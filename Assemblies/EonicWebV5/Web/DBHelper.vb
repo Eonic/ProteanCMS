@@ -86,14 +86,19 @@ Imports System
                 goSession = moCtx.Session
                 goServer = moCtx.Server
                 'End If
-
-                ResetConnection("Data Source=" & goConfig("DatabaseServer") & "; " & _
-                    "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
-                    GetDBAuth())
-
                 myWeb = aWeb
                 moPageXml = myWeb.moPageXml
                 mnUserId = myWeb.mnUserId
+                Dim ServerName As String = goConfig("DatabaseServer")
+                Dim DatabaseName As String = goConfig("DatabaseName")
+
+                If ServerName = "" Or DatabaseName = "" Then
+                    myWeb.msRedirectOnEnd = "/ewcommon/setup/default.ashx"
+                Else
+                    ResetConnection("Data Source=" & ServerName & "; " &
+                  "Initial Catalog=" & DatabaseName & "; " &
+                  GetDBAuth())
+                End If
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))

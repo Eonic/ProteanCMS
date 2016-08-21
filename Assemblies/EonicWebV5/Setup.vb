@@ -1944,6 +1944,26 @@ DoOptions:
 
                 oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "WebSettings", "", "Setup eonicweb5")
 
+                If goConfig("AdminAcct") = "" Then
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter server admin credentials")
+
+                    MyBase.addInput(oFrmElmt, "AdminDomain", True, "Servername / Domain")
+                    MyBase.addBind("AdminDomain", "web/add[@key='AdminDomain']/@value", "false()")
+
+                    MyBase.addInput(oFrmElmt, "AdminAcct", True, "Server Admin Account")
+                    MyBase.addBind("AdminAcct", "web/add[@key='AdminAcct']/@value", "true()")
+
+                    MyBase.addInput(oFrmElmt, "AdminPassword", True, "Admin Password")
+                    MyBase.addBind("AdminPassword", "web/add[@key='AdminPassword']/@value", "false()")
+
+                    MyBase.addInput(oFrmElmt, "AdminGroup", True, "Admin Group")
+                    MyBase.addBind("AdminGroup", "web/add[@key='AdminGroup']/@value", "true()")
+
+                    MyBase.addInput(oFrmElmt, "DatabaseServer", True, "DB Server Hostname")
+                    MyBase.addBind("DatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
+
+                End If
+
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "DB Name")
@@ -1963,82 +1983,106 @@ DoOptions:
                 'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                 'Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                Dim AdminAcct As String = goConfig("AdminAcct")
+                Dim AdminDomain As String = goConfig("AdminDomain")
+                Dim AdminPassword As String = goConfig("AdminPassword")
+                Dim AdminGroup As String = goConfig("AdminGroup")
 
-                    'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
-                    Dim oDefaultCfgXml As New XmlDocument
+                If MyBase.goRequest("AdminAcct") <> "" Then
+                    AdminAcct = MyBase.goRequest("AdminAcct")
+                    AdminDomain = MyBase.goRequest("AdminDomain")
+                    AdminPassword = MyBase.goRequest("AdminPassword")
+                    AdminGroup = MyBase.goRequest("AdminGroup")
+                End If
+
+                'Get the instance
+                Dim oDefaultCfgXml As New XmlDocument
+                If goConfig("AdminAcct") = "" Then
+                    oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config_standalone.xml"))
+                Else
                     oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config.xml"))
+                End If
+                MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
 
-                    MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
+                If MyBase.isSubmitted Then
+                    MyBase.updateInstanceFromRequest()
+                    MyBase.addValues()
+                End If
+
+                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(AdminAcct, AdminDomain, AdminPassword, True, AdminGroup) Then
 
                     'code here to replace any missing nodes
                     'all of the required config settings
 
                     If MyBase.isSubmitted Then
-                        MyBase.updateInstanceFromRequest()
-                        MyBase.validate()
-                        If MyBase.valid Then
+                            MyBase.updateInstanceFromRequest()
+                            MyBase.validate()
+                            If MyBase.valid Then
 
-                            'lets insure all the essential files are in place
-                            Dim CreateDirs As New FileStructureSetup
-                            If Not CreateDirs.Execute() Then
+                                'lets insure all the essential files are in place
+                                Dim CreateDirs As New FileStructureSetup
+                                If Not CreateDirs.Execute() Then
 
-                                MyBase.valid = False
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
+                                    MyBase.valid = False
+                                    MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
 
-                            Else
+                                Else
 
-                                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                                    Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
-                                If Not oCfg Is Nothing Then
-                                    Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
-                                    Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
-                                    If Not oCgfSect Is Nothing Then
-                                        oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                        oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                        'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
-                                        oCfg.Save()
+                                    If Not oCfg Is Nothing Then
+                                        Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
+                                        Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
+                                        If Not oCgfSect Is Nothing Then
+                                            oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                            oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                            'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
+                                            oCfg.Save()
+                                        Else
+                                            'update config based on form submission
+                                            oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                                            'save as web.config in the root
+                                            oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
+                                        End If
                                     Else
                                         'update config based on form submission
                                         oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
                                         'save as web.config in the root
-                                        oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
+                                        oDefaultCfgXml.Save(goServer.MapPath("web.config"))
                                     End If
-                                Else
-                                    'update config based on form submission
-                                    oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
-                                    'save as web.config in the root
-                                    oDefaultCfgXml.Save(goServer.MapPath("web.config"))
-                                End If
 
-                                'Now lets create the database
-                                Dim oDbt As New Eonic.Web.dbHelper(Nothing)
-                                Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
-                                If oDbt.createDB(sDbName) Then
-                                    'success
-                                    MyBase.valid = True
-                                Else
-                                    MyBase.valid = False
+                                    'Now lets create the database
+                                    Dim oDbt As New Eonic.Web.dbHelper(Nothing)
+                                    Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
+                                    If oDbt.createDB(sDbName) Then
+                                        'success
+                                        MyBase.valid = True
+                                    Else
+                                        MyBase.valid = False
+                                    End If
+                                    oDbt = Nothing
                                 End If
-                                oDbt = Nothing
+                                CreateDirs = Nothing
+
                             End If
-                            CreateDirs = Nothing
-
                         End If
-                    End If
-                    oImp.UndoImpersonation()
-                    'lets take a guess at the DB Name
-                    If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
-                        Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = GuessDBName()
+                        oImp.UndoImpersonation()
+                        'lets take a guess at the DB Name
+                        If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
+                            Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = GuessDBName()
+                        End If
+
+                        If Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "" Then
+                            Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "4.1.0.0"
+                        End If
+
+                    Else
+
+                        If MyBase.goRequest("AdminAcct") <> "" Then
+                        MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials failed to validate.", True)
                     End If
 
-                    If Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "" Then
-                        Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "4.1.0.0"
-                    End If
-
-                Else
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
                 End If
 
                 MyBase.addValues()

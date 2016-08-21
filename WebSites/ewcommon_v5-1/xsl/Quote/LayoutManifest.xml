@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<PageLayouts imgPath="/ewcommon/images/pagelayouts">
-  <ModuleTypes>
-    <ModuleGroup name="Quoting controls">
-      <Module type="QuoteListQuotes" name="List Quotes">List Quotes [requires membership]</Module>
-    </ModuleGroup>
-  </ModuleTypes>
-</PageLayouts>
-
