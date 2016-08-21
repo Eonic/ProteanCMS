@@ -1,0 +1,782 @@
+﻿
+.caption-mixin(@text-color,@text-size,@text-font) {
+        position:absolute;
+        color:@text-color;
+        font-weight:700;
+        font-size:@text-size;
+        line-height:@line-height-base;
+        font-family:@text-font;
+        padding:2px 4px;
+        margin:0px;
+        border-width:0px;
+        border-style:none;
+		h1 {
+			font-size:@font-size-h1;
+        	font-weight:700;
+        	color:@text-color !important;
+		}
+		h2 {
+        	font-size:@font-size-h2;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h3 {
+        	font-size:@font-size-h3;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h4 {
+        	font-size:@font-size-h4;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h5 {
+        	font-size:@font-size-h5;
+        	font-weight:700;
+			color:@text-color !important;
+		}		
+        h6 {
+        	font-size:@font-size-h6;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+}
+
+
+.captionbg-mixin(@text-color,@text-size,@text-font) {
+        position: absolute;
+        color:@text-color;
+        font-weight: 700;
+        font-size: @text-size;
+        line-height:@line-height-base;
+        font-family: @text-font;
+        padding: 2px 4px;
+        margin: 0px;
+        border-width: 0px;
+        border-style: none;
+        Letter-spacing: 0;
+ 		display:inline;
+		h1, h2, h3, h4, h5, h6{
+			display: inline-block;
+			font-size:@font-size-base;
+        	font-weight:700;
+        	color:#fff !important;
+			background-color: @text-color;
+			padding:10px 15px 10px 15px;
+			margin-bottom:10px;
+			clear:right;
+			line-height:@line-height-base;
+		}
+		h1 {
+			font-size:@font-size-base-h1;
+			padding:10px 15px 10px 15px;
+		}
+		h2 {
+			font-size:@font-size-h2;
+			padding:10px 15px 10px 15px;
+		}
+		h3 {
+			font-size:@font-size-h3;
+			padding:10px 15px 10px 15px;
+		}
+		h4 {
+			font-size:@font-size-h4;
+			padding:10px 15px 10px 15px;
+		}
+		span {
+			background-color: @text-color;
+			padding:10px 15px 10px 15px;
+        	line-height: @line-height-base;
+		}	
+}
+
+.captionWhite-mixin(@text-color,@text-size,@text-font) {
+        position:absolute;
+        color:@text-color !important;
+        font-weight:700;
+        font-size:@text-size;
+        line-height:@line-height-base;
+        font-family:@text-font;
+        padding:2px 4px;
+        margin:0px;
+        border-width:0px;
+        border-style:none;
+        text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+		h1 {
+			font-size:@font-size-h1;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h2 {
+			font-size:@font-size-h2;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h3 {
+			font-size:@font-size-h3;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+		h4 {
+			font-size:@font-size-h4;
+        	font-weight:700;
+			color:@text-color !important;
+		}
+}
+
+.captionbg_Black-mixin(@text-color,@text-size,@text-font) {
+        position: absolute;
+        color: rgb(0, 0, 0);
+        font-weight: 700;
+        font-size: @text-size;
+        line-height: @line-height-base;
+        font-family: @text-font;
+        padding: 2px 4px;
+        margin: 0px;
+        border-width: 0px;
+        border-style: none;
+        Letter-spacing: 0;
+        color:@text-color!important;
+		h1, h2, h3, h4, h5, h6{
+			display: inline-block;
+			font-size:@font-size-base;
+        	font-weight:700;
+        	color:@text-color!important;
+			background-color: #fff;
+			padding:10px 15px 10px 15px;
+			margin-bottom:10px;
+			clear:right;
+			line-height:@line-height-base;
+		}
+		h1 {
+			font-size:@font-size-h1;
+			padding:10px 15px 10px 15px;
+		}
+		h2 {
+			font-size:@font-size-h2;
+			padding:10px 15px 10px 15px;
+		}
+		h3 {
+			font-size:@font-size-h3;
+			padding:10px 15px 10px 15px;
+		}
+		h4 {
+			font-size:@font-size-h4;
+			padding:10px 15px 10px 15px;
+		}
+		span,p {
+			background-color: #fff;
+			padding:10px 15px 10px 15px;
+        	line-height: @line-height-base;
+		}	
+        
+}
+
+.captionbg_White-mixin(@text-color,@text-size,@text-font) {
+        position: absolute;
+        color: #fff;
+        font-weight: 700;
+        font-size: @text-size;
+        line-height: @line-height-base;
+        font-family: @text-font;
+        padding: 2px 4px;
+        margin: 0px;
+        border-width: 0px;
+        border-style: none;
+        Letter-spacing: 0;
+		h1, h2, h3, h4, h5, h6{
+			display: inline-block;
+			font-size:@font-size-base;
+        	font-weight:700;
+        	color:#fff !important;
+			background-color: fade(@text-color, 50%);
+			padding:10px 15px 10px 15px;
+			margin-bottom:10px;
+			clear:right;
+			line-height:@line-height-base;
+		}
+		h1 {
+			font-size:@font-size-h1;
+			padding:10px 15px 10px 15px;
+		}
+		h2 {
+			font-size:@font-size-h2;
+			padding:10px 15px 10px 15px;
+		}
+		h3 {
+			font-size:@font-size-h3;
+			padding:10px 15px 10px 15px;
+		}
+		h4 {
+			font-size:@font-size-h4;
+			padding:10px 15px 10px 15px;
+		}
+		span {
+			background-color: @text-color;
+			padding:10px 15px 10px 15px;
+        	line-height: @line-height-base;
+		}	
+}
+
+.Site {
+
+//headings
+    .tp-caption.primary_heading{
+        .caption-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.action_heading {
+        .caption-mixin(@brand-action,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.info_heading {
+        .caption-mixin(@brand-info,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.success_heading {
+        .caption-mixin(@brand-success,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.warning_heading {
+        .caption-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.danger_heading {
+        .caption-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.white_heading {
+        .captionWhite-mixin(#ffffff,@font-size-h3,@headings-font-family)
+    }
+
+     .tp-caption.black_heading {
+        .caption-mixin(#000000,@font-size-h3,@headings-font-family)
+    }
+//Headings with white backgrounds
+     .tp-caption.whitebg_blackHeading{
+         .captionbg_Black-mixin(#000,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_primaryHeading{
+         .captionbg_Black-mixin(@brand-primary,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_actionHeading{
+         .captionbg_Black-mixin(@brand-action,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_infoHeading{
+         .captionbg_Black-mixin(@brand-info,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_successHeading{
+         .captionbg_Black-mixin(@brand-success,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_warningHeading{
+         .captionbg_Black-mixin(@brand-warning,@font-size-h3,@font-family-base)
+     }
+     .tp-caption.whitebg_dangerHeading{
+         .captionbg_Black-mixin(@brand-danger,@font-size-h3,@font-family-base)
+     }
+
+//body text
+    .tp-caption.primary_body {
+        .caption-mixin(@brand-primary,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.action_body {
+        .caption-mixin(@brand-action,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.info_body {
+        .caption-mixin(@brand-info,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.success_body {
+        .caption-mixin(@brand-success,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.warning_body {
+        .caption-mixin(@brand-warning,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.danger_body {
+        .caption-mixin(@brand-danger,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.white_body {
+        .captionWhite-mixin(#ffffff,@font-size-base,@font-family-base)
+    }
+
+     .tp-caption.black_body {
+        .caption-mixin(#000000,@font-size-base,@font-family-base)
+    }
+
+     //bg colour white text
+    .tp-caption.primarybg_headingw {
+        .captionbg_White-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.actionbg_headingw {
+        .captionbg_White-mixin(@brand-action,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.infobg_headingw {
+        .captionbg_White-mixin(@brand-info,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.successbg_headingw{
+        .captionbg_White-mixin(@brand-success,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.warningbg_headingw {
+        .captionbg_White-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.dangerbg_headingw {
+        .captionbg_White-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.blackbg_headingw {
+        .captionbg_Black-mixin(#fff,@font-size-h3,@headings-font-family)
+    }
+      .tp-caption.whitebg_headingw {
+        .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
+    }
+
+     .tp-caption.primarybg_bodyw {
+        .captionbg_White-mixin(@brand-primary,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.actionbg_bodyw {
+        .captionbg_White-mixin(@brand-action,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.infobg_bodyw {
+        .captionbg_White-mixin(@brand-info,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.successbg_bodyw{
+        .captionbg_White-mixin(@brand-success,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.warningbg_bodyw {
+        .captionbg_White-mixin(@brand-warning,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.dangerbg_bodyw {
+        .captionbg_White-mixin(@brand-danger,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.blackbg_bodyw {
+        .captionbg_White-mixin(#fff,@font-size-base,@font-family-base)
+    }
+      .tp-caption.whitebg_bodyw {
+        .captionbg_White-mixin(#000,@font-size-base,@font-family-base)
+    }
+
+
+//BG colour heading black text
+    .tp-caption.primarybg_heading {
+        .captionbg_Black-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.actionbg_heading {
+        .captionbg_Black-mixin(@brand-action,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.infobg_heading {
+        .captionbg_Black-mixin(@brand-info,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.successbg_heading {
+        .captionbg_Black-mixin(@brand-success,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.warningbg_heading {
+        .captionbg_Black-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.dangerbg_heading {
+        .captionbg_Black-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.blackbg_heading {
+        .captionbg_Black-mixin(#000,@font-size-h3,@headings-font-family)
+    }
+//BG colour body black text
+    .tp-caption.primarybg_body {
+        .captionbg_Black-mixin(@brand-primary,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.actionbg_body {
+        .captionbg_Black-mixin(@brand-action,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.infobg_body {
+        .captionbg_Black-mixin(@brand-info,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.successbg_body {
+        .captionbg_Black-mixin(@brand-success,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.warningbg_body {
+        .captionbg_Black-mixin(@brand-warning,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.dangerbg_body {
+        .captionbg_Black-mixin(@brand-danger,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.blackbg_body {
+        .captionbg_Black-mixin(#ffffff,@font-size-base,@font-family-base)
+    }
+
+    .tp-caption.WhiteheadingBbg_heading{
+        .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
+    }
+
+
+
+ //heading jumbo
+    .tp-caption.primary_heading_jumbo {
+        .caption-mixin(@brand-primary,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.action_heading_jumbo {
+        .caption-mixin(@brand-action,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.info_heading_jumbo {
+        .caption-mixin(@brand-info,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.success_heading_jumbo {
+        .caption-mixin(@brand-success,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.warning_heading_jumbo {
+        .caption-mixin(@brand-warning,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.danger_heading_jumbo {
+        .caption-mixin(@brand-danger,@jumbotron-font-size,@headings-font-family)
+    } 
+
+    .tp-caption.black_heading_jumbo {
+        .caption-mixin(#000,@jumbotron-font-size,@headings-font-family)
+    } 
+    .tp-caption.white_heading_jumbo {
+        .captionWhite-mixin(#fff,@jumbotron-font-size,@headings-font-family)
+    } 
+
+    .tp-caption.primary_body_jumbo {
+        .caption-mixin(@brand-primary,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.action_body_jumbo {
+        .caption-mixin(@brand-action,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.info_body_jumbo {
+        .caption-mixin(@brand-info,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.success_body_jumbo {
+        .caption-mixin(@brand-success,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.warning_body_jumbo {
+        .caption-mixin(@brand-warning,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.danger_body_jumbo {
+        .caption-mixin(@brand-danger,@jumbotron-font-size,@font-family-base)
+    }
+    
+    .tp-caption.black_body_jumbo {
+        .caption-mixin(#000,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.white_body_jumbo {
+        .captionWhite-mixin(#fff,@jumbotron-font-size,@font-family-base)
+    }
+
+//heading jumbo bg
+    .tp-caption.primary_heading_jumbobg {
+        .captionbg_White-mixin(@brand-primary,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.action_heading_jumbobg {
+        .captionbg_White-mixin(@brand-action,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.info_heading_jumbobg {
+        .captionbg_White-mixin(@brand-info,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.success_heading_jumbobg {
+        .captionbg_White-mixin(@brand-success,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.warning_heading_jumbobg {
+        .captionbg_White-mixin(@brand-warning,@jumbotron-font-size,@headings-font-family)
+    }
+
+    .tp-caption.danger_heading_jumbobg {
+        .captionbg_White-mixin(@brand-danger,@jumbotron-font-size,@headings-font-family)
+    } 
+
+    .tp-caption.black_heading_jumbobg {
+        .captionbg_White-mixin(#000,@jumbotron-font-size,@headings-font-family)
+    } 
+    .tp-caption.white_heading_jumbobg {
+        .captionbg_Black-mixin(#fff,@jumbotron-font-size,@headings-font-family)
+    } 
+
+    .tp-caption.primary_body_jumbobg {
+        .captionbg_White-mixin(@brand-primary,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.action_body_jumbobg {
+        .captionbg_White-mixin(@brand-action,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.info_body_jumbobg {
+        .captionbg_White-mixin(@brand-info,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.success_body_jumbobg {
+        .captionbg_White-mixin(@brand-success,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.warning_body_jumbobg {
+        .captionbg_White-mixin(@brand-warning,@jumbotron-font-size,@font-family-base)
+    }
+
+    .tp-caption.danger_body_jumbobg {
+        .captionbg_White-mixin(@brand-danger,@jumbotron-font-size,@font-family-base)
+    }
+    
+    .tp-caption.black_body_jumbobg {
+        .captionbg_White-mixin(#000,@jumbotron-font-size,@font-family-base)
+    }
+    .tp-caption.white_body_jumbobg {
+        .captionbg_Black-mixin(#fff,@jumbotron-font-size,@font-family-base)
+    }
+
+//BG colour body black text
+   
+
+    .tp-caption.WhiteheadingBbg_headingw{
+        .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
+    }
+
+
+    .tp-bullets{
+    z-index:999;
+    }
+
+}
+
+html,
+body{height:100%;}
+#mainTable{
+	min-height:100%;
+	height:auto!important;
+	height:100%;
+}
+.Site{
+	font-weight:@font-weight-base;
+	font-family:@font-family-base;
+	color:@text-color;
+	//a{color:@link-color;}
+	a,
+	a:focus{outline:none!important;}
+	.btn.principle{
+		float:right;
+	}
+    .eventdate{
+    padding-right:@grid-gutter-width;
+
+    }
+    section.margin-bottom-0{margin-bottom:0!important;}
+}
+//------------------------------------------------
+//LOGO FONT
+//------------------------------------------------
+@charset "UTF-8";
+
+@font-face {
+  font-family: "logo-font-3";
+  src:url("/ewcommon/fonts/logo-font-3.eot");
+  src:url("/ewcommon/fonts/logo-font-3.eot?#iefix") format("embedded-opentype"),
+    url("/ewcommon/fonts/logo-font-3.woff") format("woff"),
+    url("/ewcommon/fonts/logo-font-3.ttf") format("truetype"),
+    url("/ewcommon/fonts/logo-font-3.svg#logo-font-3") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "logo-font-3" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-eonic"]:before,
+[class*=" icon-eonic"]:before {
+  font-family: "logo-font-3" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-eonic-logo3:before {
+  content: "e";
+  font-size:4.8em;
+  float:right;
+  margin-top:-58px;
+}
+
+.fa-inverse{
+    color:@brand-primary;
+}
+
+//MIXINS
+.padding-lr(@padding:(@grid-gutter-width/2)){
+    padding-left:@padding;
+    padding-right:@padding;
+}
+.time-icon(@color:@brand-primary;@highlight:@brand-action;){
+    ul{
+        padding:0;
+        text-align:center;
+        margin-top:15px;
+        li{
+            float:left;
+            list-style:none;
+            @media(max-width:@screen-sm-max){width:auto;}
+        }
+    }
+    time.icon{
+      font-size: 1em; /* change icon size */
+      display: block;
+      position: relative;
+      width: 7em;
+      height: 7em;
+      background-color: #fff;
+      border-radius: @border-radius-base;
+      box-shadow: 0 0 0 1px #bdbdbd;
+      overflow: hidden;
+      max-width:100%;
+      & *{
+          display: block;
+          width: 100%;
+          font-size: 1em;
+          font-weight: bold;
+          font-style: normal;
+          text-align: center;
+      }
+      strong{
+          position: absolute;
+          top: 0;
+          padding: 0.4em 0;
+          color: #fff;
+          background-color: @highlight;
+        }
+        em{
+            position: absolute;
+            bottom: 0.3em;
+            color: @highlight;
+        }
+        span{
+            font-size: 2.8em;
+            letter-spacing: -0.05em;
+            padding-top: 0.8em;
+            color: @highlight;
+        }
+    }
+    .price{
+        font-weight:700;
+        padding:7px 0;
+        display:inline-block;
+    }
+    .active{
+        time.icon{
+            strong{
+                background-color: @color;
+            }
+            em,
+            span{
+                color: @color;
+            }
+        }
+        .price{
+            color: @color;
+        }
+    }
+    .booking-full{
+        time.icon{
+            strong{
+                background-color: @gray;
+            }
+            em,
+            span{
+                color: @gray;
+            }
+        }
+        .price{
+            color: @gray;
+        }
+        cursor: not-allowed;
+    }
+}
+.qty-btn-group(@height:40px;@radius:4px;@width:50px;){
+    .flex-display;
+    .flex-direction(row-reverse);
+    input,
+    button{
+        height:@height;
+        float:none;
+    }
+    .decreaseQty{
+        border-radius:@radius 0 0 @radius;
+    }
+    .increaseQty{
+        border-radius:0 @radius @radius 0;
+    }
+    input{
+        width:@width;
+        border-top:1px solid @brand-info;
+        border-bottom:1px solid @brand-info;
+    }
+    .input-group-btn{
+        font-size:0.8em;
+        position:static;
+        width:auto;
+    }
+}
+//APPLYING MIXINS
+.Site{
+    #buyPanels{
+        h4{.padding-lr}
+        .time-icon;
+        .input-group{
+            .qty-btn-group;
+        }
+    }
+    .eventdate{
+        padding:0;
+    }
+}

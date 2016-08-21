@@ -1,0 +1,321 @@
+﻿/*	Begin Form Elements 
+	Eonic Ltd 
+*/
+.Site .ewXform fieldset fieldset legend{  
+	font-size:			1.2em;
+	font-weight:		bold;
+	border:				none;
+	background:			none;
+	display:			inline;
+	padding:			5px;
+}
+.Site .ewXform fieldset fieldset legend
+{	
+	border:none;
+	margin:3px;
+	width:100%;
+}
+.ewXform fieldset ol {  
+	margin: 0;
+	padding: 0;  
+	list-style: none !important;
+}
+.ewXform fieldset li {  
+	position:	relative;
+	padding-bottom:.3em;
+	margin:3px 0 3px 0;
+	list-style: none !important;
+}
+
+.ewXform fieldset.inline li.label
+{
+	display:block;
+	clear:both;
+	float:none;
+	padding-bottom:0;
+	margin:3px 0 0 0;
+}	
+.ewXform fieldset.inline li
+{
+	display:inline-block;
+	float:left;
+	margin-right:10px;
+}
+.ewXform fieldset#submitform {  
+	background-image:	none;
+	border-style: 		none;
+}
+.Site .ewXform label 
+{
+	padding: 0 0 3px 0;
+	display:block;
+}
+
+.ewXform .inline .form-group
+{
+    float:left;
+    display:inline-block;
+    width:49%;
+    padding-right:15px;
+   }
+.ewXform .optionButtons label
+{
+	display:inline;
+} 
+.Site .ewXform input,
+.Site .ewXform textarea,
+.Site .ewXform select,
+.Site .ewXform .readonlyvalue
+{
+	padding:.3em;
+	font-size:1.3em;
+	color:#676767;
+	border:solid 1px #d8d9da;
+	background:#FFFFFF;
+}
+.ewXform input.readonly,
+.ewXform textarea.readonly
+{
+	background: #f1f1f1;
+	color:#999;	
+}
+.ewXform input.loading
+{
+	background: url(/ewcommon/images/layout/input.loading.gif) 95% center no-repeat;
+}
+.Site input.readonly
+{
+	background: #F0F0F0;
+	color: #898989;
+}
+.ewXform input.slider, #template_AdminXForm #WebSettings input.slider
+{
+    width:50px;    
+}
+.ewXform .radiocheckbox input
+{
+	border: 0;
+	background: none;
+}
+.ewXform .inline .rptDelete	input
+{
+	margin: 25px 0 15px 0 !important;
+}
+.ewXform .readonlyvalue
+{
+	border: 0;
+}
+.ewXform select
+{
+	padding: .2em .3em .2em .3em; /* otherwise weird padding arond controls */
+}
+
+.ewXform select.short
+{
+	width: 110px !important; /* otherwise weird padding arond controls */
+}
+
+/* Needed so that selects are the same height as inputs - for nice floating. */
+#template_AdminXForm .ewXform select
+{
+	padding: 0.3em;
+}
+.ewXform input.principle, .ewXform button.principle 
+{
+	float:right;
+	position: static;
+	clear:both;
+}
+.ewXform input.adminButton
+{
+	cursor: pointer !important;
+	font-size: 1em;
+	padding: 0px 5px 0px 15px;
+	margin: 0px 2px 0px 0;
+	font-weight: 400;
+	/* WHY?!?! height: 24px;*/
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	background:  #fff no-repeat top right;
+	width: auto;
+	color: #000;
+}
+.ewXform span.radiocheckbox
+{
+	/* This lineheight insures inline radios take up the same 
+		vertical space as inputs and drops downs for neat floating */ 
+	line-height: 2.5em;
+	display:inline-block;
+}
+.ewXform span.multiline, .ewXform fieldset.multiline span
+{
+	display:block;
+	line-height:1.7em !important;
+}
+ #template_AdminXForm .ewXform .contentLocations fieldset.multiline span, .ewXform .contentLocations fieldset.multiline span, .ewXform div.multiline label
+ {
+	display:block !important;
+}
+
+.ewXform span.radiocheckbox label
+{
+	clear:none;
+	float:none;
+	display:inline;
+	width:auto;
+	text-align:left;
+	padding-left:7px;
+	padding-right:7px;
+}
+.ewXform span.radiocheckbox input {
+	padding:.3em;
+	font-size:1.3em;		
+	display:inline;
+	width:auto;
+	color:#676767;
+	border: 0px;
+}
+.ewXform input.radio {
+	border:	none;
+	background:	transparent;
+}	
+/* ==================Alerts =================================*/
+.ewXform span.alert,
+.ewXform span.hint,
+.ewXform span.help
+{
+	border:none;
+	padding:5px 10px 5px 35px;
+	color:#000;
+	margin:0px;
+	min-height:22px;
+	display:block;
+}
+.ewXform span.alert
+{
+	display:block;
+	background:transparent url(/ewcommon/images/layout/alert.png) 0px 3px no-repeat;
+	color:#000;
+	font-weight: normal;
+}
+span.hint,
+td.hint span
+{
+	display:block;
+	background:transparent url(/ewcommon/images/layout/hint_small.png) left center no-repeat;
+	color:#000;
+	font-size:.8em;
+}
+span.help,
+td.help span
+{
+	background:transparent url(/ewcommon/images/layout/hint_small.png) left center no-repeat;
+}
+td.alert span.valid
+{
+	background-image:url(/ewcommon/images/layout/message_sent_cccccc.gif);
+	color:#000;
+	padding-left:70px
+}
+#headerInfo #UserLogon
+{
+	font-size:90%;
+}
+#headerInfo #UserLogon.ewXform label
+{
+	display:inline;
+}
+#headerInfo #UserLogon.ewXform li
+{
+	float:left;
+}
+#headerInfo #UserLogon.ewXform fieldset
+{
+	margin-top:5px;
+}
+#headerInfo #UserLogon.ewXform fieldset ol
+{
+	float:right
+}
+#headerInfo #UserLogon.ewXform fieldset.hideLabels li
+{
+	float:left;
+}
+.Site #headerInfo input.textbox
+{
+	width:100px;
+    padding:3px 0;
+    font-size:90%;
+    margin-left:10px;
+}
+#headerInfo .alert
+{
+    position:absolute;
+    bottom: 25px;
+    right:0 !important;
+    padding: 11px 5px 11px 45px !important;
+    font-weight: bold;       
+}
+#headerInfo #UserLogon label
+{
+	margin-left:10px;
+
+}
+
+/* ================== FORM COLUMNS ==================*/
+.ewXform fieldset.col1,
+.ewXform fieldset.col2,
+.ewXform fieldset.col3 
+{
+	float:left;
+}
+.ewXform .cols2 fieldset.col1,
+.ewXform .cols2 fieldset.col2
+{
+	width: 49%;
+}
+.ewXform .cols3 fieldset.col1,
+.ewXform .cols3 fieldset.col2,
+.ewXform .cols3 fieldset.col3
+{
+	width: 32%;
+} 
+.ewXform input.principle
+{
+	cursor: pointer;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	/*background: url("/ewcommon/images/admin/submit-principle-bg.gif") no-repeat scroll right top transparent;*/
+	font-size: 1em;
+	font-weight: bold;
+	/* WHY?!?!?! height:32px; */
+	padding: 7px;
+}
+
+input.colorPicker
+{
+	text-shadow: 1px 1px white;
+	-moz-text-shadow: 1px 1px white;
+}
+.ewXform div.slider
+{
+    width: 150px;
+    margin-left: 100px;
+}
+.ewXform div.slider span
+{
+    display: none;
+}
+
+.ewXform li.cbScroll div.checkboxes{
+    height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;background-color:rgb(243, 247, 251);
+}
+.ewXform li.cbScroll div.checkboxes span.radiocheckbox{display:block !important}
+#template_AdminXForm .ewXform li.cbScroll div.checkboxes span.radiocheckbox{display:block !important; line-height:1.5em}
+#adminLayout #UserLogon .btn{clear:none;}
+#adminLayout #UserLogon .btn-primary{float:left;}
+#adminLayout #UserLogon .input-wrapper{padding-bottom:10px;}

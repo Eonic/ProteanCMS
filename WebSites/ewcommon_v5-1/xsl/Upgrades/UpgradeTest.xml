@@ -1,0 +1,35 @@
+﻿<instance xmlns:ew="urn:ew">
+  <tblContentStructure>
+    <nStructKey>1</nStructKey>
+    <nStructParId>0</nStructParId>
+    <cStructForiegnRef></cStructForiegnRef>
+    <cStructName>Home</cStructName>
+    <cStructDescription>
+      <DisplayName title="" linkType="external" exclude="false" noindex="false"></DisplayName>
+      <Images>
+        <img class="thumbnail" />
+        <img class="icon" />
+        <img class="detail" />
+      </Images>
+      <Description></Description>
+    </cStructDescription>
+    <cUrl></cUrl>
+    <nStructOrder>0</nStructOrder>
+    <cStructLayout>Modules_3_columns</cStructLayout>
+    <nAuditId>6</nAuditId>
+    <nCloneStructId>0</nCloneStructId>
+    <nVersionParId>0</nVersionParId>
+    <cVersionLang></cVersionLang>
+    <cVersionDescription></cVersionDescription>
+    <nVersionType></nVersionType>
+    <nAuditKey>6</nAuditKey>
+    <dPublishDate></dPublishDate>
+    <dExpireDate></dExpireDate>
+    <dInsertDate>2011-11-03T15:23:46+00:00</dInsertDate>
+    <nInsertDirId>0</nInsertDirId>
+    <dUpdateDate>2011-11-28T14:06:55+00:00</dUpdateDate>
+    <nUpdateDirId>1</nUpdateDirId>
+    <nStatus>1</nStatus>
+    <cDescription></cDescription>
+  </tblContentStructure>
+</instance>

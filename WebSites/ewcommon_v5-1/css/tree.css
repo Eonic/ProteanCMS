@@ -1,0 +1,244 @@
+/*
+ * CSS for Standard tree layout
+ * Copyright (C) 2005 SilverStripe Limited
+ * Feel free to use this on your websites, but please leave this message in the fies
+ * http://www.silverstripe.com/blog
+ */
+ 
+#adminLayout ul.tree{
+	width: auto;
+	padding-left : 0px;
+	margin-left : 0px;
+	border-top: 1px dotted #C0C0C0;
+}
+#adminLayout ul.tree img{
+ 	border : none;
+}
+#adminLayout ul.tree, ul.tree ul {
+	padding-left: 0;
+}
+#adminLayout ul.tree ul {
+	margin-left: 16px;
+		
+}
+#adminLayout ul.tree li.closed ul {
+	display: none;
+}
+#adminLayout ul.tree div span
+{
+	position:relative;
+	display:block;
+	float:left;
+	margin:0 3px 0 0!important;
+	padding:3px 6px 3px 6px !important;
+	font:0.8em/1em verdana,sans-serif;
+	text-decoration:none;
+	white-space: nowrap;
+}
+#adminLayout ul.tree li 
+{
+	list-style: none;
+	background: url(/ewcommon/images/menutree/i-repeater.gif) 0 0 repeat-y;
+	display: block;
+	width: auto;
+	padding: 0;
+	background-color:#FFF;
+}
+#adminLayout ul.tree li.alternate
+{
+	
+}
+#adminLayout ul.tree li.last {
+	list-style: none;
+	background-image: none;
+}
+
+/* Span-A: I/L/I glpyhs */
+#adminLayout ul.tree span.a {
+	background: url(/ewcommon/images/menutree/t.gif) 0 0 no-repeat;
+	display: block;
+}
+#adminLayout ul.tree span.a.last {
+	background: url(/ewcommon/images/menutree/l.gif) 0 0 no-repeat;
+}
+
+/* Span-B: Plus/Minus icon */
+#adminLayout ul.tree span.b {
+}
+#adminLayout ul.tree span.a.children span.b {
+	background: url(/ewcommon/images/menutree/minus.gif) 0 0 no-repeat;
+	cursor: pointer;
+}
+#adminLayout ul.tree li.closed span.a.children span.b {
+	background: url(/ewcommon/images/menutree/plus.gif) 0 0 no-repeat;
+	cursor: pointer;
+}
+
+/* Span-C: Spacing and extending tree line below the icon */
+#adminLayout ul.tree span.c 
+{
+	display:block;
+	margin-left: 16px;
+}
+#adminLayout ul.tree span.a.children span.c {
+	background: url(/ewcommon/images/menutree/i-bottom.gif) 0 50% no-repeat;
+}
+#adminLayout ul.tree span.a.spanClosed span.c {
+	background-image: none;
+}
+
+
+/* Anchor tag: Page icon */
+
+#adminLayout ul.tree span.treeNode 
+{
+	vertical-align:top;
+	line-height: 23px;
+}
+#adminLayout ul.tree span.treeNode
+{
+	border:solid 1px #ff000;
+	display:inline-block;
+	width:220px;
+}
+#adminLayout ul.tree span.treeNode a.status
+{
+	white-space: nowrap;
+	overflow: none;
+	padding: 1px 5px 5px 13px !important;
+	line-height: 24px;
+	text-decoration: none;
+	vertical-align:top;
+}
+#adminLayout ul.tree span.treeNode a.pageName
+{
+	display:inline-block;
+	width:190px;	
+	line-height: 1.2em;
+}
+#adminLayout ul.tree span.treeNode a.live
+{
+	background: url(/ewcommon/images/menutree/page-file.gif) top left no-repeat;
+}
+#adminLayout ul.tree span.a.children span.treeNode a.hide
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif)  0 0 no-repeat !important;
+}
+#adminLayout ul.tree span.treeNode a.hide
+{
+	background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;
+} 
+#adminLayout ul.tree span.a.children span.treeNode a.live 
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon.gif)  0 0 no-repeat;
+}
+#adminLayout ul.tree span.a.children.spanClosed span.treeNode a.live 
+{
+	background: url(/ewcommon/images/menutree/page-foldericon.gif)  0 0 no-repeat;
+}
+#adminLayout ul.tree span.a.children.spanClosed span.treeNode a.hide 
+{
+	background: url(/ewcommon/images/menutree/page-foldericon-hidden.gif)  0 0 no-repeat !important;
+}
+/* Unformatted tree */
+#adminLayout ul.tree.unformatted li {
+	background-image: none;
+	padding-left: 16px;
+}
+#adminLayout ul.tree.unformatted li li {
+	background-image: none;
+	padding-left: 0px;
+}
+#adminLayout #template_FileSystem ul.tree span.treeNode a.live
+{
+	background: url(/ewcommon/images/menutree/page-foldericon.gif)  0 0 no-repeat;
+}
+#adminLayout #template_FileSystem ul.tree span.a.children span.treeNode a.live 
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon.gif)  0 0 no-repeat;
+}
+#adminLayout #template_FileSystem ul.tree span.a.children.spanClosed span.treeNode a.live 
+{
+	background: url(/ewcommon/images/menutree/page-foldericon.gif)  0 0 no-repeat;
+}
+/*
+ * Divs, by default store vertically aligned data
+ */
+/*
+ul.tree li div {
+	float: left;
+	clear: left;
+	height: 1em;
+	width: 475px;
+	margin-top: -20px;
+	margin-left: 250px;
+}
+
+ As inside DIVs should be treated normally 
+ul.tree div a  {
+	padding: 0;
+	background-image: none;
+	min-height: auto;
+	height: auto;
+}
+*/
+#adminLayout ul.tree li A:link, ul.tree li A:hover, ul.tree li A:visited {
+	color : #111111;
+}
+
+#adminLayout ul.tree li .over{
+/*	background-color : pink;*/
+}
+#adminLayout ul.tree .hidden
+{
+	display:none;
+}
+
+/*ul.tree a.hide
+{
+	background-image:url(/ewcommon/images/hidden.gif);
+}
+ul.tree a.live 
+{
+	background-image:url(/ewcommon/images/live.gif);
+}
+ul.tree a.status
+{
+	margin:5px 3px 0 0!important;
+	display:none;
+}*/
+
+/* ########################## Site Menu Key ########################## */
+#adminLayout #siteMenuKey
+{
+	padding-top: 10px;
+	font-size: 0.8em;
+	border-top: 1px solid #000;	
+}
+#adminLayout #siteMenuKey table
+{
+	margin-top: 5px;	
+}
+#adminLayout #siteMenuKey td
+{
+	padding-bottom: 3px;
+	padding-left: 20px;	
+	vertical-align: middle;
+}
+#adminLayout #siteMenuKey .parent
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon.gif)  0 0 no-repeat;	
+}
+#adminLayout #siteMenuKey .parentHidden
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif)  0 0 no-repeat !important;	
+}
+#adminLayout #siteMenuKey .page
+{
+	background: url(/ewcommon/images/menutree/page-file.gif) 0 0 no-repeat;	
+}
+#adminLayout #siteMenuKey .pageHidden
+{
+	background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;	
+}
+

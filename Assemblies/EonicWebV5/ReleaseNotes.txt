@@ -1,0 +1,2211 @@
+
+===============================================================================
+	RELEASE NOTES FOR EonicWeb 5.0
+	
+	Please use this to register what changes have been made and where versions
+	are currently
+	
+===============================================================================
+	IN DEVELOPMENT 
+===============================================================================
+5.0.51.x
+[TS] Changes to enable to displayRelatedBrief on feeds
+[TS] Modifications to catch PayPal non response
+[TS] Changes to allow Grabber for Events
+[TS] Ablity to specify Multiple versions of Messaging Provider using altName for the classname
+[TS] Fixes to the module ordering to be more accurate
+[TS] Fixes to overiding cascaded items to match both name and position
+
+
+===============================================================================
+	RELEASED TO LIVE
+===============================================================================
+
+5.0.13.x to 5.0.50.x
+
+Loads of changes and updates many undocumented because going through major transition.
+
+Including.....
+
+Bootstrap Admin System 
+DB Backup / Restore
+Theme Installer
+PDF Thumbnail generator
+Less Compiler
+Hugely improved installer which updates machine config files
+
+
+
+5.0.12.x
+[TS] Made changes to web to allow it to work when request object is not available request.querystring.count > 0
+[TS] Added PurchaseActions to showInvoice stage, so we can specifiy a method to execute on the purchase of an item
+[TS] Added AddUserToGroup in membership.modules to fire off when a purchase is made - example on ticket in SepScience Project
+
+5.0.11.x
+[TS] Small changes to fix errors in 5.0.10.x
+
+5.0.10.x
+[TS] Changes to image performance for claritystamp.
+[TS] Was a bit rubbish and didn't record, some sorry.
+
+5.0.7.x
+[TS] Moved Membership features into Membership.BaseProvider so we can utilise providers for membership features.
+[TS] Enabled menu caching to work properly for wellards
+
+5.0.5.x
+[TS] dbHelper - CommitLogToDB removed some logic that stops working "LogAll" in the session settings seems to break stuff.
+[TS] added Machine Name to Error handling
+[TS] Added Redirect to page+not+found to returnDocumentFromItem if available in systempages.
+[TS] DB Updates Changes to enable activity reporting to be a bit neater, and include newer action types
+[TS] Fix to enable AdminLogon and UserLogon forms to be different.
+[TS] replaced -- with _ in ProcessRepeats as -- upsets javascript in form field names
+[TS] dbhelper - processInstanceExtras allowed for relations between directory items.
+[TS] web - GetContentDetailXml adding attributes on the contentDetail/Content node.
+[TS] contentActions - process for ContentDetail/Content too
+[GCF] tools.Encryption - added generateSalt to help with making MD5salt passwords 
+[GCF] discount.vb - added check for products' children as it was killing discounts
+[GCF] xForm.vb - added check for unique filename on upload
+[ADdW] xmlTools.vb / FSHelper.vb - Added CompareDateIsNewer to compare last write time of two files so that old thumbnails are overidden when uploading images
+[GCF] cart.vb - cart now persists between sessions if PersistSession is "on" in eonic.cart.config
+[GCF] dbhelper - getTable() now get it's value direct from Enum TableNames
+[TS] Added the ability to specifiy VAT rate on line (REQUIRES TESTING !!!)
+[TS] CompileMode to complie transform to DLL
+[TS] Add deny permissions to shipping methods (DB upgrade required)
+[TS] Added module for Eonic.Web+Membership+Modules.UserContact (requires testing / xsl)
+[GCF] dbhelper - added clause to finishQuestionnaire to stop multiple entries to tblQuestionaireResultDetail
+[GCF] Cart - UpdateExistingUserAddress - fixed bug that will always added dupe addresses 
+[TS] Fixed error where prices with sale price of 0 overides the users price, intorduced by other work in this release VAT Rate on online.
+[TS] Fixed error in Alerts where content sent out twice.
+[GCF] Added a condition to the google feed handler to limit the content type of related content
+[TS] Added Imports System to every single class and I don't know why I had to all of a sudden but wouldn't build - very strange
+[TS] Considerable speed improvement to image library (Try to avoid recursive PerfMon calls in future !!!! )
+
+
+5.0.5.1
+[TS] changed error email to eonicweb5
+[TS] added new functionality to GetAdminMenu to cater for replacing nodes as well as inserting beneath
+[GCF] Small fix to edit related content
+[TS] added updateDate option to ContentGrabber
+[TS] changes to getContentFilePath - to allow for ../ in paths
+
+5.0.4.1
+
+[TS] Moved services.vb into EonicWeb
+[TS] Modification to allow invoice to be displayed without dropping session.
+[GCF] Changed validateUser to include "off" as a value of cMembershipEncryption, due to settings in v4 websites.
+[GCF] Refactored web.calendar.add with for speed
+[TS] Some peformance improvements loading in large amounts of content. when loading in content dataset using oContent.OwnerDocument.ImportNode once per dataset rather than for every single content node
+[TS] Added the ability to Map a FreeStock directory to the images folder.
+[GCF] Fixed bug in CheapestItemDiscount discount rule.
+[TS] Added status and publish and expire date to discount list in admin
+[TS] Created a whole bunch of indexes for Discounts tables, not in SQL update yet, script saved in SQLUPDATES 5.0.1.x.
+[TS] Moved Theme Settings and check if web.themes.config exists and added as a feature.
+[TS] Fixed AddBulkRelatedContent so that parents can have the same children.
+[TS] Using the DB password for the admin password on setup, added default admin user details.
+[TS] Enable MD5 encryption on setup.
+[GCF] Many optimistations to Discount.vb to speed up application of discount rules.
+[TS] Modified Content Graber to pass through sort string from cSort feild.
+[GCF/TS] Process Repeats, resolved issues with deleting repeating elements, tested and lovely!
+[TS] Believe to have resolved issue with html emails being sent as plaintext looking for "<html" not "<html>"
+
+
+5.0.1.1 27/10/2011
+[TS] Admin - AdminProcess - Changes to where the Admin Menu gets loaded in, moved to start.
+[TS] Admin - GetAdminMenu - Changes to how non-active features are removed
+[TS] AdminXforms - New xFrmEditRole - Loaded in the admin menu and build tickbox list to control access to features using the admin menu.
+[TS] sForm - Change addBind from sub to function and return bindNode
+[TS] Web GetUserXml added the group / role cXml to the output
+[TS] getPagePermissionLevel, added to test for domain user and administrator give full access.
+[TS] AdminProcess - pulling in content for CopyContent to allow content based dropdown to be populated
+[TS] Setup ContentImport - addition to processInstanceExtras
+[GCF] Added Apply3DSecure bool to payProTx in PaymentProviders to allow filtering of 3d secure by IP address
+[TS] Web - SystemPage Id's now load from App pool rather than from every page request.
+[TS] Fixes for dbhelper.ImportObjects not deleting temp tables
+[TS] Fixes for Language settings of PageXForm
+[TS] Closed security hole in cart process that allowed users to complete a transaction by posting cartCmd=ShowInvoice rather than completing the payment screen.
+[GCF] Image Width & Height without opening file, performance enhancement
+[GCF] Improved Google Base Feed
+[GCF] Image Lib works with a wider range of image types
+
+
+
+
+4.1.1.103 10/08/2011
+[TS] Changes to Encryption to ensure MD5 returns as Hex values
+[TS] Changes to pickContactXForm to support noDeliveryAddress
+
+
+4.1.1.102
+[CF] Change to getPagePermissionLevel to allow AddUpdateOwnPublish to work - previously didn't.
+
+
+4.1.1.101
+[TS] Changes and fixes to Setup process
+[TS] PayPoint/SagePay - orderprefix inserted before orderId on VendorTXCode
+[ADdW] Updated import process to accept xml as well as CSV files.
+
+4.1.1.100
+[TS] Farily major rewrite of pickContactXform and ContactXform in the cart - requires major testing!!!
+[TS] Major Performance improvements to GetParId (only returns ParId if on current site)
+[TS] Modifications to the update cart process to make more options available in awaiting payment.
+[TS] Modifications to editContentXfrm to allow for cascade to stick on items where parId not specified in link but item has a parent.
+
+* Requires significant Cart Testing & DB upgrade.
+
+4.1.1.99
+[AG] fsHelper.FileInfoTypeFilter - amend to allow it to ignore case when comparing extensions
+[TS] getStructureXml - amend to strip whitespace from menu before loading in, causing weird error condition
+[TS] dbHelper - added foriegn ref to tblCodes of the code itself to allow code imports.
+[TS] xFrmDeleteDirectoryItem - Fixed issue with transfering users
+[TS] Cart.Module - Added ListOrders and ListQuotes
+[TS] dbhelper.listUserOrders - This was not being used elsewhere I believe (unless in overload) made major changes
+[TS] dbHelper.ListPageVersions New
+[TS] Web.EnumerateFeatures - Added PageVersions
+[TS] AdminXforms xFrmCopyPageVersion
+[TS] Admin Added PageVersions and NewPageVerison to AdminProcess
+[TS] Web.GetStructureXml - Added page versions features.
+[AG] Synchronisation.SyncModuleContentFromFolder - fix to get the file type to be picked up.
+[AG] xmlTools.xsltExtensions.GetSelectOptions - New option for getting Users
+[AG] xForm.addOptionsFromSqlDataReader - Added fallback where name and/or value fields are not returned.
+[TS] Changes to Setup.xFrmWebSettings to put some error handling around setup file structure - to be tested on live.
+
+DEPENDENCIES:
+- * Requires DB Upgrade
+- Eonic.Tools 1.0.0.66
+
+
+4.1.1.97 - Wellards
+[AG] Added Web.RootPageId and Web.sessionRootPageId to handle the root page as a session scoped variable
+[AG] Changed all references in Web.vb and DBHelper.vb to gnTopLevel to be Me.RootPageId
+[AG] New function Web.GetConfigItemAsInteger - updated some items that read in configs as integers (see the root page id stuff)
+[TS] DBHelper.GetReport - formatting update on datetime parameters
+
+DEPENDENCIES: Eonic.Tools 1.0.0.65
+
+
+4.1.1.95 - 10/03/2011
+[AG] dbHelper.logActivity - added a new parameter to remove all previous logs of this activity type within the current session
+						  - rewrote code
+[AG] Web.gbSingleLoginSessionPerUser - new global variable indicating whether only one session per user is allowed.
+[AG] Web.MembershipProcess - Logging logins and logouts now happens if gbSingleLoginSessionPerUser is enabled (even if ActivityLogging is not)
+[AG] Admin.adminProcess - Logging logins and logouts now happens if gbSingleLoginSessionPerUser is enabled
+[AG] dbHelper.maintainDirectoryRelation - Doesn't call in the messagin provider adminprocess if it can't instantiate the messaging provider object
+[TS] Change to xFrmSelectTheme to not error if no theme folder available.
+[AG] Web.Open - plugged a rather large security flaw with the rememberme cookie - needs to be rethought.
+[AG] Web.LogSingleUserSession - new function
+[AG] dbHelper.ActivityType - added SessionReconnectFromCookie activity type
+[AG] dbHelper.validateUser - Added the single user per session lock check.
+[AG] Web.Open - added the check for reconnecting from a cookie for the single user per session lock.
+[AG] Cart.apply - if user is logged on have added the userxml to the xml that the emailreceipts reads.
+[TS] Messaging Provider xFormPreviewNewsletter, adjusted to send a subject.
+[AG] New Shared functions (in Configuration.vb) Eonic.Config.Value and Eonic.Config.ConfigSection
+[AG] Eonic.Web.Config - Shared function to return the config section collection for eonic/web
+[AG] Eonic.Web.COnfigValue - Shared function to get a config value from eonic/web
+[AG] FSHelper.initialiseVariables - moved the library path decision to a shared function FSHelper.GetFileLibraryPath
+[AG] FSHelper.GetFileLibraryPath - shared function to return library paths
+[AG] FSHelper.EnumerateFolders - shared and public functions to return a List of paths for folders under a given folder.
+[AG] xmlTools.GetSelectOptions - updated with a new query FolderList.<libraryType>
+[AG] stdTools.SimpleRegexFind - deprecated and moved to Eonic.Tools (under Text.SimpleregexFind)  - this functions refers to the stdTools one.
+[AG] New class file (Object.vb) and class TypeExtensions - inherits from its Eonic.Tools equivalent
+														 - adds an all encompassing method of GetType
+														 - also adds an Eonic Provider aware version
+[AG] Invoke.InvokeMethod - changed most of the calling settings around this to make it more type aware.
+[AG] AdminXforms.xfrmEditContent - added functionality for calling a method to call once the content has been saved.
+[AG] stdTools.GetMIMEType - Deprecated - moved to Eonic.Tools.FileHelper
+[AG] FSHelper.GetFileListByTypeFromRelativePath - new public function
+[AG] FSHelper.GetFileListByTypeFromPhysicalPath - new shared function
+[AG] FSHelper.ConvertPhysicalFilePathToVirtualPath - new shared function
+[AG] FSHelper.FileInfoTypeFilter - new shared function - useful to filter out folder file lists to an Eonic Library Type
+[AG] FSHelper.FullNameFromFileInfo - new shared function - used as a Converter
+[AG] FSHelper - loads more methods
+[AG] FSHelper files have been moved into /Tools/FSHelper
+[AG] New classes FSHelper.WebFile and FSHelper.WebFileExtendedProperties
+[AG] New Class Eonic.Web.Synchronisation for Eonic.Web related sync methods
+[AG] dbHelper.importObjects - Added the ability to supress locations (i.e. for orphans) and relate by ID, not just FREF
+[AG] Web - New public instantiated variable moFSHelper
+[TS] Cart.pickContactXform Hopeful fix of longstanding duplicate delivery address error.
+[TS] DBHelper.validateUser added catch for encrypted < and > on passwords problem on MD5 on some passwords.
+[TS] PaymentProviders.PayPalExpress - Changes to allow deposit payments to work.
+
+
+Dependencies :
+
+***Eonic.Tools 1.0.0.63***
+
+(4-5 only)
+[WH]	Please release all EwCommonv4-5 - See release notes; 
+		/ewcommon_v4-5/ReleaseNotes.txt
+		
+/ewcommon_v4-5/xForms/Config/Membership.xml 
+/ewcommon/tools/keepalive.ashx
+/ewcommon/js/commonV4-5.js
+
+
+4.1.1.89 - 26/01/2011
+[AG] Integrations.Helper.PostContent - Small fix when nothing is checked on posting content.
+[TS] DBHelper.maintainDirectoryRelation - Entry point for Messaging Provider to adjust list memberships
+[AG] DBHelper.recurseUpPathArray - changed to not check for permissions, as its calling routine does this. 
+[AG] DBHelper.IsSystemPage - new function to return if a page id matches a system page.
+[AG] DBHelper.getPageIdFromPath - updated to make sure that if it is invoking the permission check, then it can update the page id if a system page is returned.
+[TS] Cart.PaymentProviders PayPayPalExpress - Added ability to cater for product options.
+[AG] DBHelper.GetReport - Updated for extended functionality (file naming options).
+
+Dependencies:
+ewcommon sqlUpdates folder 4.1.1.89 and DatabaseUpgrade.xml
+
+
+4.1.1.87 - 18/01/2011
+
+[AG] dbHelper.moveContent - Fixed issues with unwatned cascades and primaries coming out wrong.
+[AG] dbHelper.addBulkRelatedContent - updated for related content functionality.
+[TS] Tested and fixed Log Email functionality within Messaging.Mailer, doesn't look like it had been used for some time and was buggy.
+     Added relationship to activityLog along with an additional XML field to save the instance, also storing either the name of the root node or the id of XML being saved.
+     Added setting to General Config xForm in ewCommon4-5
+     New db upgrade required, scripted and tested on V4-5 needs to be copied to V4 common
+[TS] Removed references to EPDQ functionaility with a view to loading in from a seperate payment provider dll
+[TS] Improved the reliability of the performance monitoring and added log points to calendar to help resolve issues.
+[TS] Cart.AddItems added a new config settings for ClearOnAdd to remove all items from the cart when adding new items.
+[TS] RemoveItem changed to use deleteObject instead of direct SQL delete.
+[TS] Done some work to implement the activity logging reporting
+[TS] DBHelper - ListReports and GetReport
+[TS] admin - Reports Process
+[TS] added functionailty to be able to deploy a new report with an xForm and Stored proceedure, 
+	needs presentation to be finished on reporting pages, and excel download to be tested.
+	needs Populate dropdown on MailFormSubmissions for form type.
+	Expect this functionailty to evolve as new features are required.
+[AG] AdminXforms.xFormContentLocations - added a new rootmode - ChildOnly.
+[AG] Web.ProcessPageXMLForLanguage - when the checks on nodes to be stripped out are made, we account for empty nodes if there are only empty nodes in the current scope (TFS:2643)
+[TS] Added direct SQL call to GetSelectOptions xslt function
+[TS] Quick mod to allow items being added to the cart with a first node that is not (name) for an event the first node is (headline).
+[TS] Cart Small fix to append a "/" on the end of moCartConfig("SecureURL") if nessesary when creating mcPagePath, fix bug with PayPal
+[TS] Cart fix to fix logic around setting config variables when "yes" specified
+[TS] PayPalExpress, adjustments to passing through prices, to cater for VAT rules.
+[AG] Web - Added a public variable mcContentDisposition, which allows the Content-Disposition header to be set programmatically.
+[TS] Web.ContentActions - Small change to allow module behaviours on external components.
+[AG] xmlTools.xslExtensions.GetSelectOptions - added a new query to get cart types
+[AG] DBHelper.GetReport - Updated for extended functionality.
+
+
+16/12/2010 - Tested by building to 4.1.1.82 on DS01 
+            - checked on several sites both before and after db upgrade 
+            - reverted back to 4.1.1.80 on DS01 for work tomorrow features should be in next stable release.
+
+SQL Updates
+/sqlUpdate/4.1.1.83/*.*
+
+
+Requires:
+AdminMenu.xml
+DB Upgrade to enable activity logging. (TS - only done in V45 not tested)
+/xforms/reports
+/tools/export.ashx
+/xforms/paymentProviders/PayPalExpress.xml
+FULL EWCOMMON RELEASE
+
+
+4.1.1.79
+[AG] In the middle of fixing dbhelper.addBulkRelatedContent - if a page has related modules and no related content then no content will be loaded into the modules.
+
+
+4.1.1.77 - buggy
+[TS] Fixed content not coming into modules where contentTypes listed for loading into briefs.
+[TS] Moved the Payment Providers selection handing out into new class called Eonic.Providers.Payment.EonicProvider
+[TS] Implemented new mechanisium for creating payment providers as separate DLL's
+[TS] Moved SavePayment, CartPaymentMethod and to DBHelper from PaymentProviders with re-direct functions in place.
+[TS] DBHelper, created new function for UpdateSellerNotes.
+[TS] Fix @rtype not being added to content relationships since 4.1.1.76
+[AG] stdTools.returnException - Wording change on failback message 
+[TS] Fix to DeleteObject to delete both parent and child content relations when content deleted.
+
+4.1.1.76 - Rolled back to 72 on DS01 - buggy
+[TS] dbhelper - pulled out ContentDataSetToXml from AddDataSetToContent
+[TS] changed ContentDataSetToXml to use XMLDocument rather than XMLDataDocument.
+[TS] removed calling addRelatedContent from AddDataSetToContent, still used for GetContentDetails.
+[TS] dbhelper added addBulkRelatedContent to step through and add the specified levels of related content with minimal DB calls.
+[TS] dbHelper.CleanAuditOrphans - added removal of orphans on related content and location tables
+[AG] dbhelper.addBulkRelatedContent - fix for cRelationType column
+
+DEPENDENCY:
+Eonic.Tools 1.0.0.56
+
+4.1.1.72
+[AG] adminXforms.xFrmEditSubscription - fixed an error with trying to set up default blank groups
+[AG] Admin.adminProcess - added the secondary and tertiary ewCmds to be added to the page cmd
+[AG] xform.evaluateByType - changed the number check to be truly numeric (i.e. account for negatives and not pick up tabs and stuff)
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.54
+
+4.1.1.71 - 29/11/2010
+[AG] xForm - added a private variable _stopHackyLocalPathCheck which prevents a local file additional check that in itself negates the common folder checks - I don't think the additional check is necessary as it's just trying to mollycoddle bad config settings.
+[AG] xForm.load(String) - implemented the above.
+[AG] Messaging.emailer - if sender and from address are the same, then don't add the sender field.
+[AG] Calendar.add - updated to allow a calCmd of yyyymm as an option.
+
+4.1.1.69 - 05/11/10
+[AG] updated the Features to include subscription and membercodes
+ewcommon (4 and 4-5) : /admin/adminmenu.xml
+
+4.1.1.66 - Paramo - 1/11/10
+[AG] dbHelper.logObjectStatusChange - function to log status changes, not used at the mo.
+[AG] Discount.getAvailableDiscounts - updated the retrieval of discounts to check expiry and publish by the day (i.e. 00:00-23:59) and not the time
+
+
+
+4.1.1.63 14/10/2010
+[TS] Small change to GetAjaxXml to pass through moConfig("NonAuthUserID") to moDbhelper 
+[TS] Further adjustment to Mailer workflow to allow for ImagePickers
+[TS] XSL fixes to allow drag and drop on Mailers
+[TS] Using image resize on imagePickers
+[AG] Messaging.emailer - rewrote the message body to accomodate alternate views.  
+[AG] ADminXforms.xFrmUpdateOrder - If shipped is selected and a template is specified in the cart config then an e-mail confirmation is sent.
+[AG] xForm.addDiv - new optional param to add as text not xml.
+[TS] fsHelper.GetFileStream changed permissions used to open filestream.
+[AG] Messaging.emailer - added UTf-8 encoding to the message body
+[AG] Messaging.emailer - by default, all e-mails have a Sender added to the header.
+
+
+Requires:
+MailerLayoutsV4-5.xsl
+Adminv4-5.xsl
+
+
+4.1.1.61 04/10/2010
+[AG] Web.CheckContentVersions - fix when looking for content versions - there may be page content that is added by behaviour/layout that inherently does not have an id and therefore needs to be ignored
+[TS] Mailing List provider - fix to AddMail workflow
+[TS] Find/Search content workflow fixes to redirect to cater for mailing list
+[TS] Related content 1Way / 2 Way fixes
+[AG] Eonic.Providers.Messaging.EonicProvider.Admin.MailingListProcess - fix to the related content add content redirection
+[TS] Web.GetAjaxXml small change to specify user non-logged on edits should use. moConfig("NonAuthUserID")
+[AG] xForm.UpdateInstanceFromRequest - Trimmed the request where required
+[AG] xForm.UpdateInstanceFromRequestOnly - Trimmed the request where required
+[AG] AdminXforms.isSubmittedOther - RelateAdd and RelateFind now add the pgid to the redirect url to keep the page 
+
+Requires 
+CampaignMonitor DLL
+ewcommon4-5:/xsl/Admin/Admin4-5.xsl
+ewcommon4-5:/tools/ajaxContentForm.ashx
+ewcommon4:/tools/ajaxContentForm.ashx
+
+4.1.1.59 29/09/2010
+[TS] Changes to xFrmAddModule to look for Modules in xsl/MailingList for site modules xsl/Mailer still used for modules for email
+[AG] Integration.Directory.Twitter.Post - minor change to fallback for url shortening.
+[TS] CopyContent / EditContentXfrm - small fix when renaming cContentName copy of ***
+[TS] When mailingList ewCmd's stored in session and root page called default to mailingList admin home not site home.
+[TS] Fixes for mailingList Admin Process Flow..
+[TS] AdminProcess - Normal changed the url saved to session to to be originalURL but specified.
+[TS] EditMail / AddMail added more go to processflow logic.
+[TS] AdminProcess - MoveContent Changes to redirect behavior on move to allow for items to be moved between newsletters.
+
+Requires:
+xsl/mailinglist/layoutmanifest.xml
+ewcommon4-5 : /xsl/admin/Admin4-5.xsl
+adminmenu.xml
+[AG] ewcommon4 : /xsl/admin/ewAdminV4_0.xsl
+
+4.1.1.57 - 28/09/2010
+[TS] Modification to GetAdminMenu to pull extra items in local adminMenu file 
+into that specified in web.config
+[TS] Added ReverseItterator Class to Eonic.Tools/Conversions
+[TS] Mod to xFrmWebConfig to it to edit any eonic config section
+[TS] Moved MessagingProvider name to config eonic.mailinglist
+[TS] Changed all references to Skins to Themes
+
+[AG] Promotional Code from External Reference changes:
+[AG]		Cart Private variable promocodeFromExternalRef
+[AG]		Cart.InitializeVariables - added process to read in the cart xml from the db to pick up transitory variables
+[AG]		Cart.InitializeVariables - checks for a request item called promocode
+[AG]		Cart.GetCart - adds the promocode to the cartxml and removes from session when we start saving the cart xml
+[AG]		Cart.notesXform - Additional checks for the external reference code.
+[AG]		Cart.discountsXform - Additional checks for the external reference code.
+[AG]		Discount.CheckDiscounts - Small check to bring in external reference code
+ 
+[AG] xform.AddNote - added a fallback if setting the note as innerxml fails
+[AG] AdminXforms.xFrmDeleteContent - Changed the alert to encode ampersands
+[AG] AdminXforms.xFrmDeletePage - Changed the alert to encode ampersands
+[AG] AdminXforms.xFrmDeleteDirectoryItem - Changed the alert to encode ampersands
+[AG] AdminXforms.xFrmDeletePaymentProvider - Changed the alert to encode ampersands
+
+[TS] Fixes for compiled transform mode.
+[TS] Addition to xslt function getSelectOptions to allow options from external library.
+[TS] Fixed various issues with regard to related content on Content Forms.
+[TS] Ordering related items no longer returns to page.
+[TS] Using enter to submit now works on Content Forms with related items.
+[TS] Source Image Not Found issue solved in code of xslt.resizeImage now returns "/ewcommon/images/awaiting-image-thumbnail.gif"
+
+[TS] INTRODUCED LOCKED DOWN VERSION TO ONLY ALLOW LOCAL DEV (::1) or on hostname *.eonicweb.dev
+	 
+	 NOTE: in eonic.web please update property moLicenceMode to Live when doing a build to live.
+
+[AG] AdminXforms.xFrmEditContent - Added switchable Integrations poster when content is updated (full process incomplete)
+[AG] New Class with Shared method: Invoke and InvokeObjectMethod (TODO: update EW calls to use this)
+[AG] Web.GetRequestVariablesXml - ImportNode at the end incase oPageElmt has been created in a different context
+[AG] Web.CheckLicence - Updated the localhost check to include "127.0.0.1" as well as "::1"
+[AG] AdminXforms.xFrmEditDirectoryItem - Updated it to pick up the ParId bit when adding a user to a group
+[TS] Cart optionsXform shipping method permissions now includes auth and nonAuth groups logic
+[AG] Moved xmlTools.XslExtensions functionality for TruncateString to refer to Tools.Text.TruncateString
+[AG] xForm.processFormParameters - added a new function processFormParameters that allows string replacement/customisation of xform xml before processing using a String.Format {0} style parameter swap out - intended for use by the component, not anywhere else.
+[AG] xForm.load - updated to include xForm.processFormParameters
+[AG] Implemented more of Integration.Directory.Helper
+[AG] PaymentProviders.paySecPay - Added schedule payments for whole payment (not line item based)
+[AG] Added more info to the debug error message for Web.GetSiteStructureXml
+[AG] PaymentProviders.payDirectDebitSecureEmail - added bank validation with PostCodeAnywhere.
+[AG] dbHelper.getDBObjectNameWithBespokeCheck - routine that looks for the dbObjectName prefixed with "b" to indicate a bepoke dbObjectname to use instead.
+[AG] Cart.CartReportsDownload - added a bespoke db object check to the report
+[AG] xForm - moved the procedures for the calculate attribute on bind nodes from addValues ot validate (where other attributes are processed)
+[AG] Cart.CartReportsDownload - updated the date check to look for end times of end date (optionally)
+[AG] adminXforms.xFrmFindRelated - added entity conversion to the content name to stop ampersands killing it.
+[TS] web.returnDocumentFromItem - added comma separated docId's to return a zip file of specified files
+[TS] Changes to Theme selection and editing.
+[TS] Switch to defualt setup creating multiple config files.
+[TS] dbHelper.MoveContent to remember itterateDown and Content location
+[TS] search.GetContentXml caught the getdiscounts if no cart enabled.
+
+
+DEPENDENCIES:
+*** Eonic.Tools 1.0.0.53
+*** Eonic.Cs3rdParty 1.0.1.8
+
+ewcommon4-5 : xsl/xforms/xforms4-5.xsl
+ewcommon4   : /xsl/admin/ewadminV4_0.xsl
+ewcommon4-5 : /xsl/admin/Admin4-5.xsl
+ewcommon4-5 : /xsl/tools/csv.xsl
+ewcommon4-5 : /xsl/tools/excel_2000.xsl
+ewcommon4-5 : /xsl/tools/xml.xsl
+ewcommon4-5 : /tools/export.ashx
+Admin4-5.xsl
+ewAdmin.js
+
+Add ICSharpCode.SharpZipLib to GAC v0.86
+
+4.1.1.54 (Release Candidate)
+[AG] Web.GetFeedXML - updated to account for passing through all contentTypes.
+[AG] Web.CommonActions - not sure if this is a good idea, buit I have a need for common restricted actions that can be called from, say BuildPageXml or GetAjaxXml etc.  This is the repository for said actions.
+[TS] EnumberateFeatures - Added Sync
+[AG] Updated references to Tools.Webrequest in Messaging and Syndication
+
+[TS/AG] Changes made to PermLog.Log and New() - temporary, will need some consolidation.
+
+[AG] Indexer.IndexPage (both methods) to use new Lucene version calls (from Field.Keyword to New Field())
+[AG] Search.IndexQuery reflects latest version of Lucene. New IndexSearcher constructor, search for GetFields as well.
+[AG] Indexer.DoIndex - Updating to pick up indexable meta data.
+[AG] Search - lots of changes to the IndexQuery
+[AG] dbHelper.GetMostPopularSearches - new function
+[AG] Web.GetAjaxXml - updated to get the report above.
+
+[AG] Site Caching - I've enabled site caching for non-membership sites.  Updates in Web.Init and Web.GetSiteStructure
+[AG] AdminXforms.xfrmEditPage - site cache is cleared on submit.
+
+[AG] dbHelper.addRelatedContent  - Will not run if indexing is on and ibIndexRelatedContent is true
+
+[AG} Indexing and Searching changes - in progress
+[TS] Syncronisation XSLT - ResetRelatedByType
+
+[TS] To document indexing changes
+[TS] Small change to include current URL in PasswordReset Xml
+[TS] Messaging.BaseProvider - move out messaging features from admin process and AdminXforms. 
+(Not fully tested yet, don't release to sites with MailingList features !)
+
+[AG] Web.processPolls - added date checks and vote blocking checks.
+[AG] Search.IndexQuery - fix to paging where no paging is set.
+
+[AG] New dbHelper Function : IsAuditedObjectLive
+[AG] AdminXforms.xfrmUserIntegrations changes.
+[AG] Search.IndexQuery - added prefix name search query
+
+[TS] Updates to UserLogon Module Handlers
+[TS] new Membership Module Handler for GetUserContent to get content of a type inserted by the current user.
+[TS] moved CheckContentVersions() to end of getPageXml rather than getContentXml to catch content added by module handlers.
+
+[AG] Xsl Function: Trim  - trims strings
+[AG] Xsl Function: ToTitleCase  - converts strings to Title Case
+[AG] Xsl Function: RegexTest  - Given an input and a pattern, this will test if the pattern matches
+
+[TS] Small change to cart ContactXform to not have the ------ spacer selected as default
+
+DEPENDENCIES 
+	Eonic.Tools 1.0.0.49
+	Lucene.Net 2.9.2.2
+
+4.1.1.50
+[TS] Addition of Countries to xslt:extetnion ew:GetSelectOptions
+[AG] Indexer.DoIndex - Fixes to the error handling
+
+
+4.1.1.49
+[AG] Admin.PollProcess - updates to the report
+
+4.1.1.48
+[AG] Admin.adminProcess - picks up command ManagePollVotes
+[AG] Admin.PollsProcess - handles the administration of Polls.
+[AG] dbHelper.ActivityTypes - new activity type: VoteExcluded
+[AG] Web.GetRequestItemAsInteger - new Function
+[AG] Web.mbSuppressLastPageOverrides - new property to stop lastpage being set after it gets cleared.
+[AG] Admin.adminProcess - added functionality for mbSuppressLastPageOverrides
+[AG] AdminXForms.xFrmEditContent - added functionality for mbSuppressLastPageOverrides
+[TS] Modifications to Admin.GetAdminMenu to load from file
+[TS] Admin.AdminProcess split ewCmd on "." to allow for structured commands
+[TS] Admin.AdminProcess WebSettings changed to support new xFrmWebConfig which loads from files
+[TS] AdminXForms new xFrmWebConfig to load from files.
+[TS] XMLtools.XSLT extensions, added GetSelectOptions returns an xform option node set from a range of queries supplied.
+
+
+Dependencies:
+Eonic.Tools 4.1.1.47
+V4
+/ewcommon/xsl/admin/ewAdminV4_0.xsl
+/ewcommon/xsl/tools/ewcommonFunctions.xsl
+/ewcommon/xsl/tools/excel_2000.xsl
+ewcommon/css/admin/admin.css
+ewcommon/css/admin/adminMode.css
+ewcommon/xforms/config/*
+ewcommon/xsl/xforms/xforms4-5.xsl
+
+V45
+/ewcommon/xsl/admin/AdminV4-5.xsl
+/ewcommon/xsl/tools/ewcommonFunctions.xsl
+/ewcommon/xsl/tools/excel_2000.xsl
+ewcommon/css/admin/admin.css
+ewcommon/css/admin/admin4-5.css
+ewcommon/css/admin/adminMode.css
+ewcommon/xforms/config/*
+ewcommon/xsl/xforms/xforms4-5.xsl
+ewcommon/xsl/tools/functions4-5.xsl
+
+4.1.1.46
+[TS] Web.GetContentStructure Skip Cache Mode Functionality if Session = Nothing i.e. being called from SOAP
+		This means that the indexer should now work from a scheduled soap call.
+[AG] Web.ValidatedOutputXml - new property, can be used to check the request for XML against a block list in the config file.
+[AG] Web.IsCurrentIPAddressInList - new function to see if the current IP address is in a specified list of IPs. Uses Eonic.Tools.Text.IsIPAddressInList
+[AG] Web.GetFeedXML(string,boolean) - deprecated, see below.
+[AG] Web.GetFeedXML(string,boolean,integer,boolean,string,string) - expanded functionality for feeds including page ids, mime Types, xsl folder locations
+[AG] Web.BuildFeedXML(string,boolean) - deprecated, see below.
+[AG] Web.BuildFeedXML(string,boolean,integer,boolean) - expanded functionality for feeds including dynamic xsl retrieval, plus page ids, mime Types, xsl folder locations
+[TS] SelectSkin in web settings	
+[AG] dbHelper.getRelationsByContentId - new function that gets the relations of a given content in a format similar to getLocationsByContentId
+[AG] dbHelper.checkContentLocationsInCurrentMenu - new function that checks if a content node could be located in any of the menuitem nodes of the current menu
+[AG] Web.GetContentDetailXml - amended the content permission check to use dbHelper.checkContentLocationsInCurrentMenu
+[AG] removed some old commented code from Web (stuff that has been moved to Search)
+[AG] removed some old commented code from externalsynchronisation.tidyXhtml
+[AG] removed reference to interop.cisso
+[AG] removed reference to interop.eftidyhtml
+[TS] Closed images held open when listing folders in admin
+
+[AG] In Progress - New Class Eonic.Integration - moved into a folder sctructure for ease of development
+[AG] In Progress - added adminxforms.xfrmUserIntegrations and updated admin.adminprocess will probably rename
+
+[TS] Web. created a public moTransform object so can be reused for multiple page builds as in indexing.
+[TS] Web.ReturnPageHTML changed to use moTransform if available
+[TS] Web.Close modified to dispose of moTransform if created.
+
+[TS] Indexer.DoIndex added more error handling to catch transform errors on page indexes
+[TS] Indexer.DoIndex limited indexing of ContentDetail to default to only "NewsArticle,Event,Product,Contact,Document,Job"
+[TS] Indexer.DoIndex config.eonic.web <add key="SiteSearchIndexDetailTypes" value=""/> overides above settings.
+[TS] Indexer.New default values for index folders no need to set in config.
+[TS] Indexer.New Index Read and Write Folders created if they don't exist.
+[TS] Indexer. Added Save Page to save indexed version of the pages for dev review.
+[TS] Indexer. new web.config value of SiteSearchDebug=on to indicate saving index pages for review
+
+[AG] Web.AddResponse - new method that adds a simple Response node to the page XML under the Responses node.
+
+Dependencies:
+-------------
+Reliant on Eonic.Tools 1.0.0.45
+
+ewcommonV4_5/xsl/tools/Functions4-5.xsl
+ewcommonV4/xsl/tools/ewCommonFunctions.xsl
+
+ 4.1.1.44 - 24 May 2010
+ [TS]	Fix to Discounts to allow multiple buy 1 get 1 free offers to work in a single order.
+ [NB] xform.addOptionsFromSqlDataReader - Changed so name values change &amp; into &'s but not the unseen value
+ [NB] cart.CartReportsDownload - Added & handling into the replace function to remove &amp;'s
+ [NB] Amended Discount.getAvailableDiscounts to pull in available NonAuth Discounts if the user id is 0 (TS this didn't work, so re-wrote it!!)
+ [TS] Amended Discount.getAvailableDiscounts to pull in available NonAuth Discounts if the user id is 0 or Auth User Discounts if users is logged on.
+ [TS] Added Eonic.Web.Calendar.Module.Add, and made adjustments to how the old calender is loaded to better reuse code.
+ !!! Please test calendar functions in Brokerage and Elsewhere.
+ [TS] Cart.Apply changed the process flow on Update to go to Currency which in turn calls AddBehaviour
+ [TS] Fix to Indexer to fix not indexing pages with no Content details.
+ [AG] Web.GetAjaxXML - Added Delete as a command.
+ [AG] Web.GetAjaxXML - Edit and Delete commands add the menu structure to the xml being returned.
+ [AG] Web.GetAjaxXML - now calls ProcessPageForLanguage to incorporate multi-language features.
+ [TS] Fixes to Admin Ecommerce Order Download form
+ [TS] Modifications to Build Feed XML to ensure only items found on current sitetree are returned.
+ [TS] Fixed Delivery Method form to say "expire date" not "date date"
+ [TS] Fixed issue with deleting folders
+ [AG] PaymentProviders.payProTx - updated the URLs to the SagePay standards, as the proTx versions will be discontinued.
+ [TS] Upgraded adminXforms.xfrmAddModule to scan search,cart,quote,membership,subscriptions folders for PageLayout.xml
+ [TS] Added Eonic.Web.Search.Modules method GetResults.
+ [AG] Web.mcBehaviourEditPageCommand - Added this value to allow bespoke behaviour for forcing the page flow on editting a page.
+ [AG] Admin.adminprocess - Updated the EditPage process to handle bespoke flow better, although much of this was put in place to address a larger issue that was probably addresses last Oct 09.
+ [AG] Web.Membership.Alerts.AlertItem - Changed the Private variables to be Protected Friend so as to pass to overriding/derivative classes.
+ [AG] Admin.adminProcess - Added a check after SupplimentalProcess to see if we need to go back to GoToProcessFlow
+ [AG] Admin.adminProcess - Migrated the commented out editCourse call to Wellards
+ [AG] AdminXforms.xFrmEditCourse - Migrated the commented out xFrmEditCourse call to Wellards
+ 
+ Dependencies:
+ Nath helpfully didn't mention that this release requires Eonic.Tools 1.0.0.43! - now 44
+ 
+ 
+ Dependencies from EW 4.1.1.41 - 12 May 2010
+ /ewcommon/sqlUpdates/4.1.1.40/* + databaseupgrade file
+ /ewcommon/tools/export.ashx
+ /ewcommon/xsl/tools/csv.xsl
+ /ewcommon/xsl/tools/xml.xsl
+
+ 4.1.1.41 - 07 Apr 2010
+ [TS] Indexer Modifications to index publish and updated dates.
+ [NB] Warning - watch out with Web.vb declaring oXform as an xForm - it thinks this is meant to be a Web.xForm which is causing override issues with Content Actions on websites like Next Step.
+ [NB] xForm.ProcessRepeats - Added a catch to stop the last repeated element from removing it's binds / instance
+ [AG] Feedhandler - changes in progress
+ [AG] Updated SetObjectInstance - updating audit records will remove any insert nodes (they don't need updating) as blank ones break db constraints.
+ [AG] Updated SetObjectInstance - from the above fix, I've had to add a hard coding fix for ContentVersion objects as well.
+ [AG] AdminXforms.xfrmFeedItem updates
+ [TS] PaymentProviders.getSecPayAddress modified to spilt street by commas and insert into addr1 and addr2
+ [TS] ExternalSync.xslt modified to removeRelationByRef to ignore empty Fkeys
+ [TS] Added the ability to add "showRelated" attribute on the contentBrief to specifiy a comma seperated list of content types to show related of.
+ [TS] Added response StatusCodes for returning 404 errors etc with customer error pages. 
+ [NB] Search.IndexQuery - Added in a catch to stop empty search strings killing the process
+ [NB] Discount.New - Added more catches incase currency is not set in config
+ [TS] LocateContent xform changed to handle position on the related node.
+ [TS] ContentUpgrade Fixes to allow better error handling when XSLT upgrade errors
+ [TS] XsltExtensions - Added 3 new functions ContentQuery, DeleteContent, UpdatePositions
+ [AG] Admin.GetXformEditor - Updated for Eonic.Xform
+ [AG] AdminXforms.XformEditor.New - Updated for Eonic.Xform
+ [TS] Added OrderDownload facility to the eCommerce Reports page.
+ [AG] AdminXforms.xfrmEditPage - changed the bit that brings in an existing instance to use SetObjectInstance from Combine_Nodes
+ [AG] Moved Admin.GetXformEditor to Web.GetXformEditor
+ [AG] Added a public variable to Admin - moXformEditor
+ [AG] Completely rewritten Admin.XFormEditor
+ [AG] Updated Admin.EditXFormProcess
+ [AG] xForm.LoadInstanceFromInnerXml - New process because Instance.InnerXml = something doesn't always work.
+ [AG] Messaging.emailerMultiUsers - corrected a typo with getting pickup hosts from the web.config
+ [AG] Web.ProcessCalendars - Changed the reference of oECal to moCalendar so that errors can be picked up.
+ [AG] Calendar.apply - Changed the loading in of dates for next and previous months to not be quite so unbelieveably crap and flimsy
+ 
+
+ REQUIRES Eonic.Tools 1.0.0.40
+ 
+ Non-dependency:
+ /ewcommon/App_Code/services.vb (added a self-contained function)
+ /ewcommon/tools/excel.ashx
+ /ewcommon/xsl/tools/excel_2000.xsl
+ /ewcommon/xsl/admin/ewAdminV4_0.xsl
+
+ 4.1.1.39
+ [TS] Small fix to shipping permissions
+
+ 4.1.1.38
+ [AG] Added Web.HasSession property to return the state of the moSession object
+ [AG] Updated Discount.New to account for HasSession (above).
+ [NB] Discount.vb - getAvailableDiscounts - Changed logic in the XPaths to handle all content apart from that within the Discounts node, not just the Contents node
+ [NB] xForm.Load(Filepath) - Adding way to handle loading in saved instances
+ [NB] xForm.Load(XmlElement, Optional Boolean) - Added capacity to handle src nodes, and therefore load in an xform from a file
+ [TS] Sync.AddContentRelationByRef Changed to return the id of the content related to
+ [AG] Setup.DoChange - Updated to use GetObjectInstance
+ [AG] xmlTools.tidyXhtmlFrag - Added optional 3rd param, bEncloseText, which can be set to false to stop data coming back wrapped in <p> blocks.
+ [AG] xmlTools.tidyXhtmlFrag - If we're searching for <body> tags, strip the whitespace frmo the extracted text.
+ [AG] stdTools.exceptionReport - corrected typo
+ [AG] Web.GetRequestVariablesXml - added assembly codebase and referenced assemblies to the requestvariables
+ [AG] Web.InitialiseGlobal - added the retrieval of the above info info to be stored in the cache objects as they only need to be determined once per application start
+ [AG] Property Web.Generator (Overrideable) - Returns the executing assembly
+ [AG] Property Web.ReferencedAssemblies (Overrideable) - Returns the executing assemblies referenced assemblies
+ [AG] Web - New module-level variables: mcPageLanguage and mcPreferredLanguage.  
+ [AG] Web.SetPageLanguage - new sub.  Sets the language and preferred language for the user
+ [AG] Cart.InitializeVariables - amended the change list in 4.1.1.34 to only set the page if the user is logged on AND the requested page is greater than 0.
+ [AG] xForm.evaluateByType - Corrected an error where fileUpload getting set as required always returned "no file selected"
+ [TS] Setup - V3Upgrade - included related contact addresses to users.
+ [AG] AdminXforms.xFrmDirMemberships - got this working for EonicWeb (previously added in a Wellards specific way)
+ [AG] New Web module vars: mcClientCommonFolder, mcEWCommonFolder, maCommonFolders
+ [AG] Web.InitialiseGlobal : sets the variables above.
+ [AG] xform.load(String) : updated to make less reliant on hitting exceptions for returning false (which is a memory/resource fail)
+ [AG] New function xform.load(String, String()): checks a filepath and an array of prefixed folders (e.g. ewcommon)
+ [AG] Updated the following references to use the new xform.load:
+			AdminXforms.xFrmUserLogon
+			ExternalSynchronistation.ImportItems
+			AdminXforms.xFrmPasswordReminder (now it can get it from common if necessary, also removed project path)
+			AdminXforms.xFrmEditPage
+			AdminXforms.xFrmEditContent
+			AdminXforms.xFrmEditDirectoryItem (also removed project path)
+			AdminXforms.xFrmActivationCode
+			AdminXforms.xFrmPaymentProvider (extended to use local, rather than just common)
+			AdminXforms.xFrmDiscountRule
+			AdminXforms.xFrmEditDirectoryContact
+			AdminXforms.xFrmSchedulerItem
+			AdminXforms.xFrmFeedItem
+			AdminXforms.xFrmEditSubscription
+			AdminXforms.xFrmMemberCodeset
+			AdminXforms.xFrmMemberCodeGenerator
+[TS] Set default new order behaviour to "MoveBottom"
+[TS] SET ARITHABORT ON SELECT added to GetPageContentFromSelect
+[TS] getLocationsByContentId changed to allow return locations into existing contentNode to show content name when locating content
+[AG] Web.GetPageContentFromSelect - Fixed an issue with ContentGrabber not working when logged on.	
+[TS] Fixed various issues with MailManager content entry workflow.
+[TS] Added AddModule functionality
+[TS] GetContentXml now returns additional attributes on the Content node.	
+[TS] Xform.load changed to raise exception on error rather than return nothing.
+[TS] Modified EditContact in Membership to pull address select1 from shipping locations if select1 class=billing
+[TS] Update Existing User address, small fix to handle multiple updates.
+[TS] Tidy GetPaymentMethod to limit the call to ReturnRepeatPayments only when specified in settings
+[AG] Admin.Command - New readonly property which cleans up and passes out mcEwCmd.
+[AG] Web.ProcessPageXMLForLanguage - Looks for nodes in the page xml that have an xml:lang attribute and tries to work out which nodes to strip out or keep based on the user's preference and the page preference.
+[AG] Web.GetPageXML - calls ProcessPageXMLForLanguage 
+[TS] PaymentProviders - Repeat confimation - remove principle class from cancel button.
+[TS] PaymentProviders - ProTx / SecPay / ccForm modified to display test transaction mode clearly.
+[TS] PaymentProviders - PremiumCredit - Fixed transaction SellerNotes Reporting, and added test mode alert to form.
+[TS] AdminXforms . Send Newsletter, added group information to the activity log
+
+[TS] .Setup fixes to DatabaseUpgrade2 to allow full upgrades to work from any version
+[TS] .Setup moved the declaration of the context objects to New(), and allowed for Context to be passed in on new(context)
+[TS] .Web moved the declaration of the context objects to New(), and allowed for Context to be passed in on new(context)
+[TS] .dbHelper moved the declaration of the context objects to New(), and allowed for Context to be passed in on new(context)
+[TS] .AdminXforms moved the declaration of the context objects to New(), and allowed for Context to be passed in on new(context)
+[TS] .xforms moved the declaration of the context objects to New(), and allowed for Context to be passed in on new(context)
+
+[AG] Updated various alerts in xform, adminxform and dbhelper - search for span class=""msg-
+
+[TS] ExternalSyncronisation - Minor fixes for error handling on imports
+[TS] .dbhelper getObjectInstance, if using tidy then return numberic entity references is not switched on.
+[TS] Small change to SchedulerProcess to get the site id from the scheduler setting if supplied.
+[TS] Adding PayPal Pro - incomplete.
+[TS] Adding PayPal Express Checkout Payment Method
+[TS] Changes to SearchRelated forms. 
+[TS] XmlTools - Process when loading full file now trims any whitespace out of the start and end of the xslt string
+[TS] DBHelper - New Function UpdatePagePosition
+[TS] Admin - Added - UpdatePosition process step
+[TS] ExternalSyncronisation - Added - RemoveLocationsWithRef
+[TS] PerfLog.vb - connectionStrng from web.Config
+[TS] DBhelper - added optional bAllowRecursion to AddDataSetToContent
+[TS] Discount GetDiscountXml not recursing related on AddDataSetToContent 
+[TS] Consolidated so getAvailableDiscounts is only call once after all content is loaded and looks at all content nodes
+[TS] getDiscountXML modified to only return content where the content AND discount rule are active.
+[TS] Fix to PayPalExpress for multiple items in cart.
+[TS] Web.ContentActions - Add the ability of Content/@contentFile to load in content from a file
+[TS] Web.ContentActions - Add Content/@contentFile='xform' now process xforms
+[TS] Tools.Xml.FirstElement to return the first element ingoring whitespace
+[TS] xForms now users Eonic.Tools.Xml.getNsMgrRecursive to add a NS prefix of ews2: for any namespace below the root level, 
+		this allows namspaces to referenced in bindpaths by ews2:nodename
+[NB] getAvailableDiscounts.Discount.vb - 
+        Retrieves Product Types from Web.Config
+        Searches within Page Xml For Content that matches those Product Types
+        Creates a comma separated list of Content Ids
+        If this list is empty, run old SQL code
+        Else run modified SQL call, to only get discount information for the products on the list (thus only those on the current page)
+[NB] applyDiscountsToPriceXml.Discount.vb - During the price modifications, added IsNumber to account for Text prices being added in (e.g. £200 - £300)
+[NB] addPageDetailLinksToStructure.Web.vb - Modified SQL variables to be more secure for the comma separated list used for the IN statement
+[AG] Web.GetContentDetailXml - rewrote the code that tries to put the Content node in another Content before transferring it back. 
+[AG] Web.GetBriefDetailXml - ditto the above
+[TS] Added BespokeActions to ContentActions to allow for overloads.
+[TS] Added tblCartShippingPermissions table and features associated to allow to set permissions on user groups
+[TS] updateInstanceFromRequest changed to use firstElement when inserting a validation error
+[TS] Various performance improvements to Discounts.
+[AG] Feedhandler.GetFeedItems - by adding an attribute of htmlTransform to a node, the feed handler will explicitly try to convert it to XML/HTML
+
+---- ---------------------------------			
+ THIS VERSION DEPENDS ON:
+-------------------------------------
+cs3rdParty 1.0.1.6 - New PayPal References
+Eonic.Tools 1.0.0.38 - Xml.convertEntitiesToCode
+
+-------------------------------------
+ THIS VERSION DELIVERS FEATURES FOR:
+-------------------------------------
+[TS] added the ablity to populate the addresses dropdown from shipping locations when user is editing address			
+[TS] PayPal ExpressCheckout Payment Method		
+			
+ DEPENDENCIES:
+ ewcommon: /xsl/Admin/ewAdminV4_0.xsl
+ ewcommon: /xsl/xforms/xformv4_0.xsl
+ number of new features available in ewCommon4-5
+ ewcommon: /services.vb
+ ewcommon: /setup/default.ashx
+
+
+
+4.1.1.34 - 05/11/2009 (Wellards only)
+[AG] dbHelper.clearStructureCache - pulled in the code from Wellards to clear site cache if being used.  Checks for the existence of tblxmlcache
+[AG] Cart.InitializeVariables - If retrieving a first time secure site cart for a logged on user, set the page id myWeb.mnPageId
+
+4.1.1.33 - 05/11/2009
+ [TS] Cart.PickContactXform made Overridable 
+ [TS] Cart.optionsXform made Overridable 
+ [TS] Cart allowed moPay - PaymentProviders to be set at cart level
+ [TS] Mods to PaySecPay to allow 2 Secpay Settings profiles dependant on access rights
+ [TS] Mods to set AllowSavePayment to be set in the SecPay Settings
+ [TS] web.addPageDetailLinksToStructure - change to include publish and update dates
+ [AG] Updated MapPath("") calls to be MapPath("/")  this affects several classes, best found using a Find in Files for the string.
+ [AG] Minor fix to Cart.Subscriptions.AddUserSubscriptions to reload the menu and page id if a sub is processed.
+ [TS] Cart.ContactXform change the select from countries to search for field from entire form.
+
+4.1.1.32 - 30/10/2009
+[AG] dbHelper.moveDirectoryRelations - was saving relationships round the wrong way.
+[AG] New Web module variable: mbIsUsingHTTPS - Is true when the site is being viewed over HTTPS
+[AG] New config variable: OverrideBaseUrlWithSecureSiteForHTTPS - This is for the rare case of a website using itself as an HTTPS site with a different domain address - e.g. http://www.wellards.co.uk and https://wellards.co.uk
+                          If this is on and the site is being viewed over HTTPS then the BaseURL will use the Secure site URL instead.
+[AG] Web.initialiseVariables:  Added in functionality for the above.  
+[AG] Setup.ContentMigration - made lots of changes to the functions to pick up Page (COntentStructure) updates
+[AG] Setup.ContentMigration.DoChange - updated to explicitly get audit fields to get round a problem where saveInstance needs non null insert date field.                        
+[NB] AdminXForms.vb - xFrmEditPage() New Optional Parameter - cXml, for using custom XML, specified by name, default set to "Page"
+[NB] AdminXForms.vb - xFrmEditPage() Additional processing to handle RelatedContent nodes if found (Load / Saving), unused on all sites but Trevor Mottram currently
+[NB] xForm.vb - addValues() Elements with class="generateUniqueID" set a time based uniqueID as their value, to be used for Poll options
+[NB] Web.vb - contentActions() Adding edits to incorporate the polling needs {12-10-2009}
+[TS] adminProcess - Changes to return to Advanced/PageSettings after editing content
+[NB] xForm.vb - processRepeats() - Repeat nodes now assign themselves with an extra class of "repeated", this stops processRepeats from being able to reprocess them if called again later during the page building process.
+[AG] Replaced all calls to dbo.fxn_SearchXML with a native SQL xml.exist() function, in the following subs:
+		- Quote.apply()
+		- Search.XPathQuery()
+		- Web.getSearchXml()
+[AG] xForm.updateInstanceFromRequest() - for fileUpload, on uploading a file the path is stored in a session in validation doesn't get completed.
+[AG] xForm.updateInstanceFromRequest() - for fileUpload, the bind can now have 'timeStamp="true"' which will add a timestamp to the filename.
+[AG] xForm.validate() - if fileUpload session variable is stored and valid is true then the session variable gets cleared.
+[AG] Cart.contactXform - Have made the "holy large statement batman" a little less reliant on the XML nodes that it's looking for.
+[TS] Search - Xpath Search chnages to do XQuery search instead of bespoke search COM object
+[TS] Search - Allowed for the overloading of a bespoke search method.
+[TS] SaveInstance - Change to retore entities to chars on saving when no 'Xml' in feildname
+[TS] Web.getSearchXml Commented out as I believe this is no longer called from anywhere but has been replaced by stuff in search.vb
+[NB] AdminXforms.xfrmEditContent() - Changed the related content redirect (on submit) to work outside of the content id check (thus allows for it to work for edit as well as the previously only working add). Also removed unnecessary variable clearing.
+[TS] Cart OptionsXform - Fixed not checking delivery location.
+[AG] AdminXforms.xFrmResetAccount() - Made more robust and less prone to falling over when duff data is entered.
+[AG] FSHelper.checkCommonFilePath - New function to check a local path against ewcommon	
+[AG] FSHelper.checkLeadingSlash - New function. checks a string for a leading slash, optionally adding or removing it.
+[TS] Cart xFrmOptions - Terms and Conditions don't display any tickbox if no settings in config.
+[NB] DBHelper.logActivity() - Added a new field for nOtherId to be passed in, original method now calls this with 0 as it's nOtherId
+[TS] Fixed error when passing a path of "/" and logged in not redirecting to "AuthenticatedRootPageId"
+[AG] web.contentactions() - added poll hanlding
+[AG] web.processpolls - added poll handling.
+[AG] AdminXforms.xfrmEditContent() - Fixed the redirection issues associated with Adding and Editting related content.
+
+Dependencies: /ewcommon/xsl/email/passwordreset.xml
+Note the replacement of dbo.fxn_SearchXML now means that for these functions to work EW needs to use SQL 2005 or 2008.
+
+REQUIRES DB UPGRADE !! 4.1.1.31                  
+
+
+4.1.1.30 - 16-Sep-09
+[NB] Messaging.vb - Altered emailer to close the email session after
+[NB] Messaging.vb - Added deleteAttachment to clean up Attachments (since the delete method in add never worked)
+[NB] Messaging.vb - Altered addAttachment, made deleteAfterAttach Optional as it is currently not used. If commented out section is to be removed then consider cleaning this param out? 
+[TS] ExternalSyncronisation.vb - Fixed Import items for returning no results.
+[TS] PaymentProviders.vb PaySecPay - small fix to allow payment method to be save when redirecting to 3DSecure
+[TS] PaymentProviders.vb PayDirectDebitSecureEmail - Added
+[TS] Messaging.vb - added IsHTML property
+[TS] Import Objects - added the ability to handle content relationships too.
+[TS] Import Objects - added the ability to skip items that don't already exist.
+[AG] Cart.updateTotals - Fixed the issue where Vat wasn't being caluclated for options with prices.
+
+4.1.1.29 - 26-Aug-09
+[NB] Messaging.vb - Added emailerPostToHTMLForm, takes infomation from a modified emailer xform and submits to an HTML Post
+[TS] Changes to allow email forms to process repeat elements.
+[TS] Xform.Load combined logic for oNode and oElmt overload and added with repeats overload
+[TS] Moved xForm handling from LayoutActions to ContentActions
+[TS] Xform.Load, added process repeats boolean and functionality to save the instance for processing.
+[TS] Search, changed paths for index directory.
+[TS] Indexer, changed to pull all data including extract from meta tags generated by search/cleanhtml.xsl
+[TS] Indexer, Enabled Standard NOINDEX and NOFOLLOW tags (NoFollow) will not index PageContent.
+
+4.1.1.28 - 18-Aug-09
+[NB] - DBHElper - importObjects - Now can read in XSL that allows for products not included to be deleted.
+	DeleteNonEntries[@enabled='true'] has to be turned on the XSL along with a node for cDefiningField (see comments in code)
+	Else importObjects behaves as normal.
+[AG] Alerts.CurrentAlerts - Made the point where the alert checks to see if it should send the e-mail look specifically for Content nodes.
+[AG] Web.GetPageContentFromSelect - Additional parameter oContentsNode to load contents into something other than the page.
+[AG] Web.GetPageContentFromSelect - Additional parameter cAdditionalJoins, which allows for extra tables to be added to SQl statement if the criteria needs it
+[AG] dbHelper.CommitLogToDB - made into a function that returns the key of the log item inserted
+[AG] Implemented Eonic.Syndication
+[AG] Admin.adminProcess - under AddContent, this picks up relationships for contentParId being passed through as with ajax calls.
+[AG] Messaging.emailer - fixed issues with CC and BCC for one person being put into the To field instead.
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.35
+
+IS DEPENDED ON BY:
+/ewcommon/App_Code/services.vb
+
+4.1.1.27 - 10-Aug-09
+
+[NB] Discount -
+		Discount_CheapestFree - Fixed a couple of issues in the logic that allowed either too many free items, or none at all
+		applyDiscountsToPriceXml - Added for getAvailableDiscounts to call, to add Discounts to the xml
+[TS] dateAdd added to XSLT functions
+[AG] Virtual MapPath - In order to allow browsing above the root tree in IIS7, I've updated 
+     the following references where it seems possible that this situation might crop up.
+     
+     Search.New
+     AdminXforms.FileList
+     xForm.updateInstanceFromRequest
+     Messaging.emailerWithXmlAttachment
+     FSHelper.CopyFile
+   
+[AG] XmlTools.XslExtensions.ResizeImage - Added a NoStretch parameter to the function, added backward comp with existing functions.
+[AG] xForm.evaluateByType - added a parameter that looks for the object being required in order to stop non-required fileUploads being flagged up.
+[AG] dbHelper.getContentFromContentGrabber - Made overrideable
+[AG] xmlTools.TruncateString - truncate a string to the last whole word before a given length.
+
+4.1.1.24
+[AG] - Web - new module variable: mcOriginalURL, see below.
+[AG] - Replaced all project references to moRequest.ServerVariables("HTTP_X_REWRITE_URL") with mcOriginalURL
+
+4.1.1.23
+[AG] AdminXform.xFormContentLocations.ProcessSelects - additional functionality
+[AG] xForm.addSelect - removed the facility to add a choices node by default
+[AG] AdminXform.xFrmPagePermissions - made the schemas involved configurable through config setting (AdminPagePermissionSchemas)
+[AG] AdminXform.xFrmPageRights - made the schemas involved configurable through config setting (AdminPageRightSchemas)
+[AG] AdminXform.xFrmPageRights - Changed the behaviour for removing rights - it now removes permissions for that DirItem, rather than Setting their permission to Denied, which wasn't how Permissions page worked.
+[NB] PaymentProviders.getPaymentMethods - Added support to update payment method chosen if 'back' command is issued on the cart
+	(thus allowing the user to select a new payment type, this already worked for Premium credit, however didn't for other payment methods)
+[TS] Numberous changes to how discounts information is output to the screen - Don't publish the component till changes made to xsl for nunes
+[AG] DbHelper.AddDataSetToContent - Added a depth check to the routine that optionally added related content to brief content recursively - by default the depth is 1, but can be overridden with a config setting "ShowRelatedBriefDepth"
+[AG] AdminXform.xfrmWebSettings - Added a couple of new settings.
+[TS] Changes to Premium Credit for fixes
+[TS] added moCartConfig("FullfillmentDateXpath") to allow us to set a fullfillment date for payment providers from the notes XML
+[TS] Cart Quit added request option redirect=false if we are not redirecting.
+[AG] dbHelper.RelatedContentSearch - Optimised it into this century.  Shockingly slack Db routines and memory suckage going on.
+[AG] fsHelper - added two shared functions URLToPath and PathToURL which are backslash replacement routines.
+[AG] xForm.updateImageElement - Added the facility for creating unique filenames if an existing one exists.
+[AG] xForm.updateImageElement - Ignore requests that don't post a file.
+[AG] xForm.updateImageElement - Checks for duplicates bind elements (say, to brief and detail) and updates them to prevent multiple uploads of the same file.
+[AG] AdminXforms.xFrmEditContent - added a node to indicate the status before it changes (corrected version control behaviour when publishing from pending to live)
+[AG] dbHelper.contentVersioning - corrected version control behaviour when publishing from pending to live
+[AG] AdminXforms.xFrmEditContent - added the facility to redirect post submit to another command (e.g. AwaitingApproval) by passing thought ewRedirCmd to the request.
+[AG] DbHelper.AddDataSetToContent - Added a proviso to always look at going down the related contrent tree if in ContentDetail (works in conjunction with the recursion limitation)
+[AG] Admin.VersionControlProcess - moved the gettign pending content into dbhelper
+[AG] DBHelper.getPendingContent - see above
+[AG] Web.initialiseGlobal - moved some global variables from initialiseVariables.
+[AG] Web.GetAjaxXML - forced a permission in order to pick up contentdetail post form submission.
+[AG] Web.GetContentDetailXml - added an attribute of status to content nodes
+[AG] Web.GetContentBriefXml - added an attribute of status to content nodes
+[AG] Updated all calls to Eonic.Tools.Security.Impersonate.ImpersonateValidUser to include the AdminGroup
+
+
+DEPENDENCIES:
+	/ewcommon/xsl/Admin/ewAdminV4_0.xsl
+
+===============================================================================
+	RELEASED TO LIVE 
+===============================================================================
+4.1.1.22 - 03/07/2009
+[AG] xmlTools.xsltExtensions.datediff - Updated to differentiate between itself and Microsoft.VisualBasic.DateDiff!
+[TS] setup.databaseUpgrade2 - General Fixes
+[TS] added cCampaignCodes to tblCartOrder - it saves any google codes if present to cart for tracking.
+[TS] changes to authentication on setup to allow users in AdminGroup, not just Domain Admins by default.
+
+
+4.1.1.21 - 01/07/2009
+[AG] Web.GetAjaxXml - if Edit is being called and content is orphan, then permissions are checked against the definitive parent
+[AG] Web.CheckContentVersions - New function - check Content Nodes in the XMl and replaces them with later/pending versions if applicable.
+[AG] dbHelper.getUnorphanedAncestor - given orphan related content, this will recurse until it finds a parent related content with a page id 
+[AG] dbHelper.addRelatedContent - adjusted to maintain a list of nodes that are its ancestors, avoiding recursion.
+[AG] dbHelper.AddDataSetToContent - adjusted for the point above
+[AG] dbHelper.AddDataSetToContent - Added a config value ShowRelatedBriefContentTypes which specifies content types that will load related content into the XmlBrief version of that content item
+[AG] dbHelper.insertContentRelation - Added a parameter bHaltRecursion to stop specific cases of recursion.  Also rewrote the part that handles 1 way orphans.
+[TS] cart OptionsXForm - Moved getPaymentMethods into Payment Providers - adding payment options from PremiumCredit
+[AG] dbHelper.legacyRedirection - Fix where the path was being doubled up if it didn't have a trailing /
+[AG] Web.GetAjaxXML - Tidied up the permissions check (calling in a common function from dbhelper
+[AG] Web.GetAjaxXML - Passes the permissions check through to a dbhelper variable
+[AG] dbHelper.CanPublish - Added the shared function
+[AG] dbHelper.CanAddUpdate - Added the shared function
+[AG] dbHelper.setObjectInstance - Amended the addition of new Content to run through contentVersioning as well.
+[AG] dbHelper.contentVersioning - Amended to handle Pending content and permissions checks
+[AG] Cart.ListOrders - Updated to only return the current page of results
+[AG] dbHelper.AddDataSetToContent - moved some code into a separate function SimpleTidyContentNode
+[AG] dbHelper.SimpleTidyContentNode - new function
+[AG] Web.GetStandardFilterSQLForContent - new function to return a standard filter for getting live content, with version control taken into account.
+[AG] Updated all Web content grabbing functions to use the function above.
+[AG] Admin.VersionControlProcess - new function.
+[TS] Cart.AddItem - added nPrice to overide price
+[TS] Setup - numberous fixes
+[TS] Cart.EmptyCart - Added function
+[TS] Cart Settings - EmailReceipts on/off (default on).
+[TS] Cart SavePayment - Blanked Out CV2.
+[TS] Cart optionsXform - will not adjust the form title when load form from file.
+[AG] xmlTools.xsltExtensions.datediff - new function
+[TS] Cart.optionsXform - adds payment methods to empty select1[@ref='cPaymentMethod'] if found otherwise it adds it
+[TS] Cart.apply added code to ensure we delete an existing cart xml before we add a new one.
+[AG] Web.GetAjaxXML - Added call to Web.CheckContentVersions
+[TS] XSLT functions - Resize Image - performance improvement.
+[TS] ExternalSyncronisation - Modified deleteItems to check for missing Frefs on the syncronising db and Delete local records.
+[TS] Soap Error Handling - Eonic Tools
+[AG] AdminXforms.xFrmEditContent - Corrected the log value when content is editted to be logged as ContentEdited and not ContentAdded.
+[AG] Added global variable gbIPLogging from config value IPLogging. 
+[AG] dbHelper.CommitLogtoDB - updated to optionally track IP addresses. Requires a DB upgrade.
+[AG] dbHelper.logActivity - updated to optionally track IP addresses. Requires a DB upgrade.
+[AG] xform.addBind - extended the function to accept constraint parameters
+[AG] AdminXform.xFormContentLocations - New Class
+[AG] AdminXform.xFormContentLocations.xFormContentLocationsSelect - New Class
+[TS] dbHelper moved GetHashTable to Tools.database
+[TS] Web Added GetFeedXml and GetBuildXml requires ewcommon/feeds and ewcommon/xsl/feeds - base.ashx?contentType=Garment&showRelated=yes
+[AG] AdminXforms.xFrmEditContent - Locations can be tagged in content xforms by adding a select with a class of "contentLocations"
+[AG] dbHelper.updateLocationsWithScope - batch processing of the updateLocations function with a scope to stop everything being deleted.
+[TS] Eonic.xmlTools.xsltExtensions.ResizeImage - Updated a performance issue, where images were being loaded into memory before being check to see if they had been resized already.
+
+DEPENDENCIES:
+	EonicTools 1.0.0.34
+	/ewcommon/xsl/Admin/ewAdminV4_0.xsl
+	/ewcommon/xsl/Tools/EwCommonFunctions.xsl
+	/ewcommon/css/Admin/admin.css
+	/ewcommon/SQLUpdate/toV4/4.1.1.21/*.*
+	/ewcommon/SQLUpdate/DatabaseUpgrade.xml
+	/ewcommon/js/UserEditable.js
+	/ewcommon/feeds
+	/ewcommon/xsl/feeds
+
+
+4.1.1.20 - 02/06/2009
+[AG] Backed out of change overriding the checkButtons subroutine.
+
+ 4.1.1.19 - 01/06/2009 - FAULTY!
+[TS] cart - checkbuttons not called if mcCartCmd <> ""
+[TS] cart - added cartCmd NotesToAddress to allow for overloading of that step.
+[AG] PaymentProviders.paySecPay - Added the default_cv2avs option to allow test transactions to go through
+ 
+ 4.1.1.18 - 28/05/09
+[AG] dbHelper.ViewMailHistory - Updated to show Newsletter activity (not e-mail)
+[AG] dbHelper.legacyRedirection - fix to stop it just sending 302 redirects.
+[AG] stdTools.HTTPRedirect - Alternative to response.redirect to give more status code options.
+[AG] Web.addPageDetailLinksToStructure - Updated to account for LegacyRedirect
+
+Dependencies:
+
+Updates:
+Update Aftermarket and Vitalflow to change any activity with a type of 3 to be 80.
+
+4.1.1.17 - 26/05/09
+ [NB] Web - LayoutActions() - Made Overridable to allow additional cases to be applied by Team Dorset
+ [AG] dbHelper.checkPagePermission - Updated it to not associate logged off users with gnAuthUsers when checking permissions.
+ [TS] Web - Added Google Campaign Codes to be stored in session and output in XML to allow for content switching on inbound campaign links
+ [TS] Payment Providers - List builds from the forms available in ewcommon\xforms\paymentProviders directory
+ [TS] Payment Providers - Admin now deletes providers
+ [TS] Payment Providers - eonic.config copies to ..\secure on update if directory exists.
+ [TS] Payment Providers - added form for ePDQ
+ [TS] Payment Providers - Added Premium Credit
+ [TS] DBHelper - Introduced Versioning when moConfig("VersionControl") = On 
+ [AG] Feedhandler.GetFeedItems - Updated the Body, and url node handlers.
+ [TS] xForm Submission - Changed to look for and update existing if there.
+ [TS] XSLT function to return a FRef from a Page Id.
+ [AG] dbHelper.CommitLogToDB - Added optional parameter to override the logging checks for routines that may log their own activity independent of actual user activity logging (e.g. mail history)
+ [AG] AdminXforms.xFrmSendNewsLetter - Updated the logging to override the logging checks.
+ [AG] Messaging.SendMailToList_Queued - Provides the e-mail address that it errors on in error log.
+ [AG] AdminXforms.PageValidation - Stopped - and + being allowed in page names
+ [AG] Web.Open - added in call to dbHelper.legacyRedirection
+ [AG] dbHelper.legacyRedirection - forwards requests to a more SEO friendly URL
+ [AG] dbHelper.getPageIdFromPath - accomodates hyphens in URLs instead of spaces.
+ [AG] Web.GetStructureXML - buildUrl now accomodates hyphens if requested.
+ [TS] Web.Cart.optionsXfrm / getCart - Pulled out calculateTotals to get called from optionsXfrm to update totals consistently.
+ [AG] Subscriptions.SubcriptionReminders - updated so that rolling subs do not get sent out at each reminder period, just the last one.
+ [TS] Setup - Fixed logon xform, and added more process reporting for DB Builds
+ 
+ Dependancies
+ \xForms\Cart\Payment
+ \xForms\PaymentProviders
+ \xsl\admin\ewAdminV4_0.xsl
+ \xsl\tools\ewCommonFunctions.xsl
+ \SQLUpdate
+ 
+ DB Upgrade required to enable Version Control.
+
+ Eonic.Tools 1.0.0.33
+ Eonic.cs3rdParty 1.0.1.5
+
+
+4.1.1.16 -24/04/2009
+
+[AG] - Messaging.emailer - updated SubjectLine again to cope with Null SubjectLines
+[AG] - Cart.emailRecipients - updated the subject line from OrderEmailSubject to account for empty values.
+[NB] - Updated Messaging.emailerWithXmlAttachment to save XML in UTF-8 format instead of default 16
+
+4.1.1.15 - 23/04/2009
+[TS] Fixed Calcuation of VAT on Discounts
+[TS] Changed GetCartSummary to call GetCart and then remove the item lines to standardize calculation of values
+[TS] Added the lineTax to each line in the cart
+[TS] Stopped logon redirect happening within the Cart Process.
+[NB] DBHelper.RemoveContentLocations - updated to NOT use DeleteObject which is problematic for bulk deletes.
+[NB] DbHelper.getObjectByRef - ADded a private function overloading the public one that allows a more streamlined way of optimising it for bulk calls.
+
+Dependencies
+Eonic.Tools 1.0.0.32
+EwCommon/App_Code Services.vb
+
+4.1.1.14 - Built for Wellards, not ready for general release.
+[TS] GetCart / GetCartSummary Fixed issues with VAT rounding on unit and round up
+[TS] Modified Discounts to save nDiscountValue to the CartItem
+[TS] Changed Discounts not to RoundUp by Default.
+[AG] DbHelper.getContentFromContentGrabber - Updated to include cascaded pages.
+[AG] Web.GetPageContentFromSelect - Corrected the permissions part of this routine which was explicitly looking with only OPEN and VIEW, rather than NOT LIKE DENIED which is what I think it probably should be looking for
+
+
+4.1.1.13 - 03/04/2009
+[AG] DBHelper.getKey - Changed from Protected to Protected Friend
+[AG] DBHelper.GetUserXML - Ignore the page permissions call if myWeb is nothing (allows setup to call it)
+[AG] DBHelper.ActivityType - Added a new enumeration for setup
+[AG] Setup.ContentMigration - Updated the class to accomodate Directory updtes, added option to not show xml, plus track progress in the database.
+[TS] Cart - VATAtUnit can now be set with 'on' as well as 'yes'
+[AG] DBHelper.doesTableExist - deprecated to use Database.checkDBObjectExists instead
+[AG] DBHelper.TableExists - deprecated to use Database.checkDBObjectExists instead
+[TS] Cart - RoundUp added a config setting to turn roundup to false on VAT
+[AG] DBHelper.validateUser - made overrideable.
+[AG] DbHelper.getContentFromContentGrabber - New routine.
+[AG] Web.ContentActions - new routine that is called for non-function and non-layout specific content types.
+[AG] Web.GetStructureXml - changed the bit that tries to tidy up the Description node.  Would like some testing..
+[NB] Messaging.emailerWithXmlAttachment - added, Currently sends an Emails (via emailer), with an added attachment of the mailform in .xml format (can be transformed by passed in XSL)
+
+Dependencies:
+Eonic.Tools 1.0.0.31 (Database.checkDBObjectExists)
+
+/ewcommon/xsl/admin/setup.xsl
+/ewcommon/xforms/content/contentgrabber.xml
+/ewcommon/xsl/pagelayouts/layoutmanfest.xml
+
+4.1.1.12 - Released 19/03/2009
+[AG] Fix broken SQL in Web.Open - When looking for a user ID, this now will look up a current cart order if refSessionId is passed through the request object.
+
+
+4.1.1.11 - Released as 4.1.1.12
+[TS] fixes for isSumbitted to handle a case where we have an unnamed form element.
+[TS] Fixed to contentxform redirect after managing related content
+[TS] Display issues on managing related content
+[TS] Hidden directories starting with '~' from the resource library
+[TS] Added 'number' to work the same as 'float' as a type in xform validation
+
+Co-deliverables:
+/xsl/xforms/xFormsV4-0.xsl
+/xsl/admin/ewAdminV4_0.xsl
+
+4.1.1.10 - Released as 4.1.1.12; Released to Wellards separately
+[TS] Added Delete All Products feature to Syncronisation options.
+[AG] PaymentProviders.payProTx - Made the save payment end routine conditional to accomodate 3d Secure.
+[AG] Web.Open - When looking for a user ID, this now will look up a current cart order if refSessionId is passed through the request object.
+[AG] Web.LogOffProcess - clears any current cart session associated with the session id
+[AG] AdminXforms.xFrmEditContent - Added a conditional that allows the schema of existing content to be overridden.
+[AG] AdminXforms.xFrmActivateAccount - New function for processing activation code forms
+[AG] Web.membershipProcess - Accomodating the activation process forms.
+[AG] Admin.MemberCodeProcess - Re-organised most aspects of the form.
+[AG] AdminXforms.xFrmMemberCodeset - New Function
+[AG] AdminXforms.xFrmMemberCodeGenerator - Updated the function.
+[NB] Messaging.emailerMultiUsers - New Function to handle multiple emails
+[NB] Messaging.emailer - Fixed spacing in a couple of the failure messages
+[NB] Membership.Alerts.AlertItem - Updated New to set private property for AlertDirId.
+[AG] Admin.apply - Updated the redirection process for AddPage to accomodate EditStructure and cloned pages.
+[AG] Messaging.emailer - Fixed SubjectLine cleansing (corrections in 4.1.0.39 were not working)
+[AG] stdTools.UrlResponseToHashTable - Made the function more robust for values that may contain the value delimiter.
+[AG] PaymentProviders.payProTx - Fixed the 3d Secure process, hopefully.
+[NB] Web.GetPageContentFromSelect - Added extra optional boolean to ignore the Membership Check
+[NB] Alerts.AlertItem - CreateAlertItem / ContentElement / Populate / PopulateContent all made overrideable for Brokerage to use
+[WH] No timeout limit for Admin users in the admin system.
+
+Co-deliverables:
+/xsl/xforms/xFormsV4-0.xsl
+/xsl/admin/ewAdminV4_0.xsl
+/xsl/membership/EwMembershipV4_0.xsl
+/xsl/membership/LayoutManifest.xml
+/xforms/Content/ActivationCodeXform.xml
+/xforms/Directory/ActivationCode.xml
+/xforms/Directory/Codes.xml
+/xforms/Directory/CodeGenerator.xml
+/xforms/Directory/CodesGroups.xml
+/Tools/keepalive.ashx
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.30 (Image.ResizeMax, Image.Save)  
+
+4.1.1.9 - 20/02/2009
+
+[NB] xform.updateImageElement - Can now read in quality attribute to pass into the Image process
+[AG] Web.GetStructureXML - DEPRECATED AND REPLACED With a new function.  The function adds performance and site caching.
+[AG] Added Web.TidyMenuNode as part of the performance improvements above.
+[TS] Added resize image functionality to ew:xslt functions
+[AG] dbHelper.saveDirectoryRelations - Addressed null error when no parents are available.
+[TS] Enabled xFrmEditContent to process repeat elements.*
+[NB] xform.updateImageElement - Can now read in noStretch attribute to pass into the Image process (Prevents small images being expanded)
+[AG] Web.GetContentXml - Made an adjustement to not pull in cloned page content when getting the originals
+[AG] Admin.adminProcess - Updated page permissions to show hidden pages.
+[AG] AdminXforms.xFrmEditDirectoryItem - extracted the member code processes - see below.
+[AG] AdminXforms.useMemberCode - added this private function
+[AG] AdminXforms.validateMemberCode - added this private function.
+[AG] Web.BuildPageXML - updated the System Pages structure grab with new function params.
+[NB] RegExpQuery.Search - line 474 - Added code to remove line breaks from the Regular Expression checks since this was causing failures within Brokerage's User XML
+[NB] emailerMultiUsers.Messaging - Added to prepend emailer, allows for multi emails to be queued and sent
+
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.29 (Image.ResizeMax, Image.NoStretch)  
+YOU MUST RUN /ewcommon/sqlUpdate/toV4/4.1.1.9/ContentStructureUpdate.sql with this update!
+
+* Upload /xforms/content/products.xml xform in common
+* Upload xFormsV4-0.xsl in common
+* /ewcommon/sqlUpdate/toV4/4.1.1.9/ContentStructureUpdate.sql
+
+4.1.1.8 05/02/2009
+[AG] Messaging.emailer - added an option to queue mail via a pickup list.  Use optional params cPickupHost and cPickupLocation
+[AG] Alerts.CurrentAlerts - updated the emailer to queue the mail - use alert config options AlertPickupHost and AlertPickupLocation
+
+
+4.1.1.7 - 04/02/2009
+[AG] Alerts.AlertItem.Populate - Fixing my own stupid error (when trying to find the last time it was run it wasn't ognoring the current log item) in Alerts
+[NB] Calender.apply (Web) - Added check to allow empty EndDate's to pass through (and gain the value of the start date)
+
+
+4.1.1.6
+[TS] Modified AddBehaviour to redirect to secure on "notes"
+[AG] AdminXforms.xfrmcopypage - Modified the wording of the options for copying content.
+[AG] DBHelper.copyPageContent - Updated the part that clears out audit identifications.
+[AG] Cart.UpdateTaxRate - Added the provision for excluding tax rate from the cart via membership of the group TaxRateExclusionGroupId
+[AG] Cart.GetCart - calls UpdateTaxRate each time it is called.
+[TS] Web.GetAjaxXml - now not getting permissions on MenuNode - Much FASTER!
+[AG] Web.GetPageContentFromStoredProcedure - made this function generic
+[NB] xForm.evaluateByType - Added fileUpload evaluation for extension checking.
+[AG] xForm.validate - Added filesize checks - they won't capture anything over the server max size, but we can specify smaller limits and files that fall into this scope can be checked.
+
+Web.config updates:
+Under cart, new key TaxRateExclusionGroupId specifies a group that doesn't have tax rates applied
+
+DPENDENCIES:
+Eonic.Tools 1.0.0.28   (Database.GetDataset)
+/js/UserEditable.js
+/xsl/xforms/xformsV4_0.xsl
+/tools/ajaxAdmin.ashx
+
+4.1.1.5 - 19/01/2009 (fixes from 4.1.1.4 16/01/2009)
+[TS] FSHelper, added new delete file method to contain full path of file
+[TS] Messaging, added new addAttachment that take a file location.
+[TS] ewCommon, Services.vb, added emailerWithAttachment
+[NB] Added AdminXform.xFrmEditContentSubmissionPreProcessing for overriding
+[NB] xForm.updateInstanceFromRequest - Added the fileupload facility
+[NB] Messaging.addAttachment - Built in check for a no file upload
+[NB] xForm.updateInstanceFromRequest - Fixed issue where form was submitted with no file, thus causing an exception
+[AG] AdminXform.xFrmMemberCodeGenerator - Corrected the config instance elements.
+[AG] AdminXform.xFrmMemberCodeGenerator - Removed block on department schemas beig excluded from code groups .
+[AG] Admin.MemberCodesProcess - Updated with fixes.
+[AG] Web.MembershipProcess - Added Password Change to pick up the ResetPassword xform.
+[AG] AdminXforms.xFrmEditDirectoryItem - Updated the bit that removes the password inputs when encryption is present to be more robust.
+[NB] xForm.updateInstanceFromRequest - Removed Check for File Extensions
+[AG] Cart.pickContactXform - Added an object oReturnForm to pick up the returned object rather than calling several exit points in the Function.
+[AG] Cart.pickContactXform - Added a duplicate clean up script.
+[AG] AdminXForms.maintainMembershipsFromXForm - New Subroutine pulled out of AdminXforms.xFrmEditDirectoryItem 
+[AG] Added AdminXforms.xFrmEditContentPostBuildProcessing for overriding
+[TS] Cart OptionsXform, added xForm validation when xForm is loaded from a file.
+[AG] Calendar.apply - rewrote the content population bit, becuase it was inefficient and didn't pick up end dates.
+
+Dependencies:
+Eonic Tools 1.0.0.27
+/ewcommon/xsl/tools/excel_2000.xsl
+/ewcommon/xsl/tools/EwCommonFunctions.xsl
+/ewcommon/xsl/admin/ewAdminV4_0.xsl
+/ewcommon/xforms/Directory/Codes.xml
+
+/ewcommon/xsl/Membership/EwMembershipV4_0.xsl
+/ewcommon/xsl/Membership/LayoutManifest.xml
+
+/ewcommon/App_code/services.vb
+
+4.1.1.3 - 06/01/2009
+[TS] Fixes to problem with cart notes xForm loading instance
+
+4.1.1.2 - Released as 4.1.1.3
+[NB] AdminXForms.vb - isSubmittedOther - "RelateAdd"/"RelateFind" - Now pass on extra relationType parameter in the redirect URL
+[NB] AdminXForms.vb - xFrmEditContent/isSubmittedOther - Changed variable init to cope better with updated <Repeat> xform functions (Was losing scope)
+!!!! ^ above fix works for this, but might need to be repeated elsewhere if the <Repeat> change is kept
+[NB] DBHelper.vb - addRelatedContent/addDatasetToContent/insertContentRelation/RekatedContentSearch/saveContentRelations - Can now handle the additional cRelationType field in tblContentRelations. Checks made to bypass this for older DB's
+[AG] Deprecated ImgVerify.getRandomPassword - use Eonic.Tools.Text.RandomPassword instead
+[AG] Updated Admin.MemberCodesProcess
+[AG] AdminXforms.xFrmSendNewsLetter - Corrected the addNote bit for invalid e-mail addresses
+[TS] added Override prices config setting to cart to enable the price to be added from the page form variable, for openquote.
+[TS] fixed user xform for handling passwords on adding users.
+[TS] GetContentDetail - Now pulls in brief if detail is blank.
+[TS] fixed slashed on imageXform functionality
+[TS] added getDate to xsltfunctions
+[TS] removed brokerage specific stuff from calendar.
+[AG] Web.MembershipProcess - amended the conditional that pulls in the My Account / Register form to produce a WYSIWYG view when in admin (if Admin Mode is on, it ignores the state of the User ID)
+[AG] Web.MembershipProcess - added Site Redirection.  Pulled out the Log Off process, so that it can be called elsewhere.
+[AG] Web.SiteRedirection - New Sub - Redirects a newly logged on user to another site.
+[AG] Web.LogOffProcess - new Sub which is just an extract of the codee that was in MembershipProcess.  Allows it to be called elsewhere (e.g. before a site redirection)
+[AG] Added global variable gbClone
+[AG] Web.BuildPageXML - pointed the layout retireval at dbHelper.getPageLayout
+[AG] Added dbHelper.getPageLayout
+[AG] Added Web module variables mnClonePageId, mbIsClonePage, mnCloneContextPageId
+[AG] Web.GetContentXml (both versions) - Added clone page bits.
+[AG] Added DBHelper.isClonedPage
+[AG] Added DBHelper.getClonePageID
+[AG] Web.GetStructureXml (both versions) - Updated to Accomodate Cloned pages 
+[AG] Web.BuildPageXML - Added a page attribute for cloned pages
+[AG] AdminXforms.xFrmEditPage - Added the clone input.
+
+!!!! This needs testing may have some wider impact on xforms.
+[TS] Changed xForms.Instance to a get / set property (to allow trigger repeat element calculations)
+[TS] Enabled repeat in xforms
+[TS] Enabling Trigger delete and insert in xforms, requires further work
+[TS] Small fix to how notes are being loaded into the cart to allow for alternative root node names for IYM.
+[AG] xform.submit - Added robustness to the point where the response is added as a Note, in order to stop it falling over if the Xml is bad.
+[AG] Messaging.emailer - corrected typo in error message.
+[AG] Membership.Alerts.New - Added an error handler for myWeb.
+[AG] Membership.Alerts.AlertItem.Log - replaces MarkDone and is used more often for better protection against multiple e-mails.
+[TS] Added AddBehaviour to CartConfig to allow you to skip to notes and not show the summary screen.
+[AG] Admin.GetAdminMenu - Added behaviour for removing menu items for cloned pages.
+[AG] Web.GetAdminXml - Made allowances for clone context nodes.
+[TS] Fixes to Registration Xforms to allow registration xforms to be loaded from content.
+[AG] Added AdminXforms.PageValidation - an overridable subroutine that covers specific page validation
+[AG] Added readonly property to xform.vb - Xform.RootGroup, returns the root group if it exists
+[AG] Cart.optionsXform - Added the ability to override the event attribute of the submission element.
+[AG] Cart.AddItems - made overridable
+[AG] Web.Open - Rewrote Logon Redirect Facility to 1. Hit the admin root page, whenever in admin (so it can be picked up on logging in)
+				and 2. Correctly log out of admin and NOT be taken to the admin root page, rather the user site root page.
+[AG] PaymentProviders.ReturnRepeatPayments - Ensured that it doesn't return repeat payment for non-users (i.e. user id = 0)
+[TS] MultipowUpload implemented to allow upload of multiple files.
+
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.26
+/ewcommon/xforms/directory/codes.xml
+/ewcommon/sqlUpdate - DatabaseUpgrade.xml and 4.1.1.2 folder
+/ewcommon/js/jquery/ajaxtreeview/jquery.ajaxtreeview.js
+/ewcommon/xsl/ewadminv4_0.xsl
+/ewcommon/xsl/xforms/xformsV4_o.xsl
+
+
+4.1.1.1 - 11/11/2008 - Wellards Only
+[AG] Web.GetStructureXml - Added more diagnostic info for root page id errors.
+[AG] AdminXForms.xFrmMemberCodeGenerator - Rewrote to offer more control over the codes xForm and differentiate the groups bit.
+[AG] DBHelper.CheckCode - Corrected PublishDate and ExpireDate criteria comparisons in SQl statement
+[AG] DBHelper.UseCode - Corrected PublishDate and ExpireDate criteria comparisons in SQl statement
+[TS] Added Resize image to external Sync
+
+
+DEPENDENCIES:
+Eonic.Tools 1.0.0.24
+/ewcommon/xforms/directory/codes.xml
+/ewcommon/xforms/directory/codesgroups.xml
+
+4.1.1.0 - 04/11/2008
+[AG] Web.MembershipProcess - Updated to allow for AlternativeAuthentication
+[AG] Web.AlternativeAuthentication - new function (overridable)
+[AG] DbHelper.GetUserIDFromEmail - Retrieves an active user id from an e-mail
+
+Dependencies:
+Eonic.Tools 1.0.0.23
+
+4.1.0.99 - 29/10/2008
+[TS] Added ProjectPath to xFrmEditDirectoryItem when loading xform
+[AG] Admin.getAdminXML - Fixed admin call to actually get the menu from admin root
+[AG] Admin.getAdminXML - GetStructureXml nows passes a nominal user id of -1 to prevent permissions calls.
+[AG] xmlTools.xsltExtensions.EonicConfigValue - Accounted for null return values.
+
+Dependencies:
+
+Optional requirements:
+Database upgrade files (4.1.0.99)
+
+4.1.0.98 – 27/10/2008
+[AG] xForm.evaluateByType - updated the email check to point to Eonic.Tools.Text.IsEmail
+[AG] Deprecated stdTools.is_valid_email - please use Eonic.Tools.Text.IsEmail instead
+[TS] Added Abiltiy to do multiple uploads, using 3rd party flash uploader.
+[SM] Calendar - Added facility to retrieve the Company Published Events by Year Group
+[AG] Membership.Alerts - Added / corrected the error handling.
+[AG] New class Eonic.Monitor - The start of a class to monitor Eonic items (e.g. Scheduler).
+[AG] stdTools.returnException - Added an optional parameter cSubjectLinePrefix in order to prefix the subject line of the error e-mail.
+[AG] Messaging - added e-mail validation to SendMailToList_Queued and SendSingleMail_Queued
+[TS] Show admin menu with EditDirItem
+[TS] Admin Reset Password and remove password from User form, in encrypted pwd mode.
+
+Also Release:
+/xsl/xforms/xformsV4_0.xsl
+tools/uploadfiles.ashx
+flash/ElementITMultiPowUpload1.7.swf
+xsl/tools/schedulermonitor.xsl
+xforms/scheduleditems/useralerts.xml
+App_Code/services.asmx
+
+js/jQuery/jquery.ajaxtreeview.js
+xsl/Admin/ewAdminv4_0.xsl
+css/Admin/adminMode.css
+xsl/Tools/EwCommonFunctions.xsl
+xsl/Admin/ajaxadmin.xsl
+
+***DEPENDENCIES***
+Eonic.Tools 1.0.0.22
+
+4.1.0.97 – 27/10/2008
+[AG] Admin - new Private mnAdminTopLevel - set to AdminRootPageId (or in its absence RootPageId)
+[AG] Admin.adminProcess - modified call to GetStructureXML to use mnAdminTopLevel
+[AG] Admin.getAdminXML - modified call to GetStructureXML to use mnAdminTopLevel
+[AG] DbHelper.SetContentLocation - allows any new locations to be automatically ordered, if BehaviourNewContentOrder is specified in the web.config ("MoveTop","MoveBottom" etc)
+[AG] Web - added new public var : mcBehaviourNewContentOrder - see above.
+[AG] Admin.xFrmEditPageLayout - If a new page is being added, populate the nStructKey of the instance before returning it, so it can be used for post-processing.
+[AG] Admin.adminProcess - Added an override for Add Page, you can pass the following ewCmds through to determine where the page goes after adding a page ("Normal", "Advanced", "EditPage", "EditPageLayout", "EditPagePermissions")
+[AG] Web - added new public var : mcBehaviourAddPageCommand - User to override the default process following adding pages (which is viewing the menu).
+[AG] stdTools.returnException - Added an attribute of error to the Page node, so that even when error pages are being sourced from actual content managed items, we can detect that the page was an error page.
+
+
+4.1.0.96 - 07/10/2008
+[AG] Feedhandler.GetFeedItems - Added a UserAgent to account for stupid non-compliant feed providers.
+
+4.1.0.95 - 06/10/2008
+[AG] Messaging.emailer - Corrected diagnostic error info when duff CC and BCC addresses are passed through
+[AG] dbHelper.setObjectStatus - Made overridable
+[AG] dbHelper.moveContent - Made overridable
+[AG] dbHelper.DeleteObject - Made overridable
+[SM] Added new Calendar class to view and set relative contents for the particular dates
+[SM] Added new facility in Web.vb - GetContentFromStoredProcedure - Pull the contents to page for XML Calendar
+[AG] Updated all references to Impersonate to point to Eonic.Tools.Security.Impersonate (affected: Setup,FSHelper,Indexer,Adminxforms,dbhelper,web)
+[AG] CLASS REMOVAL: FsHelper.Impersonate (Use Eonic.Tools.Security.Impersonate instead)
+[TS] Added Activity log for file downloads.
+[TS] Added Google Tracking Code passthrough faciltiy to Cart Redirect.
+[AG] Web.GetStructureXML[Long,Long] - Extended the optional params to include a root id, that if not specified will default to the Top Level id.   Was going to use the overloaded  Web.GetStructureXML[String,Long,Long, Boolean], but this actually tries to interfere with the page xml, which to my mind is wrong.
+[AG] dbHelper.getUserXML - Optimised the sql that retrieves groups memberships. 
+[AG] dbHelper.getUserXMLById - Optimised the sql that retrieves groups memberships.
+ 
+***DEPENDENCIES***
+Eonic.Tools 1.0.0.21
+
+4.1.0.94 - 24/09/2008
+[AG] Feedhandler.CompareFeedItems - makes adjustments if a guid is not available.
+
+4.1.0.93 - 24/09/2008
+[AG] Feedhandler.GetFeedItems - can now deal with HTML and namespaces in feeds
+
+4.1.0.92 - 23/09/2008
+[TS] response timeout on getAjaxHtml
+[TS] added userXml to getAjaxXml
+[AG] Feedhandler.GetFeedItems - commented out the xmlns stripper.
+[TS] Tidied up Search for Related Content Form.
+[TS] Syncronisation. XSLT RemoveRelatedContentByRef limited to remove only relations of content where both the same type.
+[TS] Added <add key="RegisterBehaviour" value="validateByEmail" /> funcitonaility - but not tested yet.
+[AG] Web.LayoutActions - replaced the deprecated search code with AddSearch(Me)
+[AG] Web.Search.GetContentXml - added an optional parameter to order the results
+[AG] Added Web.Search.ContentByDateQuery.
+
+4.1.0.91 - 18/09/2008
+[AG] DBHelper.ResetConnection - Rewrote so that it actually tried to use the passed connection string to gather user id and parameter variables.
+
+4.1.0.90 - 18/09/2008
+[TS] belt and braces on importObject to skip altogether in no fRef.
+[SM] Fix the imcompatible assignment of value in DBHelper - Import Objects
+[SM] 'setObjectInstance' from DBHelper - Overrides in - CarbonTrust.vb
+[AG] Membership.Alerts.MarkDone - Switched the SQL call to ExecuteSQL
+
+4.1.0.89 - 15/09/2008
+[TS] Fixes to allow related content to be reordered on page.
+[TS] Fixes to allow related content to be removed on page.
+[TS] All Modules to pull in related content in brief.
+[TS] Xls Import to content facility
+[NB] Fixes to document download error reporting
+[TS] Increase the XSLT transform timeout to 15 seconds and updated the error message to be correct (not ,000's).
+
+**IMPORTANT**
+Requires AdminV4.xsl 
+
+4.1.0.88 - 01/09/2008
+[TS] Fix to get getImageXhtml to fix for missing forward slash
+
+4.1.0.86 - 28/08/2008
+[TS] Fix to password reminders so "plain" works for password reminders
+[TS] Removed Contacts from UserXml in password reminder. (It is defaulted to true and this seems wrong perhaps this could be looked into.)
+[TS] fix for itemsDetails not loading onto root page
+
+
+4.1.0.85 - 23/08/2008
+[TS] Fix for search results problem, owner need to be added to the query wherever AddDataSetToContent is called
+
+4.1.0.82-84 22/08/2008
+[TS] Small fix to getSiteStructure to sort out release error
+
+4.1.0.81 - ***Requires latest build of Eonic.Tools***
+[TS] Addition of Page Permission Level to User XML
+[TS] Addition of owner id to contentbrief
+[TS] Fixes for Encrypted logon to still allow domain logon
+[TS] New Functions in Web to allow for separate Ajax HTML loading
+[AG] Made Web.OnComponentError overrideable
+[AG] Added Global Variable to Web : mcContentType (default text/html) can be overridden
+[AG] Web.GetPageHTML - added an optional means of blocking XML output by IP address.
+[TS] Deprecated ImageHandler to use one in Tools
+
+4.1.0.80
+[BR] Added Code generation facilities for member registration
+[BR] Added connection pooling to dbtools
+[BR] Changed dbHelper to inherit from Eonic.Tools.Database
+
+**IMPORTANT**
+Requires AdminV4.xsl and XformsV4.xsl
+Requires SQLUpdate folder
+
+4.1.0.78
+[AG] stdTools.returnException - added EW XSLT Extensions to the xslt transform to stop it falling over.
+
+4.1.0.77
+[BR] Changed User Search to handle entities better/
+[AG] Reports.SetDefaultSortColumn - Fixed an issue with it overwriting Item nodes.
+[AG] stdTools.returnException - included accounting for gbDebug in the final message if an exception is caught.
+
+4.1.0.76
+[BR] Added procedure to remove duplicate directory relations. to do this use ewCmd=RemoveDuplicateDirRelations in admin mode
+[BR] Added more activity types and code for activity logging
+[AG] AdminXforms.xFrmEditPage - replaced the current function for inserting pages with setObjectInstance
+[AG] Overloaded function dbHelper.insertStructure(XmlElement) - calls setObjectInstance instead of hardcoding the entry points.  Note that the other funtion still exists as it's widely used for quick page inserts.
+[AG] Messaging.emailer - if no e-mail address is valid, a failure message to that effect is returned.  if some of the e-mail addresses are invalid, a success message is sent, but the skipped addresses are noted.
+[BR] Added activity log reports
+[BR] Added node merge facility
+[AG] PaymentProviders.creditCardXform - Added validation for expiry and issue dates.
+
+4.1.0.74
+[AG] AdminXforms.xFrmEditPage - New Feature: Config val DefaultPagePermissionGroupId can be set to restrict every newly added page to the specified directory item.
+[AG] dbHelper.setObjectInstance - If an exisintg object does not have an nAuditId element, then we can go and get it.
+[AG] stdTools.sqlDateTime - Overloaded to make it work with a date object.
+[AG] Updated the existing stdTools.sqlDate/Time funcs to be a bit easier to read.
+[BR] Added functionality to external synchronisation to allow multiple content locations from one reference
+[BR] Changed All refenreces from stdTools.SQLDate/Time to point to Eonic.Tools.Database.SqlDate
+[BR] Changed All refenreces from Eonic.Tools.convertentitiestocode to point to Eonic.Tools.Xml.convertentitiestocode
+[BR] Changed All refenreces from stdTools.XmlDate/Time to point to Eonic.Tools.Xml.XmlDate
+
+4.1.0.72
+[AG] Added functionality for remember me. Config key is RememberMeMode - Options are KeepCookieAfterLogoff and ClearCookieAfterLogoff
+[BR] Added email activity log functionality tblEmailActivityLog
+[TS] Move set mbAdminMode from InitialiseVariables to InitalizeGlobal
+[TS] Removed Page Status from PageXForm on Root Page
+[TS] Added ewCmd PasswordReminder to Membership Process
+[TS] Added the ability to load the Password Reminder in from a file
+[BR] Added "transactionType=defer/deferred"  functionality to paySecPay (options now include "deferred=true")
+[BR] Small fix to user contacts to display extra xml correctly
+
+4.1.0.71
+[BR] Fixed error on user search
+
+4.1.0.70
+[AG] Requires Eonic.Tools 1.0.0.11+
+[AG] Messaging.emailer - Have added a facility to send all emails to a single address instead of the intended addresses.  Useful for testing when live data is in the system.  
+					   - Add an EmailOverride key to web.config.
+					   - Checking that all e-mails being added are valid e-mail addresses
+					   - Checking that we have a valid from address - if not use SiteAdminEmail
+[AG] Added xmlTools.XsltExtensions.formatDate
+[AG] Added xmlTools.XsltExtensions.textAfterLast - Returns the text after the last occurence of a search string	
+[AG] Added xmlTools.XsltExtensions.GetContentLocations - Returns a comma separated list of locations for a given content ID.
+[AG] Updated xForm.addBind to have an optional param oBindParent that allows the bind to be appended to a parent other than the model (allowing bind nesting)
+[BR] Alteration to secpay diest key
+[BR] Alteration to user alerts
+[AG] Updated AdminXforms.xFrmUserLogon to not accept any args (not used anywhere) and to include RememberMe cookie, which doesn't appear to be working, but is only called in thru web.config, so not an issue.
+[AG] Updated Admin.New to pull in some of the Admin.open stuff.  Need to pull it all over at some point.
+[BR] Fixed error on user search
+
+4.1.0.69
+[BR] Attempt to fix stupid error with messaging
+
+4.1.0.68
+[AG] AdminXforms.xFrmEditPage - Can now override the page settings with local xforms xml file.
+
+4.1.0.66
+[BR] Can now overload edit/register user form 
+
+4.1.0.65
+[BR] Added Error Information to messaging function
+
+4.1.0.64
+[BR] Incremeted Number to sort version control
+
+4.1.0.63
+[BR] Added Debug Info on Alerts
+
+4.1.0.62
+[BR] Yet another small change on alerts
+
+4.1.0.61
+[BR] Small fixes for alerts
+
+4.1.0.60
+[AG] PaymentProviders.creditCardXform : created the ability to add a cardholder anem field to the credit card xform.  Is turned on by moCartConfig("CardholderName") = "on"
+[BR] Small fixes for alerts
+
+4.1.0.58
+[BR] Made xForm.Submit Overridable for Alford Bishop
+[BR] Made Web.oXForm Publically Declared Variable so can be overriden for Alford Bishop
+[AG] Created Admin.SupplimentalAdminMenu - an overrideable sub for extra admin menu tasks
+[BR] Added ePDQ class as new payment provider and added "PayePDQ" function to payment providers
+[BR] Added "base64Binary_Leave" as a type to xforms. This is for uploaded files that we wish to leave alone for another part of the component to deal with
+
+4.1.0.57
+[AG] Cart.apply - fix to a scenario in the previous implementation for "TaxFromDeliveryAddress"
+[BR] Secure membership fix for editing users
+[BR] Fix for image library where items have capital extensions (.JPG)
+[BR] Removed "Private Const gbDebug As Boolean = True" from AdminxForms
+
+4.1.0.56
+[AG] Cart.apply - Added the ability to base the tax rate on the delivery address.  Optional cart config item "TaxFromDeliveryAddress"
+
+
+4.1.0.55 - AJG 04/06/2008 09:00
+[BR] Fix to the admin login (added by AG)
+
+4.1.0.53 - BJR 03/06/2008 16:05
+[BR] Secure Membership overrides base url
+
+4.1.0.52 - BJR 03/06/2008 11:30
+[TS] Changed LogonRedirectPageId to AuthenticatedRootPageId to better reflect how feature works.
+[TS] Added "LogonRedirectPath" to Web.Config and supporting functionality
+[BR] Adding Encrypted Membership functionality
+[BR] Added option to add related content to cart xml
+[AG] PaymentProviders.paySecPay - Added ccXform.valid = True wherever bIsValid = True is being set to account for 3D Secure callbacks where bAuthorised = True bu ccXform.valid = False (there is no ccXform when there is a callback from 3DSecure)
+[TS] Replaced - for _ in Guess DB Name to match helm conventions
+[BR] Added functionality to get config value in xslt transform
+[BR] XSLT Functionality can now save variables for functions
+[AG] Admin.appendMenuItem - Function made Public
+[BR] Cart/QuoteNumber Prefix can be overriden
+
+*Requires membership XSL to be uploaded
+
+4.1.0.51
+[BR] Added sql update to ensure payment method xml is ntext field
+[BR] Updated repeatsecpay to throw an error if not remotePassword field in config
+[BR] Added functionality to delete shipping locations
+[BR] Changed Paysecpay to handle an invalid return string with no "="
+[BR] Cart.Apply cProcessinfo now contains a history of cartcmds to diagnose problems better
+[BR] Notes xform corrected for promotional discount codes
+
+*requires release of sql update folder
+*requires admin xsl to be released
+*requires upload of discount xforms
+
+4.1.0.50
+[BR] Updated Secpay Reference
+
+4.1.0.49
+[BR] Change to cart for discounts promotional code
+[TS] Small change to ProTx description to urlencode after we have done the left() so as not to truncate any urlencoded chars
+[BR] Fixed error in search where duplicates where returned
+[BR] Cart process now cleans out delivery information when addresses changed
+[BR] Fixed Advanced Mode so Add/Show/Hide/Delete Content returns to advanced mode
+[BR] Fixed Related Products for groups to look for multiple content types
+
+4.1.0.48
+[BR] Added Save payment to Repeat ProTx payments
+[TS] Added Logon Redirect Facility.
+[BR] Added Auth code to secpay save payments
+[TS] Enabled Report for overloading
+[TS] removed CourseReminder from messaging
+[TS] added ObjectToNumberic function from wellards
+[TS] added handletimeouts to getdataset from wellards
+
+4.1.0.47
+
+
+4.1.0.46
+[TS] Added HTTPrewrite Functionality to Web.
+[TS] Added the ability to add a default file extension to eonicWeb pages in URL rewrite mode.
+[TS] removed ?pgid=xxx from the URL whilst in adminMode and eonicRewrite mode
+[TS] Important Changes to EwCommonV_$.xsl and ewCommonFunctions.xsl to handle getUrl to cater for extensions
+
+4.1.0.45
+[TS] Enable Text entry product options.
+[BR] Changed GetCartSummary to be the same as GetCart
+
+ * Requires New upload of Xart XSL
+
+
+4.1.0.44
+[TS] Hotfix for error in multiple parId handling
+
+
+4.1.0.43
+[TS] Removed Encryption and changed to rely on encryption in Eonic.Tools
+[TS] Changed Assembly name from eonicwebV4_0 to EonicWeb4
+[TS] Various FxCop fixes
+[TS] Idisposable on Web
+[TS] more changes to base64 binary in xForm
+[BR] Changed Stored Procedure getContentStructure
+[TS] error in multiple parId handling
+[TS] Added the ability to have multiple product types for discounts.
+
+4.1.0.42
+[AG] Undid Web.getpagehtml to revert moResponse.ContentType back to "text/html"
+[AG] Cart : modified the cartCmd for picking up settlements
+[AG] PaymentProviders.creditCardXform : Adjusted the validation process for deposits.
+[AG] Cart.InitilializeVariables : More deposit status checking
+[AG] Added a new field to deposit enabled tblCartOrder : nLastPaymentMade
+[TS] Added functionality for base64Binary to xForm
+
+4.1.0.41 
+[BR] Removed old 'TODO: tasks
+[BR] New "synchronisation" config section added (needs to be added to servers)
+[BR] Slight alteration to cart GetProductpricesbyxml to take into account multiple groups
+(Not included as Web.vb was not synced - besides it would have screwed EW : [TS] changed getpagehtml to include moResponse.ContentType = "application/xhtml+xml")
+
+4.1.0.40 - 12/03/2008 09:30
+[BR] Rebuild to get all fixes
+
+4.1.0.39 - 11/03/2008 13:30
+[BR] Fixed problem whereby Items on hidden pages where show in search results
+[TS] Stripped vccrlf from emailer subject
+[TS] removed querystring and form from error message as they can cause credit card numbers to be shown.
+[AG] Cart.PaymentProviders.creditCardXform :: Moved deposit facility outside of the scope of the part which looks for creditcard submission, as it does not work with 3dSecure
+[TS] cleaned the filename for downloads
+[AG] Cart.PaymentProviders.Secpay validateCV2
+
+4.1.0.38 - 04/03/2008 12:30
+[BR] Rollback transform process
+
+
+4.1.0.37 - 04/03/2008 11:00
+!!--IMPORTANT--!! EONIC.TOOLS LIBRARY MUST BE UPLOADED !!--!!
+
+[AG] Updated Cart.PaymentProviders.paySecureTrading
+[AG] Added optional parameter oNullReturnValue to dbTools.GetDataValue
+[AG] Updated stdTools.EncryptString (added Symettric encryption)
+[AG] Updated stdTools.DecryptString (added Symettric decryption)
+[AG] Update Encryption.Symettric.New (added PaddingMode for Provider.Rijndael)
+[AG] Added xmlTools.xmlToHashTable
+[AG] Updated Cart.PaymentProviders.paySecPay to use xmlTools.xmlToHashTable
+[AG] Updated Cart.PaymentProviders.creditCardXform to optionally load an instance in
+[AG] Updated Cart.apply to allow for the SecureTrading callback.
+[BJR] Added Eonic.Tools Library
+[BJR] Added ExternalSynchronisation.vb
+[BJR] Changed Web.GetPageHTML and stdTools.returnException Transform class/Method
+
+Requires /xsl/xforms/xformsv4_0.xsl
+
+
+4.1.0.36 - 26/02/2008 10:00
+[BR] Added thumbnail images to Pages
+[BR] added parId to contentDetail
+[BR] Added Amount Paid to detail xml of saved payments
+[BR] Changed Cart get price to deal with splits in the product template - Required for ITW
+[BR] Changed advanced mode to to list content types from the layout manifest files ***
+[TS] Cart - split out the notesProcess from apply to provide for overloading
+[TS] Web - split out addCart from GetPageXml to provide for overloading
+
+*files sqlUpdate\toV4\Structure.sql and sqlUpdate\toV4\4.1.0.11\tblCartPaymentMethod.sql need uploaded
+** ewCommonFunctions.xsl needs uploading
+*** Requires common layout manifest to be uploaded
+*** Also needs ewAdminV4_0.xsl to go
+
+4.1.0.35 - 30/01/2008 13:00 [BR]
+[BR] Fixed Error whereby moving content removed the primary location
+[TS] Changes to Manage Contacts Features.*
+[BR] Related content Search 2 way relationbship now dictated by xform
+[BR] Added Find content for locating
+[BR] Related Content now redirecting properely**
+[BR] Fixed config issue with feed process
+[TS/BR] Removed goConfig variable from stdTools and added loca moconfig variables to procedures/classes previously referencing goConfig
+
+*Requires new version of ewMembershipv4.xsl
+**Requires new version of ewAdminv4.xsl and xForms.xsl
+
+
+
+
+4.1.0.34 - 24/01/2008 10:30 [BR]
+[BR] Changed Upgrade Content to work on one xsl rather than 2.
+[TS] Added Shipping Method XML to Cart
+[TS] GetDocumentFromItem fixed to check detail if brief path if empty.
+[TS] Added Default Shipping Price and Description to Cart Config*
+[TS] Added the shippingId to the order,(was never saved just cost and description oops)*
+[TS] Changed Layout of UpdateCart xform in admin
+[TS] Futher Amendments to the Error Handling Script
+[BR] Relating content on a new piece of content produced errors and didnt locate content on page. Fixed
+
+* REQUIRES EwCartV4_0.xsl EWAdminv4_0.xsl adminMode.css to be uploaded
+
+4.1.0.33 - 21/01/2008 09:30 [BR]
+[BR] Fix to Related Content Search. SQL Syntax Error
+
+4.1.0.32 - 18/01/2008 10:00 [BR]
+[TS] Small fix to error handling code to report better when looking for error page, ensured error page id = 0 if not found.
+[TS] Added mailserver name to error reporting
+[TS] EditDirectoryContact - added "Successfully Updated" alert
+
+4.1.0.31
+[BR] Added "nAdditionId" to admin.vb so overloaded functions can get the id of an added item
+[BR] Added moAdmin to web as a property so it can be overloaded (FlooringDB)
+[BR] Added more detail to web.getPageXML error handling. More detail in sProcessInfo
+[BR] Added more detail to stdTools.returnException error handling. More detail in sProcessInfo
+[BR] Added procedure AddExceptionToEventLog in case an error occures in get page html or returnException. This adds an event to the server event log under EonicV4.1
+
+4.1.0.30
+[BR] Fix to Save Payment option showing when turned off
+[BR] Removed menu node from cart email xml. went out last release
+
+
+4.1.0.29
+[BR] Amended URLs for Repeat transactions for ProTx
+[BR] Overloaded some admin and web procedures for flooring database
+
+4.1.0.28
+[BR] Fixed Problem of submitting card details twice
+[BR] Save Payment button is checked by default if subscription in the cart
+
+4.1.0.27
+[BR] Fixed a problem where cart was sending more than one email if "Close Invoice" button was not pressed
+[BR] Fixed search results extract not working with ampersands (&)
+
+4.1.0.26
+[BR] Emergency Fix to contact form handling
+
+4.1.0.25
+[TS] goConfig not being pulled in for admin Xforms, and causing errors.
+
+
+4.1.0.24
+[BR] Change to payment providers for repeat payments error reporting
+[BR] Change to subscriptions for better group handling
+[TS] Redirects to previous page on page order and edit page status, for WYSIWYG menu management.
+[TS] Modified get Cart to pick first price if more than one shown.
+[TS] Added optional "unit" to Add to Cart
+[BR] Delete Delivery Methods added
+[BR] Full Response added to secpay log
+[BR] Changed the database updat procedure to work from xml
+
+4.1.0.23
+[BR]	Indexing fixed problem where indexing was changing global xsl file
+[BR]	Indexing now has a read and write folder
+[TS]	Added mode=open to file downloads to open in browser rather than offer save option.
+
+4.1.0.22
+[BR]	Subscriptions
+[BR]	ProTx Repeat Payments
+[BR]	Default Contact XForm Required Fields
+[BR]	Referrer added to the cart seller notes field if available
+[BR]	Changed "LogActivity" to work if no session
+[BR]	"ReturnPageHTML" also includes an error header if there was as error ("X-EonicError")
+[TS]	Fixes to the Setup Facility
+
+4.1.0.21
+[BR]	Changed Cart Persist Variables to Update the cart user id in the database
+[BR]	Changed Cart Options form to work with multiple groups/currencies/payment methods
+[BR]	Added promotional codes to discounts (Discount Xforms need to be uploaded)
+
+4.1.0.20
+[TS]	HasRepeatPayments Changed to only return values if user > 0 
+[TS]	Changed Metacharge to only pass through street details for address as requested from MetaCharge
+[TS]	Added Orders Shipped to the admin menu
+[TS]    Changes to the index search to use a striped down XSLT for indexing and another to create a page extract, added extract to results and using our compiler object.
+[BR]	Added Product/Content Groups to content (Like Discount or Subscription Groups)
+[BR]	Increase tblCartOrder.cShippingDesc length to 255 char
+[TS]	Added Secure3D message to credit card Xform
+[BR]	Fix to cart for quantity changing to 0
+[TS]	Changes to SecPay Secure3D MPI valid codes
+[BR]	Fixed Issue where credit card number was bieng saved without mask
+
+
+4.1.0.19
+[TS]	Changes to paybyCash XML instance is BankDetails
+[BR]	Change To Discounts (Discount_Break_Group) to fix discount application.
+[TS]	Removal of damaging routine from XSLTextensions.
+
+4.1.0.18
+[TS]	Improvements to AuthorizeNet
+[BR]	Improvements to SavePayments
+[BR]	Fix to saving billing addresses
+[TS]	Fix to redirect to normal mode after save including full stepper urls
+[TS]	Added PREVIOUS_PAGE to the session variables in XML
+
+4.1.0.17
+[TS]	Fix to Secpay Order details full item list added, text file form Secpay populated.
+
+4.1.0.16
+[TS]	Fix to Pay By Cash xform handling
+[TS]	Fix to user/group permissions
+[BR]	Allow content to go into Sitemaps
+[TS]	Fix for Delivery Methods now work on first save
+[TS]	Various fixes to Secpay Payment Method with save payment for 3dSecure transactions and order field
+
+4.1.0.15
+[TS]	Fix to Email Recipts on Cart swaped merchant/customer templates to fix error
+[TS]	Added warning messages to Settings form
+[BR]	Fix to Adding/Editing Users whereby looking for subscription details.
+
+4.1.0.14
+[TS]	Small change to xfrmdeliveryMethods to allow editing before payment config is added.
+[TS]	Added Updated and Expire date to Page XML.
+[TS]	Added small fix to not fall over image directory for corrupted images
+[TS]	Cart Settings enabled 
+[TS]	Payment Provider editing enabled not all xforms in place (secpay and authorize.net done)
+[TS]	AuthorizeNet Payment Provider
+[TS]	cart.addItem error if price not available in currency.
+[TS]	enable of decrementing stocklevels on purchase.
+
+4.1.0.13
+[BR]	Fix : Error when credit card expire date has a month of 12
+
+4.1.0.12
+[AG]	Cart.contactXForm Delivery checkbox corrected
+
+4.1.0.11
+[TS]	Xforms Image Verification Funtionality Added.
+[TS]	Changes to xforms to allow validation of values bound but not in the instance.
+[TS]	Xform - updated evaluateByType to recognise a type called "imgVerification" value saved in session, when image created.
+[TS]	Added Saved Payment Method to SecPay, UKash, and PayByCash
+[TS]	Added Pay By Cash Payment Method
+[TS]	Include Payment details in getCart for process and emails
+[BR]	Save Payment Method Available for integration into various payment methods.
+
+4.1.0.10
+[AG]	Cart - Implemented the correct pickup of bespoke billing and delivery address forms, utilising the cContactXml field correctly.
+[AG]	Xform - updated evaluateByType to recognise a dynamic type called "format:<regexp>"
+[AG]	Cart - New function in GetCart and GetCartSummary : Check quantities.
+[TS]	Cart - per product discount / surcharge added.
+
+
+4.1.0.9
+[AG]	Emergency fix - commenting out code in GetCartSummary connected to subscriptions.
+[AG]	Adding the feature to limit individual product purchase by min and max quantites and modulus. Function is in pace but not implemented.
+
+
+4.1.0.8
+[BR]	Fixed an Error where contact search was not working for mrasco.
+		Fixed a an error not returning parId after moving content
+
+
+4.1.0.7
+[TS]	Fixed errors with Payment Providers not displaying non-debug error messages, now nice errors. (All Payment Providers)
+
+
+4.1.0.6
+[TS]	Fixed errors with Membership Process and Re-direction missed during testing of overrideing web.
+
+
+4.1.0.5
+[TS]	Upgraded ProTx to include Secure3D facilities using http request rather than dll
+[TS]	Fixed issue with UserXml not displaying
+[TS]	Added Option Group Name to Selected Product Options in Cart
+
+4.1.0.4 
+
+[AG]	Updated RegExp search to search by multi-content types
+[AG]	Updated AddDataSetToContent to add source attribute to nodes
+[TS]	ProTx upgraded not tested and unfinished
+
+4.1.0.3
+[TS]	Small fix for bizare rounding error in Ukash payment
+[TS]	Increased the default timeout when compiling XSLT
+[TS]	Changes to MembershipProcess to make it overridable
+[TS]	Added Disable Directory Item Buttons for users, groups and roles
+[TS]	Moved any logon or register redirects to just before the tranform 
+		by setting a object variable in Web to allow overides on membership process to work.
+[TS]	Added FLV Streaming HttpHandler - not fully implemented.		
+[TS]	Changes to setup to allow setup with blank website.
+[TS]	exeProcessSQLScalar now returns nothing for dbNull rather than an error.
+[TS]	added createDB to dbtools and a new with no connection.
+[TS]	added setup from just mapped ewcommon facility.
+[TS]	added fulfillment date facility to metacharge
+[TS]	enabled line discount / surcharge line
+[TS]	fixed exception handling for emailer when getting subject line fails, this should not throw an error just override subject supplied if available.
+
+
+
+4.1.0.1
+[BR1]	Small fix to discounts, added "standard" to default groups for prices
+
+4.1.0.0
+[BR/TS]	Major Performance and Structual Changes
+		Fixes to setup process
+		Deletion of users and groups fixed
+		Improved XSLT parsing
+		Bespoke XSL replace fucntion
+
+ALL NEEDS TO BE ADDED TO 4.1.0 AFTER THIS POINT 
+
+4.0.1.69
+[BR]	Added a fix for cart currencies (again)
+
+4.0.1.68
+[BR]	Addtions for Durlings: CSVHelper.vb, ImageHelper.vb.
+		Payment Providers Line 255 Addition to go into 4.1
+		Database upgrade required for sites using feed (changed cContentForeign ref from 50 to 255 chars)added to setup
+		Fix for cascaded content being replaced by child content of same name.
+
+
+		
+4.0.1.67
+[BR]	Fix for Contact forms caused from perfmon
+
+4.0.1.66
+[AG]   PaymentProviders.xfrmSecure3D : Removed hardcoded reference to default.ashx in callback URL
+[TS]   cs3rdParty.1.0.1.3 released
+[TS]   CompiledTransform typo corrected, enabling it to be picked up.
+
+4.0.1.65
+[BR]	Changed functionality of the setting currency option.
+[BR]	Changed Soap encoding
+[BR]	Reordered Mailing list forms
+4.0.1.64
+[TS]	Introduced error message is eonic/payment config not setup.
+[BR]	Fixed a character casing issue in the search
+[BR]	Added more null handling to currency select
+4.0.1.63
+[BR]	Fix to mailing list stopping content from loading, got broken when mailing list menu was changed.
+4.0.0.62
+[BR]	Small change to fix an issue with permissions.
+4.0.0.61
+[BR]	Small change to attempt fix for search error occuring on nunes.
+4.0.0.60
+[BR]	Fix so that Mailing list pages and system pages are now shown when locating content
+4.0.0.59
+[BR]	Release to fix server error, no changes made
+4.0.0.58
+[BR/TS/AG]	Added custom error page functionality for Page not found, Access Denied and eonic errors
+4.0.0.57
+4.0.0.56
+[BR]	Feed Functionality (Test Only)
+		Code Changes: Moved code for related search and product groups search and events inside xforms. Mailing list events inside xforms. Changed mailing list menu to be inserted differently
+4.0.0.55
+[TS]	Page Not Found Behaviour.
+
+
+4.0.0.55
+[BR]	Output certain items to an unrelated page similar to User Control Panel Remove duplicate
+		
+4.0.0.53
+[BR]	Output certain items to an unrelated page similar to User Control Panel
+
+4.0.0.52
+[BR]	Remove invalid charactors from contentName
+		
+4.0.0.51
+[BR]	Fix to content locations
+		New Discount (Breaks by Group)
+4.0.0.50
+[TS]	Fix to xforms handling for mailforms / soap interfaces
+		Inclusion of "Generator" to server variables with EonicWeb Version Number
+
+4.0.0.49
+[BR]	Fix to allow document path from Detail as well as Brief
+		Clean Page names on import routine.
+		Admin order/quote output changed to be the same as user
+		Edit user contact facility now in place
+[TS]	Addition of root path to allow for mini-sites
+
+		
+4.0.0.48
+[BR]
+		Fix for Mailing Lists where mailing menu was bieng loaded incorrectly
+		when locating content
+		
+4.0.0.47
+[TS]
+		SecureEmail Payment Provider
+		Added Secure email facility to emailer function.
+
+4.0.0.46
+[BR]	
+		Initial newsletter functionality release
+		Fix to currencies
+4.0.0.45
+[BR]	
+		Cart fix with logon
+		Cart fix with secure site and membership
+		Allowed customised logon forms
+		Mailing List/NewsLetter development
+		Fix to discounts working with only quote on
+		Fix to cart logon process
+		Quote listing in admin
+		Quote/Order listing turned on/off depending on setup
+		Custom logon form supported
+		
+4.0.0.44
+[BR]	
+		Search Fix
+		Quote Fix
+		Mailing List/NewsLetter development
+		
+4.0.0.43
+[BR]	
+		Added Page(s) Copy functionality
+				
+4.0.0.42
+[BR]	
+		Small currencies fix
+		Mailing List/Newletter beta functionality
+
+4.0.0.41
+[TS]	Inclusion of Language to web.config
+		Small fix for ProTx and currencies
+		Added error messaging for missing Payment Config sections
+		Added error messaging for Country choosen not in the delivery locations list.
+
+4.0.0.39
+[BR]
+		User Search Change
+
+4.0.0.38
+[BR]
+		User Search Corrention
+		
+4.0.0.37
+[BR]
+		Keysource Units Changes
+		UserGroup Changes
+		Cart/Quote Status IDs
+
+4.0.0.35
+[BR]
+		Import Content
+		Related Content ParId
+		
+4.0.0.34
+[BR]
+		Fixes and Changes to Search
+		Fixes on Content retrieval
+		Added Multi-Currency support
+
+
+4.0.0.31
+[TS]	Fixes to the search query
+		Fixes to pick image for Firefox and IE. xforms.xsl and ewAdmin.js
+
+
+4.0.0.30
+[TS]	Fixes to Pick Image facility on Xforms
+		Fixes to cart process for displaying option details
+		Fixes to cart redirect to secure to include pageId
+
+4.0.1.28-29
+[BR]	Fixes to Quote Search Process.
+
+4.0.1.27
+[BR]	Small Discounts Fix.
+		Don't add discounts to content unless cart is on
+
+4.0.1.26
+[TS]	Change Display Name to not required.
+		Changes and fixes to the Cart Process
+		Final Implementation of Discounts
+		Update to TinyMCE upload all files and xforms.xsl
+		Fixed issue with empty text areas
+		General Updates to the Setup Area
+[BR]	Added Domain Admin Logon Facility to Admin and Setup
+		Disabled the ability to delete the main admin user.
+
+
+4.0.1.25
+[TS]	bull entity added
+		Various Fixes to Quote Process
+		Added Display Name to pages.
+		Copy Content Added.
+[BR]	Updates and fixes to V3 Migration
+		
+
+4.0.1.24
+[TS]	Enabled Password Reminder Facilities
+		Fixed errors with Registration Process
+		Added emailer for Registration
+		Validation for multiple accounts with the same email address.
+		Added searching for pluals
+
+4.0.1.23
+[TS]	Payment Providers: Enabled "On Account"
+		Enabled Providers by group functionality.
+		EcCmd=admin redirects to content when logged on.
+		Omega Entities Added.
+
+4.0.1.22
+[BR]	Adding in discount facilities.
+
+4.0.1.21
+[TS]	Added the pgid to the url in adminMode to catch duplicate pages of the same name with different permissions.
+
+4.0.1.20
+[TS]	Improved Membership Logon features checking the page Id find from path against page permissions.
+[TS]	Checked for reserved directories on the edit page form.
+[TS]	Limited admin menu options for no Membership / Cart facilities.
+
+4.0.1.18
+[BR]	Added related content functionality.
+
+4.0.1.15
+[TS]	Fixed errors with SecPay Address.
+
+4.0.1.14
+[TS]	Added move shipping location functionality. needs update of ewAdminV4.xsl

@@ -1,0 +1,59 @@
+﻿<Content>
+  <model class="ewXform">
+    <instance>
+      <emailerWithFTPAttachment xmlns="http://www.eonic.co.uk/ewcommon/Services">
+            <oBodyXML>
+                <Items>
+                    <Name />
+                    <ProjectName/>
+                    <Email />
+                </Items>
+            </oBodyXML>
+            <xsltPath>/ewcommon/xsl/Email/FTPSent.xsl</xsltPath>
+            <!--<xsltPath>/ewcommon/xsl/Mailer/emailer.xsl</xsltPath>-->
+            <fromName></fromName>
+            <fromEmail>test@eonic.co.uk</fromEmail>
+            <recipientEmail>trevor@eonic.co.uk</recipientEmail>
+            <SubjectLine>File Uploaded to FTP</SubjectLine>
+            <cAttachmentFilePath/>
+            <bDeleteAfterSend>true</bDeleteAfterSend>
+            <FTPServer>tms01.raqsys.com</FTPServer>
+            <FTPUsername>dmackenzie</FTPUsername>
+            <FTPPassword>dan$ftp</FTPPassword>
+            <FTPFolder>/tmsltd.com/www/uploads/</FTPFolder>
+        </emailerWithFTPAttachment>
+    </instance>
+    <submission method="post" action="/ewCommon/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailerWithFTPAttachment" id="SendFile" event="return form_check(this);" />
+    <bind id="emailerWithFTPAttachment" nodeset="emailerWithFTPAttachment">
+        <bind id="oBodyXML" nodeset="oBodyXML/Items">
+            <bind id="VacancyRef" nodeset="VacancyRef" required="false()" type="string" />
+            <bind id="Name" nodeset="Name" required="true()" type="string" />
+            <bind id="Email" nodeset="Email" required="true()" type="email" />
+            <bind id="Telephone" nodeset="Telephone" required="false()" type="string" />
+        </bind>
+        <bind id="Name" nodeset="fromName" required="true()" type="string" />
+        <bind id="Email" nodeset="fromEmail" required="true()" type="string" />
+        <bind id="yourFile" nodeset="cAttachmentFilePath" required="false()" type="fileUpload"  allowedExt="doc,docx,pdf" saveTo="\..\imports\" />
+    </bind>
+</model>
+<group>
+<label>Upload File</label>
+    <group>
+        <input bind="Name" appearance="">
+            <label>Name</label>
+        </input>
+        <upload bind="yourFile" appearance="">
+            <label>Your File</label>
+        </upload>
+        <input bind="Telephone" appearance="">
+            <label>Contact Telephone</label>
+        </input>
+        <input bind="Email" class="required">
+            <label>Email</label>
+        </input>
+        <submit submission="SendFile" bind="ewCmd" class="principle">
+            <label>Send</label>
+        </submit>
+    </group>
+</group>
+  </Content>

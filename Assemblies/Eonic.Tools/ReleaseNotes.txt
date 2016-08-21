@@ -1,0 +1,229 @@
+
+===============================================================================
+	RELEASE NOTES FOR Eonic.Tools.5.0
+	
+	Please use this to register what changes have been made and where versions
+	are currently.
+	 
+===============================================================================
+===============================================================================
+	IN PRODUCTION 
+===============================================================================
+5.0.1.x
+
+
+
+===============================================================================
+	RELEASE CANDIDATE : ON DS01
+===============================================================================
+
+
+
+
+===============================================================================
+	RELEASED TO LIVE
+===============================================================================
+5.0.1.0 - 07/10/2011
+
+Moved in iFilter & GNUPG from old 3rd Party.
+
+
+1.0.0.67
+[AG] Database.HasColumn - shared function that can be called on anything implementing IDataRecord (e.g. SqlDataReader)
+
+1.0.0.65 - On Wellards
+[TS] Xml.SerializeToXml RegEx didn't work for me added line to strip the specific namespace required. Needs the RegEx fixed.
+[AG] Xml.SerializeToXml - removed the above fix and updated the regex to strip out non suffixed xmlns declarations.
+
+1.0.0.63 - 10/03/2011
+[AG] New shared class (and file)  Enum.vb (class of EnumUtility)
+[AG] Text.Coalesce - a string based coalesce function
+[AG] Text.SimpleRegexFind - moved from Eonic.stdtools
+[AG] New class TypeExtensions (in file Object.vb)
+[AG] New Class TypeExtensions.TypeAndMethodParser
+[AG] Xml.getNodeValueByType - Changed the node reference in the parameters to by ByVal and not ByRef so as to avoid explicit conversion when passing an XmlElement through.
+[AG] New Namespace DelegateWrappers - to contains wrapper for delegates!
+[AG] New Class DelegateWrappers.PredicateWrapper - allows arguments to be passed to predicates for List.Find type methods
+[AG] FileHelper.GetMIMEType - moved from Eonic.Web
+[AG] Xml.Serialize - Serializes objects to string representation of Xml
+[AG] Xml.SerializeToXml - Serializes objects to XmlNode
+[AG] Xml.AddExistingNode - adds a node to another by importing it.
+[AG] Text.UTF8ByteArrayToString and Text.StringToUTF8ByteArray - function name says it all.
+
+1.0.0.60
+[AG] DBHelper.checkTableColumnExists
+
+1.0.0.54
+[AG] Number.IsReallyNumeric - proper string based number check
+
+1.0.0.53
+[TS] Added ReverseItterator Class to Eonic.Tools/Conversions
+[AG] Xml.SetInnerXmlThenInnerText - new function that standardises our 'lazy' approach to setting the inner xml.
+[AG] Text.TruncateString - new function
+[AG] Updated Http.WebRequest.Send to work with GET requests
+[AG] Http.Utils.ShortenURL - new shared function
+[AG] Database.checkDBObjectExists - new overload of this function that doesn't care about object type being specified.
+
+1.0.0.51
+[AG] Moved Webrequest into the Namespace Eonic.Tools.Http
+[AG] New class Eonic.Tools.Http.Utils - intended for shared utilities, not instantiated class
+[AG] Number.IsStringNumeric - new function
+[AG] Number.CheckAndReturnStringAsNumber - new function
+[AG] New module FileHelper
+[AG] New Text Functions: ReplaceLastCharacter and RemoveLastCharacter
+
+1.0.0.48
+[AG] Number.ConvertStringToIntegerWithFallback - New function
+
+1.0.0.46
+
+[AG] Added the Integration folder and all its files.
+[AG] Added XML.GetOrCreateSingleChildElement - Tries to get a named child node and if it doesn't exist it creates it.
+
+1.0.0.44 - 24 May 10
+[NB] Image.ResizeMax - Redone how it works out how to crop, including if to stretch or not
+[AG] Image.ResizeMax - Fixed Nath's code for the above!
+
+1.0.0.42 - 07 Apr 10
+[AG] New classes in Counter.vb: Counter and CounterCollection
+[AG] Xml.removeChildByName - new function
+[TS] Database.GetColumnArray - new function
+[TS] ExternalSync modified to allow joins on multiple feilds on export to allow for payment method reuse.
+[TS] Impersonate small fix if no domain provided, to aid running locally on home edition.
+[AG] Calendar.CreateDatePeriodElement - added a couple of more Month Attributes on the monthly element
+
+
+1.0.0.39 - 29-Jan-10
+[TS] Added the ability to add headers to a soap request.
+[AG] Update XML.convertEntitiesToCode with fuller list.
+[AG] XML.CombineNodes - rewrote with better handling for whitespace nodes.
+[TS] Added XML.firstElement
+[TS] Added Xml.getNsMgrRecursive
+[TS] Updated XML.addNsToXpath
+[TS] Added Jeff Attwords CAPTCHA module to eonic.tools.image.imageCaptcha (Thanks Jeff)
+
+ ewcommon: /tools/imgVerification.ashx
+
+1.0.0.37 - 30-Oct-09
+[TS] Added Image Reflect
+[TS] Added Xml.convertEntitiesToString
+
+1.0.0.35 - 18-Aug-09
+[AG] Created a new standard class WebRequest
+
+1.0.0.34 - 01/07/2009
+[TS] SoapClient - additional error handling.
+[AG] Dictionary.hashtableToCSV - New function
+
+
+1.0.0.33 - 26/05/09
+[AG] Text.IsEmail - Updated the validation to pickup consecutive periods in a domain name
+
+1.0.0.32
+This is not really a release.
+Had to be produced for Wellards as there were versioning issues that could not be got round at short notice.
+
+1.0.0.31 - 03/04/2009
+[AG] Database.checkDBObjectExists - New function to return the existence of a table, view, function or stored procedure.
+
+1.0.0.30 : Web01/02 - 19/03/2009; Wellards - 17/03/2009
+[NB] Image.ResizeMax - Altered the descision making process for everything except cropped images
+[TS] Image.Save - Error if no directory path supplied fixed.
+
+1.0.0.29
+[NB] Image.ResizeMax - Altered NonCrop If structure to allow Square images a different ruleset
+[NB] Image.ResizeMax - Added procedures for not stretching smaller images
+[NB] Image.NoStretch - Added to allow the option of not stretching smaller images
+[TS] Image.ImageResize - Added two extra High Quality options (Smoothing, Compositing)
+[NB] Image.ImageResize - Added two extra High Quality options (Interpolation, PixelOffset)
+
+1.0.0.28
+[AG] Updated Database.GetDataset to optionally allow parameters to be passed through.
+
+1.0.0.27 - 16/01/2009
+[AG] Text.RandomPassword - Added resilience for options that don't allow for a character set
+
+1.0.0.26 - 06/01/2009
+[AG] Added Text.RandomPassword with extended functionality
+[AG] Added Number.Random as a replacement for System.Random
+[NB] Conversion.ConvertExcelToXml - Extended the OLEDB Connection String for Excel to include IMEX=1 flag
+[NB] Conversion.vb - Line 227 - Added Trim to remove 's
+
+1.0.0.24 - 11/11/2008 Wellards Only
+[AG] Xml.NodeState - Corrected the return parameters for innerxml and innertext
+
+
+1.0.0.23 - 4/11/2008
+[AG]  Create Dictionary module
+[AG]  Added Dictionary.getSimpleHashTable(csvList)
+
+1.0.0.22 - 27/10/2008
+[AG] Errors.ErrorEventArgs - Added a function ToString.
+[AG] Encryption.RC4 - New cryptographic provider (not native to .NET)
+
+1.0.0.21 - 06/10/2008
+[SM] Added new class Eonic.Tools.Calendar
+[AG] Impersonate.ImpersonateValidUser - Fixed 'admin' overriding group validation 
+
+1.0.0.20 - 18/09/2008
+[AG] Database.ExeProcessSqlorIgnore - added connection opening and closing.
+
+1.0.0.19
+[TS] Note from Ali - Trev must've done something to this because it's been released to LIVE.
+
+1.0.0.18
+[AG] Tidied up Tools.Xml by grouping functions inot #Regions - not actually rewriting code
+[AG] Added the Conversion class.
+
+1.0.0.17
+[AG] Added Text.IsIPAddressInList
+[TS] Added Crop Facility to Image Tools
+
+1.0.0.16
+[BR] Fix to CombineNodes
+[BR] Added option for connection pooling
+
+1.0.0.14
+[AG] Applied fix to (space before T) and tidied up Eonic.Tools.XML.XmlDate
+[AG] Added an optional param to Xml.Tools.NodeState - bCheckTrimmedInnerText.
+
+1.0.0.13
+[AG] Applied fix to Eonic.Tools.Database.SqlDate
+
+1.0.0.12
+[BR] Greek Entitities added to xml.convertentitiestocode
+[BR] Updated Eonic.Tools.Database.SqlDate to reflect AG's changes
+
+1.0.0.11
+[AG] Updated  Text.IsEmail to be super efficient (one-liner).
+[AG] Added Xml.Xslt.XsltFunctions.formatDate
+[AG] Added Xml.Xslt.XsltFunctions.textAfterLast - Returns the text after the last occurence of a search string
+
+1.0.0.10
+[AG] Added Xml.NodeState - Function to check whether a Node (or Node + XPath) instantiates, is empty or has contents, with options to populate the resulting node
+
+
+1.0.0.7
+[BR] Added some text functions
+
+1.0.0.6
+[BR] Added Encryption functions
+
+1.0.0.4/5
+[BR] Database.GetDatareader change
+[BR] Added more text functions
+[BR] Added Error module with EventArg Type (FXCOP)
+[BR] Changed some Error handling to use new event args(FXCOP)
+
+1.0.0.3
+[BR] More Minor name changes
+[BR] Images added
+[BR] CSV added
+[BR] Encryption added
+[TS/BR] Various fixes to encryption for FxCop
+
+1.0.0.2 - 11/03/2008 13:30
+[TS/BR] Minor name changes
+
+1.0.0.0 - 04/03/2008 11:00
+[BR] Initial Build 28/02/08

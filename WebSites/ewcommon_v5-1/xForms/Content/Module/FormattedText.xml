@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="FormattedText" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" /> 
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
+      <bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
+      <bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Formatted Text Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+        <input bind="panelImage" class="pickImageFile label-border-top bs-only">
+          <label>Panel Image</label>
+          <value></value>
+        </input>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+        <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Module Links</label>
+        <select1 bind="cLinkType" appearance="full">
+          <label class="label-heading">Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+        <select bind="bLinkBox" appearance="full" class="multiline bs-only">
+          <item>
+            <label>Link entire box</label>
+            <value>true</value>
+          </item>
+          <help class="inline">This will make the whole of the box clickable, rather than just the button at the bottom. This is better for touchscreen devices, but don't use this if you have hyperlinks in the text.</help>
+        </select>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Text</label>
+    </submit>
+  </group>
+</Content>

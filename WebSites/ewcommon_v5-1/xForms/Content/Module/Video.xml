@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+        <cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content position="" moduleType="Video" box="" title="" link="" linkType="internal" linkText="Read more" videoType="Local" size="Auto" ratio="FourThree" width="" height="">
+						<Local url="">
+							<img/>
+						</Local>
+						<YouTube code="" showSuggested="false" useHttps="false"/>
+						<Vimeo code="" portrait="false" title="true" byline="false" autoplay="false" loop="false"/>
+            <HTML5 videoMp4="" videoGG="" videoWebm="" autoplay="autoplay" controls="controls" loop=""/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+			<bind id="cVideoType" nodeset="@videoType" required="true()" type="string"/>
+			<bind nodeset="Local">
+				<bind id="cLocalUrl" nodeset="@url" required="false()" type="string"/>
+				<bind id="cLocalImage" nodeset="img" required="false()" type="xml-replace"/>
+			</bind>
+			<bind nodeset="YouTube">
+				<bind id="cYouTubeCode" nodeset="@code" required="false()" type="string"/>
+				<bind id="cYouTubeShowSuggested" nodeset="@showSuggested" required="false()" type="string"/>
+				<bind id="cYouTubeUseHttps" nodeset="@useHttps" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="Vimeo">
+				<bind id="cVimeoCode" nodeset="@code" required="false()" type="string"/>
+				<bind id="cVimeoTitle" nodeset="@title" required="false()" type="string"/>
+				<bind id="cVimeoByline" nodeset="@byline" required="false()" type="string"/>
+				<bind id="cVimeoPortrait" nodeset="@portrait" required="false()" type="string"/>
+				<bind id="cVimeoAutoplay" nodeset="@autoplay" required="false()" type="string"/>
+				<bind id="cVimeoLoop" nodeset="@loop" required="false()" type="string"/>
+			</bind>
+      <bind nodeset="HTML5">
+        <bind id="cVideoMp4" nodeset="@videoMp4" required="false()" type="string"/>
+        <bind id="cVideoGG" nodeset="@videoGG" required="false()" type="string"/>
+        <bind id="cVideoWebm" nodeset="@videoWebm" required="false()" type="string"/>
+        <bind id="cAutoplay" nodeset="@autoplay" required="false()" type="string"/>
+        <bind id="cControls" nodeset="@controls" required="false()" type="string"/>
+        <bind id="cloop" nodeset="@loop" required="false()" type="string"/>
+      </bind>
+      <bind id="cVideoSize" nodeset="@size" required="false()" type="string"/>
+			<bind id="cVideoRatio" nodeset="@ratio" required="false()" type="string"/>
+			<bind id="cVideoWidth" nodeset="@width" required="false()" type="number"/>
+			<bind id="cVideoHeight" nodeset="@height" required="false()" type="number"/>
+		</bind>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Edit Video Module</label>
+		<group>
+			<group>
+				<!-- These hidden fields and bindings are required for the component-->
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+				<input bind="cModuleType" class="hidden">
+					<label>ModuleType</label>
+				</input>
+				<!-- End of hidden fields -->
+                <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+                <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+			</group>
+		</group>
+		<group>
+			<group>
+				<label>Content</label>
+				<input bind="cModuleTitle" class="long">
+					<label>Title or Name</label>
+				</input>
+			</group>
+			<group>
+				<label>Source</label>
+				<select1 bind="cVideoType" appearance="full">
+					<item>
+            <label>HTML5</label>
+            <value>HTML5</value>
+            <toggle case="cTypeHTML5" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>YouTube</label>
+            <value>YouTube</value>
+            <toggle case="cTypeYouTube" event="DOMActivate"/>
+          </item>
+					<item>
+						<label>Vimeo</label>
+						<value>Vimeo</value>
+						<toggle case="cTypeVimeo" event="DOMActivate"/>
+					</item>
+          <item>
+            <label>Legacy FLV player</label>
+            <value>Local</value>
+            <toggle case="cTypeLocal" event="DOMActivate"/>
+          </item>
+				</select1>
+				<switch class="disable">
+					<!-- Local -->
+					<case id="cTypeLocal">
+						<input bind="cLocalUrl" class="pickMedia">
+							<label>URL</label>
+						</input>
+						<input bind="cLocalImage" class="pickImage">
+							<label>Alternative image</label>
+							<help class="inline">
+								<p>
+									This image will be displayed before the video is played.
+								</p>
+							</help>
+						</input>
+					</case>
+
+					<!-- YouTube -->
+					<case id="cTypeYouTube">
+						<input bind="cYouTubeCode">
+							<label>Video code</label>
+							<help>
+								<p>
+									The video code is a 11 character alphanumeric code - you can find it by
+									clicking the "Share" button under a YouTube video and looking
+									at the last 11 characters of "Link to this video" address (shown below).
+								</p>
+								<p>
+									<img src="/ewcommon/images/admin/help/video/youtube.png" alt="" width="504" height="62"/>
+								</p>
+							</help>
+						</input>
+						<select bind="cYouTubeShowSuggested" appearance="full">
+							<label>Show suggested videos when the video finishes</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+						<select bind="cYouTubeUseHttps" appearance="full">
+							<label>Use HTTPS</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+					</case>
+					
+					<!-- Vimeo-->
+					<case id="cTypeVimeo">
+						<input bind="cVimeoCode">
+							<label>Video code</label>
+							<help>
+								<p>
+									The video code is an 8 number numeric code - you can find it by
+									looking for the last 8 numbers in the address of your Vimeo video
+									(e.g. vimeo.com/<b>12345678</b>).
+								</p>
+							</help>
+						</input>
+						<select bind="cVimeoTitle" appearance="full">
+							<label>Show title</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+						<select bind="cVimeoByline" appearance="full">
+							<label>Show byline</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+						<select bind="cVimeoPortrait" appearance="full">
+							<label>Show portrait</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+						<select bind="cVimeoAutoplay" appearance="full">
+							<label>Autoplay</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>
+						<select bind="cVimeoLoop" appearance="full">
+							<label>Loop</label>
+							<item>
+								<label></label>
+								<value>true</value>
+							</item>
+						</select>						
+					</case>
+
+          <!--HTML5-->
+          <case id="cTypeHTML5">
+            <group>
+              <hint>
+                You can put the full "https://weburl" in or pick file from Resource Library
+              </hint>
+              <input bind="cVideoMp4" class="pickMedia">
+                <label>
+                  The MP4 Source for the HTML5 Video
+                </label>
+              </input>
+              <input bind="cVideoGG" class="pickMedia">
+                <label>
+                  The OGG Source for the HTML5 Video
+                </label>
+              </input>
+              <input bind="cVideoWebm" class="pickMedia">
+                <label>
+                  The WEBM Source for the HTML5 Video
+                </label>
+              </input>
+              <select bind="cControls" appearance="full">
+                <item>
+                  <label>Display controls for Video</label>
+                  <value>controls</value>
+                </item>
+              </select>
+              <select bind="cAutoplay" appearance="full">
+                <item>
+                  <label>Enable Autoplay</label>
+                  <value>autoplay</value>
+                </item>
+              </select>
+              <select bind="cLoop" appearance="full">
+                <item>
+                  <label>Enable loop</label>
+                  <value>loop</value>
+                </item>
+              </select>
+            </group>
+          </case>
+				</switch>
+			</group>
+
+			<group>
+				<label>Size</label>
+				
+				<select1 bind="cVideoSize" appearance="full">
+					<item>
+						<label>Auto</label>
+						<value>Auto</value>
+						<toggle case="cSizeAuto" event="DOMActivate"/>
+					</item>
+					<item>
+						<label>Manual</label>
+						<value>Manual</value>
+						<toggle case="cSizeManual" event="DOMActivate"/>
+					</item>
+				</select1>
+
+				<switch class="disable">
+					<case id="cSizeAuto">
+						<select1 bind="cVideoRatio" class="short">
+							<label>Ratio</label>
+							<item>
+								<label>4:3</label>
+								<value>FourThree</value>
+							</item>
+							<item>
+								<label>16:9</label>
+								<value>SixteenNine</value>
+							</item>
+						</select1>						
+					</case>
+					<case id="cSizeManual">
+						<input bind="cVideoWidth" class="vshort" type="number">
+							<label>Width</label>
+						</input>
+						<input bind="cVideoHeight" class="vshort" type="number">
+							<label>Height</label>
+						</input>
+					</case>
+				</switch>
+			</group> 
+			<group>
+				<label>Module Links</label>
+				<select1 bind="cLinkType" appearance="full" class="required">
+					<label>Type of Link</label>
+					<item>
+						<label>Internal (Going to a page on this site)</label>
+						<value>internal</value>
+						<toggle case="cLinkType_1" event="DOMActivate"/>
+					</item>
+					<item>
+						<label>External (Going to another site)</label>
+						<value>external</value>
+						<toggle case="cLinkType_2" event="DOMActivate"/>
+					</item>
+				</select1>
+				<switch class="disable">
+					<case id="cLinkType_1">
+						<select1 bind="cModuleLink" class="siteTree">
+							<label>Link to page</label>
+						</select1>
+					</case>
+					<case id="cLinkType_2">
+						<input bind="cModuleLink" class="short">
+							<label>Link to URL</label>
+						</input>
+					</case>
+				</switch>
+				<input bind="cModuleLinkText" class="long">
+					<label>Module footer link text</label>
+				</input>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Video Module</label>
+		</submit>
+	</group>
+</Content>

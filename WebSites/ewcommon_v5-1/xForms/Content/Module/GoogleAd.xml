@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Module</cContentSchemaName>
+				<cContentXmlBrief>
+          <Content adName="" adPlacement="" position="" moduleType="GoogleAd" box=""/>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+				<bCascade/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentAdName" nodeset="tblContent/cContentName" required="false()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cContentAdName" nodeset="@adName" required="true()" type="string"/>
+      <bind id="cContentAdPlacement" nodeset="@adPlacement" required="true()" type="string"/>
+		</bind>
+		<bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
+		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+		<bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+		<bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Edit Google Ad Module</label>
+		<group>
+      <group>
+			<!-- These hidden fields and bindings are required for the component-->
+			<input bind="nContentKey" class="hidden">
+				<label>ContentId</label>
+			</input>
+			<input bind="cModuleType" class="hidden">
+				<label>ModuleType</label>
+			</input>
+
+			<!-- end of hidden fields -->
+			<label>Settings</label>
+			<input bind="cPosition" class="readonly">
+				<label>Position</label>
+			</input>
+			<select1 bind="cModuleBox" class="boxStyle" appearance="minimal">
+				<label>Box Style</label>
+				<item>
+					<label>None</label>
+					<value>false</value>
+				</item>
+				<item>
+					<label>Default Box</label>
+					<value>Default Box</value>
+				</item>
+			</select1>
+			<input bind="dPublishDate" class="calendar short">
+				<label>Publish Date</label>
+			</input>
+			<input bind="dExpireDate" class="calendar short">
+				<label>Expire Date</label>
+			</input>
+			<select1 bind="nStatus" appearance="full" class="required vshort">
+				<label>Status</label>
+				<item>
+					<label>Live</label>
+					<value>1</value>
+				</item>
+				<item>
+					<label>Hidden</label>
+					<value>0</value>
+				</item>
+			</select1>
+			<select bind="bCascade" appearance="full">
+				<label>Cascade to Child Pages</label>
+				<item>
+					<label></label>
+					<value>true</value>
+				</item>
+			</select>
+      </group>
+		</group>
+		<group>
+      <group>
+        <label>Advert Details</label>
+        <input bind="cContentAdName" class="long required">
+          <label>Ad name</label>
+          <help class="inline">
+            <p>EonicWeb reference name</p>
+          </help>
+        </input>
+        <input bind="cContentAdPlacement" class="long required">
+          <label>Ad-Manager ad unit name</label>
+          <help class="inline">
+            <p>Google DFP ad unit/placement name</p>
+          </help>
+        </input>
+  		</group>
+    </group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Google Ad</label>
+		</submit>
+	</group>
+</Content>

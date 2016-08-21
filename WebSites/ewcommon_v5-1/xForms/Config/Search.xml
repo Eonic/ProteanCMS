@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="WebSettings">
+   <model>
+     <instance>
+       <web>
+        <add key="SearchMode" value="REGEX" />
+        <add key="SearchContentTypes" value="Product" />
+        <add key="SiteSearch" value="off" />
+        <add key="SiteSearchDebug" value="off" />
+        <add key="SiteSearchPath" value="../Index" />
+        <add key="SiteSearchReadPath" value="../Index/Read" />
+        <add key="SiteSearchWritePath" value="../Index/Write" />
+        <add key="SiteSearchIndexDetailTypes" value="" />
+      </web>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+     <bind id="ewSearchType" nodeset="web/add[@key='SearchType']/@value" required="false()" type="string" />
+     <bind id="ewSearchContentTypes" nodeset="web/add[@key='SearchContentTypes']/@value" required="false()" type="string" />
+    <bind id="ewSiteSearch" nodeset="web/add[@key='SiteSearch']/@value" required="false()" type="string" />
+    <bind id="ewSiteSearchPath" nodeset="web/add[@key='SiteSearchPath']/@value" required="false()" type="string" />
+    <bind id="ewSiteSearchReadPath" nodeset="web/add[@key='SiteSearchReadPath']/@value" required="false()" type="string" />
+    <bind id="ewSiteSearchWritePath" nodeset="web/add[@key='SiteSearchWritePath']/@value" required="false()" type="string" />
+    <bind id="ewSearchDebug" nodeset="web/add[@key='SiteSearchDebug']/@value" required="false()" type="string" />
+    <bind id="ewSiteSearchIndexDetailTypes" nodeset="web/add[@key='SiteSearchIndexDetailTypes']/@value" required="false()" type="string" />
+   </model>
+   <group ref="WebSettings">
+    <label>Search Settings</label>
+    <select1 bind="ewSiteSearch" appearance="full">
+      <label>Index Search</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value>on</value>
+    </select1>
+     <select1 bind="ewSearchDebug" appearance="full">
+       <label>Debug Search</label>
+       <item>
+         <label>On</label>
+         <value>on</value>
+       </item>
+       <item>
+         <label>Off</label>
+         <value>off</value>
+       </item>
+       <value>on</value>
+     </select1>
+     <select1 bind="ewSearchType" appearance="full">
+       <label>Search Type</label>
+       <item>
+         <label>Content</label>
+         <value>REGEX</value>
+       </item>
+       <item>
+         <label>All Pages (requires Index Setup)</label>
+         <value>INDEX</value>
+       </item>
+       <value>on</value>
+     </select1>
+     <input bind="ewSearchContentTypes">
+       <label>Search Content Types</label>
+     </input>
+     <input bind="ewSiteSearchPath">
+      <label>Index Path</label>
+      <value />
+    </input>
+     <input bind="ewSiteSearchReadPath">
+       <label>Index Path Read</label>
+       <value />
+     </input>
+     <input bind="ewSiteSearchWritePath">
+       <label>Index Path Write</label>
+       <value />
+     </input>
+     <textarea bind="ewSiteSearchIndexDetailTypes" cols="60" rows="5">
+       <label>Content Types to Index Detail Views</label>
+       <value />
+     </textarea>
+     <submit submission="" ref="submit" class="principle">
+      <label>Save Settings</label>
+    </submit>
+  </group>
+</Content>

@@ -1,0 +1,417 @@
+﻿/* This is the standard layout for EonicCart V3 E-Commerce plug-in classes, id's and elements*/
+
+#cartFull form, #glFull form
+{
+	padding:0 5px 5px;
+}
+#cartFull form th, #glFull form th
+{
+	text-align:right;
+}
+
+#cartFull table, #glFull table
+{
+	width: auto;
+}
+#cartFull .terminus, #glFull .terminus
+{
+	clear:right !important;
+}
+#cartLegend
+{
+	border:1px solid #666;
+	padding:8px;
+}
+#cartFull .textareaReadOnly, #glFull .textareaReadOnly
+{
+   border-color: #999;
+   background-color: #fff;
+}
+#cartFull td.description, 
+#cartFull td.ref, 
+#cartFull td.price 
+{
+	font-weight: bold;	
+}
+#cartFull .optionList
+{
+	font-weight: normal;
+}
+#cartFull span.radiocheckbox 
+{
+	white-space:nowrap;
+	vertical-align:top;
+	height:25px;
+}
+#cartFull div.radios
+{
+	width:100% !important;
+}
+#cartFull label.radio 
+{
+	margin-right:15px;
+	display:inline-block;
+	/*height:25px;  WHY THE HEIGHT??? Clips all descending characters and brackets !! WH 2009-01-06*/
+}
+#cartFull label.MC, #cartFull label.MasterCard
+{
+	background: transparent url(/ewcommon/images/icons/cc/mc.gif) no-repeat left top;
+	padding-left:35px;
+}
+#cartFull label.VISA, #cartFull label.Visa
+{
+	background: transparent url(/ewcommon/images/icons/cc/visa.gif) no-repeat left top;
+	padding-left:35px;
+}
+#cartFull label.UKE, #cartFull label.Uke
+{
+	background: transparent url(/ewcommon/images/icons/cc/electron.gif) no-repeat left top;
+	padding-left:35px;
+}
+#cartFull label.DELTA, #cartFull label.Delta
+{
+	background: transparent url(/ewcommon/images/icons/cc/delta.gif) no-repeat left top;
+	padding-left:35px;
+}
+#cartFull label.SOLO, #cartFull label.Solo
+{
+	background: transparent url(/ewcommon/images/icons/cc/solo.gif) no-repeat left top;
+	padding-left:20px;
+}
+#cartFull label.SWITCH, #cartFull label.Switch
+{
+	background: transparent url(/ewcommon/images/icons/cc/maestro.gif) no-repeat left top;
+	padding-left:35px;
+}
+#cartFull label.AMEX, #cartFull label.AMEX
+{
+	background: transparent url(/ewcommon/images/icons/cc/amex.gif) no-repeat left top;
+	padding-left:30px;
+}
+#cartLogonBox
+{
+	float:right;
+	width:260px;
+}
+#cartRegisterBox
+{
+	margin-right:280px;
+}
+
+#cartFull .textbox, #cartFull .textarea, #cartFull .dropdown, #glFull .textbox, #glFull .textarea, #glFull .dropdown
+{
+	width:150px;
+}
+
+#cartLegend
+{
+	line-height:1.5;
+	margin-bottom:10px;
+	margin-top: 10px;
+}
+#cartLegend .icon
+{
+	display:none
+}
+#cartLegend p
+{
+	padding-left:30px;
+	margin:5px 0;
+	background:left center no-repeat;
+}
+#cartLegend .delete
+{
+	background:url(/ewcommon/images/icons/delete.png) no-repeat top left;
+}
+
+/* ======================= */
+
+table#cartListing
+{
+	width:100%;
+	margin-top: 10px;
+}
+#cartListing .heading
+{
+	text-align:left;
+}
+
+#cartListing TD, #cartListing TH
+{
+	padding:6px;
+	vertical-align:top;
+}
+#cartListing TH.heading
+{
+	line-height:1.5;
+	color:#FFF;
+	background:#555;
+}
+
+#cartListing TD.cell, #cartListing TD.total
+{
+	border-bottom:1px dashed #bbb;	
+	padding-top:10px !important;
+	height:26px;
+}
+#cartListing TD.quantity
+{
+	padding-top:3px !important;
+	width:90px;
+}
+#cartListing TD .discount
+{
+	font-weight:normal;
+}
+#cartListing .lineTotal, #cartListing .linePrice
+{
+	width:90px;
+}
+#cartListing .linePrice, #cartListing .lineTotal, #cartListing TD.heading, #cartListing TD.amount
+{
+	text-align:right;
+}
+#cartListing TD.dropdown
+{
+	white-space:nowrap;
+	padding:10px 3px;
+	text-align:right;
+}
+
+/* ======================= */
+
+#cartFull h2, #cartRegisterBox, #glFull h2, table.SelectDeliveryOption, table.CreditCardPayment, .cartButtons, #cartInvoice, #cartLogonBox, #cartListing, #cartTerms, .optionButtons, #optionsForm, #PayForm
+{
+	margin-bottom:10px;
+}
+#cartNotes .textarea
+{
+	width:300px;
+}
+#cartNotes P
+{
+	margin:3px 0;
+}
+
+.cartAddress
+{
+	height:1%;
+	line-height:1;
+	margin-bottom:10px;
+	padding-bottom: 12px;
+}
+#cartTerms textarea
+{
+	width:100%;
+}
+#cartTandCs
+{
+	border:1px solid #999;
+	height:7em;
+	overflow:scroll;
+	padding:5px;
+	margin-bottom:10px;
+}
+#billingAddress
+{
+	margin-right:480px;
+}
+.fullwidth #deliveryAddress
+{
+	float:right;
+	width:480px;
+}
+#deliveryAddress
+{
+	float:right;
+	width:380px;
+}
+.shipping .dropdown
+{
+	width:auto !important;
+}
+th.subTitle, .cartAddress P.addressTitle, form h3
+{
+	margin:0;
+}
+.alert
+{
+	color:#f00;
+	display:block;
+}
+form#giftlistForm input.radiocheckbox
+{
+	width:40px;
+}
+form#giftlistForm label.singleword
+{
+	width:150px;
+}
+.day, .month
+{
+	width:45px!important;
+}
+.year
+{
+	width:60px!important;
+}
+#cartFull a.textButton, #glFull a.textButton
+{
+	line-height:3;
+}
+/* ========== DISCOUNTS ========== */
+#template_Discounts_Listings table.discountProducts td.product
+{
+	padding-bottom: 10px !important;
+}
+/* ========== ERROR MESSAGES ========== */
+.errorMessage .err_sub_msg
+{
+	display:block;
+	margin: 0.5em 0;
+}
+
+
+
+.Site TABLE#cartListing TD.delete
+{
+	text-align:center;
+	width:40px;
+}
+
+#cartListing TD.amount
+{
+	background:#ddd;
+}
+#cartListing .total
+{
+	font-weight:700;
+}
+
+.cartAddress form th, .cartAddress form td
+{
+	padding-bottom:3px;
+}
+
+.cartAddress P, .cartAddress h4, .cartAddress h5, .cartAddress a.textButton, #cartInvoice p
+{	
+	padding:2px 5px;
+	margin:0;
+}
+#cartFull a.button
+{
+    -moz-border-radius:4px 4px 4px 4px;
+    font-size:1em;
+    font-weight:bold;
+    height:22px;
+    padding: 5px 5px 0px 5px;
+    display:inline-block;
+    border:2px solid #b0ffa6;
+}
+#cartFull a.principle
+{
+	padding:5px 27px 5px 5px;
+	background:url("/ewcommon/images/admin/cart-submit-principle-bg.png") no-repeat scroll right top transparent;
+	background-color:#b0ffa6 !important;
+}
+#cartFull .ewXform legend
+{
+	font-weight:700;
+	font-size:1.4em;
+	padding:10px 0 10px 0;
+}
+#cartFull .ewXform
+{
+	background-color:#ddd !important;
+}
+#cartFull .ewXform .dropdown, 
+#cartFull .ewXform .textarea, 
+#cartFull .ewXform .textbox,
+#cartFull .ewXform .textBox,
+#cartFull .ewXform .required,
+#cartFull .ewXform select,
+#cartFull .ewXform option
+{
+	width:300px;
+}
+.fullwidth #cartFull .ewXform .dropdown, 
+.fullwidth #cartFull .ewXform .textarea, 
+.fullwidth #cartFull .ewXform .textbox,
+.fullwidth cartFull .ewXform .textBox,
+.fullwidth #cartFull .ewXform .required,
+.fullwidth #cartFull .ewXform select,
+.fullwidth #cartFull .ewXform option
+{
+	width:440px;
+}
+#cartFull .ewXform input.button
+{
+    -moz-border-radius:4px 4px 4px 4px;
+    font-size:1em;
+    font-weight:bold;
+    height:32px;
+    padding:0 5px 0 5px;
+}
+#cartFull .ewXform input.principle
+{
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-principle-bg.png") no-repeat scroll right top transparent;
+	background-color:#b0ffa6 !important;
+}
+#cartFull .ewXform input.continue
+{
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-continue-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc !important;
+}
+#cartFull .ewXform input.update
+{
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-update-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc !important;
+}
+#cartFull .ewXform input.empty
+{
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-delete-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc !important;
+}
+.cartAddress .button
+{
+	margin:5px;
+}
+
+form h3, p.addressTitle
+{
+	padding:10px 5px;
+	font-weight:700;
+	font-size:130%;
+}
+
+/* ========== ERROR MESSAGES ========== */
+.errorMessage
+{
+	text-align:center;
+	padding:15px;
+	margin:20px;
+	background:#FFF;
+	color:#000;
+	border:1px solid #F00;
+}
+
+.errorMessage .zz_footer
+{
+	font-weight:bold;
+	font-style:italic;
+	color:Red;
+}
+#cartLogonBox
+{
+    width: 49%;
+    float:left;
+}
+#cartRegisterBox
+{
+   margin-left: 50%; 
+   width:50%;
+}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+	<ModuleTypes>
+    <ModuleGroup name="Campaign Monitor Modules">
+      <Module type="CampaignMonitorSubscribe" name="CampaignMonitorSubscribe">Campaign Monitor Subscribe</Module>
+	  <Module type="CampaignMonitorUnSubscribe" name="CampaignMonitorUnSubscribe">Campaign Monitor UnSubscribe</Module>
+	</ModuleGroup>
+    <ModuleGroup name="Dropbox Modules">
+      <Module type="DropboxUpload" name="DropboxUpload">DropboxUpload</Module>
+    </ModuleGroup>
+		<ModuleGroup name="WSP Modules">
+			<Module type="ListWebsites" name="ListWebsites">ListWebsites</Module>
+		</ModuleGroup>
+		<ModuleGroup name="MSCRM Modules">
+			<Module type="ListCases" name="ListCases">List Cases</Module>
+		</ModuleGroup>
+	</ModuleTypes>	
+</PageLayouts>

@@ -1,0 +1,150 @@
+/* This is the standard layout for the EonicCart E-Commerce plug-in*/
+
+#cartFull
+{
+
+	position:relative;
+	margin:auto;
+}
+#cartFull h2, table.SelectDeliveryOption, table.CreditCardPayment
+{
+	margin-bottom:10px;
+}
+#cartFull .textareaReadOnly {
+   border-color: #999;
+   background-color: #fff;
+}
+#cartFull .textBox
+{
+	width:150px;
+}
+#cartFull .dropDown
+{
+	width:150px;
+}
+#cartLegend
+{
+	padding:8px;
+	margin-bottom:10px;
+}
+#cartLegend .icon
+{
+	display:none;
+}
+#cartLegend span
+{
+	background: left center no-repeat;
+	padding:5px 0 5px 30px;
+}
+#cartLegend span.delete
+{
+	background-image: url(/common/images/icons/trash.gif);
+}
+.errorMessage
+{
+	text-align:center;
+	padding:15px;
+	margin:20px;
+	background:#FFF;
+	border:1px solid #F00;
+}
+TABLE#cartListing
+{
+	margin:0;
+}
+#cartListing TD, TH
+{
+	padding:3px;
+}
+#cartListing TD
+{
+	vertical-align:middle;
+}
+#cartListing .price
+{
+	text-align:right;
+}
+#cartListing .lineTotal
+{
+	text-align:right;
+}
+#cartListing TD.heading
+{
+	text-align:right;
+}
+#cartListing TD.amount
+{
+	text-align:right;
+}
+#cartListing TD.dropdown
+{
+	white-space:nowrap;
+	padding:10px 3px;
+	text-align:right;
+}
+#cartNotes
+{
+	margin-bottom:10px;
+}
+#cartNotes TEXTAREA
+{
+	width:300px;
+}
+#cartNotes P
+{
+	margin:3px 0;
+}
+table.form
+{
+	margin: 0;
+}
+.cartAddress
+{
+	height:1%;
+}
+.cartButtons
+{
+	margin-bottom:10px;
+}
+#cartTerms
+{
+	margin:10px 0;
+}
+#cartTerms textarea
+{
+	width:100%;
+}
+#cartTandCs
+{
+   border: 1px solid #99a;
+   height: 7em;
+   overflow: scroll;
+   padding: 5px;
+   margin-bottom: 10px;
+}
+#billingAddress
+{
+	float:left;
+	width: 270px;
+}
+#deliveryAddress
+{
+	padding:5px;
+	margin-left:292px;
+}
+.optionButtons
+{
+	margin:10px 0;
+}
+.shipping .dropDown
+{
+	width:auto !important;
+}
+#cartFull .terminus
+{
+	height:10px;
+}
+th.subTitle, .cartAddress P.addressTitle
+{
+	margin:0;
+}

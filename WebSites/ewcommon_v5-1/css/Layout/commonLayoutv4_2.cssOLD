@@ -1,0 +1,2073 @@
+/*
+
+   Column pixel points:
+
+   Assuming main layout is 598px content space (not including 10px padding either side)
+   and the columns are to have a 10px gutter between.  
+   Other assumption is box having 1px border and 8px padding (x2) = new content width of 580.
+   
+   Notes: 33-66 split is actually 38-62
+   
+			1st column width     3rd column width
+   
+   50-50* :			294
+   50-50 boxed :	285
+   33-66 :			222
+   33-66 boxed :	215
+   66-33 :			365
+   66-33 boxed :	354
+   33-33-33 :		192					192
+   
+   * proportions listed represent other templates that use similar layout (e.g. sub page listing
+     uses 50-50 values.
+*/
+
+/* ################################# Common Elements and Classes ################################# */
+form
+{
+	margin:0;
+}
+form table td, form table th
+{
+	padding:3px 5px;
+}
+form input.singleword, form input.short 
+{
+	width:100px;
+}
+form input.currency
+{
+	width:60px;
+}
+
+form .principle
+{
+	float:right;
+}
+form .selectLine
+{
+	 display: inline-block;
+	 margin:3px;
+	 white-space:nowrap;
+}
+form .selectLine label
+{
+	margin-right:3px;
+	padding:0px;
+}
+form .selectLine label span
+{
+	display:inline-block;
+	padding-bottom:5px;
+}
+form .selectLine label img
+{
+	display:block;
+}
+
+.list hr
+{
+	display:none;
+}
+
+table
+{
+	width:100%; 
+	border:none;
+}
+/* Fix for Tiny MCE Editor*/
+div.contextMenu table
+{
+width:auto;
+}
+
+table td
+{
+	vertical-align:top;
+}
+
+P
+{
+	margin: 0 0 1em; /* For column (floating div) templates to work, tag must have no top-spacing */
+}
+
+/*Subscript Superscript fix*/
+
+.Site sup,
+
+.Site sub {
+
+height: 0;
+
+line-height: 1;
+
+vertical-align: baseline;
+
+_vertical-align: bottom;
+
+position: relative;
+
+
+}
+
+.Site sup {
+
+bottom: 1ex;
+
+}
+
+.Site sub {
+
+top: .5ex;
+
+}
+
+
+
+
+.centerHeading
+{
+	text-align: center;	
+}
+.pointer
+{
+	cursor: pointer;	
+}
+
+
+/* ############################ generic classes ############################ */
+.alignleft,
+.alignright
+{
+	margin-top: 10px;
+	margin-bottom: 10px;	
+}
+.alignleft
+{
+	float: left;
+	margin-right: 10px;
+}
+.alignright
+{
+	float: right;
+	margin-left: 10px;
+}
+span.alert,
+td.alert span,
+span.hint,
+td.hint span,
+span.help,
+td.help span
+{
+	border:1px solid #ccc;
+	padding:3px 10px 3px 50px;
+	color:#000;
+	margin:2px;
+	min-height:30px
+}
+span.alert,
+td.alert span
+{
+	display:block;
+	background:#eee url(/ewcommon/images/layout/alert_sml_cccccc.gif) 10px 7px no-repeat;
+	color:#000;
+	font-weight:700;
+	color:#B01100;
+}
+span.hint,
+td.hint span
+{
+	display:block;
+	background:#eee url(/ewcommon/images/layout/hint_sml_cccccc.gif) 10px 7px no-repeat;
+	color:#000;
+	font-weight:700;
+}
+span.help,
+td.help span
+{
+	background:#eee url(/ewcommon/images/layout/hint_sml_cccccc.gif) 10px 7px no-repeat;
+}
+td.alert span.valid
+{
+	background-image:url(/ewcommon/images/layout/message_sent_cccccc.gif);
+	color:#000;
+	padding-left:70px
+}
+.backlink, .morelink
+{
+	text-align:right;
+	clear:right
+}
+.box 
+{
+	margin-bottom:5px;
+	height: 1%; /* !!!!! Stops full page width boxes breaking in IE6 & 7 - No effect in Moz !!!!! */
+}
+.Site .box .content,
+.Site .module .content
+{
+    /*min-height: 20px; WHY?!?! WH-2009-09-17*/    
+}
+.discountinfo
+{
+	vertical-align: super;
+}
+.hidden
+{
+	display: none;
+}
+.imageFloatLeft
+{
+	float:left;
+	margin-right:15px;
+	margin-bottom:5px;
+}
+.imageFloatRight
+{
+	float:right;
+	margin-left:15px;
+	margin-bottom:5px;
+}
+
+.list IMG.thumbnail, 
+.list IMG.picture, 
+.detail IMG.display,
+.detail IMG.picture
+{
+    float: right;
+    margin: 0 0 5px 5px;
+}
+/*.enlarge
+{
+	float:right;
+	text-align:center;
+	margin:0 0 5px 5px;
+}
+.enlarge img.picture
+{
+	float:none !important;
+	display:block !important;
+	margin:0 !important;
+}*/
+.list IMG
+{
+	margin: 5px 5px 0 0;
+}
+.qtybox
+{
+	width:35px!important;
+	text-align:right;
+}
+.stepper, .stepper P 
+{
+	margin: 0; /* Overrules any other P settings */
+	padding: 0 ;
+}
+.stepper P
+{
+	text-align: right;
+}
+
+.template
+{
+	margin: auto;
+}
+.site .template table
+{
+	width:99%;
+}
+
+/* === Terminus : blank item to stop floating items exceeding their containers === */
+
+.terminus
+{
+	clear: both;
+	line-height:0px;
+}
+.list .terminus, 
+.detail .terminus
+{
+	clear:right;
+}
+
+.textareaReadOnly
+{
+   overflow: scroll;
+   height: 8em;
+   padding: 0.5em;
+   border-width: 1px;
+   border-style: solid;
+   margin-bottom: 1em;
+}
+#footer
+{
+}
+#mainLayout TABLE#productList TD.list
+{
+    width: 50%;
+}
+
+/* ################################## Preview bar for admin mode ################################## */
+
+#previewBar
+{
+	background: #46065C url(/ewcommon/images/eonic_skin/infoBar_bg.gif) top left repeat-x;	
+	border: 1px solid #000;
+	border-bottom: none;
+	min-height:38px;
+	color:#fff;
+}
+#previewBar #adminSubMenu2
+{
+	margin-top: 3px;
+	white-space: nowrap;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+#previewBar #adminSubMenu2 ul
+{
+	display:block;
+	margin:10px 0 0 0
+}
+#previewBar #adminSubMenu2 li
+{	position: relative;
+	list-style: none;
+}
+#previewBar #adminSubMenu2 ul a
+{
+	font-size:1em;
+	margin-right: 5px !important;	
+	display:block;
+	padding: 2px 10px 10px 10px;
+	margin-top: 1px;
+	background: #616161;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+#previewBar #adminSubMenu2 .adminSubMenu2TL
+{
+	width: 3px;
+	height: 21px;
+	position: absolute;
+	top: 0;
+	left:0;
+}
+#previewBar #adminSubMenu a.active, 
+#previewBar #adminSubMenu2 a.active
+{
+	color:#fff;
+}
+#previewBar #adminSubMenu a.on, 
+#previewBar #adminSubMenu2 a.on
+{
+	color:#fff;
+}
+#previewBar #addressBar
+{
+	position: relative;
+	padding: 10px 0 2px 15px;
+	min-height: 24px;
+	width:50%;	
+	background: url(/ewcommon/images/eonic_skin/infoBar_rhs.gif) top left no-repeat;
+	color: #FFF;	
+}
+#previewBar #infoContainer
+{
+	background: url(/ewcommon/images/eonic_skin/eonicWeb_logo_bar.gif) 40px top no-repeat;
+}
+#addressBar .TR, #addressBar .BL, #addressBar .BR {width:3px; height:3px;}
+#addressBar .R	{height:100%; width:3px;}
+#addressBar .B	{width:100%; height:3px;}
+
+#addressBar .TR	{position:absolute; top:0; right:0;}
+#addressBar .BR	{position:absolute; bottom:0; right:0;}
+#addressBar .BL	{position:absolute; bottom:0; left:0;}
+#addressBar .R	{position:absolute; top:0; right:0;}
+#addressBar .B	{position:absolute; bottom:0; left:0;}
+
+#previewBar #addressBar .R	{background: url(/ewcommon/images/eonic_skin/addressBar_R.gif) top right no-repeat;}
+#previewBar #addressBar .B	{background: url(/ewcommon/images/eonic_skin/addressBar_B.gif) bottom left no-repeat;}
+#previewBar #addressBar .TR	{background: url(/ewcommon/images/eonic_skin/addressBar_TR.gif) top right no-repeat;}
+#previewBar #addressBar .BL	{background: url(/ewcommon/images/eonic_skin/addressBar_BL.gif) bottom left no-repeat;}
+#previewBar #addressBar .BR	{background: url(/ewcommon/images/eonic_skin/addressBar_BR.gif) bottom right no-repeat;}
+
+#previewBar a
+{
+	color:#fff;
+}
+#previewBar #adminMenu
+{
+	float:right;
+}
+#previewBar #logoff
+{
+	float:right;
+	display:inline-block;
+	text-decoration:none;
+	margin-top: 4px;
+	margin-right: 7px;
+	height: 29px;
+	width: 91px;
+	background: url(/ewcommon/images/eonic_skin/logoff_off.gif) top left no-repeat;	
+}
+#previewBar #logoff:hover
+{
+	background: url(/ewcommon/images/eonic_skin/logoff_off_over.gif) top left no-repeat;	
+}
+#previewBar #adminSubMenu2 ul a
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_tr.gif) top right no-repeat;	
+}
+#previewBar #adminSubMenu2 .adminSubMenu2TL
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_tl.gif) top left no-repeat;	
+}
+#previewBar #adminSubMenu2 ul a:hover
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_over_tr.gif) top right no-repeat;
+}
+#previewBar #adminSubMenu2 a:hover .adminSubMenu2TL
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_over_tl.gif) top left no-repeat;	
+}
+#previewBar #infoContainer
+{
+	padding: 4px 0 4px 6px;
+	padding-left: 180px;	
+}
+* html #previewBar #addressBar
+{
+	height: 24px;	
+}
+#previewBar #addressBar a
+{
+	color: #FFF;
+	text-decoration: none;	
+}
+
+/* ################################## Templates (and children) ################################## */
+
+
+/* ################################## Legacy Templates (id) ################################## */
+.rowMargin
+{
+	margin-right:20px;
+}
+
+.listItem
+{
+	border-bottom:solid 1px #ccc;
+	margin-bottom:20px;
+	float: left;
+	width: 100%;
+}
+.listItem .thumbnail, .listItem .morelink
+{
+	float:right;
+}
+#template_1_Column .cols2 .listItem
+{
+    width: 444px;
+}
+#template_1_Column .cols3 .listItem
+{
+    width: 285px;
+}
+#template_2_Columns DIV#column1, 
+#template_Logon_Register DIV#column1
+{
+	float: left;
+}
+#template_2_Columns .cols2 .listItem
+{
+    width: 200px;
+}
+#template_2_Columns .cols3 .listItem
+{
+    width: 135px;
+}
+
+#template_Modules_2_columns DIV#column1
+{
+    float: left;
+}
+#template_2_Columns
+
+/* ======================== */
+
+#template_2_Columns_66_33 DIV#column1
+{
+	float: left;
+}
+
+
+/* ======================== */
+
+#template_2_Columns_33_66 DIV#column1
+{
+	float: left;
+}
+
+/* ======================== */
+
+#template_2_Columns_Boxed DIV#column1
+{
+	float: left;
+}
+
+
+/* ======================== */
+
+#template_2_Columns_66_33_Boxed .box .content #column1
+{
+	float: left;
+}
+
+/* ======================== */
+
+#template_2_Columns_33_66_Boxed .box .content #column1
+{
+	float: left;
+}
+
+/* ======================== */
+
+#template_3_Columns #column1
+{
+	float: left;
+}
+#template_3_Columns #column2
+{
+	float: left;
+	display:inline;
+}
+#template_3_Columns #column3
+{
+	height:1%;  
+}
+
+/* ======================== */
+
+
+
+/* ======================== */
+
+#template_Stepped_Pages_2Col #column1
+{
+	float:left;
+}
+
+
+/* ======================== */
+
+
+#template_Sub_Page_Listing #column1
+{
+	float: left;
+}
+
+/* ======================== */
+
+#template_Contacts_Style_2 #column1
+{
+	float:right;
+}
+
+
+/* ======================== */
+
+#template_Contacts_List_Companies .list .contactDetails
+{
+	float:right;
+}
+
+/* ======================== */
+
+#template_Events_Style_2 #column1,
+#template_Events_Style_3 #column1,
+.event #column1
+{
+	float:right;
+}
+
+#template_Events_Gallery .list
+{
+    width: 33%; 
+    text-align: center;
+    padding: 5px 0 0 0 !important;   
+}
+
+#template_Events_Gallery .list a img.thumbnail
+{
+    float: none;
+    margin: auto;   
+}
+
+#template_Events_Gallery .list p.date,
+#template_Events_Gallery .list p.venue,
+#template_Events_Gallery .list p.morelink,
+#template_Events_Gallery .list h4
+{
+    display: none;    
+}
+
+/* ======================== */
+
+#template_Home_Variant #column1
+{
+	float: left;
+}
+
+#template_Home_Variant .terminus
+{
+	clear:right;
+}
+/* ======================== */
+
+#template_Image_Gallery_Left #column1
+{
+	float:left;
+}
+
+#template_Image_Gallery_Right #column2
+{
+	float:right;
+}
+
+
+table#imageGallery td.list
+{
+	padding:0 5px;
+}
+
+/* ========================== */
+#template_Image_Library_5col .libImg
+{
+width:180px;
+min-height: 200px;
+float:left;
+text-align:center;
+font-size:0.8em;
+}
+
+#template_Image_Gallery_Switch .box
+{
+	margin-top:10px;
+}
+#template_Image_Gallery_Switch #column1
+{
+	position:relative;
+	float:left;
+}
+
+#template_Image_Gallery_Switch table#libraryList
+{
+	margin-bottom:10px;
+}
+#template_Image_Library_Scroller #imageDetails
+{
+	margin: 10px;
+	float: left;
+}
+
+#template_Image_Library_Scroller #scrollerContainer
+{
+	height: 141px;
+	margin: auto;
+	width: 500px;
+	overflow: auto;
+		
+}
+#template_Image_Library_Scroller #imagePicture
+{
+	margin: 10px;
+	float: right;
+}
+#galleryFocus
+{
+	text-align:center;
+	vertical-align:middle;
+}
+#imgCaption
+{
+	margin:1em 0;
+	text-align:center;
+}
+#template_Image_Library_Scroller #imageDescription
+{
+    text-align:left !important;
+}
+/* ======================== */
+
+
+#template_Image_Library_10up_Stepped_1col #column1
+{
+	float:left;
+}
+
+/*#template_Image_Library_10up_Stepped_1col .terminus
+{
+	clear:right;
+}*/
+
+/* ======================== */
+
+#template_Mailform_Left #column1
+{
+	float: left;
+}
+
+
+/* ======================== */
+
+#template_Mailform_Right #column1
+{
+	float: left;
+}
+
+/* ======================== */
+/* ======================== */
+
+#template_News_Articles_10up_stepped_2col td.newsarticle
+{
+	padding: 5px 10px 5px 10px; 
+}
+/* ======================== */
+
+/* ======================== */
+#template_Sub_Page_Listing_Thumbnail TABLE, #template_Sub_Page_Listing_Thumbnail_2 TABLE, #template_Sub_Page_Listing_Thumbnail_3 TABLE
+{
+	margin:auto;
+}
+
+#template_Sub_Page_Listing_Thumbnail UL
+{
+    padding:0;
+    margin:0 0 0 20px;
+}
+#template_Sub_Page_Listing_Thumbnail LI
+{
+    padding:0;
+    margin:0;
+}
+#template_Sub_Page_Listing_Thumbnail TD.subPageItem, #template_Sub_Page_Listing_Thumbnail_2 TD.subPageItem
+{
+	width:25%;
+	padding:10px;
+}
+#template_Sub_Page_Listing_Thumbnail .subPageTitleThumb
+{
+	margin-bottom:10px;
+    display:block;
+}
+#template_Sub_Page_Listing_Thumbnail .subPageTitle
+{
+    display: block;
+}
+
+/* ======================== */
+
+#template_Sub_Page_Listing_Thumbnail_3 .subPageTitle
+{
+    padding:0 20px 0 0;
+    margin:0;
+}
+
+#template_Sub_Page_Listing_Thumbnail_3 .subPageTitleThumb
+{
+	float:left;
+}
+
+
+#template_Sub_Page_Listing_Thumbnail_3 TD.subPageItem
+{
+	padding: 10px;
+	vertical-align: middle;
+}
+#template_Sub_Page_Listing_Thumbnail_3 TD.subPageItem img.thumbnail
+{
+	float: left;
+}
+/* ======================== */
+
+#template_Sub_Page_Listing_Thumbnail_5 #subPageList h2
+{
+	font-size:110%;
+}
+
+#template_Sub_Page_Listing_Thumbnail_5 .col1
+{
+	width:1px;
+}
+#template_Sub_Page_Listing_Thumbnail_5 .col2
+{
+	padding-left:30px;
+}
+		
+/* ======================== */
+
+#template_Sub_Page_Listing_Table #column1
+{
+	float: left;
+}
+
+
+/* ======================== */
+
+.scrollInstruction
+{
+	margin-top: 2px;	
+}
+
+#template_Sub_Page_Listing_Scroller #scrollerContainer
+{
+	width: 500px;
+	margin: auto;
+	overflow: auto;
+	height: 160px;
+	margin-bottom: 10px;
+}
+
+#template_Sub_Page_Listing_Scroller #scrollerContainer td,
+#template_Product_Scroller #scrollerContainer td,
+.product #scrollerContainer td
+{
+	text-align: center;	
+}
+
+/* ======================== */
+
+#template_Product_Scroller #scrollerContainer,
+.product #scrollerContainer
+{
+	width: 500px;
+	margin: auto;
+	overflow: auto;
+	height: 160px;
+	margin-bottom:10px;
+}
+
+/* ======================== */
+#template_Product_Gallery td.list
+{
+	padding:10px 0;
+}
+#template_Product_Gallery td.list H3
+{
+    margin-bottom:10px;
+    text-align: center;
+}
+#template_Product_Gallery .detail
+{
+    text-align: center;
+}
+#template_Product_Gallery IMG.thumbnail, #template_Product_Gallery IMG.picture
+{
+    padding:0;
+    margin:0 auto;
+    float:none;
+    display:block;
+}
+
+#template_Product_Gallery .detail .stepper
+{
+    text-align: center;
+}
+
+/* ======================== */
+
+#template_Products_Grouped #column1
+{
+	float: left;
+
+}
+
+#template_Products_Grouped h2
+{
+	margin:0;
+}
+table#productsGrouped
+{
+	width:auto !important;
+}
+table#productsGrouped th, table#productsGrouped td
+{
+	text-align:left;
+	vertical-align:middle;
+	padding-right:10px;
+}
+table#productsGrouped H3
+{
+    font-size:100%;
+    margin:0 !important;
+}
+table#productsGrouped H4
+{
+    font-weight: 400;
+    font-size: 100%;
+    margin:0;
+}
+table#productsGrouped td.options
+{
+    width: 80px;
+}
+table#productsGrouped .qtybox
+{
+	text-align: right
+}
+table#productsGrouped td.buttons
+{
+	text-align:right;
+}
+
+/* ======================== */
+
+#template_Products_Grouped_2 #column1, #template_Products_Grouped_3 #column1
+{
+	float: left;
+}
+
+#template_Products_Grouped_3 #column1 IMG
+{
+	margin:0;
+}
+
+/* ======================== */
+
+#template_sitemap #column1
+{
+	float: left;
+}
+.Site #template_sitemap ul ul
+{
+    margin-left: 25px;    
+}
+
+/* ======================== */
+
+#template_Sitemap_Style_2 UL
+{
+	margin:0;
+	padding:0;
+}
+#template_Sitemap_Style_2 UL LI
+{
+	display:inline;
+	list-style-type:none;
+}
+#template_Sitemap_Style_2 UL a
+{
+	position:relative;
+	display:block;
+}
+#template_Sitemap_Style_2 UL UL
+{
+	margin-left:20px;
+}
+#template_Sitemap_Style_2 UL UL a
+{
+	float:left;
+	display:inline;
+}
+
+#template_Sitemap_Style_2 UL UL ul a
+{
+	width:auto;
+	white-space:nowrap;
+}
+/* ======================== */
+
+#template_Search_Results h3.title 
+{
+	padding-top: 20px;	
+}
+#template_Search_Results #searchHeader
+{
+	margin: 10px;	
+}
+#template_Search_Results #searchFacility
+{
+	margin-bottom: 10px;	
+}
+/* ======================== */
+#template_Information .pageTop
+{
+	font-size: 0;	
+}
+/* ======================== */
+
+
+
+
+/* ################################## Revised Templates (class) ################################## */
+
+
+
+.template_2_Columns DIV#column1, 
+.template_Logon_Register DIV#column1
+{
+	float: left;
+    width: 369px;
+}
+.template_2_Columns DIV#column2, 
+.template_Logon_Register DIV#column2
+{
+	margin-left: 379px;
+}
+.template_Modules_2_columns DIV#column1
+{
+    width: 50%;
+    float: left;
+}
+.template_Modules_2_columns DIV#column2
+{
+    margin-left: 51%;
+}
+/* ======================== */
+
+.template_2_Columns_66_33 DIV#column1
+{
+	float: left;
+    width: 365px;
+}
+.template_2_Columns_66_33 DIV#column2
+{
+    margin-left: 375px;
+}
+
+/* ======================== */
+
+.template_2_Columns_33_66 DIV#column1
+{
+	float: left;
+    width: 222px;
+}
+.template_2_Columns_33_66 DIV#column2
+{
+    margin-left: 232px;
+}
+
+/* ======================== */
+
+.template_2_Columns_Boxed DIV#column1
+{
+	float: left;
+    width: 285px;
+}
+
+.template_2_Columns_Boxed DIV#column2
+{  
+	margin-left: 295px;
+}
+
+/* ======================== */
+
+.template_2_Columns_66_33_Boxed .box .content #column1
+{
+	float: left;
+    width: 354px;
+}
+.template_2_Columns_66_33_Boxed .box .content #column2
+{
+	margin-left: 364px;
+}
+
+/* ======================== */
+
+.template_2_Columns_33_66_Boxed .box .content #column1
+{
+	float: left;
+    width: 215px;
+}
+.template_2_Columns_33_66_Boxed .box .content #column2
+{
+	margin-left: 225px;
+}
+
+/* ======================== */
+
+.template_3_Columns #column1
+{
+	float: left;
+    width: 192px;
+}
+.template_3_Columns #column2
+{
+	float: left;
+	display:inline;
+    margin-left: 10px;
+    width: 192px;
+}
+.template_3_Columns #column3
+{
+	height:1%;
+	margin-left:404px;        
+}
+
+/* ======================== */
+
+.template_Stepped_Pages .content
+{
+    margin: 20px 0;
+}
+
+/* ======================== */
+
+.template_Stepped_Pages_2Col #column1
+{
+	float:left;
+	width:294px;
+}
+.template_Stepped_Pages_2Col #column2
+{
+	margin-left:304px;
+}
+
+/* ======================== */
+
+.template_Sub_Page_Listing #column2
+{
+	margin-left: 304px;
+}
+.template_Sub_Page_Listing #column1
+{
+	float: left;
+    width: 294px;
+}
+
+/* ======================== */
+
+.template_Contacts_Style_2 #column1
+{
+	float:right;
+    width: 222px;
+}
+.template_Contacts_Style_2 #column2
+{
+    margin-right: 232px;   
+}
+
+/* ======================== */
+
+.template_Contacts_List_Companies .list .contactDetails
+{
+	float:right;
+	width:222px;
+}
+.template_Contacts_List_Companies .descriptionBrief
+{
+	margin-right:232px;
+}
+
+/* ======================== */
+
+.template_Events_Style_2 #column1,
+.template_Events_Style_3 #column1,
+.event #column1
+{
+	float:right;
+    width: 225px;
+}
+.template_Events_Style_2 #column2,
+.template_Events_Style_3 #column2,
+.event #column2
+{
+    margin-right: 235px;   
+}
+.template_Events_Gallery .list
+{
+    width: 33%; 
+    float: left;
+    text-align: center;
+    padding: 5px 0 0 0 !important;   
+}
+.template_Events_Gallery .list a img.thumbnail
+{
+    float: none;
+    margin: auto;   
+}
+.template_Events_Gallery .list p.date,
+.template_Events_Gallery .list p.venue,
+.template_Events_Gallery .list p.morelink,
+.template_Events_Gallery .list h4
+{
+    display: none;    
+}
+/* ======================== */
+
+.template_Home_Variant #column1
+{
+	float: left;
+    width: 294px;
+}
+.template_Home_Variant #column2
+{
+	margin-left: 304px;
+}
+.template_Home_Variant .terminus
+{
+	clear:right;
+}
+/* ======================== */
+
+.template_Image_Gallery_Left #column1
+{
+	float:left;
+}
+.template_Image_Gallery_Left #column1, .template_Image_Gallery_Right #column2
+{
+	width:240px;
+}
+.template_Image_Gallery_Right #column2
+{
+	float:right;
+}
+.template_Image_Gallery_Left #column2
+{
+	margin-left:250px;
+}
+.template_Image_Gallery_Right #column1
+{
+	margin-right:250px;
+}
+table#imageGallery td.list
+{
+	padding:0 5px;
+}
+
+/* ========================== */
+
+.template_Image_Gallery_Switch .box
+{
+	margin-top:10px;
+}
+.template_Image_Gallery_Switch #column1
+{
+	position:relative;
+	float:left;
+	width:235px;
+}
+.template_Image_Gallery_Switch #column2
+{
+	margin-left:245px;
+}
+.template_Image_Gallery_Switch table#libraryList
+{
+	margin-bottom:10px;
+}
+.template_Image_Library_Scroller #imageDetails
+{
+	margin: 10px;
+	float: left;
+	width: 43%;	
+}
+.template_Image_Library_Scroller #scrollerContainer
+{
+	height: 141px;
+	margin: auto;
+	width: 500px;
+	overflow: auto;
+		
+}
+.template_Image_Library_Scroller #imagePicture
+{
+	margin: 10px;
+	float: right;
+	width: 50%;	
+}
+#galleryFocus
+{
+	text-align:center;
+	vertical-align:middle;
+}
+#imgCaption
+{
+	margin:1em 0;
+	text-align:center;
+}
+.template_Image_Library_Scroller #imageDescription
+{
+    text-align:left !important;
+}
+/* ======================== */
+
+.template_Image_Library_10up_Stepped td.list
+{
+	width:20%;
+}
+.template_Image_Library_9up_Stepped td.list
+{
+	width:33%;
+}
+.template_Image_Library_10up_Stepped_2col td.list
+{
+	width:50%;
+}
+.template_Image_Library_10up_Stepped_1col #column1
+{
+	float:left;
+	width:290px;
+}
+.template_Image_Library_10up_Stepped_1col #column2
+{
+	margin-left:300px;
+}
+/*.template_Image_Library_10up_Stepped_1col .terminus
+{
+	clear:right;
+}*/
+
+/* ======================== */
+
+.template_Mailform_Left #column1
+{
+	float: left;
+    width: 365px;
+}
+
+.template_Mailform_Left #column2
+{
+	margin-left: 390px;
+}
+
+/* ======================== */
+
+.template_Mailform_Right #column1
+{
+	float: right;
+    width: 365px;
+}
+
+.template_Mailform_Right #column2
+{
+	margin-right: 390px;
+}
+
+/* ======================== */
+
+.template_News_Articles_Style_2 #column1
+{
+	float:right;
+    width: 222px;
+}
+.template_News_Articles_Style_2 #column2
+{
+    margin-right: 232px;   
+}
+
+/* ======================== */
+/* ======================== */
+
+.template_News_Articles_10up_stepped_2col td.newsarticle
+{
+	width: 50%;
+	padding: 5px 10px 5px 10px; 
+}
+/* ======================== */
+.Site img.subPageThumbnail 
+{
+	float:right;
+	margin: 0 0 5px 5px;
+}
+/* ======================== */
+.template_Sub_Page_Listing_Thumbnail TABLE, .template_Sub_Page_Listing_Thumbnail_2 TABLE, .template_Sub_Page_Listing_Thumbnail_3 TABLE
+{
+	width:99%;
+	margin:auto;
+}
+.template_Sub_Page_Listing_Thumbnail UL
+{
+    padding:0;
+    margin:0 0 0 20px;
+}
+.template_Sub_Page_Listing_Thumbnail LI
+{
+    padding:0;
+    margin:0;
+}
+.template_Sub_Page_Listing_Thumbnail TD.subPageItem, .template_Sub_Page_Listing_Thumbnail_2 TD.subPageItem
+{
+	width:25%;
+	padding:10px;
+}
+.template_Sub_Page_Listing_Thumbnail .subPageTitleThumb
+{
+	margin-bottom:10px;
+    display:block;
+}
+.template_Sub_Page_Listing_Thumbnail .subPageTitle
+{
+    display: block;
+}
+
+/* ======================== */
+
+.template_Sub_Page_Listing_Thumbnail_3 .subPageTitle
+{
+    padding:0 20px 0 0;
+    margin:0;
+}
+
+.template_Sub_Page_Listing_Thumbnail_3 .subPageTitleThumb
+{
+	float:left;
+}
+
+.Site .template_Sub_Page_Listing_Thumbnail_3 td 
+{
+	width: 50%;
+}
+
+.template_Sub_Page_Listing_Thumbnail_3 TD.subPageItem
+{
+	padding: 10px;
+	vertical-align: middle;
+}
+.template_Sub_Page_Listing_Thumbnail_3 TD.subPageItem img.thumbnail
+{
+	float: left;
+}
+/* ======================== */
+
+.template_Sub_Page_Listing_Thumbnail_5 #subPageList h2
+{
+	font-size:110%;
+}
+.template_Sub_Page_Listing_Thumbnail_5 .col1
+{
+	width:1px;
+}
+.template_Sub_Page_Listing_Thumbnail_5 .col2
+{
+	padding-left:30px;
+}
+		
+/* ======================== */
+
+.template_Sub_Page_Listing_Table #column1
+{
+	float: left;
+    width: 365px;
+}
+.template_Sub_Page_Listing_Table #column2
+{
+	margin-left: 375px;
+}
+
+/* ======================== */
+.scrollInstruction
+{
+	margin-top: 2px;	
+}
+.template_Sub_Page_Listing_Scroller #scrollerContainer
+{
+	width: 500px;
+	margin: auto;
+	overflow: auto;
+	height: 160px;
+	margin-bottom: 10px;
+}
+.template_Sub_Page_Listing_Scroller #scrollerContainer td,
+.template_Product_Scroller #scrollerContainer td,
+.product #scrollerContainer td
+{
+	text-align: center;	
+}
+/* ======================== */
+
+.template_Product_Scroller #scrollerContainer,
+.product #scrollerContainer
+{
+	width: 500px;
+	margin: auto;
+	overflow: auto;
+	height: 160px;
+	margin-bottom:10px;
+}
+
+/* ======================== */
+.template_Product_Gallery td.list
+{
+	width:33%;
+	padding:10px 0;
+}
+.template_Product_Gallery td.list H3
+{
+    margin-bottom:10px;
+    text-align: center;
+}
+.template_Product_Gallery .detail
+{
+    text-align: center;
+}
+.template_Product_Gallery IMG.thumbnail, .template_Product_Gallery IMG.picture
+{
+    padding:0;
+    margin:0 auto;
+    float:none;
+    display:block;
+}
+
+.template_Product_Gallery .detail .stepper
+{
+    text-align: center;
+}
+
+/* ======================== */
+
+.template_Products_Grouped #column1
+{
+	float: left;
+   width: 222px;
+}
+.template_Products_Grouped #column2
+{
+    margin-left: 232px;
+}
+.template_Products_Grouped h2
+{
+	margin:0;
+}
+table#productsGrouped
+{
+	width:auto !important;
+}
+table#productsGrouped th, table#productsGrouped td
+{
+	text-align:left;
+	vertical-align:middle;
+	padding-right:10px;
+}
+table#productsGrouped H3
+{
+    font-size:100%;
+    margin:0 !important;
+}
+table#productsGrouped H4
+{
+    font-weight: 400;
+    font-size: 100%;
+    margin:0;
+}
+table#productsGrouped td.options
+{
+    width: 80px;
+}
+table#productsGrouped .qtybox
+{
+	text-align: right
+}
+table#productsGrouped td.buttons
+{
+	text-align:right;
+}
+
+/* ======================== */
+
+.template_Products_Grouped_2 #column1, .template_Products_Grouped_3 #column1
+{
+	float: left;
+    width: 250px;
+}
+.template_Products_Grouped_2 #column2, .template_Products_Grouped_3 #column2
+{
+    margin-left: 260px;
+}
+.template_Products_Grouped_3 #column1 IMG
+{
+	margin:0;
+}
+
+/* ======================== */
+
+.template_sitemap #column1
+{
+	float: left;
+    width: 365px;
+}
+.template_sitemap #column2
+{
+	margin-left: 375px;
+}
+
+/* ======================== */
+
+.template_Sitemap_Style_2 UL
+{
+	margin:0;
+	padding:0;
+}
+.template_Sitemap_Style_2 UL LI
+{
+	display:inline;
+	list-style-type:none;
+}
+.template_Sitemap_Style_2 UL a
+{
+	position:relative;
+	display:block;
+}
+.template_Sitemap_Style_2 UL UL
+{
+	margin-left:20px;
+}
+.template_Sitemap_Style_2 UL UL a
+{
+	float:left;
+	width:130px;
+	display:inline;
+}
+.template_Sitemap_Style_2 ul ul ul
+{
+	margin-left:150px;
+}
+.template_Sitemap_Style_2 UL UL ul a
+{
+	width:auto;
+	white-space:nowrap;
+}
+/* ======================== */
+
+.template_Search_Results h3.title 
+{
+	padding-top: 20px;	
+}
+.template_Search_Results #searchHeader
+{
+	margin: 10px;	
+}
+.template_Search_Results #searchFacility
+{
+	margin-bottom: 10px;	
+}
+/* ======================== */
+.template_Information .pageTop
+{
+	font-size: 0;	
+}
+/* ======================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.testimonial .source
+{
+	text-align: right;	
+}
+.testimonial .sourceName
+{
+	font-weight: bold;	
+}
+/* ======================== */
+.downloadlink
+{
+	display:block;
+	margin-bottom:5px;
+}
+.list p.author
+{
+	margin:0;
+}
+.libraryimage p.image
+{
+	text-align:center;
+	float:right;
+	margin-left:10px;
+	margin-bottom:10px;
+}
+.libraryimage p.image img.picture
+{
+	float:none;
+	margin:0;
+}
+.libraryimage .backlink
+{
+	padding:0 50px;
+}
+td.libraryimage
+{
+	text-align:center;
+}
+td.libraryimage img.thumbnail
+{
+	float:none;
+}
+table#libraryList
+{
+	width:100%;
+}
+
+/* ======================== */
+
+TABLE#subPageTable
+{
+    border-top: #000 1px solid;
+    border-left: #000 1px solid
+}
+TABLE#subPageTable .col1
+{
+    WIDTH: 100px;
+}
+TABLE#subPageTable .col2
+{
+    WIDTH: auto
+}
+TABLE#subPageTable .col3
+{
+    WIDTH: 30%
+}
+
+/* ======================== */
+
+#developerLink a
+{
+	text-decoration:none;
+	font-weight:400;
+	float:right;
+	padding:3px 10px;
+}
+#developerLink a:hover
+{
+	text-decoration:none;
+}
+input.slider
+{
+	float:left;
+	width:20px;
+}
+.Site input
+{
+	overflow:hidden !important;
+}
+div.slider
+{
+margin-left:30px;
+}
+
+/* ##################################  Calendar Styling for Date input ################################### */
+/* The main calendar widget.  DIV containing a table. */
+
+.calendar {
+  position: relative;
+  display: none;
+  border: 0px ;
+  font-size: 11px;
+  color: #000;
+  cursor: default;
+  background: #c8d0d4;
+  font-family: tahoma,verdana,sans-serif;
+  width:180px !important;
+}
+
+.calendar table {
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  font-size: 11px;
+  color: #000;
+  cursor: default;
+  background: #c8d0d4;
+  font-family: tahoma,verdana,sans-serif;
+}
+
+/* Header part -- contains navigation buttons and day names. */
+
+.calendar .button { /* "<<", "<", ">", ">>" buttons have this class */
+  text-align: center;
+  padding: 1px;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+}
+
+.calendar .nav {
+  background: transparent url(menuarrow.gif) no-repeat 100% 100%;
+}
+
+.calendar thead .title { /* This holds the current "month, year" */
+  font-weight: bold;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788084;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar thead .headrow { /* Row <TR> containing navigation buttons */
+}
+
+.calendar thead .daynames { /* Row <TR> containing the day names */
+}
+
+.calendar thead .name { /* Cells <TD> containing the day names */
+  border-bottom: 1px solid #000;
+  padding: 2px;
+  text-align: center;
+  background: #e8f0f4;
+}
+
+.calendar thead .weekend { /* How a weekend day name shows in header */
+  color: #f00;
+}
+
+.calendar thead .hilite { /* How do the buttons in header appear when hover */
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: 2px solid #fff;
+  padding: 0px;
+  background-color: #d8e0e4;
+}
+
+.calendar thead .active { /* Active (pressed) buttons in header */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  background-color: #b8c0c4;
+}
+
+/* The body part -- contains all the days in month. */
+
+.calendar tbody .day { /* Cells <TD> containing month days dates */
+  width: 2em;
+  text-align: right;
+  padding: 2px 4px 2px 2px;
+}
+.calendar tbody .day .othermonth{
+  font-size: 80%;
+  color: #aaa;
+}
+.calendar tbody .day .othermonth .oweekend {
+  color: #faa;
+}
+
+.calendar table .wn {
+  padding: 2px 3px 2px 2px;
+  border-right: 1px solid #000;
+  background: #e8f4f0;
+}
+
+.calendar tbody .rowhilite td {
+  background: #d8e4e0;
+}
+
+.calendar tbody .rowhilite td.wn {
+  background: #c8d4d0;
+}
+
+.calendar tbody td.hilite { /* Hovered cells <TD> */
+  padding: 1px 3px 1px 1px;
+  border: 1px solid;
+  border-color: #fff #000 #000 #fff;
+}
+
+.calendar tbody td.active { /* Active (pressed) cells <TD> */
+  padding: 2px 2px 0px 2px;
+  border: 1px solid;
+  border-color: #000 #fff #fff #000;
+}
+
+.calendar tbody td.selected { /* Cell showing selected date */
+  font-weight: bold;
+  padding: 2px 2px 0px 2px;
+  border: 1px solid;
+  border-color: #000 #fff #fff #000;
+  background: #d8e0e4;
+}
+
+.calendar tbody td.weekend { /* Cells showing weekend days */
+  color: #f00;
+}
+
+.calendar tbody td.today { /* Cell showing today date */
+  font-weight: bold;
+  color: #00f;
+}
+
+.calendar tbody .disabled { color: #999; }
+
+.calendar tbody .emptycell { /* Empty cells (the best is to hide them) */
+  visibility: hidden;
+}
+
+.calendar tbody .emptyrow { /* Empty row (some months need less than 6 rows) */
+  display: none;
+}
+
+/* The footer part -- status bar and "Close" button */
+
+.calendar tfoot .footrow { /* The <TR> in footer (only one right now) */
+}
+
+.calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
+  background: #e8f0f4;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788084;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar tfoot .hilite { /* Hover style for buttons in footer */
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  padding: 1px;
+  background: #d8e0e4;
+}
+
+.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+/* Combo boxes (menus that display months/years for direct selection) */
+
+.calendar .combo {
+  position: absolute;
+  display: none;
+  width: 4em;
+  top: 0px;
+  left: 0px;
+  cursor: default;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  background: #d8e0e4;
+  font-size: 90%;
+  padding: 1px;
+  z-index: 100;
+}
+
+.calendar .combo .label,
+.calendar .combo .label-IEfix {
+  text-align: center;
+  padding: 1px;
+}
+
+.calendar .combo .label-IEfix {
+  width: 4em;
+}
+
+.calendar .combo .active {
+  background: #c8d0d4;
+  padding: 0px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+.calendar .combo .hilite {
+  background: #048;
+  color: #aef;
+}
+
+.calendar td.time {
+  border-top: 1px solid #000;
+  padding: 1px 0px;
+  text-align: center;
+  background-color: #e8f0f4;
+}
+
+.calendar td.time .hour,
+.calendar td.time .minute,
+.calendar td.time .ampm {
+  padding: 0px 3px 0px 4px;
+  border: 1px solid #889;
+  font-weight: bold;
+  background-color: #fff;
+}
+
+.calendar td.time .ampm {
+  text-align: center;
+}
+
+.calendar td.time .colon {
+  padding: 0px 2px 0px 3px;
+  font-weight: bold;
+}
+
+.calendar td.time span.hilite {
+  border-color: #000;
+  background-color: #667;
+  color: #fff;
+}
+
+.calendar td.time span.active {
+  border-color: #f00;
+  background-color: #000;
+  color: #0f0;
+}
+/* =##########========== FLASH STUFF ============###########= */
+.list .FVPlayer
+{
+    width: 200px;
+    float: right; 
+    margin-left: 5px;
+    margin-bottom: 5px;  
+}
+.detail .FVPlayer OBJECT
+{
+    margin-bottom: 20px;
+    z-index:inherit;
+}
+div#mapWindowContainer
+{
+	visibility: hidden;
+}
+
+/* =##########========== POLL STUFF ============###########= */
+.pollBar
+{
+	background: #bcbcbc;
+	border: 1px solid #000;
+	height: 25px;
+}
+.optionResult
+{
+	padding: 0 0 5px 10px;
+}
+.pollsubmission
+{
+	padding: 20px 5px 10px 15px;
+	text-align: left;
+}
+.pollsubmission input
+{
+	float: none;	
+}

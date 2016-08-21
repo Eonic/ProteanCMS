@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>AdCanopyAdvert</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content>
+            <iframe src="" width="" height="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"/>
+            <z/>
+            <f/>
+            <r/>
+            <Notes/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <bind id="cContentSRC" nodeset="tblContent/cContentXmlBrief/Content/iframe/@src" required="true()" type="string"/>
+    <bind id="cContentWIDTH" nodeset="tblContent/cContentXmlBrief/Content/iframe/@width" required="true()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+      <alert type="type">Must be a numeric value</alert>
+    </bind>
+    <bind id="cContentHEIGHT" nodeset="tblContent/cContentXmlBrief/Content/iframe/@height" required="true()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+      <alert type="type">Must be a numeric value</alert>
+    </bind>
+
+    <bind id="cContentFrameBorder" nodeset="tblContent/cContentXmlBrief/Content/iframe/@frameborder" required="false()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+      <alert type="type">Must be a numeric value</alert>
+    </bind>
+    <bind id="cContentScrolling" nodeset="tblContent/cContentXmlBrief/Content/iframe/@scrolling" required="false()" type="string"/>
+    <bind id="cContentMarginHeight" nodeset="tblContent/cContentXmlBrief/Content/iframe/@marginheight" required="false()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+      <alert type="type">Must be a numeric value</alert>
+    </bind>
+    <bind id="cContentMarginWidth" nodeset="tblContent/cContentXmlBrief/Content/iframe/@marginwidth" required="false()" type="format:^[-+]?[0-9]*\.?[0-9]+$">
+      <alert type="type">Must be a numeric value</alert>
+    </bind>
+
+    <bind id="cContentZ" nodeset="tblContent/cContentXmlBrief/Content/z" required="true()" type="string"/>
+    <bind id="cContentF" nodeset="tblContent/cContentXmlBrief/Content/f" required="true()" type="string"/>
+    <bind id="cContentR" nodeset="tblContent/cContentXmlBrief/Content/r" required="false()" type="string"/>
+    <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+    <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+    <bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+    <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit AdCanopy Advert Code</label>
+    <group>
+      <group>
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="cContentName" class="required short">
+          <label>Text Location</label>
+        </input>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <select bind="bCascade" appearance="full">
+          <label>Cascade to Child Pages</label>
+          <item>
+            <label></label>
+            <value>true</value>
+          </item>
+        </select>
+        <input bind="cDescription" class="short">
+          <label>Change Notes</label>
+        </input>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>AdCanopy URL</label>
+        <input bind="cContentSRC" class="required long">
+          <label>SRC</label>
+        </input>
+        <input bind="cContentZ" class="required">
+          <label>Z</label>
+        </input>
+        <input bind="cContentF" class="required">
+          <label>F</label>
+        </input>
+        <input bind="cContentR">
+          <label>R</label>
+        </input>
+      </group>
+      <group>
+        <label>Dimensions</label>
+        <input bind="cContentWIDTH" class="required">
+          <label>Width</label>
+        </input>
+        <input bind="cContentHEIGHT" class="required">
+          <label>Height</label>
+        </input>
+      </group>
+      <group>
+        <label>Options</label>
+        <input bind="cContentFrameBorder">
+          <label>Frame Border</label>
+        </input>
+        <input bind="cContentScrolling">
+          <label>Scrolling</label>
+        </input>
+        <input bind="cContentMarginHeight">
+          <label>Margin Height</label>
+        </input>
+        <input bind="cContentMarginWidth">
+          <label>Margin Width</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <submit submission="" ref="ewSubmit" class="principle">
+    <label>Save Advert Code</label>
+  </submit>
+</Content>

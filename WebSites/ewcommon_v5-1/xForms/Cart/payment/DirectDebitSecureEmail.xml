@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="PayForm">
+  <model>
+    <instance>
+		<DirectDebit>
+			<AccountHolder></AccountHolder>
+			<BankSortCode></BankSortCode>
+			<BankName></BankName>
+			<BankAddress></BankAddress>
+			<BankAccountNumber></BankAccountNumber>
+			<BankAccountName></BankAccountName>
+			<AgreementDate></AgreementDate>
+		</DirectDebit>
+    </instance>
+    <submission id="payment" action="" method="POST" event="return form_check(this);" />
+	  <bind nodeset="DirectDebit">
+		  <bind id="AccountHolder" nodeset="AccountHolder" required="true()" type="string" />
+		  <bind id="BankName" nodeset="BankName" required="true()" type="string" />
+		  <bind id="BankAddress" nodeset="BankAddress" required="true()" type="string" />
+		  <bind id="BankSortCode" nodeset="BankSortCode" required="true()" type="string" />
+		  <bind id="AcctNumber" nodeset="BankAccountNumber" required="true()" type="string" />
+		  <bind id="AcctReferance" nodeset="PolicyClientReference" required="true()" type="string" />
+		  <bind id="PrefPaymentDate" nodeset="PrefPaymentDate" required="false()" type="string" />	  
+	  </bind>
+  </model>
+  <group ref="address">
+    <label>Pay by Direct Debit</label>
+		<input bind="AccountHolder" class="textbox required">
+			<label>Account Holder</label>
+		</input>
+		<input bind="BankName" class="textbox required">
+			<label>Bank Name</label>
+		</input>
+		<input bind="BankAddress" class="textbox required">
+			<label>Bank Address</label>
+		</input>
+		<input bind="BankSortCode" class="textbox required">
+			<label>Bank Sort Code</label>
+		</input>
+		<input bind="AcctNumber" class="textbox required">
+			<label>Account Number</label>
+		</input>
+		<input bind="AcctReferance" class="textbox">
+			<label>Account Referance (if applicable)</label>
+		</input>
+	  <input bind="PrefPaymentDate" class="textbox">
+		  <label>Prefered Payment Date</label>
+	  </input>
+	</group>
+	<submit submission="SubmitDD" ref="confirmPaymentDetails" class="principle">
+      <label>Confirm Payment by Monthly Instalments</label>
+	  <hint>The day of the month the payment is taken</hint>
+    </submit>
+</Content>

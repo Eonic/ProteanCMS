@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="FlashMovie" box="" title="" link="" linkType="internal" slinkText="Read more">
+            <object type="application/x-shockwave-flash" width="" height="" data="" id="">
+              <param name="movie" value=""/>
+              <param name="quality" value="high"/>
+              <param name="bgcolor" value="#000000"/>
+              <param name="ver" value="7"/>
+              <param name="menu" value="false"/>
+              <param name="wmode" value="opaque"/>
+              <img src="" class="FlashAlternative"/>
+            </object>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cContentMovie" nodeset="object/@data" required="true()" type="string"/>
+      <bind id="cContentMovie" nodeset="object/param[@name='movie']/@value" required="true()" type="string"/>
+      <bind id="cContentWidth" nodeset="object/@width" required="true()" type="string"/>
+      <bind id="cContentHeight" nodeset="object/@height" required="true()" type="string"/>
+      <bind id="cBGColor" nodeset="object/param[@name='bgcolor']/@value" required="true()" type="string"/>
+      <bind id="cContentQuality" nodeset="object/param[@name='quality']/@value" required="true()" type="string"/>
+      <bind id="cContentImage" nodeset="object/img[@class='FlashAlternative']" required="false()" type="xml-replace"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col ">
+    <label>Edit Flash Movie Module</label>
+    <group>
+      <!-- These hidden fields and bindings are required for the component-->
+      <input bind="nContentKey" class="hidden">
+        <label>ContentId</label>
+      </input>
+      <input bind="cModuleType" class="hidden">
+        <label>ModuleType</label>
+      </input>
+      <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+      <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+    </group>
+    <group class="inline">
+      <label>Flash Movie Properties</label>
+      <input bind="cModuleTitle" class="long">
+        <label>Title or Name</label>
+      </input>
+      <input bind="cContentMovie" class="required pickMedia">
+        <label>Flash Movie</label>
+      </input>
+      <input bind="cContentWidth" class="required ">
+        <label>Width</label>
+      </input>
+      <input bind="cContentHeight" class="required ">
+        <label>Height</label>
+      </input>
+      <input bind="cModuleHeight" class="short">
+        <label>Minimum Height</label>
+      </input>
+      <input bind="cBGColor" class="required colorPicker">
+        <label>Background Colour</label>
+      </input>
+      <select1 bind="cContentQuality" appearance="full" class="required ">
+        <label>Quality</label>
+        <item>
+          <label>High</label>
+          <value>high</value>
+        </item>
+        <item>
+          <label>Low</label>
+          <value>low</value>
+        </item>
+      </select1>
+      <input bind="cContentImage" class="short pickImage">
+        <label>Alternative Image</label>
+      </input>
+      </group>
+    <group>
+      <select1 bind="cModuleLink" class="siteTree">
+        <label>Link to Page</label>
+      </select1>
+      <input bind="cModuleLinkText" class="long">
+        <label>Module footer link text</label>
+      </input>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Flash Movie</label>
+    </submit>
+  </group>
+</Content>

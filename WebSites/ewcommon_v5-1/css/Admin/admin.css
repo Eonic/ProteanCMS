@@ -1,0 +1,1758 @@
+/* reset body font-size to px for adminMode 
+.ewAdmin, .ewAdmin h1, .ewAdmin h2, .ewAdmin h3, .ewAdmin h4, .ewAdmin h5, .ewAdmin h6 ,.ewAdmin .ui-widget
+{
+    font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif !important;
+}
+.ewAdmin h1
+{
+    font-family: "Segoe UI Light" !important;
+}
+.ewAdmin dt
+{
+    font-weight: bold;
+}
+.ewAdmin .ui-widget
+{
+    font-size:1em;
+}
+.ewAdmin .hidden
+{
+    display: none;
+}*/
+
+/* ============================= ADMIN MODE LAYOUTS ========================= */
+/*.ewAdmin #adminLayout
+{
+    margin: 0px auto 0px auto;
+    padding:15px;
+    background-color: rgb(243, 247, 251)
+}*/
+
+.ewAdmin #footerCopyright
+{
+    padding:15px 0 15px 0;
+}
+
+/*.ewAdmin #adminLayout .page-header
+{
+    border-bottom: solid 2px #c0cfd8;
+    font-size: 2.2em;
+    font-family: "Segoe UI Light";
+    display: block;
+    padding: 0px 5px 15px 10px;
+    margin: 0px 0px 10px 0px;
+    color: #464646;
+}*/
+
+/*.ewAdmin .ewXform .panel-body
+{
+  background-color:#F6F7F9;
+}
+
+.ewAdmin .ewXform legend
+{
+  line-height:1.2em;
+  padding-bottom:5px;
+}*/
+
+.ewAdmin #adminLayout #LeftMenu a
+{
+    padding: 5px 12px 5px 21px;
+    display: block;
+    border-bottom: solid 1px #C0CFD8;
+}
+.ewAdmin #adminLayout #LeftMenu a .adminMenuIcon
+{
+    display: none;
+}
+
+
+
+
+/* ============================= Content Body / Reports and Forms ========================= */
+
+#popupWindow
+{
+    padding: 0px;
+    width: 770px;
+}
+
+#popupWindow form.ewXform
+{
+    width: 760px;
+}
+
+#popupWindow #template_FileSystem
+{
+    width: 780px;
+}
+#popupWindow #template_FileSystem #column1
+{
+    width: 220px !important;
+}
+#popupWindow #template_FileSystem #column2
+{
+    width: 500px !important;
+}
+
+.ewAdmin div.report
+{
+    width: 944px;
+    margin: auto;
+    margin-top: 5px;
+    padding: 20px;
+}
+.ewAdmin div.report #column2
+{
+    float: right;
+    width: 653px;
+}
+/**/
+.ewAdmin #tpltAdvancedMode #column2
+{
+    width: 680px;
+}
+.ewAdmin #tpltAdvancedMode td.name
+{
+    font-size:.80em;
+}
+.ewAdmin #tpltAdvancedMode td.name span
+{
+    padding-right:5px;
+}
+.ewAdmin div.report #column1
+{
+    width: 250px !important;
+}
+.ewAdmin div.report div.reportSet
+{
+    position: relative;
+    padding: 7px;
+}
+.ewAdmin div.report div.reportSet div#accordion
+{
+    background: #fff;
+    padding: 7px;
+}
+
+.ewAdmin div.report div.reportSet div#accordion div.header, .ewAdmin .ewXform div#accordion div.header
+{
+    color: #fff;
+    padding: 7px 5px 5px 40px;
+    height: 30px;
+    border: none;
+    background: #606163;
+    margin-bottom: 5px;
+}
+
+
+
+.ewAdmin .ui-accordion div.ui-accordion-header span.ui-icon
+{
+    position: absolute;
+    width: 24px;
+    height: 27px;
+    padding: 0;
+    margin: 0;
+    margin-top: 0;
+    top: auto;
+    left: 7px;
+}
+
+.ewAdmin .adminListControls
+{
+    text-align: left;
+    margin-top: 22px;
+}
+.ewAdmin div.adminList div.ui-accordion-header span.ui-icon-triangle-1-e
+{
+    background: url(/ewcommon/images/admin/sectionHeaderClosed.gif) no-repeat;
+}
+.ewAdmin div.adminList div.ui-accordion-header span.ui-icon-triangle-1-s
+{
+    background: url(/ewcommon/images/admin/sectionHeaderOpen.gif) no-repeat;
+}
+
+.ewAdmin div.adminList div.header a.adminButton
+{
+    font-size: .8em;
+}
+.ewAdmin div.adminList table, .ewAdmin table.adminList
+{
+    border: none;
+    margin-bottom: 5px;
+    width: 100%;
+}
+.ewAdmin table.adminList th
+{
+    font-weight: bold;
+    padding: 15px 5px 5px 0;
+    border-bottom: solid 1px #c0cfd8;
+}
+.ewAdmin table.adminList td
+{
+    padding: 5px;
+    border-bottom: dashed 1px #c0cfd8;
+}
+.ewAdmin table.table td .btn
+{
+    margin-bottom:5px;    
+}
+.ewAdmin table.adminList td.relatedOptionsButton
+{
+    width: 300px;
+    text-align:right;
+    padding-right:7px;
+}
+.ewAdmin div.adminList td.name
+{
+    font-size: .9em;
+    font-weight: bold;
+    color: #612e8d;
+}
+.ewAdmin div.adminList td.name span
+{
+    font-weight: normal;
+    font-size: .75em;
+    color: #000;
+}
+.ewAdmin div.adminList tr, .ewAdmin table.adminList tr
+{
+    border-bottom: solid 1px #c0cfd8;
+}
+
+.ewAdmin table.adminList tr.midRow, .ewAdmin table.adminList tr.midRow td
+{
+    border-bottom: none;
+}
+
+.ewAdmin .ewXform .fieldset .fieldset
+{
+    padding:0px 15px;    
+}
+
+/* ==================Form Specific=================================*/
+.ewAdmin div.report
+{
+    position: relative;
+    background: #f3f7fb;
+    border: solid 1px #c0cfd8;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 10px;
+    color: #464646;
+}
+
+.ewAdmin form#UserLogon
+{
+    margin-top: 100px;
+    margin-bottom: 130px;
+    margin-right:auto;
+    margin-left:auto;
+    width: 350px;
+}
+
+.ewAdmin form#UserLogon h3.panel-title
+{
+    font-size:1.7em;
+}
+
+.ewAdmin form#UserLogon input.adminButton
+{
+    width: auto;
+}
+
+.ewAdmin div.report h2
+{
+    border-bottom: solid 1px #c0cfd8;
+    font-size: 1.7em;
+    font-weight: normal;
+    display: block;
+    padding: 0px 5px 7px 27px;
+    background: url(/ewcommon/images/admin/formHeader.gif) no-repeat 0px 5px;
+    color: #464646;
+    width: 93%;
+}
+
+
+#template_AdminXForm .ewXform fieldset.adminRights LI
+{
+    margin: 0 0 0 10px;
+}
+
+#template_AdminXForm .ewXform fieldset.adminRights LABEL{display: inline-block;width: 200px;margin:0px;padding:0px}
+#template_AdminXForm .ewXform fieldset.adminRights .checkboxes{display: inline-block;width: 200px;line-height:0em}
+#template_AdminXForm .ewXform fieldset.adminRights .checkboxes .radiocheckbox{line-height:0em;height:10px;}
+#template_AdminXForm .ewXform fieldset.adminRights fieldset{margin-left:20px;}
+#template_AdminXForm .ewXform fieldset.adminRights .form-group{margin-bottom:0px;}
+
+#template_AdminXForm .ewXform fieldset.adminRights SPAN.radiocheckbox
+{
+    line-height: 1em;
+}
+
+.ewAdmin div.report h2
+{
+    margin: 0;
+}
+
+.ewAdmin div.report h3
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 5px 5px 7px 5px;
+    border: none;
+    background: none;
+    display: block;
+    padding: 5px;
+}
+#template_AdminXForm .ewXform fieldset ol
+{
+    margin: 0;
+}
+#template_AdminXForm .ewXform fieldset fieldset.withH3
+{
+    margin-top: 25px;
+}
+
+.ewAdmin div.report div.reportSet
+{
+    background: #e7e8ea;
+    border: solid 1px #c0cfd8;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-top: 10px;
+    padding: 6px;
+}
+
+
+#template_AdminXForm .ewXform fieldset fieldset.withH3
+{
+    padding-bottom: 25px;
+}
+/* Allows invisible group behaviour within borderd groups  - e.g. see Product xForm - Product Name*/
+#template_AdminXForm .ewXform fieldset fieldset fieldset fieldset
+{
+    border: 0;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+#template_AdminXForm .ewXform fieldset fieldset.withChildFs
+{
+    background: #f3f7fb;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ewXform fieldset.repeat, .ewXform fieldset.repeated
+{
+    background: transparent;
+    border: none;
+    -moz-border-radius: none;
+    border-bottom: solid 1px #c0cfd8;
+    margin: 0px 3px 0 0;
+    padding: 3px;
+}
+
+
+#template_AdminXForm .ewXform fieldset.contentSubmit
+{
+    margin: 0;
+}
+.ewXform div.previewImage span
+{
+    float: left;
+    margin: 3px 3px 3px 0;
+    display: block;
+    width: 85px;
+    height: 85px;
+    overflow: hidden;
+}
+.ewXform div.previewImage a.adminButton
+{
+    display: inline-block;
+}
+.ewXform div.previewImage
+{
+    min-height: 70px;
+}
+
+.ewAdmin div.report div#column1 div div, .ewAdmin div.report div.reportSet div
+{
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ewXform fieldset.PermissionButtons
+{
+	width: 250px !important;
+}
+.ewXform .PermissionButtons li
+{
+    text-align: center;
+}
+.ewXform .PermissionButtons li input.PermissionButtons
+{
+	width: 200px	
+}
+#column1 .ewXform .dropdown, .ewXform .col1 select, .ewXform .col3 select, .ewXform .col1 .readonlyvalue
+{
+    width: 260px;
+}
+#AddRelated #cSection
+{
+    width: 200px;
+}
+.droppable-hover
+{
+    background-color: #d9d9d9;
+    height: auto;
+}
+.ui-draggable-dragging
+{
+    /*	position:relative !important; 		text-align:right;*/
+}
+
+/* ================== Button Styles=================================*/
+
+.Site .ewAdmin .dropdown-menu li.title 
+{
+    margin: 3px 5px 2px 20px;
+    font-size:.8em;
+    color:rgba(0,0,0,0.4);
+}
+
+.Site .ewAdmin.options.addmodule
+{
+    padding: 3px;
+    margin-bottom:3px;
+    border: dashed 1px; 
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.Site .ewAdmin.options.addmodule a.btn
+{
+    margin-right:0;
+    margin-left:4px;
+ }
+
+.Site .ewAdmin .dropdown-menu li.updown 
+{
+    margin: 3px 5px 2px 20px;
+}
+
+.Site .ewAdmin .dropdown-menu li.updown a
+{
+    display: inline-block;
+    margin-right:2px;
+    padding: 3px 6px;
+}
+
+.ewAdmin a.sync
+{
+    display: inline-block;
+    padding: 3px 5px 2px 2px;
+    font-size: .9em;
+    font-family:"Helvetica Neue",HelveticaNeue,Arial,Helvetica,sans-serif;
+    font-weight:bold;
+    text-shadow: none;
+    border: solid 1px #7ebd26;
+    text-decoration: none;
+    color: #ffffff;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer !important;
+    margin: 2px 0 2px 5px;
+    padding: 4px 8px 4px 26px;
+    background-color: #52b16b;
+    background-position:  4px 4px !important;
+    background-repeat: no-repeat !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    background-image: url(/ewcommon/images/icons/gf/white/refresh_icon&16.png) !important;
+}
+
+.ewAdmin a.sync:hover
+{
+    background-color: #7ebd26 !important;
+}
+
+
+
+.ewAdmin TD a.adminButton
+{
+    margin: 0;
+}
+
+.ewAdmin span.updown a.adminButton
+{
+    margin: 2px;
+    width: 14px;
+    height: 14px;
+    border: none;
+    overflow: hidden;
+    padding: 0 0 0 0px;
+    font-size: 0;
+    line-height: 0;
+}
+.ewAdmin a:hover.adminButton
+{
+    background: #f5f6fa;
+}
+
+.ewAdmin a.move
+{
+    background-image: url(/ewcommon/images/admin/move.gif) !important;
+}
+
+
+.ewAdmin .inlinePopupLabel
+{
+    float: right;
+    border: none;
+    background: none;
+}
+
+.ewAdmin a.status
+{
+    display: inline-block;
+    width: 17px;
+    height: 15px;
+    margin: 5px;
+}
+
+.ewAdmin #MenuTree a.status
+{
+    margin: 2px 2px 6px 0;
+}
+
+
+/*.ewAdmin .ewXform input.adminButton {
+		cursor: pointer !important;
+		font-size:	1em;
+		padding:	0px 5px 0px 15px;
+		margin: 0px 0px 0px 2px;
+		font-weight:500;
+		height:		24px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		background:  #fff no-repeat top right;
+		width: auto;
+	}*/
+
+.ewAdmin a:hover.hideButton
+{
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+.ewAdmin input.add, .ewAdmin input.find, .ewAdmin input.delete, .ewAdmin input.edit, .ewAdmin input.arrowbutton
+{
+    padding: 3px 25px;
+    overflow: visible;
+    width: auto !important;
+}
+
+.ewAdmin a.principle, .ewAdmin a.cancel
+{
+    padding: 7px 27px 7px 10px !important;
+    background-position: right top;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.ewAdmin a.drag, .ewAdmin a.drag:hover
+{
+    text-decoration: none;
+    cursor: pointer;
+}
+.ewAdmin a.arrowbutton, .ewAdmin input.arrowbutton, .ewAdmin #searchForm input
+{
+    border: 1px solid #DDDDDD;
+    padding: 1px 8px 3px 8px;
+    background-position: 2px 2px;
+    background-repeat: no-repeat;
+    background-color: #FFF;
+    margin-right: 0px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.ewAdmin a.arrowbutton span, .ewAdmin a.drag span
+{
+    display: none;
+}
+.ewAdmin input.up, .ewAdmin input.down, .ewAdmin #template_AdminXForminput.up, .ewAdmin #template_AdminXForm input.down
+{
+    background-position: 3px 4px !important;
+    padding: 1px 7px 2px 5px !important;
+}
+.ewAdmin input.top, .ewAdmin input.bottom, .ewAdmin #template_AdminXForm input.top, .ewAdmin #template_AdminXForm input.bottom
+{
+    background-position: 3px 4px !important; /*padding: 1px 7px 2px 5px !important;*/
+    padding: 0 !important;
+    height: 24px !important;
+    width: 20px !important;
+}
+.ewAdmin a.back
+{
+    float: right;
+    margin-bottom: 5px;
+    background-image: url(/ewcommon/images/admin/up.gif) !important;
+}
+
+.ewAdmin a.excel
+{
+    background-image: url(/ewcommon/images/admin/excel.gif) !important;
+}
+.ewAdmin a.edit
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/pencil_icon&16.png) !important;
+}
+.ewAdmin a.send
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/email_icon&16.png) !important;
+}
+
+.ewAdmin input.find, .ewAdmin a.find
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/zoom_icon&16.png) !important;
+}
+.ewAdmin a.popup
+{
+    background-image: url(/ewcommon/images/admin/popup.gif) !important;
+}
+.ewAdmin a.popupOpen
+{
+    background-image: url(/ewcommon/images/admin/popup-active.gif) !important;
+}
+.ewAdmin a.add, .ewAdmin ul.inlinePopup a.add
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/sq_plus_icon&16.png) !important;
+}
+.ewAdmin a.move
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/doc_export_icon&16.png) !important;
+}
+.ewAdmin a.copy
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/clipboard_copy_icon&16.png) !important;
+}
+.ewAdmin a.hideButton, .ewAdmin a.hide
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/delete_icon&16.png) !important;
+}
+.ewAdmin a.show
+{
+    background-image: url(/ewcommon/images/admin/show.gif) !important;
+}
+.ewAdmin a.delete
+{
+    background-image: url(/ewcommon/images/admin/delete.gif) !important;
+}
+.ewAdmin .status a.active2
+{
+    background-image: url(/ewcommon/images/admin/active.gif) !important;
+}
+.ewAdmin a.hidden
+{
+    background-image: url(/ewcommon/images/admin/hidden.gif) !important;
+}
+.ewAdmin a.principle
+{
+    background-image: url(/ewcommon/images/admin/submit-principle-bg.gif) !important;
+}
+.ewAdmin a.cancel
+{
+    background-image: url(/ewcommon/images/admin/submit-cancel-bg.gif) !important;
+}
+.ewAdmin a.delete:hover
+{
+    background-image: url(/ewcommon/images/admin/delete_white.gif) !important;
+    background-color: #F00;
+    color: #FFF;
+}
+.ewAdmin a.top, .ewAdmin input.top, .ewAdmin input.top:hover
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/sq_br_top_icon&16.png) !important;
+}
+.ewAdmin a.bottom, .ewAdmin input.bottom, .ewAdmin input.bottom:hover
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/sq_br_bottom_icon&16.png) !important;
+}
+.ewAdmin a.up, .ewAdmin input.up, .ewAdmin input.up:hover
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/sq_br_up_icon&16.png) !important;
+}
+.ewAdmin a.down, .ewAdmin input.down, .ewAdmin input.down:hover
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/sq_br_down_icon&16.png) !important;
+}
+.ewAdmin a.upDir
+{
+    background-image: url(/ewcommon/images/admin/up.gif) !important;
+    background-position: 5px 5px;
+}
+.ewAdmin a.upFiles
+{
+    background-image: url(/ewcommon/images/admin/top.gif) !important;
+    background-position: 5px 5px;
+}
+.ewAdmin a.inactive
+{
+    background-color: #DDDDDD;
+}
+.ewAdmin a.locations
+{
+    background-image: url(/ewcommon/images/icons/gf/darkgrey/share_icon&16.png) !important;
+}
+.ewAdmin span.options
+{
+    display: inline-block;
+}
+
+/* ==================Popup Menus=================================*/
+.Site .ewAdmin .btn, .Site .ewAdmin .dropdown
+{
+	font-weight: normal;
+	font-size: 13px !important;
+	line-height: 20px !important;
+	text-decoration: none;
+	-moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+/*
+.Site .ewAdmin .btn:hover
+{
+	background: rgba(255, 255, 255, 1);
+	color: rgba(0, 0, 0, 1);
+}
+*/
+
+.on-top
+{
+    z-index: 90000;
+    border: solid 2px #f00;
+}
+
+.ewAdmin div.ewPopMenu, ewAdmin DIV.report DIV.reportSet DIV.ewPopMenu
+{
+    display: none;
+    position: absolute;
+    top: 28px;
+    width: 160px;
+    background: #f3f6fb !important;
+    border: solid 1px #d9d9d9 !important;
+    right: 0px;
+    text-align: left;
+    z-index: 10000;
+}
+.ewAdmin .optionsButton div.ewPopMenu
+{
+    top: 24px;
+}
+
+.ewAdmin div.ewPopMenu a
+{
+    margin: 5px 5px 0px 5px;
+    padding-right: 5px;
+}
+.ewAdmin div.ewPopMenu span
+{
+    clear: both;
+}
+
+
+.Site .ewAdmin .addHere
+{
+    font-size: .8em;
+    color: #a9a9a9;
+    padding: 3px;
+}
+
+/*this needs to be here to separate the edit buttons from the content in admin -PH - 21/5/2010 */
+.Site .editable
+{
+  /* min-height: 30px;*/
+    position: relative;
+}
+
+/* === */
+.Site .editable div.moduleDrag
+{
+    width: 100%;
+}
+
+.Site .editable div.moduleDrag .edit
+{
+    margin-right:30px;
+}
+
+.Site .editable div.moduleDrag .popup, .Site .editable div.moduleDrag .popupOpen
+{
+    position: absolute;
+    right: 0px;
+}
+.Site .editable div.moduleDrag .popup, .Site .editable div.moduleDrag .popupOpen
+{
+    right: 35px;
+}
+
+/*.ewAdmin #files .item.col-md-2
+{
+    padding:5px;
+    
+}*/
+.ewAdmin #files .item.col-md-2 .ItemThumbnail
+{
+    height:120px;
+}
+.ewAdmin #files .item.col-md-4 .ItemThumbnail
+{
+    height:120px;
+}
+.ewAdmin #files .item.col-md-2 .description,
+.ewAdmin #files .item.col-md-4 .description
+{
+    height:35px;
+    overflow:hidden;
+}
+.ewAdmin #files .item .description .image-description-name
+{
+    overflow:hidden;
+    height:1.2em;
+    display:inline-block;
+}
+
+.ewAdmin #files .item.col-md-2 .ItemThumbnail a
+{
+    vertical-align:middle;
+}
+/*.ewAdmin #files .item.col-md-2 .panel
+{
+    margin-bottom:0;
+}*/
+.ewAdmin #files .item.col-md-2 .panel-body
+{
+    padding:5px;
+}
+
+.ewAdmin form .choices div.selected
+{
+    background: #aaa;
+}
+.ewAdmin form .choices .description, .ewAdmin #template_FileSystem div.item .description
+{
+    font-size: .8em;
+}
+.ewAdmin #template_FileSystem .pickByImage div.item .ItemThumbnail
+{
+    float: none;
+    text-align: center;
+    min-height:90px;
+}
+.ewAdmin form .choices
+{
+    clear: both;
+}
+.ewAdmin .pageControlButtons li
+{
+    display: inline;
+}
+/* ########################## Tree View - EditStructure ########################## */
+.ewAdmin #column2 .tree, .ewAdmin #column1 .tree
+{
+    font-size: .9em;
+}
+.ewAdmin #MenuTree SPAN.treeNode .pageName
+{
+    display: inline-block;
+    width: 200px;
+    margin: 0px;
+}
+.ewAdmin UL.sideNav
+{
+    
+    line-height: 1.2em;
+    vertical-align: top;
+}
+.ewAdmin UL.sideNav LI A
+{
+    
+    padding:0 0 5px 0;
+}
+.ewAdmin UL.sideNav UL
+{
+    padding-left: .5em !important;
+}
+.ewAdmin UL.sideNav SPAN.treeNode .pageName
+{
+
+    width: auto !important;
+}
+.ewAdmin #MenuTree LI
+{
+    vertical-align: top;
+    list-style: none;
+}
+.ewAdmin #MenuTree LI TABLE
+{
+    width: auto;
+    background: transparent;
+}
+.ewAdmin #MenuTree LI TABLE TD
+{
+    padding: 3px;
+    line-height: 1.2em;
+}
+.ewAdmin #MenuTree LI TABLE td.status a.status
+{
+    width: 17px !important;
+    height: 15px !important;
+    display: block !important;
+}
+.ewAdmin #MenuTree LI TABLE td.pageName
+{
+    width: 200px;
+    border-bottom: dashed 1px #ddd;
+    padding-bottom: 1px;
+}
+.ewAdmin #MenuTree LI TABLE td.pageHits
+{
+    border-bottom: dashed 1px #ddd;
+    padding-bottom: 1px;
+}
+
+.ewAdmin #MenuTree LI TABLE td.optionButtons
+{
+    /* Changed to 595px so that delete buttons do not go onto second line in Edit Menu mode - PH */ /*width:535px;*/
+    width: 595px;
+    border-bottom: dashed 1px #ddd;
+    padding-bottom: 3px;
+}
+.ewAdmin #MenuTree div.pageVersions div
+{
+    padding: 2px 0px 2px 22px;
+}
+.ewAdmin #MenuTree div.pageVersions a.vtext
+{
+    padding-left: 25px;
+}
+.ewAdmin #MenuTree div.pageVersions a.vtext
+{
+    background: url(/ewcommon/images/menutree/page-file-v.gif) top left no-repeat;
+}
+.ewAdmin #MenuTree tr.treeNode a.active, .ewAdmin #MenuTree .treeNode a.active
+{
+    background: url(/ewcommon/images/menutree/page-file.gif) top left no-repeat;
+}
+.ewAdmin #MenuTree tr.treeNode a.folder, .ewAdmin #MenuTree .treeNode a.folder
+{
+    background: url(/ewcommon/images/menutree/page-foldericon.gif) top left no-repeat;
+}
+.ewAdmin #MenuTree span.a.children tr.treeNode a.hidden, .ewAdmin #MenuTree tr.a.children tr.treeNode a.hidden
+{
+    background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif) 0 0 no-repeat !important;
+}
+.ewAdmin #MenuTree tr.treeNode a.hidden, .ewAdmin #MenuTree .treeNode a.hidden
+{
+    background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;
+}
+
+.ewAdmin #MenuTree tr.treeNode a.activeParent, .ewAdmin #MenuTree .treeNode a.activeParent
+{
+    background: url(/ewcommon/images/menutree/page-openfoldericon.gif) 0 0 no-repeat;
+}
+.ewAdmin #MenuTreeold tr.treeNode a.active, .ewAdmin #MenuTreeold .treeNode a.active
+{
+    background: url(/ewcommon/images/menutree/page-foldericon.gif) 0 0 no-repeat;
+}
+.ewAdmin #MenuTree tr.treeNode a.hiddenParent, .ewAdmin #MenuTree .treeNode a.hiddenParent
+{
+    background: url(/ewcommon/images/menutree/page-foldericon-hidden.gif) 0 0 no-repeat !important;
+}
+.ewAdmin #MenuTree .treeNode .pageSales
+{
+    color: #13b802;
+}
+.ewAdmin #MenuTree .treeNode .childPageSales
+{
+    color: #FF0000 !important;
+}
+.ewAdmin .headerButtons
+{
+    position: absolute;
+    right: 10px;
+    width: 350px;
+    text-align: right;
+}
+.ewAdmin #userSearch
+{
+    width: 300px;
+    float: right;
+    margin-left: 20px;
+}
+.ewAdmin #userSearch input
+{
+    width: 140px;
+}
+/* ########################## End Treeview ########################## */
+.ewAdmin #accordion div.options
+{
+    background-color: Transparent !important;
+    position: relative;
+    float: right; /*margin:5px 10px 0 0; Replaced with margin 0 to correct layout in Advanced Mode*/
+    margin: 0;
+}
+
+/* ########################################################## */
+
+.ewAdmin #accordion .ui-accordion-header span.ui-icon
+{
+    background: #f3f6fb 5px 5px no-repeat;
+    border: solid 1px #d9d9d9;
+    padding: 5px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.ewAdmin #accordion tbody
+{
+    width: 100%;
+}
+
+.ewAdmin #accordion .ui-accordion-header span.ui-icon-triangle-1-e
+{
+    width: 14px;
+    height: 14px;
+    background-image: url(/ewcommon/images/admin/popup-active.gif);
+}
+.ewAdmin #accordion .ui-accordion-header span.ui-icon-triangle-1-s
+{
+    width: 14px;
+    height: 14px;
+    background-image: url(/ewcommon/images/admin/popup.gif);
+}
+
+.ui-accordion .ui-accordion-content-active
+{
+    display: block;
+}
+
+/* PH Changes */
+
+.ui-accordion td.name
+{
+    width: 360px;
+}
+
+table.mceLayout
+{
+    width: 571px !important;
+}
+.ewAdmin .ewXform .relatedOptionsButton input.adminButton
+{
+    padding: 0 4px 0 19px !important;
+}
+.AdminRelatedContent th.relatedOptionsButton
+{
+    width: 274px;
+    text-align: right;
+}
+fieldset.contentSubmit
+{
+    position: static;
+}
+fieldset.contentSubmit input
+{
+    position: relative;
+    top: 0;
+    right: 0;
+    height: 32px !important;
+}
+table.ui-accordion-content
+{
+    z-index: 999 !important;
+}
+
+
+.onTop
+{
+    z-index: 90000 !important;
+}
+.ewXform img.helpTip
+{
+    margin-top: 2px;
+    margin-left: 6px;
+}
+
+img.helpTip
+{
+    cursor: pointer;
+}
+
+/* ADMIN FORMS */
+#template_AdminXForm .ewXform .cols2 fieldset.col2
+{
+    float: left;
+    margin-left: 25px; /* IF FORMS BREAK, HAVE A LOOK AT THEIR MAKE UP THE XHTML MAY BE WRONG */
+    width: 640px;
+}
+#template_AdminXForm .ewXform fieldset.contentSubmit
+{
+    margin-top: 25px;
+}
+#template_AdminXForm .ewXform h3.col1, #template_AdminXForm div#column1 .ewXform h2
+{
+    width: 285px;
+}
+#template_AdminXForm .ewXform fieldset.col1 input, #template_AdminXForm .ewXform fieldset.col1 textarea
+{
+    width: 210px;
+}
+#template_AdminXForm .ewXform fieldset.col1 input.adminButton
+{
+    width: auto;
+}
+#template_AdminXForm .ewXform fieldset.col1 span.hint
+{
+    width: 210px;
+}
+#template_AdminXForm .ewXform fieldset.col2 input.textbox
+{
+    width: 265px;
+}
+
+#template_AdminXForm .ewXform fieldset.col2 input.short
+{
+    width: 190px;
+}
+#template_AdminXForm .ewXform fieldset.col2 input.vshort
+{
+    width: 90px;
+}
+#template_AdminXForm .ewXform .col2 fieldset.inline li
+{
+    width: 48%;
+}
+
+#template_AdminXForm .ewXform fieldset.col2 input.jqDatePicker
+{
+    width: 190px;
+    margin-right: 3px;
+}
+#template_AdminXForm div#column1 .ewXform fieldset span.radiocheckbox input
+{
+    width: auto;
+}
+#template_AdminXForm .ewXform fieldset.col1
+{
+    width: 270px;
+}
+#template_AdminXForm .ewXform fieldset.col1 input.jqDatePicker
+{
+    width: 150px;
+}
+#template_AdminXForm .ewXform fieldset.col2 input.long, #template_AdminXForm .ewXform fieldset.col2 textarea
+{
+    /*Changed width of 580px as it blows column2 in Firefox in admin mode when editing content 		And allow space for Info icon */
+    width: 550px;
+}
+
+#template_AdminXForm #WebSettings .radiocheckbox input, #template_AdminXForm #WebSettings input.adminButton, #template_AdminXForm #WebSettings .ItemThumbnail input
+{
+    width: auto;
+}
+#template_AdminXForm .ewXform fieldset.col2 select
+{
+    width: 590px;
+}
+#template_AdminXForm .ewXform fieldset.col2 .inline select
+{
+    width: 270px;
+}
+#template_AdminXForm .ewXform fieldset.col2 div.CodeMirror-wrapping
+{
+    width: 547px;
+}
+#template_AdminXForm .ewXform input.adminButton
+{
+    cursor: pointer !important;
+    font-size: 1em;
+    padding: 0px 5px 0px 22px;
+    margin: 0px 0px 0px 2px;
+    font-weight: 500;
+    height: 24px;
+    width: auto;
+}
+#template_AdminXForm .ewXform input.arrowbutton
+{
+    cursor: pointer !important;
+    font-size: 1em;
+    padding: 0px 3px 0px 0px;
+    margin: 0px 0px 0px 0px !important;
+    font-weight: 500;
+    height: 24px;
+    min-width: 24px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #fff no-repeat top right;
+}
+#template_AdminXForm .ewXform input.principle
+{
+    padding: 0px 27px 0px 5px;
+    height: 32px;
+    background: url(/ewcommon/images/admin/submit-principle-bg.gif) no-repeat top right;
+    font-family: Verdana;
+}
+#template_AdminXForm .ewXform input.getGeocodeButton
+{
+	float:none !important;
+	margin-top: 19px;
+}
+#adminLayout #LeftMenu li a
+{
+    background-position: 5px 6px;
+    background-repeat: no-repeat;
+    background-image: url(/ewcommon/images/admin/leftMenu.gif);
+    text-decoration: none;
+}
+#template_AdminXForm .ewXform input.add
+{
+    background-image: url(/ewcommon/images/admin/add.gif);
+}
+#template_AdminXForm .ewXform input.find
+{
+    background-image: url(/ewcommon/images/admin/find.gif);
+}
+#template_AdminXForm .ewXform input.edit
+{
+    background-image: url(/ewcommon/images/admin/edit.gif);
+}
+#template_AdminXForm .ewXform input.delete
+{
+    background-image: url(/ewcommon/images/admin/delete.gif);
+}
+#template_AdminXForm .ewXform input:active, .ewXform input:focus
+{
+    color: #000;
+    border: solid 1px #af9cc3;
+}
+#template_AdminXForm .ewXform span.radiocheckbox
+{
+    /* This lineheight insures inline radios take up the same  		vertical space as inputs and drops downs for neat floating */
+    line-height: 2.8em;
+    display: inline-block !important;
+}
+#template_AdminXForm .ewXform span.multiline
+{
+    display: block !important;
+    line-height: 1.7em !important;
+}
+#template_AdminXForm .ewXform span.radiocheckbox input
+{
+    padding: .3em;
+    font-size: 1.3em;
+    display: inline;
+    width: auto;
+    color: #676767;
+    border: 0px;
+}
+#template_AdminXForm .ewXform label.required
+{
+    padding-left:12px;
+    background: transparent url(/ewcommon/images/layout/required.png) no-repeat 0px 4px;
+}
+
+#template_AdminXForm .ewXform span.required
+{
+    padding-left: 22px;
+    background: transparent url(/ewcommon/images/layout/required.png) no-repeat center left !important;
+}
+#template_AdminXForm .ewXform span.required req
+{
+    display:none;
+}
+
+#template_AdminXForm .ewXform label.readonly
+{
+    color: #999;
+}
+#template_AdminXForm .ewXform label span
+{
+    position: absolute;
+    left: -10000px;
+    top: 0px;
+}
+#template_AdminXForm .ewXform li span.req
+{
+    display: none;
+}
+#template_AdminXForm .ewXform a.cleardate
+{
+    margin-top: 5px;
+    margin-left: 7em;
+    padding-left: 12px;
+    clear: both;
+}
+#template_AdminXForm .ewXform textarea.xhtml
+{
+    width: 600px;
+}
+.ewXform div.slider
+{
+    width: 150px;
+    margin-left: 100px;
+}
+.ewXform div.slider span
+{
+    display: none;
+}
+#template_AdminXForm .ewXform input.radio
+{
+    border: none;
+    background: transparent;
+}
+#template_AdminXForm .ewXform .col2 .inline span.alert, #template_AdminXForm .ewXform .col2 .inline span.hint, #template_AdminXForm .ewXform .col2 .inline span.help
+{
+    width: 250px;
+}
+
+#template_AdminXForm .ewXform fieldset.repeated
+{
+    padding: 20px 0 !important;
+    border-bottom: 1px solid #C0CFD8;
+}
+
+/* OVER RIDES FOR 3 COLUMN PERMISSIONS PAGES */
+.ewAdmin #EditInputPageRights fieldset.col1, .ewAdmin #EditInputPageRights fieldset.col2, .ewAdmin #EditInputPageRights fieldset.col3, .ewAdmin #EditInputPagePermissions fieldset.col1, .ewAdmin #EditInputPagePermissions fieldset.col2, .ewAdmin #EditInputPagePermissions fieldset.col3
+{
+    width: 30%;
+}
+.ewAdmin #EditInputPageRights fieldset fieldset h3, .ewAdmin #EditInputPagePermissions fieldset fieldset h3
+{
+    margin: 0px 10px 10px 10px;
+    top: 0;
+    display: block;
+}
+
+/* ALPHA STEPPER */
+.ewAdmin .alphaStepper
+{
+    margin: 10px 0 10px 0;
+    border: 1px solid #c0cfd8;
+    padding: 10px;
+    background: #e2e6ea;
+}
+
+.ewAdmin .stepper
+{
+    clear:both;
+    padding-top:5px;
+}
+
+.ewAdmin .stepper .stepLinks{float:right}
+
+#tpltLocateSearch #AddLocation fieldset select#nFromPage
+{
+    width: 230px;
+}
+/* User Guide */
+/*.ewAdmin #btnHelpEditing
+{
+    background: url(/ewcommon/images/admin/skin/guide-tab.png) no-repeat 0 0;
+    border: none;
+    position: fixed;
+    right: 0px;
+    width: 34px;
+    height: 107px;
+    top: 40%;
+    cursor: pointer;
+    z-index: 5000;
+}*/
+/*.ewAdmin #helpBox
+{
+    color: #464646;
+    padding: 0px 5px 0px 15px;
+    background: url(/ewcommon/images/admin/skin/help_border.png) repeat-y #FFF;
+    overflow: hidden;
+}
+*/
+.ewAdmin .scroll-pane-arrows
+{
+    padding: 5px 0 0 0;
+}
+.ewAdmin #helpBox h2
+{
+    font-size:1.6em;
+    padding-bottom:15px;
+}
+.ewAdmin #helpBox h3
+{
+    font-size:1.2em;
+    font-weight:bold;
+    padding-bottom:5px;
+}
+.ewAdmin #helpBox a
+{
+    color:#000;
+}
+.ewAdmin #helpBox .SubPages a
+{
+    text-decoration:none;
+    font-weight:normal;
+}
+.ewAdmin #helpBox .entryFooter .morelink a
+{
+    text-decoration:none;
+    font-weight:bold;
+}
+.ewAdmin #helpBox .externallink
+{
+    display:block;
+    text-decoration:none;
+    text-align:center;
+    background:#F3F7FB;
+    border:solid 1px #C0CFD8;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding:7px;
+}
+ /*.ewAdmin #divHelpBox
+{
+    right: -345px;
+    position: fixed;
+    width: 350px;
+    z-index: 49900;
+   -moz-box-shadow: #777 -4px 0px 15px;
+    -webkit-box-shadow: #777 -4px 0px 15px;
+    -o-box-shadow: #777 -4px 0px 15px;
+    box-shadow: #777 -4px 0px 15px;
+}*/
+.ewAdmin #divHelpBox #helpBox  #mainLayout
+{
+    max-width:300px;
+    margin-left:0;
+    height:auto;
+}
+.ewAdmin #helpBox .EmailForm  li, .ewAdmin #helpBox  li input.textbox, .ewAdmin #helpBox  li textarea
+{
+    width:280px;
+    height:auto;
+}
+#helpBox a.lightbox
+{
+    position:relative;
+}
+#helpBox a.lightbox img
+{
+    max-width:300px;
+    height:auto;
+}
+#helpBox a.lightbox span#guideZoomIcon
+{
+    position:absolute;
+    right:0;
+    bottom:0;
+}
+.ewAdmin #helpBox div.module
+{
+    margin-bottom:10px!important;
+}
+.ewAdmin #helpBox .userguideFormVisibile
+{
+    visibility:visible!important;
+    top:10px;
+    left:10px;
+}
+.ewAdmin #helpBox .userguideFormHidden
+{
+    visibility:hidden;
+    position:absolute;
+    width:320px;
+}
+#jquery-overlay
+{
+    z-index: 99990;
+}
+#jquery-lightbox
+{
+    top:30px!important;
+    z-index: 99999
+}
+.scroll-pane-arrows
+{
+    overflow: auto;
+    background: url(/ewcommon/images/admin/loading.gif) no-repeat center;
+}
+.nobackground
+{
+    background:none!important;
+}
+
+.ewAdmin iframe.pluginIframe
+{
+	border: 1px solid #C0CFD8;
+}
+
+.ewAdmin #fileupload #uploadFiles .drophere 
+{
+    border: 2px dashed #C0CFD8;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    height: 75px;
+    line-height: 75px;
+    text-align:center;
+    margin-bottom:5px;
+    background:white;
+}
+.ewAdmin #fileupload #uploadFiles 
+{
+    padding-top:5px;
+}
+.ewAdmin #fileupload td
+{
+    height:20px;
+    padding:3px;
+}
+.ewAdmin #fileupload td div.ui-progressbar
+{
+    height:18px;
+    width:100px;
+}
+.ewAdmin #fileupload #uploadFiles input
+{
+    float:left;
+}
+.ewAdmin #fileupload .fileupload-progressbar
+{
+    float:right;
+    width:600px;
+    height:27px;
+}
+.ewAdmin #xFormControls .options{float:right; width:100px;}
+.ewAdmin #xFormControls span.buttons{float:right;}
+.ewAdmin #xFormControls .control, .ewAdmin #xFormControls .groupHeader{min-height:30px;}
+
+.ewAdmin .pickByImage .ui-accordion-content,
+.ewAdmin .li-PickByImage .ui-accordion-content
+{
+    padding:0;}
+    
+    
+    /*
+ * jQuery File Upload UI Plugin CSS 8.0
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+.ewAdmin .fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.ewAdmin .fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transform: translate(-300px, 0) scale(4);
+  font-size: 23px;
+  direction: ltr;
+  cursor: pointer;
+}
+.ewAdmin .fileupload-buttonbar .btn,
+.ewAdmin .fileupload-buttonbar .toggle {
+  margin-bottom: 5px;
+}
+.ewAdmin .progress-animated .bar {
+  background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/progressbar.gif) !important;
+  filter: none;
+}
+.ewAdmin .fileupload-loading {
+  float: right;
+  width: 32px;
+  height: 32px;
+  background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/loading.gif) center no-repeat;
+  background-size: contain;
+  display: none;
+}
+.ewAdmin .fileupload-processing .fileupload-loading {
+  display: block;
+}
+
+.ewAdmin .listLookups .listButtons
+{
+    width:130px;
+    text-align:right;
+}
+
+.progress {
+    background-color: #F7F7F7;
+    background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
+    background-repeat: repeat-x;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+    height: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress .bar {
+    -moz-box-sizing: border-box;
+    background-color: #0E90D2;
+    background-image: linear-gradient(to bottom, #149BDF, #0480BE);
+    background-repeat: repeat-x;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    color: #FFFFFF;
+    float: left;
+    font-size: 12px;
+    height: 100%;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    transition: width 0.6s ease 0s;
+    width: 0;
+}
+
+.progress-striped .bar {
+    background-color: #149BDF;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    background-size: 40px 40px;
+}
+
+.progress-success.progress-striped .bar, .progress-striped .bar-success {
+    background-color: #62C462;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+}
+.fileinput-button {
+    overflow: hidden;
+    position: relative;
+}
+
+.btn-arrow {
+    font-size: 11px;
+    line-height: 15px;
+    padding: 2px 4px 2px 4px;
+}
+
+.btn-primary{color:#fff;background-color:#7a8288;border-color:#7a8288}
+.btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary{color:#fff;background-color:#676d73;border-color:#5d6368}
+.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary{background-image:none}
+.btn-primary.disabled,.btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,.btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,.btn-primary.disabled.active,.btn-primary[disabled].active,fieldset[disabled] .btn-primary.active{background-color:#7a8288;border-color:#7a8288}
+.btn-primary .caret,.btn-success .caret,.btn-warning .caret,.btn-danger .caret,.btn-info .caret{border-top-color:#fff}
+.dropup .btn-default .caret{border-bottom-color:#fff}
+.dropup .btn-primary .caret,.dropup .btn-success .caret,.dropup .btn-warning .caret,.dropup .btn-danger .caret,.dropup .btn-info .caret{border-bottom-color:#fff}
+.btn-primary{background-image:-webkit-gradient(linear,0 0,0 100%,from(#8a9196),color-stop(60%,#7a8288),to(#70787d));background-image:-webkit-linear-gradient(#8a9196,#7a8288 60%,#70787d);background-image:-moz-linear-gradient(top,#8a9196,#7a8288 60%,#70787d);background-image:linear-gradient(#8a9196,#7a8288 60%,#70787d);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8a9196',endColorstr='#ff70787d',GradientType=0)}
+.btn-primary:hover{background-image:-webkit-gradient(linear,0 0,0 100%,from(#404448),color-stop(40%,#4e5458),to(#585e62));background-image:-webkit-linear-gradient(#404448,#4e5458 40%,#585e62);background-image:-moz-linear-gradient(top,#404448,#4e5458 40%,#585e62);background-image:linear-gradient(#404448,#4e5458 40%,#585e62);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff404448',endColorstr='#ff585e62',GradientType=0)}
+@media (max-width: 767px) {
+  .fileupload-buttonbar .toggle,
+  .files .toggle,
+  .files .btn span {
+    display: none;
+  }
+  .files .name {
+    width: 80px;
+    word-wrap: break-word;
+  }
+}
+
+/*.ewAdmin .form-actions {
+display: block;
+background-color: rgb(245, 245, 245);
+border-top: 1px solid rgb(229, 229, 229);
+margin-top: 0px;
+padding: 19px 20px 35px 20px;
+}*/
+
+.btn.btn-app {
+display: inline-block;
+font-size: 18px;
+font-weight: normal;
+text-align: center;
+border: 0px;
+border-image-source: initial;
+border-image-slice: initial;
+border-image-width: initial;
+border-image-outset: initial;
+border-image-repeat: initial;
+border-radius: 12px;
+padding: 12px 0px 8px;
+margin: 2px;
+line-height: 1.7;
+position: relative;
+}
+.btn.btn-app > [class*="icon"] {
+display: block;
+font-size: 42px;
+margin: 0px 0px 4px;
+line-height: 36px;
+min-width: 0px;
+padding: 0px;
+text-align: center;
+}
+
+.ewAdmin .btn {margin-right: 4px;}
+
+
+.pickImageModal .modal-dialog
+{width:700px;}
+.ewAdmin .featuresEnabled a.btn{text-align:left}
+.ewAdmin .featuresEnabled a.btn span.btnNotes{font-size:.7em}
+.ewAdmin #MainMenuModal ul.nav li{padding-right:5px}
+.ewAdmin #MainMenuModal ul.nav li:last-child{padding-right:0px}
+
+.ewAdmin .pickImageInput{overflow:auto;height:34px;}
+
+#loading-indicator {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  top: 50%;
+  left: 50%;
+  margin-left: -100px; /* margin is -0.5 * dimension */
+  margin-top: -50px; 
+}
+
+.ewAdmin .accordion-body[class*="in collapse"]{ overflow:visible;}
+
+.ewAdmin .pickIcon .bfh-selectbox-options li
+{
+    display:inline-block;
+    width:35px;
+    height:35px;
+}
+
+.ewAdmin .boxStyle .bfh-selectbox-toggle
+{
+    height:85px;
+}
+
+.ewAdmin .boxStyle .bfh-selectbox-toggle .bfh-selectbox-option
+{
+    height:80px;
+}
+.ewAdmin .boxStyle .bfh-selectbox-options li
+{
+    display:inline-block;
+    width:320px;
+}
+.ewAdmin .pickByImage button.imageSelect
+{
+    width:100%;
+    padding:5px;
+    text-align:left;
+}
+.ewAdmin .pickByImage button.imageSelect img
+{
+    padding-right:10px;
+}

@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="EonicWebV5_com_pclpls_www_XMLTransferEngine" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://www.pclpls.com/services/xmltransferengine.asmx</Value>
+    </Setting>
+    <Setting Name="EonicWebV5_com_pclplstest_www_XMLTransferEngine" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://www.pclplstest.com/services/xmltransferengine.asmx</Value>
+    </Setting>
+    <Setting Name="EonicWebV5_uk_co_postcodeanywhere_services_PostcodeAnywhere" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://services.postcodeanywhere.co.uk/BankAccountValidation/Interactive/Validate/v2.00/soapnew.ws</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

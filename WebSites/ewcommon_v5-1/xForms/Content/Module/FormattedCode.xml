@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="FormattedCode" box="" title="" link="" linkType="internal" linkText="Read more">
+            <code class="">
+            </code>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cContentBody" nodeset="code" required="false()" type="string"/>
+      <bind id="cLanguage" nodeset="code/@class" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Formatted Code Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+        <select1 bind="cLanguage" appearance="full" class="required vshort">
+          <label>Language</label>
+          <item>
+            <label>C #</label>
+            <value>csharp</value>
+          </item>
+          <item>
+            <label>CSS</label>
+            <value>css</value>
+          </item>
+          <item>
+            <label>HTML</label>
+            <value>xml</value>
+          </item>
+          <item>
+            <label>Java</label>
+            <value>java</value>
+          </item>
+          <item>
+            <label>Javascript</label>
+            <value>js</value>
+          </item>
+          <item>
+            <label>Java</label>
+            <value>java</value>
+          </item>
+          <item>
+            <label>SQL</label>
+            <value>sql</value>
+          </item>
+          <item>
+            <label>PHP</label>
+            <value>php</value>
+          </item>
+          <item>
+            <label>VB.Net</label>
+            <value>vbnet</value>
+          </item>
+          <item>
+            <label>XML</label>
+            <value>xml</value>
+          </item>
+        </select1>
+        <textarea bind="cContentBody" class="TextArea" rows="25" cols="70">
+          <label>Enter Code</label>
+        </textarea>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Code</label>
+    </submit>
+  </group>
+</Content>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" />
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
+      <bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+      <bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
+      <bind id="bMatchHeight" nodeset="@matchHeight" required="false()" type="string"/>
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <bind nodeset="tblContent">
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+      <bind id="bCascade" nodeset="bCascade" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="Screens" nodeset="@screens" required="false()" type="string"/>
+      </bind>
+    </bind>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Formatted Text Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <group id="presentation">
+          <label>Presentation</label>
+          <select1 bind="cModuleBox" class="boxStyle" appearance="minimal">
+            <label>Box Style</label>
+            <item>
+              <label>None</label>
+              <value></value>
+            </item>
+            <item>
+              <label>Default Box</label>
+              <value>Default Box</value>
+            </item>
+          </select1>
+          <select bind="bMatchHeight" appearance="full" class="multiline bs-only">
+            <item>
+              <label>Match Height (panels only)</label>
+              <value>true</value>
+            </item>
+            <help class="inline">Tick this box on 2 or more modules within a page, and they will all be the same height. This only works on panel box styles and the match doesn't include the module footer link height.</help>
+          </select>
+          <select1 bind="cIcon" class="iconSelect ewQuery bs-only" query="availableIcons" appearance="minimal">
+            <label class="label-border-top">Icon</label>
+            <item>
+              <label>None</label>
+              <value>false</value>
+            </item>
+          </select1>
+          <input bind="uploadIcon" class="pickImageFile bs-only">
+            <label>Upload icon from file</label>
+            <value></value>
+          </input>
+          <select1 bind="cIconStyle" appearance="minimal" class="bs-only">
+            <label>Heading / Icon Style</label>
+            <item>
+              <label>None</label>
+              <value>false</value>
+            </item>
+            <item>
+              <label>Left</label>
+              <value>Left</value>
+            </item>
+            <item>
+              <label>Centre - Large</label>
+              <value>Centre</value>
+            </item>
+          </select1>
+        </group>
+        <group id="publish">
+        <label>Publish Settings</label>
+          <input bind="cPosition" class="readonly">
+            <label>Page Position</label>
+          </input>
+          <input bind="dPublishDate" class="calendar short">
+            <label>Publish Date</label>
+          </input>
+          <input bind="dExpireDate" class="calendar short">
+            <label>Expire Date</label>
+          </input>
+          <select1 bind="nStatus" appearance="full" class="vshort">
+            <label class="label-border-top label-heading">Status</label>
+            <item>
+              <label>Live</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>Hidden</label>
+              <value>0</value>
+            </item>
+            <help class="inline">
+              <p>
+                <b>Live</b> content will be published on the website for all to see.
+              </p>
+              <p>
+                <b>Hidden</b> content is only viewable to you as the administrator.
+              </p>
+            </help>
+          </select1>
+          <select bind="bCascade" appearance="full" class="multiline">
+            <item>
+              <label>Show this on child pages</label>
+              <value>true</value>
+            </item>
+            <help class="inline">This module will be shown on every child of the current page. If you use this feature when adding a module to the home page, the module will appear on every page.</help>
+          </select>
+          <select bind="Screens" appearance="full" class="multiline bs-only">
+            <label>Hide from Screens</label>
+            <item>
+              <label>Extra small (phones) under 768px</label>
+              <value>xs</value>
+            </item>
+            <item>
+              <label>Small (tablets) 768px or over</label>
+              <value>sm</value>
+            </item>
+            <item>
+              <label>Medium (desktops) 992px or over </label>
+              <value>md</value>
+            </item>
+            <item>
+              <label>Large (desktops) 1200px or over </label>
+              <value>lg</value>
+            </item>
+          </select>
+        </group>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+        <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
+        </textarea>
+      </group>
+      <group>
+        <label>Module links</label>
+        <select1 bind="cLinkType" appearance="full" class="required">
+          <label>Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Text</label>
+    </submit>
+  </group>
+</Content>

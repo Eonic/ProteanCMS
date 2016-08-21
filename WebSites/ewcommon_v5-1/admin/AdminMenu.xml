@@ -1,0 +1,170 @@
+<AdminMenu>
+  <MenuItem name="Dashboard" cmd="AdmHome" display="true" icon="fa-dashboard">
+    <MenuItem name="Content" cmd="Content" display="true" plugin="Content" icon="fa-edit">
+      <MenuItem name="By Page" cmd="ByPage" display="true" icon="fa-edit">
+        <MenuItem name="Edit Page" cmd="Normal" display="true" icon="fa-edit">
+          <MenuItem name="Edit Content" cmd="EditContent" display="false" icon="fa-edit"/>
+          <MenuItem name="Add Module" cmd="AddModule" display="false" icon="fa-th-large"/>
+          <MenuItem name="Add Content" cmd="AddContent" display="false" icon="fa-edit"/>
+          <MenuItem name="Move Content" cmd="MoveContent" display="false" icon="fa-mail-forward"/>
+          <MenuItem name="Locate Content" cmd="LocateContent" display="false" icon="fa-mail-reply-all fa-flip-horizontal"/>
+          <MenuItem name="Related Item Search" cmd="RelateSearch" display="false" icon="fa-search"/>
+          <MenuItem name="Locate Search" cmd="LocateSearch" display="false" icon="fa-search"/>
+          <MenuItem name="Copy Content" cmd="CopyContent" display="false" icon="fa-copy"/>
+          <MenuItem name="Hide Content" cmd="HideContent" display="false" icon="fa-minus-square"/>
+          <MenuItem name="Show Content" cmd="ShowContent" display="false" icon="fa-plus-square"/>
+          <MenuItem name="Delete Content" cmd="DeleteContent" display="false" icon="fa-trash-o"/>
+          <MenuItem name="Content Versions" cmd="ContentVersions" display="false" icon="fa-copy"/>
+          <MenuItem name="Rollback Content" cmd="RollbackContent" display="false" icon="fa-reply"/>
+          <MenuItem name="Manage Poll Votes" cmd="ManagePollVotes" display="false" icon="fa-check-square"/>
+        </MenuItem>
+        <MenuItem name="Page Settings" cmd="EditPage" display="true" icon="fa-gears"/>
+        <MenuItem name="SEO Settings" cmd="EditPageSEO" display="true" icon="fa-globe"/>
+        <MenuItem name="Page Layout" cmd="EditPageLayout" display="true" icon="fa-columns"/>
+        <MenuItem name="Advanced" cmd="Advanced" display="true" icon="fa-pencil-square"/>
+        <MenuItem name="Page Versions" cmd="PageVersions" display="true" feature="PageVersions" icon="fa-copy"/>
+        <MenuItem name="New Page Version" cmd="NewPageVersion" display="false" feature="PageVersions" icon="fa-copy"/>
+        <MenuItem name="Permissions" cmd="EditPagePermissions" display="true" feature="Membership" icon="fa-key"/>
+        <MenuItem name="Rights" cmd="EditPageRights" display="true" feature="Membership" icon="fa-lock"/>
+        <MenuItem name="Preview" cmd="PreviewOn" display="true" icon="fa-eye"/>
+      </MenuItem>
+      <MenuItem name="Edit Menu" cmd="EditStructure" display="true" icon="fa-bars">
+        <MenuItem name="Move Page" cmd="MovePage" display="false" icon="fa-mail-forward"/>
+        <MenuItem name="Add Page" cmd="AddPage" display="false" icon="fa-plus-square"/>
+        <MenuItem name="Copy Page" cmd="CopyPage" display="false" icon="fa-copy"/>
+      </MenuItem>
+      <MenuItem name="Resource Library" cmd="ImageLib" display="true" icon="fa-picture-o">
+        <MenuItem name="Images" cmd="ImageLib" pgid="1" display="true" icon="fa-picture-o"/>
+        <MenuItem name="Media" cmd="MediaLib" pgid="1" display="true" icon="fa-play-circle"/>
+        <MenuItem name="Documents" cmd="DocsLib" pgid="1" display="true" icon="fa-file"/>
+      </MenuItem>
+     
+      <MenuItem name="Awaiting Approval" cmd="AwaitingApproval" display="true" feature="VersionControl" icon="fa-check-square-o"/>
+    </MenuItem>
+    <MenuItem name="Membership" cmd="ListUsers" display="true" icon="fa-group">
+      <MenuItem name="All Users" cmd="ListUsers" display="true" icon="fa-user"/>
+      <MenuItem name="Groups" cmd="ListGroups" display="true"  feature="Membership" icon="fa-users"/>
+      <MenuItem name="Roles" cmd="ListRoles" display="true" icon="fa-briefcase"/>
+      <MenuItem name="Access Permission" cmd="Permissions" display="true" feature="Membership" icon="fa-key"/>
+      <MenuItem name="Edit Item" cmd="EditDirItem" display="false"/>
+      <MenuItem name="Edit Role" cmd="EditRole" display="false"/>
+      <MenuItem name="Edit Item" cmd="ResetUserPwd" display="false"/>
+      <MenuItem name="Delete Dir Item" cmd="DeleteDirItem" display="false"/>
+      <MenuItem name="Dir Permissions" cmd="DirPermissions" display="false"/>
+      <MenuItem name="Maintain Relations" cmd="MaintainRelations" display="false" feature="Membership" icon="fa-link"/>
+      <MenuItem name="List User Contacts" cmd="ListUserContacts" display="false" feature="Membership" icon="fa-map-marker"/>
+      <MenuItem name="Add User Contact" cmd="AddUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+      <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+      <MenuItem name="List Companies" cmd="ListCompanies" display="false" feature="Membership"/>
+      <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership"/>
+      <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+      <MenuItem name="Activity Reporting" cmd="MemberActivity" display="true" feature="Membership" icon="fa-bar-chart-o"/>
+      <MenuItem name="Member Codes" cmd="MemberCodes" display="true" feature="MemberCodes" icon="fa-certificate"/>
+      <MenuItem name="Subscriptions" cmd="Subscriptions" display="true" feature="Subscriptions" icon="fa fa-calendar-o">
+        <MenuItem name="ListSubscribers" cmd="ListSubscribers" display="false" icon="fa-certificate"/>
+        <MenuItem name="List Subscriptions" cmd="Subscriptions" display="true" icon="fa fa-calendar-o"/>
+        <MenuItem name="Upcoming Renewals" cmd="UpcomingRenewals" display="true" icon="fa fa-calendar-plus-o"/>
+        <MenuItem name="Expired Subscriptions" cmd="ExpiredSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
+        <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa fa-envelope-o"/>
+     </MenuItem>
+    </MenuItem>
+    <MenuItem name="Email Marketing" cmd="MailingList" display="true" feature="MailingList" icon="fa-envelope">
+      <MenuItem name="All email campaigns" cmd="MailingList" display="true" icon="fa-envelope"/>
+      <MenuItem name="History" cmd="MailHistory" display="true" icon="icon-history" />
+      <MenuItem name="Opt-Out" cmd="MailOptOut" display="true" icon="fa-ban"/>
+      <MenuItem name="HiddenMenu" cmd="NotARealValue" display="false">
+        <MenuItem name="Normal Mode" cmd="NormalMail" display="true" icon="fa-pencil-square-o" />
+        <MenuItem name="Advanced Mode" cmd="AdvancedMail" display="true" icon="fa-cog"/>
+        <MenuItem name="E-Mail Settings" cmd="EditMail" display="true" icon="fa-cogs"/>
+        <MenuItem name="E-Mail Layout" cmd="EditMailLayout" display="true" icon="fa-columns"/>
+        <MenuItem name="Send Preview" cmd="PreviewMail" display="true" icon="fa-eye"/>
+        <MenuItem name="Send E-Mail" cmd="SendMail" display="true" icon="fa-exchange"/>
+        <MenuItem name="AddMailModule" cmd="AddMailModule" display="false"/>
+        <!--<MenuItem name="Edit Content" cmd="EditContent" display="false"/>-->
+        <MenuItem name="Preview" cmd="MailPreviewOn" display="true" icon="fa-eye"/>
+      </MenuItem>
+      <MenuItem name="NewMail" cmd="NewMail" display="false" />
+    </MenuItem>
+    <MenuItem name="Ecommerce" cmd="Orders" display="true" feature="Cart" icon="fa-shopping-cart">
+      <MenuItem name="Orders" cmd="Orders" display="true" icon="fa-shopping-cart">
+        <MenuItem name="New Sales" cmd="Orders" display="true" icon="fa-shopping-cart"/>
+        <MenuItem name="Awaiting Payment" cmd="OrdersAwaitingPayment" display="true" icon="fa-clock-o"/>
+        <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
+        <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
+        <MenuItem name="Deposit Paid" cmd="OrdersDeposit" display="true" icon="fa-money"/>
+        <MenuItem name="History" cmd="OrdersHistory" display="true" icon="icon-history"/>
+      </MenuItem>
+      <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" icon="icon-earth"/>
+      <MenuItem name="Delivery Methods" cmd="DeliveryMethods" display="true" icon="fa-gift">
+        <MenuItem name="Set Delivery Methods Locations" cmd="DeliveryMethodLocations" display="false"/>
+      </MenuItem>
+      <MenuItem name="Carriers" cmd="Carriers" display="true" icon="fa-truck"/>
+      <MenuItem name="Discounts" cmd="Discounts" display="true" icon="fa-certificate">
+        <MenuItem name="Product Groups" cmd="ProductGroups" display="true" icon="fa-gift"/>
+        <MenuItem name="Discount Rules" cmd="DiscountRules" display="true" icon="fa-certificate"/>
+        <MenuItem name="Discounts" cmd="Discounts" display="false" icon="fa-certificate"/>
+        <MenuItem name="ProductGroups" cmd="ProductGroups" display="false"/>
+        <MenuItem name="DiscountRules" cmd="DiscountRules" display="false"/>
+        <MenuItem name="DiscountGroupRelations" cmd="DiscountGroupRelations" display="false"/>
+        <MenuItem name="EditProductGroups" cmd="EditProductGroups" display="false"/>
+        <MenuItem name="Add Products to Product Group" cmd="AddProductGroupsProduct" display="false"/>
+        <MenuItem name="AddDiscountRules" cmd="AddDiscountRules" display="false"/>
+        <MenuItem name="EditDiscountRules" cmd="EditDiscountRules" display="false"/>
+        <MenuItem name="ApplyDirDiscountRules" cmd="ApplyDirDiscountRules" display="false"/>
+        <MenuItem name="ApplyGrpDiscountRules" cmd="ApplyGrpDiscountRules" display="false"/>
+        <MenuItem name="AddProductGroups" cmd="AddProductGroups" display="false"/>
+      </MenuItem>
+      <MenuItem name="Voucher Codes" cmd="MemberCodes" display="true" icon="fa-barcode"/>
+      <MenuItem name="Reports" cmd="CartReportsMain" display="true" icon="fa-bar-chart-o">
+        <MenuItem name="Order Download" cmd="CartDownload" display="true"/>
+        <MenuItem name="Sales by Product" cmd="CartReports" display="true"/>
+        <MenuItem name="Sales by Page" cmd="CartActivityDrilldown" display="true"/>
+        <MenuItem name="Sales by Period" cmd="CartActivityPeriod" display="true"/>
+      </MenuItem>
+      <MenuItem name="Settings" cmd="CartSettings" display="true" icon="fa-cogs">
+        <MenuItem name="General Settings" cmd="CartSettings" display="true" icon="fa-cog"/>
+        <MenuItem name="Payment Providers" cmd="PaymentProviders" display="true" icon="fa-credit-card"/>
+        <MenuItem name="Access Syncronisation" cmd="Sync" display="true" feature="AccessSync" icon="fa-exchange"/>
+      </MenuItem>
+    </MenuItem>
+    <MenuItem name="Reports" cmd="Reports" display="true" plugin="Report" icon="fa-bar-chart-o">
+      <MenuItem name="Reports" cmd="Reports" display="true" icon="fa-bar-chart-o"/>
+      <MenuItem name="Web Stats" cmd="WebStats" display="true" icon="fa-globe"/>
+      <MenuItem name="Google Analytics" cmd="GoogleAnalytics" display="true" icon="icon-google"/>
+      <MenuItem name="SEO Reports" cmd="RavenFrameset" display="true" icon="icon-google"/>
+      <!--MenuItem name="Activity Log" cmd="ActivityLogging" display="true" feature="ActivityLogging" icon="fa-meh-o"/-->
+    </MenuItem>
+      <MenuItem name="Site Theme" cmd="ThemeSettings" display="true" feature="Themes" icon="icon-brush">
+        <MenuItem name="Current Theme Settings" cmd="ThemeSettings" display="true" icon="fa-gears"/>
+        <MenuItem name="Change Site Theme" cmd="SelectTheme" display="true" icon="icon-brush"/>
+        <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
+      </MenuItem>
+    <MenuItem name="Settings" cmd="SettingsDash" display="true" icon="fa-cogs">
+      <MenuItem name="Settings" cmd="WebSettings" display="true" icon="fa-cogs">
+        <MenuItem name="Site Settings" cmd="WebSettings" display="true" icon="fa-cogs"/>
+        <MenuItem name="Search" cmd="WebSettings.Search" display="true" feature="Search" icon="fa-search"/>
+        <MenuItem name="Membership" cmd="WebSettings.Membership" display="true" feature="Membership" icon="fa-users"/>
+        <MenuItem name="Password Policy" cmd="WebSettings.PasswordPolicy" display="true" feature="Membership" icon="fa-lock"/>
+        <MenuItem name="Cart" cmd="WebSettings.Cart" display="true" feature="Cart" icon="fa-shopping-cart"/>
+        <MenuItem name="Mailing List" cmd="WebSettings.MailingList" display="true" feature="MailingList" icon="fa-envelope"/>
+        <MenuItem name="Scheduler" cmd="WebSettings.Scheduler" display="true" feature="Scheduler" icon="fa-clock-o"/>
+        <MenuItem name="Reseller" cmd="WebSettings.Reseller" display="true" icon="fa-building-o"/>
+      </MenuItem>
+      <MenuItem name="Scheduled Items" cmd="ScheduledItems" display="true" feature="Scheduler" icon="fa-clock-o">
+        <MenuItem name="Edit Scheduled Item" cmd="EditScheduledItem" display="false" feature="Scheduler" icon="fa-clock-o"/>
+        <MenuItem name="Run Scheduled Item" cmd="ScheduledItemRunNow" display="false" feature="Scheduler" icon="fa-clock-o"/>
+      </MenuItem>
+      <MenuItem name="Redirects" cmd="RewriteRules" display="true" icon="fa-share">
+          <MenuItem name="Rules" cmd="RewriteRules" display="true" icon="fa-share"/>
+          <MenuItem name="Perminent Redirects" cmd="301Redirect" display="true" icon="fa-share"/>
+          <MenuItem name="Temporary Redirects" cmd="302Redirect" display="true" icon="fa-share"/>
+        <MenuItem name="Static Rewrites" cmd="StaticRewrites" display="true" icon="fa-share"/>
+      </MenuItem>
+      <MenuItem name="System Pages" cmd="SystemPages" display="true" icon="fa-warning"/>
+      <MenuItem name="View System Pages" cmd="ViewSystemPages" display="false"/>
+      <MenuItem name="Index Site" cmd="SiteIndex" display="true" feature="Search" icon="fa-tachometer"/>
+      <MenuItem name="Manage Lookups" cmd="ManageLookups" display="true" icon="fa-bars"/>
+      <MenuItem name="Import Files" cmd="FileImport" display="true" feature="Import" icon="fa-sign-in fa-rotate-180"/>
+    </MenuItem>
+  </MenuItem>
+</AdminMenu>

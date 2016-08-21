@@ -1,0 +1,492 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="WebSettings">
+   <model>
+     <instance>
+       <web>
+         <add key="SiteName" value="" />
+         <add key="SiteLogo" value="" />
+         <add key="CompanyName" value="" />
+         <add key="CompanyAddress" value="" />
+         <add key="CompanyTel" value="" />
+         <add key="CompanyEmail" value="" />
+         <add key="VATnumber" value="" />
+         <add key="CompanyRegNo" value="" />
+         <add key="CharityRegNo" value="" />
+        <add key="DatabaseName" value="" />
+        <add key="DatabaseUsername" value="" />
+        <add key="DatabasePassword" value="" />
+        <add key="RootPageId" value="1" />
+        <add key="BaseUrl" value="" />
+        <add key="MailServer" value="" />
+        <add key="MailServer2" value="" />
+        <add key="MailServerPort" value="" />
+        <add key="MailServerUsername" value="" />
+        <add key="MailServerPassword" value="" />
+        <add key="MailServerSSL" value="" />
+        <add key="ImageRootPath" value="/images/" />
+        <add key="DocRootPath" value="/docs/" />
+        <add key="MediaRootPath" value="/media/" />
+        <add key="NonAuthenticatedUsersGroupId" value="" />
+        <add key="AuthenticatedUsersGroupId" value="" />
+        <add key="RegisterBehaviour" value="" />
+        <add key="RegisterRedirectPageId" value="" />
+        <add key="ControlPanelTypes" value="" />
+        <add key="Debug" value="on" />
+        <add key="CompiledTransform" value="off" />
+         <add key="ScriptAtBottom" value="off" />
+        <add key="SiteAdminName" value="Webmaster" />
+        <add key="SiteAdminEmail" value="support@eonic.co.uk" />
+        <add key="Subscriptions" value="off" />
+        <add key="ActivityLogging" value="off" />
+        <add key="IPLogging" value="off" />
+        <add key="GoogleContentTypes" value="Product,SKU" />
+        <add key="ShowRelatedBriefContentTypes" value="" />
+        <add key="ShowRelatedBriefDepth" value="" />
+        <add key="VersionControl" value="off" />
+		    <add key="PageVersions" value="off" />
+        <add key="LegacyRedirect" value="off" />
+        <add key="PageURLFormat" value="" />
+        <add key="AllowContentDetailAccess" value="" />
+        <add key="MenuContentCountTypes" value="" />
+        <add key="MenuContentBriefTypes" value="" />
+        <add key="CookieDomain" value="" />
+		    <add key="UserIntegrations" value="off" />
+        <add key="LogEmail" value="off" />
+        <add key="LogEmailXml" value="on" />
+		    <add key="ShowStructForiegnRef" value="off" />
+		    <add key="StatsID" value="" />
+		    <add key="StatsUser" value="" />
+		    <add key="StatsPassword" value="" />
+        <add key="XslTimeout" value="" />
+        <add key="Scheduler" value="off" />
+        <add key="ExpireAtEndOfDay" value="off" />
+        <add key="GoogleAnalyticsUniversalID" value="" />
+        <add key="XmlSettings" value="" />
+       </web>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+     <bind id="ewSiteName" nodeset="web/add[@key='SiteName']/@value" required="false()" type="string" />
+     <bind id="ewSiteLogo" nodeset="web/add[@key='SiteLogo']/@value" required="false()" type="string" />
+     <bind id="ewCompanyName" nodeset="web/add[@key='CompanyName']/@value" required="false()" type="string" />
+     <bind id="ewCompanyAddress" nodeset="web/add[@key='CompanyAddress']/@value" required="false()" type="string" />
+     <bind id="ewCompanyTel" nodeset="web/add[@key='CompanyTel']/@value" required="false()" type="string" />
+     <bind id="ewCompanyEmail" nodeset="web/add[@key='CompanyEmail']/@value" required="false()" type="string" />
+     <bind id="ewVATnumber" nodeset="web/add[@key='VATnumber']/@value" required="false()" type="string" />
+     <bind id="ewCompanyRegNo" nodeset="web/add[@key='CompanyRegNo']/@value" required="false()" type="string" />
+     <bind id="ewCharityRegNo" nodeset="web/add[@key='CharityRegNo']/@value" required="false()" type="string" />
+    <bind id="ewDatabaseName" nodeset="web/add[@key='DatabaseName']/@value" required="true()" type="string" />
+    <bind id="ewDatabaseUsername" nodeset="web/add[@key='DatabaseUsername']/@value" required="false()" type="string" />
+    <bind id="ewDatabasePassword" nodeset="web/add[@key='DatabasePassword']/@value" required="false()" type="string" />
+    <bind id="ewRootPageId" nodeset="web/add[@key='RootPageId']/@value" required="true()" type="string" />
+    <bind id="ewBaseUrl" nodeset="web/add[@key='BaseUrl']/@value" required="false()" type="string" />
+    <bind id="ewDebug" nodeset="web/add[@key='Debug']/@value" required="true()" type="string" />
+    <bind id="ewCompiledTransform" nodeset="web/add[@key='CompiledTransform']/@value" required="true()" type="string" />
+    <bind id="ewScriptAtBottom" nodeset="web/add[@key='ScriptAtBottom']/@value" required="true()" type="string" />
+    <bind id="ewImageRootPath" nodeset="web/add[@key='ImageRootPath']/@value" required="true()" type="string" />
+    <bind id="ewDocRootPath" nodeset="web/add[@key='DocRootPath']/@value" required="true()" type="string" />
+    <bind id="ewMediaRootPath" nodeset="web/add[@key='MediaRootPath']/@value" required="true()" type="string" />
+    <bind id="ewActivityLogging" nodeset="web/add[@key='ActivityLogging']/@value" required="true()" type="string" />
+    <bind id="ewIPLogging" nodeset="web/add[@key='IPLogging']/@value" required="true()" type="string" />
+    <bind id="ewMailserver" nodeset="web/add[@key='MailServer']/@value" required="false()" type="string" />
+     <bind id="ewMailserverPort" nodeset="web/add[@key='MailServerPort']/@value" required="false()" type="string" />
+     <bind id="ewMailserverUsername" nodeset="web/add[@key='MailServerUsername']/@value" required="false()" type="string" />
+     <bind id="ewMailserverPassword" nodeset="web/add[@key='MailServerPassword']/@value" required="false()" type="string" />
+     <bind id="ewMailserverSSL" nodeset="web/add[@key='MailServerSSL']/@value" required="false()" type="string" />
+     <bind id="ewMailserver2" nodeset="web/add[@key='MailServer2']/@value" required="false()" type="string" />
+    <bind id="ewSiteAdminName" nodeset="web/add[@key='SiteAdminName']/@value" required="false()" type="string" />
+    <bind id="ewSiteAdminEmail" nodeset="web/add[@key='SiteAdminEmail']/@value" required="false()" type="string" />
+    <bind id="ewGoogleContentTypes" nodeset="web/add[@key='GoogleContentTypes']/@value" required="false()" type="string" />
+    <bind id="ewShowRelatedBriefContentTypes" nodeset="web/add[@key='ShowRelatedBriefContentTypes']/@value" required="false()" type="string" />
+    <bind id="ewShowRelatedBriefDepth" nodeset="web/add[@key='ShowRelatedBriefDepth']/@value" required="false()" type="number" />
+    <bind id="ewVersionControl" nodeset="web/add[@key='VersionControl']/@value" required="false()" type="string" />
+    <bind id="ewPageVersions" nodeset="web/add[@key='PageVersions']/@value" required="false()" type="string" />
+    <bind id="ewLegacyRedirect" nodeset="web/add[@key='LegacyRedirect']/@value" required="true()" type="string" />
+    <bind id="ewPageURLFormat" nodeset="web/add[@key='PageURLFormat']/@value" required="true()" type="string" />
+    <bind id="ewAllowContentDetailAccess" nodeset="web/add[@key='AllowContentDetailAccess']/@value" required="false()" type="string" />
+    <bind id="ewMenuContentCountTypes" nodeset="web/add[@key='MenuContentCountTypes']/@value" required="false()" type="string" />
+     <bind id="ewMenuContentBriefTypes" nodeset="web/add[@key='MenuContentBriefTypes']/@value" required="false()" type="string" />
+	  <bind id="ewUserIntegrations" nodeset="web/add[@key='UserIntegrations']/@value" required="true()" type="string" />
+    <bind id="ewLogEmail" nodeset="web/add[@key='LogEmail']/@value" required="true()" type="string" />
+    <bind id="ewLogEmailXml" nodeset="web/add[@key='LogEmailXml']/@value" required="true()" type="string" />
+	  <bind id="ewShowStructForiegnRef" nodeset="web/add[@key='ShowStructForiegnRef']/@value" required="true()" type="string" />
+	   <bind id="ewStatsID" nodeset="web/add[@key='StatsID']/@value" required="false()" type="string" />
+	   <bind id="ewStatsUser" nodeset="web/add[@key='StatsUser']/@value" required="false()" type="string" />
+	   <bind id="ewStatsPassword" nodeset="web/add[@key='StatsPassword']/@value" required="false()" type="string" />
+     <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
+     <bind id="ewXslTimeout" nodeset="web/add[@key='XslTimeout']/@value" required="false()" type="string" />
+     <bind id="ewScheduler" nodeset="web/add[@key='Scheduler']/@value" required="false()" type="string" />
+     <bind id="ewExpireAtEndOfDay" nodeset="web/add[@key='ExpireAtEndOfDay']/@value" required="false()" type="string" />
+     <bind id="XmlSettings" nodeset="web/add[@key='XmlSettings']/@value" required="false()" type="string" />
+   </model>
+   <group ref="WebSettings">
+    <label>Web Settings</label>
+     <alert>Saving this form will log you out of the admin system.</alert>
+     <alert>Any Changes you make to this form risk making this site completely non-functional. Please be sure you know what you are doing before making any changes, or call Technical Support on the number below.</alert>
+     <group ref="Site Information" class="inline">
+       <label>Site Information</label>
+       <input bind="ewSiteName">
+         <label>Site Name</label>
+         <value></value>
+       </input>
+       <input bind="ewSiteLogo" class="pickImageFile">
+         <label>Site Logo</label>
+         <value></value>
+       </input>
+       <input bind="ewCompanyName">
+         <label>Company Name</label>
+         <value></value>
+       </input>
+       <input bind="ewCompanyAddress">
+         <label>Company Address</label>
+         <value />
+       </input>
+       <input bind="ewCompanyTel">
+         <label>Company Telephone</label>
+         <value/>
+       </input>
+       <input bind="ewCompanyEmail">
+         <label>Company Email</label>
+         <value/>
+       </input>
+       <input bind="ewVATnumber">
+         <label>VAT number</label>
+         <value/>
+       </input>
+       <input bind="ewCompanyRegNo">
+         <label>Companies House Registration No.</label>
+         <value/>
+       </input>
+       <input bind="ewCharityRegNo">
+         <label>Charity Registration No.</label>
+         <value/>
+       </input>
+     </group>
+     <group ref="Database" class="inline">
+		   <label>Database</label>
+			<input bind="ewDatabaseName">
+			  <label>DB Name</label>
+			  <value></value>
+			</input>
+			 <input bind="ewDatabaseUsername">
+			  <label>DB Username</label>
+			  <value />
+			</input>
+			 <input bind="ewDatabasePassword">
+			  <label>DB Password</label>
+			  <value />
+			</input>
+		   <input bind="ewRootPageId">
+			  <label>Root Page Id</label>
+			  <value>1</value>
+			</input>
+		</group>
+	   <group ref="Email" class="inline">
+		   <label>Email</label>
+       <div class="long">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>
+		   <input bind="ewMailserver">
+			   <label>Mailserver</label>
+			   <value />
+		   </input>
+       <input bind="ewMailserver2">
+         <label>Backup Mailserver</label>
+         <value />
+       </input>
+       <input bind="ewMailserverPort">
+         <label>Mailserver Port</label>
+         <value />
+       </input>
+       <input bind="ewMailserverUsername">
+         <label>Mailserver Username</label>
+         <value />
+       </input>
+       <input bind="ewMailserverPassword">
+         <label>Mailserver Password</label>
+         <value />
+       </input>
+       <select1 bind="ewMailserverSSL" appearance="full">
+         <label>Mailserver SSL</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>on</value>
+       </select1>
+		   <input bind="ewSiteAdminName">
+			   <label>Webmaster Email Name</label>
+			   <value></value>
+		   </input>
+		   <input bind="ewSiteAdminEmail">
+			   <label>Webmaster Email Address</label>
+			   <value></value>
+		   </input>
+	   </group>
+	   <group ref="WebStats" class="inline">
+		   <label>WebStats</label>
+		   <div class="long">Settings for SmarterStats Server</div>
+		   <input bind="ewStatsID">
+			   <label>Site ID</label>
+		   </input>
+		   <input bind="ewStatsUser">
+			   <label>Username</label>
+		   </input>
+		   <input bind="ewStatsPassword">
+			   <label>Password</label>
+		   </input>
+       <div class="long">Settings Google Analytics</div>
+       <input bind="ewGoogleAnalyticsUniversalID">
+         <label>Google Site ID</label>
+       </input>
+	   </group>
+	   <group ref="Paths" class="inline">
+		   <label>Default Paths</label>
+		   <input bind="ewBaseUrl">
+			   <label>Base URL</label>
+			   <value />
+		   </input>
+		   <input bind="ewImageRootPath">
+			   <label>Images Directory</label>
+			   <value>/images/</value>
+		   </input>
+		   <input bind="ewDocRootPath">
+			   <label>Docs Directory</label>
+			   <value>/docs/</value>
+		   </input>
+		   <input bind="ewMediaRootPath">
+			   <label>Media Directory</label>
+			   <value>/media/</value>
+		   </input>
+	   </group>
+	   <group ref="Features" class="inline">
+		   <label>Features</label>
+     <select1 bind="ewDebug" appearance="full">
+      <label>Debug</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value>on</value>
+    </select1>
+     <select1 bind="ewCompiledTransform" appearance="full">
+      <label>Compiled Transform</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value>off</value>
+    </select1>
+       <select1 bind="ewScriptAtBottom" appearance="full">
+         <label>Script at bottom</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>    
+    <select1 bind="ewActivityLogging" appearance="full">
+      <label>Activity Logging</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+
+     <select1 bind="ewIPLogging" appearance="full">
+      <label>IP Tracking</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+
+    <input bind="ewGoogleContentTypes">
+      <label>Google Sitemap Content Types</label>
+      <value />
+    </input>
+     <input bind="ewShowRelatedBriefContentTypes">
+      <label>Include Related Content for these Content Types</label>
+      <value />
+    </input>
+     <input bind="ewShowRelatedBriefDepth">
+      <label>Depth to get related content for brief content.</label>
+      <value />
+    </input>
+     <select1 bind="ewVersionControl" appearance="full">
+      <label>Version Control</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+	   <select1 bind="ewPageVersions" appearance="full">
+		   <label>ewPageVersions</label>
+		   <item>
+			   <label>On</label>
+			   <value>on</value>
+		   </item>
+		   <item>
+			   <label>Off</label>
+			   <value>off</value>
+		   </item>
+		   <value />
+	   </select1>
+    <select1 bind="ewLegacyRedirect" appearance="full">
+      <label>Legacy URL Forwarding</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+     <select1 bind="ewPageURLFormat" appearance="full">
+      <label>Page URL Format for Spaces</label>
+       <item>
+        <label>Use Hyphens</label>
+        <value>hyphens</value>
+      </item>
+       <item>
+        <label>No preference</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+     <select1 bind="ewAllowContentDetailAccess" appearance="full">
+      <label>Always allow access to content detail regardless of location and permissions</label>
+       <item>
+        <label>On</label>
+        <value>on</value>
+      </item>
+       <item>
+        <label>Off</label>
+        <value>off</value>
+      </item>
+      <value />
+    </select1>
+    <input bind="ewMenuContentCountTypes">
+         <label>Menu Content Count Types</label>
+         <value />
+    </input>
+    <input bind="ewMenuContentBriefTypes">
+         <label>Menu Content Brief Types</label>
+         <value />
+    </input>
+	  <select1 bind="ewUserIntegrations" appearance="full">
+		   <label>User Integration Interfaces</label>
+		   <item>
+			   <label>On</label>
+			   <value>on</value>
+		   </item>
+		   <item>
+			   <label>Off</label>
+			   <value>off</value>
+		   </item>
+		   <value />
+	   </select1>
+       <select1 bind="ewLogEmail" appearance="full">
+           <label>Log Emails</label>
+           <item>
+               <label>On</label>
+               <value>on</value>
+           </item>
+           <item>
+               <label>Off</label>
+               <value>off</value>
+           </item>
+           <value />
+       </select1>
+       <select1 bind="ewLogEmailXml" appearance="full">
+           <label>Log Email Xml</label>
+           <item>
+               <label>On</label>
+               <value>on</value>
+           </item>
+           <item>
+               <label>Off</label>
+               <value>off</value>
+           </item>
+           <value />
+       </select1>
+	   <select1 bind="ewShowStructForiegnRef" appearance="full">
+		   <label>Show Foriegn Ref on Edit Page</label>
+		   <item>
+			   <label>On</label>
+			   <value>on</value>
+		   </item>
+		   <item>
+			   <label>Off</label>
+			   <value>off</value>
+		   </item>
+		   <value />
+       </select1>
+       <input bind="ewXslTimeout">
+         <label>Xsl Timeout</label>
+         <value />
+       </input>
+       <input bind="XmlSettings">
+         <label>Xml Settings i.e. section.value;section2.value2</label>
+       </input>
+       <select1 bind="ewScheduler" appearance="full">
+         <label>Scheduler</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value />
+       </select1>
+       <select1 bind="ewExpireAtEndOfDay" appearance="full">
+         <label>Expiry Dates (expire at end of day)</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value />
+       </select1>
+	   </group>
+     <submit submission="" ref="submit" class="principle">
+      <label>Save Settings</label>
+    </submit>
+  </group>
+</Content>

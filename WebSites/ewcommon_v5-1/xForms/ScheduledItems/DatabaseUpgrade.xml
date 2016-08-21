@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditDatabaseUpgrade">
+  <model>
+    <instance>
+      <tblActions>
+        <nActionKey>0</nActionKey>
+        <nWebsite/>
+        <cType>DatabaseUpgrade</cType>
+        <cSubPath>ewcommon/services.asmx</cSubPath>
+        <cActionXML>
+          <DatabaseUpgrade exemelnamespace="http://www.eonic.co.uk/ewcommon/Services" />
+        </cActionXML>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nFrequency>30</nFrequency>
+        <dLastComplete/>
+        <dDueNext/>
+      </tblActions>
+    </instance>
+    <submission id="EditFeed" action="" method="post" event="return form_check(this)"/>
+    <bind id="nActionKey" nodeset="tblActions/nActionKey" required="false()" type="number"/>
+    <bind id="nWebsite" nodeset="tblActions/nWebsite" required="false()" type="number"/>
+    <bind id="dPublishDate" nodeset="tblActions/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblActions/dExpireDate" required="false()" type="string"/>
+    <bind id="dLastComplete" nodeset="tblActions/dLastComplete" required="false()" type="date"/>
+    <bind id="dDueNext" nodeset="tblActions/dDueNext" required="false()" type="date"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Database Upgrade</label>
+    <group>
+      <group>
+        <input bind="nActionKey" class="hidden">
+          <label>nActionKey</label>
+        </input>
+        <input bind="nWebsite" class="hidden">
+          <label>nWebsite</label>
+        </input>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <input bind="dLastComplete" class="short readonly">
+          <label>Last Done</label>
+        </input>
+        <input bind="dDueNext" class="short readonly">
+          <label>Next Due</label>
+        </input>
+      </group>
+    </group>
+    <group>
+      <submit submission="" ref="ewSubmit" class="principle">
+        <label>Save Upgrade</label>
+      </submit>
+    </group>
+  </group>
+</Content>

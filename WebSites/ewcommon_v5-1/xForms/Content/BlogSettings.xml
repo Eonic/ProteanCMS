@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>BlogSettings</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<BlogTitle/>
+						<BlogOwnerName/>
+						<BlogOwnerEmail/>
+						<Strapline/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<contentType>BlogArticle</contentType>
+						<ArchiveAfter>1</ArchiveAfter>
+						<DisplayTopXArticles>0</DisplayTopXArticles>
+						<SocialBookMarkingLinks>true</SocialBookMarkingLinks>
+						<AbbreviatedOnArticleListing>false</AbbreviatedOnArticleListing>
+						<CommentSettings/>
+						<HideNewPosts>1</HideNewPosts>
+						<AutoSubmitAPIs Feedburner="true" Technocrati="true"/>
+						<channel>
+							<title/>
+							<link/>
+							<description/>
+							<language>en-gb</language>
+							<pubDate/>
+							<lastBuildDate/>
+							<copyright/>
+							<category/>
+							<docs/>
+							<managingEditor/>
+							<webMaster/>
+							<generator>eonicweb4 Content Management System</generator>
+							<ttl>60</ttl>
+							<image>
+								<url/>
+								<title/>
+								<link/>
+							</image>
+							<cloud domain="" port="" path="" registerProcedure="" protocol=""/>
+							<rating/>
+							<textInput/>
+							<skipHours/>
+							<skipDays/>
+						</channel>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<BlogTitle/>
+						<BlogOwnerName/>
+						<BlogOwnerEmail/>
+						<Strapline/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<contentType>BlogArticle</contentType>
+						<ArchiveAfter>1</ArchiveAfter>
+						<DisplayTopXArticles>0</DisplayTopXArticles>
+						<SocialBookMarkingLinks>true</SocialBookMarkingLinks>
+						<AbbreviatedOnArticleListing>false</AbbreviatedOnArticleListing>
+						<CommentSettings/>
+						<HideNewPosts>1</HideNewPosts>
+						<AutoSubmitAPIs Feedburner="true" Technocrati="true"/>
+						<channel>
+							<title/>
+							<link/>
+							<description/>
+							<language>en-gb</language>
+							<pubDate/>
+							<lastBuildDate/>
+							<copyright/>
+							<category/>
+							<docs/>
+							<managingEditor/>
+							<webMaster/>
+							<generator>eonicweb4 Content Management System</generator>
+							<ttl>60</ttl>
+							<image>
+								<url/>
+								<title/>
+								<link/>
+							</image>
+							<cloud domain="" port="" path="" registerProcedure="" protocol=""/>
+							<rating/>
+							<textInput/>
+							<skipHours/>
+							<skipDays/>
+						</channel>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cBlogTitle" nodeset="cContentName" required="true()" type="string" />
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentBlogTitle" nodeset="BlogTitle" required="true()" type="string" />
+				<bind id="cStrapline" nodeset="Strapline" required="false()" type="string" />
+				<bind id="cBlogOwnerName" nodeset="BlogOwnerName" required="false()" type="string" />
+				<bind nodeset="Images">
+					<bind id="cContentFullSizePicture" nodeset="img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				</bind>
+				<bind id="cArchiveAfter" nodeset="ArchiveAfter" required="false()" type="string" />
+				<bind id="cDisplayTopXArticles" nodeset="DisplayTopXArticles" required="false()" type="string" />
+				<bind id="nSocialBookMarkingLinks" nodeset="SocialBookMarkingLinks" required="false()" type="string" />
+				<bind id="nAbbreviatedOnArticleListing" nodeset="AbbreviatedOnArticleListing" required="false()" type="string" />
+				<bind id="nCommentSettings" nodeset="CommentSettings" required="false()" type="string" />
+				<bind id="nHideNewPosts" nodeset="HideNewPosts" required="false()" type="string" />
+				<bind nodeset="AutoSubmitAPIs">
+					<bind id="nAutoSubmitFeedburnerAPI" nodeset="@Feedburner" required="false()" type="string" />
+					<bind id="nAutoSubmitTechnocratiAPI" nodeset="@Technocrati" required="false()" type="string" />
+				</bind>
+				<bind id="cBlogOwnerEmail" nodeset="BlogOwnerEmail" required="false()" type="string" />
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentBlogTitle" nodeset="BlogTitle" required="true()" type="string" />
+				<bind id="cStrapline" nodeset="Strapline" required="false()" type="string" />
+				<bind id="cBlogOwnerName" nodeset="BlogOwnerName" required="false()" type="string" />
+				<bind nodeset="Images">
+					<bind id="cContentFullSizePicture" nodeset="img[@class='thumbnail']" required="false()" type="xml-replace"/>
+					<bind id="cContentFullSizePicture" nodeset="img[@class='display']" required="false()" type="xml-replace"/>
+					<bind id="cContentFullSizePicture" nodeset="img[@class='detail']" required="false()" type="xml-replace"/>
+				</bind>
+				<bind id="cArchiveAfter" nodeset="ArchiveAfter" required="false()" type="string" />
+				<bind id="nDisplayTopXArticles" nodeset="DisplayTopXArticles" required="false()" type="string" />
+				<bind id="nSocialBookMarkingLinks" nodeset="SocialBookMarkingLinks" required="false()" type="string" />
+				<bind id="nAbbreviatedOnArticleListing" nodeset="AbbreviatedOnArticleListing" required="false()" type="string" />
+				<bind id="nCommentSettings" nodeset="CommentSettings" required="false()" type="string" />
+				<bind id="nHideNewPosts" nodeset="HideNewPosts" required="false()" type="string" />
+				<bind nodeset="AutoSubmitAPIs">
+					<bind id="nAutoSubmitFeedburnerAPI" nodeset="@Feedburner" required="false()" type="string" />
+					<bind id="nAutoSubmitTechnocratiAPI" nodeset="@Technocrati" required="false()" type="string" />
+				</bind>
+				<bind id="cBlogOwnerEmail" nodeset="BlogOwnerEmail" required="false()" type="string" />
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Edit Blog Settings</label>
+		<!-- Begin of Column 1-->
+		<group class="xFormContainer">
+			<group class="Content">
+				<label>Settings</label>
+				<input bind="dPublishDate" class="calendar short">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="required vshort">
+					<label>Status</label>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+				</select1>
+				<input bind="cDescription" class="short">
+					<label>Change Notes</label>
+				</input>
+			</group>
+		</group>
+		<!-- End of Column 1-->
+		<!-- Begin of Column 2-->
+		<group class="xFormContainer">
+			<group class="Content">
+				<label>Blog Name *</label>
+				<input bind="cContentBlogTitle" class="required long">
+				</input>
+			</group>
+			<group class="Content">
+				<label>Blog Owner:</label>
+				<input bind="cBlogOwnerName" class="required long">
+					<label>Blog Owners Name:</label>
+				</input>
+				<input bind="cBlogOwnerEmail" class="required long">
+					<label>Blog Owners Email:</label>
+				</input>
+			</group>
+			<!-- -->
+			<group ref="mainContent" class="Content">
+				<label>Blog Strapline</label>
+				<textarea bind="cStrapline" class="TextArea xhtml" rows="5"/>
+			</group>
+			<group class="Content">
+				<label>Blog Settings:</label>
+				<!--<select1 bind="cArchiveAfter" class="required">
+					<label>Archive After:</label>
+					<item>
+						<label>1 Month</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>2 Months</label>
+						<value>2</value>
+					</item>
+					<item>
+						<label>3 Months</label>
+						<value>3</value>
+					</item>
+					<item>
+						<label>4 Months</label>
+						<value>4</value>
+					</item>
+					<item>
+						<label>5 Months</label>
+						<value>5</value>
+					</item>
+					<item>
+						<label>6 Months</label>
+						<value>6</value>
+					</item>
+				</select1>-->
+				<!--<select1 bind="nDisplayTopXArticles" appearance="full" class="required vshort">
+					<label>Display Top X Articles</label>
+					<item>
+						<label>Yes</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>0</value>
+					</item>
+				</select1>-->
+				<select1 bind="nSocialBookMarkingLinks" appearance="full" class="required vshort">
+					<label>Social bookmarking links</label>
+					<item>
+						<label>Yes</label>
+						<value>true</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>false</value>
+					</item>
+				</select1>
+				<select1 bind="nAbbreviatedOnArticleListing" appearance="full" class="required vshort">
+					<label>Abrieviated on article listing</label>
+					<item>
+						<label>Yes</label>
+						<value>true</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>false</value>
+					</item>
+				</select1>
+			</group>
+			<!--<select1 bind="nCommentSettings">
+				<label>Comment setting</label>
+				<item>
+					<label>Always email (request email and name)</label>
+					<value>AlwaysEmail</value>
+				</item>
+				<item>
+					<label>Register to post</label>
+					<value>RegisterToPost</value>
+				</item>
+				<item>
+					<label>Email for non registered</label>
+					<value>EmailForNonRegistered</value>
+				</item>
+				<item>
+					<label>No comments</label>
+					<value>NoComments</value>
+				</item>
+			</select1>
+			<select1 bind="nHideNewPosts" appearance="full" class="required vshort">
+				<label>Hide all new posts</label>
+				<item>
+					<label>Yes</label>
+					<value>1</value>
+				</item>
+				<item>
+					<label>No</label>
+					<value>0</value>
+				</item>
+			</select1>-->
+			<!--<group class="Content">
+				<label>Social networks submission:</label>
+				<select bind="nAutoSubmitFeedburnerAPI" appearance="full">
+					<label>Submit to Feedburner</label>
+					<item>
+						<label/>
+						<value>true</value>
+					</item>
+				</select>
+				<select bind="nAutoSubmitTechnocratiAPI" appearance="full">
+					<label>Submit to Technocrati</label>
+					<item>
+						<label/>
+						<value>true</value>
+					</item>
+				</select>
+			</group>-->
+			<group ref="submit" class="contentSubmit">
+				<submit submission="" ref="ewSubmit" class="principle">
+					<label>Save Blog Settings</label>
+				</submit>
+			</group>
+		</group>
+		<!-- End of Column 2-->
+	</group>
+</Content>

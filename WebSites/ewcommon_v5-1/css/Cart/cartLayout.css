@@ -1,0 +1,605 @@
+/* This is the standard layout for EonicCart V3 E-Commerce plug-in classes, id's and elements*/
+
+/*#cartFull form, #glFull form NOT really a good idea padding on an inline container element, put it on fieldset.
+{
+	padding:6px;
+}*/
+.cartFull form th, #glFull form th
+{
+	text-align:right;
+}
+.cartFull #threeDS
+{
+    width: 500px;
+    height:400px;
+    border:0px;
+}
+
+
+.cartFull table, #glFull table
+{
+	width: 100%;
+}
+#cartLegend
+{
+	border:1px solid #666;
+	padding:8px;
+}
+.cartFull .textareaReadOnly, #glFull .textareaReadOnly
+{
+   border-color: #999;
+   background-color: #fff;
+}
+.cartFull td.quantity input
+{
+	width: 30px;
+}
+.cartFull td.description, 
+.cartFull td.ref, 
+.cartFull td.price 
+{
+	font-weight: bold;	
+}
+.cartFull th.price,
+.cartFull td.price
+{
+	text-align: right !important;
+}
+.cartFull .optionList
+{
+	font-weight: normal;
+	display:block;
+}
+.cartFull span.radiocheckbox 
+{
+	white-space:nowrap;
+	vertical-align:top;
+	/*height:25px; What you using a height for??? let it grow!! */
+}
+.cartFull div.radios
+{
+	width:100% !important;
+}
+#PayForm label.radio 
+{
+	display:inline-block;
+	padding-right:20px;
+
+	/*height:25px;  WHY THE HEIGHT??? Clips all descending characters and brackets !! WH 2009-01-06*/
+}
+#PayForm label.MC, #PayForm label.MasterCard,  #PayForm label.Master-Card
+{
+	background: transparent url(/ewcommon/images/icons/cc/mastercard.png) no-repeat left center;
+	padding-left:63px;
+    overflow: hidden;
+    width: 0;
+}
+#PayForm label.VISA, #PayForm label.Visa
+{
+	background: transparent url(/ewcommon/images/icons/cc/visa.png) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+#PayForm label.UKE, #PayForm label.Uke
+{
+	background: transparent url(/ewcommon/images/icons/cc/electron.gif) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+#PayForm label.DELTA, #PayForm label.Delta
+{
+	background: transparent url(/ewcommon/images/icons/cc/visadebit.png) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+#PayForm label.SOLO, #PayForm label.Solo
+{
+	background: transparent url(/ewcommon/images/icons/cc/solo.png) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+#PayForm label.SWITCH, #PayForm label.Switch, #PayForm label.Switch-Maestro
+{
+	background: transparent url(/ewcommon/images/icons/cc/maestro.png) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+#PayForm label.AMEX, #PayForm label.American-Express
+{
+	background: transparent url(/ewcommon/images/icons/cc/amex.png) no-repeat left center;
+	padding-left:60px;
+	overflow: hidden;
+    width: 0;
+}
+
+/*#cartLogonBox
+{
+	float:right;
+	width:260px;
+}
+#cartRegisterBox
+{
+	margin-right:280px;
+}*/
+
+.cartFull .textbox, 
+.cartFull .textarea, 
+.cartFull .dropdown, 
+#glFull .textbox, 
+#glFull .textarea, 
+#glFull .dropdown
+{
+	width:150px;
+}
+
+#cartLegend
+{
+	line-height:1.5;
+	margin-bottom:10px;
+	margin-top: 10px;
+}
+#cartLegend .icon
+{
+	display:none
+}
+#cartLegend p
+{
+	padding-left:30px;
+	margin:5px 0;
+	background:left center no-repeat;
+}
+#cartLegend .delete
+{
+	background:url(/ewcommon/images/icons/delete.png) no-repeat top left;
+}
+
+/* ======================= */
+
+table#cartListing
+{
+	width:100%;
+	margin-top: 10px;
+}
+#cartListing .heading
+{
+	text-align:left;
+}
+
+#cartListing TD, #cartListing TH
+{
+	padding:10px;
+	vertical-align:top;
+}
+#cartListing TH.heading
+{
+	line-height:1.5;
+	/*color:#FFF;*/
+	background:#ddd;
+	border-bottom:1px dashed #bbb;
+}
+
+#cartListing TD.cell, #cartListing TD.total
+{
+	border-bottom:1px dashed #bbb;
+}
+#cartListing TD.quantity
+{
+	padding-top:3px !important;
+	width:50px;
+}
+#cartListing TD .discount
+{
+	font-weight:normal;
+}
+#cartListing .lineTotal, #cartListing .linePrice
+{
+	width:90px;
+}
+#cartListing .linePrice, #cartListing .lineTotal, #cartListing TD.heading, #cartListing TD.amount
+{
+	text-align:right;
+}
+#cartListing TD.dropdown
+{
+	white-space:nowrap;
+	padding:10px 3px;
+	text-align:right;
+}
+#cartListing td.lineTotal
+{
+	font-weight:bold;
+}
+/* ======================= */
+
+.cartFull h2, 
+#cartRegisterBox, 
+#glFull h2, 
+table.SelectDeliveryOption, 
+table.CreditCardPayment, 
+.cartButtons, 
+#cartInvoice, 
+#cartLogonBox, 
+#cartListing, 
+#cartTerms, 
+.optionButtons, 
+#optionsForm, 
+#PayForm
+{
+	margin-bottom:10px;
+}
+#cartNotes .textarea
+{
+	width:300px;
+}
+#cartNotes P
+{
+	margin:3px 0;
+}
+
+.cartAddress
+{
+	margin-bottom:10px;
+	padding-bottom: 12px;
+}
+#cartTerms textarea
+{
+	width:100%;
+}
+#cartTandCs
+{
+	border:1px solid #999;
+	height:7em;
+	overflow:scroll;
+	padding:5px;
+	margin-bottom:10px;
+}
+#billingAddress
+{
+	/*margin-right:480px;*/
+}
+.fullwidth #deliveryAddress
+{
+	float:right;
+	width:480px;
+}
+/*#deliveryAddress
+{
+	float:right;
+	width:380px;
+}*/
+.shipping .dropdown
+{
+	width:auto !important;
+}
+th.subTitle, .cartAddress P.addressTitle, form h3
+{
+	margin:0;
+}
+.cartFull .alert
+{
+	color:#f00;
+	display:block;
+}
+form#giftlistForm input.radiocheckbox
+{
+	width:43px;
+}
+form#giftlistForm label.singleword
+{
+	width:150px;
+}
+
+.cartFull a.textButton, #glFull a.textButton
+{
+	line-height:3;
+}
+/* ========== ERROR MESSAGES ========== */
+.errorMessage .err_sub_msg
+{
+	display:block;
+	margin: 0.5em 0;
+}
+
+
+
+.Site TABLE#cartListing TD.delete
+{
+	text-align:center;
+	width:40px;
+}
+
+#cartListing TD.amount
+{
+	background:#ddd;
+}
+#cartListing .total
+{
+	font-weight:700;
+}
+
+.cartAddress form th, .cartAddress form td
+{
+	padding-bottom:3px;
+}
+
+.cartAddress P, .cartAddress h4, .cartAddress h5, .cartAddress a.textButton, #cartInvoice p
+{	
+	padding:2px 5px;
+	margin:0;
+}
+
+.cartFull a.button {
+	cursor: pointer !important;
+	font-size:	1em;
+	margin: 0px 0px 0px 2px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	width: auto;
+	color: #000;
+    background:url("/ewcommon/images/admin/cart-submit-continue-bg.png") no-repeat scroll right top transparent;
+    font-size:1em;
+    font-weight:bold;
+    height:28px;
+    padding:3px 27px 0 10px;
+    border:1px solid #D0CFD0;
+    display:inline-block;
+}
+.cartFull a.principle
+{
+	  background-image: url(/ewcommon/images/admin/submit-principle-bg.gif); 
+}
+
+.cartFull .ewXform legend
+{
+	font-weight:bold;
+	font-size:1.4em;
+}
+
+.cartFull .ewXform .dropdown, 
+.cartFull .ewXform .textarea, 
+.cartFull .ewXform .textbox,
+.cartFull .ewXform .textBox,
+.cartFull .ewXform select,
+.cartFull .ewXform option
+{
+	width:300px !important;
+}
+.fullwidth .cartFull .ewXform .dropdown, 
+.fullwidth .cartFull .ewXform .textarea, 
+.fullwidth .cartFull .ewXform .textbox,
+.fullwidth .cartFull .ewXform .textBox,
+.fullwidth .cartFull .ewXform select,
+.fullwidth .cartFull .ewXform option
+{
+	width:440px;
+}
+
+.day, .month,.fullwidth .cartFull .ewXform .day,.fullwidth .cartFull .ewXform .month, .cartFull .ewXform .day, .cartFull .ewXform .month
+{
+	width:60px!important;
+}
+.year,.fullwidth .cartFull .ewXform  .year, .cartFull .ewXform .year
+{
+	width:84px!important;
+}
+
+.cartFull .ewXform .short
+{
+	width:100px;
+}
+
+.cartFull input.button
+{
+    -moz-border-radius:4px 4px 4px 4px;
+    font-size:1em;
+    font-weight:bold;
+    height:32px;
+    padding:0 5px 0 5px;
+    cursor:pointer;
+}
+.cartFull input.principle
+{
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/submit-principle-bg.gif") no-repeat scroll right top transparent;
+	-moz-border-radius: 4px 4px 4px 4px;
+	border-radius: 4px;
+	color:#333;
+	border: 1px solid #D8D9DA;
+	float:right;
+}
+.cartFull input.continue
+{
+	border:1px solid #D0CFD0;
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-continue-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc;
+}
+.cartFull input.update
+{
+	border:1px solid #D0CFD0;
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-update-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc;
+}
+.cartFull input.empty
+{
+border:1px solid #D0CFD0;
+	padding:0 27px 0 5px;
+	background:url("/ewcommon/images/admin/cart-submit-delete-bg.png") no-repeat scroll right top transparent;
+	background-color:#ccc;
+}
+.cartAddress .button
+{
+	margin:5px;
+}
+p.addressTitle
+{
+	padding:10px 5px;
+	font-weight:700;
+	font-size:130%;
+}
+
+/* ========== ERROR MESSAGES ========== */
+.errorMessage
+{
+	/*text-align:center; Really? What paragraph looks good centered? */
+	padding:15px;
+	margin:20px;
+	background:#FFF;
+	color:#000;
+	border:1px solid #F00;
+}
+
+.errorMessage .zz_footer
+{
+	font-weight:bold;
+	font-style:italic;
+	color:Red;
+}
+/*#cartLogonBox
+{
+    width: 49%;
+    float:left;
+}
+#cartRegisterBox
+{
+   margin-left: 50%; 
+   width:50%;
+}*/
+#cartFull #cartStepper
+{
+    margin-bottom:15px;
+}
+
+/* === Quote steps === */
+#quoteStepsTop,
+#quoteStepsBottom
+{
+	height: 10px;
+}
+#quoteSteps
+{
+	background-color: #BBB;
+	color: #999;
+	display: inline-block;
+	font-size: .917em;
+	height: 2.8em;
+	line-height: 2.8em;
+}
+#quoteSteps .step 
+{
+	background: url(/ewcommon/images/layout/quote_step.png) no-repeat right center;
+	float: left;
+}
+#quoteSteps .last
+{
+	background: none;
+}
+#quoteSteps .step div
+{
+	margin: 0 1.8em 0 .9em;
+}
+#quoteSteps .last div
+{
+	margin-right: .9em;
+}
+#quoteSteps .active
+{
+	color: #FFF;
+}
+#quoteSteps .completed
+{
+	color: #000;
+}
+/*
+#quoteSteps .completed div
+{
+	background: url(/ewcommon/images/layout/quote_step_completed.png) no-repeat right center;
+}
+*/
+.quoteStepsTerminus
+{
+	clear: both;
+	font-size: 0%;
+	height: 0;
+}
+
+/*
+#cartFull #quoteSteps
+{
+    height:29px;
+    padding-top:3px;
+    font-size:0.8em;
+    text-align:left;
+    background-color:#8b8b8b;
+    color:#bababa;
+    font-weight:bold;
+    line-height:normal;
+    padding-bottom:2px;
+}
+#cartFull #quoteSteps .step div
+{
+    padding-left:8px;
+    padding-top:7px;
+    padding-bottom:6px;
+    border-left:solid 1px #fff; 
+    padding-right:5px;  
+}
+#cartFull #quoteSteps .first div
+{
+    border-left:medium none !important;
+}
+#cartFull #quoteSteps .step
+{
+    background:transparent url(/ewcommon/images/layout/cart_stepper.gif) no-repeat 93% center;
+}
+#cartFull #quoteSteps .completed
+{
+    color:#ffffff;
+    background:transparent url(/ewcommon/images/layout/cart_completed.gif) no-repeat 93% center;
+}
+#cartFull #quoteSteps .active
+{
+    color:#000000;
+    background:transparent url(/ewcommon/images/layout/cart_current.gif) no-repeat 93% center;
+}
+#cartFull .quoteStepsTerminus
+{
+    height:0;
+    clear:both;
+}
+#cartFull #quoteStepsTop,
+#cartFull #quoteStepsBtm
+{
+    height:5px;
+}
+*/
+
+.cartFull input.button
+{
+    background-color:#e9e9e9;
+    border-color:#d0cfd0;
+}
+
+.cartFull .firstAdd
+{
+	border:solid 1px #aaa;
+    background: #eee;
+}
+.cartFull .addressGrp
+{
+	padding: 10px;
+}
+.cartFull .pickAddress
+{
+	margin-bottom:10px;
+}
+.Site  #cartFull #PayForm li.li-cardDetails{float:left;display:inline-block; width:300px; margin-bottom:0px;}
+.Site  #cartFull #PayForm li.li-cardDetails input.textbox{width:280px}
+.Site  #cartFull #PayForm li.li-CV2Info{display:inline-block; width:300px; height:380px; margin-bottom:0px; padding-left:15px;position: inherit}
+.Site  #cartFull #PayForm li.li-CV2Info:after li{clear:both; padding-left:15px;}

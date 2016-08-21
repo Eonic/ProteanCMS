@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance/>
+	</model>
+	<group ref="EditContent" class="1Col">
+		<label>Edit Integrations</label>
+		<input class="integration Twitter" provider="Twitter"/>
+		<!--<input class="integration Facebook" provider="Facebook"/>-->
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Back</label>
+		</submit>
+	</group>
+</Content>
