@@ -401,6 +401,37 @@ Public Module Text
         Throw New NotImplementedException
     End Function
 
+    Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False, Optional ByVal bURLSafe As Boolean = False) As String
+        'Valid Chars
+        Dim cValids As String
+        cValids = "0123456789"
+        cValids &= "abcdefghijklmnopqrstuvwxyz"
+        cValids &= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        cValids &= " -&"
+        Try
+            cName = Replace(cName, "'", "")
+            cName = Replace(cName, "&amp;", "&")
+            If Not bLeaveAmp Then cName = Replace(cName, "&", "and")
+            Dim i As Integer
+            Dim cBuilt As String = ""
+            For i = 0 To cName.Length
+                Dim cTest As String = Right(Left(cName, i), 1)
+                If cValids.Contains(cTest) Then cBuilt &= cTest
+            Next
+            cName = cBuilt
+            'replace double spaces a few times
+            cName = Replace(cName, "  ", " ")
+            cName = Replace(cName, "  ", " ")
+            cName = Replace(cName, "  ", " ")
+            If bURLSafe Then
+                cName = cName.Replace(" ", "-")
+            End If
+            Return cName
+        Catch ex As Exception
+            Return cName
+        End Try
+    End Function
+
 End Module
 
 

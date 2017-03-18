@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="http://dev.jquery.com/view/trunk/ui/ui/ui.datepicker.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			url = window.location.href;
+			loc = url.indexOf('=');
+			path = url.slice(loc+1, 100);
+			document.write('<link rel="stylesheet" href="' + path + '/ui.datepicker.css" type="text/css" media="screen" title="no title" charset="utf-8">');
+		</script>
+		<style type="text/css" media="screen">
+			h3 { font-weight: normal; color: #333; margin: 0; padding: 0; }
+			input { margin-left: 10px; }
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript" charset="utf-8">
+			document.write('<h3>Theme: "' + path.replace('-', ' ') + '"</h3>');
+		</script>
+		<span id="inline"></span>
+		<input id="debug" type="text" value="click to open">
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function(){
+				$("#inline").datepicker({ changeFirstDay: false	});
+				$("#debug").datepicker({ changeFirstDay: false	});
+			});
+		</script>
+	</body>
+</html>

@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("EonicWeb Content Management System")> 
 <Assembly: AssemblyCompany("Eonic Associates LLP")> 
 <Assembly: AssemblyProduct("EonicWeb5")>
-<Assembly: AssemblyCopyright("Eonic Associates LLP 2002-2016")>
+<Assembly: AssemblyCopyright("Eonic Associates LLP 2002-2017")>
 <Assembly: AssemblyTrademark("EonicWeb")> 
 <Assembly: CLSCompliant(True)> 
 
@@ -33,11 +33,11 @@ Imports System.Runtime.InteropServices
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("5.0.117.44")>
+<Assembly: AssemblyVersion("5.0.129.123")>
 <Assembly: AssemblyDelaySign(False)> 
 <Assembly: AssemblyKeyFile("../../../eonic.snk")> 
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("5.0.117.43")>
+<Assembly: AssemblyFileVersion("5.0.129.122")>
 <Assembly: NeutralResourcesLanguageAttribute("en")> 
 

@@ -24,7 +24,7 @@ Public Class FeedHandler
     Public TotalsElmt As XmlElement
 
     Public oDBH As Web.dbHelper
-    Public oTransform As New Eonic.XmlHelper.Transform()
+    Public oTransform As Eonic.XmlHelper.Transform
     Public oAdmXFrm As New Web.Admin.AdminXforms()
 
     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
@@ -44,12 +44,13 @@ Public Class FeedHandler
     Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing)
         PerfMon.Log("FeedHandler", "New")
         Try
-            oDBH = New Web.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " & _
-            "Initial Catalog=" & oConfig("DatabaseName") & "; " & _
+            oDBH = New Web.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
+            "Initial Catalog=" & oConfig("DatabaseName") & "; " &
             oConfig("DatabaseAuth"), 1)
+            oDBH.myWeb = New Eonic.Web(System.Web.HttpContext.Current)
             oAdmXFrm.goConfig = oConfig
             oAdmXFrm.moDbHelper = oDBH
-            oAdmXFrm.myWeb = New Eonic.Web()
+            oAdmXFrm.myWeb = oDBH.myWeb
             oAdmXFrm.myWeb.InitializeVariables()
             'set the main values
             cFeedURL = Replace(cURL, "&amp;", "&") 'when saving a url it can replace ampersands
@@ -61,6 +62,7 @@ Public Class FeedHandler
             _updateExistingItems = True
             _counters = New CounterCollection()
             InitialiseCounters()
+            oTransform = New Eonic.XmlHelper.Transform(oDBH.myWeb, cXSLTransformPath, False)
         Catch ex As Exception
             AddExternalError(ex)
         End Try
@@ -106,8 +108,13 @@ Public Class FeedHandler
                 'now we need to compare them to existing feed items on the page
                 'and depending on the save mode, ignore/delete
                 'we wont overwrite details in case the admin has edited some text
+
+                If LCase(oConfig("Debug")) = "on" Then
+                    oInstanceXML.Save(goServer.MapPath("/parsedFeed.xml"))
+                End If
+
                 If LCase(oConfig("FeedMode")) = "import" Then
-                    Me.AddExternalMessage(oDBH.importObjects(oInstanceXML.DocumentElement, cFeedURL))
+                    Me.AddExternalMessage(oDBH.importObjects(oInstanceXML.DocumentElement, cFeedURL, cXSLTransformPath))
                 Else
                     CompareFeedItems(oInstanceXML)
                 End If
@@ -136,7 +143,12 @@ Public Class FeedHandler
             'request the page
             oRequest = DirectCast(System.Net.WebRequest.Create(cFeedURL), HttpWebRequest)
             ' Force a user agent for rubbish feed providers.
-            oRequest.UserAgent = "Mozilla/5.0 (compatible; eonicweb v4.1)"
+            oRequest.UserAgent = "Mozilla/5.0 (compatible; eonicweb v5.1)"
+            ' Set a 10 min timeout
+            If oConfig("FeedTimeout") <> "" Then
+                oRequest.Timeout = oConfig("FeedTimeout")
+            End If
+
             oResponse = DirectCast(oRequest.GetResponse(), HttpWebResponse)
             oReader = New StreamReader(oResponse.GetResponseStream())
             oFeedXML = oReader.ReadToEnd
@@ -151,7 +163,9 @@ Public Class FeedHandler
 
             Dim oResXML As New XmlDocument
             oResXML.InnerXml = oFeedXML
-
+            If LCase(oConfig("Debug")) = "on" Then
+                File.WriteAllText(goServer.MapPath("/recivedFeedRaw.xml"), oResXML.OuterXml)
+            End If
             'now get the feed into out format
             Dim cFeedItemXML As String
             Dim oTW As IO.TextWriter = New StringWriter()
@@ -170,6 +184,12 @@ Public Class FeedHandler
 
             ' Fix Number Entities
             cFeedItemXML = cFeedItemXML.Replace("&amp;#", "&#")
+
+            cFeedItemXML = cFeedItemXML.Replace("&amp;", "&")
+            cFeedItemXML = cFeedItemXML.Replace("&", "&amp;")
+            'Fix any missing &amp;
+            ' cFeedItemXML = Regex.Replace(cFeedItemXML, "/&(?!amp;)/", "&amp;")
+
 
             oInstanceXML.InnerXml = cFeedItemXML
 
@@ -202,33 +222,6 @@ Public Class FeedHandler
         End Try
     End Function
 
-    Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False) As String
-        'Valid Chars
-        Dim cValids As String
-        cValids = "0123456789"
-        cValids &= "abcdefghijklmnopqrstuvwxyz"
-        cValids &= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        cValids &= " -&"
-        Try
-            cName = Replace(cName, "'", "")
-            cName = Replace(cName, "&amp;", "&")
-            If Not bLeaveAmp Then cName = Replace(cName, "&", "and")
-            Dim i As Integer
-            Dim cBuilt As String = ""
-            For i = 0 To cName.Length
-                Dim cTest As String = Right(Left(cName, i), 1)
-                If cValids.Contains(cTest) Then cBuilt &= cTest
-            Next
-            cName = cBuilt
-            'replace double spaces a few times
-            cName = Replace(cName, "  ", " ")
-            cName = Replace(cName, "  ", " ")
-            cName = Replace(cName, "  ", " ")
-            Return cName
-        Catch ex As Exception
-            Return cName
-        End Try
-    End Function
 
     Public Sub CompareFeedItems(ByRef oInstanceXML As XmlDocument)
         Try

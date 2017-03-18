@@ -298,10 +298,16 @@ Partial Public Class fsHelper
             Dim rootDir As New DirectoryInfo(goServer.MapPath("/") & "\" & mcRoot)
             If Not rootDir.Exists Then
                 Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
-                baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
+                rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
             End If
 
             Dim workingFolder As String = mcStartFolder
+            Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
+            startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
+            Dim startfld As New DirectoryInfo(mcStartFolder)
+            If Not startfld.Exists Then
+                rootDir.CreateSubdirectory(startFolderName)
+            End If
 
             For i = 0 To UBound(aFolderNames)
                 If aFolderNames(i) <> "" Then
@@ -666,6 +672,32 @@ Partial Public Class fsHelper
             Return pathsToCheck.Find(Function(path As String) (IO.File.Exists(goServer.MapPath(path))))
         Catch ex As Exception
             Return ""
+        End Try
+
+    End Function
+
+    Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True) As String
+        Try
+            Dim thisDir As New DirectoryInfo(mcRoot & path)
+            Dim ofile As FileInfo
+            Dim ofolder As DirectoryInfo
+
+            Dim nLengthBefore As Long = 0
+
+            For Each ofolder In thisDir.GetDirectories()
+                OptimiseImages(path & "\" & ofolder.Name, nFileCount, nSavings, lossless)
+            Next
+
+            For Each ofile In thisDir.GetFiles
+                Dim oImgTool As New Eonic.Tools.Image("")
+                nSavings = nSavings + oImgTool.CompressImage(ofile, lossless)
+                nFileCount = nFileCount + 1
+            Next
+
+            Return nFileCount & " Files Updated " & nSavings / 1024 & " Kb have been saved"
+
+        Catch ex As Exception
+            Return ex.Message
         End Try
 
     End Function

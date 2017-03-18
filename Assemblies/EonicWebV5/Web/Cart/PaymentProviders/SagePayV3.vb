@@ -220,8 +220,6 @@ Namespace Providers
 
                                 'standard card validation request
                                 cRequest = "VPSProtocol=" & sAPIVer & "&"
-                                Dim txType As String
-
                                 cRequest = cRequest & "TxType=" & oDictOpt("transactionType") & "&" ' 0=omited 1=full auth 2=pre-auth only
                                 cRequest = cRequest & "Vendor=" & oDictOpt("accountId") & "&" ' 0=omited 1=full auth 2=pre-auth only
                                 If nAttemptCount > 1 Then
@@ -603,9 +601,9 @@ Namespace Providers
 
                 Public Function CheckStatus(ByRef oWeb As Eonic.Web, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
-                    Dim oSagePayV3Cfg As XmlNode
-                    Dim nTransactionMode As TransactionMode
+                    ' Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+                    '  Dim oSagePayV3Cfg As XmlNode
+                    '  Dim nTransactionMode As TransactionMode
 
                     Try
 

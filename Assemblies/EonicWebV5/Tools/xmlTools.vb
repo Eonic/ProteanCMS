@@ -32,7 +32,7 @@ Public Class Proxy
     End Function
 End Class
 
-Public Module xmlTools
+Partial Public Module xmlTools
 
     Function SortedNodeList_UNCONNECTED(ByVal oRootObject As XmlElement, ByVal cXPath As String, ByVal cSortItem As String, ByVal cSortOrder As XmlSortOrder, ByVal cSortDataType As XmlDataType, ByVal cCaseOrder As XmlCaseOrder) As XmlNodeList
         Dim oElmt As XmlElement = oRootObject.OwnerDocument.CreateElement("List")
@@ -549,12 +549,38 @@ Public Module xmlTools
 
         Public Function replacestring(ByVal text As String, ByVal replace As String, ByVal replaceWith As String) As String
             Try
-                Return text.Replace(replace, replaceWith)
+                If Not (text = "") And Not (replace = "") Then
+                    Return text.Replace(replace, replaceWith)
+                Else
+                    Return text
+                End If
             Catch ex As Exception
                 Return text
             End Try
         End Function
 
+        Public Function escapeJs(ByVal text As String) As String
+            Try
+
+                Dim orig As String = text
+                If Not (text = "") Then
+                    text = text.Replace("\", "\\")
+                    text = text.Replace("&#13;", "\r")
+                    text = text.Replace("&#10;", "\n")
+                    text = text.Replace("#9;", "\t")
+                    text = text.Replace("""", "\""")
+                    text = text.Replace("'", "\'")
+                    text = text.Replace("’", "\'")
+                End If
+                If orig <> text Then
+                    Return text
+                Else
+                    Return orig
+                End If
+            Catch ex As Exception
+                Return text
+            End Try
+        End Function
 
         Public Function cleantitle(ByVal text As String) As String
             Try
@@ -631,10 +657,10 @@ Public Module xmlTools
                             Dim language As String = cultureParams.Groups(1).Value
                             Dim country As String = cultureParams.Groups(3).Value
                             If country = "" Then country = language
-                            culture = New CultureInfo( _
-                                                            language.ToLower & _
-                                                            "-" & _
-                                                            country.ToUpper _
+                            culture = New CultureInfo(
+                                                            language.ToLower &
+                                                            "-" &
+                                                            country.ToUpper
                                                         )
                         Else
                             culture = CurrentCulture()
@@ -867,6 +893,7 @@ Public Module xmlTools
                 Else
                     Try
                         ' Return cHtmlOut
+                        cHtmlOut = cHtmlOut.Replace("&amp;#", "&#")
                         oXML.LoadXml(cHtmlOut)
                         Return oXML.DocumentElement
                     Catch ex As Exception
@@ -1071,7 +1098,7 @@ Public Module xmlTools
         Public Function SaveImage(ByVal imageUrl As String, ByVal cVirtualPath As String) As String
 
             Try
-                Dim oFS As New Eonic.fsHelper
+                Dim oFS As New Eonic.fsHelper(myWeb.moCtx)
 
                 oFS.mcStartFolder = goServer.MapPath("/")
 
@@ -1100,9 +1127,11 @@ Public Module xmlTools
 
             Try
                 If VirtualFileExists(cVirtualPath) > 0 Then
-                    Dim imageFromFile As BitmapSource = BitmapFrame.Create(New Uri(goServer.MapPath(cVirtualPath)))
+                    Dim oURI As Uri = New Uri(goServer.MapPath(cVirtualPath))
+                    Dim imageFromFile As BitmapSource = BitmapFrame.Create(oURI)
                     Dim nWidth As Integer = imageFromFile.PixelWidth
                     Dim nHeight As Integer = imageFromFile.PixelHeight
+                    oURI = Nothing
                     imageFromFile = Nothing
                     Return nWidth & "x" & nHeight
                 Else
@@ -1252,10 +1281,19 @@ Public Module xmlTools
             Dim cProcessInfo As String = "Resizing - " & cVirtualPath
             Try
                 ' PerfMon.Log("xmlTools", "ResizeImage - Start")
+                If myWeb.moRequest Is Nothing Then
 
-                If myWeb.moRequest("imgRefresh") <> "" Then
-                    forceCheck = True
+                Else
+                    Try
+                        If myWeb.moRequest("imgRefresh") <> "" Then
+                            forceCheck = True
+                        End If
+                    Catch ex As Exception
+
+                    End Try
+
                 End If
+
                 cVirtualPath = cVirtualPath.Replace("%20", " ")
                 'calculate the new filename
                 'dim get the filename
@@ -1289,24 +1327,6 @@ Public Module xmlTools
                         If (Not (VirtualFileExists(newFilepath) > 0)) Or CompareDateIsNewer(cVirtualPath, newFilepath) > 0 Then
                             Select Case filetype
                                 Case "pdf"
-
-                                    'We move this into a new thread
-
-                                    'Dim cCheckServerPath As String = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1)
-                                    'cCheckServerPath = goServer.MapPath(cCheckServerPath)
-                                    'If Directory.Exists(cCheckServerPath) = False Then
-                                    '    Directory.CreateDirectory(cCheckServerPath)
-                                    'End If
-
-                                    'Dim imgComp As SoundInTheory.DynamicImage.Fluent.CompositionBuilder = New SoundInTheory.DynamicImage.Fluent.CompositionBuilder() _
-                                    '                                                                    .WithLayer(New SoundInTheory.DynamicImage.Fluent.PdfLayerBuilder().SourceFileName(goServer.MapPath(cVirtualPath)).PageNumber(1).WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(500)) _
-                                    '                                                                    .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Resize.ToWidth(maxWidth)) _
-                                    '                                                                    .WithFilter(SoundInTheory.DynamicImage.Fluent.FilterBuilder.Border.Width(1).Fill(SoundInTheory.DynamicImage.Colors.Black)) _
-                                    '                                                                    )
-                                    'imgComp.ImageFormat(SoundInTheory.DynamicImage.DynamicImageFormat.Png)
-                                    'imgComp.SaveTo(goServer.MapPath(newFilepath))
-                                    'imgComp = Nothing
-
 
                                     Dim ihelp As New ImageHelper("")
 
@@ -2116,8 +2136,9 @@ Public Class XmlHelper
 
     Class Transform
 
-        Private myWeb As Web
+        Public myWeb As Web
         Private msXslFile As String = ""
+        Private msXslLastFile As String = ""
         Private mbCompiled As Boolean = False
         Private mnTimeoutSec As Long = 20000
         Private bXSLFileIsPath As Boolean = True
@@ -2130,7 +2151,7 @@ Public Class XmlHelper
         Dim bFinished As Boolean = False
         Private bError As Boolean = False
         Public currentError As Exception
-        Dim xsltArgs As Xsl.XsltArgumentList
+        Public xsltArgs As Xsl.XsltArgumentList
         Dim compiledFolder As String = "\xsltc\"
         Public xsltDomain As AppDomain
 
@@ -2163,23 +2184,23 @@ Public Class XmlHelper
                                 assemblyInstance = [Assembly].LoadFrom(AssemblyPath)
                             End If
                         Else
-                                If IO.File.Exists(AssemblyPath) Then
+                            If IO.File.Exists(AssemblyPath) Then
                                 assemblyInstance = [Assembly].LoadFrom(AssemblyPath)
                                 If assemblyInstance IsNot Nothing Then
                                     goApp(ClassName) = True
                                 End If
 
+                            Else
+                                Dim compileResponse As String = CompileXSLTassembly(ClassName)
+                                If compileResponse = ClassName Then
+                                    'Dim assemblyBuffer As Byte() = File.ReadAllBytes(assemblypath)
+                                    'assemblyInstance = xsltDomain.Load(assemblyBuffer)
+                                    assemblyInstance = [Assembly].LoadFrom(AssemblyPath)
                                 Else
-                                    Dim compileResponse As String = CompileXSLTassembly(ClassName)
-                                    If compileResponse = ClassName Then
-                                        'Dim assemblyBuffer As Byte() = File.ReadAllBytes(assemblypath)
-                                        'assemblyInstance = xsltDomain.Load(assemblyBuffer)
-                                        assemblyInstance = [Assembly].LoadFrom(AssemblyPath)
-                                    Else
-                                        Err.Raise(8000, msXslFile, compileResponse)
-                                        assemblyInstance = Nothing
-                                    End If
+                                    Err.Raise(8000, msXslFile, compileResponse)
+                                    assemblyInstance = Nothing
                                 End If
+                            End If
                         End If
 
                         CalledType = assemblyInstance.GetType(className, True)
@@ -2191,9 +2212,13 @@ Public Class XmlHelper
 
                     Else
                         'the old method is quicker for realtime loading of xslt
-                        oStyle = New Xsl.XslTransform
-                        If msXslFile <> "" Then
-                            oStyle.Load(msXslFile)
+                        If msXslLastFile <> msXslFile And oStyle Is Nothing Then
+                            'modification to allow for XSL to only be loaded once.
+                            oStyle = New Xsl.XslTransform
+                            If msXslFile <> "" Then
+                                oStyle.Load(msXslFile)
+                            End If
+                            msXslLastFile = msXslFile
                         End If
                     End If
                 Catch ex As Exception

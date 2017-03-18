@@ -94,8 +94,6 @@ Partial Public Class Web
 
                     'List Subscription groups and thier subscriptions.
                     Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers")
-                    Dim oDT As DataTable
-                    Dim oDC As DataColumn
                     Dim oXML As New XmlDocument
 
                     oXML.InnerXml = Replace(Replace(oDS.GetXml, "&lt;", "<"), "&gt;", ">")
@@ -298,7 +296,13 @@ RedoCheck:
                                 nPaymentFrequency = oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText
                             End If
                         End If
-                        nTotalPrice = nPrice + SubscriptionPrice(nRptPrice, oCurSubElmt.SelectSingleNode("Content/PaymentUnit").InnerText, nPaymentFrequency, oCurSubElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Now)
+                        If oCurSubElmt.SelectSingleNode("Content/SubscriptionPrices/@delayStart").Value = "true" Then
+                            nTotalPrice = nPrice
+                        Else
+                            nTotalPrice = nPrice + SubscriptionPrice(nRptPrice, oCurSubElmt.SelectSingleNode("Content/PaymentUnit").InnerText, nPaymentFrequency, oCurSubElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Now)
+                        End If
+
+
                     Else
                         'okies, there is some stuff in here.
                         'now there should only be one.
@@ -1091,8 +1095,6 @@ RedoCheck:
                     ' Called to get XML for the User Logon.
 
                     Dim oFrmElmt As XmlElement
-                    Dim oSelElmt As XmlElement
-                    Dim sValidResponse As String
                     Dim cProcessInfo As String = ""
                     Dim bRememberMe As Boolean = False
                     Try
@@ -1186,9 +1188,6 @@ Check:
                 End Sub
 
                 Public Sub UpdateSubscriptionPaymentMethod(ByRef myWeb As Eonic.Web, ByRef contentNode As XmlElement)
-
-                    Dim nSubscriptionId As Integer
-                    Dim cPaymentMethodType As String
 
                     Dim pseudoCart As New Eonic.Web.Cart(myWeb)
                     Dim pseudoOrder As Eonic.Web.Cart.Order
@@ -1359,10 +1358,6 @@ processFlow:
 
                 Public Sub Subscribe(ByRef myWeb As Eonic.Web, ByRef contentNode As XmlElement)
 
-                    Dim sSql As String
-                    Dim oDS As DataSet
-                    Dim oDr As DataRow
-                    Dim oElmt As XmlElement
                     Dim listSubs As Boolean = True
                     Dim sProcessInfo As String
                     Try

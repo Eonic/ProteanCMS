@@ -86,7 +86,6 @@ Namespace Providers
 
                     Dim oDictOpt As Hashtable = New Hashtable
 
-                    Dim cOrderType As String
                     Dim bCv2 As Boolean = False
                     Dim b3DSecure As Boolean = False
                     Dim b3DAuthorised As Boolean = False
@@ -889,16 +888,12 @@ Namespace Providers
 
                 Public Function CheckStatus(ByRef oWeb As Eonic.Web, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim _merchantId As String
-                    Dim _merchantToken As String
-                    Dim _opperationMode As String
-                    Dim _sandboxToken As String
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+
                     Dim oPayPalProCfg As XmlNode
                     Dim nTransactionMode As TransactionMode
 
                     Try
-
+                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
                         oPayPalProCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalPro']")
 
                         Dim ppProfile As New PayPalAPI.CustomSecurityHeaderType
@@ -955,7 +950,7 @@ Namespace Providers
                                     Return "Error - no value returned"
                             End Select
                         Catch ex As Exception
-                            Return "Error - no value returned"
+                            Return "Error - no value returned " & ex.Message
                         End Try
 
 
@@ -968,11 +963,6 @@ Namespace Providers
 
                 Public Function CancelPayments(ByRef oWeb As Eonic.Web, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
-                    Dim _merchantId As String
-                    Dim _merchantToken As String
-                    Dim _opperationMode As String
-                    Dim _sandboxToken As String
-                    Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
                     Dim oPayPalProCfg As XmlNode
 
                     Try

@@ -1,0 +1,10 @@
+﻿.bs-only,
+.responsive-only
+{
+    display:none;
+}
+.Site .template .row{margin:0;}
+.ewAdmin #adminHeader .preview
+{
+padding-top:24px!important;
+}

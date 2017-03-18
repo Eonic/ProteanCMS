@@ -101,6 +101,7 @@ Partial Public Class Web
                     End If
 
                     mcModuleName = "Eonic.Discount"
+                    PerfMon.Log("Discount", "New-End")
 
                 Catch ex As Exception
                     returnException(mcModuleName, "New", ex, "", "", gbDebug)

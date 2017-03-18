@@ -401,58 +401,58 @@ Partial Public Class Web
                         cOrderType = oRoot.GetAttribute("orderType")
                         If Not (cOrderType <> "" And CStr(oDictOpt("UseOrderType")) = "true") Then cOrderType = CStr(oDictOpt("accountId"))
                         If Not b3DSecure Then
-                            cResponse = oSecVpn.validateCardFull(cOrderType, _
-                            CStr(oDictOpt("accountPassword")), _
-                            CStr(mnCartId), _
-                            goRequest.ServerVariables("REMOTE_ADDR"), _
-                            mcCardHolderName, _
-                            goRequest("creditCard/number"), _
-                            CStr(mnPaymentAmount), _
-                            fmtSecPayDate(goRequest("creditCard/expireDate")), _
-                            goRequest("creditCard/issueNumber"), _
-                            fmtSecPayDate(goRequest("creditCard/issueDate")), _
-                            getSecPayOrder(oRoot), _
-                            getSecPayAddress(oRoot, "Delivery Address"), _
-                            getSecPayAddress(oRoot, "Billing Address"), _
+                            cResponse = oSecVpn.validateCardFull(cOrderType,
+                            CStr(oDictOpt("accountPassword")),
+                            CStr(mnCartId),
+                            goRequest.ServerVariables("REMOTE_ADDR"),
+                            mcCardHolderName,
+                            goRequest("creditCard/number"),
+                            CStr(mnPaymentAmount),
+                            fmtSecPayDate(goRequest("creditCard/expireDate")),
+                            goRequest("creditCard/issueNumber"),
+                            fmtSecPayDate(goRequest("creditCard/issueDate")),
+                            getSecPayOrder(oRoot),
+                            getSecPayAddress(oRoot, "Delivery Address"),
+                            getSecPayAddress(oRoot, "Billing Address"),
                             sOpts)
 
                             bSavePayment = True
 
                         Else
                             If Not b3DAuthorised Then
-                                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType, _
-                                                    CStr(oDictOpt("accountPassword")), _
-                                                    CStr(mnCartId), _
-                                                    goRequest.ServerVariables("REMOTE_ADDR"), _
-                                                    mcCardHolderName, _
-                                                    goRequest("creditCard/number"), _
-                                                    CStr(mnPaymentAmount), _
-                                                    fmtSecPayDate(goRequest("creditCard/expireDate")), _
-                                                    goRequest("creditCard/issueNumber"), _
-                                                    fmtSecPayDate(goRequest("creditCard/issueDate")), _
-                                                    getSecPayOrder(oRoot), _
-                                                    getSecPayAddress(oRoot, "Delivery Address"), _
-                                                    getSecPayAddress(oRoot, "Billing Address"), _
-                                                    sOpts, _
-                                                    "0", _
-                                                    goRequest.ServerVariables("HTTP_ACCEPT"), _
-                                                    goRequest.ServerVariables("HTTP_USER_AGENT"), _
-                                                    "", _
-                                                    "", _
-                                                    "", _
-                                                    "", _
-                                                    "", _
+                                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType,
+                                                    CStr(oDictOpt("accountPassword")),
+                                                    CStr(mnCartId),
+                                                    goRequest.ServerVariables("REMOTE_ADDR"),
+                                                    mcCardHolderName,
+                                                    goRequest("creditCard/number"),
+                                                    CStr(mnPaymentAmount),
+                                                    fmtSecPayDate(goRequest("creditCard/expireDate")),
+                                                    goRequest("creditCard/issueNumber"),
+                                                    fmtSecPayDate(goRequest("creditCard/issueDate")),
+                                                    getSecPayOrder(oRoot),
+                                                    getSecPayAddress(oRoot, "Delivery Address"),
+                                                    getSecPayAddress(oRoot, "Billing Address"),
+                                                    sOpts,
+                                                    "0",
+                                                    goRequest.ServerVariables("HTTP_ACCEPT"),
+                                                    goRequest.ServerVariables("HTTP_USER_AGENT"),
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
+                                                    "",
                                                     "")
 
                                 bSavePayment = True
 
                             Else
                                 'Pass the process back to Secpay
-                                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType, _
-                                CStr(oDictOpt("accountPassword")), _
-                                CStr(mnCartId), _
-                                goRequest("MD"), _
-                                goRequest("PaRes"), _
+                                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType,
+                                CStr(oDictOpt("accountPassword")),
+                                CStr(mnCartId),
+                                goRequest("MD"),
+                                goRequest("PaRes"),
                                 sOpts)
                                 'Save in the session the MD and the instance to save
 
@@ -647,14 +647,26 @@ Partial Public Class Web
 
                         ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
 
-                        'Update Seller Notes:
 
+
+                    Else
+                        If ccXform.isSubmitted And ccXform.validationError = "" Then
+                            err_msg = "Unknown Error: Please call"
+                            ccXform.addNote(ccXform.moXformElmt, xForm.noteTypes.Alert, err_msg)
+                        Else
+                            err_msg = ccXform.validationError
+                        End If
+                        ccXform.valid = False
+                    End If
+
+                    If ccXform.isSubmitted Or b3DAuthorised Then
+                        'Update Seller Notes:
                         sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
                         Dim oDs As DataSet
                         Dim oRow As DataRow
                         oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                         For Each oRow In oDs.Tables("Order").Rows
-                            If bIsValid Then
+                            If bIsValid Or b3DAuthorised Then
                                 oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Received) " & vbLf & "comment: " & err_msg & vbLf & "Full Response:' " & cResponse & "'"
                             Else
                                 If err_msg_log = "" Then err_msg_log = err_msg
@@ -665,9 +677,6 @@ Partial Public Class Web
                             End If
                         Next
                         modbHelper.updateDataset(oDs, "Order")
-
-                    Else
-                        ccXform.valid = False
                     End If
 
                     If Not Xform3dSec Is Nothing Then
@@ -3234,7 +3243,6 @@ Partial Public Class Web
 
                 Dim oDictOpt As Hashtable = New Hashtable
 
-                Dim cOrderType As String
                 Dim bCv2 As Boolean = False
                 Dim b3DSecure As Boolean = False
                 Dim b3DAuthorised As Boolean = False
@@ -3293,9 +3301,9 @@ Partial Public Class Web
                     ppProfile2.Credentials.Password = CStr(oDictOpt("accountPassword"))
                     ppProfile2.Credentials.Signature = CStr(oDictOpt("accountSignature"))
 
-                    Dim endpointAddress As String = "https://api-3t.paypal.com/2.0/"
+                    Dim endpointAddress As String = "https://api-aa-3t.paypal.com/2.0/"
                     If nTransactionMode = TransactionMode.Test Then
-                        endpointAddress = "https://api-3t.sandbox.paypal.com/2.0/"
+                        endpointAddress = "https://api-aa-3t.sandbox.paypal.com/2.0/"
                         host = "www.sandbox.paypal.com"
                     End If
                     Dim ppEndpointAddress As New System.ServiceModel.EndpointAddress(endpointAddress)
@@ -4953,11 +4961,9 @@ Partial Public Class Web
 
                 Dim ccXform As xForm = New xForm
 
-                Dim bIsValid As Boolean
                 Dim err_msg As String = ""
                 Dim err_msg_log As String = ""
                 Dim sProcessInfo As String = ""
-                Dim cResponse As String
 
                 Dim oDictOpt As Hashtable = New Hashtable
 

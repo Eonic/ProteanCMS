@@ -829,11 +829,13 @@ Public Class Database
         Try
 
             Dim oDr As SqlDataReader
-
             oDr = getDataReader(sql, commandtype, parameters)
+
             Do While oDr.Read
                 oXmlValue = oDr.GetSqlXml(0)
             Loop
+
+            '  oXmlValue = GetDataValue(sql, commandtype, parameters)
 
             ' If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
             If (Not (IsNothing(nullreturnvalue))) And (IsNothing(oXmlValue) Or IsDBNull(oXmlValue)) Then
@@ -848,6 +850,46 @@ Public Class Database
         End Try
         Return oXmlValue
     End Function
+
+
+    Public Sub AddXMLValueToNode(ByVal sql As String, ByRef oElmt As XmlElement)
+
+        Dim cProcessInfo As String = "Running Sql: " & sql
+        Dim oXdoc As New XmlDocument
+        Dim cmd As SqlCommand = Nothing
+        Try
+
+            If oConn.State = ConnectionState.Closed Then
+                oConn.Open()
+            End If
+
+
+            cmd = New SqlCommand(sql, oConn)
+            Dim reader As XmlReader = cmd.ExecuteXmlReader()
+
+            If reader.Read() Then
+                oXdoc.Load(reader)
+            End If
+
+            If Not oXdoc.DocumentElement Is Nothing Then
+                Dim newNode As XmlNode = oElmt.OwnerDocument.ImportNode(oXdoc.DocumentElement, True)
+                oElmt.AppendChild(newNode)
+            End If
+
+            oXdoc = Nothing
+
+            reader.Dispose()
+            reader = Nothing
+
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
+
+        Finally
+            cmd.Dispose()
+            CloseConnection()
+        End Try
+
+    End Sub
 
     Public Function getHashTable(ByVal sSql As String, ByVal sNameField As String, ByRef sValueField As String) As Hashtable
         'PerfMon.Log("dbTools", "getHashTable")

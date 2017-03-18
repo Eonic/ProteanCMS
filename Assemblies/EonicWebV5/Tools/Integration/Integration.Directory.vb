@@ -25,6 +25,8 @@ Namespace Integration.Directory
         Protected _moduleName As String = "Eonic.Integration.Directory"
         Protected _myWeb As Eonic.Web
         Private _diagnostics As String = ""
+        Protected _providerName As String
+
 
         ' Core class default behaviour variables
         Private _directoryId As Long = 0
@@ -118,6 +120,31 @@ Namespace Integration.Directory
             End Get
         End Property
 
+        Function ValidateExternalAuth(ByVal ExternalId As String) As Long
+            Try
+                Dim oDr As SqlClient.SqlDataReader = _myWeb.moDbHelper.getDataReader("select nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
+                Dim oRow As DataRow
+
+                If oDr.HasRows Then
+                    For Each oRow In oDr
+                        Return oRow("nDirectoryId")
+                    Next
+                Else
+                    Return 0
+                End If
+
+            Catch ex As Exception
+
+            End Try
+        End Function
+
+        Function GetUserSchemaXml() As XmlElement
+
+            Dim oXform As New Eonic.xForm
+            oXform.load("/xforms/directory/User.xml", _myWeb.maCommonFolders)
+            Return oXform.Instance.SelectSingleNode("tblDirectory/cDirXml")
+
+        End Function
         ''' <summary>
         ''' Gets the user instance and loads the provider credentials if they exist.
         ''' If they don't exist then a default credentials object is created.

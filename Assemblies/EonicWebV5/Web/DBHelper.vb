@@ -86,19 +86,14 @@ Imports System
                 goSession = moCtx.Session
                 goServer = moCtx.Server
                 'End If
+
+                ResetConnection("Data Source=" & goConfig("DatabaseServer") & "; " & _
+                    "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
+                    GetDBAuth())
+
                 myWeb = aWeb
                 moPageXml = myWeb.moPageXml
                 mnUserId = myWeb.mnUserId
-                Dim ServerName As String = goConfig("DatabaseServer")
-                Dim DatabaseName As String = goConfig("DatabaseName")
-
-                If ServerName = "" Or DatabaseName = "" Then
-                    myWeb.msRedirectOnEnd = "/ewcommon/setup/default.ashx"
-                Else
-                    ResetConnection("Data Source=" & ServerName & "; " &
-                  "Initial Catalog=" & DatabaseName & "; " &
-                  GetDBAuth())
-                End If
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
@@ -4107,6 +4102,7 @@ restart:
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getLocationByRef", ex, cProcessInfo))
+                Return 0
             End Try
 
         End Function
@@ -4197,6 +4193,13 @@ restart:
                     If cOrderBy <> "" AndAlso LCase(cSortDirection) = "descending" Then cOrderBy &= " DESC"
 
                     myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, nTop, cOrderBy, oContent)
+                    If LCase(goConfig("DisableGrabberRelated")) <> "on" Then
+                        'Get Related Items
+                        Dim oContentElmt As XmlElement
+                        For Each oContentElmt In oContent.SelectNodes("Content")
+                            addRelatedContent(oContentElmt, oContentElmt.GetAttribute("id"), myWeb.mbAdminMode)
+                        Next
+                    End If
 
                 End If
 
@@ -5454,6 +5457,13 @@ restart:
                     'End If
                     'updateDataset(oDs, "tblXmlCache", False)
 
+                    ' Automatically clear up historical caches
+                    If bAuth Then
+                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, Eonic.SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
+                    Else
+                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
+                    End If
+
                     'OPTION 2 - Insert using parameter Also slow
                     Dim nUpdateCount As String
                     sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
@@ -6523,11 +6533,8 @@ restart:
         Public Sub ListUserVouchers(ByRef oContentsXML As XmlElement)
             PerfMon.Log("DBHelper", "ListUserOrders")
             Dim oRoot As XmlElement
-            Dim oElmt As XmlElement
-            Dim oElmtOrder As XmlElement
             Dim sSql As String
             Dim oDs As DataSet
-            Dim oDr As DataRow
 
             Dim cProcessInfo As String = ""
             Dim cExtraWhere As String = ""
@@ -6602,7 +6609,7 @@ restart:
 
         End Function
 
-        Public Function importObjects(ByVal ObjectsXml As XmlElement, Optional FeedRef As String = "") As String
+        Public Function importObjects(ByVal ObjectsXml As XmlElement, Optional FeedRef As String = "", Optional ReParseXsl As String = "") As String
             PerfMon.Log("DBHelper", "importObjects")
             Dim cProcessInfo As String = ""
             Dim cContentLocationTable As String = ""
@@ -6621,6 +6628,9 @@ restart:
             Dim cDefiningWhereStmt As String = ""
             Dim bSkipExisting As Boolean = False
             Dim bResetLocations As Boolean = True
+            Dim ProcessedQty As Long = 0
+            Dim completeCount As Long = 0
+            Dim startNo As Long = 0
 
             Try
 
@@ -6628,16 +6638,28 @@ restart:
 
                 Dim FeedCheck As String = ""
                 If FeedRef <> "" Then
-
-                    Dim sSQL As String = "select cActivityDetail from tblActivityLog where cActivityDetail like '" & FeedRef & "#' and not(cActivityDetail like '#Complete' )"
+                    Dim sSQL As String = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" & FeedRef & "%' and not(cActivityDetail like '%Complete') and dDateTime > " & sqlDateTime(DateAdd(DateInterval.Hour, -3, Now())) & " order by dDateTime DESC"
                     FeedCheck = Me.ExeProcessSqlScalar(sSQL)
-
                 End If
 
                 If FeedCheck <> "" Then
-                    Return FeedCheck
+                    Return "Previous Feed Still Processing:" & FeedCheck
                     Exit Function
+                Else
+                    'Get the last time the feed run and check it completed
+                    Dim sSQL As String = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" & FeedRef & "%' order by dDateTime DESC "
+                    FeedCheck = Me.ExeProcessSqlScalar(sSQL)
+                    If FeedCheck.EndsWith(" Processed") Then
+                        Dim sProcessesQty As String = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9)
+                        If IsNumeric(sProcessesQty) Then
+                            startNo = CLng(sProcessesQty)
+                        Else
+                            Return "StartNo not found:" & FeedCheck
+                            Exit Function
+                        End If
+                    End If
                 End If
+
 
                 Dim oInstance As XmlElement
                 If Not ObjectsXml Is Nothing Then
@@ -6672,33 +6694,33 @@ restart:
 
                     'To delete existing Directory Relations (excluding Admin ones)
                     If Not ObjectsXml.SelectSingleNode("DeleteDirRelations[@enabled='true']") Is Nothing Then
-                        Dim cSql_Relation_Audits As String = "DELETE tblAudit from tblAudit a " & _
-                        "Inner Join tblDirectoryRelation r " & _
-                        "On r.nAuditId = a.nAuditKey " & _
-                        "Where r.nDirChildId IN ( " & _
-                        "Select nDirKey " & _
-                        "From tblDirectory " & _
-                        "WHERE nDirKey NOT IN (" & _
-                        "Select d.nDirKey " & _
-                        "From tblDirectoryRelation r " & _
-                        "Inner Join tblDirectory d " & _
-                        "On r.nDirChildId = d.nDirKey " & _
-                        "WHERE r.nDirParentId = " & _
+                        Dim cSql_Relation_Audits As String = "DELETE tblAudit from tblAudit a " &
+                        "Inner Join tblDirectoryRelation r " &
+                        "On r.nAuditId = a.nAuditKey " &
+                        "Where r.nDirChildId IN ( " &
+                        "Select nDirKey " &
+                        "From tblDirectory " &
+                        "WHERE nDirKey NOT IN (" &
+                        "Select d.nDirKey " &
+                        "From tblDirectoryRelation r " &
+                        "Inner Join tblDirectory d " &
+                        "On r.nDirChildId = d.nDirKey " &
+                        "WHERE r.nDirParentId = " &
                         "(SELECT nDirKey From tblDirectory Where cDirForiegnRef = 'Administrator')))"
 
                         myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql_Relation_Audits)
 
-                        Dim cSql_Relations As String = "DELETE " & _
-                            "From tblDirectoryRelation " & _
-                            "Where nDirChildId IN ( " & _
-                            "Select nDirKey " & _
-                            "From tblDirectory " & _
-                            "WHERE nDirKey NOT IN (" & _
-                            "Select d.nDirKey " & _
-                            "From tblDirectoryRelation r " & _
-                            "Inner Join tblDirectory d " & _
-                            "On r.nDirChildId = d.nDirKey " & _
-                            "WHERE r.nDirParentId = " & _
+                        Dim cSql_Relations As String = "DELETE " &
+                            "From tblDirectoryRelation " &
+                            "Where nDirChildId IN ( " &
+                            "Select nDirKey " &
+                            "From tblDirectory " &
+                            "WHERE nDirKey NOT IN (" &
+                            "Select d.nDirKey " &
+                            "From tblDirectoryRelation r " &
+                            "Inner Join tblDirectory d " &
+                            "On r.nDirChildId = d.nDirKey " &
+                            "WHERE r.nDirParentId = " &
                             "(SELECT nDirKey From tblDirectory Where cDirForiegnRef = 'Administrator')))"
 
                         myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql_Relations)
@@ -6720,62 +6742,43 @@ restart:
 
                     Dim logId As Long = Me.logActivity(ActivityType.ContentImport, mnUserId, 0, 0, ReturnMessage & " Started")
 
-                    Dim completeCount As Long = 0
-
+                        Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, ReParseXsl, False)
+                    'oTransform.XSLFile = ReParseXsl
+                    'oTransform.Compiled = False
 
                     Dim Tasks As New dbImport(Me.oConn.ConnectionString, mnUserId)
 
                     System.Threading.ThreadPool.SetMaxThreads(10, 10)
-
-                    'Dim InstanceCol As IEnumerable(Of XmlNode) = ObjectsXml.SelectNodes("Instance | instance")
-
-
-                    'System.Threading.Tasks.Parallel.ForEach(InstanceCol, Sub(myInstance As XmlNode)
-
-                    '                                                         completeCount = completeCount + 1
-
-                    '                                                         Dim stateObj As New dbImport.ImportStateObj()
-                    '                                                         stateObj.oInstance = myInstance
-                    '                                                         stateObj.LogId = logId
-                    '                                                         stateObj.CompleteCount = completeCount
-                    '                                                         stateObj.totalInstances = totalInstances
-                    '                                                         stateObj.bSkipExisting = bSkipExisting
-                    '                                                         stateObj.bResetLocations = bResetLocations
-                    '                                                         stateObj.bOrphan = bOrphan
-                    '                                                         stateObj.bDeleteNonEntries = bDeleteNonEntries
-                    '                                                         stateObj.cDeleteTempTableName = cDeleteTempTableName
-
-                    '                                                         Tasks.ImportSingleObject(stateObj)
-
-                    '                                                     End Sub)
 
                     Dim doneEvents(totalInstances) As System.Threading.ManualResetEvent
 
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
 
                         completeCount = completeCount + 1
+                            If completeCount > startNo Then
 
-                        Dim stateObj As New dbImport.ImportStateObj()
-                        stateObj.oInstance = oInstance
-                        stateObj.LogId = logId
-                        stateObj.FeedRef = FeedRef
-                        stateObj.CompleteCount = completeCount
-                        stateObj.totalInstances = totalInstances
-                        stateObj.bSkipExisting = bSkipExisting
-                        stateObj.bResetLocations = bResetLocations
-                        stateObj.bOrphan = bOrphan
-                        stateObj.bDeleteNonEntries = bDeleteNonEntries
-                        stateObj.cDeleteTempTableName = cDeleteTempTableName
+                                Dim stateObj As New dbImport.ImportStateObj()
+                                stateObj.oInstance = oInstance
+                                stateObj.LogId = logId
+                                stateObj.FeedRef = FeedRef
+                                stateObj.CompleteCount = completeCount
+                                stateObj.totalInstances = totalInstances
+                                stateObj.bSkipExisting = bSkipExisting
+                                stateObj.bResetLocations = bResetLocations
+                                stateObj.bOrphan = bOrphan
+                                stateObj.bDeleteNonEntries = bDeleteNonEntries
+                                stateObj.cDeleteTempTableName = cDeleteTempTableName
+                                stateObj.moTransform = oTransform
 
-                        If oInstance.NextSibling Is Nothing Then
-                            cProcessInfo = "Is Last"
-                        End If
+                                If oInstance.NextSibling Is Nothing Then
+                                    cProcessInfo = "Is Last"
+                                End If
 
-                        System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
 
-                        stateObj = Nothing
-
-                    Next
+                                stateObj = Nothing
+                            End If
+                        Next
 
                     Return ReturnMessage
 
@@ -6924,7 +6927,7 @@ restart:
             End Try
         End Function
 
-     
+
 
 
         Public Function processInstanceExtras(ByVal savedId As Long, ByVal oInstance As XmlElement, ByVal bResetLocations As Boolean, ByVal bOrphan As Boolean) As Integer
@@ -7393,7 +7396,8 @@ restart:
                         'Just a page no detail requested
                         Return Nothing
                     End If
-
+                Else
+                    Return Nothing
                 End If
 
             Catch ex As Exception
@@ -7896,8 +7900,6 @@ restart:
             Dim sProcessInfo As String = "building the related Content XML"
             Dim oElmt As XmlElement
             Dim sContentLevelxPath As String = ""
-            ' Dim specificTypes As String = goConfig("ShowRelatedBriefContentTypes") & ""
-            Dim i As Integer
 
             ' This is not cleared with each depth iteration as 
             ' a Content node for a given @id should have the same @showRelated 
@@ -10204,6 +10206,38 @@ ReturnMe:
             End Try
         End Function
 
+
+        ''' <summary>
+        ''' This function is to allow content to be added to the page that blocks the automatic loading of a particular contentType, because that content has its own rules for selecting and loading that content type.
+        ''' </summary>
+        ''' <param name="nPageId"></param>
+        ''' <returns></returns>
+        Public Function GetPageBlockedContent(ByVal nPageId As Long) As String
+            Dim returnValue As String = ""
+            Dim oRow As DataRow
+            Try
+                If Me.checkTableColumnExists("tblContent", "cBlockedSchemaType") Then
+                    Dim sSQL As String = "select cBlockedSchemaType from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " & nPageId
+                    Dim oDs As DataSet = GetDataSet(sSQL, "ContentBlock", "Block")
+                    For Each oRow In oDs.Tables("ContentBlock").Rows
+                        If Not IsDBNull(oRow("cBlockedSchemaType")) Then
+
+                            If oRow("cBlockedSchemaType") <> "" Then
+                                If returnValue <> "" Then
+                                    returnValue = returnValue & ","
+                                End If
+                                returnValue = returnValue & oRow("cBlockedSchemaType")
+                            End If
+                        End If
+                    Next
+                End If
+                Return returnValue
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckIsParentPage", ex, ""))
+            End Try
+        End Function
+
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
             Try
@@ -10274,6 +10308,7 @@ ReturnMe:
             Public bDeleteNonEntries As Boolean
             Public cDeleteTempTableName As String
             Public modbhelper As dbHelper
+            Public moTransform As Eonic.XmlHelper.Transform
         End Class
 
 
@@ -10281,12 +10316,14 @@ ReturnMe:
             Dim cTableName As String = ""
             Dim cTableKey As String = ""
             Dim cTableFRef As String = ""
+            Dim ErrorMsg As String = ""
+            Dim ErrorId As Long
+            Dim cProcessInfo As String
+            Dim modbhelper As dbHelper = New dbHelper(oConnString, mnUserId, moCtx)
+
             Try
 
-
-                Dim modbhelper As dbHelper = New dbHelper(oConnString, mnUserId, moCtx)
-
-                moDbHelper.ResetConnection(oConnString)
+                modbhelper.ResetConnection(oConnString)
                 modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.FeedRef & " Importing " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Processed")
 
                 'lets get the object type from the table name.
@@ -10308,8 +10345,8 @@ ReturnMe:
                 ' The purpose of this is to try to reduce the amount of table name/key/fref calls
                 ' so to optimise this for bulk use.
                 'If cTableName <> cPreviousTableName Then
-                cTableKey = moDbHelper.getKey(oObjType)
-                cTableFRef = moDbHelper.getFRef(oObjType)
+                cTableKey = modbhelper.getKey(oObjType)
+                cTableFRef = modbhelper.getFRef(oObjType)
                 'End If
 
                 Dim fRefNode As XmlElement = ImportStateObj.oInstance.SelectSingleNode(cTableName & "/" & cTableFRef)
@@ -10320,7 +10357,7 @@ ReturnMe:
                     Dim nId As Long
                     'lets get an id if we are updating a record with a foriegn Ref
 
-                    nId = moDbHelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef)
+                    nId = modbhelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef)
 
                     'nId = myWeb.moDbHelper.getObjectByRef(cTableName, cTableKey, cTableFRef, oObjType, fRef)
 
@@ -10330,29 +10367,110 @@ ReturnMe:
                     End If
 
                     ImportStateObj.oInstance.SelectSingleNode(cTableName & "/" & cTableFRef)
+                    modbhelper.ResetConnection(oConnString)
+                    If nId > 0 And ImportStateObj.oInstance.getAttribute("update") = "surgical" Then
+                        'Get origional instance
+                        Dim origInstance As New XmlDocument
+                        origInstance.LoadXml("<instance>" & modbhelper.getObjectInstance(oObjType, nId) & "</instance>")
 
-                    If Not (ImportStateObj.bSkipExisting And nId <> 0) Then
-                        moDbHelper.ResetConnection(oConnString)
-                        nId = moDbHelper.setObjectInstance(oObjType, ImportStateObj.oInstance, nId)
+                        'Setupthrough nodes with @surgicalUpdate & update the origional instance
+                        Dim oUpdElmt As XmlElement
+                        For Each oUpdElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
+                            Dim updXpath As String = oUpdElmt.GetAttribute("updateSurgical")
+                            Dim nodeToUpdate As XmlElement = origInstance.SelectSingleNode("/instance/" & updXpath)
+                            If Not nodeToUpdate Is Nothing Then
+                                nodeToUpdate.InnerText = oUpdElmt.InnerText
+                                Dim att As XmlAttribute
+                                For Each att In oUpdElmt.Attributes
+                                    nodeToUpdate.SetAttribute(att.Name, att.Value)
+                                Next
+                            Else
+                                ErrorMsg = ErrorMsg & updXpath & " not found"
+                            End If
+
+                        Next
+
+                        'clean up sugical update - just in case this failed on insert / can be deleted
+                        Dim oRemoveElmt As XmlElement
+                        For Each oRemoveElmt In origInstance.SelectNodes("descendant-or-self::*[@updateSurgical!='']")
+                            oRemoveElmt.RemoveAttribute("updateSurgical")
+                        Next
+
+                        'save the origional instance
+                        nId = modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId)
+
+                    Else
+                        'clean up sugical update as we are doing inserts.
+                        Dim oRemoveElmt As XmlElement
+                        For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
+                            oRemoveElmt.RemoveAttribute("updateSurgical")
+                        Next
+
+                        Dim updateInstance As XmlElement = ImportStateObj.oInstance
+
+                        If ImportStateObj.oInstance.getAttribute("insert") = "reparse" Then
+                            'run XSL again on instance....
+                            Dim oTW As IO.TextWriter = New StringWriter()
+                            Dim oTR As IO.TextReader
+                            Dim cFeedItemXML As String
+                            Dim oInstanceDoc As New XmlDocument
+                            oInstanceDoc.LoadXml(ImportStateObj.oInstance.OuterXml)
+                            ImportStateObj.moTransform.Process(oInstanceDoc, oTW)
+                            oTR = New StringReader(oTW.ToString())
+                            cFeedItemXML = oTR.ReadToEnd
+                            'remove whitespace
+                            Dim myRegex As New Regex(">\s*<")
+                            cFeedItemXML = myRegex.Replace(cFeedItemXML, "><")
+                            'move up a node
+                            ImportStateObj.oInstance.innerXml = cFeedItemXML
+                            updateInstance = ImportStateObj.oInstance.firstChild
+                        End If
+
+                        If ImportStateObj.oInstance.getAttribute("insert") = "none" Then
+                            ImportStateObj.bSkipExisting = True
+                        End If
+
+                        If Not (ImportStateObj.bSkipExisting And nId <> 0) Then
+
+                            nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
+
+                            modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+
+                            cProcessInfo = nId & " Saved"
+                        Else
+                            ErrorMsg = nId & " Not Found"
+                        End If
+
+                        updateInstance = Nothing
+
                     End If
 
-                    moDbHelper.processInstanceExtras(nId, ImportStateObj.oInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                    ' Moved to under setobjectinstance
+                    '                    If nId > 0 Then
+                    '                   modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                    '              End If
+
+
 
                     If ImportStateObj.bDeleteNonEntries Then
 
                         Dim cSQL As String = "INSERT INTO dbo." & ImportStateObj.cDeleteTempTableName & " (cImportID , cTableName) VALUES ('" & SqlFmt(fRef) & "','" & SqlFmt(cTableName) & "')"
-                        moDbHelper.ResetConnection(oConnString)
-                        moDbHelper.ExeProcessSql(cSQL)
+                        modbhelper.ResetConnection(oConnString)
+                        modbhelper.ExeProcessSql(cSQL)
 
                     End If
-
-
+                    ErrorId = nId
 
                 End If
-                moDbHelper = Nothing
+
+                If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
+                    modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.FeedRef & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
+                End If
+
+                modbhelper = Nothing
 
             Catch ex As Exception
-
+                modbhelper.logActivity(dbHelper.ActivityType.Alert, 0, 0, ErrorId,, ex.Message)
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""))
             End Try
         End Sub

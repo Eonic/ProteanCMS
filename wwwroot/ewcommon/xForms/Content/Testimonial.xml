@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Testimonial</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content showRelated="Tag">
+            <SourceName/>
+            <SourceCompany/>
+            <PublishDate/>
+            <Strapline/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content>
+            <SourceName/>
+            <SourceCompany/>
+            <PublishDate/>
+            <Strapline/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+            <Body/>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="cContentSourceName" nodeset="cContentName" required="true()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cContentSourceName" nodeset="SourceName" required="true()" type="string"/>
+        <bind id="cContentSourceCompany" nodeset="SourceCompany" required="false()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDetail" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+        <bind id="bNoLink" nodeset="@noLink" required="false()" type="string"/>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cContentSourceName" nodeset="SourceName" required="true()" type="string"/>
+        <bind id="cContentSourceCompany" nodeset="SourceCompany" required="false()" type="string"/>
+        <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
+        <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDetail" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+      </bind>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+    </bind>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Testimonial</label>
+    <group class="ContentColumn1">
+      <group ref="Settings" class="leftSettings">
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <input bind="cDescription" class="short">
+          <label>Change Notes</label>
+        </input>
+      </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main Testimonial Image</label>
+        </input>
+        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative Thumbnail</label>
+        </input>
+        <input bind="cContentPicture" class="short pickImage">
+          <label>Alternative Picture</label>
+        </input>
+      </group>
+    </group>
+    <group class="ContentColumn2">
+      <group ref="Content" class="Content">
+        <label>Testimonial Content</label>
+        <label>Source Name</label>
+        <input bind="cContentSourceName" class="required long">
+        </input>
+        <label>Source Company</label>
+        <input bind="cContentSourceCompany" class="long">
+        </input>
+        <label>Strapline</label>
+        <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
+        </textarea>
+        <label>Main Testimonial</label>
+        <textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
+        </textarea>
+        <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">
+          <label>Related Tags</label>
+        </relatedContent>
+        <select bind="bNoLink" appearance="full" class="multiline">
+          <item>
+            <label>Don't link to testimonial details</label>
+            <value>true</value>
+          </item>
+          <help class="inline">This will remove the 'read more' button from the bottom of this testimonial, so that only the information shown in this contact list is available, without an additional page for further information</help>
+        </select>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Testimonial</label>
+    </submit>
+  </group>
+</Content>

@@ -8408,12 +8408,7 @@ Namespace PayPalAPI
      System.SerializableAttribute(),
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
     Public Enum RecurringFlagType
-
-        '''<remarks/>
         Y
-
-        '''<remarks/>
-       ' y
     End Enum
 
     '''<remarks/>

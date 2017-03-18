@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>PollOption</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content>
+            <Title/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <bind id="cContentName" nodeset="tblContent/cContentXmlBrief/Content/Title" required="true()" type="string"/>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+    <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+    <bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+    <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Poll Option</label>
+    <group>
+      <group>
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+      </group>
+    </group>
+    <group>
+      <group>
+        <input bind="cContentName" class="required long">
+          <label>Poll Option</label>
+        </input>
+      </group>
+
+      <submit submission="" ref="ewSubmit" class="principle">
+        <label>Save Poll Option</label>
+      </submit>
+    </group>
+
+  </group>
+</Content>

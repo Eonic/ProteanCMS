@@ -567,6 +567,8 @@ Partial Public Class Web
 
                     If mnCartId > 0 Then
                         '   cart exists
+                        'turn off page caching
+                        myWeb.bPageCache = False
 
                         If mcPersistCart = "on" Then
                             writeSessionCookie() 'write the cookie to persist the cart
@@ -624,7 +626,7 @@ Partial Public Class Web
                                     End If
 
                                 Catch ex As Exception
-
+                                    cProcessInfo = ex.Message
                                 End Try
 
                             End If
@@ -657,8 +659,9 @@ Partial Public Class Web
                                 sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
                             End If
 
-
+                            PerfMon.Log("Cart", "InitializeVariables - check for cart start")
                             oDr = moDBHelper.getDataReader(sSql)
+                            PerfMon.Log("Cart", "InitializeVariables - check for cart end")
 
                             If oDr.HasRows Then
                                 While oDr.Read
@@ -995,7 +998,9 @@ Partial Public Class Web
                 If Not (mnCartId > 0) Then
                     ' Cart doesn't exist - if the process flow has a valid command (except add or quit), then this is an error
                     Select Case mcCartCmd
-                        Case "Logon", "Remove", "Cart", "NotesForm", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
+                        Case "Cart"
+                            mcCartCmd = "CartEmpty"
+                        Case "Logon", "Remove", "NotesForm", "Billing", "Delivery", "ChoosePaymentShippingOption", "Confirm", "EnterPaymentDetails", "SubmitPaymentDetails", "SubmitPaymentDetails", "ShowInvoice", "ShowCallBackInvoice"
                             mcCartCmd = "CookiesDisabled"
                         Case "Error"
                             mcCartCmd = "Error"
@@ -1278,6 +1283,7 @@ processFlow:
                         Dim Redirect3dsXform As xForm = New xForm
                         Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
                         moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt)
+                        myWeb.moResponseType = pageResponseType.iframe
 
                     Case "EnterPaymentDetails", "SubmitPaymentDetails" 'confirm order and submit for payment
                         mnProcessId = 5
@@ -1391,6 +1397,10 @@ processFlow:
 
                     Case "CookiesDisabled" ' Cookies have been disabled or are undetectable
                         mnProcessError = 1
+                        GetCart(oElmt)
+
+                    Case "CartEmpty" ' Cookies have been disabled or are undetectable
+                        mnProcessError = -1
                         GetCart(oElmt)
 
                     Case "BackToSite"
@@ -1644,6 +1654,9 @@ processFlow:
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
                             Case "Quote"
+                                If moMailConfig("QuoteList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                End If
                                 ListId = moMailConfig("QuoteList")
                         End Select
                         If ListId <> "" Then
@@ -2265,7 +2278,7 @@ processFlow:
                                     oProd.InnerXml = oRow("productDetail")
                                     If oProd.SelectSingleNode("Content[@overridePrice='True']") Is Nothing Then
                                         oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"))
-                                        cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " Check that a price is available for this quantity and a group for this current user."
+                                        cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         nCheckPrice = oCheckPrice.InnerText
                                         nTaxRate = getProductTaxRate(oCheckPrice)
                                         'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
@@ -2858,11 +2871,14 @@ processFlow:
                     If Not oThePrice Is Nothing Then
                         If IsNumeric(oThePrice.InnerText) Then
                             'this selects the cheapest price for this user assuming not free
-                            If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
-                                oThePrice = oPNode
+                            If IsNumeric(oPNode.InnerText) Then
+                                If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                    oThePrice = oPNode
+                                End If
                             End If
+
                         Else
-                            oThePrice = oPNode
+                                oThePrice = oPNode
                         End If
                     Else
                         oThePrice = oPNode
@@ -3422,8 +3438,6 @@ processFlow:
 
                     oXform.addInput(oGrpElmt, cCmdType, True, cCmdType, "hidden")
                     oXform.addBind(cCmdType, cCmdType)
-
-
 
                     oXform.addInput(oGrpElmt, "cContactType", True, "Type", "hidden")
                     oXform.addBind("cContactType", "tblCartContact/cContactType")
@@ -4820,12 +4834,10 @@ processFlow:
 
             Dim nQuantity As Short
             Dim nAmount As Double
-            Dim nVatAmt As Double
             Dim nWeight As Double
             Dim cDestinationCountry As String
             Dim nShippingCost As Double
             Dim cShippingDesc As String = ""
-            Dim sCountryList As String
 
             Dim cHidden As String = ""
             Dim bHideDelivery As Boolean = False
@@ -4993,46 +5005,78 @@ processFlow:
                         bFirstRow = True
                         Dim nLastID As Integer = 0
 
+                        ' If selected shipping method is still in those available (because we now )
+                        If nShippingMethodId <> 0 Then
+                            Dim bIsAvail As Boolean = False
+                            For Each oRow In ods.Tables("Option").Rows
+                                If Not oRow.RowState = DataRowState.Deleted Then
+                                    If nShippingMethodId = oRow("nShipOptKey") Then
+                                        bIsAvail = True
+                                    End If
+                                End If
+                            Next
+                            'If not then strip it out.
+                            If bIsAvail = False Then
+                                nShippingMethodId = 0
+                                cartElmt.SetAttribute("shippingType", "0")
+                                cartElmt.SetAttribute("shippingCost", "")
+                                cartElmt.SetAttribute("shippingDesc", "")
+                                Dim cSqlUpdate As String = "UPDATE tblCartOrder SET cShippingDesc= null, nShippingCost=null, nShippingMethodId = 0 WHERE nCartOrderKey=" & mnCartId
+                                moDBHelper.ExeProcessSql(cSqlUpdate)
+                            End If
+                        End If
 
+                        'If shipping option selected is collection don't change
+                        Dim bCollectionSelected As Boolean = False
                         For Each oRow In ods.Tables("Option").Rows
                             If Not oRow.RowState = DataRowState.Deleted Then
-                                If (Not oRow("nShipOptKey") = nLastID) Then
+                                If Not IsDBNull(oRow("bCollection")) Then
+                                    If oRow("nShipOptKey") = nShippingMethodId And oRow("bCollection") = True Then
+                                        bCollectionSelected = True
+                                    End If
+                                End If
+                            End If
+                        Next
 
-                                    If nShippingMethodId <> 0 Then
+                        For Each oRow In ods.Tables("Option").Rows
+                                    If Not oRow.RowState = DataRowState.Deleted Then
+                                        If (Not oRow("nShipOptKey") = nLastID) Then
+
+                                    If bCollectionSelected Then
                                         'if collection allready selected... Show only this option
                                         If nShippingMethodId = oRow("nShipOptKey") Then
                                             oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                            nShippingCost = oRow("nShippingTotal")
+                                            nShippingCost = CDbl(oRow("nShippingTotal") & "0")
                                             nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                             oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
                                         End If
                                     Else
                                         Dim bShowMethod As Boolean = True
-                                        'Don't show if a collection method
-                                        If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
-                                            If Not IsDBNull(oRow("bCollection")) Then
-                                                If oRow("bCollection") = True Then
-                                                    bShowMethod = False
+                                                'Don't show if a collection method
+                                                If moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
+                                                    If Not IsDBNull(oRow("bCollection")) Then
+                                                        If oRow("bCollection") = True Then
+                                                            bShowMethod = False
+                                                        End If
+                                                    End If
+                                                End If
+                                                If bShowMethod Then
+                                                    If bFirstRow Then oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
+                                                    nShippingCost = CDbl(oRow("nShippingTotal") & "0")
+                                                    nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                                    oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
+                                                    bFirstRow = False
+                                                    nLastID = oRow("nShipOptKey")
                                                 End If
                                             End If
-                                        End If
-                                        If bShowMethod Then
-                                            If bFirstRow Then oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                            nShippingCost = oRow("nShippingTotal")
-                                            nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
-                                            oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
-                                            bFirstRow = False
-                                            nLastID = oRow("nShipOptKey")
+
                                         End If
                                     End If
 
-                                End If
+                                Next
                             End If
 
-                        Next
-                    End If
-
-                    ods = Nothing
+                            ods = Nothing
 
                     ' Allow to Select Multiple Payment Methods or just one
                     Dim oPaymentCfg As XmlNode
@@ -6107,7 +6151,7 @@ processFlow:
             Dim cProcessInfo As String = ""
             Try
 
-                sSql = "select a.nStatus as status, nShipOptKey as id, cShipOptName as name, cShipOptCarrier as carrier, a.dPublishDate as startDate, a.dExpireDate as endDate, tblCartShippingMethods.cCurrency from tblCartShippingMethods left join tblAudit a on a.nAuditKey = nAuditId"
+                sSql = "select a.nStatus as status, nShipOptKey as id, cShipOptName as name, cShipOptCarrier as carrier, a.dPublishDate as startDate, a.dExpireDate as endDate, tblCartShippingMethods.cCurrency from tblCartShippingMethods left join tblAudit a on a.nAuditKey = nAuditId order by nDisplayPriority"
                 oDs = moDBHelper.GetDataSet(sSql, "ListItem", "List")
 
                 If oDs.Tables(0).Rows.Count > 0 Then
@@ -6311,7 +6355,7 @@ processFlow:
                     sSql = "update tblCartOrder set nTaxRate = " & mnTaxRate & " where nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(sSql)
                 End If
-
+                PerfMon.Log("Cart", "UpdateTaxEnd")
             Catch ex As Exception
                 returnException(mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug)
 
@@ -6655,76 +6699,85 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                         oContentDetails.SetAttribute("start", nStart)
                         oContentDetails.SetAttribute("total", nTotal)
+                        Dim bSingleRecord As Boolean = False
+                        If oDs.Tables(mcOrderType).Rows.Count = 1 Then bSingleRecord = True
 
                         'go through each cart
                         For Each oDR In oDs.Tables(mcOrderType).Rows
 
-                            ' Only add the relevant rows (page selected)
-                            nCurrentRow += 1
-                            If nCurrentRow > nStart Then
+                                ' Only add the relevant rows (page selected)
+                                nCurrentRow += 1
+                                If nCurrentRow > nStart Then
 
 
-                                Dim oContent As XmlElement = moPageXml.CreateElement("Content")
+                                    Dim oContent As XmlElement = moPageXml.CreateElement("Content")
 
-                                oContent.SetAttribute("type", mcOrderType)
-                                oContent.SetAttribute("id", oDR("nCartOrderKey"))
-                                oContent.SetAttribute("statusId", oDR("nCartStatus"))
-                                cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
-                                Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
-                                Do While oDRe.Read
-                                    oContent.SetAttribute("created", oDRe.GetValue(0))
+                                    oContent.SetAttribute("type", mcOrderType)
+                                    oContent.SetAttribute("id", oDR("nCartOrderKey"))
+                                    oContent.SetAttribute("statusId", oDR("nCartStatus"))
+                                    cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
+                                    Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
+                                    Do While oDRe.Read
+                                    oContent.SetAttribute("created", xmlDateTime(oDRe.GetValue(0)))
                                 Loop
                                 oDRe.Close()
-                                If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
-                                    oContent.InnerXml = oDR("cCartXML")
-                                Else
-                                    Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
-                                    Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
-                                    oContent.InnerXml = oCartListElmt.OuterXml
-                                End If
-                                ':TODO this might not be needed if cCartXml is saved at every step.
-                                'make sure the status is upto date.
-                                Dim orderNode As XmlElement = oContent.FirstChild
-                                orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                    If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
+                                        oContent.InnerXml = oDR("cCartXML")
+                                    Else
+                                        Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
+                                        Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
+                                        oContent.InnerXml = oCartListElmt.OuterXml
+                                    End If
+                                    ':TODO this might not be needed if cCartXml is saved at every step.
+                                    'make sure the status is upto date.
+                                    Dim orderNode As XmlElement = oContent.FirstChild
+                                    orderNode.SetAttribute("statusId", oDR("nCartStatus"))
 
-                                oContent.SetAttribute("type", LCase(mcOrderType))
-                                oContent.SetAttribute("currency", mcCurrency)
-                                oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
+                                    oContent.SetAttribute("type", LCase(mcOrderType))
+                                    oContent.SetAttribute("currency", mcCurrency)
+                                    oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
+
+                                    If oDR("nCartUserDirId") <> 0 Then
+                                        oContent.SetAttribute("userId", oDR("nCartUserDirId"))
+                                    End If
 
                                 'TS: Removed because it gives a massive overhead when Listing loads of orders.
-
-                                'If myWeb.mbAdminMode And CInt("0" & oDR("nCartUserDirId")) > 0 Then
-                                '    oContent.AppendChild(moDBHelper.GetUserXML(CInt(oDR("nCartUserDirId")), False))
-                                'End If
-
-                                Dim oTestNode As XmlElement = oContentDetails.SelectSingleNode("Content[@id=" & oContent.GetAttribute("id") & " and @type='" & LCase(mcOrderType) & "']")
-                                If mcOrderType = "Cart" Or mcOrderType = "Order" Then
-                                    'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
-
-                                    oContentDetails.AppendChild(oContent)
-
-                                    'End If
-                                Else
-                                    If oTestNode Is Nothing Then
-                                        If bListAllQuotes Then
-                                            oContentDetails.AppendChild(oContent)
-                                        Else
-                                            '   If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) Then
-                                            oContentDetails.AppendChild(oContent)
-                                            '    End If
-                                        End If
+                                If bSingleRecord Then
+                                    If myWeb.mbAdminMode And CInt("0" & oDR("nCartUserDirId")) > 0 Then
+                                        oContent.AppendChild(moDBHelper.GetUserXML(CInt(oDR("nCartUserDirId")), False))
                                     End If
+                                    addNewTextNode("Notes", oContent.FirstChild, oDR("cClientNotes"))
+                                    addNewTextNode("SellerNotes", oContent.FirstChild, Replace(oDR("cSellerNotes"), vbCr, "<br/>"))
                                 End If
 
+                                Dim oTestNode As XmlElement = oContentDetails.SelectSingleNode("Content[@id=" & oContent.GetAttribute("id") & " and @type='" & LCase(mcOrderType) & "']")
+                                    If mcOrderType = "Cart" Or mcOrderType = "Order" Then
+                                        'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
+
+                                        oContentDetails.AppendChild(oContent)
+
+                                        'End If
+                                    Else
+                                        If oTestNode Is Nothing Then
+                                            If bListAllQuotes Then
+                                                oContentDetails.AppendChild(oContent)
+                                            Else
+                                                '   If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) Then
+                                                oContentDetails.AppendChild(oContent)
+                                                '    End If
+                                            End If
+                                        End If
+                                    End If
 
 
-                                'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
-                                '    oContentDetails.AppendChild(oContent)
-                                'End If
-                            End If
-                        Next
+
+                                    'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
+                                    '    oContentDetails.AppendChild(oContent)
+                                    'End If
+                                End If
+                            Next
+                        End If
                     End If
-                End If
             Catch ex As Exception
                 returnException(mcModuleName, "ListOrders", ex, "", "", gbDebug)
             End Try
@@ -6870,6 +6923,10 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
 
+        ''' <summary>
+        ''' Select currency deals with the workflow around choosing a currency when an item is added to the cart.
+        ''' </summary>
+        ''' <returns></returns>
         Public Function SelectCurrency() As Boolean
             If Not PerfMon Is Nothing Then PerfMon.Log("Cart", "SelectCurrency")
             Dim cProcessInfo As String = ""
@@ -6895,11 +6952,17 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         mcCartCmd = ""
                     End If
                     Return True
-                End If
-                cProcessInfo = "Check to see if already used"
-                If myWeb.moSession("bCurrencySelected") = True Then
-                    mcCartCmd = "Cart"
-                    Return True
+                Else
+                    cProcessInfo = "Check to see if already used"
+                    If myWeb.moSession("bCurrencySelected") = True Then
+                        If mcCartCmd = "Currency" Then
+                            mcCartCmd = "Cart"
+                        Else
+                            mcCartCmd = mcCartCmd
+                        End If
+
+                        Return True
+                    End If
                 End If
 
                 cProcessInfo = "Getting Currencies"
@@ -6910,63 +6973,80 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     mcCartCmd = "Cart"
                     Return True
                 End If
+
                 'check we have differenct currencies
                 If moPaymentCfg.SelectSingleNode("currencies/Currency") Is Nothing Then
-                    mcCartCmd = "Cart"
+                    '  mcCartCmd = "Cart"
                     myWeb.moSession("bCurrencySelected") = True
                     Return True
-                ElseIf Not moPaymentCfg.SelectSingleNode("currencies/Currency").HasChildNodes Then
-                    mcCartCmd = "Cart"
-                    myWeb.moSession("bCurrencySelected") = True
-                    Return True
+                Else
+                    Dim oCurrencies As XmlNodeList = moPaymentCfg.SelectNodes("currencies/Currency")
+
+                    If oCurrencies.Count = 1 Then
+                        Dim oCurrency As XmlElement = oCurrencies(0)
+                        myWeb.moSession("cCurrency") = oCurrency.GetAttribute("ref")
+
+                        'here we need to re-get the cart stuff in the new currency
+                        GetCurrencyDefinition()
+                        ' mcCartCmd = "Cart"
+                        myWeb.moSession("bCurrencySelected") = True
+                        Return True
+                    End If
+                    oCurrencies = Nothing
+                    'If multiple currencies then we need to pick
                 End If
 
                 'If Not bOverride And Not mcCurrencyRef = "" Then Return True
 
-                'And mcCurrencyRef = "" Then Return True
-                'get and load the currency selector xform
-                cProcessInfo = "Supplying and Checking Form"
-                Dim oCForm As New xForm(myWeb)
-                oCForm.NewFrm()
-                oCForm.load("/ewcommon/xforms/cart/CurrencySelector.xml")
-                Dim oInputElmt As XmlElement = oCForm.moXformElmt.SelectSingleNode("group/group/group/select1[@bind='cRef']")
-                Dim oCur As XmlElement = oCForm.Instance.SelectSingleNode("Currency/ref")
-                oCur.InnerText = mcCurrency
-                Dim oCurrencyElmt As XmlElement
-                For Each oCurrencyElmt In moPaymentCfg.SelectNodes("currencies/Currency")
-                    'going to need to do something about languages
-                    Dim oOptionElmt As XmlElement
-                    oOptionElmt = oCForm.addOption(oInputElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"))
-                    oCForm.addNote(oOptionElmt, xForm.noteTypes.Hint, oCurrencyElmt.SelectSingleNode("description").InnerText)
-                Next
-                If oCForm.isSubmitted Then
-                    oCForm.updateInstanceFromRequest()
-                    oCForm.addValues()
-                    oCForm.validate()
-                    If oCForm.valid Then
-                        mcCurrencyRef = oCForm.Instance.SelectSingleNode("Currency/ref").InnerText
-                        myWeb.moSession("cCurrency") = mcCurrencyRef
-                        'here we need to re-get the cart stuff in the new currency
-                        GetCurrencyDefinition()
-                        myWeb.moSession("bCurrencySelected") = True
-                        mcCartCmd = "Cart"
-                        Return True
+                If mcCartCmd = "Currency" Then
+                    'And mcCurrencyRef = "" Then Return True
+                    'get and load the currency selector xform
+                    cProcessInfo = "Supplying and Checking Form"
+                    Dim oCForm As New xForm(myWeb)
+                    oCForm.NewFrm()
+                    oCForm.load("/ewcommon/xforms/cart/CurrencySelector.xml")
+                    Dim oInputElmt As XmlElement = oCForm.moXformElmt.SelectSingleNode("group/group/group/select1[@bind='cRef']")
+                    Dim oCur As XmlElement = oCForm.Instance.SelectSingleNode("Currency/ref")
+                    oCur.InnerText = mcCurrency
+                    Dim oCurrencyElmt As XmlElement
+                    For Each oCurrencyElmt In moPaymentCfg.SelectNodes("currencies/Currency")
+                        'going to need to do something about languages
+                        Dim oOptionElmt As XmlElement
+                        oOptionElmt = oCForm.addOption(oInputElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"))
+                        oCForm.addNote(oOptionElmt, xForm.noteTypes.Hint, oCurrencyElmt.SelectSingleNode("description").InnerText)
+                    Next
+                    If oCForm.isSubmitted Then
+                        oCForm.updateInstanceFromRequest()
+                        oCForm.addValues()
+                        oCForm.validate()
+                        If oCForm.valid Then
+                            mcCurrencyRef = oCForm.Instance.SelectSingleNode("Currency/ref").InnerText
+                            myWeb.moSession("cCurrency") = mcCurrencyRef
+                            'here we need to re-get the cart stuff in the new currency
+                            GetCurrencyDefinition()
+                            myWeb.moSession("bCurrencySelected") = True
+                            mcCartCmd = "Cart"
+                            Return True
+                        End If
                     End If
+                    oCForm.addValues()
+                    If Not moPageXml.SelectSingleNode("/Page/Contents") Is Nothing Then
+                        moPageXml.SelectSingleNode("/Page/Contents").AppendChild(moPageXml.ImportNode(oCForm.moXformElmt.CloneNode(True), True))
+                    End If
+                    mcCartCmd = "Currency"
+                    Return False
                 End If
-                oCForm.addValues()
-                If Not moPageXml.SelectSingleNode("/Page/Contents") Is Nothing Then
-                    moPageXml.SelectSingleNode("/Page/Contents").AppendChild(moPageXml.ImportNode(oCForm.moXformElmt.CloneNode(True), True))
 
-                End If
 
-                mcCartCmd = "Currency"
-                Return False
             Catch ex As Exception
                 returnException(mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Function
 
+        ''' <summary>
+        ''' takes the mcCurrencyRef and sets the currency for the current order 
+        ''' </summary>
         Public Sub GetCurrencyDefinition()
             If Not PerfMon Is Nothing Then PerfMon.Log("Cart", "GetCurrencyDefinition")
             Dim cProcessInfo As String = ""
@@ -6987,9 +7067,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     mnShippingRootId = -1
 
                     If IsNumeric(oCurrency.GetAttribute("ShippingRootId")) Then
-
                         mnShippingRootId = CInt(oCurrency.GetAttribute("ShippingRootId"))
-
                     End If
 
                     mcCurrency = mcCurrencyCode
@@ -7302,7 +7380,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
             Try
 
                 Dim nQuantity As Long = 1
-                Dim xmlTemp As XmlElement 'use to step through xml el
 
                 xmlProduct.SetAttribute("test1", "1")
 

@@ -126,7 +126,6 @@ Public Class Messaging
         Try
             Dim sSql As String
             Dim oDs As DataSet
-            Dim id As String
             Dim dsRow As DataRow
             Dim strFilePath As String
             Dim strError As String = ""

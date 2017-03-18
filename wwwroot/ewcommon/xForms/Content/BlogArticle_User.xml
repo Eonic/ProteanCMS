@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>BlogArticle</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Headline/>
+						<Article/>
+						<Categories>
+							<Category/>
+						</Categories>
+						<User/>
+						<EditRecord/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<Headline/>
+						<Article/>
+						<Categories>
+							<Category/>
+						</Categories>
+						<User/>
+						<EditRecord/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this);"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentHeadline" nodeset="cContentName" required="true()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentHeadline" nodeset="Headline" required="true()" type="string"/>
+				<bind id="cContentArticle" nodeset="Article" required="true()" type="string"/>
+				<bind id="cblogConentUsername" nodeset="User" required="false()" type="string"/>
+				<bind id="cblogEditRecord" nodeset="EditRecord" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentHeadline" nodeset="Headline" required="false()" type="string"/>
+				<bind id="cContentArticle" nodeset="Article" required="false()" type="string"/>
+				<bind id="cblogConentUsername" nodeset="User" required="false()" type="string"/>
+				<bind id="cblogEditRecord" nodeset="EditRecord" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Add / Edit Entry</label>
+		<group>
+			<input bind="nContentKey" class="hidden">
+				<label>ContentId</label>
+			</input>
+			<input bind="cContentHeadline" class="required long">
+				<label>Headline</label>
+			</input>
+			<input bind="cblogConentUsername" class="hidden"/>
+			<input bind="cblogEditRecord" class="hidden"/>
+			<textarea bind="cContentArticle" class="TextArea" rows="10" cols="40">
+				<label>Article</label>
+			</textarea>
+			<submit submission="" ref="ewSubmit" class="principle submit">
+				<label>Submit</label>
+			</submit>
+		</group>
+	</group>
+</Content>

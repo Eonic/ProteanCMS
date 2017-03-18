@@ -58,6 +58,7 @@ Partial Public Class Web
 
         End Sub
 
+
         Sub New(ByRef aWeb As Web)
             myWeb = aWeb
             moConfig = myWeb.moConfig
@@ -375,7 +376,10 @@ ProcessFlow:
                         End If
                         If moAdXfm.valid Then
                             mcEwCmd = "Normal"
+                            myWeb.moCtx.Application("ewSettings") = Nothing
                             myWeb.msRedirectOnEnd = "/?ewCmd=SettingsDash"
+                            myWeb.ClearPageCache()
+
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -488,8 +492,6 @@ ProcessFlow:
 
                         Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/theme")
 
-
-
                         oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings("../../ewThemes/" & moThemeConfig("CurrentTheme") & "/xforms/Config/SkinSettings"))
 
                         If moAdXfm.valid Then
@@ -501,9 +503,10 @@ ProcessFlow:
                                 Eonic.Config.UpdateConfigValue(myWeb, "eonic/web", "SiteXsl", myWeb.moRequest("SiteXsl"))
                             End If
 
-
+                            myWeb.moCtx.Application("ewSettings") = Nothing
                             mcEwCmd = "Normal"
-                            myWeb.msRedirectOnEnd = "/"
+                            myWeb.msRedirectOnEnd = "/?rebundle=true"
+
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -600,6 +603,7 @@ ProcessFlow:
 
                                     If myWeb.moRequest("Location") <> "" Then
                                         FilterValue = myWeb.moRequest("Location")
+                                        myWeb.mnPageId = CLng("0" & FilterValue)
                                     Else
                                         If myWeb.moSession("FilterValue") <> "" Then
                                             FilterValue = myWeb.moSession("FilterValue")
@@ -610,11 +614,12 @@ ProcessFlow:
 
                                     oXfrm.addUserOptionsFromSqlDataReader(locSelect, myWeb.moDbHelper.getDataReader(sSql))
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
+                                    myWeb.ClearPageCache()
 
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
-                                        FilterSQL = "dbo.fxn_getContentParents(c.nContentKey) = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType, FilterSQL)
+                                        FilterSQL = " CL.nStructId = '" & FilterValue & "'"
+                                        myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType & "|ASC_cl.nDisplayOrder", FilterSQL)
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
 
@@ -645,6 +650,8 @@ ProcessFlow:
 
                         oPageDetail.AppendChild(moAdXfm.xFrmAddModule(myWeb.moRequest("pgid"), myWeb.moRequest("position")))
                         If moAdXfm.valid Then
+                            myWeb.ClearPageCache()
+
                             If myWeb.moRequest("nStatus") <> "" Then
                                 oPageDetail.RemoveAll()
                                 If myWeb.moSession("lastPage") <> "" Then
@@ -676,6 +683,7 @@ ProcessFlow:
                         If moAdXfm.valid Then
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
+                            myWeb.ClearPageCache()
 
                             'if we have a parent releationship lets add it but not if we have a relation type becuase that happens in the xform.
                             If myWeb.moRequest("contentParId") <> "" AndAlso IsNumeric(myWeb.moRequest("contentParId")) Then
@@ -713,6 +721,8 @@ ProcessFlow:
                             bAdminMode = False
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
+
+                            myWeb.ClearPageCache()
 
                             'if we have a parent releationship lets add it
                             If myWeb.moRequest("contentParId") <> "" AndAlso IsNumeric(myWeb.moRequest("contentParId")) Then
@@ -754,6 +764,8 @@ ProcessFlow:
                             mcEwCmd = myWeb.moSession("ewCmd")
                             myWeb.mnArtId = 0
                             oPageDetail.RemoveAll()
+                            myWeb.ClearPageCache()
+
                             'lest just try this redirecting to last page
                             If mcEwCmd = "Normal" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
@@ -779,6 +791,8 @@ ProcessFlow:
                                 myWeb.mnArtId = 0
                                 oPageDetail.RemoveAll()
                             End If
+                            myWeb.ClearPageCache()
+
                             GoTo processflow
                         Else
                             sAdminLayout = "AdminXForm"
@@ -806,6 +820,7 @@ ProcessFlow:
                             ElmtToChange.InnerText = cContentValue
                         End If
                         myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Content, oTempInstance.DocumentElement, nMyContentId)
+                        myWeb.ClearPageCache()
 
                         sAdminLayout = "AjaxReturnTrue"
 
@@ -824,6 +839,7 @@ ProcessFlow:
                             moAdXfm.valid = False
                             GoTo ProcessFlow
                         End If
+                        myWeb.ClearPageCache()
 
                         oPageDetail.RemoveAll()
                         myWeb.mnArtId = 0
@@ -837,6 +853,7 @@ ProcessFlow:
                         If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
                             myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                         End If
+                        myWeb.ClearPageCache()
                         oPageDetail.RemoveAll()
                         myWeb.mnArtId = 0
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
@@ -849,6 +866,7 @@ ProcessFlow:
                         If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
                             myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                         End If
+                        myWeb.ClearPageCache()
                         oPageDetail.RemoveAll()
                         myWeb.mnArtId = 0
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
@@ -866,6 +884,7 @@ ProcessFlow:
                             moAdXfm.valid = False
                             GoTo ProcessFlow
                         End If
+                        myWeb.ClearPageCache()
                         oPageDetail.RemoveAll()
                         myWeb.mnArtId = 0
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
@@ -877,7 +896,7 @@ ProcessFlow:
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
                             'lest just try this redirecting to last page
-
+                            myWeb.ClearPageCache()
                             If myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
@@ -886,7 +905,6 @@ ProcessFlow:
                                 moAdXfm.valid = False
                                 GoTo ProcessFlow
                             End If
-
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -897,6 +915,7 @@ ProcessFlow:
                             myWeb.moDbHelper.updatePagePosition(myWeb.moRequest("pgid"), myWeb.moRequest("id"), myWeb.moRequest("position"))
                             'oPageDetail.RemoveAll()
                             'output nothing ,just called by AJAX
+                            myWeb.ClearPageCache()
                         End If
                     Case "MoveContent"
                         If myWeb.moRequest("parId") <> "" Then
@@ -910,7 +929,7 @@ ProcessFlow:
                                 myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
                             End If
                             oPageDetail.RemoveAll()
-
+                            myWeb.ClearPageCache()
                         End If
                         bLoadStructure = True
                         bMailMenu = True
@@ -929,6 +948,7 @@ ProcessFlow:
                             bAdminMode = False
                             oPageDetail.RemoveAll()
                             myWeb.mnArtId = 0
+                            myWeb.ClearPageCache()
                             If mcEwCmd <> "Normal" Then
                                 GoTo ProcessFlow
                             End If
@@ -954,6 +974,7 @@ ProcessFlow:
                             bAdminMode = False
                             oPageDetail.RemoveAll()
                             myWeb.mnArtId = 0
+                            myWeb.ClearPageCache()
                         End If
                     Case "ContentVersions"
                         sAdminLayout = "ContentVersions"
@@ -966,6 +987,7 @@ ProcessFlow:
                         myWeb.moDbHelper.moveStructure(CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("parid")))
                         sAdminLayout = "EditStructure"
                         mcEwCmd = "MovePage"
+                        myWeb.ClearPageCache()
 
 
                     Case "ContentLocations", "MovePage"
@@ -983,6 +1005,7 @@ ProcessFlow:
                             mcEwCmd = myWeb.moSession("ewCmd")
                             sAdminLayout = ""
                             oPageDetail.RemoveAll()
+                            myWeb.ClearPageCache()
                         Else
                             sAdminLayout = "PageSettings"
                         End If
@@ -998,6 +1021,7 @@ ProcessFlow:
                         End Select
                         myWeb.moDbHelper.ReorderNode(dbHelper.objectTypes.PageVersion, myWeb.moRequest("pgid"), direction)
                         mcEwCmd = "PageVersions"
+                        myWeb.ClearPageCache()
                         GoTo ProcessFlow
                     Case "CopyPage"
                         bLoadStructure = True
@@ -1008,6 +1032,7 @@ ProcessFlow:
                             oPageDetail.RemoveAll()
                             Dim cUrl As String = myWeb.moConfig("ProjectPath") & "/?ewCmd=" & mcEwCmd
                             myWeb.msRedirectOnEnd = cUrl
+                            myWeb.ClearPageCache()
                         Else
                             sAdminLayout = "PageSettings"
                         End If
@@ -1069,7 +1094,7 @@ ProcessFlow:
                                 myWeb.msRedirectOnEnd = cUrl
 
                             End If
-
+                            myWeb.ClearPageCache()
                         Else
                             'come back here if not going back elsewhere such as EditStucture
 
@@ -1085,6 +1110,7 @@ ProcessFlow:
                             mcEwCmd = myWeb.moSession("ewCmd")
                             sAdminLayout = ""
                             oPageDetail.RemoveAll()
+                            myWeb.ClearPageCache()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -1097,6 +1123,7 @@ ProcessFlow:
                         oPageDetail.RemoveAll()
                         'Redirect to previous page
                         myWeb.mnPageId = myWeb.moSession("pgid")
+                        myWeb.ClearPageCache()
                     Case "ShowPage"
                         ' Show Page
                         myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.ContentStructure, dbHelper.Status.Live, myWeb.moRequest("pgid"))
@@ -1104,6 +1131,7 @@ ProcessFlow:
                         mcEwCmd = myWeb.moSession("ewCmd")
                         sAdminLayout = ""
                         oPageDetail.RemoveAll()
+                        myWeb.ClearPageCache()
                         'Redirect to previous page
                         myWeb.mnPageId = myWeb.moSession("pgid")
                     Case "DeletePage"
@@ -1117,6 +1145,7 @@ ProcessFlow:
                             'oPageDetail.RemoveAll()
                             ''Redirect to previous page
                             'myWeb.mnPageId = myWeb.moSession("pgid")
+                            myWeb.ClearPageCache()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -1169,6 +1198,7 @@ ProcessFlow:
                             'Redirect to previous page
                             myWeb.mnPageId = myWeb.moSession("pgid")
                         End If
+                        myWeb.ClearPageCache()
                     Case "ImageLib"
                         LibProcess(oPageDetail, sAdminLayout, fsHelper.LibraryType.Image)
                     Case "DocsLib"
@@ -1421,6 +1451,7 @@ ProcessFlow:
                     Case "EditPagePermissions"
                         bLoadStructure = True
                         oPageDetail.AppendChild(moAdXfm.xFrmPagePermissions(myWeb.moRequest("pgid")))
+                        myWeb.ClearPageCache()
                         sAdminLayout = "AdminXForm"
 
                     Case "EditPageRights"
@@ -1485,24 +1516,24 @@ ProcessFlow:
                     Case "PreviewOn"
                         sAdminLayout = ""
                         mbPreviewMode = True
+                        If myWeb.moSession("PreviewDate") Is Nothing Then
+                            myWeb.moSession("PreviewDate") = Now.Date
+                        End If
 
-                        myWeb.moSession("PreviewDate") = Now.Date
-                        myWeb.moSession("PreviewUser") = oWeb.mnUserId
+                        If myWeb.moSession("PreviewUser") Is Nothing Then
+                            myWeb.moSession("PreviewUser") = oWeb.mnUserId
+                        End If
 
-                    Case "PreviewSet"
-                        '-----------------------------------------------------------------
-                        '
-                        '
-                        'This is a holder, this command will set the user/date information
-                        '
-                        '
-                        'myWeb.moSession("PreviewDate") = Now.Date
-                        'myWeb.moSession("PreviewUser") = 0
-                        'If IsNumeric(myWeb.moSession("previewUser")) Then oWeb.myWeb.mnUserId = CInt(myWeb.moSession("previewUser"))
-                        'If IsDate(myWeb.moSession("previewDate")) Then oWeb.mdDate = CDate(myWeb.moSession("previewDate"))
-                        '
-                        '
-                        '-----------------------------------------------------------------
+                        If IsDate(myWeb.moRequest("PreviewDate")) Then
+                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("PreviewDate"))
+                        End If
+                        myWeb.mdDate = myWeb.moSession("PreviewDate")
+
+                        If CInt("0" & myWeb.moRequest("PreviewUser")) > 0 Then
+                            myWeb.moSession("PreviewUser") = CInt("0" & myWeb.moRequest("PreviewUser"))
+                        End If
+                        myWeb.mnUserId = myWeb.moSession("PreviewUser")
+
                     Case "RelateSearch"
                         If ButtonSubmitted(myWeb.moRequest, "saveRelated") Then
                             'code for saving results of 2nd form submission
@@ -1573,7 +1604,7 @@ ProcessFlow:
                             myWeb.moDbHelper.saveProductsGroupRelations()
                             myWeb.msRedirectOnEnd = myWeb.moRequest.QueryString("Path") & "?ewCmd=ProductGroups&GroupId=" & myWeb.moRequest.QueryString("GroupId")
                         Else
-                            Dim sProductTypes As String = "Product,SKU"
+                            Dim sProductTypes As String = "Product,SKU,Ticket"
                             If moConfig("ProductTypes") <> "" Then
                                 sProductTypes = moConfig("ProductTypes")
                             End If
@@ -1597,6 +1628,7 @@ ProcessFlow:
                             oPageDetail.AppendChild(moAdXfm.xFrmDiscountRule(IIf(IsNumeric(myWeb.moRequest.QueryString("DiscId")), myWeb.moRequest.QueryString("DiscId"), 0), nDiscountType))
 
                             If moAdXfm.valid Then
+                                myWeb.ClearPageCache()
                                 DiscountRulesProcess(oPageDetail, sAdminLayout)
                             End If
                         Else
@@ -1663,6 +1695,7 @@ ProcessFlow:
                     Case "ViewSystemPages"
                         bSystemPagesMenu = True
                         oWeb.mnSystemPagesId = myWeb.moDbHelper.getPageIdFromPath("System+Pages", False, False)
+                        oWeb.mbAdminMode = False
                         If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
                     Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "EditSubscription", "MoveSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers"

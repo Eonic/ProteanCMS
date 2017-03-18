@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Imports>
+  <ImportGroup name="Imports">
+		<!--Calling Withdrawn Publication XSL Filter-->
+    <Import name="Users" xslFile="Users.xsl" importDoc="xml">Users</Import>
+  </ImportGroup>
+</Imports>

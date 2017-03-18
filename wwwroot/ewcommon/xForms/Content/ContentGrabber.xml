@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditFeedItem">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>ContentGrabber</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Type/>
+						<Sort/>
+						<SortDirection/>
+						<Page/>
+						<IncludeChildPages/>
+						<NumberOfItems>5</NumberOfItems>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content/>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditFeedItem" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cTitle" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cType" nodeset="Type" required="true()" type="string"/>
+				<bind id="cSort" nodeset="Sort" required="false()" type="string"/>
+				<bind id="cSortDirection" nodeset="SortDirection" required="false()" type="string"/>
+				<bind id="nPage" nodeset="Page" required="false()" type="float"/>
+				<bind id="cIncludeChildPages" nodeset="IncludeChildPages" required="false()"/>
+				<bind id="nCount" nodeset="NumberOfItems" required="true()" type="float"/>
+			</bind>
+		</bind>
+	</model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Content Grabber</label>
+    <group class="ContentColumn1">
+      <group ref="Settings" class="leftSettings">
+        <label>Settings</label>
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+      </group>
+    </group>
+    <group class="ContentColumn2">
+       
+      <group>
+ <label>Details</label>
+		<select1 bind="cType" appearance="minimal" class="required">
+			<label>Content Type</label>
+			<item>
+				<label>Document</label>
+				<value>Document</value>
+			</item>
+			<item>
+				<label>Event</label>
+				<value>Event</value>
+			</item>
+			<item>
+				<label>Feed Item</label>
+				<value>FeedItem</value>
+			</item>
+			<item>
+				<label>Library Image</label>
+				<value>LibraryImage</value>
+			</item>
+			<item>
+				<label>Link</label>
+				<value>Link</value>
+			</item>
+			<item>
+				<label>News Article</label>
+				<value>NewsArticle</value>
+			</item>
+			<item>
+				<label>Product</label>
+				<value>Product</value>
+			</item>
+      <item>
+        <label>Vacancies</label>
+        <value>Job</value>
+      </item>
+		</select1>
+
+		<select1 bind="nPage" class="siteTree">
+			<label>Source</label>
+		</select1>
+		
+		<select bind="cIncludeChildPages" appearance="full">
+			<label>Include Child Pages from Source</label>
+			<item>
+				<label/>
+				<value>true</value>
+			</item>
+		</select>
+
+		<input bind="nCount" class="textbox">
+          <label>No. of Items to grab</label>
+        </input>
+
+		<select1 bind="cSort" appearance="minimal" class="required">
+			<label>Order Items By</label>
+			<item>
+				<label>None</label>
+			</item>
+			<item>
+				<label>Creation Date</label>
+				<value>CreationDate</value>
+			</item>
+			<item>
+				<label>Name</label>
+				<value>Name</value>
+			</item>
+			<item>
+				<label>Publish Date</label>
+				<value>PublishDate</value>
+			</item>
+		</select1>
+
+		<select1 bind="cSortDirection" appearance="full" >
+			<label>Order Preference</label>
+			<item>
+				<label>Ascending</label>
+				<value>Ascending</value>
+			</item>
+			<item>
+				<label>Descending</label>
+				<value>Descending</value>
+			</item>
+		</select1>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="ewSubmit" ref="ewSubmit" class="principle">
+      <label>Save Content Grabber</label>
+    </submit>
+  </group>
+</Content>

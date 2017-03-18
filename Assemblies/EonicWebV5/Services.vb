@@ -45,7 +45,12 @@ Public Class Services
     Sub AddResponse(ByVal cMessage As String)
         Try
             Dim oElmt As XmlElement = oRXML.CreateElement("ResponseMessage")
-            oElmt.InnerText = cMessage
+            If cMessage.StartsWith("<") Then
+                oElmt.InnerXml = cMessage
+            Else
+
+                oElmt.InnerText = cMessage
+            End If
             oResponseElmt.AppendChild(oElmt)
         Catch ex As System.Exception
             bResult = False
@@ -256,12 +261,10 @@ Public Class Services
                 'Dim myThread As System.Threading.Thread
                 'myThread = New System.Threading.Thread(AddressOf Services.LuceneIndexAsync)
                 'myThread.Start(HttpContext.Current)
+                Dim sResult As String = LuceneIndexAsync(HttpContext.Current)
 
-                LuceneIndexAsync(HttpContext.Current)
-
-                Eonic.Tools.Xml.addElement(oResponseElmt, "Message", "Indexer Started - See Activity Log for Results")
+                Eonic.Tools.Xml.addElement(oResponseElmt, "Message", sResult)
                 bResult = True
-
 
                 'Dim oIndexer As New Eonic.Indexer(New Eonic.Web)
                 'oIndexer.DoIndex(0, bResult)
@@ -287,27 +290,30 @@ Public Class Services
         Return oRXML
     End Function
 
-    Public Shared Sub LuceneIndexAsync(ByVal oCtx As HttpContext)
+    Public Shared Function LuceneIndexAsync(ByVal oCtx As HttpContext) As String
         Dim bResult As Boolean
         Dim sResult As String = ""
         Dim myWeb As New Eonic.Web(oCtx)
         Try
 
-            Dim oIndexer As New Eonic.Indexer(myWeb)
-            oIndexer.DoIndex(0, bResult)
+            Dim oIndexer As New Eonic.IndexerAsync(myWeb)
+
+            sResult = oIndexer.DoIndex(0, bResult)
+
             Dim cSubResponse As String = oIndexer.cExError
             If cSubResponse = "" Then
                 bResult = True
-                sResult = "Indexer Successful"
             Else
                 sResult = "Indexer Error" & cSubResponse
                 bResult = False
             End If
 
-            sResult = sResult & " Pages: " & oIndexer.nPagesIndexed
-            sResult = sResult & " Documents: " & oIndexer.nDocumentsIndexed
-            sResult = sResult & " Contents: " & oIndexer.nContentsIndexed
+            '  sResult = sResult & " Pages: " & oIndexer.nPagesIndexed
+            '  sResult = sResult & " Documents: " & oIndexer.nDocumentsIndexed
+            '  sResult = sResult & " Contents: " & oIndexer.nContentsIndexed
+
             myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.Search, 0, 0, 0, sResult)
+            Return sResult
 
         Catch ex As System.Exception
             bResult = False
@@ -317,7 +323,7 @@ Public Class Services
             myWeb.Close()
             myWeb = Nothing
         End Try
-    End Sub
+    End Function
 
     <WebMethod()> _
     Public Function DatabaseUpgrade() As XmlDocument

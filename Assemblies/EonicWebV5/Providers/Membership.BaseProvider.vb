@@ -286,11 +286,10 @@ Check:
 
                 Public Overridable Function xFrmPasswordReminder() As XmlElement
                     Dim oFrmElmt As XmlElement
-                    Dim oFrmElmt2 As XmlElement
                     Dim sValidResponse As String
                     Dim cProcessInfo As String = ""
                     Dim getRecordByEmail As Boolean
-                    Dim sSQL As String
+
 
                     Try
 

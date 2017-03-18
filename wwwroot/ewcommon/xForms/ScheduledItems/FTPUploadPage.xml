@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="FTPUploadPage">
+  <model>
+    <instance>
+      <tblActions>
+        <nActionKey>0</nActionKey>
+        <nWebsite/>
+        <cType>FTPUploadPage</cType>
+        <cSubPath>ewcommon/services.asmx</cSubPath>
+        <cActionXML>
+          <FTPUploadPage exemelnamespace="http://www.eonic.co.uk/ewcommon/Services">
+            <SourceURL>http://</SourceURL>
+            <FTPServer/>
+            <FTPUserName/>
+            <FTPPassword/>
+            <FTPFilePath/>
+            <FTPFileName/>
+          </FTPUploadPage>
+        </cActionXML>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nFrequency>30</nFrequency>
+        <dLastComplete/>
+        <dDueNext/>
+      </tblActions>
+    </instance>
+    <submission id="EditFeed" action="" method="post" event="return form_check(this)"/>
+    <bind id="nActionKey" nodeset="tblActions/nActionKey" required="false()" type="number"/>
+    <bind id="nWebsite" nodeset="tblActions/nWebsite" required="false()" type="number"/>
+    <bind nodeset="tblActions/cActionXML/FTPUploadPage">
+      <bind id="cSourceURL" nodeset="SourceURL" required="true()" type="string"/>
+      <bind id="cFTPServer" nodeset="FTPServer" required="true()" type="string"/>
+      <bind id="cFTPUserName" nodeset="FTPUserName" required="true()" type="string"/>
+      <bind id="cFTPPassword" nodeset="FTPPassword" required="true()" type="string"/>
+      <bind id="cFTPFilePath" nodeset="FTPFilePath" required="true()" type="string"/>
+      <bind id="cFTPFileName" nodeset="FTPFileName" required="true()" type="string"/>
+    </bind>
+    <bind id="dPublishDate" nodeset="tblActions/dPublishDate" required="false()" type="date"/>
+    <bind id="dExpireDate" nodeset="tblActions/dExpireDate" required="false()" type="date"/>
+    <bind id="dLastComplete" nodeset="tblActions/dLastComplete" required="false()" type="date"/>
+    <bind id="dDueNext" nodeset="tblActions/dDueNext" required="false()" type="date"/>
+    <bind id="nFrequency" nodeset="tblActions/nFrequency" required="true()" type="number"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit FTPUploadPage</label>
+    <group>
+      <group>
+        <input bind="nActionKey" class="hidden">
+          <label>nActionKey</label>
+          <value/>
+        </input>
+        <input bind="nWebsite" class="hidden">
+          <label>nWebsite</label>
+          <value/>
+        </input>
+        <input bind="cSourceURL" class="required short">
+          <label>Page URL</label>
+          <value/>
+        </input>
+        <input bind="cFTPServer" class="required short">
+          <label>FTP Server</label>
+          <value/>
+        </input>
+        <input bind="cFTPUserName" class="required short">
+          <label>FTP Username</label>
+          <value/>
+        </input>
+        <input bind="cFTPPassword" class="required short">
+          <label>FTP Password</label>
+          <value/>
+        </input>
+        <input bind="cFTPFilePath" class="required short">
+          <label>FTP File Path</label>
+          <value/>
+        </input>
+        <input bind="cFTPFileName" class="required short">
+          <label>FTP File Name</label>
+          <value/>
+        </input>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+          <value/>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+          <value/>
+        </input>
+        <input bind="dLastComplete" class="short readonly">
+          <label>Last Done</label>
+          <value/>
+        </input>
+        <input bind="dDueNext" class="short readonly">
+          <label>Next Due</label>
+          <value/>
+        </input>
+      </group>
+      <group>
+        <label>Frequency</label>
+        <input bind="nFrequency" class="required short">
+          <label>Interval (Minutes)</label>
+          <value/>
+        </input>
+      </group>
+    </group>
+    <group>
+      <submit submission="" ref="ewSubmit" class="principle">
+        <label>Save Feed</label>
+      </submit>
+    </group>
+  </group>
+</Content>

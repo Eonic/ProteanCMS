@@ -1,0 +1,489 @@
+﻿//FORM LAYOUT MIXINS
+
+.horizontal-form(@labelwidth:3;){
+	fieldset fieldset.inline{
+		margin-left:-(@grid-gutter-width/2);
+		margin-right:-(@grid-gutter-width/2);
+        
+        > .form-group{
+            margin-left:0;
+            margin-right:0;
+            padding-left:0;
+            padding-right:0;
+        }
+	}
+    fieldset fieldset.inline-items{
+        margin-left:0;
+		margin-right:0;
+        legend{
+            padding-left:0;
+            padding-right:0;
+        }
+    }
+	fieldset fieldset fieldset{
+		margin-left:0;
+		margin-right:0;
+	}
+	/*legend,
+	.form-text{
+		padding-left:(@grid-gutter-width/2);
+		padding-right:(@grid-gutter-width/2);
+	}*/
+	.form-horizontal;
+	div.form-group{
+		.alert{
+			margin-left:(@grid-gutter-width/2);
+			margin-right:(@grid-gutter-width/2);
+		}
+	}
+	label{
+		.make-sm-column(@labelwidth);
+	}
+	.input-wrapper,
+	.upload-wrapper,
+	.select1-wrapper,
+	.secret-wrapper,
+	.textarea-wrapper,
+	.input-group,
+	.select-group .select-wrapper,
+	.checkbox-group .select-wrapper,
+	.range-wrapper{
+		.make-sm-column((12 - @labelwidth));
+	}
+	.upload-wrapper .input-group{padding:0;}
+	.checkbox,
+	.radiocheckbox{
+		padding-top:0;
+		label{
+			.make-sm-column(12);
+		}
+	}
+	.select1-wrapper .checkbox,
+	.select1-wrapper .radiocheckbox{
+		@media(max-width:@screen-xs-max){padding-left:5px;}
+		padding-right:0;
+	}
+	.select-wrapper .checkbox{
+		padding-right:0;
+	}
+	.li-2col{
+		.form-actions{.make-sm-column(12);}
+	}
+	.addressGrp{
+		.make-sm-column(6);
+	}
+    .alert-wrapper{
+        .make-sm-column-offset(@labelwidth);
+        padding:5px 0 0 (@grid-gutter-width / 2);
+        float:left;
+        background:transparent;
+    }
+    .relatedContent-group{
+        margin-left:0;
+        margin-right:0;
+    }
+}
+.hide-label(){
+    .input-containing > label,
+    .textarea-group > label{.sr-only}
+    /*.checkbox-group,
+    .radio-group,
+    .range-group,
+    .pickImageFile,
+    .pickDocument,
+    .pickMedia,
+    .upload-group,
+    .TextArea,
+    .radiocheckbox,
+    .checkbox{
+        label{
+            position: static;
+            width: auto;
+            height: auto;
+            margin: 0;
+            overflow: auto;
+        }
+    }*/
+}
+.Site{
+    .horizontalForm .ewXform{.horizontal-form;}
+    .hideLabel .ewXform{.hide-label;}
+//------------------------------------------------
+
+//FORMS
+//------------------------------------------------
+	.ewXform{
+        legend{
+            border-bottom:0;
+            margin-bottom:5px;
+        }
+        fieldset fieldset{margin-bottom:12px;}
+        .alert-wrapper .fa-exclamation-triangle{
+            font-size: 1.1em;
+            padding-right: 5px;
+            margin-top: 3px;
+            padding-bottom:0;
+        }
+        .alert-danger{
+            padding:20px;
+            h3{margin:0;}
+        }
+        input.form-control{height:40px;}
+		div.form-group div.form-group{
+			margin:0;
+		}
+		div.form-group{
+			margin-left:0;
+			margin-right:0;
+		}
+		.inline div.form-group{
+			padding-left:0;
+			padding-right:0;
+		}
+		.clearfix();
+		label{
+			color:@text-color;
+			font-weight:400;
+		}
+		.dropdown{
+			padding-left:3px;
+			font-size:0.95em;
+		}
+		.short{width:auto;}
+		.input-wrapper,
+		.select1-wrapper,
+		.secret-wrapper,
+		.textarea-wrapper,
+		.input-group{
+			font-size:1em;
+		}
+		.button{
+			.btn;
+			.btn-default;
+			.pull-right();
+		}
+        .btn-primary{
+            .btn-mixin(@brand-primary);
+        }
+        .btn-default{
+            .btn-mixin(@btn-default-bg);
+        }
+        .input-group .input-group-btn .btn{
+            border-radius:0 5px 5px 0;
+            font-size:14px;
+        }
+		.select1-wrapper .radiocheckbox{
+			width:100%;
+			label{
+				padding-top:0;
+				padding-right:16px;
+				padding-left:1.1em;
+				position:relative;
+				input{
+					@media(min-width:@screen-sm-min){
+						position:absolute;
+						left:0;
+					}
+				}
+			}
+		}
+		.inline-items{.clearfix;}
+		.inline-items .select1-wrapper .radiocheckbox,
+		.inline-items .select-wrapper .checkbox{
+			width:auto;
+			float:left;
+			padding-right:20px;
+		}
+		input.qtybox{
+			width:auto!important;
+			padding:5px 3px 4px;
+			margin-right:5px;
+		}
+		input.qtyButton{
+			.btn;
+			.btn-sm;
+			.btn-info;
+		}
+		input,
+		select{color:#333;}
+		.input-wrapper .textbox{
+			.form-control;
+            height:40px;
+			color:#333;
+		}
+		.qty-product{
+			float:left;
+			.qty-label{
+				padding-left:0;
+				width:auto;
+				padding-top:4px;
+			}
+			button{
+				.btn-sm;
+				margin-right:5px;
+			}
+		}
+		.radiocheckbox{
+			input,
+			label{
+				width:auto!important;
+				float:left;
+			}
+			input{box-shadow:none;}
+		}
+		.addressGrp{
+			ol{
+				padding:0;
+				list-style:none;
+			}
+			.button{
+				.btn-info;
+				.btn-sm;
+				.pull-left();
+				margin-right:10px;
+			}
+		}
+		.range-wrapper{
+			input{
+				width:60px;
+				float:left;
+			}
+			div.slider{
+				float:left;
+				width: 50%;
+				margin: 10px 0 0 29px;
+				span{display:none;}
+				span.ui-slider-handle{display:block}
+			}
+		}
+		.upload-wrapper input,
+		input.imgVerification{
+			padding: 8px 12px;		
+		}
+		span.req{color:@brand-danger;}
+		.textarea-wrapper textarea{width:100%;}
+		.input-wrapper .input-group{
+			padding:0;
+			width:100%;
+			label.btn{
+				width: 100%;
+				padding: 8px 15px;
+				border-radius: 0 @btn-radius-base @btn-radius-base 0;
+			}
+		}
+		table button.btn{margin:0 0 10px 10px;}
+		.popoverContent{display:none;}
+		.checkbox,
+		.radiocheckbox{
+			margin-top:0;
+			margin-bottom:0;
+			padding-top:0;
+			padding-left:0;
+			.clearfix;
+			label{
+				padding-top:0;
+				margin-top:0;
+			}
+		}
+		.alert-outer,
+        .has-alert{
+			input,
+			textarea{border-color:@brand-danger!important;}
+			.alert{
+				float:right;
+				i.fa-2x{font-size:1.5em;}
+				padding:5px;
+			}
+
+		}
+		.input-group-btn > .btn{min-height:40px;}
+        .alert-wrapper{
+            float:none;
+            margin:0;
+            background:transparent;
+            padding:5px 0 0;
+        }
+	    .inline{
+		    margin-left:-(@grid-gutter-width/2);
+		    margin-right:-(@grid-gutter-width/2);
+		    div.form-group,
+		    legend,
+		    .form-text{
+			    padding-left:(@grid-gutter-width/2);
+			    padding-right:(@grid-gutter-width/2);
+		    }
+	    }
+        
+	}
+    /*.ewXform when(@form-placeholders = true){
+        label{display:none;}
+        .checkbox-group,
+        .radio-group,
+        .range-group,
+        .pickImageFile,
+        .pickDocument,
+        .pickMedia,
+        .upload-group,
+        .TextArea,
+        .radiocheckbox,
+        .checkbox{
+            label{display:block;}
+        }
+
+    }*/
+	.ewXform{
+		input,
+		select,
+		textarea,
+		.input-wrapper .textbox{
+			border:1px solid @tint-border;
+			border-radius:0!important;
+			.clear-shadow;
+		}
+	}
+	.searchBrief{
+		input{padding:6px;}
+		.btn{border-radius:0 @btn-radius-base @btn-radius-base 0;}
+	}
+//------------------------------------------------
+
+//ECOMMERCE
+//------------------------------------------------
+    
+	.cartButtons .btn{float:left}	
+    #cartListing{margin-top:20px;}
+	#SelectCurrency .radiocheckbox{margin-left:0;}
+	.cartButtons{margin-top:@line-height-computed;}
+	.payment-tcs .ewXform{
+		.radiocheckbox{
+			padding-left:0px;
+			margin-left:0;
+			display:block;
+			padding-bottom:5px;
+			.clearfix();
+		}
+		.control-wrapper{padding-left:15px;}
+		.textarea-wrapper{float:left;}
+		.select-wrapper{
+			float:left;
+			margin-left:18px;
+			white-space:nowrap;
+		}
+        .terms-and-condiditons .textarea-wrapper{
+            float:none;
+            padding-left:0;
+            padding-right:0;
+        }
+	}
+	.check-address .ewXform{
+		.make-sm-column(6);
+		.addressTitle{font-weight:bold;}
+		.button{
+			.btn-info;
+			.btn-sm;
+			.pull-left();
+		}
+	}
+	.basket .ewXform button.btn-info{
+		float:left;
+		margin-right:10px;
+	}
+	.addressTitle{font-weight:bold;}
+	#cartStepper #MyWizard{
+		background:@light-tint;
+		margin-bottom:@box-margin;
+		border:none;
+		.clear-shadow;
+		.badge{.clear-shadow;}
+		ul.steps{
+			width:100%;
+			li{
+				width:20%;
+				background-color:@stronger-tint;
+				color:contrast(@stronger-tint,#fff,@contrast-color);
+				font-size:1em;
+				cursor:inherit;
+				&:first-child{
+					border-radius:@border-radius-base 0 0 @border-radius-base;
+				}
+				&:last-child{
+					border-radius:0 @border-radius-base @border-radius-base 0;
+				}
+				span.chevron{border-left-color:@content-bg;}
+				span.chevron:before{border-left:14px solid @stronger-tint;}
+				span.badge{
+					background-color:contrast(@stronger-tint,#fff,@contrast-color);
+					color:@stronger-tint;
+					padding-right: 6px;
+					padding-left: 6px;
+				}
+				span.step-text{
+					display:none;
+					@media (min-width: @screen-sm-min){
+						display:inline;
+					}
+				}
+			}
+			li.complete{
+				background-color:@brand-success;
+                color:contrast(@brand-success,#fff,@contrast-color);
+				cursor:inherit;
+				span.chevron:before{border-left:14px solid @brand-success;}
+				span.badge{
+					background-color:contrast(@brand-success,#fff,@contrast-color);
+					color:@brand-success;
+				}
+			}
+			li.active{
+				background-color:@brand-action;
+                color:contrast(@brand-action,#fff,@contrast-color);
+				span.badge{
+					background-color:contrast(@brand-action,#fff,@contrast-color);
+					color:@brand-action;
+				}
+				span.chevron:before{border-left:14px solid @brand-action;}
+			}
+		}
+	}
+	
+	 #cartFull .basket .ewXform{
+		.cart-btns-top{
+			margin-bottom:@line-height-computed;
+			margin-top:3px;
+		}
+		.cart-btns-top .btn-info{margin-top:8px;}
+		tr.orderItem td{padding-top:10px;}
+		td input,
+		td .delete-btn{margin-top:-3px;}
+		table .delete,
+		table .quantity{width:45px;}
+		.linePrice,
+		.lineTotal{width:110px;}
+		a.delete-btn{
+			padding:4px 7px 3px;
+			i{font-size:1.4em;}
+		}
+		.total{font-weight:700} 
+	}
+	#cartFull{margin-bottom:@line-height-computed;}
+	#optionsForm .readonly .textarea-wrapper .textareaReadOnly{
+		height: 200px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		border:1px solid @tint-border;
+		padding: 10px;
+		border-radius: 4px;
+		font-size: 0.85em;
+	}
+	.blueEdge form .btn-sm{
+		float:left;
+		margin-right:10px;
+	}
+	#cartCurrencyBox{
+		span.radiocheckbox{padding-left:0;}
+	}
+	.cart-summary button{
+		float:left;
+		margin-right:10px;
+	}
+}

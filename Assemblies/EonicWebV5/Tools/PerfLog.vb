@@ -240,7 +240,11 @@ Public Class PerfLog
                     If Not Entries(i) = "" Then
                         cProcessInfo = Entries(i)
                         oCmd.CommandText = Entries(i)
-                        oCmd.ExecuteNonQuery()
+                        Try
+                            oCmd.ExecuteNonQuery()
+                        Catch ex As Exception
+
+                        End Try
                     End If
                 Next
                 oCon.Close()

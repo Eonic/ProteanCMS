@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content action="Eonic.Web+Search+Modules.GetResults" moduleType="Search" searchMode="" contentType="SearchResult" box="" title="" sortBy="Position" order="" cols="1" display="related" stepCount="0" position=""/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cSearchMode" nodeset="@searchMode" required="true()" type="string"/>
+      <bind id="cContentType" nodeset="@contentType" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cSubmitLabel" nodeset="@submitLabel" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Add/Edit Search Content Module</label>
+    <group>
+      <group>
+        <label>Settings</label>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden"/>
+        <input bind="cModuleType" class="hidden"/>
+        <input bind="cDisplay" class="hidden"/>
+        <input bind="nStepCount" class="hidden"/>
+        <!-- end of hidden fields -->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Module title or name</label>
+        </input>
+      </group>
+      <group class="form-group">
+        <label>Search type</label>
+        <select1 bind="cSearchMode" appearance="full" class="required">
+          <label>Search Type</label>
+          <help class="inline">
+            <dl>
+              <dt>Content search</dt>
+              <dd>
+                <p>Ideal for searching a particular type of content e.g. products. Returns links to content detailed pages.</p>
+              </dd>
+              <dt>Site search</dt>
+              <dd>
+                <p>Used for prodiminatly text heavy sites. Indexes each page much like a search engine would. Returns pages as results</p>
+              </dd>
+              <!--<dt>Full search</dt>
+            <dd>
+              <p>Used for online journals or publications. An index search but also has the power to follow down links to documents and index the contents of the documents.</p>
+            </dd>-->
+              <dt>User search</dt>
+              <dd>† Requires Membership. Ideal for large community sites. Searches for other users</dd>
+            </dl>
+          </help>
+          <item>
+            <label>Content search</label>
+            <value>REGEX</value>
+            <toggle case="cSearchMode_0" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Site search</label>
+            <value>INDEX</value>
+            <toggle case="cSearchMode_1" event="DOMActivate"/>
+          </item>
+          <!--<item>
+          <label>Full search</label>
+          <value>XPATH</value>
+          <toggle case="cSearchMode_2" event="DOMActivate"/>
+        </item>-->
+          <item>
+            <label>User search †</label>
+            <value>USER</value>
+            <toggle case="cSearchMode_3" event="DOMActivate"/>
+          </item>
+          <!--<item>
+          <label>Bespoke</label>
+          <value>BESPOKE</value>
+        </item>-->
+        </select1>
+        <switch class="disable">
+          <case id="cSearchMode_0">
+            <select1 bind="cContentType" appearance="minimal">
+              <label>Content type</label>
+              <item>
+                <label>Products</label>
+                <value>Product</value>
+              </item>
+              <item>
+                <label>News articles</label>
+                <value>NewsArticle</value>
+              </item>
+              <item>
+                <label>Events</label>
+                <value>Event</value>
+              </item>
+              <item>
+                <label>Documents</label>
+                <value>Document</value>
+              </item>
+              <item>
+                <label>Vacancies</label>
+                <value>Job</value>
+              </item>
+              <item>
+                <label>Videos</label>
+                <value>Video</value>
+              </item>
+            </select1>
+          </case>
+          <case id="cSearchMode_1"/>
+          <case id="cSearchMode_2"/>
+          <case id="cSearchMode_3"/>
+        </switch>
+        <input bind="cSubmitLabel" class="short">
+          <label>Submit button text</label>
+        </input>
+      </group>
+      <group class="form-group">
+        <label>Display results</label>
+        <select1 bind="cSortBy" appearance="full" class="">
+          <item>
+            <label>Ranking (relevancy)</label>
+            <value>Position</value>
+            <toggle case="cSortBy_0" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Alphabetical</label>
+            <value>Name</value>
+            <toggle case="cSortBy_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Publish date</label>
+            <value>publish</value>
+            <toggle case="cSortBy_2" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Price (Products Only)</label>
+            <value>Price</value>
+            <toggle case="cSortBy_3" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cSortBy_0"/>
+          <case id="cSortBy_1">
+            <select1 bind="cPageOrder" appearance="minimal" class="vshort">
+              <label>Order</label>
+              <item>
+                <label>A to Z</label>
+                <value>ascending</value>
+              </item>
+              <item>
+                <label>Z to A</label>
+                <value>descending</value>
+              </item>
+            </select1>
+          </case>
+          <case id="cSortBy_2">
+            <select1 bind="cPageOrder" appearance="minimal" class="vshort">
+              <label>Order</label>
+              <item>
+                <label>Newest to Oldest</label>
+                <value>descending</value>
+              </item>
+              <item>
+                <label>Oldest to Newest</label>
+                <value>ascending</value>
+              </item>
+            </select1>
+          </case>
+          <case id="cSortBy_3">
+            <select1 bind="cPageOrder" appearance="minimal" class="vshort">
+              <label>Order</label>
+              <item>
+                <label>Lowest to Highest</label>
+                <value>ascending</value>
+              </item>
+              <item>
+                <label>Highest to Lowest</label>
+                <value>descending</value>
+              </item>
+            </select1>
+          </case>
+          <case id="cSortBy_4" />
+        </switch>
+        <select1 bind="nColumns" appearance="full" class="required vshort">
+          <label>Number of columns</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
+        </select1>
+        <select1 bind="cModuleLink" class="siteTree">
+          <label>Link to page</label>
+        </select1>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Module</label>
+    </submit>
+  </group>
+</Content>

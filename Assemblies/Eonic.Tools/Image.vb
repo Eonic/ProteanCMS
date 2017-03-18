@@ -13,6 +13,8 @@ Public Class Image
     Private cLocation As String 'Location of the file to load
     Private bKeepRelational As Boolean = True 'keep sizes relation or skew
     Private oImg As System.Drawing.Bitmap 'the base image
+    Private oSourceImg As System.Drawing.Bitmap 'the base image
+    Private oGraphics As Graphics
     Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
     Private Const mcModuleName As String = "Eonic.Tools.Image"
     Private bCrop As Boolean = False 'Crop the image?
@@ -43,14 +45,51 @@ Public Class Image
         End Try
     End Sub
 
+    Public Sub Close()
+        'closes
+        Try
+            If Not oGraphics Is Nothing Then
+                oGraphics.Dispose()
+                oGraphics = Nothing
+            End If
+            If Not oImg Is Nothing Then
+                oImg.Dispose()
+                oImg = Nothing
+            End If
+            If Not oSourceImg Is Nothing Then
+                oSourceImg.Dispose()
+                oSourceImg = Nothing
+            End If
+            Me.Finalize()
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""))
+        End Try
+    End Sub
+
     Public Sub ReLoad()
         'load the image
         Try
             If IO.File.Exists(cLocation) Then
-                oImg = System.Drawing.Image.FromFile(cLocation)
+                Using stream = File.OpenRead(cLocation)
+                    oImg = System.Drawing.Image.FromStream(stream)
+                End Using
+                'oImg = System.Drawing.Image.FromFile(cLocation)
             End If
         Catch ex As Exception
             RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ReLoad", ex, ""))
+        End Try
+    End Sub
+
+    Public Sub UploadProcessing(ByVal _WatermarkText As String, _WatermarkImgPath As String)
+        Try
+            If _WatermarkText <> "" Then
+                AddWatermark(oImg, _WatermarkText, _WatermarkImgPath)
+            End If
+            'overwrite
+
+
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 
@@ -78,15 +117,7 @@ Public Class Image
         End Try
     End Sub
 
-    Public Sub Close()
-        'closes
-        Try
-            oImg.Dispose()
-            Me.Finalize()
-        Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""))
-        End Try
-    End Sub
+
 
     Public Sub Reflect(ByVal _BackgroundColor As Color, ByVal _Reflectivity As Integer)
         ' Calculate the size of the new image
@@ -246,11 +277,15 @@ Public Class Image
                         Resize(nMaxWidth, 0)
                     ElseIf ((oImg.Height < nMaxHeight) And (oImg.Width >= nMaxWidth)) Then
                         Resize(0, nMaxHeight)
+                    ElseIf ((oImg.Width < nMaxWidth) And (oImg.Height < nMaxHeight)) Then
+                        'Do nothing for if both smaller!
+                        'Blow it up....
+                        If oImg.Width < oImg.Height Then
+                            Resize(0, nMaxHeight)
+                        Else
+                            Resize(nMaxWidth, 0)
+                        End If
                     End If
-                    'Do nothing for if both smaller!
-
-
-
                 End If
 
                 'If oImg.Height < oImg.Width Then
@@ -295,6 +330,8 @@ Public Class Image
                     ElseIf (oImg.Height >= nMaxHeight) Then
                         Resize(0, nMaxHeight)
                     Else
+                        'increase size of the image
+                        Resize(oImg.Width, oImg.Height)
                         ' Do nothing if both smaller!
                     End If
 
@@ -333,9 +370,9 @@ Public Class Image
     Private Function ImageResize(ByVal oImage As System.Drawing.Image, ByVal nHeight As Int32, ByVal nWidth As Int32) As System.Drawing.Image
         'does the actual resize
         Try
-            Dim oBitmapOrig As New Bitmap(oImage)
-            Dim oBitmapNew As New Bitmap(nWidth, nHeight)
-            Dim oGraphics As Graphics = Graphics.FromImage(oBitmapNew)
+            oSourceImg = New Bitmap(oImage)
+            oImg = New Bitmap(nWidth, nHeight)
+            oGraphics = Graphics.FromImage(oImg)
             'GFX Additions--
             'Trev
             ' oGraphics.Clear(Color.White)
@@ -345,8 +382,8 @@ Public Class Image
             oGraphics.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
             oGraphics.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
             '--
-            oGraphics.DrawImage(oBitmapOrig, 0, 0, oBitmapNew.Width, oBitmapNew.Height)
-            oImage = oBitmapNew
+            oGraphics.DrawImage(oSourceImg, 0, 0, oImg.Width, oImg.Height)
+            oImage = oImg
             'Added--
             If bCrop Then oImage = CropImage(oImage)
             '-------
@@ -376,8 +413,9 @@ Public Class Image
 
     Private Function SaveJPGWithCompressionSetting(ByVal theImg As System.Drawing.Image, ByVal szFileName As String, ByVal compression As Long, Optional ByVal serverPath As String = "") As Boolean
         'save the image
+        Dim cProcessInfo As String = ""
         Try
-            
+
             If serverPath <> "" Then
                 If Directory.Exists(serverPath) = False Then
                     Directory.CreateDirectory(serverPath)
@@ -386,22 +424,101 @@ Public Class Image
 
             If szFileName.EndsWith(".gif") Then
                 theImg.Save(Replace(szFileName, ".gif", ".png"), ImageFormat.Png)
+
+                Dim imgFile As New FileInfo(Replace(szFileName, ".gif", ".png"))
+                If compression = 100 Then
+                    CompressImage(imgFile, True)
+                Else
+                    CompressImage(imgFile, False)
+                End If
+
             ElseIf szFileName.EndsWith(".png") Then
                 theImg.Save(szFileName, ImageFormat.Png)
+
+                Dim imgFile As New FileInfo(szFileName)
+                If compression = 100 Then
+                    CompressImage(imgFile, True)
+                Else
+                    CompressImage(imgFile, False)
+                End If
+
             Else
                 Dim eps As New EncoderParameters(1)
-                eps.Param(0) = New EncoderParameter(Imaging.Encoder.Quality, compression)
+                eps.Param(0) = New EncoderParameter(Imaging.Encoder.Quality, 100)
                 Dim cEncoder As String = "image/jpeg"
                 Dim ici As ImageCodecInfo = GetEncoderInfo(cEncoder)
                 theImg.Save(szFileName, ici, eps)
-            End If
 
+                Dim imgFile As New FileInfo(szFileName)
+                If compression = 100 Then
+                    CompressImage(imgFile, True)
+                Else
+                    CompressImage(imgFile, False)
+                End If
+                imgFile.Refresh()
+
+            End If
+            cProcessInfo = cProcessInfo
             Return True
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveJPGWithCompressionSetting", ex, ""))
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveJPGWithCompressionSetting", ex, cProcessInfo))
             Return False
+        Finally
+            theImg.Dispose()
+            Close()
         End Try
     End Function
+
+    Public Function CompressImage(ByRef imgfileInfo As FileInfo, ByVal lossless As Boolean) As Long
+        Dim difference As Long
+        Try
+            'Compress the File using ImageMagick
+            Select Case LCase(imgfileInfo.Extension)
+            Case ".gif"
+
+                difference = imgfileInfo.Length
+                Dim optimizer As New ImageMagick.ImageOptimizers.GifOptimizer()
+                If lossless Then
+                    optimizer.LosslessCompress(imgfileInfo)
+                Else
+                    optimizer.OptimalCompression = True
+                    optimizer.Compress(imgfileInfo)
+                End If
+                imgfileInfo.Refresh()
+                difference = difference - imgfileInfo.Length
+            Case ".png"
+
+                difference = imgfileInfo.Length
+                Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
+                If lossless Then
+                    optimizer.LosslessCompress(imgfileInfo)
+                Else
+                    optimizer.OptimalCompression = True
+                    optimizer.Compress(imgfileInfo)
+                End If
+                imgfileInfo.Refresh()
+                difference = difference - imgfileInfo.Length
+            Case ".jpg", ".jpeg"
+
+                difference = imgfileInfo.Length
+                Dim optimizer As New ImageMagick.ImageOptimizers.JpegOptimizer()
+                If lossless Then
+                    optimizer.LosslessCompress(imgfileInfo)
+                Else
+                    optimizer.OptimalCompression = True
+                    optimizer.Compress(imgfileInfo)
+                End If
+                imgfileInfo.Refresh()
+                difference = difference - imgfileInfo.Length
+        End Select
+        Return difference
+
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+            Return 0
+        End Try
+    End Function
+
 
     Private Function CropImage(ByVal oImage As System.Drawing.Image) As System.Drawing.Image
         Try
@@ -472,6 +589,101 @@ Public Class Image
 
     End Function
 
+    Private Function AddWatermark(ByVal imgPhoto As System.Drawing.Image, ByVal _WatermarkText As String, _WatermarkImgPath As String) As System.Drawing.Image
+
+        Try
+
+            Dim phWidth As Integer = imgPhoto.Width
+            Dim phHeight As Integer = imgPhoto.Height
+
+            Dim bmPhoto As New Bitmap(phWidth, phHeight, PixelFormat.Format24bppRgb)
+            bmPhoto.SetResolution(72, 72)
+
+            Dim grPhoto As Graphics = Graphics.FromImage(bmPhoto)
+
+            grPhoto.SmoothingMode = SmoothingMode.AntiAlias
+            grPhoto.DrawImage(imgPhoto, New Rectangle(0, 0, phWidth, phHeight), 0, 0, phWidth, phHeight, GraphicsUnit.Pixel)
+
+
+            ' Write the Watermark Text centred at the bottom of the image
+            ' Check the font size
+            Dim sizes As Integer() = New Integer() {48, 24, 20, 16, 14, 12, 10, 8, 6, 4}
+            Dim crFont As Font = Nothing
+            Dim crSize As New SizeF()
+            For i As Integer = 0 To 9
+                crFont = New Font("arial", sizes(i), FontStyle.Bold)
+                crSize = grPhoto.MeasureString(_WatermarkText, crFont)
+
+                If CUShort(crSize.Width) < CUShort(phWidth * 0.66) Then
+                    Exit For
+                End If
+            Next
+            'Place at the bottom
+            Dim yPixlesFromBottom As Integer = CInt(Math.Truncate(phHeight * 0.05))
+            Dim yPosFromBottom As Single = ((phHeight - yPixlesFromBottom) - (crSize.Height / 2))
+            Dim xCenterOfImg As Single = (phWidth / 2)
+
+            'Write the text
+            Dim StrFormat As New StringFormat()
+            StrFormat.Alignment = StringAlignment.Center
+
+            Dim semiTransBrush2 As New SolidBrush(Color.FromArgb(153, 0, 0, 0))
+
+            grPhoto.DrawString(_WatermarkText, crFont, semiTransBrush2, New PointF(xCenterOfImg + 1, yPosFromBottom + 1), StrFormat)
+
+            Dim semiTransBrush As New SolidBrush(Color.FromArgb(153, 255, 255, 255))
+
+            grPhoto.DrawString(_WatermarkText, crFont, semiTransBrush, New PointF(xCenterOfImg, yPosFromBottom), StrFormat)
+
+            'Now add the image watermark
+            If _WatermarkImgPath <> "" Then
+
+                Dim imgWatermark As System.Drawing.Image = System.Drawing.Image.FromFile(_WatermarkImgPath)
+                Dim wmWidth As Integer = imgWatermark.Width
+                Dim wmHeight As Integer = imgWatermark.Height
+
+                Dim bmWatermark As New Bitmap(bmPhoto)
+                bmWatermark.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution)
+
+                Dim grWatermark As Graphics = Graphics.FromImage(bmWatermark)
+
+
+                Dim imageAttributes As New ImageAttributes()
+                Dim colorMap As New ColorMap()
+
+                colorMap.OldColor = Color.FromArgb(255, 0, 255, 0)
+                colorMap.NewColor = Color.FromArgb(0, 0, 0, 0)
+                Dim remapTable As ColorMap() = {colorMap}
+
+                imageAttributes.SetRemapTable(remapTable, ColorAdjustType.Bitmap)
+
+                Dim colorMatrixElements As Single()() = {New Single() {1.0F, 0F, 0F, 0F, 0F}, New Single() {0F, 1.0F, 0F, 0F, 0F}, New Single() {0F, 0F, 1.0F, 0F, 0F}, New Single() {0F, 0F, 0F, 0.3F, 0F}, New Single() {0F, 0F, 0F, 0F, 1.0F}}
+
+                Dim wmColorMatrix As New ColorMatrix(colorMatrixElements)
+
+                imageAttributes.SetColorMatrix(wmColorMatrix, ColorMatrixFlag.[Default], ColorAdjustType.Bitmap)
+
+                Dim xPosOfWm As Integer = ((phWidth - wmWidth) - 10)
+                Dim yPosOfWm As Integer = 10
+
+                grWatermark.DrawImage(imgWatermark, New Rectangle(xPosOfWm, yPosOfWm, wmWidth, wmHeight), 0, 0, wmWidth, wmHeight, GraphicsUnit.Pixel, imageAttributes)
+
+                oImg = bmWatermark
+
+
+                grWatermark.Dispose()
+            Else
+                oImg = bmPhoto
+            End If
+            Save(cLocation)
+            Return oImg
+            grPhoto.Dispose()
+
+        Catch ex As Exception
+            Return imgPhoto
+        End Try
+
+    End Function
 
 #End Region
 

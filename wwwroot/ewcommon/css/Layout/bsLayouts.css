@@ -1,0 +1,1354 @@
+.fullwidth #isotope-module .module{height:auto;}
+
+a:hover{text-decoration:none;}
+a:hover,a:focus{text-decoration:none!important;}
+
+/* ################################# Basic list styling ################################# */
+#mainLayout ol li
+{
+	margin-left: 20px;
+	list-style-position: inside;
+	margin-bottom: 1em;
+}
+#mainLayout ul li{list-style:disc}
+#mainLayout ol li{list-style:decimal}
+#mainLayout .ewXform ol li
+{
+	margin:0;
+	padding:0;	
+}
+
+/* ################################# Common Elements and Classes ################################# */
+.centerHeading{text-align: center;}
+.pointer{cursor: pointer;}
+.listItem hr{display: none;}
+.hidden{display: none !important;}
+/* === Terminus : blank item to stop floating items exceeding their containers === */
+.terminus{clear: both;line-height:0px;}
+
+/* WTF - probably another underlying issue for you to need the below. */
+/*.listItem .terminus,.detail .terminus{clear:right;}*/
+
+/* ############################ navigation classes ############################ */
+
+.Site .nav ul,
+.Site .nav li
+{
+    margin:0;
+    padding:0
+}
+.Site .nav li
+{
+    display:inline;
+    list-style:none
+}
+.Site .nav ul a
+{
+    display:block
+}
+.Site .hnav ul li,
+.Site .hnav ul a
+{
+    float:left
+}
+
+
+/* ############################ generic classes ############################ */
+.Site .backlink, .Site .morelink
+{
+	text-align:right;
+	clear:right
+}
+.Site .box 
+{
+	margin-bottom:15px;
+	height: 1%; /* !!!!! Stops full page width boxes breaking in IE6 & 7 - No effect in Moz !!!!! */
+}
+.Site .boxnotitle .tr
+{
+	font-size: 0;
+	line-height: 0;
+	min-height:10px;
+}
+.Site .discountinfo
+{
+	vertical-align: super;
+}
+
+.Site .listItem
+{
+	border-bottom:solid 1px #ccc;
+	padding-bottom:10px;
+	float: left;
+	width: 100%;
+}
+.Site .listItem IMG.thumbnail, 
+.Site .listItem IMG.picture, 
+.Site .detail span.picture
+{
+    float: right;
+    margin: 0 0 15px 20px;
+}
+.Site img.alignleft
+{
+    margin: 0 15px 15px 0;
+    float: left;
+}
+.Site img.alignright,
+.Site div.alignright
+{
+    margin: 0 0 15px 15px;
+    float:right;
+}
+.Site .entryFooter
+{
+	clear:both;
+}
+
+.Site .GalleryImageList .listItem img.thumbnail 
+{
+	margin-left: auto !important;
+	margin-right: auto !important;
+	float:none;
+}
+
+.Site .GalleryImageList .listItem span.image
+{
+	display: block;
+	text-align: center;
+}
+
+.Site .GalleryImageList .listItem span.image
+{
+	display: block;
+	text-align: center;
+}
+
+.Site .GalleryImageList .listItem h2
+{
+	text-align: center;
+}
+
+.Site .detail span.picture
+{
+	/*Remmed as was causing issue on SKU image changer*/
+	/*display:block;*/
+}
+
+.Site .detail span.picture span
+{
+	text-align:right;
+	display:block;
+}
+/* Old code for old sotes, but cant have a div in an anchor, so changed to span. */
+.Site .detail span.picture div{text-align:right;}
+
+
+.Site .listItem IMG
+{
+	margin: 15px 15px 0 0;
+}
+.Site .qtybox
+{
+	width:35px!important;
+	text-align:right;
+}
+.Site .stepper, .Site .stepper P 
+{
+	margin: 0; /* Overrules any other P settings */
+	padding: 0 ;
+}
+.Site .stepper P
+{
+	text-align: right;
+}
+.Site .template table
+{
+	width:99%;
+}
+.Site .textareaReadOnly
+{
+   overflow: scroll;
+   height: 8em;
+   padding: 0.5em;
+   border-width: 1px;
+   border-style: solid;
+   margin-bottom: 1em;
+}
+
+.Site #developerLink a
+{
+	text-decoration:none;
+	font-weight:400;
+	float:right;
+	padding:3px 10px;
+}
+.Site #developerLink a:hover
+{
+	text-decoration:none;
+}
+/* =##########========== FLASH STUFF ============###########= */
+.Site .list .FVPlayer
+{
+    width: 200px;
+    float: right; 
+    margin-left: 15px;
+    margin-bottom: 15px;  
+}
+.Site .detail .FVPlayer OBJECT
+{
+    margin-bottom: 15px;
+    z-index:inherit;
+}
+.Site div#mapWindowContainer
+{
+	visibility: hidden;
+}
+
+/* =##########========== POLL STUFF ============###########= */
+.Site .pollBar
+{
+	background: #bcbcbc;
+	border: 1px solid #000;
+	height: 25px;
+}
+.Site .optionResult
+{
+	padding: 0 0 5px 10px;
+}
+.Site .pollsubmission
+{
+	padding: 20px 5px 10px 15px;
+	text-align: left;
+}
+.Site .pollsubmission input
+{
+	float: none;	
+}
+.Site ul.sitemap li p
+{
+	padding: 0 0 5px 0 !important;
+	margin: 0 !important;
+	line-height: 1.3em;
+}
+/* =##########========== TESTIMONIAL STUFF ============###########= */
+.Site .source
+{
+	text-align: right;	
+}
+.Site .sourceName
+{
+	font-weight: bold;	
+}
+
+/* ##########========== VIDEO STUFF ============###########= */
+.Site .FVPlayer
+{
+    width: 200px;
+    float: right; 
+    margin-left: 5px;
+    margin-bottom: 5px;  
+}
+.Site .detail .FVPlayer OBJECT
+{
+    margin-bottom: 20px;
+    z-index:inherit;
+}
+.Site div#mapWindowContainer
+{
+	visibility: hidden;
+}
+
+/* ##################################  Calendar Styling for Date input ################################### */
+/* The main calendar widget.  DIV containing a table. */
+
+input.calendar {
+  position: relative;
+  /*display: none;	*/
+  border: 0px ;
+  cursor: default;
+  width:180px;
+}
+
+.Site .fullwidth .ewXform input.calendar, .Site .ewXform input.calendar {
+  width:170px !important;
+}
+
+.calendar table {
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  font-size: 11px;
+  color: #000;
+  cursor: default;
+  background: #c8d0d4;
+  font-family: tahoma,verdana,sans-serif;
+}
+
+/* Header part -- contains navigation buttons and day names. */
+
+.calendar .button { /* "<<", "<", ">", ">>" buttons have this class */
+  text-align: center;
+  padding: 1px;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+}
+
+.calendar .nav {
+  background: transparent url(menuarrow.gif) no-repeat 100% 100%;
+}
+
+.calendar thead .title { /* This holds the current "month, year" */
+  font-weight: bold;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788084;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar thead .headrow { /* Row <TR> containing navigation buttons */
+}
+
+.calendar thead .daynames { /* Row <TR> containing the day names */
+}
+
+.calendar thead .name { /* Cells <TD> containing the day names */
+  border-bottom: 1px solid #000;
+  padding: 2px;
+  text-align: center;
+  background: #e8f0f4;
+}
+
+.calendar thead .weekend { /* How a weekend day name shows in header */
+  color: #f00;
+}
+
+.calendar thead .hilite { /* How do the buttons in header appear when hover */
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: 2px solid #fff;
+  padding: 0px;
+  background-color: #d8e0e4;
+}
+
+.calendar thead .active { /* Active (pressed) buttons in header */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  background-color: #b8c0c4;
+}
+
+/* The body part -- contains all the days in month. */
+
+.calendar tbody .day { /* Cells <TD> containing month days dates */
+  width: 2em;
+  text-align: right;
+  padding: 2px 4px 2px 2px;
+}
+.calendar tbody .day .othermonth{
+  font-size: 80%;
+  color: #aaa;
+}
+.calendar tbody .day .othermonth .oweekend {
+  color: #faa;
+}
+
+.calendar table .wn {
+  padding: 2px 3px 2px 2px;
+  border-right: 1px solid #000;
+  background: #e8f4f0;
+}
+
+.calendar tbody .rowhilite td {
+  background: #d8e4e0;
+}
+
+.calendar tbody .rowhilite td.wn {
+  background: #c8d4d0;
+}
+
+.calendar tbody td.hilite { /* Hovered cells <TD> */
+  padding: 1px 3px 1px 1px;
+  border: 1px solid;
+  border-color: #fff #000 #000 #fff;
+}
+
+.calendar tbody td.active { /* Active (pressed) cells <TD> */
+  padding: 2px 2px 0px 2px;
+  border: 1px solid;
+  border-color: #000 #fff #fff #000;
+}
+
+.calendar tbody td.selected { /* Cell showing selected date */
+  font-weight: bold;
+  padding: 2px 2px 0px 2px;
+  border: 1px solid;
+  border-color: #000 #fff #fff #000;
+  background: #d8e0e4;
+}
+
+.calendar tbody td.weekend { /* Cells showing weekend days */
+  color: #f00;
+}
+
+.calendar tbody td.today { /* Cell showing today date */
+  font-weight: bold;
+  color: #00f;
+}
+
+.calendar tbody .disabled { color: #999; }
+
+.calendar tbody .emptycell { /* Empty cells (the best is to hide them) */
+  visibility: hidden;
+}
+
+.calendar tbody .emptyrow { /* Empty row (some months need less than 6 rows) */
+  display: none;
+}
+
+/* The footer part -- status bar and "Close" button */
+
+.calendar tfoot .footrow { /* The <TR> in footer (only one right now) */
+}
+
+.calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
+  background: #e8f0f4;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788084;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar tfoot .hilite { /* Hover style for buttons in footer */
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  padding: 1px;
+  background: #d8e0e4;
+}
+
+.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+/* Combo boxes (menus that display months/years for direct selection) */
+
+.calendar .combo {
+  position: absolute;
+  display: none;
+  width: 4em;
+  top: 0px;
+  left: 0px;
+  cursor: default;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  background: #d8e0e4;
+  font-size: 90%;
+  padding: 1px;
+  z-index: 100;
+}
+
+.calendar .combo .label,
+.calendar .combo .label-IEfix {
+  text-align: center;
+  padding: 1px;
+}
+
+.calendar .combo .label-IEfix {
+  width: 4em;
+}
+
+.calendar .combo .active {
+  background: #c8d0d4;
+  padding: 0px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+.calendar .combo .hilite {
+  background: #048;
+  color: #aef;
+}
+
+.calendar td.time {
+  border-top: 1px solid #000;
+  padding: 1px 0px;
+  text-align: center;
+  background-color: #e8f0f4;
+}
+
+.calendar td.time .hour,
+.calendar td.time .minute,
+.calendar td.time .ampm {
+  padding: 0px 3px 0px 4px;
+  border: 1px solid #889;
+  font-weight: bold;
+  background-color: #fff;
+}
+
+.calendar td.time .ampm {
+  text-align: center;
+}
+
+.calendar td.time .colon {
+  padding: 0px 2px 0px 3px;
+  font-weight: bold;
+}
+
+.calendar td.time span.hilite {
+  border-color: #000;
+  background-color: #667;
+  color: #fff;
+}
+
+.calendar td.time span.active {
+  border-color: #f00;
+  background-color: #000;
+  color: #0f0;
+}
+
+
+/* ################################## Preview bar for admin mode ################################## */
+
+#previewBar
+{
+	background: #46065C url(/ewcommon/images/eonic_skin/infoBar_bg.gif) top left repeat-x;	
+	border: 1px solid #000;
+	border-bottom: none;
+	min-height:38px;
+	color:#fff;
+}
+
+#previewBar #adminSubMenu2
+{
+	margin-top: 3px;
+	white-space: nowrap;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+
+#previewBar #adminSubMenu2 ul
+{
+	display:block;
+	margin:10px 0 0 0
+}
+
+#previewBar #adminSubMenu2 li
+{	position: relative;
+	list-style: none;
+}
+
+#previewBar #adminSubMenu2 ul a
+{
+	font-size:1em;
+	margin-right: 5px !important;	
+	display:block;
+	padding: 2px 10px 10px 10px;
+	margin-top: 1px;
+	background: #616161;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+#previewBar #adminSubMenu2 .adminSubMenu2TL
+{
+	width: 3px;
+	height: 21px;
+	position: absolute;
+	top: 0;
+	left:0;
+}
+#previewBar #adminSubMenu a.active, 
+#previewBar #adminSubMenu2 a.active
+{
+	color:#fff;
+}
+#previewBar #adminSubMenu a.on, 
+#previewBar #adminSubMenu2 a.on
+{
+	color:#fff;
+}
+#previewBar #addressBar
+{
+	position: relative;
+	padding: 10px 0 2px 15px;
+	min-height: 24px;
+	width:50%;	
+	background: url(/ewcommon/images/eonic_skin/infoBar_rhs.gif) top left no-repeat;
+	color: #FFF;	
+}
+#previewBar #infoContainer
+{
+	background: url(/ewcommon/images/eonic_skin/eonicWeb_logo_bar.gif) 40px top no-repeat;
+}
+#addressBar .TR, #addressBar .BL, #addressBar .BR {width:3px; height:3px;}
+#addressBar .R	{height:100%; width:3px;}
+#addressBar .B	{width:100%; height:3px;}
+
+#addressBar .TR	{position:absolute; top:0; right:0;}
+#addressBar .BR	{position:absolute; bottom:0; right:0;}
+#addressBar .BL	{position:absolute; bottom:0; left:0;}
+#addressBar .R	{position:absolute; top:0; right:0;}
+#addressBar .B	{position:absolute; bottom:0; left:0;}
+
+#previewBar #addressBar .R	{background: url(/ewcommon/images/eonic_skin/addressBar_R.gif) top right no-repeat;}
+#previewBar #addressBar .B	{background: url(/ewcommon/images/eonic_skin/addressBar_B.gif) bottom left no-repeat;}
+#previewBar #addressBar .TR	{background: url(/ewcommon/images/eonic_skin/addressBar_TR.gif) top right no-repeat;}
+#previewBar #addressBar .BL	{background: url(/ewcommon/images/eonic_skin/addressBar_BL.gif) bottom left no-repeat;}
+#previewBar #addressBar .BR	{background: url(/ewcommon/images/eonic_skin/addressBar_BR.gif) bottom right no-repeat;}
+
+#previewBar a
+{
+	color:#fff;
+}
+#previewBar #adminMenu
+{
+	float:right;
+}
+#previewBar #logoff
+{
+	float:right;
+	display:inline-block;
+	text-decoration:none;
+	margin-top: 4px;
+	margin-right: 7px;
+	height: 29px;
+	width: 91px;
+	background: url(/ewcommon/images/eonic_skin/logoff_off.gif) top left no-repeat;	
+}
+#previewBar #logoff:hover
+{
+	background: url(/ewcommon/images/eonic_skin/logoff_off_over.gif) top left no-repeat;	
+}
+#previewBar #adminSubMenu2 ul a
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_tr.gif) top right no-repeat;	
+}
+#previewBar #adminSubMenu2 .adminSubMenu2TL
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_tl.gif) top left no-repeat;	
+}
+#previewBar #adminSubMenu2 ul a:hover
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_over_tr.gif) top right no-repeat;
+}
+#previewBar #adminSubMenu2 a:hover .adminSubMenu2TL
+{
+	background: url(/ewcommon/images/eonic_skin/sub_menu_2_over_tl.gif) top left no-repeat;	
+}
+#previewBar #infoContainer
+{
+	padding: 4px 0 4px 6px;
+	padding-left: 180px;	
+}
+* html #previewBar #addressBar
+{
+	height: 24px;	
+}
+#previewBar #addressBar a
+{
+	color: #FFF;
+	text-decoration: none;	
+}
+/**
+ * jQuery lightBox plugin
+ * This jQuery plugin was inspired and based on Lightbox 2 by Lokesh Dhakar (http://www.huddletogether.com/projects/lightbox2/)
+ * and adapted to me for use like a plugin from jQuery.
+ * @name jquery-lightbox-0.5.css
+ * @author Leandro Vieira Pinho - http://leandrovieira.com
+ * @version 0.5
+ * @date April 11, 2008
+ * @category jQuery plugin
+ * @copyright (c) 2008 Leandro Vieira Pinho (leandrovieira.com)
+ * @license CC Attribution-No Derivative Works 2.5 Brazil - http://creativecommons.org/licenses/by-nd/2.5/br/deed.en_US
+ * @example Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
+ */
+#jquery-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 90;
+	width: 100%;
+	height: 500px;
+}
+#jquery-lightbox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	text-align: center;
+	line-height: 0;
+}
+#jquery-lightbox a img { border: none; }
+#lightbox-container-image-box {
+	position: relative;
+	background-color: #fff;
+	width: 250px;
+	height: 250px;
+	margin: 0 auto;
+}
+#lightbox-container-image { padding: 10px; }
+#lightbox-loading {
+	position: absolute;
+	top: 40%;
+	left: 0%;
+	height: 25%;
+	width: 100%;
+	text-align: center;
+	line-height: 0;
+}
+#lightbox-nav {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 10;
+}
+#lightbox-container-image-box > #lightbox-nav { left: 0; }
+#lightbox-nav a { outline: none;}
+#lightbox-nav-btnPrev, #lightbox-nav-btnNext {
+	width: 49%;
+	height: 100%;
+	zoom: 1;
+	display: block;
+}
+#lightbox-nav-btnPrev { 
+	left: 0; 
+	float: left;
+}
+#lightbox-nav-btnNext { 
+	right: 0; 
+	float: right;
+}
+#lightbox-container-image-data-box {
+	font: 10px Verdana, Helvetica, sans-serif;
+	background-color: #fff;
+	margin: 0 auto;
+	line-height: 1.4em;
+	overflow: auto;
+	width: 100%;
+	padding: 0 10px 0;
+}
+#lightbox-container-image-data {
+	padding: 0 10px; 
+	color: #666; 
+}
+#lightbox-container-image-data #lightbox-image-details { 
+	width: 70%; 
+	float: left; 
+	text-align: left; 
+}	
+#lightbox-image-details-caption { font-weight: bold; }
+#lightbox-image-details-currentNumber {
+	display: block; 
+	clear: left; 
+	padding-bottom: 1.0em;	
+}			
+#lightbox-secNav-btnClose {
+	width: 66px; 
+	float: right;
+	padding-bottom: 0.7em;	
+}
+span.reviewRate
+{
+	display:block;
+	height:14px;
+	width:73px;
+	float:left;
+	margin-right:5px;
+}
+span.rating1
+{
+	background:transparent url(/ewcommon/images/layout/reviewRatings.png) no-repeat 0 -56px;
+}
+
+span.rating2
+{
+	background:transparent url(/ewcommon/images/layout/reviewRatings.png) no-repeat 0 -42px;
+}
+
+span.rating3
+{
+	background:transparent url(/ewcommon/images/layout/reviewRatings.png) no-repeat 0 -28px;
+}
+
+span.rating4
+{
+	background:transparent url(/ewcommon/images/layout/reviewRatings.png) no-repeat 0 -14px;
+}
+
+span.rating5
+{
+	background:transparent url(/ewcommon/images/layout/reviewRatings.png) no-repeat 0 0px;
+}
+.reviewer,
+.dtreviewed
+{
+	font-weight:bold;
+}
+.Site #pageMenu 
+{
+	margin-bottom:20px;
+	padding-bottom:20px;
+}
+
+strong 
+{
+	font-weight: bold;
+}
+
+#productScroller 
+{
+	width: 980px;
+	min-height: 180px;
+	overflow: auto;
+	margin-bottom: 1em;
+}
+
+#productScrollerInner td 
+{
+	padding: 0 10px;
+}
+
+.selectOptions 
+{
+	margin-bottom: 1em;
+}
+input#imgVerification
+{
+    width:175px;
+}
+img.imgVerification
+{
+    display:block;
+    margin-left:0;
+    margin-top:5px;
+}
+
+.Site span.price
+{
+	display:block;
+}
+.Site .rrpPrice
+{
+	/*text-decoration: line-through;*/
+}
+.Site span.price
+{
+	font-size: 2em;
+}
+.Site .price span.priceSuffix
+{
+    font-size:0.65em;
+}
+
+/* ==== RSS DEFAULTS ==== */
+a.rsssubscribebutton
+{
+	float: right;
+	margin: 5px;
+}
+
+.Site .SubPageGrid a,
+.Site .linkGrid a
+{
+    display:block;
+    margin:auto;
+    text-align:center;
+}
+.Site .SubPageGrid img.thumbnail,
+.Site .linkGrid img.thumbnail
+{
+    float:none !important;
+    margin:0;
+}
+.Site .SubPageGrid a:hover img,
+.Site .linkGrid a:hover img
+{
+    cursor: pointer;
+    filter: alpha(opacity=85);
+    -moz-opacity: .85;	
+    opacity: .85;	
+    -khtml-opacity: 0.85;
+    color: #fff;
+}
+/* =##########========== CALENDAR STUFF ============###########= */
+td.calendarDays,
+.calendarDays td,
+.calendarDays th
+{
+	padding: 0 !important;
+	margin: 0 !important;
+}
+td.calendarDays
+{
+	border-bottom: 1px solid #333;
+}
+.calendarMonthHeader th
+{
+	vertical-align: middle;
+}
+th.previousMonthNav
+{
+	text-align: left !important;
+	width: 20%;	
+}
+th.currentMonthNav
+{
+	text-align: center !important;
+}
+th.nextMonthNav
+{
+	text-align: right !important;
+	width: 20%;	
+}
+.calendarHeader th
+{
+	text-align: right !important;
+}
+td.weekNumber
+{
+	width: 3%;
+	border: 1px solid #333;
+	border-bottom: 0;
+}
+td.cday
+{
+	width: 13%;
+	height: 100px !important;
+	border-right: 1px solid #333;	
+}
+td .cdaytitle
+{
+	text-align: right;
+	border-top: 1px solid #333;
+	border-bottom: 1px solid #333;
+	padding-right: 3px;
+	
+}
+td.cday .calendarentry
+{
+	font-size: 0.8em;
+	padding: 2px;
+	border-bottom: 1px solid #cdcdcd;
+}
+.searchResult a img{position: relative;top: 3px;margin-right: 10px;}
+.searchResult p{margin-left: 28px !important;}
+
+.Site .ProductGallery
+{
+    text-align:center;
+}
+.Site .ProductGallery span
+{
+
+    display:block;
+}
+.Site .ProductGallery img
+{
+    float:none !important;
+    margin:0;
+}
+.Site .ProductGallery img.thumbnail:hover
+{
+    filter: alpha(opacity=85);
+    -moz-opacity: .85;	
+    opacity: .85;	
+    -khtml-opacity: 0.85;
+}
+.Site .ProductGallery .listItem
+{
+    border-bottom:none;
+}
+.Site .ProductGallery .listItem .lIinner
+{
+    border:solid 1px #cccccc;
+    padding:5px;
+}
+.Site .ProductGallery h3
+{
+    font-size:1em;
+    margin-bottom:0;
+}
+.Site .ProductGallery h3 span.price
+{
+    font-size:1em;
+}
+.Site .SubPageMenu ul
+{
+	margin: 0 !important;
+}
+.Site #mainLayout .SubPageMenu ul li
+{
+	list-style-type: none;
+}
+.Site .Grid .listItem
+{
+    border:none;
+}
+.Site .Grid .listItem .lIinner a
+{
+    display:block;
+}
+.Site .Grid .listItem .lIinner img
+{
+    margin:0;
+}
+.Site .Grid .listItem .lIinner
+{
+    text-align:center;
+    padding:5px;
+}
+.Site .Grid .listItem .lIinner h3
+{
+    margin-bottom:0;
+    font-size:0.9em;
+}
+.Site .Grid .listItem .lIinner h3 span
+{
+    display:block;
+}
+.Site .Grid .listItem .lIinner h3 span.navTab-tl
+{
+    display:inline;
+}
+
+
+/* Document icons */
+.Site a.docLink
+{
+	padding-left:20px;
+	display:block;
+	background: Transparent url(/ewcommon/images/icons/Icon_genericDoc.gif) 0 0 no-repeat; 
+}
+.Site a.pdficon{	background-image: url(/ewcommon/images/icons/Icon_PDF.gif)}
+.Site a.docicon{	background-image: url(/ewcommon/images/icons/Icon_doc.gif)}
+.Site a.docxicon{	background-image: url(/ewcommon/images/icons/Icon_doc.gif)}
+.Site a.xlsicon{	background-image: url(/ewcommon/images/icons/Icon_xls.gif)}
+.Site a.xlsxicon{	background-image: url(/ewcommon/images/icons/Icon_xls.gif)}
+
+.Site a.mdbicon{	background-image: url(/ewcommon/images/icons/Icon_mdb.gif)}
+.Site a.accdbicon{	background-image: url(/ewcommon/images/icons/Icon_accdb.gif)}
+
+.Site a.zipicon{	background-image: url(/ewcommon/images/icons/Icon_zip.gif)}
+.Site a.gificon{	background-image: url(/ewcommon/images/icons/Icon_gif.gif)}
+.Site a.jpgicon{	background-image: url(/ewcommon/images/icons/Icon_jpg.gif)}
+.Site a.pngicon{	background-image: url(/ewcommon/images/icons/Icon_png.gif)}
+.Site a.htmlicon{	background-image: url(/ewcommon/images/icons/Icon_page.gif)}
+.Site a.ppsicon{	background-image: url(/ewcommon/images/icons/Icon_pps.gif)}
+.Site a.ppticon{	background-image: url(/ewcommon/images/icons/Icon_ppt.gif)}
+.Site a.pptxicon{	background-image: url(/ewcommon/images/icons/Icon_pptx.gif)}
+.Site a.ppsxicon{	background-image: url(/ewcommon/images/icons/Icon_ppsx.gif)}
+.Site a.wmvicon{	background-image: url(/ewcommon/images/icons/Icon_wmv.gif)}
+.Site a.mp3icon{	background-image: url(/ewcommon/images/icons/Icon_music.gif)}
+.Site a.swficon{	background-image: url(/ewcommon/images/icons/Icon_swf.gif)}
+.Site a.xmlicon{	background-image: url(/ewcommon/images/icons/Icon_xml.gif)}
+
+/* Recipe specific */
+.ingredient,
+.credentials
+{
+	float: right;
+	clear:right;
+	/*width: 300px; default image width that it sits under */
+	margin: 0 0 15px 20px;
+}
+.credentials
+{
+	border: 1px solid #bcbcbc;
+	background: #dedede;
+	
+}
+.credentials .published,
+.credentials .author
+{
+	margin: 1em;
+}
+.recipe span.label
+{
+	font-weight:bold;
+}
+
+
+/*  ==  GOOGLE MAPS  ==============================================================================  */
+.gmap-canvas
+{
+	display:block;
+	height:200px;
+	border: 1px solid #acacac;
+	background: #f4f3f0 url(/ewcommon/images/layout/gmap-canvas.gif);
+}
+
+/*  ==  Social bookmarks  ==========================================================================  */
+.socialBookmarks
+{
+	display: inline-block;
+	padding: 5px 10px;
+}
+.bottom-right .socialBookmarks,
+.top-right .socialBookmarks { float: right; }
+.socialBookmarks .bookmark 
+{
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+	margin-right: 10px;
+}
+.top-right .bookmark,
+.bottom-right .bookmark 
+{
+	margin-right: 0;
+	margin-left: 10px;
+}
+.bookmarks-standard .facebook-bookmark { width: 320px; }
+.bookmarks-standard-count .twitter-bookmark { width: 87px; }
+.bookmarks-standard-count .google-bookmark { width: 71px; }
+.bookmarks-standard-count .facebook-bookmark { width: 130px; }
+.bookmarks-large .facebook-bookmark { width: 44px; }
+
+.align-Right .socialLinks
+{
+    text-align:right;
+}
+
+
+/**
+ * Sitemap module
+ */
+.Site .Sitemap .headingLevel1,
+.Site .Sitemap .headingLevel2
+{
+	border-bottom: 1px solid #000;
+	margin-bottom: .5em;
+}
+.Site .Sitemap .headingLevel1 
+{
+	font-size: 1.231em;
+	font-weight: 700;
+	border-color: #ccc;
+}
+.Site .Sitemap .headingLevel2
+{
+	font-size: 1.077em;
+	border-color: #ddd;
+}
+.Site .Sitemap .description 
+{
+	font-size: .769em;
+	line-height: 1.2;
+	color: #999;
+	margin-bottom: .333em;
+}
+.Site .Sitemap .description * { margin: 0; }
+.Site .Sitemap .listLevel3 .list { margin-left: 1em; }
+.Site .Sitemap .list .listItem { border-bottom: 0; }
+/**
+ * End of Sitemap module
+ */
+
+/* Events */
+.detail .tickets
+{
+	float: right;
+	clear: right;
+	width: 50% !important;
+	margin: 0 0 20px 20px;
+}
+.tickets table
+{
+	border: 0 !important;
+}
+table.ticketsGrouped td
+{
+	vertical-align: middle;
+	padding-bottom: 15px;
+}
+table.ticketsGrouped td p
+{
+	margin-bottom: 0;
+}
+.ticketsGrouped td.price
+{
+	line-height: 1.8em;
+	vertical-align:middle;
+}
+.ticketsGrouped td.quantity
+{
+	vertical-align: middle;
+}
+
+/* =================== TAG CLOUD STYLES ============= */
+
+.Site .tag
+{
+    font-weight:normal;
+}
+
+.Site #tagcloud
+{
+    line-height:1.5em;
+    margin:0px;
+}
+
+.Site .tag0
+{
+  font-size:0.6em;
+}
+
+.Site .tag1
+{
+  font-size:0.7em;
+  font-weight:bold;
+}
+
+.Site .tag2
+{
+    font-size:0.8em;    
+}
+
+.Site .tag3
+{
+   font-size:1em;
+   font-weight:bold;
+}
+
+.Site .tag4
+{
+    font-size:1em;
+    
+}
+.Site .tag5
+{
+    font-size:1.2em;
+    font-weight:bold;
+}
+
+.Site .tag6
+{
+    font-size:1.4em;
+    font-weight:bold;
+}
+
+.Site .tag7
+{
+    font-size:1.6em;
+}
+
+.Site .tag8
+{
+    font-size:1.8em;
+    font-weight:bold;
+}
+
+.Site .tag9
+{
+    font-size:2em;
+}
+
+.Site .tag10
+{
+    font-size:2.2em;font-weight:bold;
+}
+
+/* Developer Link Styles */
+
+.Site #developerLink {
+    margin-top: 1em;
+}
+.Site #developerLink .developerLogo {
+    background: url("../../images/developer-link.png") repeat scroll 0 -21px transparent;
+    display: inline-block;
+    height: 21px;
+    overflow: hidden;
+    text-indent: 7777px;
+    vertical-align: bottom;
+    width: 80px;
+}
+.Site #developerLink a {
+    float: none;
+    padding: 0;
+}
+.Site #developerLink a:hover .developerLogo {
+    background-position: 0 0;
+}
+
+
+/**
+ * Ecommerce List Orders module
+ */
+.Site .EcommerceListOrders td 
+{
+	vertical-align: middle;
+	padding: 10px 0;
+}
+.Site .EcommerceListOrders .first td { padding-top: 0; }
+.Site .EcommerceListOrders .last td { padding-bottom: 0; }
+.Site .EcommerceListOrders h3 { margin: 0; }
+.Site .EcommerceListOrders .total,
+.Site .EcommerceListOrders .view { width: 1%; }
+.Site .EcommerceListOrders .total 
+{
+	font-size: 1.308em;
+	padding-right: 20px;
+}
+.Site .EcommerceListOrders .view .button { white-space: nowrap; }
+/*
+.Site .EcommerceListOrders .order { padding-bottom: 15px; }
+.Site .EcommerceListOrders table { table-layout: fixed; }
+.Site .EcommerceListOrders .delete 
+{
+	width: 0 !important;
+	padding: 0 !important;
+}
+.Site .EcommerceListOrders .quantity { width: 45px !important; }
+.Site .EcommerceListOrders .ref { width: 80px !important; }
+.Site .EcommerceListOrders .linePrice,
+.Site .EcommerceListOrders .lineTax { width: 110px !important; }
+.Site .EcommerceListOrders .lineTotal { width: 85px !important; }
+*/
+
+/**
+ * Membership User Contacts module
+ */
+.Site .MembershipUserContacts .add 
+{
+	text-align: right;
+	margin: 15px 0;
+}
+
+
+li.buttons input[type="radio"] {display:none;}
+li.buttons .radiocheckbox label {
+    background:#F5F5F5;
+    color: #333333;
+    padding: 5px 10px 5px 10px;
+
+}
+li.buttons .radiocheckbox input[type="radio"]:checked+label { 
+    background-color:rgb(22, 86, 160);*background-color:rgb(22, 86, 160);
+    color:#ffffff !important;
+}
+
+.center-block
+{
+    text-align:center;
+    }

@@ -959,7 +959,6 @@ Public Class Syndication
         ''' <summary>
         ''' This routine is for loading configs - it tries to find a Distributor node with the Distributor name
         ''' </summary>
-        ''' <value></value>
         ''' <remarks></remarks>
         Public Sub LoadConfig(ByVal value As XmlElement)
             Try

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!-- 
+	MASTER FILE: 
+    This is the standard rewrite ruleset for IIS7 for EonicWeb
+	
+-->
+<configuration>
+	<system.webServer>
+		<rewrite>
+			<!-- 
+						EonicWeb Rewrite Rules
+						Platform:	IIS7 URL Rewrite Module
+						Author:		Ali Granger
+						Date:		08/06/2009
+						Revision:	v1.1
+										  
+						If local resources exist (e.g. /default.ashx /service.asmx), then this
+						will use them, if they do not exist, then the ewcommon version will be used.
+						
+						This accepts both article content link formats (i.e. /itemNNNN and /1234-/item-name)
+										  
+						This is currently configured to NOT forward legacy content URLs - see below for changes that you may need to            make.
+						
+			-->
+			<rules>
+				<rule name="Ignore Frontpage" enabled="true" patternSyntax="Wildcard" stopProcessing="true">
+					<match url="*"/>
+					<conditions>
+						<add input="{USER_AGENT}" pattern="*MSFrontpage*"/>
+					</conditions>
+				</rule>
+
+				<rule name="EW: Static Rewrites" enabled="true" stopProcessing="true">
+					<match url=".*"/>
+					<conditions>
+						<add input="{StaticRewrites:{REQUEST_URI}}" pattern="(.+)"/>
+					</conditions>
+					<action type="Rewrite" url="{C:1}"/>
+				</rule>
+
+				<rule name="EW: Forward root calls to root default.ashx">
+					<match url="^(/(\?(.*)?)?)?$"/>
+					<action type="Rewrite" url="/default.ashx{R:1}"/>
+				</rule>
+
+				<rule name="EW: Admin Access" enabled="true">
+					<match url="^/?admin$"/>
+					<action type="Redirect" url="/?ewCmd=admin"/>
+				</rule>
+
+				<!-- ewcommon vs local processing -->
+				<rule name="EW: Forward ewcommon resource calls to root"  enabled="true">
+					<match url="^/?ewcommon/((.*)\.as[h|p|m]x(\?(.*))?)$"/>
+					<action type="Rewrite" url="/{R:1}" appendQueryString="true"/>
+				</rule>
+
+				<rule name="Ignore existing file or directories (check that it's not requesting a .ashx or .asmx resource)" enabled="true" stopProcessing="true">
+					<match url="^((?!\.as[h|p|m]x).)*$"/>
+					<conditions logicalGrouping="MatchAny">
+						<add input="{REQUEST_FILENAME}" matchType="IsDirectory"/>
+						<add input="{REQUEST_FILENAME}" matchType="IsFile"/>
+					</conditions>
+				</rule>
+				<!-- Rules for Legacy Content Forwarding - Uncomment ART-NEW and comment out ART_CURRENT to use this-->
+				<!-- START RULE ART-NEW -->
+				<!--
+				<rule name="EW: Forward itemNNNN calls to ewcommon (legacy redirect)">
+                    <match url="^/?(.+/)*(?!.*\.\w{2,4}([\?\#]|$))(item(\d+))/?(\?(.*))?$" />
+                    <action type="Rewrite" url="/default.ashx?path=/{R:1}&amp;redirect=302&amp;artid={R:4}" appendQueryString="true"/>
+                </rule>
+
+				-->
+				<!-- END RULE ART-NEW -->
+				<!-- Rule for old style itemNNNN acceptance with no forwarding -->
+				<!-- START RULE ART-CURRENT -->
+				<rule name="EW: Forward itemNNNN calls to default.ashx (legacy redirect)" enabled="true">
+					<match url="^/?(.+/)*(?!.*\.\w{2,4}([\?\#]|$))(item(\d+))/?(\?(.*))?$"/>
+					<action type="Rewrite" url="/default.ashx?path=/{R:1}&amp;artid={R:4}" appendQueryString="true"/>
+				</rule>
+				<!-- END RULE ART-CURRENT -->
+				<rule name="EW: Deal with articles (i.e. /path/NNNNN-/item-name, where NNNNN is the content id)" enabled="true">
+					<match url="^/?(.+/)*(?!.*\.\w{2,4}([\?\#]|$))(\d+)-/[^/\?]+(\?(.*))?$"/>
+					<action type="Rewrite" url="/default.ashx?path=/{R:1}&amp;artid={R:3}" appendQueryString="true"/>
+				</rule>
+				<rule name="EW: Deal with normal paths" enabled="true">
+					<match url="^/?(.+/)*(?!.*\.\w{2,4}([\?\#]|$))([^\?]+?)(\?(.*))?$"/>
+					<action type="Rewrite" url="/default.ashx?path=/{R:1}{R:3}" appendQueryString="true"/>
+				</rule>
+				<rule name="EW: If root resource (ashx asmx) does exist, stop processing" enabled="true" stopProcessing="true">
+					<match url="^/?(?!(ewcommon/))((.*)\.as[h|p|m]x(\?(.*))?)$"/>
+					<conditions>
+						<add input="{REQUEST_FILENAME}" matchType="IsFile"/>
+					</conditions>
+				</rule>
+				<rule name="EW: If root resource (ashx asmx) does NOT exist, forward to ewcommon" enabled="true" stopProcessing="true">
+					<match url="^/?(?!(ewcommon/))((.*)\.as[h|p|m]x(\?(.*))?)$"/>
+					<conditions>
+						<add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true"/>
+					</conditions>
+					<action type="Rewrite" url="/ewcommon/{R:2}{R:4}"/>
+				</rule>
+				<!-- Anything  that gets through the rules will illicit a 404 error.-->
+			</rules>
+			<rewriteMaps>
+				<rewriteMap name="StaticRewrites" defaultValue="">
+					<add key="/googlesitemap.xml" value="/ewcommon/feeds/google/sitemap.ashx"/>
+					<add key="/googlebaseproducts.xml" value="/ewcommon/feeds/google/base.ashx"/>
+				</rewriteMap>
+			</rewriteMaps>
+		</rewrite>
+
+	</system.webServer>
+</configuration>

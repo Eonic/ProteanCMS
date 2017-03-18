@@ -1058,11 +1058,9 @@ Partial Public Class Web
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "This config section has not yet been setup, saving will implement these settings for the first time and then log you off the admin system.")
                             End If
 
-                            Dim oTemplateElmt As XmlElement
+
                             Dim oElmt As XmlElement
-                            Dim Key As String
-                            Dim ConfigSectionName As String
-                            Dim ConfigSection As System.Collections.Specialized.NameValueCollection
+
 
                             If MyBase.isSubmitted Then
 
@@ -3240,15 +3238,21 @@ Partial Public Class Web
                     MyBase.submission("DeleteFolder", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete Content")
 
-                    MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this folder? - """ & cPath & """", , "alert-danger")
-
-                    MyBase.addSubmit(oFrmElmt, "", "Delete folder")
+                    If cPath = "" Or cPath = "\" Or cPath = "/" Then
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "You cannot delete the root folder", , "alert-danger")
+                    Else
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this folder? - """ & cPath & """", , "alert-danger")
+                        MyBase.addSubmit(oFrmElmt, "", "Delete folder")
+                    End If
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
+                        If goRequest("cFolderName") = "" Or goRequest("cFolderName") = "\" Or goRequest("cFolderName") = "/" Then
+                            MyBase.valid = False
+                        End If
                         If MyBase.valid Then
 
                             Dim oFs As fsHelper = New fsHelper
@@ -3348,7 +3352,7 @@ Partial Public Class Web
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "<h4>Are you sure you want to delete this page - """ & Tools.Xml.encodeAllHTML(sContentName) & """</h4><br/><br/>By deleting this page you will also delete <strong>ALL</strong> the child pages beneath <strong>ARE YOU SURE</strong> !", , "alert-danger")
 
-                    MyBase.addSubmit(oFrmElmt, "", "Delete Page" & sContentSchemaName, , , "fa-trash")
+                    MyBase.addSubmit(oFrmElmt, "", "Delete Page" & sContentSchemaName, , "btn-danger principle", "fa-trash")
 
                     MyBase.Instance.InnerXml = "<delete/>"
 
@@ -3700,7 +3704,7 @@ Partial Public Class Web
 
                     MyBase.addInput(oFrmElmt, "cDesc", True, "Alt Description")
                     MyBase.addBind("cDesc", "img/@alt", "false()")
-                    MyBase.addDiv(oFrmElmt, "<a href=""/ewcommon/admin/popup.ashx?ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right""><i class=""fa fa-picture-o""> </i> Pick New Image</a>", "")
+                    MyBase.addDiv(oFrmElmt, "<a href=""?contentType=popup&amp;ewCmd=ImageLib&amp;targetField=" & cTargetFeild & "&amp;targetClass=" & cClassName & """ class=""btn btn-primary pull-right""><i class=""fa fa-picture-o""> </i> Pick New Image</a>", "")
                     MyBase.addSubmit(oFrmElmt, "", "Update Image", "ewSubmit", "ewSubmit")
 
                     If cClassName <> "" Then
@@ -5914,7 +5918,6 @@ Partial Public Class Web
 
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
-                Dim oGrp1Elmt As XmlElement
                 Dim oSelElmt1 As XmlElement
                 Dim oSelElmt2 As XmlElement
                 Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
@@ -7952,9 +7955,7 @@ Partial Public Class Web
             Public Function xFrmVoucherCode(ByVal nCodeId As Integer) As XmlElement
 
                 Dim cProcessInfo As String = ""
-
                 Dim cTypePath As String
-                Dim sSQL As String
                 Try
 
 

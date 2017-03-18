@@ -1,0 +1,243 @@
+@charset "utf-8";
+
+.tn3t-gallery {
+    width: 960px;
+    height: 576px;
+    position:relative;
+}
+.tn3t-gallery img {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    max-width: none !important;
+}    
+.tn3t-image {
+    position:absolute;
+    width: 960px;
+    height: 576px;
+    background-color:#000;
+}
+.tn3-thumbs ul, .tn3-thumbs li {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-type: none !important;
+}
+.tn3t-thumbs {
+    position:absolute;
+    width: 960px;
+    height: 74px;
+    bottom: 46px;
+    background-image: url('bg.png');
+    display: none;
+    padding-top:2px;
+}
+.tn3t-thumb {
+    width:66px;
+    height:66px;
+    padding:2px;
+    cursor:pointer;
+}
+.tn3t-thumb img {
+    width:66px;
+    height:66px;
+}    
+.tn3t-thumb-selected {
+    /*padding:0px;
+    border:2px solid #ffffff;*/
+    background-color: #ffffff;
+    cursor: default;
+}
+.tn3t-over {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    font-size: medium;
+}
+.tn3t-preloader {
+    position:absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('bg.png');
+}
+.tn3t-image-info {
+    position:absolute;
+    width: 100%;
+    overflow: hidden;
+    background-image: url('bg.png');
+    bottom: 46px;
+    display: none;
+}
+.tn3t-image-title {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 6px 0 0 6px;
+}
+.tn3t-image-description {
+    font-family: Tahoma, Helvetica, sans-serif;
+    color: #fff;
+    font-size: 0.8em;
+    line-height: 1.3em;
+    padding-left: 6px;
+}
+.tn3t-over table {
+    border: 0;
+    margin: 0;
+}
+.tn3t-ctrls {
+    width: 100%;
+    background-image: url('bg.png');
+    height: 46px;
+    border-spacing: 0;
+}
+.tn3t-ctrls tbody {
+    border: 0;
+}
+.tn3t-ctrls td{
+    width: 19%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.tn3t-ctrls div{
+    margin: 0px auto;
+}
+.tn3t-show-info {
+    background: url('tn3t.png') no-repeat -102px 4px;
+    background-size: 200px 170px;
+    width:43px;
+    height:43px;
+    cursor:pointer;
+}
+.tn3t-show-info-active {
+    background: url('tn3t.png') no-repeat -155px 4px;
+    background-size: 200px 170px;
+}
+.tn3t-show-thumbs {
+    background: url('tn3t.png') no-repeat -103px -52px;
+    background-size: 200px 170px;
+    width:43px;
+    height:43px;
+    cursor:pointer;
+}
+.tn3t-show-thumbs-active {
+    background: url('tn3t.png') no-repeat -156px -52px;
+    background-size: 200px 170px;
+}
+.tn3t-play {
+    background: url('tn3t.png') no-repeat -48px 4px;
+    background-size: 200px 170px;
+    width: 43px;
+    height: 43px;
+    cursor: pointer;
+}
+.tn3t-play-active {
+    background-position: -50px -52px;
+    background-size: 200px 170px;
+}
+.tn3t-show-albums {
+    background-image:url('tn3t.png');
+    background-position:2px -52px;
+    background-size: 200px 170px;
+    width:43px;
+    height:43px;
+    cursor:pointer;
+}
+.tn3t-fullscreen {
+    background-image:url('tn3t.png');
+    background-position:-2px 4px;
+    background-size: 200px 170px;
+    width:43px;
+    height:43px;
+    cursor:pointer;
+}
+.tn3t-timer {
+    position:absolute;
+    width: 100%;
+    height: 6px;
+    top: 0px;
+    background: url('bg.png') repeat;
+    background: rgba(0, 0, 0, 0.3);
+}
+.tn3t-count {
+    position:absolute;
+    left:2px;
+    bottom:1px;
+    color:#777777;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+}
+.tn3t-albums {
+    position: absolute;
+    width: 960px;
+    height: 576px;
+    left: 0px;
+    top: 0px;
+    color: #e0dcdc;
+    font-family: Tahoma, Helvetica, sans-serif;
+    background-color: #070707;
+}
+.tn3t-inalbums {
+    position: absolute;
+    width: 954px;
+    height: 572px;
+    padding: 2px;
+}
+.tn3t-album {
+    position:absolute;
+    width: 950px;
+    height: 72px;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    border-bottom: 1px solid #222222;
+}
+.tn3t-album-selected {
+    background-color: #cdcdcd;
+    color: #111214;
+    cursor: default;
+}
+.tn3t-album-image {
+    height: 100%;
+    width: 70px;
+    margin: 0.4em 0.4em;
+    float: left;
+}
+.tn3t-album-image img {
+    width: 60px;
+    height: 60px;
+}
+.tn3t-album-title {
+    font-size: 1em;
+    font-weight:bold;
+    margin-top: 0.6em;
+}
+.tn3t-album-description {
+    font-size: 0.7em;
+    height: 2.2em;
+    line-height: 1em;
+    overflow: hidden;
+}
+.tn3t-albums-close {
+    position: absolute;
+    background-image: url('tn3t.png');
+    background-position: -0px -104px;
+    background-size: 200px 170px;
+    width: 50px;
+    height: 50px;
+    right: 0px;
+    top: 0px;
+    cursor: pointer;
+}
+
+/* when javascript is disabled */
+.tn3.album, .tn3.album li {
+	float:left;
+	list-style-type: none;
+	margin:4px;
+}
+.tn3.album div, .tn3.album li h4, .tn3.album li div{
+	display:none;
+}
+
+

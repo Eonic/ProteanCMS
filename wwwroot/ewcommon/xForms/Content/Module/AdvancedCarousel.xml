@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content moduleType="AdvancedCarousel" contentType="AdvancedCarouselSlide" box="" title="" link="" linkType="internal" linkText="More images" sortBy="Position" order="descending" cols="1" stepBy="" stepCount="0" display="related" position="" SlidesShowing="5" AutoPlay="true" hAlign="center" vAlign="center" SlideHeight="260" SlideWidth="400" CarouselHeight="485" CarouselWidth="1140" fadebetween="7000" spinner="spinner4" hideTimerBar="off" fullWidth="off" navigationStyle="round" navigationArrows="solo" navigationType="bullet" navigationHAlign="center" navigationVAlign="bottom" navigationHOffset="30" navigationVOffset="30" soloArrowLeftHalign="left" soloArrowLeftValign="center" soloArrowLeftHOffset="20" soloArrowLeftVOffset="0" soloArrowRightHalign="right" soloArrowRightValign="center" soloArrowRightHOffset="20" soloArrowRightVOffset="0"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="cAnimationType" nodeset="@animationtype" required="true()" type="string"/>
+      <bind id="cSlidesShowing" nodeset="@SlidesShowing" required="true()" type="string"/>
+      <bind id="cAutoPlay" nodeset="@AutoPlay" required="true()" type="string"/>
+      <bind id="chAlign" nodeset="@hAlign" required="true()" type="string"/>
+      <bind id="cvAlign" nodeset="@vAlign" required="true()" type="string"/>
+      <bind id="cSlideHeight" nodeset="@SlideHeight" required="true()" type="string"/>
+      <bind id="cSlideWidth" nodeset="@SlideWidth" required="true()" type="string"/>
+      <bind id="cCarouselHeight" nodeset="@CarouselHeight" required="true()" type="string"/>
+      <bind id="cCarouselWidth" nodeset="@CarouselWidth" required="true()" type="string"/>
+      <bind id="cFadeBetween" nodeset="@fadebetween" required="true()" type="string"/>
+      <bind id="spinner" nodeset="@spinner" required="true()" type="string"/>
+      <bind id="hideTimerBar" nodeset="@hideTimerBar" required="true()" type="string"/>
+      <bind id="fullWidth" nodeset="@fullWidth" required="true()" type="string"/>
+      <bind id="navigationStyle" nodeset="@navigationStyle" required="true()" type="string"/>
+      <bind id="navigationArrows" nodeset="@navigationArrows" required="true()" type="string"/>
+      <bind id="navigationType" nodeset="@navigationType" required="true()" type="string"/>
+      <bind id="navigationHAlign" nodeset="@navigationHAlign" required="true()" type="string"/>
+      <bind id="navigationVAlign" nodeset="@navigationVAlign" required="true()" type="string"/>
+      <bind id="navigationHOffset" nodeset="@navigationHOffset" required="true()" type="string"/>
+      <bind id="navigationVOffset" nodeset="@navigationVOffset" required="true()" type="string"/>
+      <bind id="soloArrowLeftHalign" nodeset="@soloArrowLeftHalign" required="true()" type="string"/>
+      <bind id="soloArrowLeftValign" nodeset="@soloArrowLeftValign" required="true()" type="string"/>
+      <bind id="soloArrowLeftHOffset" nodeset="@soloArrowLeftHOffset" required="true()" type="string"/>
+      <bind id="soloArrowLeftVOffset" nodeset="@soloArrowLeftVOffset" required="true()" type="string"/>
+      <bind id="soloArrowRightHalign" nodeset="@soloArrowRightHalign" required="true()" type="string"/>
+      <bind id="soloArrowRightValign" nodeset="@soloArrowRightValign" required="true()" type="string"/>
+      <bind id="soloArrowRightHOffset" nodeset="@soloArrowRightHOffset" required="true()" type="string"/>
+      <bind id="soloArrowRightVOffset" nodeset="@soloArrowRightVOffset" required="true()" type="string"/>
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Advanced Carousel Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+        <!-- end of hidden fields -->
+        <!--ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/-->
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+        <relatedContent search="find add" type="AdvancedCarouselSlide" relationType="" direction="1way">
+          <label>Advanced Carousel Slide</label>
+        </relatedContent>
+      </group>
+      <group class="inline">
+        <label>Animation Effects</label>
+        <input bind="cFadeBetween" class="vshort">
+          <label>Time between the slides (default 7000)</label>
+          <hint>Time between the fades in milliseconds - Default is 7000</hint>
+        </input>
+        <input bind="cCarouselHeight" class="vshort">
+          <label>Start Height (in pixels)</label>
+        </input>
+        <input bind="cCarouselWidth" class="vshort">
+          <label>Start Width (in pixels)</label>
+        </input>
+      </group>
+      <group class="inline">
+        <label>Load Options</label>
+        <select1 bind="spinner" appearance="minimal" class="vshort">
+          <label>Spinner Style</label>
+          <item>
+            <label>Spinner 1</label>
+            <value>spinner1</value>
+          </item>
+          <item>
+            <label>Spinner 2</label>
+            <value>spinner2</value>
+          </item>
+          <item>
+            <label>Spinner 3</label>
+            <value>spinner3</value>
+          </item>
+          <item>
+            <label>Spinner 4</label>
+            <value>spinner4</value>
+          </item>
+          <item>
+            <label>Spinner 5</label>
+            <value>spinner5</value>
+          </item>
+        </select1>
+        <select1 bind="hideTimerBar" appearance="minimal" class="vshort">
+          <label>Timer Bar</label>
+          <item>
+            <label>On</label>
+            <value>off</value>
+          </item>
+          <item>
+            <label>Off</label>
+            <value>on</value>
+          </item>
+        </select1>
+        <select1 bind="fullWidth" appearance="minimal" class="vshort">
+          <label>Full Width</label>
+          <item>
+            <label>On</label>
+            <value>on</value>
+          </item>
+          <item>
+            <label>Off</label>
+            <value>off</value>
+          </item>
+        </select1>
+      </group>
+      <group class="inline">
+        <label>Navigation Options</label>
+        <select1 bind="navigationStyle" appearance="minimal" class="vshort">
+          <label>Navigation Pip Style</label>
+          <item>
+            <label>Round</label>
+            <value>round</value>
+          </item>
+          <item>
+            <label>Square</label>
+            <value>square</value>
+          </item>
+          <item>
+            <label>Round Classic</label>
+            <value>round-old</value>
+          </item>
+          <item>
+            <label>Square Classic</label>
+            <value>square-old</value>
+          </item>
+          <item>
+            <label>Navbar</label>
+            <value>navbar-old</value>
+          </item>
+          <item>
+            <label>Preview 1</label>
+            <value>preview1</value>
+          </item>
+          <item>
+            <label>Preview 2</label>
+            <value>preview2</value>
+          </item>
+          <item>
+            <label>Preview 3</label>
+            <value>preview3</value>
+          </item>
+          <item>
+            <label>Preview 4</label>
+            <value>preview4</value>
+          </item>
+        </select1>
+        <select1 bind="navigationArrows" appearance="minimal" class="vshort">
+          <label>Navigation Arrow Position</label>
+          <item>
+            <label>Next to bullets</label>
+            <value>nexttobullets</value>
+          </item>
+          <item>
+            <label>Solo</label>
+            <value>solo</value>
+          </item>
+        </select1>
+        <select1 bind="navigationType" appearance="minimal" class="vshort">
+          <label>Navigation Type</label>
+          <item>
+            <label>Bullet</label>
+            <value>bullet</value>
+          </item>
+          <item>
+            <label>Thumb</label>
+            <value>thumb</value>
+          </item>
+          <item>
+            <label>None</label>
+            <value>none</value>
+          </item>
+        </select1>
+      </group>
+      <group class="inline">
+        <label>Navigation Pip Options</label>
+        <select1 bind="navigationHAlign" appearance="minimal" class="vshort">
+          <label>Pip Location Horizontal</label>
+          <item>
+            <label>Right</label>
+            <value>right</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Left</label>
+            <value>left</value>
+          </item>
+        </select1>
+        <select1 bind="navigationVAlign" appearance="minimal" class="vshort">
+          <label>Pip Location Vertical</label>
+          <item>
+            <label>Top</label>
+            <value>top</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Bottom</label>
+            <value>bottom</value>
+          </item>
+        </select1>
+        <range bind="navigationHOffset" start="0" end="1200" step="10">
+          <label>H Position Offset</label>
+        </range>
+        <range bind="navigationVOffset" start="0" end="1200" step="10">
+          <label>V Position Offset</label>
+        </range>
+      </group>
+      <group class="inline">
+        <label>Navigation Left Arrow Options</label>
+        <select1 bind="soloArrowLeftHalign" appearance="minimal" class="vshort">
+          <label>Location Horizontal</label>
+          <item>
+            <label>Right</label>
+            <value>right</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Left</label>
+            <value>left</value>
+          </item>
+        </select1>
+        <select1 bind="soloArrowLeftValign" appearance="minimal" class="vshort">
+          <label>Location Vertical</label>
+          <item>
+            <label>Top</label>
+            <value>top</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Bottom</label>
+            <value>bottom</value>
+          </item>
+        </select1>
+        <range bind="soloArrowLeftHOffset" start="0" end="1200" step="10">
+          <label>H Position Offset</label>
+        </range>
+        <range bind="soloArrowLeftVOffset" start="0" end="1200" step="10">
+          <label>V Position Offset</label>
+        </range>
+      </group>
+      <group class="inline">
+        <label>Navigation Right Arrow Options</label>
+        <select1 bind="soloArrowRightHalign" appearance="minimal" class="vshort">
+          <label>Location Horizontal</label>
+          <item>
+            <label>Right</label>
+            <value>right</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Left</label>
+            <value>left</value>
+          </item>
+        </select1>
+        <select1 bind="soloArrowRightValign" appearance="minimal" class="vshort">
+          <label>Location Vertical</label>
+          <item>
+            <label>Top</label>
+            <value>top</value>
+          </item>
+          <item>
+            <label>Center</label>
+            <value>center</value>
+          </item>
+          <item>
+            <label>Bottom</label>
+            <value>bottom</value>
+          </item>
+        </select1>
+        <range bind="soloArrowRightHOffset" start="0" end="1200" step="10">
+          <label>H Position Offset</label>
+        </range>
+        <range bind="soloArrowRightVOffset" start="0" end="1200" step="10">
+          <label>V Position Offset</label>
+        </range>
+      </group>
+    </group>
+
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Advanced Carousel Module</label>
+    </submit>
+  </group>
+</Content>

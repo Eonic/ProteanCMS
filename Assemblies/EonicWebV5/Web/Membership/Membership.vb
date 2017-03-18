@@ -2,11 +2,11 @@ Option Strict Off
 Option Explicit On
 
 Imports System.Xml
-Imports System
 Imports System.Web.Configuration
-Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Reflection
+Imports System.Collections.Generic
+
 
 Partial Public Class Web
     Public Class Membership
@@ -526,11 +526,53 @@ Partial Public Class Web
                     Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                     Dim adXfm As Object = oMembershipProv.AdminXforms
 
+                    ' OAuth Functionality
+
+                    If Not moRequest("oAuthResp") <> "" Then
+                        If moRequest("oAuthReg") <> "" And myWeb.msRedirectOnEnd = "" Then
+                            Dim sRedirectPath = ""
+                            Dim appId = ""
+                            Dim redirectURI = "http://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=" & moRequest("oAuthReg")
+                            Select Case moRequest("oAuthReg")
+                                Case "facebook"
+                                    sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?"
+                                    appId = moConfig("OauthFacebookId")
+                                    sRedirectPath = sRedirectPath & "client_id=" & appId & "&redirect_uri=" & redirectURI
+                                Case "twitter"
+                                    Dim twApi As New Integration.Directory.Twitter(myWeb)
+                                    twApi.twitterConsumerKey = moConfig("OauthTwitterId")
+                                    twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
+                                    sRedirectPath = twApi.GetRequestToken()
+                            End Select
+                            myWeb.msRedirectOnEnd = sRedirectPath
+                        Else
+
+                        End If
+                    Else
+                        Select Case moRequest("oAuthResp")
+                            Case "facebook"
+                                Dim redirectURI = "http://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=facebook"
+                                sProcessInfo = "Facebook Response"
+                                Dim fbClient As New Eonic.Integration.Directory.Facebook(myWeb, moConfig("OauthFacebookId"), moConfig("OauthFacebookKey"))
+                                Dim fbUsers As List(Of Eonic.Integration.Directory.Facebook.User)
+                                fbUsers = fbClient.GetFacebookUserData(moRequest("code"), redirectURI)
+                                sProcessInfo = fbUsers(0).first_name & " " & fbUsers(0).last_name
+
+                              '  fbClient.createFbUser(fbUsers(0))
+
+                            Case "twitter"
+                                sProcessInfo = "Twitter Response"
+                        End Select
+
+
+
+                    End If
+
                     ' If not in admin mode then base our choice on whether the user is logged in. 
                     ' If in Admin Mode, then present it as WYSIWYG
                     If (Not (myWeb.mbAdminMode) And myWeb.mnUserId > 0) Then
 
-                        Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']")
+                        Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-Or-selfContent[@type='xform' and @name='UserMyAccount']")
                         If oContentForm Is Nothing Then
                             oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm)
                         Else

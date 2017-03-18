@@ -1,0 +1,389 @@
+<html>
+<head>
+<!-- include needed JS files-->
+<script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="../jquery.optionTree.js"></script>
+<style type="text/css">
+select.vertical {
+    display: block;
+}
+.results {
+    margin: 10px;
+    color: darkgreen;
+}
+</style>
+</head>
+<body>
+<h1>Demo for optionTree plugin</h1>
+<p>Plugin homepage & short introduction: <a href="http://code.google.com/p/jquery-option-tree/">http://code.google.com/p/jquery-option-tree/</a></p>
+<p>See also: <a href="http://blog.kotowicz.net/search/label/option">blog posts about the plugin</a></p>
+<h2>Example 1</h2>
+<input type="text" name="demo1" />
+<script type="text/javascript">
+$(function() {
+
+    var option_tree = {
+       "Option 1": {"Suboption":200},
+       "Option 2": {"Suboption 2": {"Subsub 1":201, "Subsub 2":202},
+                "Suboption 3": {"Subsub 3":203, "Subsub 4":204, "Subsub 5":205}
+               }
+    };
+
+    $('input[name=demo1]').optionTree(option_tree);
+
+});
+</script>
+<code><pre>
+
+&lt;input type="text" name="demo1" /&gt;
+
+    var option_tree = {
+       "Option 1": {"Suboption":200},
+       "Option 2": {"Suboption 2": {"Subsub 1":201, "Subsub 2":202},
+                "Suboption 3": {"Subsub 3":203, "Subsub 4":204, "Subsub 5":205}
+               }
+    };
+
+    $('input[name=demo1]').optionTree(option_tree);
+</pre></code>
+<h2>Example 2 - change event and configuration</h2>
+<input type="hidden" name="demo2" />
+<script type="text/javascript">
+$(function() {
+
+    var option_tree = {
+       "Option 1": {"Suboption":200},
+       "Option 2": {"Suboption 2": {"Subsub 1":201, "Subsub 2":202},
+                "Suboption 3": {"Subsub 3":203, "Subsub 4":204, "Subsub 5":205}
+               }
+    };
+
+    var options = {empty_value: -1, choose: '...'};
+
+    $('input[name=demo2]').optionTree(option_tree, options)
+                          .change(function() { alert('Field ' + this.name  + ' = ' + this.value )});
+
+});
+</script>
+<code><pre>
+
+&lt;input type="hidden" name="demo2" /&gt;
+
+    var option_tree = {
+       "Option 1": {"Suboption":200},
+       "Option 2": {"Suboption 2": {"Subsub 1":201, "Subsub 2":202},
+                "Suboption 3": {"Subsub 3":203, "Subsub 4":204, "Subsub 5":205}
+               }
+    };
+
+    var options = {empty_value: -1, choose: '...'};
+
+    $('input[name=demo2]').optionTree(option_tree, options)
+                          .change(function() { alert('Field ' + this.name  + ' = ' + this.value )});
+
+</pre></code>
+
+<h2>Example 3 - preselected options</h2>
+<input type="hidden" name="demo3" />
+<script type="text/javascript">
+$(function() {
+
+    var option_tree = {
+       "Red": {"Default":100},
+       "Blue": {"Variant 1": {"Default":100, "Another":101},
+           "Variant 2": {"Default":100, "Another":102, "and another":103}
+          }
+    };
+
+    var options = {preselect: {'demo3': "Default"}}; // value for default option
+
+    $('input[name=demo3]').optionTree(option_tree, options)
+                          .change(function() { alert('Field ' + this.name  + ' = ' + this.value )});
+
+});
+</script>
+<code><pre>
+
+&lt;input type="hidden" name="demo3" /&gt;
+
+    var option_tree = {
+       "Red": {"Default":100},
+       "Blue": {"Variant 1": {"Default":100, "Another":101},
+           "Variant 2": {"Default":100, "Another":102, "and another":103}
+          }
+    };
+
+    var options = {preselect: {'demo3': "Default"}}; // value for default option (include field name)
+
+    $('input[name=demo3]').optionTree(option_tree, options)
+                          .change(function() { alert('Field ' + this.name  + ' = ' + this.value )});
+
+</pre></code>
+
+<h2>Example 4 - different style &amp; custom change event</h2>
+<div>
+<input type="hidden" name="demo4" />
+</div>
+<script type="text/javascript">
+$(function() {
+
+    var option_tree = {
+       "Red": {"Default":100},
+       "Blue": {"Variant 1": {"Default":100, "Another":101},
+           "Variant 2": {"Default":100, "Another":102, "and another":103}
+          }
+    };
+
+    var options = {select_class: 'vertical'}; // CSS class for select elements
+
+    /*
+     Displays string with current labels for each select element separated with ' '
+    */
+    var displayParents = function() {
+    var labels = []; // initialize array
+    $(this).siblings('select') // find all select
+                   .find(':selected') // and their current options
+                     .each(function() { labels.push($(this).text()); }); // and add option text to array
+    alert(labels.join(' '));  // and display the labels
+    }
+
+    $('input[name=demo4]').optionTree(option_tree, options)
+                          .change(displayParents);
+
+});
+</script>
+<code><pre>
+&lt;div&gt;
+&lt;input type="hidden" name="demo4" /&gt;
+&lt;/div&gt;
+
+    var option_tree = {
+       "Red": {"Default":100},
+       "Blue": {"Variant 1": {"Default":100, "Another":101},
+           "Variant 2": {"Default":100, "Another":102, "and another":103}
+          }
+    };
+
+    var options = {select_class: 'vertical'}; // CSS class for select elements
+
+    /*
+     Displays string with current labels for each select element separated with ' '
+    */
+    var displayParents = function() {
+    var labels = []; // initialize array
+    $(this).siblings('select') // find all select
+                   .find(':selected') // and their current options
+                     .each(function() { labels.push($(this).text()); }); // and add option text to array
+    alert(labels.join(' '));  // and display the labels
+    }
+
+    $('input[name=demo4]').optionTree(option_tree, options)
+                          .change(displayParents);
+
+
+</pre></code>
+<h2>Example 5 - AJAX lazy loading &amp; dynamic choose text</h2>
+<strong>This requires a HTTP server with PHP installed to work!</strong>
+<div>
+<input type="text" name="demo5" />
+</div>
+<div class="results" id="demo5-result"></div>
+<script type="text/javascript">
+$(function() {
+
+    var options = {
+            empty_value: 'null',
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: 'get-subtree.php', // this file will be called with 'id' parameter, JSON data must be returned
+            choose: function(level) {
+                return 'Choose level ' + level;
+            },
+            preselect: {'demo5': ['220','226']}
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings('select') // find all select
+                           .find(':selected') // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('<div>').text(this.value + ':' + labels.join(' > ')).appendTo('#demo5-result');  // and display the labels
+            }
+
+    $.getJSON('get-subtree.php', function(tree) { // initialize the tree by loading the file first
+        $('input[name=demo5]').optionTree(tree, options).change(displayParents);
+    });
+});
+</script>
+<code><pre>
+&lt;div&gt;
+&lt;input type=&quot;text&quot; name=&quot;demo5&quot; /&gt;
+&lt;/div&gt;
+&lt;div class="results" id="demo5-result"&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+$(function() {
+
+    var options = {
+            empty_value: &#39;null&#39;,
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: &#39;get-subtree.php&#39;, // this file will be called with &#39;id&#39; parameter, JSON data must be returned
+            choose: function(level) {
+                return &#39;Choose level &#39; + level;
+            },
+            preselect: {&#39;demo5&#39;: [&#39;220&#39;,&#39;226&#39;]} // array of default values - if on any level option value will be in this list, it will be selected
+                                                                        // be careful of variable types - &#39;111&#39; !== 111
+
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings(&#39;select&#39;) // find all select
+                           .find(&#39;:selected&#39;) // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('<div>').text(this.value + ':' + labels.join(' > ')).appendTo('#demo5-result');  // and display the labels
+            }
+
+    $.getJSON(&#39;get-subtree.php&#39;, function(tree) { // initialize the tree by loading the file first
+        $(&#39;input[name=demo5]&#39;).optionTree(tree, options).change(displayParents);
+    });
+});
+&lt;/script&gt;
+</pre></code>
+<h2>Example 6 - AJAX lazy loading &amp; setting value on each level change</h2>
+<strong>This requires a HTTP server with PHP installed to work!</strong>
+<div>
+<input type="text" name="demo6" />
+</div>
+<div class="results" id="demo6-result"></div>
+<script type="text/javascript">
+$(function() {
+
+    var options = {
+            empty_value: 'null',
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: 'get-subtree.php', // this file will be called with 'id' parameter, JSON data must be returned
+            set_value_on: 'each', // we will change input value when every select box changes
+            choose: function(level) {
+                return 'Choose level ' + level;
+            },
+            preselect: {'demo6': ['220','226']},
+            preselect_only_once: true // prevent auto selecting whole branch when user maniputales one of branch levels
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings('select') // find all select
+                           .find(':selected') // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('<div>').text(this.value + ':' + labels.join(' > ')).appendTo('#demo6-result');  // and display the labels
+            }
+
+    $.getJSON('get-subtree.php', function(tree) { // initialize the tree by loading the file first
+        $('input[name=demo6]').optionTree(tree, options).change(displayParents);
+    });
+});
+</script>
+<code><pre>
+&lt;div&gt;
+&lt;input type=&quot;text&quot; name=&quot;demo6&quot; /&gt;
+&lt;/div&gt;
+&lt;div class="results" id="demo6-result"&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+$(function() {
+
+    var options = {
+            empty_value: &#39;null&#39;,
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: &#39;get-subtree.php&#39;, // this file will be called with &#39;id&#39; parameter, JSON data must be returned
+            set_value_on: &#39;each&#39;, // we will change input value when every select box changes
+            choose: function(level) {
+                return &#39;Choose level &#39; + level;
+            },
+            preselect: {&#39;demo6&#39;: [&#39;220&#39;,&#39;226&#39;]}, // array of default values - if on any level option value will be in this list, it will be selected
+                                                                        // be careful of variable types - &#39;111&#39; !== 111
+            preselect_only_once: true // prevent auto selecting whole branch when user maniputales one of branch levels
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings(&#39;select&#39;) // find all select
+                           .find(&#39;:selected&#39;) // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('<div>').text(this.value + ':' + labels.join(' > ')).appendTo('#demo6-result');  // and display the labels
+            }
+
+    $.getJSON(&#39;get-subtree.php&#39;, function(tree) { // initialize the tree by loading the file first
+        $(&#39;input[name=demo6]&#39;).optionTree(tree, options).change(displayParents);
+    });
+});
+&lt;/script&gt;
+</pre></code>
+<h2>Example 7 - select size &gt; 1 &amp; load animation</h2>
+<strong>This requires a HTTP server with PHP installed to work!</strong>
+<div>
+<input type="text" name="demo7" />
+</div>
+<div class="results" id="demo7-result"></div>
+<script type="text/javascript">
+$(function() {
+
+    var options = {
+            empty_value: 'null',
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: 'get-subtree.php', // this file will be called with 'id' parameter, JSON data must be returned
+            choose: function(level) {
+                return 'Choose level ' + level;
+            },
+            loading_image: 'ajax-load.gif',
+            show_multiple: 10, // if true - will set the size to show all options
+            choose: '' // no choose item
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings('select') // find all select
+                           .find(':selected') // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('<div>').text(this.value + ':' + labels.join(' > ')).appendTo('#demo7-result');  // and display the labels
+            }
+
+    $.getJSON('get-subtree.php', function(tree) { // initialize the tree by loading the file first
+        $('input[name=demo7]').optionTree(tree, options).change(displayParents);
+    });
+});
+</script>
+<code><pre>
+&lt;div&gt;
+&lt;input type=&quot;text&quot; name=&quot;demo7&quot; /&gt;
+&lt;/div&gt;
+&lt;div class=&quot;results&quot; id=&quot;demo7-result&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+$(function() {
+
+    var options = {
+            empty_value: 'null',
+            indexed: true,  // the data in tree is indexed by values (ids), not by labels
+            on_each_change: 'get-subtree.php', // this file will be called with 'id' parameter, JSON data must be returned
+            choose: function(level) {
+                return 'Choose level ' + level;
+            },
+            loading_image: 'ajax-load.gif',
+            show_multiple: 10, // if true - will set the size to show all options
+            choose: '' // no choose item
+        };
+
+        var displayParents = function() {
+            var labels = []; // initialize array
+            $(this).siblings('select') // find all select
+                           .find(':selected') // and their current options
+                             .each(function() { labels.push($(this).text()); }); // and add option text to array
+            $('&lt;div&gt;').text(this.value + ':' + labels.join(' &gt; ')).appendTo('#demo7-result');  // and display the labels
+            }
+
+    $.getJSON('get-subtree.php', function(tree) { // initialize the tree by loading the file first
+        $('input[name=demo7]').optionTree(tree, options).change(displayParents);
+    });
+});
+&lt;/script&gt;
+</pre></code>
+</body>
+</html>

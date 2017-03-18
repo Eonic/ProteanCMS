@@ -1319,8 +1319,8 @@ Partial Public Class Web
         ''' </list>
         ''' 
         ''' </summary>
-        ''' <param name="keywords"></param>
-        ''' <param name="request"></param>
+        ''' <param name="keywordsToSearch"></param>
+        ''' <param name="filters"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement) As Lucene.Net.Search.Query

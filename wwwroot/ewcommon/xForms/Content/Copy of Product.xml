@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Product</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Name/>
+						<StockCode/>
+						<Manufacturer/>
+						<Options>
+							<OptGroup type="Size" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+							<OptGroup type="Other" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+						</Options>
+						<Prices>
+							<Price currency="GBP" type="sale" validGroup="all"/>
+							<Price currency="GBP" type="rrp" validGroup="all"/>
+						</Prices>
+						<Stock/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<ShortDescription></ShortDescription>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<Name/>
+						<StockCode/>
+						<Manufacturer/>
+						<Options>
+							<OptGroup type="Size" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+							<OptGroup type="Other" selectType="DropDown">
+								<option/>
+								<option/>
+								<option/>
+							</OptGroup>
+						</Options>
+						<Prices>
+							<Price currency="GBP" type="sale" validGroup="all"/>
+							<Price currency="GBP" type="rrp" validGroup="all"/>
+						</Prices>
+						<ShippingWeight/>
+						<Stock/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+							<img class="detail"/>
+						</Images>
+						<ShortDescription></ShortDescription>
+						<Body/>
+						<SpecificationDocument/>
+						<Keywords/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentProductName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentProductName" nodeset="Name" required="true()" type="string"/>
+				<bind id="cContentManufacturer" nodeset="Manufacturer" required="false()" type="string"/>
+				<bind id="cContentStockCode" nodeset="StockCode" required="false()" type="string"/>
+				<bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="false()" type="string"/>
+				<bind id="cContentPriceRRP" nodeset="Prices/Price[@type='rrp']" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+				<bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentStrap" nodeset="ShortDescription" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentProductName" nodeset="Name" required="true()" type="string"/>
+				<bind id="cContentManufacturer" nodeset="Manufacturer" required="false()" type="string"/>
+				<bind id="eOptions" nodeset="Options/OptGroup">
+						<bind id="eOptGrpName" nodeset="@type" required="true()" type="string"/>
+						<bind id="eOptGrpType" nodeset="@selectType" required="true()" type="string"/>
+						<bind id="eOptGrp" nodeset="OptGroup">
+							<bind id="eOptName" nodeset="@label" required="true()" type="string"/>
+							<bind id="eOptCode" nodeset="value" required="true()" type="string"/>
+						</bind>
+				</bind>
+				<bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="false()" type="string"/>
+				<bind id="cContentPriceRRP" nodeset="Prices/Price[@type='rrp']" required="false()" type="string"/>
+				<bind id="cContentStock" nodeset="Stock" required="false()" type="string"/>
+				<bind id="cContentStockCode" nodeset="StockCode" required="false()" type="string"/>
+				<bind id="cContentShippingWeight" nodeset="ShippingWeight" required="false()" type="string"/>
+				<bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+				<bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentSpecificationDocument" nodeset="SpecificationDocument" required="false()" type="string"/>
+				<bind id="cContentStrap" nodeset="ShortDescription" required="false()" type="string"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+				<bind id="cContentKeywords" nodeset="Keywords" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label> Edit Product</label>
+		<group class="xFormContainer">
+			<group class="Content">
+				<label>Settings</label>
+				<input bind="dPublishDate" class="calendar short">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="required vshort">
+					<label>Status</label>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+				</select1>
+			</group>
+			<group class="Content">
+				<label>Files</label>
+				<input bind="cContentFullSizePicture" class="short pickImage">
+					<label>Main Product Image</label>
+				</input>
+				<hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+				<input bind="cContentThumbnail" class="short pickImage">
+					<label>Alternative Thumbnail</label>
+				</input>
+				<input bind="cContentPicture" class="short pickImage">
+					<label>Alternative Picture</label>
+				</input>
+				<input bind="cContentSpecificationDocument" class="short pickDocument">
+					<label>Specification Document</label>
+				</input>
+			</group>
+		</group>
+		<!-- End of Column 1-->
+		<group class="xFormContainer">
+			<group class="inline">
+				<label>Product Details</label>
+				<input bind="cContentProductName" class="required long">
+					<label>Product Name</label>
+				</input>
+				<input bind="cContentPrice" class="short">
+					<label>Current Price (£)</label>
+				</input>
+				<input bind="cContentPriceRRP" class="short">
+					<label>RRP (£)</label>
+				</input>
+				<input bind="cContentStockCode" class="short">
+					<label>Stock Code</label>
+				</input>
+				<input bind="cContentStock" class="short">
+					<label>Stock Level</label>
+				</input>
+				<input bind="cContentManufacturer" class="short">
+					<label>Manufacturer</label>
+				</input>
+				<input bind="cContentShippingWeight" class="short">
+					<label>Shipping Weight (kg)</label>
+				</input>
+				<label>Short Description</label>
+				<textarea bind="cContentStrap" class="TextArea xhtml" rows="2"/>
+				<label>Full Description</label>
+				<textarea bind="cContentBody" class="TextArea xhtml" rows="15"/>
+        <group>
+				<input bind="cContentKeywords" class="long">
+					<label>Additional Keywords</label>
+				</input>
+        </group>
+			</group>
+			<group>
+					<label>Options</label>
+					<repeat bind="eOptions" id="optionsLine" class="repeat inline">
+						<input bind="eOptGrpName" class="short required">
+							<label>Group Name</label>
+						</input>
+						<select1 bind="eOptGrpType" appearance="full" class="required vshort">
+							<label>Option Type</label>
+							<item>
+								<label>Dropdown</label>
+								<value>DropDown</value>
+							</item>
+							<item>
+								<label>Radio Button</label>
+								<value>Radio</value>
+							</item>
+						</select1>
+						<trigger>
+						    	<label>Remove Group</label>
+						    	<delete bind="eOptions" at="index('optionsLine')"/>
+						</trigger>
+						<trigger>
+						    	<label>Add Option</label>
+						    	<insert position="after" bind="eOptGrp" at="index('optionGroupLine')"/>
+						</trigger>
+						<repeat bind="eOptGrp" id="optionGroupLine" class="repeat inline">
+							<input bind="eOptName" class="short">
+								<label>Opt Name</label>
+							</input>
+							<input bind="eOptCode" class="vshort">
+								<label>Opt Code</label>
+							</input>
+							<trigger>
+							    	<label>Delete</label>
+							    	<delete bind="eOptGrp" at="index('optionGroupLine')"/>
+							</trigger>
+						</repeat>
+					</repeat>
+					<trigger>
+						  <label>New Option Group</label>
+						  <insert position="after" bind="eOptions" at="index('optionGroupLine')"/>
+					</trigger>
+				</group>
+      <relatedContent search="find add" type="Product" relationType="Complimentary" direction="1way">
+        <label>Complimentary Products</label>
+      </relatedContent>
+      <relatedContent search="find add" type="Product" relationType="Alternative" direction="2ay">
+        <label>Alternative Products</label>
+      </relatedContent>
+      <relatedContent search="find add" type="Review" relationType="" direction="2ay">
+        <label>Reviews</label>
+      </relatedContent>
+			</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Product</label>
+		</submit>
+	</group>
+</Content>

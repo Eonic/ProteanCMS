@@ -17,8 +17,8 @@ Namespace Integration.Directory
         Inherits Integration.Directory.BaseProvider
         Implements Integration.Directory.IPostable
 
-        Private Const _twitterConsumerKey As String = "c2h0VNmcE5c0Vu0fsHEfGg"
-        Private Const _twitterConsumerSecret As String = "5DzFnQtX7cNxuChpJCcz1ZzhGfPGTAh4MYWMuuJvxQ"
+        Public twitterConsumerKey As String = "c2h0VNmcE5c0Vu0fsHEfGg"
+        Public twitterConsumerSecret As String = "5DzFnQtX7cNxuChpJCcz1ZzhGfPGTAh4MYWMuuJvxQ"
 
         Private Const _postLengthLimit As Integer = 140
 
@@ -38,14 +38,15 @@ Namespace Integration.Directory
                 If IsAuthorisedUser Then
 
 
-                    Dim callbackParameters As New NameValueCollection(2)
+                    Dim callbackParameters As New NameValueCollection(3)
+                    callbackParameters.Add("oAuthResp", "twitter")
                     callbackParameters.Add("integration", "Twitter.AccessTokens")
                     callbackParameters.Add("dirId", MyBase.DirectoryId.ToString())
 
                     Dim callback As Uri = BuildURIFromRequest(_myWeb.moRequest, callbackParameters)
 
                     Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
-                    Dim authenticationLink As String = twitterAPI.GetAuthenticationLink(_twitterConsumerKey, _twitterConsumerSecret, callback.ToString())
+                    Dim authenticationLink As String = twitterAPI.GetAuthenticationLink(twitterConsumerKey, twitterConsumerSecret, callback.ToString())
 
                     _myWeb.AddResponse("Twitter.AuthenticationLink", authenticationLink, , ResponseType.Redirect)
                     _myWeb.msRedirectOnEnd = authenticationLink
@@ -86,7 +87,7 @@ Namespace Integration.Directory
                         _myWeb.AddResponse("Twitter.AccessTokens.NullArguments", "Either the token or the verifier were blank", , ResponseType.Alert)
 
                     Else
-                        twitterAPI.GetAccessTokens(_twitterConsumerKey, _twitterConsumerSecret, token, verifier)
+                        twitterAPI.GetAccessTokens(twitterConsumerKey, twitterConsumerSecret, token, verifier)
 
                         _credentials.AddSetting("OAuth_Token", twitterAPI.OAuth_Token)
                         _credentials.AddSetting("OAuth_TokenSecret", twitterAPI.OAuth_TokenSecret)
@@ -94,7 +95,7 @@ Namespace Integration.Directory
                         ' Get the user name
                         Try
                             Dim user As Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser
-                            twitterAPI.AuthenticateWith(_twitterConsumerKey, _twitterConsumerSecret, twitterAPI.OAuth_Token, twitterAPI.OAuth_TokenSecret)
+                            twitterAPI.AuthenticateWith(twitterConsumerKey, twitterConsumerSecret, twitterAPI.OAuth_Token, twitterAPI.OAuth_TokenSecret)
                             user = twitterAPI.AccountInformation()
                             _credentials.AddSetting("Name", user.Name)
                             _credentials.AddSetting("ScreenName", user.ScreenName)
@@ -156,7 +157,7 @@ Namespace Integration.Directory
 
                     Else
                         Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
-                        twitterAPI.AuthenticateWith(_twitterConsumerKey, _twitterConsumerSecret, token, secret)
+                        twitterAPI.AuthenticateWith(twitterConsumerKey, twitterConsumerSecret, token, secret)
                         twitterAPI.Update(status)
                     End If
 

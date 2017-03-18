@@ -107,7 +107,7 @@ Namespace GnuPG
         ''' <summary>
         ''' Constructor
         ''' </summary>
-        ''' <param name="homeDirectory">home directory for GnuPG (where keyrings AND gpg.exe are located)</param>
+        ''' <param name="homeDirectory__1">home directory for GnuPG (where keyrings AND gpg.exe are located)</param>
         Public Sub New(homeDirectory__1 As String)
             homedirectory = homeDirectory__1
         End Sub

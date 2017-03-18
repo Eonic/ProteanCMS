@@ -90,7 +90,7 @@ Public Class Web
     Public Shared gcMenuContentCountTypes As String
     Public Shared gcMenuContentBriefTypes As String
     Public Shared gcEwBaseUrl As String
-    Public Shared gcBlockContentType As String
+    Public Shared gcBlockContentType As String = ""
     Public Shared gbMembership As Boolean = False
     Public Shared gbCart As Boolean = False
     Public Shared gbQuote As Boolean = False
@@ -162,6 +162,24 @@ Public Class Web
     Public oXform As Eonic.xForm
     Public gnShowRelatedBriefDepth As Integer = 2
     Public bRestartApp As Boolean = False
+    Public moResponseType As pageResponseType
+    Private bPageCache As Boolean = False
+    Private mcPageCacheFolder As String = "\ewCache"
+
+
+
+
+#End Region
+#Region "Enums"
+    Enum pageResponseType
+        Page = 0
+        xml = 1
+        json = 2
+        popup = 3
+        ajaxadmin = 4
+        mail = 5
+        iframe = 6
+    End Enum
 
 #End Region
 
@@ -173,27 +191,9 @@ Public Class Web
     End Sub
 
     Public Sub New(ByVal Context As System.Web.HttpContext)
-
+        MyBase.New(Context)
         Dim sProcessInfo As String = ""
         Try
-
-            '-- Now happens in Base --
-
-            'Dim nMemUse As Integer = Process.GetCurrentProcess.WorkingSet64
-
-            'If moCtx Is Nothing Then
-            '    moCtx = Context
-            'End If
-
-            'goApp = moCtx.Application
-            'moRequest = moCtx.Request
-            'moResponse = moCtx.Response
-            'moSession = moCtx.Session
-            'goServer = moCtx.Server
-            'goCache = moCtx.Cache
-            'EnumberateFeatures()
-
-            '-- End Now happens in Base --
 
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
@@ -203,12 +203,8 @@ Public Class Web
 
             InitialiseGlobal()
             If Not moCtx Is Nothing Then
-
                 PerfMon.Log("Web", "New")
-
             End If
-
-
 
             Open()
 
@@ -521,78 +517,9 @@ Public Class Web
             If Not moSession Is Nothing Then
 
                 'below code has beem moved to membership base provider
-
                 Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
                 mnUserId = oMembershipProv.Activities.GetUserId(Me)
 
-                ' If we are not logged on force the admin homepage
-                'If moSession("nUserId") = Nothing And mnUserId = 0 Then
-
-                '    'first lets check for a remember me cookie
-                '    Dim rememberMeMode As String = moConfig("RememberMeMode")
-                '    If Not moRequest.Cookies("RememberMeUserId") Is Nothing And rememberMeMode <> "KeepCookieAfterLogoff" And Not String.IsNullOrEmpty(rememberMeMode) Then
-                '        If IsNumeric(moRequest.Cookies("RememberMeUserId").Value) Then
-                '            ' AG - MAJOR SECURITY FUBAR!!! Commenting out for now.
-                '            ' mnUserId = moRequest.Cookies("RememberMeUserId").Value
-                '        End If
-                '    End If
-
-
-                '    ' If single user login is set we need to check if a cookie exists and reconnect if needs be
-                '    Dim oldSession As System.Web.HttpCookie = moRequest.Cookies("ewslock")
-                '    If gbSingleLoginSessionPerUser AndAlso oldSession IsNot Nothing Then
-
-
-                '        ' Find out what the last thing the user did (login-wise) was
-                '        If Not String.IsNullOrEmpty(oldSession.Value) Then
-
-                '            ' We need to find a few things:
-                '            ' 1. Find the last activity for the session id (within the timeout period)
-                '            ' 2. Work out if the user id for that session id has had a more recent session
-                '            ' 3. If not, then we can assume that the session is still alive and we need to update for this session.
-                '            Dim lastSeenQuery As String = "SELECT nUserDirId FROM (SELECT TOP 1 nUserDirId,nACtivityType,cSessionId, (SELECT TOP 1 l2.cSessionId As sessionId FROM tblActivityLog l2 WHERE l2.nUserDirId = l.nUserDirId ORDER BY dDateTime DESC) As lastSessionForUser FROM tblActivityLog l " _
-                '            & "WHERE cSessionId = " & dbHelper.SqlString(oldSession.Value) & " " _
-                '            & "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " & gnSingleLoginSessionTimeout & " " _
-                '            & "ORDER BY dDateTime DESC) s WHERE s.cSessionId = s.lastSessionForUser AND s.nACtivityType <> " & dbHelper.ActivityType.Logoff
-
-                '            Dim lastSeenUser As Integer = moDbHelper.GetDataValue(lastSeenQuery, , , 0)
-                '            If lastSeenUser > 0 Then
-
-                '                ' Reconnect with the new session ID
-                '                mnUserId = lastSeenUser
-                '                moResponse.Cookies("ewslock").Value = moSession.SessionID
-                '                moDbHelper.logActivity(dbHelper.ActivityType.SessionReconnectFromCookie, mnUserId, 0, 0, oldSession.Value)
-
-                '            End If
-
-                '        End If
-
-
-                '    End If
-
-
-                'Else
-                '    If moSession("nUserId") = Nothing Or moSession("nUserId") = 0 Then
-                '        'this will get set on close
-                '    Else
-                '        ' If there is a user set, we need to check if we are transferring over to a secure site,
-                '        ' to see if we should actually be logged off (which we can tell by looking at the cart order
-                '        ' based on the session id).
-                '        If gbCart AndAlso moRequest("refSessionId") <> "" Then
-
-                '            Dim nCartUserId As Long = moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(moRequest("refSessionId")) & "'", , , 0)
-                '            If nCartUserId <> moSession("nUserId") Then
-                '                mnUserId = 0
-                '            Else
-                '                mnUserId = moSession("nUserId")
-                '            End If
-                '        Else
-                '            'lets finally set the user Id from the session
-                '            mnUserId = moSession("nUserId")
-                '        End If
-
-                '    End If
-                'End If
             End If
 
             'We need the userId placed into dbhelper.
@@ -664,7 +591,9 @@ Public Class Web
 
             'don't return anything but error in admi mode
             If mcPagePath <> "" And mnPageId = RootPageId And mbAdminMode Then
-                gnResponseCode = 404
+                'TS Removed because not quite sure what is going on... 
+                ' was causing a problem with editing locations.
+                '    gnResponseCode = 404
             End If
 
             If newPageId > 0 And newPageId = gnPageLoginRequiredId And mnUserId = 0 Then
@@ -686,28 +615,28 @@ Public Class Web
                 End If
             End If
 
+            If Not mbAdminMode Then
 
-            If mnPageId = gnPageNotFoundId _
+                If mnPageId = gnPageNotFoundId _
             Or mnPageId = gnPageAccessDeniedId _
             Or mnPageId = gnPageLoginRequiredId _
             Or mnPageId = gnPageErrorId Then
-                If RootPageId <> mnPageId Then
-                    mbSystemPage = True
+                    If RootPageId <> mnPageId Then
+                        mbSystemPage = True
 
-                    If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
-                        'moResponse.StatusCode = 401
-                    End If
-                    If mnPageId = gnPageNotFoundId Then
-                        gnResponseCode = 404
-                    End If
-                    If mnPageId = gnPageErrorId Then
-                        gnResponseCode = 500
-                    End If
+                        If mnPageId = gnPageAccessDeniedId Or mnPageId = gnPageLoginRequiredId Then
+                            'moResponse.StatusCode = 401
+                        End If
+                        If mnPageId = gnPageNotFoundId Then
+                            gnResponseCode = 404
+                        End If
+                        If mnPageId = gnPageErrorId Then
+                            gnResponseCode = 500
+                        End If
 
+                    End If
                 End If
             End If
-
-
 
             If mnArtId < 1 Then
                 If Not moRequest("artid") = "" Then
@@ -770,7 +699,7 @@ Public Class Web
             goServer = Nothing
             moConfig = Nothing
 
-            If Not moTransform Is Nothing Then
+            If Not moTransform Is Nothing And ibIndexMode = False Then
                 moTransform.Close()
                 moTransform = Nothing
             End If
@@ -948,6 +877,62 @@ Public Class Web
 
             Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/cart")
 
+            If moRequest.ContentType <> "" Then
+                mcContentType = moRequest.ContentType
+            End If
+
+            Select Case LCase(moRequest("contentType"))
+                Case "xml"
+                    mcContentType = "application/xml"
+                    mbOutputXml = True
+                    moResponseType = pageResponseType.xml
+
+                    If moConfig("XmlAllowedIPList") <> "" Then
+                        If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then
+                            mcContentType = "text/html"
+                            gcEwSiteXsl = moConfig("SiteXsl")
+                            mbOutputXml = False
+                            moResponseType = pageResponseType.Page
+                        End If
+                    End If
+                Case "json"
+                    mcContentType = "application/json"
+                    mbOutputXml = True
+                    moResponseType = pageResponseType.json
+                Case "popup"
+                    If IO.File.Exists(goServer.MapPath("/xsl/admin/AdminPopups.xsl")) Then
+                        mcEwSiteXsl = "/xsl/admin/AdminPopups.xsl"
+                    Else
+                        mcEwSiteXsl = "/ewcommon/xsl/admin/AdminPopups.xsl"
+                    End If
+                    mbPopupMode = True
+                    mbAdminMode = True
+                    moResponseType = pageResponseType.popup
+                Case "ajaxadmin"
+                    mcEwSiteXsl = "/ewcommon/xsl/admin/ajaxAdmin.xsl"
+                    moResponseType = pageResponseType.ajaxadmin
+                   ' oEw.GetAjaxHTML("MenuNode")
+                Case "mail", "email"
+                    Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                    If moMailConfig("MailingXsl") <> "" Then
+                        gcEwSiteXsl = moMailConfig("MailingXsl")
+                    Else
+                        gcEwSiteXsl = "/ewcommon/xsl/Mailer/mailerStandard.xsl"
+                    End If
+                    mnMailMenuId = moMailConfig("RootPageId")
+                    mcContentType = "text/html"
+                    moResponseType = pageResponseType.mail
+                Case Else
+                    mcContentType = "text/html"
+                    gcEwSiteXsl = moConfig("SiteXsl")
+                    moResponseType = pageResponseType.Page
+                    'can we get a cached page
+                    If Not moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") Is Nothing Then
+                        If moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
+                            bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
+                        End If
+                    End If
+            End Select
 
             mnArtId = mnArtId
             mnPageId = mnPageId
@@ -965,8 +950,6 @@ Public Class Web
             Else
                 gcEwBaseUrl = moConfig("BaseUrl")
             End If
-
-            gcEwSiteXsl = moConfig("SiteXsl")
 
             ' Language sites.
             ' If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
@@ -1006,140 +989,195 @@ Public Class Web
     End Sub
 
     Public Overridable Sub GetPageHTML()
-
         PerfMon.Log("Web", "GetPageHTML")
         Dim sProcessInfo As String = ""
+        Dim sCachePath As String = ""
+        Dim sServeFile As String = ""
         Try
+            Select Case moResponseType
+                Case pageResponseType.ajaxadmin
+                    GetAjaxHTML("MenuNode")
+                Case Else
 
-            If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
-                sProcessInfo = "In Admin Mode"
-                If moAdmin Is Nothing Then moAdmin = New Admin(Me)
-                'Dim oAdmin As Admin = New Admin(Me)
-                'Dim oAdmin As Eonic.Web.Admin = New Eonic.Web.Admin(Me)
-                moAdmin.open(moPageXml)
-                moAdmin.adminProcess(Me)
-                moAdmin.close()
-                moAdmin = Nothing
-            Else
-                If moPageXml.OuterXml = "" Then
-                    sProcessInfo = "Getting Page XML"
-                    GetPageXML()
-                End If
-            End If
+                    If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                        bPageCache = False
+                    End If
 
-            sProcessInfo = "Transform PageXML using XSLT"
+                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-            moResponse.HeaderEncoding = System.Text.Encoding.UTF8
-            moResponse.ContentEncoding = System.Text.Encoding.UTF8
-
-
-            ' Check if the XML Output has an optional IP restriction placed against it.
-            If mbOutputXml Then
-                If moConfig("XmlAllowedIPList") <> "" Then
-                    If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
-                End If
-            End If
-
-            ' Overload the content type for xml
-            If mbOutputXml Then
-                mcContentType = "text/xml"
-            End If
-
-
-
-            'If mcContentType <> "text/html" Then
-            '    moResponse.Buffer = True
-            '    moResponse.Expires = 60
-            '    moResponse.AppendHeader("Pragma", "public")
-            '    moResponse.AppendHeader("Cache-Control", "max-age=0")
-            'End If
-            ' AJG - application/xhtml+xml is interpretly correctly by many browsers, especially IE
-            ' Default Content type returned to be XHTML (to clear warning on XHTML validator)
-
-            If Not msException = "" Then
-                'If there is an error we can add our own header.
-                'this means external programs can check that there is an error
-                moResponse.AddHeader("X-EonicError", "An Error has occured")
-                gnResponseCode = 500
-                moResponse.ContentType = "text/html"
-            Else
-                ' Set the Content Type
-                moResponse.ContentType = mcContentType
-
-                ' Set the Content Disposition
-                If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                    moResponse.AddHeader("Content-Disposition", mcContentDisposition)
-                End If
-            End If
-
-            'moResponse.Buffer = True
-            moResponse.Expires = 0
-            moResponse.AppendHeader("Generator", gcGenerator)
-
-            If msRedirectOnEnd <> "" Then
-                moPageXml = Nothing
-                Close()
-            Else
-                If mbOutputXml = True Then
-                    moResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
-                Else
-
-                    PerfMon.Log("Web", "GetPageHTML-loadxsl")
-                    Dim styleFile As String = CStr(goServer.MapPath(mcEwSiteXsl))
-                    Dim brecompile As Boolean = False
-
-                    If moRequest("recompile") <> "" Then
-                        'add delete xsltc flag to web.config
-                        If moRequest("recompile") = "del" Then
-                            brecompile = True
-                            msRedirectOnEnd = Nothing
-                        Else
-                            msRedirectOnEnd = "/?recompile=del"
-                            bRestartApp = True
-                            Eonic.Config.UpdateConfigValue(Me, "eonic/web", "CompliedTransform", "rebuild")
+                        If Not moRequest("reBundle") Is Nothing Then
+                            ClearPageCache()
                         End If
 
-                    End If
-
-                    Dim oTransform As New Eonic.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
-
-                    PerfMon.Log("Web", "GetPageHTML-startxsl")
-                    If moConfig("XslTimeout") <> "" Then
-                        oTransform.TimeOut = moConfig("XslTimeout")
-                    End If
-                    oTransform.mbDebug = gbDebug
-
-                    oTransform.ProcessTimed(moPageXml, moResponse)
-                    'oTransform.Process(moPageXml, moResponse)
-
-                    PerfMon.Log("Web", "GetPageHTML-endxsl")
-                    oTransform.Close()
-                    oTransform = Nothing
-
-                    'moResponse.SuppressContent = False
-                    If gnResponseCode <> 200 Then
-                        ' TODO: This is IIS7 specific, needs addressing for IIS6
-                        moResponse.TrySkipIisCustomErrors = True
-                        moResponse.StatusCode = gnResponseCode
-                    End If
-                    moSession("previousPage") = mcOriginalURL
-                    'we don't need this anymore.
-                    If Not ibIndexMode Then
-                        If msRedirectOnEnd = "" Then
-                            PerfMon.Write()
-                            moPageXml = Nothing
-                            Close()
-                            '                         moResponse.Flush()
-                            '                         moResponse.End()
-                        Else
-                            moPageXml = Nothing
-                            Close()
+                        sCachePath = mcOriginalURL
+                        If mcPagePath = "" Then
+                            sCachePath = sCachePath & "home"
                         End If
+                        If moFSHelper.VirtualFileExists(mcPageCacheFolder & sCachePath & ".html") Then
+                            sServeFile = mcPageCacheFolder & sCachePath & ".html"
+                        End If
+                    End If
+
+
+
+                    moResponse.HeaderEncoding = System.Text.Encoding.UTF8
+                    moResponse.ContentEncoding = System.Text.Encoding.UTF8
+
+                    If Not msException = "" Then
+                        'If there is an error we can add our own header.
+                        'this means external programs can check that there is an error
+                        moResponse.AddHeader("X-EonicError", "An Error has occured")
+                        gnResponseCode = 500
+                        moResponse.ContentType = "text/html"
                     Else
-                        moPageXml = New XmlDocument
+                        ' Set the Content Type
+                        moResponse.ContentType = mcContentType
+                        ' Set the Content Disposition
+                        If Not String.IsNullOrEmpty(mcContentDisposition) Then
+                            moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                        End If
                     End If
-                End If
-            End If
+
+                    moResponse.Expires = 0
+                    moResponse.AppendHeader("Generator", gcGenerator)
+
+                    If sServeFile = "" Then
+                        sProcessInfo = "Transform PageXML Using XSLT"
+                        If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                            sProcessInfo = "In Admin Mode"
+                            If moAdmin Is Nothing Then moAdmin = New Admin(Me)
+                            'Dim oAdmin As Admin = New Admin(Me)
+                            'Dim oAdmin As Eonic.Web.Admin = New Eonic.Web.Admin(Me)
+                            moAdmin.open(moPageXml)
+                            moAdmin.adminProcess(Me)
+                            moAdmin.close()
+                            moAdmin = Nothing
+                        Else
+                            If moPageXml.OuterXml = "" Then
+                                sProcessInfo = "Getting Page XML"
+                                GetPageXML()
+                            End If
+                        End If
+
+                        If msRedirectOnEnd <> "" Then
+                            moPageXml = Nothing
+                            Close()
+                        Else
+                            ' Check if the XML Output has an optional IP restriction placed against it.
+                            If mbOutputXml Then
+                                If moConfig("XmlAllowedIPList") <> "" Then
+                                    If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
+                                End If
+                            End If
+                            If mbOutputXml = True Then
+                                Select Case LCase(mcContentType)
+                                    Case "application/xml"
+                                        moResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
+                                    Case "application/json"
+
+                                        moResponse.Write(Newtonsoft.Json.JsonConvert.SerializeXmlNode(moPageXml.DocumentElement, Newtonsoft.Json.Formatting.None))
+
+                                End Select
+
+                            Else
+
+                                PerfMon.Log("Web", "GetPageHTML-loadxsl")
+                                Dim styleFile As String
+                                If Me.mbAdminMode = True Then
+                                    If LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) = "false" Or mbPopupMode = True Then
+                                        styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                    Else
+                                        If LCase(moConfig("AdminXsl")) = "common" Then
+                                            'uses the default admin xsl
+                                            styleFile = CStr(goServer.MapPath("/ewcommon/xsl/admin/page.xsl"))
+                                        ElseIf moConfig("AdminXsl") <> "" Then
+                                            'uses a specified admin XSL
+                                            styleFile = moConfig("AdminXsl")
+                                        Else
+                                            'uses the sites main XSL
+                                            styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                        End If
+                                    End If
+                                Else
+                                    If moResponseType = pageResponseType.Page Then
+                                        moResponse.AddHeader("X-Frame-Options", "DENY")
+
+                                    End If
+                                    styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                End If
+
+                                Dim brecompile As Boolean = False
+
+                                If moRequest("recompile") <> "" Then
+                                    'add delete xsltc flag to web.config
+                                    If moRequest("recompile") = "del" Then
+                                        brecompile = True
+                                        msRedirectOnEnd = Nothing
+                                    Else
+                                        msRedirectOnEnd = "/?recompile=del"
+                                        bRestartApp = True
+                                        Eonic.Config.UpdateConfigValue(Me, "eonic/web", "CompliedTransform", "rebuild")
+                                    End If
+
+                                End If
+
+                                Dim oTransform As New Eonic.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
+
+                                PerfMon.Log("Web", "GetPageHTML-startxsl")
+                                If moConfig("XslTimeout") <> "" Then
+                                    oTransform.TimeOut = moConfig("XslTimeout")
+                                End If
+                                oTransform.mbDebug = gbDebug
+                                If bPageCache Then
+
+                                    Dim textWriter As New System.IO.StringWriter
+                                    oTransform.ProcessTimed(moPageXml, textWriter)
+                                    'save the page
+                                    SavePage(sCachePath, textWriter.ToString())
+                                    sServeFile = mcPageCacheFolder & sCachePath & ".html"
+
+                                Else
+                                    oTransform.ProcessTimed(moPageXml, moResponse)
+                                    'oTransform.Process(moPageXml, moResponse)
+
+                                    PerfMon.Log("Web", "GetPageHTML-endxsl")
+                                    oTransform.Close()
+                                    oTransform = Nothing
+
+                                    'moResponse.SuppressContent = False
+                                    If gnResponseCode <> 200 Then
+                                        ' TODO: This is IIS7 specific, needs addressing for IIS6
+                                        moResponse.TrySkipIisCustomErrors = True
+                                        moResponse.StatusCode = gnResponseCode
+                                    End If
+                                    moSession("previousPage") = mcOriginalURL
+                                End If
+
+                                'we don't need this anymore.
+                                If Not ibIndexMode Then
+                                    If msRedirectOnEnd = "" Then
+                                        PerfMon.Write()
+                                        moPageXml = Nothing
+                                        Close()
+                                    Else
+                                        moPageXml = Nothing
+                                        Close()
+                                    End If
+                                Else
+                                    moPageXml = New XmlDocument
+                                End If
+                            End If
+                        End If
+                    End If
+
+                    If sServeFile <> "" Then
+                        moResponse.AddHeader("X-Frame-Options", "DENY")
+                        moResponse.WriteFile(sServeFile)
+                    End If
+
+            End Select
+
+
 
 
 
@@ -1176,7 +1214,7 @@ Public Class Web
 
         Try
             If Not ibIndexMode Then
-                AddCart(True)
+                AddCurrency()
             End If
 
             sProcessInfo = "BuildPageXML"
@@ -1184,8 +1222,8 @@ Public Class Web
 
             Dim layoutCmd As String = ""
             If Not moSession Is Nothing Then
-                If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "on") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
-                    If moRequest("noFrames") <> "true" Then ' Fix for frameset double counting                   
+                If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
+                    If moRequest("noFrames") <> "True" Then ' Fix for frameset double counting                   
                         'moDbHelper.logActivity(dbHelper.ActivityType.PageAccess, mnUserId, mnPageId, mnArtId)
                         moDbHelper.CommitLogToDB(dbHelper.ActivityType.PageViewed, mnUserId, moSession.SessionID, Now, mnPageId, mnArtId, moRequest.ServerVariables("REMOTE_ADDR") & " " & moRequest.ServerVariables("HTTP_USER_AGENT"))
                     End If
@@ -1198,7 +1236,7 @@ Public Class Web
                 sProcessInfo = "Check Admin Mode"
                 ContentActions()
 
-                If moConfig("FinalAddBulk") = "on" Then
+                If moConfig("FinalAddBulk") = "On" Then
 
                     Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
                     Dim nMaxDepth As Integer = 1
@@ -1236,7 +1274,7 @@ Public Class Web
                     sProcessInfo = "End Quote"
                 End If
 
-                If LCase(moConfig("Search")) = "on" Then
+                If LCase(moConfig("Search")) = "On" Then
 
                     Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
                     oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
@@ -1246,25 +1284,25 @@ Public Class Web
                 End If
 
                 If mbAdminMode Then
-                        Try
-                            If moRequest("ewCmd") = "" Then
-                                ProcessReports()
-                            End If
-                        Catch
-                            'do nothing
-                        End Try
+                    Try
+                        If moRequest("ewCmd") = "" Then
+                            ProcessReports()
+                        End If
+                    Catch
+                        'do nothing
+                    End Try
 
-                    Else
-                        ProcessReports()
-                    End If
-
-                    ' Process the Calendars
-                    ProcessCalendar()
-
-                    If gbVersionControl Then CheckContentVersions()
-
+                Else
+                    ProcessReports()
                 End If
-                sProcessInfo = "CheckMultiParents"
+
+                ' Process the Calendars
+                ProcessCalendar()
+
+                If gbVersionControl Then CheckContentVersions()
+
+            End If
+            sProcessInfo = "CheckMultiParents"
             Me.CheckMultiParents(moPageXml.DocumentElement, mnPageId)
 
             ' ProcessContentForLanguage
@@ -1296,7 +1334,7 @@ Public Class Web
         PerfMon.Log("Web", "BuildPageXML")
         Dim oPageElmt As XmlElement
         Dim sProcessInfo As String = ""
-        Dim sLayout As String = "default"
+        Dim sLayout As String = "Default"
 
         Try
 
@@ -1367,7 +1405,7 @@ Public Class Web
                 End If
 
                 'introduce the layout
-                If sLayout = "default" Then
+                If sLayout = "Default" Then
                     sLayout = moDbHelper.getPageLayout(mnPageId)
                 End If
                 oPageElmt.SetAttribute("layout", sLayout)
@@ -1377,16 +1415,30 @@ Public Class Web
                 If mnPageId > 0 Then
                     GetContentXml(oPageElmt)
                     'only get the detail if we are not on a system page and not at root
-                    If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or _
-                    mnPageId = gnPageAccessDeniedId Or _
-                    mnPageId = gnPageLoginRequiredId Or _
+                    If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or
+                    mnPageId = gnPageAccessDeniedId Or
+                    mnPageId = gnPageLoginRequiredId Or
                     mnPageId = gnPageErrorId) Then
-                        If LCase(moConfig("AllowContentDetailAccess")) = "on" Then
-                            GetContentDetailXml(oPageElmt)
+                        If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
+                            moContentDetail = GetContentDetailXml(oPageElmt)
                         Else
-                            GetContentDetailXml(oPageElmt, , , True)
+                            moContentDetail = GetContentDetailXml(oPageElmt, , , True)
                         End If
                     End If
+
+                    If LCase(moConfig("CheckDetailPath")) = "on" And mnArtId > 0 Then
+                        If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
+                            Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
+                            cContentDetailName = Eonic.Tools.Text.CleanName(cContentDetailName, False, True)
+                            Dim RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
+                            If RequestedContentName <> cContentDetailName Then
+                                mnPageId = gnPageNotFoundId
+                                oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                mnEonicWebError = 1005
+                            End If
+                        End If
+                    End If
+
                     Me.CheckMultiParents(oPageElmt, mnPageId)
                 Else
                     mnEonicWebError = 1005
@@ -1399,12 +1451,13 @@ Public Class Web
                 oPageElmt.SetAttribute("expireDate", Eonic.Tools.Xml.XmlDate(mdPageExpireDate))
                 oPageElmt.SetAttribute("updateDate", Eonic.Tools.Xml.XmlDate(mdPageUpdateDate))
                 oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString.ToLower)
+                oPageElmt.SetAttribute("pageViewDate", Eonic.Tools.Xml.XmlDate(mdDate))
 
                 ' Assess if this page is a cloned page.
                 ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
                 ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                 If gbClone _
-                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
+                    AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
                     ' If the current page is a cloned page
                     oPageElmt.SetAttribute("clone", "true")
                 End If
@@ -2063,12 +2116,16 @@ Public Class Web
                     'Note need to fix for newsletters.
                     Dim FullMenuXml As XmlElement = GetStructureXML(-1, RootPageId, nContextId)
 
+                    Dim getLevel As Long = 0
 
                     'Move the requested ID to the top.
                     If FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " & expId & "]") Is Nothing Then
 
                     Else
+                        getLevel = FullMenuXml.SelectNodes("descendant-or-self::MenuItem[@id = " & expId & "]/ancestor-or-self::MenuItem").Count()
                         FullMenuXml.ReplaceChild(FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " & expId & "]"), FullMenuXml.FirstChild)
+
+                        FullMenuXml.SetAttribute("level", getLevel.ToString)
                     End If
 
                     oPageElmt.AppendChild(FullMenuXml)
@@ -2161,29 +2218,53 @@ Public Class Web
 
     End Function
 
-
-    Public Overridable Sub AddCart(Optional ByVal bSetupCurrency As Boolean = False)
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    Public Sub AddCurrency()
         Dim sProcessInfo As String = "PerfMon"
         PerfMon.Log("Web", "addCart")
         'Isolated function to provide the facility to overload the cart when called from an overloaded .web
         Try
             If gbCart Then
-                sProcessInfo = "Begin Second Cart"
-                oEc = New Cart(Me)
-                If bSetupCurrency Then
-                    oEc.SelectCurrency()
-                Else
-                    oEc.apply()
 
-                    'get any discount information for this page
-                    'moDiscount.getDiscountXML(moPageXml.DocumentElement)
-                    moDiscount.getAvailableDiscounts(moPageXml.DocumentElement)
-
+                sProcessInfo = "Begin AddCurrency"
+                If oEc Is Nothing Then
+                    oEc = New Cart(Me)
                 End If
+                oEc.SelectCurrency()
+                sProcessInfo = "End AddCurrency"
+
+            End If
+        Catch ex As Exception
+            'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCurrency", ex, sProcessInfo))
+        End Try
+    End Sub
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    Public Overridable Sub AddCart()
+        Dim sProcessInfo As String = "PerfMon"
+        PerfMon.Log("Web", "addCart")
+        'Isolated function to provide the facility to overload the cart when called from an overloaded .web
+        Try
+            If gbCart Then
+
+                sProcessInfo = "Begin Cart"
+                If oEc Is Nothing Then
+                    'we should not hit this because addCurrency should establish it.
+                    oEc = New Cart(Me)
+                End If
+
+                oEc.apply()
+
+                'get any discount information for this page
+                moDiscount.getAvailableDiscounts(moPageXml.DocumentElement)
+
                 oEc.close()
                 oEc = Nothing
-                sProcessInfo = "End Second Cart"
-
+                sProcessInfo = "End Cart"
             End If
         Catch ex As Exception
             'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -2571,8 +2652,8 @@ Public Class Web
             Next
 
             Dim ContentActionXpath As String = ""
-            If mnArtId > 0 Then
-                ContentActionXpath = "/Page/ContentDetail/Content[@action!=''] | /Page/ContentDetail/Content/Content[@action!=''] | /Page/Contents/Content[@action!='' and @id='" & mnArtId & "']"
+            If mnArtId > 0 And LCase(moConfig("ActionOnDetail")) <> "true" Then
+                ContentActionXpath = "/Page/Contents/Content[@action!='' and @actionOnDetail='true'] | /Page/ContentDetail/Content[@action!=''] | /Page/ContentDetail/Content/Content[@action!=''] | /Page/Contents/Content[@action!='' and @id='" & mnArtId & "']"
             Else
                 ContentActionXpath = "/Page/Contents/Content[@action!='']"
             End If
@@ -2784,13 +2865,13 @@ Public Class Web
                 If directoryId > 0 Then
                     ' Invoke the integration method.
                     Dim constructorArguments() As Object = {Me, Convert.ToInt64(directoryId)}
-                    Invoke.InvokeObjectMethod( _
-                        "Eonic.Integration.Directory." & integrationCommand, _
-                        constructorArguments, _
-                        Nothing, _
-                        Me, _
-                        "OnComponentError", _
-                        "OnError" _
+                    Invoke.InvokeObjectMethod(
+                        "Eonic.Integration.Directory." & integrationCommand,
+                        constructorArguments,
+                        Nothing,
+                        Me,
+                        "OnComponentError",
+                        "OnError"
                         )
                 End If
 
@@ -2866,7 +2947,7 @@ Public Class Web
             End If
 
             'extra bit for user control panels
-            If moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("User_Control_Panel") Or _
+            If moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("User_Control_Panel") Or
             moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("Internal_Feed") Then
                 Dim cContentTypes As String = moConfig("ControlPanelTypes")
                 If Not cContentTypes Is Nothing And Not cContentTypes = "" Then
@@ -2890,10 +2971,10 @@ Public Class Web
     End Function
 
 
-    Public Sub GetPageContentFromStoredProcedure( _
-                                                    ByVal SpName As String, _
-                                                    Optional ByVal parameters As Hashtable = Nothing, _
-                                                    Optional ByRef nCount As Integer = 0 _
+    Public Sub GetPageContentFromStoredProcedure(
+                                                    ByVal SpName As String,
+                                                    Optional ByVal parameters As Hashtable = Nothing,
+                                                    Optional ByRef nCount As Integer = 0
                                                 )
 
         PerfMon.Log("Web", "GetPageContentFromStoredProcedure")
@@ -3314,7 +3395,7 @@ Public Class Web
             Dim oXml As XmlDocument = moDbHelper.ContentDataSetToXml(oDs, mdPageUpdateDate)
             Dim oXml2 As XmlNode = oRoot.OwnerDocument.ImportNode(oXml.DocumentElement, True)
 
-            Dim n As Long
+
             Dim oNode As XmlElement
 
             For Each oNode In oXml2.SelectNodes("Content")
@@ -3839,9 +3920,9 @@ Public Class Web
                 If Not (moRequest("token") <> "") _
                    AndAlso cSiteConfig.Length = 3 _
                    AndAlso IsNumeric(cSiteConfig(0)) _
-                   AndAlso Not ( _
+                   AndAlso Not (
                                 moRequest.Url.AbsoluteUri.StartsWith(cSiteConfig(1).ToString, StringComparison.CurrentCultureIgnoreCase) _
-                                OrElse moRequest.Url.AbsolutePath.StartsWith(cSiteConfig(1).ToString, StringComparison.CurrentCultureIgnoreCase) _
+                                OrElse moRequest.Url.AbsolutePath.StartsWith(cSiteConfig(1).ToString, StringComparison.CurrentCultureIgnoreCase)
                             ) _
                    AndAlso Not (moPageXml.DocumentElement.SelectSingleNode("/Page/User/*[@id='" & cSiteConfig(0) & "']") Is Nothing) Then
 
@@ -4289,19 +4370,30 @@ Public Class Web
         Dim root As XmlElement
         Dim sProcessInfo As String = ""
         Try
-
+            If Not moRequest("reBundle") Is Nothing Then
+                moCtx.Application("ewSettings") = Nothing
+            End If
             If moCtx.Application("ewSettings") Is Nothing Then
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you don not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.GoogleAnalyticsUniversalID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;"
+                s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 
                 Dim match As Match = Regex.Match(s, "(?<Name>[^\.]*)\.(?<Value>[^;]*);?")
 
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/cart")
-
+                Dim oThemeConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/theme")
+                Dim sCurrentTheme As String = Nothing
+                If Not oThemeConfig Is Nothing Then
+                    sCurrentTheme = oThemeConfig("CurrentTheme")
+                    Dim themesetting = moPageXml.CreateElement("add")
+                    themesetting.setAttribute("key", "theme.CurrentTheme")
+                    themesetting.setAttribute("value", sCurrentTheme)
+                    root.AppendChild(themesetting)
+                End If
                 While (match.Success)
 
                     Dim setting = moPageXml.CreateElement("add")
@@ -4313,7 +4405,10 @@ Public Class Web
                             If Not moCartConfig Is Nothing Then
                                 setting.setAttribute("value", moCartConfig(match.Groups("Value").Value))
                             End If
-
+                        Case "theme"
+                            If Not sCurrentTheme Is Nothing And match.Groups("Value").Value <> "CurrentTheme" Then
+                                setting.setAttribute("value", oThemeConfig(sCurrentTheme & "." & match.Groups("Value").Value))
+                            End If
                     End Select
                     root.AppendChild(setting)
                     match = match.NextMatch()
@@ -4419,9 +4514,9 @@ Public Class Web
 
     End Function
 
-    Public Overridable Function GetStructurePageXML(ByVal nPageId As Long, _
-                                           ByVal cMenuItemNodeName As String, _
-                                           ByVal cRootNodeName As String _
+    Public Overridable Function GetStructurePageXML(ByVal nPageId As Long,
+                                           ByVal cMenuItemNodeName As String,
+                                           ByVal cRootNodeName As String
                                            ) As XmlElement
 
         Dim cFunctionDef As String = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])"
@@ -4434,26 +4529,26 @@ Public Class Web
 
         Try
 
-            sSql = "SELECT		" & _
-                    " s.nStructKey as id, " & _
-                      " s.nStructParId as parId, " & _
-                      " s.cStructName as name, " & _
-                      " s.cUrl as url, " & _
-                      " s.cStructDescription as Description, " & _
-                      " a.dPublishDate as publish, " & _
-                      " a.dExpireDate as expire, " & _
-                      " a.nStatus as status, " & _
-                      " s.cStructForiegnRef as ref, " & _
-                      " 'ADMIN' as access,	" & _
-                      " s.cStructLayout as layout," & _
-                      " s.nCloneStructId as clone," & _
-                      " '' As accessSource," & _
-                      " 0 As accessSourceId, " & _
-                      " s.nVersionParId as vParId" & _
-                      " FROM	tblContentStructure s" & _
-                      " INNER JOIN  tblAudit a " & _
-                      " ON s.nAuditId = a.nAuditKey" & _
-                      " where(s.nVersionParId Is null Or s.nVersionParId = 0)" & _
+            sSql = "SELECT		" &
+                    " s.nStructKey as id, " &
+                      " s.nStructParId as parId, " &
+                      " s.cStructName as name, " &
+                      " s.cUrl as url, " &
+                      " s.cStructDescription as Description, " &
+                      " a.dPublishDate as publish, " &
+                      " a.dExpireDate as expire, " &
+                      " a.nStatus as status, " &
+                      " s.cStructForiegnRef as ref, " &
+                      " 'ADMIN' as access,	" &
+                      " s.cStructLayout as layout," &
+                      " s.nCloneStructId as clone," &
+                      " '' As accessSource," &
+                      " 0 As accessSourceId, " &
+                      " s.nVersionParId as vParId" &
+                      " FROM	tblContentStructure s" &
+                      " INNER JOIN  tblAudit a " &
+                      " ON s.nAuditId = a.nAuditKey" &
+                      " where(s.nVersionParId Is null Or s.nVersionParId = 0)" &
                       " and s.nStructKey = " & nPageId
 
 
@@ -4556,18 +4651,18 @@ Public Class Web
     ''' <param name="cRootNodeName">Specifies the root node name.  Default should be "Menu".  Note - if not default, then caching will not be employed.</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Overridable Function GetStructureXML( _
-                                            ByVal nUserId As Long, _
-                                            ByVal nRootId As Long, _
-                                            ByVal nCloneContextId As Long, _
-                                            ByVal cMenuId As String, _
-                                            ByVal bAddMenuToPageXML As Boolean, _
-                                            ByVal bLockRoot As Boolean, _
-                                            ByVal bUseCache As Boolean, _
-                                            ByVal bIncludeExpiredAndHidden As Boolean, _
-                                            ByVal bPruneEvenIfInAdminMode As Boolean, _
-                                            ByVal cMenuItemNodeName As String, _
-                                            ByVal cRootNodeName As String _
+    Public Overridable Function GetStructureXML(
+                                            ByVal nUserId As Long,
+                                            ByVal nRootId As Long,
+                                            ByVal nCloneContextId As Long,
+                                            ByVal cMenuId As String,
+                                            ByVal bAddMenuToPageXML As Boolean,
+                                            ByVal bLockRoot As Boolean,
+                                            ByVal bUseCache As Boolean,
+                                            ByVal bIncludeExpiredAndHidden As Boolean,
+                                            ByVal bPruneEvenIfInAdminMode As Boolean,
+                                            ByVal cMenuItemNodeName As String,
+                                            ByVal cRootNodeName As String
                                             ) As XmlElement
         Dim cFunctionDef As String = "GetStructureXML(Long,Long,Long,String,Boolean,Boolean,Boolean,Boolean,Boolean,String,String)"
         Eonic.PerfMon.Log("Web", cFunctionDef)
@@ -4587,7 +4682,7 @@ Public Class Web
         Dim sContent As String
         Dim sSql As String
         Dim cCacheMode As String = "off"
-        Dim cCacheXml As String = ""
+        Dim bCacheXml As Boolean = False
         Dim cFilePathModifier As String = ""
         Dim pvElmt As XmlElement
         Dim bAuth As Boolean = True
@@ -4668,48 +4763,61 @@ Public Class Web
 
                 ' If Cache is on then check for a cached strcture
                 If cCacheMode = "on" Then
+
+                    Dim oCache As XmlElement = moPageXml.CreateElement(cRootNodeName)
+
                     If mbAdminMode And cCacheType = "Menu/MenuItem" Then
-                        cCacheXml = goApp("AdminStructureCache")
+                        oCache.InnerXml = goApp("AdminStructureCache")
                     Else
 
-                        ' Automatically clear up historical caches
-                        sProcessInfo = "GetStructureXML-DeleteOldCache"
-                        Eonic.PerfMon.Log("Web", sProcessInfo)
-
-                        moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
 
                         Dim cacheSearchCriteria As String = " WHERE nCacheDirId = " & Eonic.SqlFmt(nUserId) & " AND cCacheType='" & cCacheType & "'"
                         If bAuth Then
-                            cacheSearchCriteria &= " AND cCacheSessionID = '" & moSession.SessionID & "' "
+                            cacheSearchCriteria &= " AND cCacheSessionID = '" & moSession.SessionID & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12"
                         End If
                         sProcessInfo = "GetStructureXML-SelectFromCache"
                         Eonic.PerfMon.Log("Web", sProcessInfo)
                         ' Get the cached structure - returns empty string if no structure found.
                         sSql = "SELECT TOP 1 cCacheStructure FROM dbo.tblXmlCache " _
-                                & cacheSearchCriteria
+                                    & cacheSearchCriteria
 
-                        'cCacheXml = moDbHelper.GetXmlValue(sSql, , , "")]
-                        Dim oCacheXml As System.Data.SqlTypes.SqlXml
-                        oCacheXml = moDbHelper.GetXmlReaderValue(sSql, , , Nothing)
-
-                        sProcessInfo = "GetStructureXML-CacheXML 2 text"
+                        sProcessInfo = "GetStructureXML-getCachefromDB-Start"
                         Eonic.PerfMon.Log("Web", sProcessInfo)
-                        If oCacheXml Is Nothing Then
-                            cCacheXml = ""
-                        Else
-                            cCacheXml = oCacheXml.Value
-                        End If
+
+                        moDbHelper.AddXMLValueToNode(sSql, oCache)
+
+                        sProcessInfo = "GetStructureXML-getCachefromDB-End"
+                        Eonic.PerfMon.Log("Web", sProcessInfo)
+
+
+                    End If
+
+                    If cRootNodeName <> "Menu" Then
+                        For Each oElmt In oCache.SelectNodes("descendant-or-self::Menu")
+                            Tools.Xml.renameNode(oElmt, cRootNodeName)
+                        Next
+                    End If
+
+                    If cMenuItemNodeName <> "MenuItem" Then
+                        For Each oElmt In oCache.SelectNodes("descendant-or-self::MenuItem")
+                            Tools.Xml.renameNode(oElmt, cMenuItemNodeName)
+                        Next
                     End If
 
 
 
+                    If Not oCache.FirstChild Is Nothing Then
+                        bCacheXml = True
+                        oElmt = oCache
+                    End If
+
+
                 End If
-                sProcessInfo = "GetStructureXML-End CheckCaching"
-                Eonic.PerfMon.Log("Web", sProcessInfo)
+
             End If
 
             ' If we don't have a cache to check then get a new structure
-            If cCacheXml = "" Or cCacheMode = "off" Then
+            If bCacheXml = False Or cCacheMode = "off" Then
 
                 ' DATA CALL : GET STRUCTURE
                 ' =========================
@@ -4718,7 +4826,7 @@ Public Class Web
                 ' - checks for page level permissions (indicated by nUserId not being -1) - if these are returned they will need to cleaned up.
                 ' - enumerate who teh permissions have come from (indicated by nUserId not being -1 and badminMode being 1)
                 ' - exclude expired, not yet published and hidden pages if not in adminmode.
-                sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Eonic.sqlDate(Now) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
+                sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Eonic.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
                 sProcessInfo = "GetStructureXML-getContentStrcuture"
                 Eonic.PerfMon.Log("Web", sProcessInfo)
@@ -4734,7 +4842,7 @@ Public Class Web
                         ' check we are returning strucutre for current user and not for another user such as in bespoke report (PDP for LMS system).
                         sSql = "EXEC getAllPageVersions"
                     Else
-                        sSql = "EXEC getUserPageVersions @userId=" & nUserId & ", @dateNow=" & Eonic.sqlDate(Now) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=0, @bShowAll=0"
+                        sSql = "EXEC getUserPageVersions @userId=" & nUserId & ", @dateNow=" & Eonic.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=0, @bShowAll=0"
                     End If
 
                     sProcessInfo = "GetStructureXML-getPageVersions"
@@ -4990,6 +5098,7 @@ Public Class Web
                         End If
                     Else
                         moDbHelper.addStructureCache(bAuth, nUserId, cCacheType, oElmt.FirstChild)
+
                     End If
 
 
@@ -5004,43 +5113,6 @@ Public Class Web
                     'moDbHelper.ExeProcessSql(sSql)
 
                 End If
-
-            Else
-
-                ' STRUCTURE RETRIEVED FROM CACHE 
-                '=================================
-                sProcessInfo = "GetStructureXML-fromCache"
-                Eonic.PerfMon.Log("Web", sProcessInfo)
-                ' Use the cache
-                'Dim oCacheAtRoot As XmlElement = Nothing
-                Dim oCache As XmlElement = moPageXml.CreateElement(cRootNodeName)
-                oCache.InnerXml = cCacheXml
-
-                If cRootNodeName <> "Menu" Then
-                    For Each oElmt In oCache.SelectNodes("descendant-or-self::Menu")
-                        Tools.Xml.renameNode(oElmt, cRootNodeName)
-                    Next
-                End If
-
-                If cMenuItemNodeName <> "MenuItem" Then
-                    For Each oElmt In oCache.SelectNodes("descendant-or-self::MenuItem")
-                        Tools.Xml.renameNode(oElmt, cMenuItemNodeName)
-                    Next
-                End If
-
-                ' oElmt = moPageXml.CreateElement(cRootNodeName)
-
-                ' Find the root
-                'If nRootId > 0 Then
-                '    If Tools.Xml.NodeState(oCache, "//" & cMenuItemNodeName & "[@id=" & nRootId & "]", , , , oCacheAtRoot) <> Tools.Xml.XmlNodeState.NotInstantiated Then
-                '        oElmt.AppendChild(oCacheAtRoot)
-                '    Else
-                '        sProcessInfo = "unhandled"
-
-                '    End If
-                'Else
-                oElmt = oCache
-                'End If
 
             End If
 
@@ -5379,25 +5451,15 @@ Public Class Web
     End Function
 
 
-    ''' <summary>
-    '''    Gets the Structure XML, and adds it to the page XML
-    ''' </summary>
-    ''' <param name="cMenuId">Adds an id attribute to the root node</param>
-    ''' <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
-    ''' <param name="nRootId">The root ID of the Structure that you want to get</param>
-    ''' <param name="bLockRoot">Adds a loced attribute to the root node</param>
-    ''' <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Overridable Function AddContentCount(ByVal oMenu As XmlElement, ByVal SchemaType As String) As XmlElement
+    Public Overridable Sub AddContentCount(ByVal oMenu As XmlElement, ByVal SchemaType As String)
         Dim oElmt As XmlElement
         Dim cSQL As String
         Try
-            cSQL = "select COUNT(nContentKey) as count,nStructId from tblContentLocation cl" & _
-                " inner join tblContent c on c.nContentKey = cl.nContentId" & _
-                " inner join tblAudit a on c.nAuditId = a.nAuditKey" & _
-                " where c.cContentSchemaName = '" & Trim(SchemaType) & "'" & _
-                  GetStandardFilterSQLForContent(True) & _
+            cSQL = "select COUNT(nContentKey) as count,nStructId from tblContentLocation cl" &
+                " inner join tblContent c on c.nContentKey = cl.nContentId" &
+                " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
+                " where c.cContentSchemaName = '" & Trim(SchemaType) & "'" &
+                  GetStandardFilterSQLForContent(True) &
                 " group by nStructId"
 
 
@@ -5415,14 +5477,12 @@ Public Class Web
 
         Catch ex As Exception
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""))
-            Return Nothing
         End Try
 
-    End Function
+    End Sub
 
-    Public Overridable Function AddContentBrief(ByVal oMenu As XmlElement, ByVal SchemaType As String) As XmlElement
+    Public Overridable Sub AddContentBrief(ByVal oMenu As XmlElement, ByVal SchemaType As String)
         Dim oElmt As XmlElement
-        Dim cSQL As String
         Dim oRoot As XmlElement
         Dim parId As String
         Dim ParentMenuElmt As XmlElement
@@ -5442,10 +5502,9 @@ Public Class Web
 
         Catch ex As Exception
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""))
-            Return Nothing
         End Try
 
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Takes a menu node, and removes the denied nodes
@@ -5473,10 +5532,10 @@ Public Class Web
 
                     If _
                             cCurrentPerm.Contains("DENIED") _
-                        Or _
-                            ( _
+                        Or
+                            (
                                 oChild.GetAttribute("access").Contains("OPEN") _
-                                And Not (cCurrentPerm.Contains("OPEN")) _
+                                And Not (cCurrentPerm.Contains("OPEN"))
                             ) Then
 
                         ' If parent is DENIED,
@@ -5535,12 +5594,12 @@ Public Class Web
 
 
             Dim sProcessInfo As String = "addPageDetailLinksToStructure"
-            Dim cSQL As String = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate" & _
-            " FROM tblContent INNER JOIN" & _
-            " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" & _
-            " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" & _
-            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " & Eonic.Tools.Database.SqlDate(Now) & " or tblAudit.dPublishDate is null) AND " & _
-            " (tblAudit.dExpireDate >= " & Eonic.Tools.Database.SqlDate(Now) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
+            Dim cSQL As String = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate" &
+            " FROM tblContent INNER JOIN" &
+            " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" &
+            " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" &
+            " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " & Eonic.Tools.Database.SqlDate(mdDate) & " or tblAudit.dPublishDate is null) AND " &
+            " (tblAudit.dExpireDate >= " & Eonic.Tools.Database.SqlDate(mdDate) & " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" & cContentTypes & ")) "
 
 
             Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
@@ -5626,9 +5685,14 @@ Public Class Web
                         ' this is not a cloned page, make sure we don't accidentally look for the cloned pages.
                         cXPathModifier = " and ((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0))"
                     End If
-
                 End If
 
+                ' Check for blocked content
+
+
+                gcBlockContentType = moDbHelper.GetPageBlockedContent(mnPageId)
+
+                oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
                     GetPageContentXml(oElmt.GetAttribute("id"))
@@ -5680,7 +5744,6 @@ Public Class Web
             ' Create the live filter
             sFilterSql = GetStandardFilterSQLForContent()
 
-
             oRoot = moPageXml.DocumentElement.SelectSingleNode("Contents")
             If oRoot Is Nothing Then
                 oRoot = moPageXml.CreateElement("Contents")
@@ -5706,10 +5769,13 @@ Public Class Web
 
             'sSql = "select c.nContentKey as id, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" & _
 
+            If gcBlockContentType <> "" Then
+                sFilterSql = sFilterSql & " and c.cContentSchemaName NOT IN ('" & gcBlockContentType.Replace(",", "','") & "') "
+            End If
 
-            sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" & _
-                    " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" & _
-                    " inner join tblAudit a on c.nAuditId = a.nAuditKey" & _
+            sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" &
+                    " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" &
+                    " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & nPageId
 
             sSql = sSql & sFilterSql & ") order by type, cl.nDisplayOrder"
@@ -5837,6 +5903,7 @@ Public Class Web
         Catch ex As Exception
             'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXml", ex, sProcessInfo))
+            Return ""
         End Try
 
     End Function
@@ -6161,26 +6228,26 @@ Public Class Web
             Select Case Me.mnEonicWebError
                 Case 1005
                     strMessageText = "Page Not Found"
-                    strMessageHtml = "<div><h2>Page Not Found</h2>" & _
+                    strMessageHtml = "<div><h2>Page Not Found</h2>" &
                                     "</div>"
                     gnResponseCode = 404
                     sErrorModule = "BuildPageXml"
                 Case 1006
                     strMessageText = "Access Denied"
-                    strMessageHtml = "<div><h2>Access Denied</h2>" & _
+                    strMessageHtml = "<div><h2>Access Denied</h2>" &
                                     "</div>"
                     'gnResponseCode = 401
                     sErrorModule = "BuildPageXml"
                 Case 1007
                     strMessageText = "File Not Found"
-                    strMessageHtml = "<div><h2>File Not Found</h2>" & _
+                    strMessageHtml = "<div><h2>File Not Found</h2>" &
                                     "</div>"
                     'gnResponseCode = 404
                     sErrorModule = "Get Document"
 
                 Case 1008
                     strMessageText = "Invalid Licence"
-                    strMessageHtml = "<div><h2>Please get a valid EonicWeb Licence</h2>" & _
+                    strMessageHtml = "<div><h2>Please get a valid EonicWeb Licence</h2>" &
                                     "</div>"
                     sErrorModule = "BuildPageXml"
             End Select
@@ -6462,14 +6529,24 @@ Public Class Web
                             getSafeURLName = getSafeURLName.Replace("""", "")
                             getSafeURLName = getSafeURLName.Replace("'", "")
 
-                            If mcOriginalURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
+                            Dim myOrigURL As String
+                            Dim myQueryString As String = ""
+
+                            If mcOriginalURL.Contains("?") Then
+                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
+                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
+                            Else
+                                myOrigURL = mcOriginalURL
+                            End If
+
+                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
                                 'we redirect perminently
                                 mbRedirectPerm = True
-                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName
+                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName & myQueryString
                             End If
                         End If
-
-                        Return oRoot.FirstChild
+                        moContentDetail = oRoot.FirstChild
+                        Return moContentDetail
                     Else
                         sProcessInfo = "no content to add - we redirect"
                         'this content is not found either page not found or re-direct home.
@@ -6538,7 +6615,7 @@ Public Class Web
 
 
                     oRoot = moPageXml.CreateElement("ContentDetail")
-                    sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status " & _
+                    sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status " &
                     "from tblContent c inner join tblAudit a on c.nAuditId = a.nAuditKey  where c.nContentKey = " & mnArtId & sFilterSql
 
 
@@ -6681,8 +6758,8 @@ Public Class Web
                 End If
 
 
-                sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " & Eonic.Tools.Database.SqlDate(Now) & " )"
-                sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Eonic.Tools.Database.SqlDate(Now) & " )"
+                sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " & Eonic.Tools.Database.SqlDate(mdDate) & " )"
+                sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Eonic.Tools.Database.SqlDate(mdDate) & " )"
             End If
             PerfMon.Log("Web", "GetStandardFilterSQLForContent-END")
             Return sFilterSQL
@@ -7021,7 +7098,7 @@ Public Class Web
         Dim sSql As String = ""
         Dim strFilePath As String = ""
         Dim strFileName As String = CStr(moRequest("filename")) & ".pdf"
-        Dim objStream, strFileSize, strFileType, FileExt As String
+        Dim objStream, strFileSize As String
         'Dim strPageInfo, strReferrer
         'Dim sWriter = New IO.StringWriter
         Dim oDS As DataSet = New DataSet
@@ -7840,6 +7917,82 @@ Public Class Web
 
     End Function
 
+    Private Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
+        PerfMon.Log("Indexer", "IndexPage")
+        Dim cProcessInfo As String = ""
+        Dim filename As String = ""
+        Dim filepath As String = ""
+        Dim artId As String = ""
+        Dim Ext As String = ".html"
+        Try
+
+            'let's clean up the url
+            If cUrl.LastIndexOf("/?") > -1 Then
+                cUrl = cUrl.Substring(0, cUrl.LastIndexOf("/?"))
+            End If
+            If cUrl.LastIndexOf("?") > -1 Then
+                cUrl = cUrl.Substring(0, cUrl.LastIndexOf("?"))
+            End If
+
+            If cUrl = "" Or cUrl = "/" Then
+                filename = "home.html"
+            Else
+                filename = Left(cUrl.Substring(cUrl.LastIndexOf("/") + 1), 240)
+                If cUrl.LastIndexOf("/") > 0 Then
+                    filepath = Left(cUrl.Substring(0, cUrl.LastIndexOf("/")), 240) & ""
+                End If
+            End If
+
+            Dim oFS As New Eonic.fsHelper(moCtx)
+            oFS.mcStartFolder = goServer.MapPath("\") & mcPageCacheFolder
+
+            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename & Ext
+
+            'Tidy up the filename
+            filename = Eonic.Tools.FileHelper.ReplaceIllegalChars(filename)
+            filename = Replace(filename, "\", "-")
+            filepath = Replace(filepath, "/", "\") & ""
+            If filepath.StartsWith("\") And mcPageCacheFolder.EndsWith("\") Then
+                filepath.Remove(0, 1)
+            End If
+
+            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename & Ext
+            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & filename
+
+            If FullFilePath.Length > 255 Then
+                FullFilePath = Left(FullFilePath, 240) & Ext
+            Else
+                FullFilePath = FullFilePath & Ext
+            End If
+
+            If filepath = "" Then filepath = "/"
+            Dim sError As String = oFS.CreatePath(filepath)
+            If sError = "1" Then
+                System.IO.File.WriteAllText(goServer.MapPath("/") & FullFilePath, cBody, System.Text.Encoding.UTF8)
+            Else
+                cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+            End If
+
+            oFS = Nothing
+
+        Catch ex As Exception
+            'if saving of a page fails we are not that bothered.
+            'cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
+            returnException(mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+            'bIsError = True
+        End Try
+    End Sub
+
+    Private Sub ClearPageCache()
+        Dim cProcessInfo As String = ""
+        Try
+
+            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/"))
+
+        Catch ex As Exception
+            returnException(mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
+        End Try
+    End Sub
 
 #Region " IDisposable Support "
     ' This code added by Visual Basic to correctly implement the disposable pattern.

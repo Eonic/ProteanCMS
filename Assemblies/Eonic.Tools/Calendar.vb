@@ -56,11 +56,11 @@ Public Class Calendar
         Try
 
             Dim oXml As New XmlDocument
-            Dim oCalendar As XmlElement
-            Dim oYear As XmlElement
-            Dim oMonth As XmlElement
-            Dim oWeek As XmlElement
-            Dim oDay As XmlElement
+            Dim oCalendar As XmlElement = Nothing
+            Dim oYear As XmlElement = Nothing
+            Dim oMonth As XmlElement = Nothing
+            Dim oWeek As XmlElement = Nothing
+            Dim oDay As XmlElement = Nothing
 
             Dim dMonthCurrentDate As Date
             Dim dMonthLastDay As Date

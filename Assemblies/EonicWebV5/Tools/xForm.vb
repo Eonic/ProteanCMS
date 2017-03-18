@@ -1746,7 +1746,6 @@ Public Class xForm
 
     Function addCase(ByRef oContextNode As XmlElement, ByVal sId As String) As XmlElement
         Dim oGrpElmt As XmlElement
-        Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
         Try
             oGrpElmt = moPageXML.CreateElement("case")
@@ -2379,7 +2378,6 @@ Public Class xForm
         Dim cProcessInfo As String = ""
         Dim oNode As XmlNode
         Dim oElmt As XmlElement
-        Dim oSubNode As XmlNode
         Dim oSubElmt As XmlElement
         Dim sServiceUrl As String
         Dim sSoapAction As String

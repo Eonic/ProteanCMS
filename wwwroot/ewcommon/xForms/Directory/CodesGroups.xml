@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="MemberCodesGroups">
+	<model>
+		<instance>
+			<tblCodes>
+				<nCodeKey />
+				<cCodeName />
+				<nCodeType>1</nCodeType>
+				<nCodeParentId />
+				<cCodeGroups />
+				<cCode />
+				<nUseId />
+				<dUseDate />
+				<nAuditId />
+				<dPublishDate />
+				<dExpireDate />
+				<dInsertDate />
+				<nInsertDirId />
+				<dUpdateDate />
+				<nUpdateDirId />
+				<nStatus>0</nStatus>
+			</tblCodes>
+		</instance>
+		<submission id="Save" action="" method="post" event="form_check(this)" />
+		<bind id="nCodeKey" nodeset="tblCodes/nCodeKey" required="false()" type="string" />
+		<bind id="cCodeName" nodeset="tblCodes/cCodeName" required="false()" type="string" />
+		<bind id="cCodeGroups" nodeset="tblCodes/cCodeGroups" required="true()" type="string" />
+	</model>
+	<group ref="Content">
+		<group ref="CodeDetails">
+			<label>Code Groups</label>
+			<input bind="nCodeKey" class="hidden">
+				<label>nCodeKey</label>
+				<value></value>
+			</input>
+			<input bind="cCodeName" class="required">
+				<label>Code Set Name</label>
+				<value></value>
+			</input>
+
+			<select bind="cCodeGroups" appearance="full" class="checkboxes">
+				<label>Groups</label>
+				<choices/>
+				<value></value>
+			</select>
+			
+			<submit submission="CodeGen" ref="submit" class="principle">
+				<label>Save Groups</label>
+			</submit>
+		</group>
+	</group>
+</Content>

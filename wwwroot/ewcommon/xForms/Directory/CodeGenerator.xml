@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content type="xform" name="MemberCodes">
+	<model>
+		<instance>
+			<tblCodes>
+				<nCodeKey />
+				<cCodeName />
+				<nCodeType>1</nCodeType>
+				<nCodeParentId />
+				<cCodeGroups />
+				<cCode />
+				<nUseId />
+				<dUseDate />
+				<nAuditId />
+				<dPublishDate />
+				<dExpireDate />
+				<dInsertDate />
+				<nInsertDirId />
+				<dUpdateDate />
+				<nUpdateDirId />
+				<nStatus/>
+				<cDescription />
+				<cPreceedingText>TEXT</cPreceedingText>
+				<nStartNumber>1</nStartNumber>
+				<nNumberOfCodes>0</nNumberOfCodes>
+				<bKeepProceedingZeros>1</bKeepProceedingZeros>
+				<bMD5Results>0</bMD5Results>
+				<bRND>0</bRND>
+				<nRNDLength>5</nRNDLength>
+				<bRNDVague>0</bRNDVague>
+				<cRNDAlpha>Letters,Numbers</cRNDAlpha>
+			</tblCodes>
+		</instance>
+		<submission id="Save" action="" method="post" event="form_check(this)" />
+		<bind id="cPreceedingText" nodeset="tblCodes/cPreceedingText" required="false()" type="string" />
+		<bind id="nStartNumber" nodeset="tblCodes/nStartNumber" required="false()" type="string" />
+		<bind id="nNumberOfCodes" nodeset="tblCodes/nNumberOfCodes" required="false()" type="string" />
+		<bind id="bKeepProceedingZeros" nodeset="tblCodes/bKeepProceedingZeros" required="false()" type="string" />
+		<bind id="bMD5Results" nodeset="tblCodes/bMD5Results" required="false()" type="string" />
+		<bind id="bRND" nodeset="tblCodes/bRND" required="false()" type="string" />
+		<bind id="nRNDLength" nodeset="tblCodes/nRNDLength" required="false()" type="string" />
+		<bind id="bRNDVague" nodeset="tblCodes/bRNDVague" required="false()" type="string" />
+		<bind id="cRNDAlpha" nodeset="tblCodes/cRNDAlpha" required="false()" type="string" />
+	</model>
+	<group ref="Generator">
+		<label>Generate Codes</label>
+		<group>
+			<label>Quantity</label>
+			<input bind="nNumberOfCodes" class="required">
+				<label>Number of Codes to Generate</label>
+				<value>0</value>
+			</input>
+		</group>
+		<group>
+			<label>Code Types</label>
+			<hint>Select the type of codes you want to generate - either User Generated, or Random</hint>
+		</group>
+			<group>
+				<label>User Generated</label>
+				<select1 bind="bRND" appearance="full">
+					<item>
+						<label>User Generated</label>
+						<value>0</value>
+					</item>
+					<value>0</value>
+				</select1>
+				<input bind="cPreceedingText" class="required">
+					<label>Code Prefix</label>
+					<value>TEXT</value>
+				</input>
+				<input bind="nStartNumber" class="required">
+					<label>Start Numbering From</label>
+					<value>1</value>
+				</input>
+				<select1 bind="bKeepProceedingZeros" class="required" appearance="full">
+					<label>Keep Leading Zeros</label>
+					<item>
+						<label>Yes</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>0</value>
+					</item>
+					<value>1</value>
+					<help>If selected, this will add leading zeros to the number generated, based on how many codes you are generating.  e.g. if you generate 100 codes, then the first code will be created as TEXT001.</help>
+				</select1>
+				<select1 bind="bMD5Results" class="required" appearance="full">
+					<label>Hash Codes</label>
+					<item>
+						<label>Yes</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>No</label>
+						<value>0</value>
+					</item>
+					<value>1</value>
+					<help>Hashing codes creates an encrypted version of the code.  This may be useful if you wanted to mask the original code.</help>
+				</select1>
+				<help>User generated codes are generated sequentially.  They are made up of the preceding text followed by the number incrementing from the start number.</help>
+			</group>
+			<group>
+				<label>Randomly Generated</label>
+				<select1 bind="bRND" appearance="full">
+					<item>
+						<label>Random Generated</label>
+						<value>1</value>
+					</item>
+					<value>0</value>
+				</select1>
+				<input bind="nRNDLength">
+					<label>Code Length</label>
+					<value>5</value>
+				</input>
+				<select bind="cRNDAlpha" class="required checkboxes" appearance="full">
+					<label>Characters to Use</label>
+					<item>
+						<label>Letters</label>
+						<value>Letters</value>
+					</item>
+					<item>
+						<label>Numbers</label>
+						<value>Numbers</value>
+					</item>
+					<item>
+						<label>Symbols</label>
+						<value>Symbols</value>
+					</item>
+					<value>Letters,Numbers</value>
+				</select>
+				<select1 bind="bRNDVague" class="required" appearance="full">
+					<label>Don't use ambigious characters</label>
+					<item>
+						<label>Don't use ambigious characters</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Use all characters</label>
+						<value>0</value>
+					</item>
+					<value>1</value>
+					<help>Amiguous characters include S and 5, 0 and O etc.</help>
+				</select1>
+			</group>
+
+		<submit submission="CodeGen" ref="submit" class="principle">
+			<label>Generate Codes</label>
+		</submit>
+	</group>
+</Content>
