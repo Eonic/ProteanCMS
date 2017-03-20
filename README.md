@@ -39,7 +39,7 @@ complete the following settings in eonic.web.config
   Any problems email trevor@eonic.co.uk or raise an issue at
   https://github.com/Eonic/EonicWeb5/issues
 
-
+  Detailed installer guides and videos will come shortly.
 
 
 ## Partners
