@@ -26,14 +26,14 @@ Get a clone or download the files, create a new site locally in IIS and point it
 Create an Empty SQL server database
 
 complete the following settings in eonic.web.config
-
+```xml
   <add key="DatabaseType" value="SQL" />
   <add key="DatabaseServer" value="" />
   <add key="DatabaseAuth" value="user id=user; password=pwd" />
   <add key="DatabaseName" value="" />
   <add key="DatabaseUsername" value="user" />
   <add key="DatabasePassword" value="pwd" />
-
+```
   and go to http://mylocalproject/ewcommon/setup and install the DB.
 
   Any problems email trevor@eonic.co.uk or raise an issue at
