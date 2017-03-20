@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Content>
+<model class="ewXform">
+  <instance>
+    <emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">
+      <oBodyXML>
+        <Items>
+          <Name />
+          <Email />
+          <Message />
+        </Items>
+      </oBodyXML>
+      <xsltPath>/ewcommon/xsl/email/mailform.xsl</xsltPath>
+      <Email></Email>
+      <fromName></fromName>
+      <fromEmail></fromEmail>
+      <recipientEmail></recipientEmail>
+      <SubjectLine>Training Course Request</SubjectLine>
+    </emailer>
+  </instance>
+  <submission method="post" action="/ewCommon/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="send" />
+  <bind id="emailer" nodeset="emailer">
+    <bind id="oBodyXML" nodeset="oBodyXML/Items">
+      <bind id="Name" nodeset="Name" required="true()" type="string" />
+      <bind id="Email" nodeset="Email" required="true()" type="email" />
+      <bind id="Message" nodeset="Message" required="false()" type="string" />
+      <bind nodeset="Email">
+        <bind id="UserEmail" nodeset="@honeypot" constraint="ews:emailer/ews:oBodyXML/ews:Items/ews:Email/@honeypot=''" />
+      </bind>
+    </bind>
+    <bind id="Email" nodeset="fromEmail" required="false()" type="string" />
+  </bind>
+</model>
+<group>
+  <input bind="UserEmail" class="jsHide" />
+  <input bind="Name" class="required">
+    <label>Name</label>
+  </input>
+  <input bind="Email" class="required">
+    <label>Email</label>
+  </input>
+  <textarea bind="Message" class="textarea" rows="4">
+    <label>When would you like to take the course? </label>
+  </textarea>
+  <submit submission="send" bind="ewCmd" class="principle">
+    <label>Send</label>
+  </submit>
+</group>
+</Content>

@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DatabaseUpgrade LatestVersion="5.0.121.0">
+	<!-- Instructions	
+	   Add SQL scripts to the directory structure as below.
+	   Separate each "create" into its own file
+	   Drop any fxn or sp before create
+	   remove all GO commands from scripts
+	   add line to remove new objects in cleardb.sql
+	   Run from setup interface and test OK should get sensible error report on screen.	
+	 -->
+	<Version Number="4">
+		<Sub1 Number="0">
+			<Sub2 Number="0">
+				<Sub3 Number="22">
+					<Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkPermission"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/fxn_checkPermission.sql"/>
+					<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="getContentStructure"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/getContentStructure.sql"/>
+					<Action Order="4" Type="Drop" ObjectType="Function" ObjectName="fxn_getUserDepts"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/fxn_getUserDepts.sql"/>
+					<Action Order="6" Type="Drop" ObjectType="Function" ObjectName="fxn_getUserRoles"/>
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/fxn_getUserRoles.sql"/>
+					<Action Order="8" Type="Drop" ObjectType="Procedure" ObjectName="getUsersCompanyAllParents"/>
+					<Action Order="9" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.sql"/>
+					<Action Order="10" Type="Drop" ObjectType="Procedure" ObjectName="spGetCompanyUsers"/>
+					<Action Order="11" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spGetCompanyUsers.sql"/>
+					<Action Order="12" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllUsersActive"/>
+					<Action Order="13" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spGetAllUsersActive.sql"/>
+					<Action Order="14" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllUsersInActive"/>
+					<Action Order="15" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.sql"/>
+					<Action Order="16" Type="Drop" ObjectType="Procedure" ObjectName="spGetCompanyUsersActive"/>
+					<Action Order="17" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.sql"/>
+					<Action Order="18" Type="Drop" ObjectType="Procedure" ObjectName="spGetCompanyUsersInActive"/>
+					<Action Order="19" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.sql"/>
+					<Action Order="20" Type="Drop" ObjectType="Procedure" ObjectName="spSearchUsers"/>
+					<Action Order="21" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/spSearchUsers.sql"/>
+				</Sub3>
+				<Sub3 Number="23">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartOrder.sql"/>
+					<Action Order="1" Type="Drop" ObjectType="Table" ObjectName="tblCartCatProductRelations"/>
+					<Action Order="2" Type="Drop" ObjectType="Table" ObjectName="tblCartDiscountGroupRelations"/>
+					<Action Order="3" Type="Drop" ObjectType="Table" ObjectName="tblCartDiscountRules"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartCatProductRelations.sql"/>
+					<!--Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartDiscountDirRelations.sql"/-->
+					<!--Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartDiscountProdCatRelations.sql"/-->
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartDiscountRules.sql"/>
+					<Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.0.23/tblCartProductCategories.sql"/>
+				</Sub3>
+				<Sub3 Number="34">
+					<!--Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.1.34/tblCartOrder.sql"/-->
+					<!--Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.1.34/tblcartShippingMethods.sql"/-->
+				</Sub3>
+				<Sub3 Number="40">
+					<!--Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql"/-->
+				</Sub3>
+				<Sub3 Number="45">
+					<Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_getContentParents"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql"/>
+				</Sub3>
+				<Sub3 Number="68">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.0.1.68/tblContent.sql"/>
+				</Sub3>
+			</Sub2>
+		</Sub1>
+		<Sub1 Number="1">
+			<Sub2 Number="0">
+				<Sub3 Number="11">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.11/tblCartPaymentMethod.sql"/>
+				</Sub3>
+				<Sub3 Number="20">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.20/tblCartOrder.sql"/>
+				</Sub3>
+				<Sub3 Number="22">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.22/tblCartCatProductRelations.sql"/>
+					<!--Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.22/tblDirectorySubscriptions.sql"/-->
+				</Sub3>
+				<Sub3 Number="24">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.24/tblCartItem.sql"/>
+				</Sub3>
+				<Sub3 Number="43">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.43/getContentStructure.sql"/>
+				</Sub3>
+				<Sub3 Number="51">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.51/tblCartPaymentMethod.sql"/>
+				</Sub3>
+				<Sub3 Number="52">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.52/tblAlerts.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.52/tblActivityLog.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.52/sp_AllDirUsers.sql"/>
+				</Sub3>
+				<Sub3 Number="72">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.72/tblEmailActivityLog.sql"/>
+				</Sub3>
+				<Sub3 Number="75">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_CSVTableINTEGERS.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_CSVTableSTRINGS.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_GetActivityDetail.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_getMembers.sql"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_getMembers_Sub.sql"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_SessionsInDateRange.sql"/>
+					<Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_SessionsLength.sql"/>
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_SessionsStart.sql"/>
+					<Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/fxn_SessionsUser.sql"/>
+					<Action Order="9" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/spGetSessionActivity.sql"/>
+					<Action Order="10" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/spGetUserSessionActivity.sql"/>
+					<Action Order="11" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.75/spGetUserSessionActivityDetail.sql"/>
+				</Sub3>
+				<Sub3 Number="79">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.79/tblCodes.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.79/spGetCodes.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.79/spGetCodeDirectoryGroups.sql"/>
+				</Sub3>
+				<Sub3 Number="80">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityLowLevel.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityGroupsPages.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityTopLevel.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityPagesPeriod.sql"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityMedLevel.sql"/>
+				</Sub3>
+				<Sub3 Number="95">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.95/spGetUserSessionActivity.sql"/>
+					<Action Order="11" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.95/spGetUserSessionActivityDetail.sql"/>
+				</Sub3>
+				<Sub3 Number="99">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.99/getContentStructure.sql"/>
+				</Sub3>
+			</Sub2>
+			<Sub2 Number="1">
+				<Sub3 Number="2">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/tblContentRelation.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/userActivityReportingOptimisations1.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/userActivityReportingOptimisations2.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/userActivityReportingOptimisations3.sql"/>
+					<Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spGetSessionActivity"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/userActivityReportingOptimisations4.sql"/>
+				</Sub3>
+				<Sub3 Number="9">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/tblXmlCache.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/ContentStructureUpdateTables.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/fxn_GetMembers_Sub.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/getContentStructure_admin.sql"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/getContentStructure_basic.sql"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/getContentStructure_Enumerate.sql"/>
+					<Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/fxn_GetMembers.sql"/>
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.9/getContentStructure_v2.sql"/>
+				</Sub3>
+				<Sub3 Number="17">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.17/tblContentVersions.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.17/cartReportingViews1.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.17/cartReportingViews2.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.17/cartReportingViews3.sql"/>
+				</Sub3>
+				<Sub3 Number="21">
+					<Action Order="0" Type="Drop" ObjectType="View" ObjectName="vw_VersionControl_GetPendingContent"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.21/vw_VersionControl_GetPendingContent.sql"/>
+					<!--Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.21/tblActivityLog.sql"/-->
+				</Sub3>
+				<Sub3 Number="31">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.31/tblCartOrder.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.31/tblCartShippingMethods.sql"/>
+				</Sub3>
+				<Sub3 Number="35">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.35/tblContentLocation.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.35/tblOptOutAddresses.sql"/>
+					<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spGetSessionActivity"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.2/userActivityReportingOptimisations4.sql"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.35/tblCartShippingPermission.sql"/>
+					<!--This is added by the component - Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.35/tblSchemaVersion.sql"/-->
+				</Sub3>
+				<Sub3 Number="40">
+					<Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spOrderDownload"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.40/spOrderDownload.sql"/>
+					<Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="spCartActivityLowLevel"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityLowLevel.sql"/>
+					<Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spCartActivityGroupsPages"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityGroupsPages.sql"/>
+					<Action Order="6" Type="Drop" ObjectType="Procedure" ObjectName="spCartActivityTopLevel"/>
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityTopLevel.sql"/>
+					<Action Order="8" Type="Drop" ObjectType="Procedure" ObjectName="spCartActivityPagesPeriod"/>
+					<Action Order="9" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityPagesPeriod.sql"/>
+					<Action Order="10" Type="Drop" ObjectType="Procedure" ObjectName="spCartActivityMedLevel"/>
+					<Action Order="11" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.0.80/spCartActivityMedLevel.sql"/>
+				</Sub3>
+				<Sub3 Number="80">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/tblEmailActivityLog.sql"/>
+					<Action Order="1" Type="Drop" ObjectType="Function" ObjectName="fxn_CSVTableINTEGERS"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/CSVTableINTEGERS.sql"/>
+					<Action Order="3" Type="Drop" ObjectType="Function" ObjectName="fxn_CSVTableSTRINGS"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/CSVTableSTRINGS.sql"/>
+					<Action Order="5" Type="Drop" ObjectType="Function" ObjectName="fxn_SessionsInDateRange"/>
+					<Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/fxn_SessionsInDateRange.sql"/>
+					<Action Order="7" Type="Drop" ObjectType="Function" ObjectName="fxn_SessionsLength"/>
+					<Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/SessionsLength.sql"/>
+					<Action Order="9" Type="Drop" ObjectType="Function" ObjectName="fxn_SessionsStart"/>
+					<Action Order="10" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/SessionsStart.sql"/>
+					<Action Order="11" Type="Drop" ObjectType="Function" ObjectName="fxn_SessionsUser"/>
+					<Action Order="12" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/SessionsUser.sql"/>
+					<Action Order="13" Type="Drop" ObjectType="Procedure" ObjectName="spGetUserSessionActivity"/>
+					<Action Order="14" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spGetUserSessionActivity.sql"/>
+					<Action Order="15" Type="Drop" ObjectType="Procedure" ObjectName="spGetUserSessionActivityDetail"/>
+					<Action Order="16" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spGetUserSessionActivityDetail.sql"/>
+					<Action Order="17" Type="Drop" ObjectType="Procedure" ObjectName="spMailDownloadOptions"/>
+					<Action Order="18" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spMailDownloadOptions.sql"/>
+					<Action Order="19" Type="Drop" ObjectType="Procedure" ObjectName="spMailFormDownload"/>
+					<Action Order="20" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spMailFormDownload.sql"/>
+					<Action Order="21" Type="Drop" ObjectType="Procedure" ObjectName="spMailFormSubmissions"/>
+					<Action Order="22" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spMailFormSubmissions.sql"/>
+					<Action Order="23" Type="Drop" ObjectType="Procedure" ObjectName="spMailTypeOptions"/>
+					<Action Order="24" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.80/spMailTypeOptions.sql"/>
+				</Sub3>
+				<Sub3 Number="83">
+
+					<Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spGenericReportLastDownloadedDropDown"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.83/00_spGenericReportLastDownloadedDropDown.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.83/01_spOrderDownload.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.83/02_spMailFormDownload_Update.sql"/>
+				</Sub3>
+				<Sub3 Number="89">
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.89/00_vw_VersionControl_GetPendingContent.sql"/>
+				</Sub3>
+				<Sub3 Number="98">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/tblCodes.sql"/>
+					<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetCodes"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/spGetCodes.sql"/>
+					<Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetCodeDirectoryGroups"/>
+					<Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/spGetCodeDirectoryGroups.sql"/>
+					<Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/tblContentStructure.sql"/>
+					<Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/fxn_getPageGroups.sql"/>
+					<Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/getAllPageVersions.sql"/>
+					<Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/getUserPageVersions.sql"/>
+					<Action Order="9" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/getContentStructure_Basic.sql"/>
+					<Action Order="10" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/getContentStructure_Admin.sql"/>
+					<Action Order="11" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/idx_Permissions_nStructId_nAccessLevel.sql"/>
+					<Action Order="12" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/vw_CurrentLiveContentIds.sql"/>
+					<Action Order="13" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.98/vw_CurrentLiveContentIdsAndSchemas.sql"/>
+				</Sub3>
+        <Sub3 Number="101">
+           <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/toV4/4.1.1.101/spGetSessionActivity.sql"/>
+        </Sub3>			
+				<Sub3 Number="102">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/5.0.0.0/fxn_checkPermission.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/5.0.0.0/getContentStructure_Basic.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/5.0.0.0/getContentStructure_Admin.sql"/>
+					<Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlupdate/v5/5.0.0.0/getContentStructure_Enumerate.sql"/>
+				</Sub3>
+				<Sub3 Number="103">
+				  <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.1.0/DiscountIndexes.sql"/>
+				  <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.1.0/tblCartDiscountRules.sql"/>
+				  <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.1.0/DiscountRulesUpgrades.sql"/>       
+				</Sub3>
+				<Sub3 Number="104">
+					<Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.1/spGetSessionActivity.sql"/>
+					<Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.1/spGetUserSessionActivity.sql"/>
+					<Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.1/spGetUserSessionActivityDetail.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.1/tblCartContact.sql"/>
+        </Sub3>
+        <Sub3 Number="105">
+          <Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spGetUsersByGroup"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/spGetUsersByGroup.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/tblCartShippingPermissionUpdate.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/tblCartShippingPermissionUpdate2.sql"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/getAllPageVersions.sql"/>
+          <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/getAllPageVersions_sub.sql"/>
+          <Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/sp_AllDirUsers.sql"/>
+          <Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/tblActivityLog.sql"/>
+          <Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.2/tblXmlCache.sql"/>
+        </Sub3>
+        <Sub3 Number="106">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.7.1/tblContent.sql"/>
+        </Sub3>
+        <Sub3 Number="107">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.12.0/tblCartItem.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.12.0/tblContentStructure.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.12.0/tblDirectory.sql"/>
+        </Sub3>
+        <Sub3 Number="108">
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_getContentLocations"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/fxn_getContentLocations.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/tblDirectory.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/tblCodes.sql"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/tblCodes2.sql"/>
+          <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/spGetCompanyUsersInActive.sql"/>
+          <Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/spGetCompanyUsersActive.sql"/>
+          <Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/spGetCompanyUsers.sql"/>
+          <Action Order="8" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/spGetAllUsersInActive.sql"/>
+          <Action Order="9" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/spGetAllUsersActive.sql"/>
+          <Action Order="10" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.15.0/tblDirectory2.sql"/>
+        </Sub3>
+        <Sub3 Number="109">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.17.0/tblCartDiscountDirRelations.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.17.0/tblCartDiscountDirRelations_update.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.17.0/tblLookup.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.17.0/tblCartDiscountRules.sql"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.17.0/tblAlerts.sql"/>
+        </Sub3>
+        <Sub3 Number="110">
+          <Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="getAllPageVersions_sub"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.21.0/getAllPageVersions_sub.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.21.0/getAllPageVersions.sql"/>
+          <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.21.0/tblActivityLog.sql"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.21.0/fxn_getStatus.sql"/>
+        </Sub3>
+      </Sub2>
+		</Sub1>
+	</Version>
+  <Version Number="5">
+    <Sub1 Number="0">
+      <Sub2 Number="25">
+        <Sub3 Number="0">
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_checkDiscountCode"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.25.0/fxn_checkDiscountCode.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="33">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/tblSubscription.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/tblSubscriptionQuota.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/tblSubscriptionRenewal.sql"/>
+          <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spEmailOptOuts"/>
+          <Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spPurchasersLast2Years"/>
+          <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/spEmailOptOuts.sql"/>
+          <Action Order="6" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/spPurchasersLast2Years.sql"/>
+          <Action Order="7" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.32.0/updates.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="70">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.70.0/tblSubscription.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.70.0/tblSubscriptionQuota.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.70.0/tblSubscriptionRenewal.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.70.0/tblCartOrder.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="81">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.81.0/fxn_GetPagePath.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="96">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.96.0/spGetDirectoryItems.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="99">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.99.0/spGetProductGroups.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.99.0/tblCartCarrier.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.99.0/tblCartOrderDelivery.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.99.0/tblCartShippingMethods.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="114">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.114.0/tblActivityLog.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="118">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.118.0/tblXmlCache.sql"/>
+        </Sub3>
+      </Sub2>
+      <Sub2 Number="121">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.121.0/tblContent.sql"/>
+        </Sub3>
+      </Sub2>
+    </Sub1>
+  </Version>
+</DatabaseUpgrade>

@@ -1,0 +1,668 @@
+BODY
+{
+	BACKGROUND-COLOR: #F5F5F5 !important;
+	background-image: none !important;
+	font:normal 12px/1.5 Arial,Helvetica,sans-serif;
+}
+/* ########################## Forms ########################## */
+#adminLayout .formMainTable
+{
+	background: #fff;
+	border: 1px solid #DDDDDD;
+}
+#adminLayout .formMainTable .group
+{
+	border: none;
+	margin:0;
+	padding:0;
+}
+#adminLayout .formMainTable table
+{
+	margin:0;
+	padding:0;
+}
+#adminLayout .formMainTable .group h3,
+#adminLayout .group h3
+{
+	padding: 3px 5px 3px 5px;
+	background: #44045B;
+	color: #fff;
+	font-size: 1.1em;
+	text-transform: uppercase;	
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+}
+#adminLayout .formMainTable .group .group h3
+{
+	padding: 3px 5px 3px 0;
+	background: #fff;
+	color: #44045B;
+	font-size: 1em;
+	text-transform: uppercase;	
+	border-top:solid 1px #aaa;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+#adminLayout .formMainTable .group td, 
+#adminLayout .formMainTable .group th
+{
+	font-size: .95em;
+	font-weight: normal;
+	font-family: Verdana;
+}
+#adminLayout .formMainTable .group th
+{
+/*	width: 100px	*/
+}
+#adminLayout .formMainTable .group input,
+#adminLayout .formMainTable .group select
+{
+	font-size: 1.05em;
+	font-weight: normal;
+	font-family: Verdana;
+	
+}
+/* ########################## Buttons ########################## */
+#adminLayout a.adminButton, #adminLayout input.adminButton,
+#adminLayout ul.inlinePopup a.add,
+#adminLayout ul.inlinePopup a.find,
+#adminLayout div.inlinePopupLabel a.options,
+#adminLayout #searchForm input
+{
+	padding: 1px 5px 1px 5px !important;
+	background: #FFF;
+	border: 1px solid #DDDDDD;
+	color: #000;
+	font-weight: normal;
+	font-size: 1em;
+	line-height:1.2em;
+	text-decoration: none;
+	text-transform: uppercase;	
+}
+#adminLayout a.edit, 
+#adminLayout a.add,
+#adminLayout a.find,
+#adminLayout a.move,
+#adminLayout a.copy,
+#adminLayout a.hideButton,
+#adminLayout a.hide,
+#adminLayout a.hideParent,
+#adminLayout a.live,
+#adminLayout a.activeParent,
+#adminLayout a.show,
+#adminLayout a.delete,
+#adminLayout a.upDir,
+#adminLayout a.upFiles,
+#adminLayout a.locations,
+#adminLayout ul.inlinePopup a.add,
+#adminLayout div.inlinePopupLabel a.options,
+#adminLayout input.add,
+#adminLayout input.delete,
+#adminLayout input.edit,
+#adminLayout a.back,
+#adminLayout a.excel
+{
+	padding: 1px 5px 1px 20px !important;
+	line-height:1.1em;
+	background-position: 2px 3px;
+	background-repeat: no-repeat;
+}
+#adminLayout a.show
+{
+	padding: 1px 8px 1px 22px !important;	
+	cursor:pointer;	
+}
+#adminLayout a.hideButton
+{
+	padding: 1px 13px 1px 27px !important;	
+	cursor:pointer;	
+}
+#adminLayout a.arrowbutton,
+#adminLayout input.arrowbutton,
+#adminLayout #searchForm input
+{
+	border: 1px solid #DDDDDD;
+	padding: 1px 8px 2px 8px;
+	background-position: 5px 4px;
+	background-repeat: no-repeat;
+	background-color: #FFF;
+	margin-right: 5px;
+	text-decoration: none;
+	cursor:pointer;	
+}
+#adminLayout a.arrowbutton span
+{
+    display:none;    
+}
+#adminLayout input.up,
+#adminLayout input.down
+{
+	background-position: 6px 4px;
+	padding: 1px 7px 2px 5px !important;	
+}
+#adminLayout input.top,
+#adminLayout input.bottom
+{
+	padding: 1px 7px 2px 5px !important;
+}
+#adminLayout #LeftMenu li a 
+{
+	background-position: 5px 4px;
+	background-repeat: no-repeat;
+	background-image: url(/ewcommon/images/admin/leftMenu.gif) ;
+}
+#adminLayout a.back
+{
+	float: right;
+	margin-bottom:5px;
+	background-image: url(/ewcommon/images/admin/up.gif) !important;	
+}
+#adminLayout a.excel
+{
+	background-image:url(/ewcommon/images/admin/excel.gif) !important;	
+}
+#adminLayout a.edit
+{
+	background-image: url(/ewcommon/images/admin/edit.gif) !important;	
+}
+#adminLayout a.add,
+#adminLayout ul.inlinePopup a.add
+{
+	background-image: url(/ewcommon/images/admin/add.gif) !important;
+}
+#adminLayout a.move
+{
+	background-image: url(/ewcommon/images/admin/move.gif) !important;	
+}
+#adminLayout a.copy
+{
+	background-image: url(/ewcommon/images/admin/copy.gif) !important;	
+}
+#adminLayout a.hideButton,
+#adminLayout a.hide
+{
+	background-image: url(/ewcommon/images/admin/hide.gif) !important;
+}
+#adminLayout a.show
+{
+	background-image: url(/ewcommon/images/admin/show.gif) !important;	
+}
+#adminLayout a.delete
+{
+	background-image: url(/ewcommon/images/admin/delete.gif) !important;
+}
+#adminLayout a.delete:hover
+{
+	background-image: url(/ewcommon/images/admin/delete_white.gif) !important;
+	background-color: #F00;
+	color: #FFF;	
+}
+#adminLayout a.top,
+#adminLayout input.top,
+#adminLayout input.top:hover
+{
+	background-image: url(/ewcommon/images/admin/top.gif) !important;	
+}
+#adminLayout a.bottom,
+#adminLayout input.bottom,
+#adminLayout input.bottom:hover
+{
+	background-image: url(/ewcommon/images/admin/bottom.gif) !important;	
+}
+#adminLayout a.up,
+#adminLayout input.up,
+#adminLayout input.up:hover
+{
+	background-image: url(/ewcommon/images/admin/up.gif) !important;	
+}
+#adminLayout a.down,
+#adminLayout input.down,
+#adminLayout input.down:hover
+{
+	background-image: url(/ewcommon/images/admin/down.gif) !important;	
+}
+#adminLayout a.upDir
+{
+	background-image: url(/ewcommon/images/admin/up.gif) !important;	
+	background-position: 5px 5px;
+}
+#adminLayout a.upFiles
+{
+	background-image: url(/ewcommon/images/admin/top.gif) !important;
+	background-position: 5px 5px;	
+}
+#adminLayout a.inactive
+{
+	background-color: #DDDDDD;
+}
+#adminLayout a.locations
+{
+	background-image: url(/ewcommon/images/admin/locations.gif) !important;
+}
+#adminLayout div.inlinePopupLabel a.options
+{
+	background-image: url(/ewcommon/images/admin/options.gif) !important;	
+	margin: 2px;
+	font-size: 10px !important;
+}
+#adminLayout ul.inlinePopup a.add
+{
+	float: right;
+	margin: 2px !important;	
+}
+#adminLayout input.add
+{
+	background: #FFF url(/ewcommon/images/admin/add.gif) 2px 3px no-repeat !important; 	
+}
+#adminLayout input.add:hover
+{
+	background: #E6EDF8 url(/ewcommon/images/admin/add.gif) 2px 3px no-repeat !important; 	
+}
+#adminLayout input.delete
+{
+	background: #FFF url(/ewcommon/images/admin/delete.gif) 2px 3px no-repeat !important; 	
+}
+#adminLayout input.delete:hover
+{
+	background: #F00 url(/ewcommon/images/admin/delete_white.gif) 2px 3px no-repeat !important;
+	color: #FFF !important; 	
+}
+#adminLayout input.edit
+{
+	background: #FFF url(/ewcommon/images/admin/edit.gif) 2px 3px no-repeat !important; 	
+}
+#adminLayout input.edit:hover
+{
+	background: #E6EDF8 url(/ewcommon/images/admin/edit.gif) 2px 3px no-repeat !important; 	
+}
+#adminLayout input.arrowbutton:hover
+{
+	background-color: #E6EDF8 !important; 	
+}
+/* ########################## Classes ########################## */
+#adminLayout #column1
+{
+	color:#000;
+	background-color:#FFF;
+	border: 1px solid #000;
+	padding: 10px;
+}
+#adminLayout #column1.instructions, #adminLayout #column2
+{
+font-size: .9em;
+}
+
+
+/* ########################## Tree View - EditStructure ########################## */
+#adminLayout #column2 .tree, #adminLayout #column1 .tree
+{
+font-size: .9em;
+}
+#adminLayout #MenuTree SPAN.treeNode .pageName
+{
+	display:inline-block;
+	width:200px;
+}
+#adminLayout UL.sideNav
+{
+	line-height:1.2em;
+	vertical-align:top;
+}
+#adminLayout UL.sideNav SPAN.treeNode .pageName
+{
+	width:auto !important;
+}
+#adminLayout #MenuTree LI
+{
+	line-height:1.5em;
+	vertical-align:top;
+	list-style:none;
+}
+#adminLayout #MenuTree LI TABLE
+{
+    width: auto;
+	background:transparent;
+ }
+ adminLayout #MenuTree LI TABLE TD
+{
+	padding:3px;
+	line-height:1.2em;
+ }
+#adminLayout #MenuTree LI TABLE td.status a.status
+{
+    width:15px !important;
+    height:15px !important;
+    display:block;
+ }
+  #adminLayout #MenuTree LI TABLE td.pageName
+{
+    width:200px;
+    border-bottom:dashed 1px #ddd;
+    padding-bottom:1px;
+ }
+   #adminLayout #MenuTree LI TABLE td.pageHits
+{
+    border-bottom:dashed 1px #ddd;
+    padding-bottom:1px;
+ }
+ 
+  #adminLayout #MenuTree LI TABLE td.optionButtons
+ {
+    width:535px;
+    border-bottom:dashed 1px #ddd;
+    padding-bottom:3px;
+ }
+
+#adminLayout #MenuTree span.treeNode a.live, 
+#adminLayout #MenuTree .treeNode a.live
+{
+	background: url(/ewcommon/images/menutree/page-file.gif) top left no-repeat;
+}
+#adminLayout #MenuTree span.a.children span.treeNode a.hide, 
+#adminLayout #MenuTree tr.a.children span.treeNode a.hide
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif)  0 0 no-repeat !important;
+}
+#adminLayout #MenuTree span.treeNode a.hide, 
+#adminLayout #MenuTree .treeNode a.hide
+{
+	background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;
+} 
+
+#adminLayout #MenuTree span.treeNode a.activeParent, 
+#adminLayout #MenuTree .treeNode a.activeParent  
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon.gif)  0 0 no-repeat;
+}
+#adminLayout #MenuTreeold span.treeNode a.live, 
+#adminLayout #MenuTreeold .treeNode a.live
+{
+	background: url(/ewcommon/images/menutree/page-foldericon.gif)  0 0 no-repeat;
+}
+#adminLayout #MenuTree span.treeNode a.hideParent, 
+#adminLayout #MenuTree .treeNode a.hideParent
+{
+	background: url(/ewcommon/images/menutree/page-foldericon-hidden.gif)  0 0 no-repeat !important;
+}
+#adminLayout #MenuTree .treeNode .pageSales
+{
+    color: #13b802;    
+}
+#adminLayout #MenuTree .treeNode .childPageSales
+{
+    color: #FF0000 !important;
+}
+/* ########################## End Treeview ########################## */
+
+#adminLayout #column2
+{
+	padding:10px;
+	color:#000;
+	background-color:#FFF;
+	border: 1px solid #AFAFAF;	
+}
+#adminLayout .options
+{
+	display: inline;
+	padding-left: 20px;	
+}
+#adminLayout .calenderDisplay
+{
+	display:block;
+	float:left;
+	border:1px solid #000;
+	width:100px;
+	padding:3px;
+	background-color:#fff;
+}
+#adminHeader ul.adminMenu
+{
+	border-color:#9ABBF2;
+	background-color:  #224477;
+}
+/* ul.correct
+{
+	border-color:#fff;
+	background:#6DB029 url(/quizmaker/images/q_cor_bg.gif) right bottom no-repeat;
+}*/
+#adminLayout .editable
+{
+	background-position:right top;
+	background-image:url(/ewcommon/images/options_admin.gif);
+	border:1px solid #94A3BD;
+}
+#adminLayout .movePage .name, .moveContent .name
+{
+	width:250px!important;
+}
+#adminLayout .template
+{
+	padding:20px 30px;
+}
+
+#adminLayout .finish
+{
+	line-height:4em;
+}
+
+/* ########################## IDs ########################## */
+
+#adminLayout h1#mainTitle
+{
+	color:#CAD1DE;
+}
+/* ######################## Edit Menu ######################## */
+
+#template_EditStructure #column2
+{
+	width: 80%;
+	float: right;
+}
+#template_EditStructure #column1
+{
+	width: 20%;	
+}
+#template_EditStructure span.c
+{
+	/*border-bottom: 1px dashed #C0C0C0;*/	
+}
+/* ######################## Advanced Mode ######################## */
+#adminLayout #template_AdvancedMode #column1, 
+#adminLayout #template_EditStructure #column1,
+#adminLayout #template_FileSystem #column1
+{
+	width: 23%; /*22*/
+}
+#adminLayout #template_AdvancedMode #column2,  
+#adminLayout #template_EditStructure #column2,
+#adminLayout #template_FileSystem #column2
+{
+	float: right;
+	width: 70%; /*71*/
+}
+
+#adminLayout #template_AdvancedMode th.options
+{
+	text-align: right;
+	padding-right: 45px;
+}
+#adminLayout #template_AdvancedMode td.optionsButton
+{
+	text-align: right;	
+}
+#adminLayout #template_AdvancedMode .subheading .addnewButton
+{
+	float: right;	
+	margin: 0;
+}
+#adminLayout #template_AdvancedMode .subheading
+{
+	border-top: 1px solid #FFF;	
+	background-color: #44045B;
+	padding: 3px;
+	padding-left: 10px;
+	padding-right: 6px;
+}
+#adminLayout #template_AdvancedMode .subheadingTitle h6
+{
+	color: #FFF !important;	
+}
+#adminLayout #template_AdvancedMode .inlinePopupContainer
+{
+	width: 100px;
+	float: right;
+}
+#adminLayout #template_AdvancedMode .inlinePopup
+{
+	width: 100px;
+	margin: 0;
+	padding: 0;
+}
+#adminLayout #template_AdvancedMode ul.inlinePopup a
+{
+	padding: 0;	
+}
+#adminLayout #template_AdvancedMode .subheadingTitle
+{
+	width: 200px;
+	float: left;	
+}
+#adminLayout .publishedOn
+{
+	color: #13B802;
+}
+#adminLayout .expiresOn
+{
+	color: #B81C02;	
+}
+#adminLayout .adminList td.publishdate
+{
+	padding-left: 35px;	
+}
+#adminLayout .adminList td.deleteContent
+{
+	text-align: right;
+}
+#adminLayout td.publishdate, 
+#adminLayout td.deleteContent
+{
+	border-bottom: 1px dashed #C0C0C0;	
+}
+/* ######################## Resource Library ######################## */
+#adminLayout #template_FileSystem .resourceLibRow td, #template_FileSystem .rowOver td
+{
+	vertical-align: middle;	
+}
+/* ######################## Permissions ######################## */
+#adminLayout #EditInputPagePermissions tbody td
+{	
+	padding-left: 20px;
+}
+#adminLayout #EditInputPagePermissions h3
+{
+	text-align: left;	
+}
+/* ######################## Related Products - Edit Content ######################## */
+#adminLayout .AdminRelatedContent
+{
+	border-collapse: collapse;		
+}
+
+#adminLayout .AdminRelatedContent td.relatedOptionsButton,
+#adminLayout .AdminRelatedContent th.relatedOptionsButton
+{
+	text-align: right;
+}
+#adminLayout .AdminRelatedContent td,
+#adminLayout .relatedSearchResults td
+{
+	border-bottom: 1px dashed #C0C0C0;
+}
+#adminLayout input.saveRelations
+{
+	margin: 10px 10px 0 0;	
+}
+#template_AdminXForm Form#UserLogon
+{
+	padding-left:200px;
+	width: 370px;
+	text-align:center;
+}
+#template_AdminXForm Form#UserLogon td
+{
+
+}
+#template_AdminXForm
+{
+	height: 90%;	
+}
+form#UpdateOrder textarea#cNotes
+{
+	width:98%;
+	height:150px;
+	font-size: 1em;
+}
+#adminLayout #template_AdminXForm .radiocheckbox span.correct
+{
+	display:inline-block !important;
+	background: url(/ewcommon/images/admin/tick.gif) 0px 2px no-repeat !important;
+	padding:2px 2px 2px 20px !important;
+}
+
+#adminLayout #template_AdminXForm input.radiocheckbox
+{
+}
+.editxform .itemContainer {	FLOAT: right;	WIDTH: 500px}
+.editxform .itemrow_0 {	BACKGROUND-COLOR: #f6f6ff}
+.editxform .itemContainer .weighting {	COLOR: #fff}
+
+#adminLayout #template_AdminXForm FORM TABLE 
+{
+    WIDTH: 100%
+}
+
+.popupWindow #template_AdminXForm FORM TABLE 
+{
+    WIDTH: 380px !important;
+}
+
+.loadnode
+{
+	display:inline-block !important;
+	background: url(/ewcommon/images/admin/ajax-loader.gif) 0px 2px no-repeat !important;
+	padding:2px 2px 2px 20px !important;
+}
+
+
+/* ########################## Site Menu Key ########################## */
+#adminLayout #siteMenuKey
+{
+	padding-top: 10px;
+	font-size: 0.8em;
+	border-top: 1px solid #000;	
+}
+#adminLayout #siteMenuKey table
+{
+	margin-top: 5px;	
+}
+#adminLayout #siteMenuKey td
+{
+	padding-bottom: 3px;
+	padding-left: 20px;	
+	vertical-align: middle;
+}
+#adminLayout #siteMenuKey .parent
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon.gif)  0 0 no-repeat;	
+}
+#adminLayout #siteMenuKey .parentHidden
+{
+	background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif)  0 0 no-repeat !important;	
+}
+#adminLayout #siteMenuKey .page
+{
+	background: url(/ewcommon/images/menutree/page-file.gif) 0 0 no-repeat;	
+}
+#adminLayout #siteMenuKey .pageHidden
+{
+	background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;	
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<theme>
+  <add key="CurrentTheme" value="Corporate" />
+  <add key="Corporate.Layout" value="TopNavSideSub" />
+  <add key="Corporate.BaseColor" value="#0faba8" />
+  <add key="Corporate.PrimaryColor" value="#642D89" />
+  <add key="Corporate.SecondaryColor" value="#FF6600" />
+  <add key="Corporate.TertiaryColor" value="#666666" />
+  <add key="Corporate.QuartaryColor" value="#C1C1C1" />
+</theme>

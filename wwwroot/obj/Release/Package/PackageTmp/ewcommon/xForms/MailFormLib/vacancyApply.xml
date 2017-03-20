@@ -1,0 +1,53 @@
+﻿<model class="ewXform">
+    <instance>
+        <emailerWithAttachment xmlns="http://www.eonic.co.uk/ewcommon/Services">
+            <oBodyXML>
+                <Items>
+                    <VacancyRef/>
+                    <Name />
+                    <Telephone />
+                    <Email />
+                </Items>
+            </oBodyXML>
+            <xsltPath>/xsl/Email/vacancyApply.xsl</xsltPath>
+            <!--<xsltPath>/ewcommon/xsl/Mailer/emailer.xsl</xsltPath>-->
+            <fromName></fromName>
+            <fromEmail>info@centum.ds01.eonic.co.uk</fromEmail>
+            <recipientEmail>perry@eonic.co.uk</recipientEmail>
+            <SubjectLine>Vacancy Application from Website</SubjectLine>
+            <cAttachmentFilePath/>
+            <bDeleteAfterSend>true</bDeleteAfterSend>
+        </emailerWithAttachment>
+    </instance>
+    <submission method="post" action="/ewCommon/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailerWithAttachment" id="applyVacancy" event="return form_check(this);" />
+    <bind id="emailerWithAttachment" nodeset="emailerWithAttachment">
+        <bind id="oBodyXML" nodeset="oBodyXML/Items">
+             <bind id="VacancyRef" nodeset="VacancyRef" required="false()" type="string" />
+             <bind id="Name" nodeset="Name" required="true()" type="string" />
+            <bind id="Email" nodeset="Email" required="true()" type="email" />
+            <bind id="Telephone" nodeset="Telephone" required="false()" type="string" />
+        </bind>
+        <bind id="yourCv" nodeset="cAttachmentFilePath" required="false()" type="fileUpload"  allowedExt="doc,docx,pdf" saveTo="\..\imports\" />
+    </bind>
+</model>
+<group>
+<label>Vacancy Application</label>
+    <group>
+        <input bind="VacancyRef" appearance="" class="hidden"/>
+        <input bind="Name" appearance="">
+            <label>Name</label>
+        </input>
+        <upload bind="yourCv" appearance="">
+            <label>Your CV</label>
+        </upload>
+        <input bind="Telephone" appearance="">
+            <label>Contact Telephone</label>
+        </input>
+        <input bind="Email" class="required">
+            <label>Email</label>
+        </input>
+        <submit submission="applyVacancy" bind="ewCmd" class="principle">
+            <label>Send</label>
+        </submit>
+    </group>
+</group>

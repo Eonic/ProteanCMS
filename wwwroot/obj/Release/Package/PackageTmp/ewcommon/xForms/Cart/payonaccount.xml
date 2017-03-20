@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="PayForm">
+	<model>
+		<instance>
+			<PaymentDetails>
+				<accountID/>
+				<accountComments/>
+				<PONumber/>
+			</PaymentDetails>
+		</instance>
+	
+	<bind nodeset="PaymentDetails">
+		<bind id="accountComments" nodeset="accountComments" required="false()" type="string"/>
+		<bind id="PONumber" nodeset="PONumber" required="true()" type="string"/>
+	</bind>
+  </model>
+	<group ref="PaymentDetails">
+		<label>Confirm Order - Enter Purchase Order Reference.</label>
+		<input bind="PONumber" class="textbox required">
+			<label>Purchase Order Reference</label>
+			<value/>
+		</input>
+		<textarea bind="accountComments" rows="6" cols="60">
+			<label>Comments</label>
+			<value/>
+		</textarea>
+	</group>
+</Content>

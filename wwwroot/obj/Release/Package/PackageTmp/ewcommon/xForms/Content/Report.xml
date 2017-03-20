@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Report Data Type migrated from Wellards to EWv4.1 11/9/07 -->
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Report</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content>
+            <Name/>
+            <Type/>
+            <Description/>
+            <Parameters>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+            </Parameters>
+            <OnArticle/>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content>
+            <Name/>
+            <Type/>
+            <Description/>
+            <Parameters>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+              <Parameter name=""/>
+            </Parameters>
+            <OnArticle/>
+          </Content>          
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
+    <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
+    <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
+    <bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
+    <bind id="cDescription" nodeset="tblContent/cDescription" required="false()" type="string"/>
+    <bind id="bCascade" nodeset="tblContent/bCascade" required="false()" type="string"/>
+    <bind id="cContentName" nodeset="tblContent/cContentXmlBrief/Content/Name" required="true()" type="string"/>
+    <bind id="cReportType" nodeset="tblContent/cContentXmlBrief/Content/Type" required="true()" type="string"/>
+    <bind id="cContentDescription" nodeset="tblContent/cContentXmlBrief/Content/Description" required="false()" type="string"/>
+    <bind id="nDisableOnArticle" nodeset="tblContent/cContentXmlBrief/Content/OnArticle" required="true()" type="string"/>
+    <bind id="cContentName" nodeset="tblContent/cContentXmlDetail/Content/Name" required="true()" type="string"/>
+    <bind id="cReportType" nodeset="tblContent/cContentXmlDetail/Content/Type" required="true()" type="string"/>
+    <bind id="cContentDescription" nodeset="tblContent/cContentXmlDetail/Content/Description" required="false()" type="string"/>
+    <bind id="nDisableOnArticle" nodeset="tblContent/cContentXmlDetail/Content/OnArticle" required="true()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content/Parameters">
+      <bind id="p1name" nodeset="Parameter[1]/@name" required="false()" type="string"/>
+      <bind id="p1value" nodeset="Parameter[1]" required="false()" type="string"/>
+      <bind id="p2name" nodeset="Parameter[2]/@name" required="false()" type="string"/>
+      <bind id="p2value" nodeset="Parameter[2]" required="false()" type="string"/>
+      <bind id="p3name" nodeset="Parameter[3]/@name" required="false()" type="string"/>
+      <bind id="p3value" nodeset="Parameter[3]" required="false()" type="string"/>
+      <bind id="p4name" nodeset="Parameter[4]/@name" required="false()" type="string"/>
+      <bind id="p4value" nodeset="Parameter[4]" required="false()" type="string"/>
+      <bind id="p5name" nodeset="Parameter[5]/@name" required="false()" type="string"/>
+      <bind id="p5value" nodeset="Parameter[5]" required="false()" type="string"/>
+    </bind>
+    <bind nodeset="tblContent/cContentXmlDetail/Content/Parameters">
+      <bind id="p1name" nodeset="Parameter[1]/@name" required="false()" type="string"/>
+      <bind id="p1value" nodeset="Parameter[1]" required="false()" type="string"/>
+      <bind id="p2name" nodeset="Parameter[2]/@name" required="false()" type="string"/>
+      <bind id="p2value" nodeset="Parameter[2]" required="false()" type="string"/>
+      <bind id="p3name" nodeset="Parameter[3]/@name" required="false()" type="string"/>
+      <bind id="p3value" nodeset="Parameter[3]" required="false()" type="string"/>
+      <bind id="p4name" nodeset="Parameter[4]/@name" required="false()" type="string"/>
+      <bind id="p4value" nodeset="Parameter[4]" required="false()" type="string"/>
+      <bind id="p5name" nodeset="Parameter[5]/@name" required="false()" type="string"/>
+      <bind id="p5value" nodeset="Parameter[5]" required="false()" type="string"/>
+    </bind>
+    <!--bind id="cContentRecRead" nodeset="tblContent/cContentXmlDetail/Content/group/div[@class='recRead']" required="false()" type="string"/-->
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Report</label>
+    <group>
+      <group>
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="cContentName" class="required short">
+          <label>Report Name</label>
+        </input>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <select bind="bCascade" appearance="full">
+          <label>Cascade to Child Pages</label>
+          <item>
+            <label></label>
+            <value>true</value>
+          </item>
+        </select>
+        <input bind="cDescription" class="short">
+          <label>Change Notes</label>
+        </input>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Report and Parameters</label>
+        <select1 bind="cReportType" appearance="minimal" class="required">
+          <label>Report</label>
+            <item>
+              <label>Eonic Stored Procedure</label>
+              <value>Eonic_Stored_Procedure</value>
+            </item>
+        </select1>
+        <select1 bind="nDisableOnArticle" appearance="full" class="required vshort">
+          <label>Action On Viewing An Article</label>
+          <item>
+            <label>Enable Report</label>
+            <value>EnableReport</value>
+          </item>
+          <item>
+            <label>Disable Report</label>
+            <value>DisableReport</value>
+          </item>
+          <hint>If you are viewing an article on a page with a report, do you want to run the report?  It might not be displayed, and it saves on performance.</hint>
+        </select1>
+        <!-- Parameter -->
+        <group ref="p1">
+          <label>Parameter 1</label>
+          <input type="Textbox" bind="p1name" class="short">
+            <label>Name</label>
+            <value/>
+          </input>
+          <input type="Textbox" bind="p1value" class="short">
+            <label>Value</label>
+            <value/>
+          </input>
+        </group>
+        <!-- Parameter -->
+        <group ref="p2">
+          <label>Parameter 2</label>
+          <input type="Textbox" bind="p2name" class="short">
+            <label>Name</label>
+            <value/>
+          </input>
+          <input type="Textbox" bind="p2value" class="short">
+            <label>Value</label>
+            <value/>
+          </input>
+        </group>
+        <!-- Parameter -->
+        <group ref="p3">
+          <label>Parameter 3</label>
+          <input type="Textbox" bind="p3name" class="short">
+            <label>Name</label>
+            <value/>
+          </input>
+          <input type="Textbox" bind="p3value" class="short">
+            <label>Value</label>
+            <value/>
+          </input>
+        </group>
+        <!-- Parameter -->
+        <group ref="p4">
+          <label>Parameter 4</label>
+          <input type="Textbox" bind="p4name" class="short">
+            <label>Name</label>
+            <value/>
+          </input>
+          <input type="Textbox" bind="p4value" class="short">
+            <label>Value</label>
+            <value/>
+          </input>
+        </group>
+        <!-- Parameter -->
+        <group ref="p5">
+          <label>Parameter 5</label>
+          <input type="Textbox" bind="p5name" class="short">
+            <label>Name</label>
+            <value/>
+          </input>
+          <input type="Textbox" bind="p5value" class="short">
+            <label>Value</label>
+            <value/>
+          </input>
+        </group>
+      </group>
+
+      <group ref="Content">
+        <label>Other Information</label>
+        <textarea bind="cContentDescription" class="TextAreaBrief xhtml" rows="10" cols="70">
+          <label>Report Description</label>
+        </textarea>
+      </group>      
+      
+      <submit submission="" ref="ewSubmit" class="principle">
+        <label>Save Text</label>
+      </submit>
+    </group>
+
+  </group>
+</Content>

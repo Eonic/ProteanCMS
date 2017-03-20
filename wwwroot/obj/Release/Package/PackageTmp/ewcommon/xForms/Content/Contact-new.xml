@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Contacts Addresses now have standardised Locational info to allow reuse of addresses and mappings -->
+
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Contact</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<GivenName/>
+						<Surname/>
+						<Title/>
+						<Company/>
+						<Department/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+              <img class="detail"/>
+						</Images>
+						<Telephone/>
+						<Fax/>
+						<Email/>
+						<Profile/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<GivenName/>
+						<Surname/>
+						<Title/>
+						<Company/>
+						<Department/>
+						<Images>
+							<img class="thumbnail"/>
+							<img class="display"/>
+              <img class="detail"/>
+						</Images>
+						<!--<Address>
+							<Street/>
+							<City/>
+							<State/>
+							<PostalCode/>
+						</Address>-->
+            <Location loc="address" map="">
+              <Venue/>
+              <Address>
+                <No />
+                <Street />
+                <Locality />
+                <Region />
+                <PostCode />
+                <Country />
+              </Address>
+              <Geo longitude="" latitude="" />
+            </Location>
+						<Telephone/>
+						<Fax/>
+						<Email/>
+						<Website/>
+						<Profile/>
+						<Description/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentSurname" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentGivenName" nodeset="GivenName" required="false()" type="string"/>
+				<bind id="cContentSurname" nodeset="Surname" required="true()" type="string"/>
+				<bind id="cContentTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentCompany" nodeset="Company" required="false()" type="string"/>
+				<bind id="cContentDepartment" nodeset="Department" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+				<bind id="cContentTelephone" nodeset="Telephone" required="false()" type="string"/>
+				<bind id="cContentFax" nodeset="Fax" required="false()" type="string"/>
+				<bind id="cContentEmail" nodeset="Email" required="false()" type="email"/>
+				<bind id="cContentProfile" nodeset="Profile" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentGivenName" nodeset="GivenName" required="false()" type="string"/>
+				<bind id="cContentSurname" nodeset="Surname" required="true()" type="string"/>
+				<bind id="cContentTitle" nodeset="Title" required="false()" type="string"/>
+				<bind id="cContentCompany" nodeset="Company" required="false()" type="string"/>
+				<bind id="cContentDepartment" nodeset="Department" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind nodeset="Location">
+          
+          <bind id="cContentLocationName" nodeset="Venue" required="false()" type="string"/>
+          <bind nodeset="Address">
+            <bind id="cContentLocationNo" nodeset="No" required="false()" type="string"/>
+            <bind id="cContentLocationStreet" nodeset="Street" required="false()" type="string"/>
+            <bind id="cContentLocationTown" nodeset="Locality" required="false()" type="string"/>
+            <bind id="cContentLocationRegion" nodeset="Region" required="false()" type="string"/>
+            <bind id="cContentLocationPostCode" nodeset="PostCode" required="false()" type="string"/>
+          </bind>
+          
+          <!--<bind nodeset="Address">
+            <bind id="cContentStreet" nodeset="Street" required="false()" type="string"/>
+            <bind id="cContentCity" nodeset="City" required="false()" type="string"/>
+            <bind id="cContentState" nodeset="State" required="false()" type="string"/>
+            <bind id="cContentPostalCode" nodeset="PostalCode" required="false()" type="string"/>
+          </bind>-->
+        </bind>
+				
+				<bind id="cContentTelephone" nodeset="Telephone" required="false()" type="string"/>
+				<bind id="cContentFax" nodeset="Fax" required="false()" type="string"/>
+				<bind id="cContentEmail" nodeset="Email" required="false()" type="email"/>
+				<bind id="cContentWebsite" nodeset="Website" required="false()" type="string"/>
+				<bind id="cContentProfile" nodeset="Profile" required="false()" type="string"/>
+				<bind id="cContentBody" nodeset="Description" required="false()" type="string"/>
+			</bind>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent" class="2col">
+		<label>Contact</label>
+		<group>
+      <group>
+			  <input bind="nContentKey" class="hidden">
+				  <label>ContentId</label>
+			  </input>
+			  <label>Settings</label>
+			  <input bind="dPublishDate" class="calendar short">
+				  <label>Publish date</label>
+			  </input>
+			  <input bind="dExpireDate" class="calendar short">
+				  <label>Expire date</label>
+			  </input>
+			  <select1 bind="nStatus" appearance="full" class="required vshort">
+				  <label>Status</label>
+				  <item>
+					  <label>Live</label>
+					  <value>1</value>
+				  </item>
+				  <item>
+					  <label>Hidden</label>
+					  <value>0</value>
+				  </item>
+			  </select1>
+			  <input bind="cDescription" class="short">
+				  <label>Change notes</label>
+			  </input>
+      </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main contact image</label>
+          <help class="inline">
+            <p>
+              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+            </p>
+            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+          </help>
+        </input>
+        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative thumbnail</label>
+        </input>
+        <input bind="cContentDisplay" class="short pickImage">
+          <label>Alternative picture</label>
+        </input>
+      </group>
+		</group>
+    <group>
+	<group class="inline">
+        <label>Details</label>
+        <input bind="cContentGivenName" class="short">
+          <label>First name(s)</label>
+        </input>
+        <input bind="cContentSurname" class="required short">
+          <label>Surname</label>
+        </input>
+        <input bind="cContentTitle" class="short">
+          <label>Job title</label>
+        </input>
+        <input bind="cContentCompany" class="short">
+          <label>Company</label>
+        </input>
+        <input bind="cContentDepartment" class="short">
+          <label>Department</label>
+        </input>
+      </group>
+
+      <group class="inline">
+        <label>Contact details</label>
+        <input bind="cContentTelephone" class="short">
+          <label>Telephone</label>
+        </input>
+        <input bind="cContentFax" class="short">
+          <label>Fax</label>
+        </input>
+        <input bind="cContentEmail" class="short">
+          <label>Email</label>
+        </input>
+        <input bind="cContentWebsite" class="short">
+          <label>Website</label>
+        </input>
+      </group>
+
+      <group class="inline">
+        <label>Address</label>
+          <input bind="cContentLocationName" class="short">
+            <label>Building name</label>
+          </input>
+          <input bind="cContentLocationNo" class="vshort keep_empty">
+            <label>No.</label>
+          </input>
+          <input bind="cContentLocationStreet" class="keep_empty">
+            <label>Street</label>
+          </input>
+          <input bind="cContentLocationTown" class="keep_empty">
+            <label>Town/city</label>
+          </input>
+          <input bind="cContentLocationRegion" class="keep_empty">
+            <label>County/state</label>
+          </input>
+          <input bind="cContentLocationPostCode" class="vshort keep_empty">
+            <label>Postal code</label>
+          </input>
+      </group>
+      
+	    <!--<group class="inline">
+        <label>Addresses</label>
+        <input bind="cContentStreet" class="short">
+          <label>Street</label>
+        </input>
+        <input bind="cContentCity" class="short">
+          <label>Town/City</label>
+        </input>
+        <input bind="cContentState" class="short">
+          <label>County/State</label>
+        </input>
+        <input bind="cContentPostalCode" class="short">
+          <label>Post/Zip Code</label>
+        </input>
+        
+      </group>-->
+	<group>
+		<label>Details</label>
+		<label>Short profile</label>
+		<textarea bind="cContentProfile" class="TextArea xhtml" rows="5" cols="70"></textarea>
+        <label>Full profile</label>
+        <textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70"></textarea>
+      </group>
+    </group>
+  </group>
+	
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Contact</label>
+		</submit>
+	</group>
+</Content>

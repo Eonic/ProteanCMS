@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ContentTypes>
+    <ContentTypeGroup name="Subscriptions">
+      <ContentType type="Subscription" name="Subscription">Subscription</ContentType>
+    </ContentTypeGroup>
+  </ContentTypes>
+  <ModuleTypes>
+    <ModuleGroup name="Subscriptions">
+      <!--<Module type="SubscriptionGroupList" name="SubscriptionGroupList">Simple list with Buy Buttons</Module>-->
+      <Module type="SubscriptionList" name="Subscription List">List of Subscriptions</Module>
+      <Module type="ManageUserSubscriptions" name="Manage User Subscriptions">Manage User Subscriptions</Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

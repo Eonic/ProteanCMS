@@ -1,0 +1,939 @@
+#header /* FIX: When empty on some pageLayouts the edit button does not have space to drop and can interfere with other buttons */
+{
+	min-height: 20px;	
+}
+#adminLayout
+{
+	color:#000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color:#eee !important;
+	padding-bottom:50px;
+	height:auto;
+}
+#adminLayout .button, a.textButton
+{
+	color:#fff;
+	font-family:Arial, sans-serif;
+	font-size:100%;
+	border:1px solid #ccc;
+	border-right:1px solid #777;
+	border-bottom:1px solid #777;
+}
+#adminLayout a.textButton
+{
+	text-decoration:none;
+	padding:1px 5px;
+	margin:0 5px;
+}
+#adminLayout a.textButton:hover
+{
+	color:#000;
+	border-color:#ccc;
+	border-top-color:#777;
+	border-left-color:#777;
+}
+#adminLayout .detail H3
+{
+	FONT-SIZE: 110%
+}
+#adminLayout .dropdown, .textarea, .textbox
+{
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+#adminLayout form td.label
+{
+	text-align:right;
+}
+#adminLayout td, #adminLayout th 
+{
+	vertical-align:top;
+}
+#adminLayout .list
+{
+    BORDER-BOTTOM: #ccc 1px solid
+}
+#adminLayout .list H3
+{
+    FONT-SIZE: 120%;
+}
+#adminLayout .list H4
+{
+    FONT-WEIGHT: 400;
+    FONT-SIZE: 100%;
+}
+#adminLayout .list .date
+{
+	FONT-SIZE: 90%;
+	COLOR: #777;
+}
+#adminLayout .label
+{
+	FONT-WEIGHT: bold;
+}
+#adminLayout .ghosted
+{
+	COLOR: #ddd;
+}
+/* ===================================================*/
+#adminLayout a img,
+#adminHeader a img
+{
+	border: 0;	
+}
+#adminLayout .template
+{
+	padding: 10px;
+	min-width: 760px;
+}
+#adminLayout .popupWindow .template
+{
+	padding: 10px;
+	min-width: 400px;
+}
+#adminLayout .listButtons
+{
+	margin-top: 10px;	
+}
+#adminLayout table.adminList
+{
+	width:100%;	
+	margin:0;
+	margin-top: 10px;
+}
+#adminLayout .adminList a
+{
+	color:#000;
+}
+#adminLayout table.adminList tr
+{
+	background-color: #FFF;
+	font-size:0.9em;
+}
+#adminLayout table.adminList th
+{
+	background-color:#EAEAEA;
+}
+#adminLayout table.adminList .rowOver td 
+{
+	background-color:#E1E1E1 !important;
+}
+#adminLayout #template_FileSystem .rowOver td
+{
+	background: #FAFAFA !important;	
+} 
+#adminLayout .adminList a.hide
+{
+	background: url(/ewcommon/images/admin/hide.gif) 5px 2px no-repeat !important;	
+}
+#adminLayout .adminList a.live
+{
+	background: url(/ewcommon/images/admin/tick.gif) 5px 2px no-repeat;	
+}
+#adminLayout table.adminList th
+{
+	PADDING:5px;
+	color:#000;
+	TEXT-ALIGN:left
+}
+#adminLayout table.adminList td
+{
+	padding: 5px;	
+}
+
+#adminLayout .adminList td dt
+{
+	color: #444;	
+}
+#adminLayout .adminList td dd
+{
+	color: #777;	
+}
+#adminLayout .adminList td dl.flat
+{
+	margin: 0 0 6px 20px;
+	clear: both;
+}
+#adminLayout .adminList td dl.flat *
+{
+	color: #777;	
+}
+#adminLayout .adminList td dl.flat dd
+{
+	margin-left: 80px
+	
+}
+#adminLayout .adminList td dl.flat dt
+{
+	display:block;
+	float: left;
+
+}
+#adminLayout .adminList td.notop
+{
+	padding-top: 0px;
+}
+#adminLayout .PermissionButtons
+{
+	width:200px;
+	text-align: center;
+	display:block;
+	margin:5px;
+}
+#adminLayout .button
+{
+	padding:2px 5px 3px 5px;
+}
+#adminLayout
+{
+	background-color: #F5F5F5;	
+}
+#adminLayout .scroll_10
+{
+width:200px;
+height:150px;
+}
+#adminLayout .scroll_30
+{
+width:200px;
+height:450px;
+}
+#adminLayout input.short,  
+#adminLayout input#cContentThumbnail,
+#adminLayout input#cContentDetail,
+#adminLayout input#cContentPicture,
+#adminLayout input#cContentFullSizePicture,
+#adminLayout input#cContentSpecificationDocument
+{
+	width:130px;
+}
+#adminLayout span.calenderDisplay
+{
+	width: 126px;	
+}
+#adminLayout select.short
+{
+	width: 134px;	
+}
+#adminLayout .vshort
+{
+	width: 30px;	
+}
+#adminLayout input.long
+{
+	width:350px;
+}
+#adminLayout form th
+{
+	text-align:left;
+}
+#adminLayout .mainContent #cContentBody
+{
+	float: right;
+	width: 50%;
+}
+#adminLayout a.textButton
+{
+	position:relative;
+	display:block;
+	float:left;
+	margin:0 3px 0 0!important;
+	padding:3px 6px 3px 6px !important;
+	color:#fff !important;
+	background-color:#8FA6D3;
+	border-color:#7C87A4 #566B8B #566B8B #7C87A4;
+	text-decoration:none;
+	font:bold 0.8em/1em verdana,sans-serif;
+	border:1px solid;
+	white-space: nowrap;
+}
+#adminLayout a:hover.textButton
+{
+	color:#fff !important;
+	background-color:#B3C9F5;
+	border-color:#B0C0DF #8FA6D3 #8FA6D3 #B0C0DF;
+}
+
+/*---------Popup Content Menu------------*/
+.editable
+{
+	position:relative;
+	border:dashed 1px #ddd !important;
+	padding-top:0px !important;
+	padding-right:2px !important;
+	min-height: 25px;
+}
+.editable:hover
+{
+	background: url(/ewcommon/images/admin/greyed.gif) repeat !important;
+}
+.over
+{
+	border-color:#5790EE;
+}
+div.inlinePopupLabel
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	position:absolute ;
+	z-index:100;
+	top:0;
+	right:0;
+	text-align:right;
+	margin:2px 4px 0 0;
+	background:Transparent url(/ewcommon/images/admin/70persent_white_BG.png)!important;
+}
+div.inlinePopupLabel a
+{
+	text-decoration:none !important;
+	border:1px solid #ddd !important;
+	padding:0px 4px 1px 15px !important;
+	text-transform:uppercase !important;
+	font-size:.8em !important;
+	color:#666 !important;
+	display:inline-block !important;
+	background-color:Transparent !important;
+}
+div.inlinePopupLabel  a.options
+{
+	background: #FFF url(/ewcommon/images/admin/options.gif) left center no-repeat !important;
+}
+h2 .inlinePopupLabel  a.options
+{
+	font-weight: normal;
+	font-size: 0.75em;	
+}
+h2 .inlinePopup a.add
+{
+	font-weight: normal;
+	font-size: 0.6em;
+}
+ul.inlinePopupOptions
+{
+	position:relative;
+	top:0;
+	right:0;
+	width:160px !important;
+	margin:0;
+	padding:2px;
+	background-color:#fff;
+	border:1px solid #999 !important;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	display:none;
+	z-index:10;
+}
+ul.inlinePopupOptions li /* Note : iehacks applicable */
+{
+	background: none !important; 
+    position:relative;
+	margin:4px 0!important;
+	padding:0;
+	list-style:none;
+	display:block;
+	line-height:1.1em;
+	font-size:0.75em;
+	width:auto !important;
+}
+
+ul.inlinePopupOptions li a /* Note : iehacks applicable */
+{
+	text-decoration:none;
+	color:#666;
+	text-transform:uppercase;
+	padding:2px 2px 2px 15px;
+	display:block;
+	position:relative;
+	width:auto !important;
+}
+ul.inlinePopupOptions li.arrows a
+{
+	float:left;
+}
+ul.inlinePopupOptions li.arrows
+{
+	clear:left;
+}
+ul.inlinePopupOptions li a.add
+{
+	background:url(/ewcommon/images/admin/add.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.find
+{
+	background:url(/ewcommon/images/admin/find.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.edit
+{
+	background:url(/ewcommon/images/admin/edit.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.move
+{
+	background:url(/ewcommon/images/admin/move.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.copy
+{
+	background:url(/ewcommon/images/admin/copy.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.locations
+{
+	background:url(/ewcommon/images/admin/locations.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.hide
+{
+	background:url(/ewcommon/images/admin/hide.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.show
+{
+	background:url(/ewcommon/images/admin/show.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions li a.delete
+{
+	background:url(/ewcommon/images/admin/delete.gif) left top no-repeat !important;
+}
+ul.inlinePopupOptions a:hover
+{
+	text-decoration:none;
+	color:#44045B;
+}
+ul.inlinePopupOptions a.arrowbutton
+{
+	width:15px !important;
+	height:15px;
+	position:relative;
+	margin:0 0 0 0 !important;
+	padding:0 !important;
+	display:block !important;
+	font-size:0;
+	float:left;
+	color:#fff;
+}
+ul.inlinePopupOptions a:hover.arrowbuttons
+{
+	border-color:#eee;
+}
+ul.inlinePopupOptions .arrowbutton span
+{
+	z-index:auto;
+	left:0;
+	top:0;
+	width:15px;
+	height:15px;
+	margin:0;
+	padding:0;
+	background-position:top left;
+	background-repeat:no-repeat;
+	cursor: pointer;  
+}
+ul.inlinePopupOptions .top
+{
+	background: url(/ewcommon/images/admin/top.gif) no-repeat 3px 3px;	
+}
+ul.inlinePopupOptions .up
+{
+	background: url(/ewcommon/images/admin/up.gif) no-repeat 3px 3px;	
+}
+ul.inlinePopupOptions .down
+{
+	background: url(/ewcommon/images/admin/down.gif) no-repeat 3px 3px;	
+}
+ul.inlinePopupOptions .bottom
+{
+	background: url(/ewcommon/images/admin/bottom.gif) no-repeat 3px 3px;	
+}
+ul.inlinePopup
+{
+	list-style:none;
+	margin-bottom:3px;
+	text-align:right;
+	list-style-type:none !important;
+}
+ul.inlinePopup li
+{
+	list-style-type:none !important;
+}
+ul.inlinePopup a
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	text-decoration:none;
+	border:1px solid #ddd;
+	padding:0 4px 1px 15px;
+	margin:3px 3px 0 0;
+	text-transform:uppercase;
+	font-size:.8em;
+	color:#666 !important;
+	white-space:nowrap;
+	text-align:left;
+}
+ul.inlinePopup  a.add
+{
+	background: #FFF url(/ewcommon/images/admin/add.gif) left 2px no-repeat;
+}
+ul.inlinePopup  a.find
+{
+	background: #FFF url(/ewcommon/images/admin/find.gif) left top no-repeat;
+}
+ul.inlinePopup  a:hover, div.inlinePopupLabel a:hover
+{
+	background-color:#f7f7f7;
+	color:#2C57AC;
+}
+.Site ul.inlinePopup li
+{
+	list-style: none !important;
+	background: none !important;	
+}
+#popup_menu 
+{
+	position:absolute;
+	z-index:100;
+}
+.overpop 
+{
+	display:block !important;
+}
+ul.item
+{
+	z-index:0;
+	clear:right;
+	position:static;
+	float:right;
+	width:200px;
+	display:block;
+	background-color:#6C82A5;
+	margin-bottom:.5em;
+}
+ul.item .adminbutton
+{
+	height:15px;
+	position:relative;
+	margin:1px 3px 0 0!important;
+	padding-right:3px;
+	display:block;
+	float:left;
+}
+ul.item .arrowbutton
+{
+	border:1px solid #fff;
+}
+ul.item li a
+{
+	color:#fff;
+}
+
+
+.ui-draggable-dragging
+{
+    width:250px;
+    height:25px;
+    border:solid 2px #f00;
+}
+/*--Any idea what this is for?--
+--*/
+#adminLayout .TextAreaBrief 
+{
+	background-color:#DDE4F2;
+	width:500px;
+	height:100px;
+}
+#adminLayout .TextAreaDetail 
+{
+	background-color:#DDE4F2;
+	width:500px;
+	height:350px;
+}
+#adminLayout .alphaStepper
+{
+	background-color:#6C82A5;
+	display:block;
+	margin:3px;
+	padding:7px;
+	width:auto;
+}
+#adminLayout .alphaStepper a
+{
+	background-color:#DDE4F2;
+	padding:5px;
+	color:#6C82A5;
+	text-decoration:none;
+}
+
+/* ######################## IDs ######################## */
+#adminLayout #template_Report
+{
+	color:#059;
+}
+#adminHeader
+{
+	position: relative;
+	padding-bottom:3px;
+	min-width: 760px;
+	min-height: 93px;
+	border-bottom: 2px solid #000;
+	z-index: 100;
+}
+* html #adminHeader
+{
+	height: 50px;	
+}
+#adminMenu
+{
+	width: 160px;
+	position: absolute;
+	top: 43px;
+	left: 10px;
+}
+#adminMenuCurrentPage
+{	
+	position: relative;
+	font-weight: bold;
+	height: 45px;
+	width: 160px;
+	text-align: right;
+	padding-top: 5px;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+#adminMenuCurrentPage #adminMenuCurrentPageName
+{
+	margin-right: 7px;	
+}
+#adminMenu .adminMenuIcon
+{
+	position: absolute;
+	top: 7px;
+	left: 7px;	
+}
+#adminMenuCurrentPage .adminMenuIcon
+{
+	top: 4px;
+	left: 6px;	
+}
+#adminMenuCurrentPageArrow
+{
+	position: absolute;
+	bottom: 10px;
+	right: 5px;
+	height: 16px;
+	width: 16px;	
+}
+#adminMenu ul
+{
+	background: #000;
+	display: none;
+}
+#adminMenu li
+{	position: relative;
+	list-style: none;
+	background: #616161;
+	border-bottom: 1px solid #7B7B7B;
+}
+#adminMenu ul a
+{
+	
+	display: block;	
+	padding: 10px 5px 36px 0;
+	margin-top: 1px;
+	background: #616161;
+	text-decoration: none;
+	text-transform: uppercase;
+	text-align: right;
+	width: 154px;
+}
+#adminMenu #Manage_ContentMenuIcon,
+#adminMenu #MembershipMenuIcon,
+#adminMenu #EcommerceMenuIcon,
+#adminMenu #ReportsMenuIcon
+{
+	width: 50px;
+	height: 50px;	
+}
+#adminInfoBar
+{
+	position: relative;
+	min-height: 38px;
+	width: 100%;
+}
+* html #adminInfoBar
+{
+	z-index: -1;	
+}
+#adminInfoBar #infoContainer
+{
+	padding: 4px 0 4px 6px;
+	padding-left: 180px;	
+	width: 50%;
+}
+#adminInfoBar #addressBar
+{
+	position: relative;
+	padding: 10px 0 2px 15px;
+	min-height: 24px;
+}
+* html #adminInfoBar #addressBar
+{
+	height: 24px;	
+}
+#adminInfoBar #addressBar a
+{
+	color: #FFF;
+	text-decoration: none;	
+}
+#adminInfoBar #addressBar a:hover
+{
+	color: #F00;	
+}
+#addressBar .TR, #addressBar .BL, #addressBar .BR {width:3px; height:3px;}
+#addressBar .R	{height:100%; width:3px;}
+#addressBar .B	{width:100%; height:3px;}
+
+#addressBar .TR	{position:absolute; top:0; right:0;}
+#addressBar .BR	{position:absolute; bottom:0; right:0;}
+#addressBar .BL	{position:absolute; bottom:0; left:0;}
+#addressBar .R	{position:absolute; top:0; right:0;}
+#addressBar .B	{position:absolute; bottom:0; left:0;}
+
+#adminInfoBar #siteName
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 33%;
+	text-align: right;
+	padding: 8px 10px 0 0;
+	z-index: 1000;
+}
+#adminHeader #logoff
+{
+	position: absolute;
+	top: 47;
+	right: 0;
+	text-decoration:none;
+	margin-top: 4px;
+	margin-right: 7px;
+	height: 29px;
+	width: 91px;
+}
+#adminSubMenu, 
+#adminSubMenu2, 
+#adminBreadcrumb
+{
+	margin-left: 180px;	
+	margin-right: 100px;
+	padding: 0;
+} 
+#adminMenuAddPos
+{
+	width:100%;
+}
+#adminMenuAddPos ul
+{
+	float:right;
+}
+#adminMenuAddPos a
+{
+	background:#eee !important;
+}
+#adminMenu ul, 
+#adminMenu li, 
+#adminSubMenu ul, 
+#adminSubMenu li, 
+#adminSubMenu2 ul, 
+#adminSubMenu2 li, 
+#adminMenuAddPos ul, 
+#adminMenuAddPos li, 
+.pageControlButtons li
+{
+	margin:0;
+	padding:0;
+}
+#adminSubMenu li, 
+#adminSubMenu2 li, 
+#adminMenuAddPos li, 
+.pageControlButtons li
+{
+	list-style:none;
+	display:inline;
+}
+#adminSubMenu ul a, 
+#adminSubMenu2 ul a
+{
+	text-decoration:none;
+	display:block;
+	float:left;
+}
+#adminSubMenu
+{
+	text-transform:uppercase;
+	margin-top: 2px;
+}
+* html #adminSubMenu
+{
+	margin-top: 0;	
+}
+#adminSubMenu .adminSubMenu1Icon
+{
+	height: 20px;
+	width: 20px;
+	position: absolute;
+	top: 4px;
+	left: 8px;
+}
+#adminSubMenu ul a
+{
+	position: relative;
+	font-size:.9em;
+	padding:.5em 16px .6em 34px;
+	background-image:url(/ewcommon/images/adsubmenu_div.gif);
+	margin-right: 2px !important;
+}
+#adminSubMenu .adminSubMenu1TL
+{
+	width: 3px;
+	height: 24px;
+	position: absolute;
+	top: 0;
+	left:0;
+}
+#adminSubMenu2
+{
+	margin-top: 3px;
+	white-space: nowrap;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+#adminSubMenu2 ul a
+{
+	position: relative;
+	padding:.4em 12px .6em 12px;
+	font-size:1em;
+	margin-right: 5px !important;
+}
+#adminSubMenu2 .adminSubMenu2TL
+{
+	width: 3px;
+	height: 21px;
+	position: absolute;
+	top: 0;
+	left:0;
+}
+#adminSubMenu a.active, 
+#adminSubMenu2 a.active
+{
+	color:#fff;
+}
+#adminSubMenu a.on, 
+#adminSubMenu2 a.on
+{
+	color:#fff;
+}
+#adminBreadcrumb
+{
+	padding: 1px 0 4px 0;
+	color:#fff;
+	font-size:.9em
+}
+#adminBreadcrumb a
+{
+	font-weight:bold;
+	color:#CBDDFF;
+	text-decoration:none;
+}
+#adminLocation
+{
+	padding-left: 25px;	
+}
+#adminBreadcrumb .label
+{
+	padding-right:16px;
+	margin-right:10px;
+	text-transform:uppercase;
+	background:url(/ewcommon/images/adsubmenu_div.gif) right center no-repeat;
+}
+#adminFooter
+{
+	height: 700px;
+}
+#adminFooter #footerCopyright
+{
+	float: left;	
+	width: 70%;	
+	padding: 9px 0 20px 20px;
+}
+#adminFooter #footerSellerLogo
+{
+	float: right;
+	height: 73px;
+	width: 125px;
+	background-position: right top;
+	background-repeat: no-repeat;	
+}
+
+/* ######################## Page Layout ######################## */
+#adminHeader .pickByImage
+{	
+	background: #FFF;
+}
+#adminHeader .pickByImage .choices
+{	
+	clear: left;
+	/*border: 2px solid #E3E3E3;*/
+}
+#adminLayout .pickByImage .choices h3
+{
+	clear: both;
+	background: #FFF !important;	
+	border-bottom: 1px solid #44045B;
+	color: #44045B !important;
+	padding-top: 10px !important;
+}
+#adminLayout .pickByImage .layoutOptions
+{
+	clear: left;
+}
+#adminLayout .pickByImage .item, .pickByImage .selected
+{
+	white-space: nowrap;
+	width: 270px;
+	float: left;
+	padding: 5px;
+	margin: 5px;
+}
+#adminLayout .pickByImage .item
+{	
+	border: 2px solid #E3E3E3;
+	background: #F5F5F5;
+	color: #000;
+}
+
+#adminLayout .pickByImage .selected
+{
+	background: #BBBBBB;
+	border: 2px solid #999999;	
+}
+#adminLayout .pickByImage h5
+{
+	width:100%;
+	font-size: 1em;
+	white-space: normal;
+	display: block;
+	margin: 0;
+	margin-bottom: 3px;
+	padding: 0;	
+}
+#adminLayout .pickByImage .item input, .pickByImage .selected input
+{
+	float: right;	
+}
+#adminLayout .pickByImage .description
+{
+	white-space: normal;
+	width: 40%;	
+	float: left;
+}
+#adminLayout .help
+{
+	display: block;
+	font-weight: bold;
+	color: #222;
+}
+#adminLayout #H3
+{
+	display: none;	
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="PayByCash" validGroups="all" validCurrencies="GBP">
+				<description value="Place order, and manually pay funds into our bank account."/>
+				<AccountXform value=""/>
+				<BankName value="Your Bank"/>
+				<AcctNumber value="12345678"/>
+				<SortCode value="12-34-56"/>
+				<Instructions/>
+				<altMerchantEmail value=""/>
+				<altMerchantName value=""/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="accountXform" nodeset="AccountXform/@value" required="false()" type="string"/>
+			<bind id="bankName" nodeset="BankName/@value" required="true()" type="string"/>
+			<bind id="acctNumber" nodeset="AcctNumber/@value" required="true()" type="string"/>
+			<bind id="sortCode" nodeset="SortCode/@value" required="true()" type="string"/>
+			<bind id="instructions" nodeset="Instructions" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Pay By Cash Settings</label>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="accountXform" class="long">
+			<label>Bespoke Xform</label>
+		</input>
+		<input bind="bankName">
+			<label>Bank Name</label>
+		</input>
+		<input bind="acctNumber">
+			<label>acctNumber</label>
+		</input>
+		<textarea bind="sortCode">
+			<label>Instructions</label>
+		</textarea>
+		<group ref="Content" class="Content">
+			<label>Instructions</label>
+			<textarea bind="instructions" class="TextArea xhtml" rows="15" cols="70"/>
+		</group>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+	</group>
+</Content>

@@ -1,0 +1,13 @@
+﻿eonicweb5-1
+
+changes to file "reponsive-embed.less file"
+
+we have added more aspect ratios to the file.
+
+This will need to be added if we every update the file all the code that will need to be copied is stated below.
+
+  // Modifier class for 4:1 aspect ratio
+  &.embed-responsive-4by1 {
+    padding-bottom: 25%;
+  
+  

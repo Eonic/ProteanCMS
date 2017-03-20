@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>Comment</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<Article/>
+						<User/>
+						<EditRecord/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail>
+					<Content>
+						<Article/>
+						<User/>
+						<EditRecord/>
+					</Content>
+				</cContentXmlDetail>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>1</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentHeadline" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="dInsertDate" nodeset="dInsertDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentArticle" nodeset="Article" required="true()" type="string"/>
+				<bind id="cblogConentUsername" nodeset="User" required="false()" type="string"/>
+				<bind id="cblogEditRecord" nodeset="EditRecord" required="false()" type="string"/>
+			</bind>
+			<bind nodeset="cContentXmlDetail/Content">
+				<bind id="cContentArticle" nodeset="Article" required="false()" type="string"/>
+				<bind id="cblogConentUsername" nodeset="User" required="false()" type="string"/>
+				<bind id="cblogEditRecord" nodeset="EditRecord" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent"  class="2col">
+		<label>Add/Edit Comment</label>
+		<group>
+			<group>
+				<input bind="nContentKey" class="hidden">
+					<label>ContentId</label>
+				</input>
+
+				<label>Settings</label>
+				<input bind="dPublishDate" class="calendar short">
+					<label>Publish Date</label>
+				</input>
+				<input bind="dExpireDate" class="calendar short">
+					<label>Expire Date</label>
+				</input>
+				<select1 bind="nStatus" appearance="full" class="required vshort">
+					<label>Status</label>
+					<item>
+						<label>Approved</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+					<item>
+						<label>Pending</label>
+						<value>3</value>
+					</item>
+					<item>
+						<label>Rejected</label>
+						<value>5</value>
+					</item>
+					<item>
+						<label>Draft Rejected</label>
+						<value>6</value>
+					</item>
+					<item>
+						<label>Superceded</label>
+						<value>2</value>
+					</item>
+				</select1>
+				<input bind="cDescription" class="short">
+					<label>Change Notes</label>
+				</input>
+
+			</group>
+			<group ref="relatedContent">
+				<label>Parent Blog Article</label>
+				<repeat class="relatedContent BlogArticle"/>
+			</group>
+		</group>
+		<group>
+			<group>
+				<label>Blog Comment</label>
+				<input bind="cblogEditRecord" class="hidden"/>
+				<textarea bind="cContentArticle" class="TextArea" rows="10" cols="50">
+					<label>Comment</label>
+				</textarea>
+				<input bind="dInsertDate" class="readonly date">
+					<label>Date Added</label>
+				</input>
+			</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Comment</label>
+		</submit>
+	</group>
+
+</Content>

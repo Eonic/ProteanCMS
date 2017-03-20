@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+      <tblCartDiscountRules>
+        <nDiscountKey/>
+        <cDiscountForeignRef/>
+        <cDiscountName/>
+        <cContentForiegnRef/>
+        <cDiscountCode/>
+        <nDiscountCat>1</nDiscountCat>
+        <bDiscountIsPercent/>
+        <nDiscountValue/>
+        <nDiscountMinPrice/>
+        <nDiscountMinQuantity/>
+        <cAdditionalXML>
+          <cDescription/>
+          <cTerms/>
+          <Images>
+            <img class="thumbnail"/>
+            <img class="display"/>
+            <img class="detail"/>
+          </Images>
+        </cAdditionalXML>
+        <cDiscountUserCode />
+        <nDiscountCodeType />
+        <nDiscountCodeBank />
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+      </tblCartDiscountRules>
+		</instance>
+		<submission id="EditDiscount" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblCartDiscountRules">
+      <bind id="cDiscountName" nodeset="cDiscountName" required="true()" type="string"/>
+      <bind id="cDiscountCode" nodeset="cDiscountCode" required="true()" type="string"/>
+      <bind id="bDiscountIsPercent" nodeset="bDiscountIsPercent" required="true()"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="true()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="nDiscountValue" nodeset="nDiscountValue" required="true()" type="string"/>
+      <bind id="nDiscountCat" nodeset="nDiscountCat" required="true()" type="number"/>
+      <bind nodeset="cAdditionalXML">
+        <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+        <bind id="cTerms" nodeset="cTerms" required="false()" type="string"/>
+        <bind id="cDiscountThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cDiscountPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cDiscountFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+      </bind>
+      <bind id="nDiscountCodeType" nodeset="nDiscountCodeType" required="true()" type="string"/>
+      <bind id="cDiscountUserCode" nodeset="cDiscountUserCode" required="false()" constraint="(//nDiscountCodeType!='0' and //cDiscountUserCode!='') or (//nDiscountCodeType='3' and //cDiscountUserCode='') or (//nDiscountCodeType='0' and //cDiscountUserCode='')" type="string">
+        <alert>If "No code" is selected "Public Discount Code" must be empty. Otherwise you must enter a "Public Discount Code".</alert>
+      </bind>
+      <bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" type="string">
+        <alert>You must select a "Voucher Code Group" value.</alert>
+      </bind>
+      <!--<bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" constraint="(//nDiscountCodeType='3' and //nDiscountCodeBank!='')" type="string">
+        <alert>You must select a "Voucher Code Group" value.</alert>
+      </bind>-->
+    </bind>
+  </model>
+	<group ref="EditDiscount" class="2col">
+		<label>Edit Discount (Basic)</label>
+
+    <group class="xFormContainer">
+        <input bind="nDiscountKey" class="hidden">
+          <label>nDiscountKey</label>
+        </input>
+        <label>General</label>
+        <input bind="cDiscountName" class="required long">
+          <label>Name</label>
+        </input>
+        <input bind="cDiscountCode" class="required short">
+          <label>Accounting Reference Code</label>
+        </input>
+      <group>
+        <label>Settings</label>
+        <input bind="nDiscountCat" class="hidden"/>
+        <select1 bind="bDiscountIsPercent" appearance="minimal" class="required full">
+          <label>Value Basis</label>
+          <choices/>
+          <item>
+            <label>Percentage</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Monetary</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <input bind="nDiscountValue" class="required short">
+          <label>Value</label>
+        </input>
+        <label>Promotional code</label>
+        <select1 bind="nDiscountCodeType" appearance="full" class=" vshort">
+          <label>Promotional Type</label>
+          <item>
+            <label>No code (discount available to all users in the related groups)</label>
+            <value>0</value>
+            <toggle case="cDisplay_0" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>One to Many</label>
+            <value>1</value>
+            <toggle case="cDisplay_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>One to One</label>
+            <value>2</value>
+            <toggle case="cDisplay_2" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Voucher Codes</label>
+            <value>3</value>
+            <toggle case="cDisplay_3" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cDisplay_0"/>
+          <case id="cDisplay_1">
+            <input bind="cDiscountUserCode" class="short">
+              <label>Public Discount Code</label>
+            </input>
+          </case>
+          <case id="cDisplay_2">
+            <input bind="cDiscountUserCode" class="short">
+              <label>Public Discount Code</label>
+            </input>
+          </case>
+          <case id="cDisplay_3">
+            <select1 bind="nDiscountCodeBank" appearance="minimal" query="CodeGroups" class="ewQuery vshort">
+              <label>Select Voucher Code Group</label>
+            </select1>
+          </case>
+        </switch>
+      </group>
+      <group>
+        <label>Status</label>
+        <input bind="dPublishDate" class="required calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="required vshort">
+          <label>Status</label>
+           <choices/>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+      </group>
+      </group>
+
+    <group class="xFormContainer">
+      <group>
+        <group>
+        <label>Discount Description</label>
+        <textarea bind="cDescription" class="TextArea xhtml" rows="15"/>
+        </group>
+        <group>
+        <label>Discount Terms and Conditions</label>
+        <textarea bind="cTerms" class="TextArea xhtml" rows="15"/>
+        </group>
+        <group>
+        <label>Images</label>
+        <input bind="cDiscountThumbnail" class="short pickImage">
+          <label>Thumbnail</label>
+        </input>
+        <input bind="cDiscountPicture" class="short pickImage">
+          <label>Picture</label>
+        </input>
+        <input bind="cDiscountFullSizePicture" class="short pickImage">
+          <label>Full Size</label>
+        </input>
+        </group>
+      </group>
+     </group>
+    </group>
+
+	
+	<group ref="submit" class="discountSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Discount</label>
+		</submit>
+	</group>
+</Content>

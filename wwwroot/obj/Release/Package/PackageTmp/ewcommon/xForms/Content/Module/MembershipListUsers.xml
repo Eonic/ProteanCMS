@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content moduleType="MembershipListUsers" action="Eonic.Web+Membership+Modules.GetUsersByGroup" contentType="User" parentSchemaType="Group" parentIds="" parentStatus="99" parentParId="0" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="LastName" order="ascending" cols="1" stepBy="" stepCount="0" display="related" position=""   />
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      
+      <bind id="membershipUserGroupsSelect" nodeset="@parentIds" required="true()" type="string"/>
+      
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+      <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+      <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>List of Membership Users</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+
+        <!-- end of hidden fields -->
+          <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+          <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or name</label>
+        </input>
+      </group>
+      <group class="inline">
+        <label>Display Settings</label>
+        <select1 bind="nColumns" appearance="full" class="required ">
+          <label>Number of columns</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
+          <item>
+            <label>4</label>
+            <value>4</value>
+          </item>
+        </select1>
+        <select1 bind="cSortBy" appearance="full" class="">
+          <label>Order by</label>
+          <item>
+            <label>Surname</label>
+            <value>LastName</value>
+          </item>
+          <item>
+            <label>Username</label>
+            <value>name</value>
+          </item>
+          <item>
+            <label>First name</label>
+            <value>FirstName</value>
+          </item>
+          <item>
+            <label>Order joined</label>
+            <value>id</value>
+          </item>
+        </select1>
+        <input bind="cPageOrder" class="hidden"/>
+        <select1 bind="nStepCount" appearance="full" class="required">
+          <label>Users per page</label>
+          <item>
+            <label>all</label>
+            <value>0</value>
+            <toggle case="cStepCounter_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+            <toggle case="cStepCounter_2" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>5</label>
+            <value>5</value>
+            <toggle case="cStepCounter_3" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>10</label>
+            <value>10</value>
+            <toggle case="cStepCounter_4" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>25</label>
+            <value>25</value>
+            <toggle case="cStepCounter_5" event="DOMActivate"/>
+          </item>
+          <item bindTo="cStepBy">
+            <input bind="cStepBy" class="hidden" />
+            <label>Other</label>
+            <value>Other</value>
+            <toggle case="cStepCounter_6" event="DOMActivate" />
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cStepCounter_1"/>
+          <case id="cStepCounter_2"/>
+          <case id="cStepCounter_3"/>
+          <case id="cStepCounter_4"/>
+          <case id="cStepCounter_5"/>
+          <case id="cStepCounter_6">
+            <input bind="nStepCount" class="form-group">
+              <label>Other Stepper Value</label>
+            </input>
+          </case>
+        </switch>
+      </group>
+      <group>
+        <label>Choose Groups of Users to List</label>
+        <select bind="membershipUserGroupsSelect" class="ewQuery required checkboxes multiline" query="Directory.Group">
+        </select>
+      </group>
+      <group>
+        <label>Module Links</label>
+        <select1 bind="cLinkType" appearance="full" class="required">
+          <label>Type of Link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Module</label>
+    </submit>
+  </group>
+</Content>

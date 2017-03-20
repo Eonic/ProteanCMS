@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="ePDQ" class="EPDQ" validGroups="all" validCurrencies="GBP">
+				<description value="Pay by Credit Card (Barclays ePDQ)" />
+				<currency value="GBP" />
+				<cardsAccepted value="Master Card:2,Visa:1,Delta:2,Solo:9,Switch/Maestro:14" />
+				<accountId value="797" />
+				<accountUsername value="mdeusr" />
+				<accountPassword value="e0nsk123" />
+                <secureCodeDsLoginId value="6819908" />
+                <verifiedByVisaDsLoginId value="681990800000000" />
+                <verifiedByVisaDsPassword value="XO80t4na" />
+                <verifiedByVisaAquirerBin value="492900" />
+				<opperationMode value="P" />
+				<address value="https://secure2.mde.epdq.co.uk:11500/"/>
+				<secure3d value="on"/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="accountId" nodeset="accountId/@value" required="true()" type="string"/>
+			<bind id="accountUsername" nodeset="accountUsername/@value" required="true()" type="string"/>
+			<bind id="accountPassword" nodeset="accountPassword/@value" required="true()" type="string"/>
+            <bind id="secureCodeDsLoginId" nodeset="secureCodeDsLoginId/@value" required="true()" type="string"/>
+            <bind id="verifiedByVisaDsLoginId" nodeset="verifiedByVisaDsLoginId/@value" required="true()" type="string"/>
+            <bind id="verifiedByVisaDsPassword" nodeset="verifiedByVisaDsPassword/@value" required="true()" type="string"/>
+            <bind id="verifiedByVisaAquirerBin" nodeset="verifiedByVisaAquirerBin/@value" required="true()" type="string"/>
+            <bind id="currency" nodeset="currency/@value" required="true()" type="string"/>
+			<bind id="cardsAccepted" nodeset="cardsAccepted/@value" required="true()" type="string"/>
+			<bind id="opperationMode" nodeset="opperationMode/@value" required="true()" type="string"/>
+			<bind id="address" nodeset="address/@value" required="true()" type="string"/>
+			<bind id="secure3d" nodeset="secure3d/@value" required="true()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>ePDQ Settings</label>
+		<note>Please Note: The site will have to be run in 32bit mode and have the EPDQ provider available along with the com+ dll installed from arcot systems.</note>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="accountId">
+			<label>Account Id</label>
+		</input>
+		<input bind="accountUsername">
+			<label>Account Username</label>
+		</input>
+		<input bind="accountPassword">
+			<label>Account Password</label>
+		</input>
+        <input bind="secureCodeDsLoginId">
+            <label>secureCode DsLoginId</label>
+        </input>
+        <input bind="verifiedByVisaDsLoginId">
+            <label>verified By Visa DsLoginId</label>
+        </input>
+        <input bind="verifiedByVisaDsPassword">
+            <label>verified By Visa DsPassword</label>
+        </input>
+        <input bind="verifiedByVisaAquirerBin">
+            <label>verified By Visa Aquirer Bin</label>
+        </input>
+		<input bind="currency">
+			<label>Default Currency</label>
+		</input>
+		<textarea bind="cardsAccepted" rows="4" cols="60">
+			<label>CardsAccepted</label>
+		</textarea>
+		<select1 bind="opperationMode" appearance="full" class="required">
+			<label>Opperation Mode</label>
+			<item>
+				<label>Production Mode</label>
+				<value>P</value>
+			</item>
+			<item>
+				<label>Test Mode</label>
+				<value>T</value>
+			</item>
+			<item>
+				<label>Test Reject</label>
+				<value>N</value>
+			</item>
+            <item>
+                <label>Test Accept</label>
+                <value>Y</value>
+            </item>
+            <item>
+                <label>Test Random</label>
+                <value>R</value>
+            </item>
+            <item>
+                <label>Test FraudSheild Accept</label>
+                <value> FY</value>
+            </item>
+            <item>
+                <label>Test FraudSheild Reject</label>
+                <value>FN</value>
+            </item>
+        </select1>
+		<input bind="address">
+			<label>Service URL</label>
+		</input>
+		<select1 bind="secure3d" appearance="full" class="required">
+			<label>3D Secure</label>
+			<item>
+				<label>Yes</label>
+				<value>on</value>
+			</item>
+			<item>
+				<label>No</label>
+				<value>off</value>
+			</item>
+		</select1>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+	</group>
+</Content>
