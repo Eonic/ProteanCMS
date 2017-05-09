@@ -1,7 +1,7 @@
 # EonicWeb5 CMS
 .Net / XSLT based Content Management System, with eCommerce and Membership facilies.
 
-## Project Desription
+## Project Description
 EonicWeb5 CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
 
 ## Background
