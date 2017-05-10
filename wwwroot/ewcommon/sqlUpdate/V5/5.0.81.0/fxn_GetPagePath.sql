@@ -1,5 +1,3 @@
-
-
 	CREATE FUNCTION [dbo].[fxn_getPagePath](@nStructId int)
 	RETURNS nvarchar(800)  
 	BEGIN 

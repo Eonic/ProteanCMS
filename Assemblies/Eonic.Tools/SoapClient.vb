@@ -281,6 +281,18 @@ Public Class SoapClient
         End Try
     End Function
 
+    Public Async Function SendRequestAsync(ByVal oSoapBody As String) As Threading.Tasks.Task(Of String)
+        Try
+            oSoapBody = Replace(oSoapBody, "exemelnamespace", "xmlns")
+            oSoapBody = Me.getSoapEnvelope(oSoapBody).OuterXml
+            Me.SendSoapRequest(oSoapBody)
+            Return Me.oResults.OuterXml
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
+            Return ""
+        End Try
+    End Function
+
 
     Public Class SoapResponse
         Inherits XmlDocument

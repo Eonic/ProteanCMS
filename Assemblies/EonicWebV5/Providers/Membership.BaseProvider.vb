@@ -843,19 +843,22 @@ Check:
 
                                     End If
 
-                                    'Passwords match?
-                                    If Len(goRequest("cDirPassword2")) > 0 Then
-                                        If goRequest("cDirPassword") <> goRequest("cDirPassword2") Then
-                                            MyBase.valid = False
-                                            MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must match ")
+                                    'Only validate passwords if form contains the fields.
+                                    If Not MyBase.moXformElmt.SelectSingleNode("/group/descendant-or-self::*[@bind='cDirPassword']") Is Nothing Then
+                                        'Passwords match?
+                                        If Len(goRequest("cDirPassword2")) > 0 Then
+                                            If goRequest("cDirPassword") <> goRequest("cDirPassword2") Then
+                                                MyBase.valid = False
+                                                MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must match ")
+                                            End If
                                         End If
-                                    End If
 
-                                    If Not moPolicy Is Nothing Then
-                                        'Password policy?
-                                        If Len(MyBase.Instance.SelectSingleNode("*/cDirPassword").InnerXml) < 4 Then
-                                            MyBase.valid = False
-                                            MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must be 4 characters long ")
+                                        If Not moPolicy Is Nothing Then
+                                            'Password policy?
+                                            If Len(MyBase.Instance.SelectSingleNode("*/cDirPassword").InnerXml) < 4 Then
+                                                MyBase.valid = False
+                                                MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must be 4 characters long ")
+                                            End If
                                         End If
                                     End If
 

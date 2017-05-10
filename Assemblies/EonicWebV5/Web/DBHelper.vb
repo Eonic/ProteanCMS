@@ -4570,7 +4570,7 @@ restart:
             End Try
         End Function
 
-        Public Function insertDirectory(ByVal cDirForiegnRef As String, ByVal cDirSchema As String, ByVal cDirName As String, ByVal cDirPassword As String, ByVal cDirXml As String, Optional ByVal nStatus As Integer = 1, Optional ByVal bOverwrite As Boolean = False) As Long
+        Public Function insertDirectory(ByVal cDirForiegnRef As String, ByVal cDirSchema As String, ByVal cDirName As String, ByVal cDirPassword As String, ByVal cDirXml As String, Optional ByVal nStatus As Integer = 1, Optional ByVal bOverwrite As Boolean = False, Optional ByVal cEmail As String = "") As Long
             PerfMon.Log("DBHelper", "insertDirectory")
             Dim sSql As String
             Dim nId As Long
@@ -4587,23 +4587,25 @@ restart:
                 cDirPassword = Eonic.Tools.Encryption.HashString(cDirPassword, goConfig("MembershipEncryption"), True)
 
                 If nId < 1 Then
-                    sSql = "Insert Into tblDirectory (cDirSchema, cDirForiegnRef, cDirName, cDirPassword, cDirXml, nAuditId)" & _
-                    " values (" & _
-                    "'" & SqlFmt(cDirSchema) & "'" & _
-                    ",'" & SqlFmt(cDirForiegnRef) & "'" & _
-                    ",'" & SqlFmt(cDirName) & "'" & _
-                    ",'" & SqlFmt(cDirPassword) & "'" & _
-                    ",'" & SqlFmt(cDirXml) & "'" & _
+                    sSql = "Insert Into tblDirectory (cDirSchema, cDirForiegnRef, cDirName, cDirPassword, cDirXml, cDirEmail, nAuditId)" &
+                    " values (" &
+                    "'" & SqlFmt(cDirSchema) & "'" &
+                    ",'" & SqlFmt(cDirForiegnRef) & "'" &
+                    ",'" & SqlFmt(cDirName) & "'" &
+                    ",'" & SqlFmt(cDirPassword) & "'" &
+                    ",'" & SqlFmt(cDirXml) & "'" &
+                    ",'" & SqlFmt(cEmail) & "'" &
                     "," & getAuditId(nStatus) & ")"
                     nId = GetIdInsertSql(sSql)
                 Else
                     If bOverwrite Then
 
-                        sSql = "update tblDirectory set " & _
-                        "cDirSchema = '" & SqlFmt(cDirSchema) & "'," & _
-                        "cDirName = '" & SqlFmt(cDirName) & "'," & _
-                        "cDirPassword = '" & SqlFmt(cDirPassword) & "'," & _
-                        "cDirXML = '" & SqlFmt(cDirXml) & "'" & _
+                        sSql = "update tblDirectory set " &
+                        "cDirSchema = '" & SqlFmt(cDirSchema) & "'," &
+                        "cDirName = '" & SqlFmt(cDirName) & "'," &
+                        "cDirPassword = '" & SqlFmt(cDirPassword) & "'," &
+                        "cDirXML = '" & SqlFmt(cDirXml) & "'," &
+                        "cDirEmail = '" & SqlFmt(cDirXml) & "'" &
                         " where nDirKey = " & nId
                         ExeProcessSql(sSql)
                         ' insert code to update the audit table here
@@ -7606,7 +7608,7 @@ restart:
                 PerfMon.Log("DBHelper", "AddDataSetToContent " & n & " items of content - End")
 
                 ' Trevors Bulk Content Relations Experiment
-                If goConfig("FinalAddBulk") <> "on" Then
+                If LCase(goConfig("FinalAddBulk")) <> "on" Then
                     addBulkRelatedContent(oContent, dUpdateDate, nMaxDepth)
                 End If
 
@@ -10379,13 +10381,15 @@ ReturnMe:
                             Dim updXpath As String = oUpdElmt.GetAttribute("updateSurgical")
                             Dim nodeToUpdate As XmlElement = origInstance.SelectSingleNode("/instance/" & updXpath)
                             If Not nodeToUpdate Is Nothing Then
-                                nodeToUpdate.InnerText = oUpdElmt.InnerText
+                                If oUpdElmt.InnerText.Trim() <> "surgicalIgnore" Then
+                                    nodeToUpdate.InnerText = oUpdElmt.InnerText
+                                End If
                                 Dim att As XmlAttribute
                                 For Each att In oUpdElmt.Attributes
-                                    nodeToUpdate.SetAttribute(att.Name, att.Value)
-                                Next
-                            Else
-                                ErrorMsg = ErrorMsg & updXpath & " not found"
+                                        nodeToUpdate.SetAttribute(att.Name, att.Value)
+                                    Next
+                                Else
+                                    ErrorMsg = ErrorMsg & updXpath & " not found"
                             End If
 
                         Next
@@ -10404,6 +10408,9 @@ ReturnMe:
                         Dim oRemoveElmt As XmlElement
                         For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
                             oRemoveElmt.RemoveAttribute("updateSurgical")
+                            If oRemoveElmt.InnerText.Trim() = "surgicalIgnore" Then
+                                oRemoveElmt.InnerText = ""
+                            End If
                         Next
 
                         Dim updateInstance As XmlElement = ImportStateObj.oInstance
@@ -10433,7 +10440,6 @@ ReturnMe:
                         If Not (ImportStateObj.bSkipExisting And nId <> 0) Then
 
                             nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
-
                             modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
 
                             cProcessInfo = nId & " Saved"

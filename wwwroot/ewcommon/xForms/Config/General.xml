@@ -64,6 +64,7 @@
         <add key="GoogleAnalyticsUniversalID" value="" />
         <add key="XmlSettings" value="" />
         <add key="PageCache" value="off" />
+        <add key="PageCacheTimeout" value="24" />
         <add key="CheckDetailPath" value="off" />
        </web>
     </instance>
@@ -121,6 +122,8 @@
      <bind id="ewExpireAtEndOfDay" nodeset="web/add[@key='ExpireAtEndOfDay']/@value" required="false()" type="string" />
      <bind id="XmlSettings" nodeset="web/add[@key='XmlSettings']/@value" required="false()" type="string" />
      <bind id="ewPageCache" nodeset="web/add[@key='PageCache']/@value" required="false()" type="string" />
+     <bind id="ewPageCacheTimeout" nodeset="web/add[@key='PageCacheTimeout']/@value" required="false()" type="string" />
+     
      <bind id="ewCheckDetailPath" nodeset="web/add[@key='CheckDetailPath']/@value" required="false()" type="string" />
    </model>
    <group ref="WebSettings">
@@ -303,6 +306,9 @@
          </item>
          <value>off</value>
        </select1>
+       <input bind="ewPageCacheTimeout">
+         <label>Timeout of Cache in Hours</label>
+       </input>
        <select1 bind="ewCheckDetailPath" appearance="full">
          <label>Check Detail Path</label>
          <item>

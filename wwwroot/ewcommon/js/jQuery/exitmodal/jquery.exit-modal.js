@@ -126,3 +126,16 @@
         $.fn.exitModal = exitModalInterface;
 
     })();
+
+
+    $(document).ready(function () {
+        $('.exit-modal').exitModal();
+        if ($('.exit-modal').data('exit-modal')) {
+            $(".destroyed-state").hide();
+            $(".initialized-state").show();
+        }
+        $('.close-exit-modal').on('click', function (e) {
+            e.preventDefault();
+            $('.exit-modal').exitModal('hideModal');
+        });
+    });

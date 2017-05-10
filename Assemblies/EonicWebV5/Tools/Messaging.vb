@@ -210,22 +210,22 @@ Public Class Messaging
         End Try
     End Sub
 
-    Public Function emailer( _
-                                ByVal oBodyXML As XmlElement, _
-                                ByVal xsltPath As String, _
-                                ByVal fromName As String, _
-                                ByVal fromEmail As String, _
-                                ByVal recipientEmail As String, _
-                                ByVal SubjectLine As String, _
-                                Optional ByVal successMessage As String = "Message Sent", _
-                                Optional ByVal failureMessage As String = "Message Failed", _
-                                Optional ByVal recipientName As String = "", _
-                                Optional ByVal ccRecipient As String = "", _
-                                Optional ByVal bccRecipient As String = "", _
-                                Optional ByVal cSeperator As String = "", _
-                                Optional ByRef odbHelper As Eonic.Web.dbHelper = Nothing, _
-                                Optional ByVal cPickupHost As String = "", _
-                                Optional ByVal cPickupLocation As String = "" _
+    Public Function emailer(
+                                ByVal oBodyXML As XmlElement,
+                                ByVal xsltPath As String,
+                                ByVal fromName As String,
+                                ByVal fromEmail As String,
+                                ByVal recipientEmail As String,
+                                ByVal SubjectLine As String,
+                                Optional ByVal successMessage As String = "Message Sent",
+                                Optional ByVal failureMessage As String = "Message Failed",
+                                Optional ByVal recipientName As String = "",
+                                Optional ByVal ccRecipient As String = "",
+                                Optional ByVal bccRecipient As String = "",
+                                Optional ByVal cSeperator As String = "",
+                                Optional ByRef odbHelper As Eonic.Web.dbHelper = Nothing,
+                                Optional ByVal cPickupHost As String = "",
+                                Optional ByVal cPickupLocation As String = ""
                             ) As Object
         PerfMon.Log("Messaging", "emailer")
         If cSeperator Is Nothing Then
@@ -256,6 +256,9 @@ Public Class Messaging
             oXml.LoadXml(XmlString)
 
             oXml.DocumentElement.SetAttribute("subjectLine", SubjectLine)
+
+            oXml.DocumentElement.SetAttribute("sessionReferrer", goRequest.Headers("SessionReferer"))
+
 
             Dim oAttIdsElmt As XmlElement = oXml.DocumentElement.SelectSingleNode("AttachmentIds")
             If Not oAttIdsElmt Is Nothing Then

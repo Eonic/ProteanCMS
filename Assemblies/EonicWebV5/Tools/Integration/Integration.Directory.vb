@@ -122,19 +122,39 @@ Namespace Integration.Directory
 
         Function ValidateExternalAuth(ByVal ExternalId As String) As Long
             Try
-                Dim oDr As SqlClient.SqlDataReader = _myWeb.moDbHelper.getDataReader("select nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
-                Dim oRow As DataRow
+                Dim oDr As SqlClient.SqlDataReader = _myWeb.moDbHelper.getDataReader("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
 
                 If oDr.HasRows Then
-                    For Each oRow In oDr
-                        Return oRow("nDirectoryId")
-                    Next
+                    While oDr.Read
+                        Return oDr("nDirectoryId")
+                    End While
                 Else
                     Return 0
                 End If
 
             Catch ex As Exception
+                Return 0
+            End Try
+        End Function
 
+        Function CreateExternalAuth(ByVal ExternalId As String, nUserId As Long) As Long
+            Try
+                Dim ExtAuthId As Long = 0
+                Dim checkId As Long = ValidateExternalAuth(ExternalId)
+                If checkId <> 0 Then
+                    Return checkId
+                Else
+                    Dim sSql As String = "insert into tblDirectoryExternalAuth (nDirectoryId,cProviderName,cProviderId) VALUES (" & nUserId & ", '" & _providerName & "','" & ExternalId & "')"
+                    ExtAuthId = _myWeb.moDbHelper.GetIdInsertSql(sSql)
+                End If
+                If ExtAuthId > 0 Then
+                    Return ExtAuthId
+                Else
+                    Return 0
+                End If
+
+            Catch ex As Exception
+                Return 0
             End Try
         End Function
 

@@ -85,6 +85,7 @@
       <Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
       <!-- Pants, needs more dev -->
       <!--<Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>-->
+      <Module type="BookList" name="Book List">BookList</Module>
       <Module type="TagList" name="Tag List">Tag List</Module>
       <Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>
       <Module type="ContactList" name="Contact List">Contacts List</Module>

@@ -64,6 +64,11 @@
   <xsl:variable name="browserVersion">
     <xsl:call-template name="getBrowserVersion" />
   </xsl:variable>
+  <xsl:variable name="bundleVersion">
+    <xsl:if test="/Page/Settings/add[@key='bundleVersion']">
+      <xsl:text>?v=</xsl:text><xsl:value-of select="/Page/Settings/add[@key='bundleVersion']/@value"/>
+    </xsl:if>
+  </xsl:variable>
   <xsl:variable name="paramDelimiter">
     <xsl:choose>
       <xsl:when test="$adminMode">
@@ -465,7 +470,7 @@
         <xsl:apply-templates select="." mode="commonJsFiles" />
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/</xsl:text>
+        <xsl:text>~/Bundles/Jquery</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
@@ -478,7 +483,6 @@
         <xsl:text>~/ewcommon/js/jquery/colorpickersliders/tinycolor.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/colorpickersliders/bootstrap.colorpickersliders.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/jquery.matchHeight.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jquery/slick-carousel/slick.js,</xsl:text>
         <xsl:choose>
           <xsl:when test="@cssFramework='bs3'">
             <xsl:text>~/ewcommon/js/jquery/revolution/js/jquery.themepunch.tools.min.js,</xsl:text>
@@ -488,7 +492,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>~/ewcommon/js/jquery/lightbox/jquery.lightbox-0.5.min.js,</xsl:text>
-            <xsl:text>~/ewcommon/js/non-bs3.js</xsl:text>
+            <xsl:text>~/ewcommon/js/non-bs3.js,</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:text>~/ewcommon/js/common.js</xsl:text>
@@ -520,6 +524,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.js" async="async">/* */</script>
       </xsl:when>
       <xsl:otherwise>
 
@@ -533,7 +538,11 @@
         <xsl:if test="//Content[@moduleType='ImageFader']">
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
-        <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
+        <xsl:if test="//Content[@carousel='true']">
+          <script src="/ewcommon/js/jquery/slick-carousel/slick.js" async="async">/* */</script>
+             <!-- !!! MIN VERSION CAUSES ERROR -->
+        </xsl:if>
+          <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
           <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
         </xsl:if>
         <!-- code formatting plugin -->
@@ -550,6 +559,7 @@
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
     </xsl:if>
+    
     <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
       <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
       <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
@@ -561,7 +571,6 @@
         <xsl:text>});</xsl:text>
       </script>
     </xsl:if>
-
   </xsl:template>
 
   <xsl:template match="Content[@type='CookiePolicy']" mode="cookiePolicy">
@@ -808,21 +817,7 @@
                 <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
             </div>
         </div>
-        <script type="text/javascript" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js">/* */</script>
-        <script type="text/javascript">
-
-        $(document).ready(function(){    
-            $('.exit-modal').exitModal();
-            if($('.exit-modal').data('exit-modal')) {
-               $(".destroyed-state").hide();
-               $(".initialized-state").show();
-            }
-            $('.close-exit-modal').on('click', function(e){
-                e.preventDefault();
-                $('.exit-modal').exitModal('hideModal');
-            });
-        });
-    </script>
+        <script type="text/javascript" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async">/* */</script>
     </xsl:if>
       
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -889,20 +884,12 @@
     <xsl:variable name="pageTitle">
       <xsl:apply-templates select="." mode="PageTitle"/>
     </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
-        <xsl:attribute name="content">
-          <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
-        </xsl:attribute>
-      </xsl:when>
-      <xsl:otherwise>
-        <meta property="og:title" content="{$pageTitle}"/>
-      </xsl:otherwise>
-    </xsl:choose>
+
     
     <xsl:choose>
       <xsl:when test="ContentDetail">
         <meta property="og:type" content="article" />
+        <meta property="og:title" content="{$pageTitle}"/>
         <meta property="og:image">
           <xsl:attribute name="content">
             <xsl:if test="$siteURL=''">
@@ -929,6 +916,18 @@
       </xsl:when>
       <xsl:otherwise>
         <meta property="og:type" content="website" />
+        <xsl:choose>
+          <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
+            <meta property="og:title">
+            <xsl:attribute name="content">
+              <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
+            </xsl:attribute>
+            </meta>
+          </xsl:when>
+          <xsl:otherwise>
+            <meta property="og:title" content="{$pageTitle}"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogImage']">
             <meta property="og:image">
@@ -958,7 +957,6 @@
       </xsl:otherwise>
     </xsl:choose>
     <meta property="og:url" content="{$href}" />
-
     <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
       <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
     </xsl:if>
@@ -1857,7 +1855,7 @@
       <xsl:value-of select="node()"/>
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script type="text/javascript" src="https://secure.leadforensics.com/js/{$lfid}.js" >/* */</script>
+      <script type="text/javascript" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" >/* */</script>
       <noscript><img src="https://secure.leadforensics.com/{$lfid}.png" style="display:none;" /></noscript>
     </xsl:if>
   </xsl:template>
@@ -2229,7 +2227,7 @@
       </xsl:choose>
     </xsl:variable>
     <div id="developerLink">
-      <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="external">
+      <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
         <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
           <xsl:attribute name="class">devText</xsl:attribute>
         </xsl:if>
@@ -2237,7 +2235,7 @@
       </a>
       <xsl:if test="$websitecreditLogo!=''">
         &#160;&#160;
-        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="external">
+        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
           <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
             <xsl:attribute name="class">devLogo</xsl:attribute>
           </xsl:if>
@@ -7774,7 +7772,7 @@
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="text/javascript" src="{$first}">/* */</script>
+      <script type="text/javascript" src="{$first}{$bundleVersion}">/* */</script>
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
       </xsl:call-template>
@@ -7818,7 +7816,7 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <link rel="stylesheet" type="text/css" href="{$first}" />
+          <link rel="stylesheet" type="text/css" href="{$first}{$bundleVersion}" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>

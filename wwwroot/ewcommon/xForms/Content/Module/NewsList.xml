@@ -8,7 +8,7 @@
         <nVersion/>
         <cContentForiegnRef/>
         <cContentName/>
-        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentSchemaName>Module</cContentSchemaName> 
         <cContentXmlBrief>
           <Content moduleType="NewsList" contentType="NewsArticle" box="" title="" link="" linkType="internal" linkText="More news" sortBy="publish" order="descending" cols="1" carousel="false" stepBy="" stepCount="0" display="all" rss="false" position="" commentPlatform="none" fbCommentsWidth="500" listGroup="true" autoplay="true" autoPlaySpeed="2000"/>
         </cContentXmlBrief>

@@ -427,6 +427,19 @@ Partial Public Class fsHelper
         End Try
     End Function
 
+    Public Function VirtualFileExistsAndRecent(ByVal cVirtualPath As String, ByVal hours As Long) As Integer
+        Try
+            Dim cVP As String = goServer.MapPath(cVirtualPath)
+            If IO.File.Exists(cVP) And IO.File.GetLastWriteTime(cVP) > DateAdd(DateInterval.Hour, (hours * -1), Now()) Then
+                Return 1
+            Else
+                Return 0
+            End If
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
+
     Public Function CompareDateIsNewer(ByVal cOriginalPath As String, ByVal cCheckNewerPath As String) As Integer
         Try
             Dim cOP As String = goServer.MapPath(cOriginalPath)

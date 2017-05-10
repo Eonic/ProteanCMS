@@ -435,6 +435,8 @@ Public Module stdTools
         If Not System.Web.HttpContext.Current Is Nothing Then
             moRequest = System.Web.HttpContext.Current.Request
             moSession = System.Web.HttpContext.Current.Session
+
+            System.Web.HttpContext.Current.Server.MapPath("")
         End If
 
         cReport = "<div style=""font: normal .75em/1.5 Verdana, Tahoma, sans-serif;""><h2>eonic<strong>web</strong>5 has returned the following Error</h2>" & _
@@ -444,6 +446,8 @@ Public Module stdTools
         addExceptionHeader(cReport, "Report Info")
         addExceptionLine(cReport, "Date + Time", FormatDateTime(Now, DateFormat.GeneralDate))
         addExceptionLine(cReport, "Webserver:", System.Environment.MachineName)
+        addExceptionLine(cReport, "SiteName:", System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName())
+
         Dim a As System.Reflection.Assembly = System.Reflection.Assembly.GetExecutingAssembly()
         addExceptionLine(cReport, "Assembly", a.FullName)
         addExceptionLine(cReport, "Codebase", a.CodeBase)
@@ -484,7 +488,9 @@ Public Module stdTools
 
         ' Querystring Variables
         If Not moRequest Is Nothing Then
-
+            addExceptionHeader(cReport, "Server Variables")
+            addExceptionLine(cReport, "AppPath", moRequest.ApplicationPath)
+            addExceptionLine(cReport, "AppPath", moRequest.ApplicationPath)
             '++++++++++++ Only re-enable this temporarily if needed for debugging +++++ Can cause credit card numbers to show in error messages.... bad karma man!
 
             'If moRequest.QueryString.Count > 0 Then
@@ -505,7 +511,6 @@ Public Module stdTools
             'Else
             '    addExceptionHeader(cReport, "No Form variables found")
             'End If
-
 
             '' Server Variables
             addExceptionHeader(cReport, "Server Variables")

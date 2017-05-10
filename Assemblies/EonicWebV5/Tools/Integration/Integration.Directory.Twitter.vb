@@ -205,6 +205,81 @@ Namespace Integration.Directory
             End Try
         End Sub
 
+        Public Class User
+            Public Property id() As String
+                Get
+                    Return m_id
+                End Get
+                Set
+                    m_id = Value
+                End Set
+            End Property
+            Private m_id As String
+            Public Property first_name() As String
+                Get
+                    Return m_first_name
+                End Get
+                Set
+                    m_first_name = Value
+                End Set
+            End Property
+            Private m_first_name As String
+            Public Property last_name() As String
+                Get
+                    Return m_last_name
+                End Get
+                Set
+                    m_last_name = Value
+                End Set
+            End Property
+            Private m_last_name As String
+            Public Property email() As String
+                Get
+                    Return m_email
+                End Get
+                Set
+                    m_email = Value
+                End Set
+            End Property
+            Private m_email As String
+            Public Property link() As String
+                Get
+                    Return m_link
+                End Get
+                Set
+                    m_link = Value
+                End Set
+            End Property
+            Private m_link As String
+            Public Property username() As String
+                Get
+                    Return m_username
+                End Get
+                Set
+                    m_username = Value
+                End Set
+            End Property
+            Private m_username As String
+            Public Property gender() As String
+                Get
+                    Return m_gender
+                End Get
+                Set
+                    m_gender = Value
+                End Set
+            End Property
+            Private m_gender As String
+            Public Property locale() As String
+                Get
+                    Return m_locale
+                End Get
+                Set
+                    m_locale = Value
+                End Set
+            End Property
+            Private m_locale As String
+        End Class
+
     End Class
 
 

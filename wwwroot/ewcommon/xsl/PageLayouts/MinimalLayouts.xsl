@@ -10903,6 +10903,7 @@
   </xsl:template>
 
   <!-- module -->
+   <!-- module -->
   <xsl:template match="Content | ContactPoint" mode="socialLinks">
     <xsl:param name="myName"/>
     <xsl:param name="iconSet"/>
@@ -10936,6 +10937,11 @@
           </xsl:if>
           <xsl:if test="@youtubeURL!=''">
             <a href="{@youtubeURL}" title="{$myName} on You Tube" id="social-id-yt" style="background-image:url({@uploadSprite});background-position:160px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig" style="background-image:url({@uploadSprite});background-position:192px 0" class="social-sprite">
               &#160;
             </a>
           </xsl:if>
@@ -10983,6 +10989,13 @@
               </i>
             </a>
           </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-2x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:when test="$iconSet='icons-square'">
           <xsl:if test="@facebookURL!=''">
@@ -11023,6 +11036,13 @@
           <xsl:if test="@youtubeURL!=''">
             <a href="{@youtubeURL}" title="{$myName} on Youtube" id="social-id-yt">
               <i class="fa fa-3x fa-youtube-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-3x fa-instagram">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -11097,6 +11117,18 @@
                 </i>
                 <i class="fa fa-youtube fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
+                </i>test
+              </span>
+            </a>
+          </xsl:if>
+         <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-instagram fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
                 </i>
               </span>
             </a>
@@ -11145,6 +11177,13 @@
               </i>
             </a>
           </xsl:if>
+         <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="@facebookURL!=''">
@@ -11170,6 +11209,16 @@
           <xsl:if test="@pinterestURL!=''">
             <a href="{@pinterestURL}" title="{$myName} on Pinterest" id="social-id-li">
               <img src="/ewcommon/images/icons/social/{$iconSet}/Pinterest.png" alt="{$myName} on Pinterest" title="Follow {$myName} on Pinterest" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" title="{$myName} on YouTube" id="social-id-yt">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/YouTube.png" alt="{$myName} on YouTube" title="Follow {$myName} on YouTube" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Pinterest" id="social-id-ig">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Instagram.png" alt="{$myName} on Instagram" title="Follow {$myName} on Instagram" />
             </a>
           </xsl:if>
         </xsl:otherwise>
@@ -12410,4 +12459,153 @@
     </div>
   </xsl:template>
 
+
+  <!-- Book List Module -->
+  <xsl:template match="Content[@type='Module' and @moduleType='BookList']" mode="displayBrief">
+    <!-- Set Variables -->
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+
+    <xsl:variable name="contentList">
+      <xsl:apply-templates select="." mode="getContent">
+        <xsl:with-param name="contentType" select="$contentType" />
+        <xsl:with-param name="startPos" select="$startPos" />
+      </xsl:apply-templates>
+    </xsl:variable>
+
+    <xsl:variable name="totalCount">
+      <xsl:choose>
+        <xsl:when test="@display='related'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- Output Module -->
+    <div class="clearfix BookList">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix BookList content-scroller</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
+        <!-- If Stepper, display Stepper -->
+        <xsl:if test="@stepCount != '0' and not($page[@cssFramework='bs3'])">
+          <xsl:apply-templates select="/" mode="genericStepper">
+            <xsl:with-param name="articleList" select="$contentList"/>
+            <xsl:with-param name="noPerPage" select="@stepCount"/>
+            <xsl:with-param name="startPos" select="$startPos"/>
+            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+            <xsl:with-param name="totalCount" select="$totalCount"/>
+          </xsl:apply-templates>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="@linkArticle='true'">
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
+          <div class="terminus">&#160;</div>
+          <xsl:apply-templates select="/" mode="genericStepper">
+            <xsl:with-param name="articleList" select="$contentList"/>
+            <xsl:with-param name="noPerPage" select="@stepCount"/>
+            <xsl:with-param name="startPos" select="$startPos"/>
+            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+            <xsl:with-param name="totalCount" select="$totalCount"/>
+          </xsl:apply-templates>
+        </xsl:if>
+        <xsl:text> </xsl:text>
+      </div>
+    </div>
+  </xsl:template>
+
+  <!-- Book List Brief -->
+  <xsl:template match="Content[@type='Book']" mode="displayBrief">
+    <xsl:param name="sortBy"/>
+    <!-- articleBrief -->
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+
+    <div class="listItem list-group-item Book">
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="'listItem list-group-item Book'"/>
+        <xsl:with-param name="sortBy" select="$sortBy"/>
+      </xsl:apply-templates>
+
+      <div class="lIinner media">
+        <xsl:if test="$page[@cssFramework!='bs3']">
+          <h3 class="title">
+            <a href="{$parentURL}" title="Read More - {Headline/node()}">
+              <xsl:apply-templates select="." mode="getDisplayName"/>
+            </a>
+          </h3>
+        </xsl:if>
+        <xsl:if test="Images/img/@src!=''">
+          <a href="{$parentURL}" title="Read More - {Headline/node()}">
+            <xsl:apply-templates select="." mode="displayThumbnail"/>
+          </a>
+          <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
+          <span class="hidden">|</span>
+        </xsl:if>
+
+        <div class="media-body">
+          <xsl:if test="$page[@cssFramework='bs3']">
+            <h4 class="media-heading">
+              <a href="{$parentURL}" title="Read More - {Headline/node()}">
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </a>
+            </h4>
+          </xsl:if>
+          <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
+          <xsl:if test="@publish!=''">
+            <p class="date">
+              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+              <xsl:call-template name="DisplayDate">
+                <xsl:with-param name="date" select="@publish"/>
+              </xsl:call-template>
+            </p>
+          </xsl:if>
+          <xsl:if test="Strapline/node()!=''">
+            <div class="summary">
+              <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+            </div>
+          </xsl:if>
+          <div class="entryFooter">
+            <xsl:apply-templates select="." mode="displayTags"/>
+            <xsl:apply-templates select="." mode="moreLink">
+              <xsl:with-param name="link" select="$parentURL"/>
+              <xsl:with-param name="altText">
+                <xsl:value-of select="Headline/node()"/>
+              </xsl:with-param>
+            </xsl:apply-templates>
+            <xsl:text> </xsl:text>
+          </div>
+        </div>
+        <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
+        <div class="terminus">&#160;</div>
+      </div>
+    </div>
+  </xsl:template>
 </xsl:stylesheet>

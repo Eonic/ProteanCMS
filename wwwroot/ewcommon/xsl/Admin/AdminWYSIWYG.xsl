@@ -509,6 +509,10 @@
       <!--</div>-->
     </xsl:if>
   </xsl:template>
+  
+    <xsl:template match="Page" mode="adminBreadcrumb">
+     <xsl:apply-templates select="AdminMenu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="adminLink"/>
+  </xsl:template>
   <!-- -->
   <!--   ################################################   User Guide  ##################################################   -->
   <!-- -->

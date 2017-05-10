@@ -508,7 +508,13 @@
       </xsl:with-param>
     </xsl:apply-templates>
 
-    <div class="control-wrapper {name()}-wrapper appearance-{@appearance} input-group">
+    <xsl:variable name="fmhz">
+      <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
+        <xsl:text>col-sm-10</xsl:text>
+      </xsl:if>
+    </xsl:variable>
+    
+    <div class="control-wrapper {name()}-wrapper appearance-{@appearance} {$fmhz} input-group">
       <xsl:attribute name="class">
         <xsl:text>control-wrapper </xsl:text>
         <xsl:value-of select="name()"/>
@@ -1646,7 +1652,8 @@
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
-     </textarea>
+      <xsl:text> </xsl:text>
+    </textarea>
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">
@@ -2302,8 +2309,6 @@
 
   </xsl:template>
 
-
-
   <!-- Radio Input with dependant Case toggle -->
   <xsl:template match="item[toggle]" mode="xform_radiocheck">
     <xsl:param name="type"/>
@@ -2629,6 +2634,9 @@
           </xsl:if>
           <xsl:if test="parent::input[contains(@class,'readonly')]">
             <xsl:text> readonly</xsl:text>
+          </xsl:if>
+          <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
+            <xsl:text> col-sm-2 control-label</xsl:text>
           </xsl:if>
         </xsl:attribute>
         <xsl:for-each select="@*">

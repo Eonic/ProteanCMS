@@ -250,6 +250,7 @@ CREATE TABLE [dbo].[tblDirectory] (
 	[cDirName] [nvarchar] (225)  NOT NULL ,
 	[cDirPassword] [nvarchar] (225)  NULL ,
 	[cDirXml] [ntext]  NULL ,
+	[cDirEmail] [nvarchar] (800)  NULL ,
 	[nAuditId] [int] NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 

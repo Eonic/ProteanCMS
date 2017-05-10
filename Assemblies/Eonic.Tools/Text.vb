@@ -46,8 +46,8 @@ Public Module Text
 
 
         ' Validate the e-mail address
-        Return New Regex("^[A-Z0-9.'_%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*\.[A-Z]{2,4}$", RegexOptions.IgnoreCase).IsMatch(cEmail & "")
-
+        Return New Regex("^[A-Z0-9.'_%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*\.[A-Z]{2,24}$", RegexOptions.IgnoreCase).IsMatch(cEmail & "")
+        'TS extended to cater for really long TLD's
 
         'Dim res As Short
         'Dim test As String

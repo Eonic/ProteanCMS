@@ -52,6 +52,7 @@ Public Class SoapClient
             serviceRequest.ContentType = "text/xml; charset=UTF-8"
             serviceRequest.Accept = "text/xml"
             serviceRequest.Method = "POST"
+            serviceRequest.Headers("SessionReferer") = moCtx.Session("Referrer")
             addSoap(serviceRequest, soapBody)
 
             results.LoadXml(ReturnSoapResponse(serviceRequest))

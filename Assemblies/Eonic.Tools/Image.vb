@@ -85,8 +85,10 @@ Public Class Image
             If _WatermarkText <> "" Then
                 AddWatermark(oImg, _WatermarkText, _WatermarkImgPath)
             End If
-            'overwrite
 
+            'overwrite
+            Dim imgFile As New FileInfo(cLocation)
+            CompressImage(imgFile, True)
 
         Catch ex As Exception
             RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))

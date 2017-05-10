@@ -1,4 +1,5 @@
 ﻿Imports System
+Imports System.Xml
 
 Partial Public Class Web
     Public Class xForm

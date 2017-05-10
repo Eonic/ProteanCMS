@@ -2841,7 +2841,12 @@
   <!-- Module -->
   <xsl:template match="Content[@moduleType='GoogleMapv3']" mode="displayBrief">
     <div class="GoogleMap">
-      <div id="gmap{@id}" class="gmap-canvas" data-mapheight="{@height}">To see this map you must have Javascript enabled</div>
+      <div id="gmap{@id}" class="gmap-canvas">
+      <xsl:if test="@height!=''">
+       <xsl:attribute name="data-mapheight"><xsl:value-of select="@height"/></xsl:attribute> 
+      </xsl:if>
+      
+      To see this map you must have Javascript enabled</div>
     </div>
     <xsl:if test="/Page/@adminMode">
       <xsl:apply-templates select="Content[@type='Location']" mode="displayBrief"/>
@@ -10647,7 +10652,14 @@
     <div class="advanced-carousel-container">
       <div class="advanced-carousel" style="height:{@CarouselHeight}px">
         <ul style="display:none">
-          <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide'] | $page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+	<xsl:choose>
+	<xsl:when test="Content[@type='AdvancedCarouselSlide']">
+          <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+        </xsl:when>
+	<xsl:otherwise>
+	 <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+	</xsl:otherwise>
+	</xsl:choose>
         </ul>
       </div>
     </div>
@@ -12270,6 +12282,11 @@
               &#160;
             </a>
           </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig" style="background-image:url({@uploadSprite});background-position:192px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:when test="$iconSet='icons'">
           <xsl:if test="@facebookURL!=''">
@@ -12314,6 +12331,13 @@
               </i>
             </a>
           </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-2x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:when test="$iconSet='icons-square'">
           <xsl:if test="@facebookURL!=''">
@@ -12354,6 +12378,13 @@
           <xsl:if test="@youtubeURL!=''">
             <a href="{@youtubeURL}" title="{$myName} on Youtube" id="social-id-yt">
               <i class="fa fa-3x fa-youtube-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-3x fa-instagram">
                 <xsl:text> </xsl:text>
               </i>
             </a>
@@ -12428,6 +12459,18 @@
                 </i>
                 <i class="fa fa-youtube fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
+                </i>test
+              </span>
+            </a>
+          </xsl:if>
+         <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-instagram fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
                 </i>
               </span>
             </a>
@@ -12476,6 +12519,13 @@
               </i>
             </a>
           </xsl:if>
+         <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="@facebookURL!=''">
@@ -12501,6 +12551,16 @@
           <xsl:if test="@pinterestURL!=''">
             <a href="{@pinterestURL}" title="{$myName} on Pinterest" id="social-id-li">
               <img src="/ewcommon/images/icons/social/{$iconSet}/Pinterest.png" alt="{$myName} on Pinterest" title="Follow {$myName} on Pinterest" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" title="{$myName} on YouTube" id="social-id-yt">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/YouTube.png" alt="{$myName} on YouTube" title="Follow {$myName} on YouTube" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" title="{$myName} on Pinterest" id="social-id-ig">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Instagram.png" alt="{$myName} on Instagram" title="Follow {$myName} on Instagram" />
             </a>
           </xsl:if>
         </xsl:otherwise>
@@ -14318,6 +14378,6 @@
       </xsl:if>
     </div>
   </xsl:template>
-
+  
 
 </xsl:stylesheet>

@@ -523,8 +523,12 @@ Partial Public Class Web
                     If oContentNode.GetAttribute("accountCreateFormName") <> "" Then AccountCreateForm = oContentNode.GetAttribute("accountCreateFormName")
                     If oContentNode.GetAttribute("accountUpdateFormName") <> "" Then AccountUpdateForm = oContentNode.GetAttribute("accountUpdateFormName")
 
+                    Dim bLogon As Boolean = False
+
                     Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                     Dim adXfm As Object = oMembershipProv.AdminXforms
+                    Dim bRedirect As Boolean = True
+
 
                     ' OAuth Functionality
 
@@ -558,12 +562,28 @@ Partial Public Class Web
                                 fbUsers = fbClient.GetFacebookUserData(moRequest("code"), redirectURI)
                                 sProcessInfo = fbUsers(0).first_name & " " & fbUsers(0).last_name
 
-                              '  fbClient.createFbUser(fbUsers(0))
+                                mnUserId = fbClient.CreateUser(fbUsers(0))
+
+                                If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
+                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
+
+                                bLogon = True
 
                             Case "twitter"
                                 sProcessInfo = "Twitter Response"
-                        End Select
+                                Dim twApi As New Integration.Directory.Twitter(myWeb)
+                                twApi.twitterConsumerKey = moConfig("OauthTwitterId")
+                                twApi.twitterConsumerSecret = moConfig("OauthTwitterKey")
+                                'Get twitter user
+                                Dim twUsers As List(Of Eonic.Integration.Directory.Twitter.User)
 
+
+                        End Select
+                        If mnUserId > 0 Then
+
+
+
+                        End If
 
 
                     End If
@@ -598,7 +618,7 @@ Partial Public Class Web
 
                         ' ok if the user is valid we then need to handle what happens next.
                         If adXfm.valid Then
-                            Dim bRedirect As Boolean = True
+
                             Select Case myWeb.moConfig("RegisterBehaviour")
 
                                 Case "validateByEmail"
@@ -633,48 +653,14 @@ Partial Public Class Web
 
                                     moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
 
-                                    'Now we want to reload as permissions have changed
+                                    bLogon = True
 
-                                    If Not moSession Is Nothing Then
-                                        If Not moSession("cLogonCmd") Is Nothing Then
-                                            cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
-                                            If myWeb.mcOriginalURL.Contains(cLogonCmd & "=") Then
-                                                cLogonCmd = ""
-                                            Else
-                                                If myWeb.mcOriginalURL.Contains("=") Then
-                                                    cLogonCmd = "&" & moSession("cLogonCmd")
-                                                Else
-                                                    cLogonCmd = "?" & moSession("cLogonCmd")
-                                                End If
-                                            End If
-                                        End If
-                                    End If
-
-                                    moSession("RedirectReason") = "registration"
-                                    myWeb.bRedirectStarted = True ' This acts as a local suppressant allowing for the sessio to pass through to the redirected page
-
-                                    Dim redirectId As String = myWeb.moConfig("RegisterRedirectPageId")
-
-                                    If oContentNode.GetAttribute("redirectPathId") <> "" Then
-                                        redirectId = oContentNode.GetAttribute("redirectPathId")
-                                    End If
-
-                                    If redirectId <> "" Then
-                                        'refresh the site strucutre with new userId
-                                        myWeb.mnUserId = mnUserId
-                                        myWeb.GetStructureXML("Site")
-                                        Dim oElmt As XmlElement = myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" & redirectId & "']")
-                                        Dim redirectPath As String = myWeb.mcOriginalURL
-                                        If oElmt Is Nothing Then
-                                            myWeb.msRedirectOnEnd = redirectPath
-                                            bRedirect = True
-                                        Else
-                                            redirectPath = oElmt.GetAttribute("url")
-                                            myWeb.msRedirectOnEnd = redirectPath
-                                            bRedirect = False
-                                        End If
-                                    End If
                             End Select
+
+
+
+
+
 
                             'send registration confirmation
                             Dim xsltPath As String = "/xsl/email/registration.xsl"
@@ -713,6 +699,50 @@ Partial Public Class Web
                             End If
                         Else
                             oContentNode.InnerXml = oXfmElmt.InnerXml
+                        End If
+                    End If
+
+                    If bLogon Then
+                        'Now we want to reload as permissions have changed
+
+                        If Not moSession Is Nothing Then
+                            If Not moSession("cLogonCmd") Is Nothing Then
+                                cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
+                                If myWeb.mcOriginalURL.Contains(cLogonCmd & "=") Then
+                                    cLogonCmd = ""
+                                Else
+                                    If myWeb.mcOriginalURL.Contains("=") Then
+                                        cLogonCmd = "&" & moSession("cLogonCmd")
+                                    Else
+                                        cLogonCmd = "?" & moSession("cLogonCmd")
+                                    End If
+                                End If
+                            End If
+                        End If
+
+                        moSession("RedirectReason") = "registration"
+                        myWeb.bRedirectStarted = True ' This acts as a local suppressant allowing for the sessio to pass through to the redirected page
+
+                        Dim redirectId As String = myWeb.moConfig("RegisterRedirectPageId")
+
+                        If oContentNode.GetAttribute("redirectPathId") <> "" Then
+                            redirectId = oContentNode.GetAttribute("redirectPathId")
+                        End If
+
+                        If redirectId <> "" Then
+                            'refresh the site strucutre with new userId
+                            myWeb.mnUserId = mnUserId
+                            myWeb.GetStructureXML("Site")
+                            Dim oElmt As XmlElement = myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" & redirectId & "']")
+                            Dim redirectPath As String = myWeb.mcOriginalURL
+                            If oElmt Is Nothing Then
+                                myWeb.msRedirectOnEnd = redirectPath
+                                bRedirect = True
+                            Else
+                                redirectPath = oElmt.GetAttribute("url")
+                                myWeb.msRedirectOnEnd = redirectPath
+                                bRedirect = False
+                            End If
                         End If
                     End If
 

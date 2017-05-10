@@ -2263,6 +2263,9 @@ processFlow:
                     oDs.Relations("Rel1").Nested = True
                     '
                     For Each oRow In oDs.Tables("Item").Rows
+
+                        Dim Discount As Double = 0
+
                         If Not oItemList.ContainsValue(oRow("contentId")) Then
                             oItemList.Add(oItemList.Count, oRow("contentId"))
                         End If
@@ -2283,7 +2286,16 @@ processFlow:
                                         nTaxRate = getProductTaxRate(oCheckPrice)
                                         'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
-                                        If Not moSubscription Is Nothing And oRow("contentType") = "Subscription" Then nCheckPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                        If Not moSubscription Is Nothing And oRow("contentType") = "Subscription" Then
+
+                                            Dim revisedPrice As Double = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                            If revisedPrice < nCheckPrice Then
+                                                'nCheckPrice = revisedPrice
+                                                Discount = nCheckPrice - revisedPrice
+                                                nCheckPrice = revisedPrice
+                                            End If
+
+                                        End If
                                     Else
                                         bOverridePrice = True
                                     End If
@@ -2349,18 +2361,25 @@ processFlow:
                         '    xstr &= oRow(ix) & ", "
                         'Next
 
-                        Dim cUpdtSQL As String = "UPDATE tblCartItem SET nPrice = " & oRow("price") & " WHERE nCartItemKey = " & oRow("id")
+                        Dim discountSQL As String = ""
+                        If Discount <> 0 Then
+                            '     discountSQL = ", nDiscountValue = " & Discount & " "
+                        End If
+
+                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
                         moDBHelper.ExeProcessSqlScalar(cUpdtSQL)
+
+
                     Next
 
 
                     ' Quantity based error messaging
-                    Dim oError As XmlElement = oCartElmt.SelectSingleNode("error")
+                    Dim oError As XmlElement = oCartElmt.SelectSingleNode("Error")
                     If Not (oError Is Nothing) Then
                         Dim oMsg As XmlElement
                         oMsg = oCartElmt.OwnerDocument.CreateElement("msg")
                         oMsg.SetAttribute("type", "zz_footer") ' Forces it to the bottom of the message block
-                        oMsg.InnerText = "<span class=""term3081"">Please adjust the quantities you require, or call for assistance.</span>"
+                        oMsg.InnerText = "<span Class=""term3081"">Please adjust the quantities you require, Or Call For assistance.</span>"
                         oError.AppendChild(oMsg)
                     End If
 
@@ -2377,13 +2396,13 @@ processFlow:
                     oCartElmt.SetAttribute("orderType", mmcOrderType & "")
 
                     If nStatusId = 6 Then
-                        oCartElmt.SetAttribute("complete", "true")
+                        oCartElmt.SetAttribute("complete", "True")
                     Else
-                        oCartElmt.SetAttribute("complete", "true")
+                        oCartElmt.SetAttribute("complete", "True")
                     End If
                     'Add the addresses to the dataset
                     If nCartIdUse > 0 Then
-                        sSql = "select cContactType as type, cContactName as GivenName, cContactCompany as Company, cContactAddress as Street, cContactCity as City, cContactState as State, cContactZip as PostalCode, cContactCountry as Country, cContactTel as Telephone, cContactFax as Fax, cContactEmail as Email, cContactXml as Details from tblCartContact where nContactCartId=" & nCartIdUse
+                        sSql = "Select cContactType As type, cContactName As GivenName, cContactCompany As Company, cContactAddress As Street, cContactCity As City, cContactState As State, cContactZip As PostalCode, cContactCountry As Country, cContactTel As Telephone, cContactFax As Fax, cContactEmail As Email, cContactXml As Details from tblCartContact where nContactCartId=" & nCartIdUse
                         moDBHelper.addTableToDataSet(oDs, sSql, "Contact")
                     End If
                     'Add Items - note - do this AFTER we've updated the prices! 
@@ -2424,7 +2443,7 @@ processFlow:
 
                         For Each oElmt In oXml.SelectNodes("/Cart/Contact/Email")
                             If moDBHelper.CheckOptOut(oElmt.InnerText) Then
-                                oElmt.SetAttribute("optOut", "true")
+                                oElmt.SetAttribute("optOut", "True")
                             End If
                         Next
 
@@ -2440,18 +2459,21 @@ processFlow:
                             End If
                             If nOptionIndex >= 0 Then
 
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/option[" & nOptionIndex & "]")
-                                If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
-                                oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[" & nOptionIndex & "]")
+                                If Not oElmt2 Is Nothing Then
+                                    If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
+                                    oElmt.ParentNode.InnerXml = oElmt2.OuterXml
+                                End If
+
                             Else
                                 'case for text option
-                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/option[1]")
+                                oElmt2 = oElmt.SelectSingleNode("Content/Options/OptGroup[" & nGroupIndex & "]/Option[1]")
                                 If Not oElmt2 Is Nothing Then
                                     If cOptionGroupName <> "" Then oElmt2.SetAttribute("groupName", cOptionGroupName)
                                     If Not oElmt.ParentNode.SelectSingleNode("Name") Is Nothing Then
                                         oElmt2.SetAttribute("name", oElmt.ParentNode.SelectSingleNode("Name").InnerText)
                                     Else
-                                        oElmt2.SetAttribute("name", "Name not defined")
+                                        oElmt2.SetAttribute("name", "Name Not defined")
                                     End If
                                     oElmt.ParentNode.InnerXml = oElmt2.OuterXml
                                 End If
@@ -2466,7 +2488,7 @@ processFlow:
 
                     End If
                     myWeb.CheckMultiParents(oCartElmt)
-                    sSql = "select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
+                    sSql = "Select cClientNotes from tblCartOrder where nCartOrderKey=" & nCartIdUse
                     Dim oNotes As XmlElement = oCartElmt.OwnerDocument.CreateElement("Notes")
                     oNotes.InnerXml = CStr("" & moDBHelper.ExeProcessSqlScalar(sSql))
 
@@ -2475,10 +2497,10 @@ processFlow:
                     oXml = Nothing
                     oDs = Nothing
 
-                    If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "true")
+                    If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
 
-                    sSql = "select * from tblCartOrder where nCartOrderKey=" & nCartIdUse
+                    sSql = "Select * from tblCartOrder where nCartOrderKey=" & nCartIdUse
 
                     oDs = moDBHelper.GetDataSet(sSql, "Order", "Cart")
                     For Each oRow In oDs.Tables("Order").Rows
@@ -2522,7 +2544,7 @@ processFlow:
 
 
                         ' Check if the cart needs to be adjusted for deposits or settlements
-                        If mcDeposit = "on" Then
+                        If mcDeposit = "On" Then
                             Dim nTotalAmount As Double = total + shipCost + vatAmt
                             Dim nPayable As Double = 0.0#
                             ' First check if an inital deposit has been paid
@@ -2568,7 +2590,7 @@ processFlow:
                             End If
 
                             If nPayable = 0 Then
-                                oCartElmt.SetAttribute("readonly", "On")
+                                oCartElmt.SetAttribute("ReadOnly", "On")
                             End If
                         End If
 
@@ -2585,7 +2607,7 @@ processFlow:
 
                         'Add the payment details if we have them
                         If oRow("nPayMthdId") > 0 Then
-                            sSql = "select * from tblCartPaymentMethod where nPayMthdKey=" & oRow("nPayMthdId")
+                            sSql = "Select * from tblCartPaymentMethod where nPayMthdKey=" & oRow("nPayMthdId")
                             oDs2 = moDBHelper.GetDataSet(sSql, "Payment", "Cart")
                             oElmt = moPageXml.CreateElement("PaymentDetails")
                             For Each oRow2 In oDs2.Tables("Payment").Rows
@@ -2599,7 +2621,7 @@ processFlow:
 
                         'Add Delivery Details
                         If nStatusId = 9 Then
-                            sSql = "select * from tblCartOrderDelivery where nOrderId=" & nCartIdUse
+                            sSql = "Select * from tblCartOrderDelivery where nOrderId=" & nCartIdUse
                             oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details")
                             For Each oRow2 In oDs2.Tables("Delivery").Rows
                                 oElmt = moPageXml.CreateElement("DeliveryDetails")
@@ -2628,7 +2650,7 @@ processFlow:
                 'mnCartId = nCartIdUse
 
 
-                If moCartConfig("RelatedProductsInCart") = "on" Then
+                If moCartConfig("RelatedProductsInCart") = "On" Then
                     Dim oRelatedElmt As XmlElement = oCartElmt.OwnerDocument.CreateElement("RelatedItems")
                     For i As Integer = 0 To oItemList.Count - 1
                         myWeb.moDbHelper.addRelatedContent(oRelatedElmt, oItemList(i), False)

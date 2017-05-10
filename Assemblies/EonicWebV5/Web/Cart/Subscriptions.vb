@@ -19,6 +19,7 @@ Partial Public Class Web
 
             Public Sub New(ByRef aWeb As Web)
                 myWeb = aWeb
+                myCart = myWeb.moCart
             End Sub
 
             Public Sub New(ByRef aCart As Web.Cart)
@@ -275,15 +276,16 @@ RedoCheck:
                     End If
 
                     'Ok, lets get any other  subscriptions in the same  group
-                    cSQL = "Select tblDirectorySubscriptions.*, tblAudit.*, tblCartCatProductRelations.nCatId" & _
-                    " FROM tblDirectorySubscriptions INNER JOIN tblAudit ON tblDirectorySubscriptions.nAuditId = tblAudit.nAuditKey LEFT OUTER JOIN" & _
-                    " tblCartCatProductRelations ON tblDirectorySubscriptions.nSubscriptionId = tblCartCatProductRelations.nContentId"
+                    cSQL = "Select tblSubscription.*, tblAudit.*, tblCartCatProductRelations.nCatId" &
+                    " FROM tblSubscription INNER JOIN tblAudit ON tblSubscription.nAuditId = tblAudit.nAuditKey LEFT OUTER JOIN" &
+                    " tblCartCatProductRelations ON tblSubscription.nSubContentId = tblCartCatProductRelations.nContentId"
                     If cGroup = "" Then
-                        cSQL &= " WHERE tblDirectorySubscriptions.nUserId = " & nSubUserId & " AND tblDirectorySubscriptions.nSubscriptionId = " & nSubscriptionID
+                        cSQL &= " WHERE tblSubscription.nDirId = " & nSubUserId & " AND tblSubscription.nSubContentId = " & nSubscriptionID
                     Else
-                        cSQL &= " WHERE (tblDirectorySubscriptions.nUserId = " & nSubUserId & ") AND (tblDirectorySubscriptions.nSubscriptionId = " & nSubscriptionID & _
+                        cSQL &= " WHERE (tblSubscription.nDirId = " & nSubUserId & ") AND (tblSubscription.nSubContentId = " & nSubscriptionID &
                         " OR tblCartCatProductRelations.nCatId = " & cGroup & ")"
                     End If
+                    cSQL &= " AND tblSubscription.cRenewalStatus <> 'Cancelled' AND tblAudit.dExpireDate > " & sqlDate(Now) & " AND tblAudit.dPublishDate < " & sqlDate(Now) & " order by tblAudit.dExpireDate DESC"
 
                     oDS = myWeb.moDbHelper.getDataSet(cSQL, "Content")
                     If oDS.Tables("Content").Rows.Count = 0 Then
@@ -313,14 +315,13 @@ RedoCheck:
                         Next
                         'oDS.Tables("Content").Columns("cContentXmlBrief").ColumnMapping = MappingType.Hidden
                         'oDS.Tables("Content").Columns("cContentXmlDetail").ColumnMapping = MappingType.SimpleContent
-                        oDS.Tables("Content").Columns("cSubscriptionXML").ColumnMapping = MappingType.SimpleContent
+                        oDS.Tables("Content").Columns("cSubXML").ColumnMapping = MappingType.SimpleContent
                         oExXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
                         Dim oNewElmt As XmlElement = oXML.DocumentElement.FirstChild
                         Dim oOldElmt As XmlElement = oExXML.DocumentElement.FirstChild
                         Dim nCurPrice As Double = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1)
-
                         nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText, oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, CDate(oOldElmt.GetAttribute("dExpireDate")))
-                        If Not oDS.Tables("Content").Rows(0)("nSubscriptionId") = nSubscriptionID Then
+                        If Not oDS.Tables("Content").Rows(0)("nSubContentId") = nSubscriptionID Then
                             nTotalPrice -= UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Now, CDate(oOldElmt.GetAttribute("dExpireDate")))
                         End If
                     End If
@@ -329,6 +330,81 @@ RedoCheck:
                     returnException(mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
                 End Try
             End Function
+
+            Public Sub UpdateSubscriptionPrice(ByVal oSubscriptionXml As XmlElement, ByVal nSubUserId As Integer)
+                Try
+                    Dim nTotalPrice As Double = 0
+                    Dim nSubscriptionId As Integer = oSubscriptionXml.GetAttribute("id")
+                    'first we need to find out if its:
+                    '1) New (No existing ones in the same group or none at all)
+                    '2) Renewal (so it tacks onto the end)
+                    '3) Upgrade/Downgrade (so it takes the remaining credit and starts it from today
+
+                    'First we'll get the xml for this subscription
+                    Dim cSQL As String = "SELECT tblContent.*, tblCartCatProductRelations.nCatId FROM tblContent Left Outer JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId where tblContent.nContentKey = " & nSubscriptionId
+                    Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
+                    Dim oDC As DataColumn
+                    For Each oDC In oDS.Tables("Content").Columns
+                        oDC.ColumnMapping = MappingType.Attribute
+                    Next
+                    oDS.Tables("Content").Columns("cContentXmlBrief").ColumnMapping = MappingType.Hidden
+                    oDS.Tables("Content").Columns("cContentXmlDetail").ColumnMapping = MappingType.SimpleContent
+                    Dim oXML As New XmlDocument
+
+                    oXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
+                    Dim oCurSubElmt As XmlElement = oXML.DocumentElement.FirstChild
+                    Dim cGroup As String = ""
+                    If Not oCurSubElmt Is Nothing Then
+                        cGroup = oCurSubElmt.GetAttribute("nCatId")
+                    End If
+
+                    'Ok, lets get any other  subscriptions in the same  group
+                    cSQL = "Select tblSubscription.*, tblAudit.*, tblCartCatProductRelations.nCatId" &
+                    " FROM tblSubscription INNER JOIN tblAudit ON tblSubscription.nAuditId = tblAudit.nAuditKey LEFT OUTER JOIN" &
+                    " tblCartCatProductRelations ON tblSubscription.nSubContentId = tblCartCatProductRelations.nContentId"
+                    If cGroup = "" Then
+                        cSQL &= " WHERE tblSubscription.nDirId = " & nSubUserId & " AND tblSubscription.nSubContentId = " & nSubscriptionId
+                    Else
+                        cSQL &= " WHERE (tblSubscription.nDirId = " & nSubUserId & ") AND (tblSubscription.nSubContentId = " & nSubscriptionId &
+                        " OR tblCartCatProductRelations.nCatId = " & cGroup & ")"
+                    End If
+                    cSQL &= " AND tblSubscription.cRenewalStatus <> 'Cancelled' AND tblAudit.dExpireDate > " & sqlDate(Now) & " AND tblAudit.dPublishDate < " & sqlDate(Now) & " order by tblAudit.dPublishDate DESC"
+
+                    oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
+
+                    If oDS.Tables("Content").Rows.Count = 0 Then
+
+                        'No Other subscriptions or subscriptions in the same group
+
+                    Else
+                        'okies, there is some stuff in here.
+                        'now there should only be one.
+                        'Either the same or one in the same group
+                        'latest valid subscription comes first and this is the one we upgrade.
+                        Dim oExXML As New XmlDocument
+                        For Each oDC In oDS.Tables("Content").Columns
+                            oDC.ColumnMapping = MappingType.Attribute
+                        Next
+                        oDS.Tables("Content").Columns("cSubXML").ColumnMapping = MappingType.SimpleContent
+                        oExXML.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
+                        Dim oNewElmt As XmlElement = oXML.DocumentElement.FirstChild
+                        Dim oOldElmt As XmlElement = oExXML.DocumentElement.FirstChild
+                        Dim nCurPrice As Double = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1)
+                        nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText, oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, CDate(oOldElmt.GetAttribute("dExpireDate")))
+                        If Not oDS.Tables("Content").Rows(0)("nSubContentId") = nSubscriptionId Then
+                            nTotalPrice -= UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Now, CDate(oOldElmt.GetAttribute("dExpireDate")))
+                            Dim PricesNode As XmlElement = oSubscriptionXml.SelectSingleNode("Prices/Price[@type='sale']")
+                            PricesNode.SetAttribute("originalPrice", PricesNode.InnerText)
+                            PricesNode.SetAttribute("discountValue", CDbl(PricesNode.InnerText) - nTotalPrice)
+                            PricesNode.SetAttribute("upgradeFrom", oOldElmt.SelectSingleNode("Content/Name").InnerText)
+                            PricesNode.InnerText = nTotalPrice
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
+                End Try
+            End Sub
 
             Public Function SubscriptionPrice(ByVal nPrice As Double, ByVal cPriceUnit As String, ByVal nDuration As Integer, ByVal cDurationUnit As String, ByVal dStart As Date) As Double
                 'Gets the price of the subscription
@@ -387,7 +463,7 @@ RedoCheck:
                 'gets the remaining credit of the old subscription
                 'so that it may be subtracted from the new one
                 Try
-                    Dim nUnitsCredit As Integer = 0
+                    Dim nUnitsCredit As Double = 0
                     Select Case cPriceUnit
                         Case "Day"
                             nUnitsCredit = dFinish.Subtract(dStart).TotalDays
@@ -404,15 +480,38 @@ RedoCheck:
                         Case "Year"
                             'same as months
                             Dim dCurrent As Date = dStart
-                            Dim nYears As Integer = 0
-                            Do Until dCurrent >= dFinish
-                                dCurrent = dCurrent.AddYears(1)
-                                nYears += 1
-                            Loop
-                            nUnitsCredit = nYears
-                    End Select
+                            Dim divBy As String = "Month"
 
-                    Return nUnitsCredit * nPrice
+                            Select Case divBy
+                                Case "Year"
+                                    Dim nYears As Integer = 0
+                                    'By Min Full Year
+                                    Do Until dCurrent >= dFinish
+                                        dCurrent = dCurrent.AddYears(1)
+                                        nYears += 1
+                                    Loop
+                                    nUnitsCredit = nYears
+                                Case "Month"
+                                    Dim nMonths As Integer = 0
+                                    'By Min Full Month
+                                    Do Until dCurrent >= dFinish
+                                        dCurrent = dCurrent.AddMonths(1)
+                                        nMonths += 1
+                                    Loop
+                                    nUnitsCredit = nMonths / 12
+                                Case "Day"
+                                    Dim nDays As Integer = 0
+                                    'By Min Full Month
+                                    Do Until dCurrent >= dFinish
+                                        dCurrent = dCurrent.AddDays(1)
+                                        nDays += 1
+                                    Loop
+                                    nUnitsCredit = nDays / 365
+                            End Select
+
+                    End Select
+                    nPrice = FormatNumber(nPrice * nUnitsCredit, 2)
+                    Return nPrice
 
                 Catch ex As Exception
                     returnException(mcModuleName, "UpgradeCredit", ex, "", "", gbDebug)
@@ -592,12 +691,13 @@ RedoCheck:
                         cSQL = "SELECT tblSubscription.*, tblContent.* FROM tblContent INNER JOIN tblSubscription ON tblContent.nContentKey = tblSubscription.nSubContentId"
                         cSQL &= " WHERE tblSubscription.nDirId = " & nSubUserId & " AND tblSubscription.nSubContentId = " & nSubscriptionID
                     Else
-                        cSQL = "SELECT tblSubscription.*, tblCartCatProductRelations.nCatId, tblContent.*" & _
-                                           " FROM tblContent INNER JOIN" & _
-                                           " tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId RIGHT OUTER JOIN" & _
-                                           " tblSubscription ON tblCartCatProductRelations.nContentId = tblSubscription.nSubContentId"
-                        cSQL &= " WHERE (tblSubscription.nDirId = " & nSubUserId & ") AND (tblSubscription.nSubContentId = " & nSubscriptionID & _
-                                                " OR tblCartCatProductRelations.nCatId = " & cGroup & ")"
+                        cSQL = "SELECT tblSubscription.*, tblCartCatProductRelations.nCatId, tblContent.*" &
+                                           " FROM tblContent INNER JOIN" &
+                                           " tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId RIGHT OUTER JOIN" &
+                                           " tblSubscription ON tblCartCatProductRelations.nContentId = tblSubscription.nSubContentId RIGHT OUTER JOIN" &
+                                           " tblAudit a ON tblSubscription.nAuditId = a.nAuditKey"
+                        cSQL &= " WHERE (tblSubscription.nDirId = " & nSubUserId & ") AND (tblSubscription.nSubContentId = " & nSubscriptionID &
+                                                " OR tblCartCatProductRelations.nCatId = " & cGroup & ") order by a.dExpireDate DESC"
                     End If
 
                     oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
@@ -623,9 +723,14 @@ RedoCheck:
                         ElseIf Not oDS.Tables("Content").Rows(0)("nContentKey") = nSubscriptionID Then
 
                             'its a regrade
-                            'replace
+                            'cancel earlier subscription
                             'RemoveSubscription(oDS.Tables("Content").Rows(0)("nSubscriptionKey"), oNewElmt.SelectSingleNode("Content"), nSubUserId)
-                            myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Subscription, oDS.Tables("Content").Rows(0)("nSubKey"))
+                            'myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Subscription, oDS.Tables("Content").Rows(0)("nSubKey"))
+                            Dim oRows As DataRow
+                            For Each oRows In oDS.Tables("Content").Rows
+                                CancelSubscription(oRows("nSubKey"))
+                            Next
+
                             'need to get the details of the current new one
                             cSQL = "Select * From tblContent Where nContentKey = " & nSubscriptionID
                             Dim oDS2 As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
@@ -1436,6 +1541,30 @@ processFlow:
 
                     Catch ex As Exception
                         returnException(mcModuleName, "ManageUserSubscriptions", ex, sProcessInfo, "", gbDebug)
+                        'Return Nothing
+                    End Try
+
+                End Sub
+
+
+                Public Sub CheckUpgrade(ByRef myWeb As Eonic.Web, ByRef contentNode As XmlElement)
+
+                    Dim sProcessInfo As String
+                    Try
+
+                        'Check User Logged on
+                        If myWeb.mnUserId > 0 Then
+
+                            Dim oSub As New Subscriptions(myWeb)
+                            'Upgrade Price
+                            oSub.UpdateSubscriptionPrice(contentNode, myWeb.mnUserId)
+
+                        End If
+
+
+
+                    Catch ex As Exception
+                        returnException(mcModuleName, "CheckUpgrade", ex, sProcessInfo, "", gbDebug)
                         'Return Nothing
                     End Try
 

@@ -967,6 +967,8 @@ Namespace Providers
 
                     Try
 
+                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+
                         oPayPalProCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalPro']")
 
                         Dim ppProfile As New PayPalAPI.CustomSecurityHeaderType
@@ -1007,7 +1009,7 @@ Namespace Providers
                         ppManageRecurringPaymentsProfileStatusRequestDetailsType.ProfileID = nPaymentProviderRef
                         ppManageRecurringPaymentsProfileStatusRequestDetailsType.Action = PayPalAPI.StatusChangeActionType.Cancel
 
-                       
+
                         Dim ppIface As New PayPalAPI.PayPalAPIAAInterfaceClient(ppBinding, ppEndpointAddress)
                         Dim ppRecuringResponse As PayPalAPI.ManageRecurringPaymentsProfileStatusResponseType
 

@@ -76,8 +76,7 @@ $(document).ready(function () {
                 }
             ]
         });
-  
-       
+
     });
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -133,8 +132,6 @@ $(document).ready(function () {
         $('#updateQty').click();
 
     });
-
-
 });
 
 /*
@@ -148,6 +145,9 @@ $(window).load(function () {
     // give fonts time to load before resizing
 
     // autoAdjustFloatingColumns();
+
+   // $("div[class$='-body'][class!='media-body'],.list-group").css('height', 'auto');
+
     matchHeightResponsive();
 
     //    $('.grid-item img').each(function () {
@@ -167,7 +167,7 @@ $(window).load(function () {
     //    $('.grid-item .thumbnail').height(highestBox);
     $('.matchHeight-body .grid-item').matchHeight();
     $('.matchHeight-body .listItem').matchHeight();
-   // $('.content-scroller .listItem').matchHeight();
+    //$('.content-scroller .listItem').matchHeight();
     PageContentActions();
 
 });

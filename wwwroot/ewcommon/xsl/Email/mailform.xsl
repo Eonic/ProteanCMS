@@ -61,7 +61,10 @@
             </xsl:choose>
           </tr>
         </xsl:for-each>
-      </table>        
+      </table>
+            <small>
+              Session Referrer: <xsl:value-of select="@sessionReferrer"/>
+            </small>
      </font>
   </xsl:template>
 

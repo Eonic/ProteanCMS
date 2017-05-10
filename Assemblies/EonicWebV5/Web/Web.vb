@@ -144,13 +144,13 @@ Public Class Web
     Public maCommonFolders As String() = {}
 
     Public Shadows mcModuleName As String = "Eonic.Web"
-
+    Public moCart As Web.Cart
     Public moDiscount As Web.Cart.Discount
     Public mbIsUsingHTTPS As Boolean = False
     Public moTransform As Eonic.XmlHelper.Transform
 
     Public moAdmin As Admin
-    Protected Friend oEc As Cart
+    Protected Friend oEc As Cart ' Used for BuildFeedXML for some reason, perhpas this could use moCart needs testing
     Protected oSrch As Eonic.Web.Search
     Protected Friend moFSHelper As fsHelper
 
@@ -165,6 +165,7 @@ Public Class Web
     Public moResponseType As pageResponseType
     Private bPageCache As Boolean = False
     Private mcPageCacheFolder As String = "\ewCache"
+    Private mcSessionReferrer As String = Nothing
 
 
 
@@ -703,6 +704,10 @@ Public Class Web
                 moTransform.Close()
                 moTransform = Nothing
             End If
+            If gbCart And Not moCart Is Nothing Then
+                moCart.close()
+                moCart = Nothing
+            End If
 
             'Dim nMemDif As Integer = Process.GetCurrentProcess.PrivateMemorySize64
             'Dim nProcDif As Integer = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
@@ -860,7 +865,7 @@ Public Class Web
 
     End Sub
 
-    Public Sub InitializeVariables()
+    Public Overridable Sub InitializeVariables()
         PerfMon.Log("Web", "InitializeVariables")
         'Author:        Trevor Spink
         'Copyright:     Eonic Ltd 2005
@@ -928,7 +933,7 @@ Public Class Web
                     moResponseType = pageResponseType.Page
                     'can we get a cached page
                     If Not moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") Is Nothing Then
-                        If moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
+                        If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
                     End If
@@ -966,6 +971,8 @@ Public Class Web
             End If
 
             If gbCart Or gbQuote Then
+                InitialiseCart()
+                'moCart = New Cart(Me)
                 moDiscount = New Cart.Discount(Me)
             End If
 
@@ -1009,18 +1016,23 @@ Public Class Web
                             ClearPageCache()
                         End If
 
-                        sCachePath = mcOriginalURL
-                        If mcPagePath = "" Then
-                            sCachePath = sCachePath & "home"
+                        sCachePath = goServer.UrlDecode(mcOriginalURL) & ".html"
+
+                        If sCachePath = "/.html" Then
+                            sCachePath = "/home.html"
                         End If
-                        If moFSHelper.VirtualFileExists(mcPageCacheFolder & sCachePath & ".html") Then
-                            sServeFile = mcPageCacheFolder & sCachePath & ".html"
+
+                        Dim nCacheTimeout As Long = 24
+                        If IsNumeric(moConfig("PageCacheTimeout")) Then
+                            nCacheTimeout = moConfig("PageCacheTimeout")
                         End If
-                    End If
 
+                        If moFSHelper.VirtualFileExistsAndRecent(mcPageCacheFolder & sCachePath, nCacheTimeout) Then
+                                sServeFile = mcPageCacheFolder & sCachePath
+                            End If
+                        End If
 
-
-                    moResponse.HeaderEncoding = System.Text.Encoding.UTF8
+                        moResponse.HeaderEncoding = System.Text.Encoding.UTF8
                     moResponse.ContentEncoding = System.Text.Encoding.UTF8
 
                     If Not msException = "" Then
@@ -1029,6 +1041,7 @@ Public Class Web
                         moResponse.AddHeader("X-EonicError", "An Error has occured")
                         gnResponseCode = 500
                         moResponse.ContentType = "text/html"
+                        bPageCache = False
                     Else
                         ' Set the Content Type
                         moResponse.ContentType = mcContentType
@@ -1134,7 +1147,7 @@ Public Class Web
                                     oTransform.ProcessTimed(moPageXml, textWriter)
                                     'save the page
                                     SavePage(sCachePath, textWriter.ToString())
-                                    sServeFile = mcPageCacheFolder & sCachePath & ".html"
+                                    sServeFile = mcPageCacheFolder & sCachePath
 
                                 Else
                                     oTransform.ProcessTimed(moPageXml, moResponse)
@@ -1150,11 +1163,14 @@ Public Class Web
                                         moResponse.TrySkipIisCustomErrors = True
                                         moResponse.StatusCode = gnResponseCode
                                     End If
-                                    moSession("previousPage") = mcOriginalURL
+                                    If Not moSession Is Nothing Then
+                                        moSession("previousPage") = mcOriginalURL
+                                    End If
+
                                 End If
 
-                                'we don't need this anymore.
-                                If Not ibIndexMode Then
+                                    'we don't need this anymore.
+                                    If Not ibIndexMode Then
                                     If msRedirectOnEnd = "" Then
                                         PerfMon.Write()
                                         moPageXml = Nothing
@@ -1176,9 +1192,6 @@ Public Class Web
                     End If
 
             End Select
-
-
-
 
 
         Catch ex As Exception
@@ -1236,7 +1249,7 @@ Public Class Web
                 sProcessInfo = "Check Admin Mode"
                 ContentActions()
 
-                If moConfig("FinalAddBulk") = "On" Then
+                If LCase(moConfig("FinalAddBulk")) = "on" Then
 
                     Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
                     Dim nMaxDepth As Integer = 1
@@ -2221,24 +2234,42 @@ Public Class Web
     ''' <summary>
     ''' 
     ''' </summary>
-    Public Sub AddCurrency()
+    Public Overridable Sub AddCurrency()
         Dim sProcessInfo As String = "PerfMon"
-        PerfMon.Log("Web", "addCart")
+        PerfMon.Log("Web", "AddCurrency")
         'Isolated function to provide the facility to overload the cart when called from an overloaded .web
         Try
             If gbCart Then
 
                 sProcessInfo = "Begin AddCurrency"
-                If oEc Is Nothing Then
-                    oEc = New Cart(Me)
+                If moCart Is Nothing Then
+                    moCart = New Cart(Me)
                 End If
-                oEc.SelectCurrency()
+                moCart.SelectCurrency()
                 sProcessInfo = "End AddCurrency"
 
             End If
         Catch ex As Exception
-            'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCurrency", ex, sProcessInfo))
+        End Try
+    End Sub
+
+    Public Overridable Sub InitialiseCart()
+        Dim sProcessInfo As String = "PerfMon"
+        PerfMon.Log("Web", "addCart")
+        'Isolated function to provide the facility to overload the cart when called from an overloaded .web
+        Try
+            If gbCart Then
+                If Not moSession Is Nothing Then
+                    If moCart Is Nothing Then
+                        'we should not hit this because addCurrency should establish it.
+                        moCart = New Cart(Me)
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCart", ex, sProcessInfo))
         End Try
     End Sub
     ''' <summary>
@@ -2252,18 +2283,14 @@ Public Class Web
             If gbCart Then
 
                 sProcessInfo = "Begin Cart"
-                If oEc Is Nothing Then
+                If moCart Is Nothing Then
                     'we should not hit this because addCurrency should establish it.
-                    oEc = New Cart(Me)
+                    moCart = New Cart(Me)
                 End If
 
-                oEc.apply()
-
+                moCart.apply()
                 'get any discount information for this page
                 moDiscount.getAvailableDiscounts(moPageXml.DocumentElement)
-
-                oEc.close()
-                oEc = Nothing
                 sProcessInfo = "End Cart"
             End If
         Catch ex As Exception
@@ -3427,380 +3454,6 @@ Public Class Web
 
             Return oMembershipProv.Activities.MembershipProcess(Me)
 
-            'Dim adXfm As Object = getAdminXform()
-
-            'adXfm.open(moPageXml)
-
-            ''logoff handler
-            'If LCase(moRequest("ewCmd")) = "logoff" And mnUserId <> 0 Then
-
-            '    Me.LogOffProcess()
-
-            '    'we are logging off so lets redirect
-            '    If Not moConfig("BaseUrl") Is Nothing And Not moConfig("BaseUrl") = "" Then
-            '        msRedirectOnEnd = moConfig("BaseUrl")
-            '    ElseIf Not moConfig("RootPageId") Is Nothing And Not moConfig("RootPageId") = "" Then
-            '        msRedirectOnEnd = moConfig("ProjectPath") & "/"
-            '    Else
-            '        msRedirectOnEnd = mcOriginalURL
-            '    End If
-            '    'BaseUrl
-            '    sReturnValue = "LogOff"
-
-
-            'ElseIf moRequest("ewCmd") = "CancelSubscription" Then
-
-            '    Dim oAdx As New Admin.AdminXforms(Me)
-            '    oAdx.moPageXML = moPageXml
-
-            '    Dim oCSFrm As XmlElement = oAdx.xFrmConfirmCancelSubscription(moRequest("nUserId"), moRequest("nSubscriptionId"), mnUserId, mbAdminMode)
-            '    If oCSFrm Is Nothing Then
-            '        moPageXml.SelectSingleNode("/Page/@layout").InnerText = "My_Account"
-            '    Else
-            '        moPageXml.SelectSingleNode("/Page/@layout").InnerText = "CancelSubscription"
-            '        AddContentXml(oCSFrm)
-            '    End If
-            'ElseIf moRequest("ewCmd") = "AR" Then ' AccountReset
-            '    Dim cAccountHash As String = moRequest("AI")
-            '    If Not cAccountHash = "" Then
-            '        Dim oXfmElmt As XmlElement = adXfm.xFrmConfirmPassword(cAccountHash)
-            '        AddContentXml(oXfmElmt)
-            '        moPageXml.DocumentElement.SetAttribute("layout", "Account_Reset")
-            '    End If
-
-
-            'End If
-
-
-
-            'If Not moConfig("SecureMembershipAddress") = "" Then
-
-            '    Dim oMembership As New Eonic.Web.Membership(Me)
-            '    AddHandler oMembership.OnError, AddressOf OnComponentError
-            '    oMembership.SecureMembershipProcess(sReturnValue)
-
-            'End If
-
-            ''display logon form for all pages if user is not logged on.
-            'If mnUserId = 0 And (moRequest("ewCmd") <> "passwordReminder" And moRequest("ewCmd") <> "ActivateAccount") Then
-
-            '    Dim oXfmElmt As XmlElement = adXfm.xFrmUserLogon()
-            '    Dim bAdditionalChecks As Boolean = False
-
-            '    If Not (adXfm.valid) Then
-            '        ' Call in additional authentication checks
-            '        If moConfig("AlternativeAuthentication") = "On" Then
-            '            bAdditionalChecks = AlternativeAuthentication()
-            '        End If
-            '    End If
-
-            '    If adXfm.valid Or bAdditionalChecks Then
-            '        moContentDetail = Nothing
-            '        'mnUserId = adXfm.mnUserId
-            '        If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
-            '        If moRequest("cRemember") = "true" Then
-            '            Dim oCookie As System.Web.HttpCookie = New System.Web.HttpCookie("RememberMe")
-            '            oCookie.Value = mnUserId
-            '            oCookie.Expires = DateAdd(DateInterval.Day, 60, Now())
-            '            moResponse.Cookies.Add(oCookie)
-            '        End If
-            '        sReturnValue = "LogOn"
-
-            '        If gbSingleLoginSessionPerUser Then
-            '            moDbHelper.logActivity(dbHelper.ActivityType.Logon, mnUserId, 0)
-            '        Else
-            '            moDbHelper.CommitLogToDB(dbHelper.ActivityType.Logon, mnUserId, moSession.SessionID, Now, 0, 0, "")
-            '        End If
-
-            '        'Now we want to reload as permissions have changed
-            '        If Not moSession Is Nothing Then
-            '            If Not moSession("cLogonCmd") Is Nothing Then
-            '                cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
-            '                If mcOriginalURL.Contains(cLogonCmd & "=") Then
-            '                    cLogonCmd = ""
-            '                Else
-            '                    If mcOriginalURL.Contains("=") Then
-            '                        cLogonCmd = "&" & moSession("cLogonCmd")
-            '                    Else
-            '                        cLogonCmd = "?" & moSession("cLogonCmd")
-            '                    End If
-            '                End If
-            '            End If
-            '        End If
-
-            '        logonRedirect(cLogonCmd)
-            '    Else
-            '        AddContentXml(oXfmElmt)
-            '        '  mnUserId = adXfm.mnUserId
-            '    End If
-            'ElseIf moRequest("ewCmd") = "passwordReminder" Then
-
-            '    Dim oXfmElmt As XmlElement
-            '    Select Case LCase(moConfig("MembershipEncryption"))
-            '        Case "md5salt", "md5", "sha1"
-            '            oXfmElmt = adXfm.xFrmResetAccount()
-            '        Case Else
-            '            oXfmElmt = adXfm.xFrmPasswordReminder()
-            '    End Select
-            '    AddContentXml(oXfmElmt)
-
-            'ElseIf moRequest("ewCmd") = "ActivateAccount" Then
-
-            '    Dim oMembership As New Eonic.Web.Membership(Me)
-            '    AddHandler oMembership.OnError, AddressOf OnComponentError
-
-            '    Dim oXfmElmt As XmlElement
-            '    oXfmElmt = adXfm.xFrmActivateAccount()
-
-            '    AddContentXml(oXfmElmt)
-
-            'End If
-
-            'Select Case moRequest("ewCmd")
-            '    Case "UserIntegrations"
-            '        AddContentXml(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
-            '        ' moContentDetail.AppendChild(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
-            '        If adXfm.valid Then
-            '            ' moContentDetail.RemoveAll()
-            '            'clear the listDirectory cache
-            '            moDbHelper.clearDirectoryCache()
-            '            'return to process flow
-            '        End If
-            'End Select
-
-
-            ''add the user logon details to the page xml.
-            'If mnUserId <> 0 Then
-
-            '    RefreshUserXML()
-
-            '    'moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML().CloneNode(True), True))
-            'End If
-
-
-            '' Site Redirection Process
-            'If moConfig("SiteGroupRedirection") <> "" And mnUserId <> 0 Then
-            '    Me.SiteRedirection()
-            'End If
-            'Dim clearUserId As Boolean = False
-            ''behaviour based on layout page
-            'Select Case moPageXml.SelectSingleNode("/Page/@layout").Value
-            '    Case "Logon_Register", "My_Account", "Register"
-            '        Dim oXfmElmt As XmlElement
-            '        ' If not in admin mode then base our choice on whether the user is logged in. 
-            '        ' If in Admin Mode, then present it as WYSIWYG
-            '        If (Not (mbAdminMode) And mnUserId > 0) Or (mbAdminMode And moPageXml.SelectSingleNode("/Page/@layout").Value = "My_Account") Then
-            '            Dim oContentForm As XmlElement = moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserMyAccount']")
-            '            If oContentForm Is Nothing Then
-            '                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , "UserMyAccount")
-            '            Else
-            '                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , "UserMyAccount", oContentForm.OuterXml)
-            '                If Not mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
-            '            End If
-            '            If adXfm.valid Then
-            '                If sReturnValue = "" Then sReturnValue = "updateUser"
-            '            End If
-
-
-            '            AddContentXml(oXfmElmt)
-            '        Else
-
-            '            Dim oContentForm As XmlElement = moPageXml.SelectSingleNode("descendant-or-self::Content[@type='xform' and @name='UserRegister']")
-            '            If oContentForm Is Nothing Then
-            '                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , "UserRegister")
-            '            Else
-            '                oXfmElmt = adXfm.xFrmEditDirectoryItem(mnUserId, "User", , "UserRegister", oContentForm.OuterXml)
-            '                If Not mbAdminMode Then oContentForm.ParentNode.RemoveChild(oContentForm)
-            '            End If
-
-            '            ' ok if the user is valid we then need to handle what happens next.
-            '            If adXfm.valid Then
-            '                Dim bRedirect As Boolean = True
-            '                Select Case moConfig("RegisterBehaviour")
-
-            '                    Case "validateByEmail"
-            '                        'don't redirect because we want to reuse this form
-            '                        bRedirect = False
-            '                        'say thanks for registering and update the form
-            '                        adXfm.addNote("EditContent", xForm.noteTypes.Hint, "Thanks for registering you have been sent an email with a link you must click to activate your account", True)
-
-            '                        'lets get the new userid from the instance
-            '                        mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
-
-            '                        'first we set the user account to be pending
-            '                        moDbHelper.setObjectStatus(dbHelper.objectTypes.Directory, dbHelper.Status.Pending, mnUserId)
-
-            '                        Dim oMembership As New Eonic.Web.Membership(Me)
-            '                        AddHandler oMembership.OnError, AddressOf OnComponentError
-            '                        oMembership.AccountActivateLink(mnUserId)
-            '                        clearUserId = True
-            '                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "Send Activation")
-
-
-            '                    Case Else ' Auto logon
-            '                        mnUserId = adXfm.instance.SelectSingleNode("tblDirectory/nDirKey").InnerText
-            '                        If Not moSession Is Nothing Then moSession("nUserId") = mnUserId
-
-            '                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.Register, mnUserId, moSession.SessionID, Now, 0, 0, "First Logon")
-
-            '                        'Now we want to reload as permissions have changed
-
-            '                        If Not moSession Is Nothing Then
-            '                            If Not moSession("cLogonCmd") Is Nothing Then
-            '                                cLogonCmd = Split(moSession("cLogonCmd"), "=")(0)
-            '                                If mcOriginalURL.Contains(cLogonCmd & "=") Then
-            '                                    cLogonCmd = ""
-            '                                Else
-            '                                    If mcOriginalURL.Contains("=") Then
-            '                                        cLogonCmd = "&" & moSession("cLogonCmd")
-            '                                    Else
-            '                                        cLogonCmd = "?" & moSession("cLogonCmd")
-            '                                    End If
-            '                                End If
-            '                            End If
-            '                        End If
-
-            '                        moSession("RedirectReason") = "registration"
-            '                        bRedirectStarted = True ' This acts as a local suppressant allowing for the sessio to pass through to the redirected page
-            '                        logonRedirect(cLogonCmd)
-            '                        bRedirect = False
-
-            '                End Select
-
-            '                'send registration confirmation
-            '                Dim xsltPath As String = "/xsl/email/registration.xsl"
-
-            '                If IO.File.Exists(goServer.MapPath(xsltPath)) Then
-            '                    Dim oUserElmt As XmlElement = moDbHelper.GetUserXML(mnUserId)
-            '                    If clearUserId Then mnUserId = 0 ' clear user Id so we don't stay logged on
-            '                    Dim oElmtPwd As XmlElement = moPageXml.CreateElement("Password")
-            '                    oElmtPwd.InnerText = moRequest("cDirPassword")
-            '                    oUserElmt.AppendChild(oElmtPwd)
-
-            '                    Dim oUserEmail As XmlElement = oUserElmt.SelectSingleNode("Email")
-            '                    Dim fromName As String = moConfig("SiteAdminName")
-            '                    Dim fromEmail As String = moConfig("SiteAdminEmail")
-            '                    Dim recipientEmail As String = ""
-            '                    If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
-            '                    Dim SubjectLine As String = "Your Registration Details"
-            '                    Dim oMsg As Messaging = New Messaging
-            '                    'send an email to the new registrant
-            '                    If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
-            '                    'send an email to the webadmin
-            '                    recipientEmail = moConfig("SiteAdminEmail")
-            '                    If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
-            '                        sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
-            '                    End If
-            '                    oMsg = Nothing
-            '                End If
-
-            '                'redirect to this page or alternative page.
-            '                If bRedirect Then
-            '                    msRedirectOnEnd = mcOriginalURL
-            '                End If
-
-            '                sReturnValue = "newUser"
-            '            Else
-            '                AddContentXml(oXfmElmt)
-            '            End If
-            '        End If
-
-            '    Case "Password_Reminder"
-
-            '        Dim oXfmElmt As XmlElement
-            '        If moConfig("MembershipEncryption") = "" Then
-            '            oXfmElmt = adXfm.xFrmPasswordReminder()
-
-            '        Else
-            '            oXfmElmt = adXfm.xFrmResetAccount()
-            '        End If
-            '        AddContentXml(oXfmElmt)
-
-            '    Case "Password_Change"
-
-            '        Dim oXfmElmt As XmlElement
-            '        oXfmElmt = adXfm.xFrmResetPassword(mnUserId)
-            '        AddContentXml(oXfmElmt)
-
-            '    Case "Activation_Code"
-
-            '        If Not Me.mbAdminMode Then
-            '            Dim oXfmElmt As XmlElement = Nothing
-            '            Dim cExistingFormXml As String = ""
-            '            'For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@type='xform' and model/submission/@SOAPAction!='']")
-
-            '            ' Look for activation code xforms
-            '            If Tools.Xml.NodeState(moPageXml.DocumentElement, "Contents/Content[@type='xform' and @name='ActivationCode']", , , , oXfmElmt) <> Tools.Xml.XmlNodeState.NotInstantiated Then
-            '                oXfmElmt.ParentNode.RemoveChild(oXfmElmt)
-            '                cExistingFormXml = oXfmElmt.OuterXml
-            '            End If
-
-            '            oXfmElmt = adXfm.xFrmActivationCode(mnUserId, , cExistingFormXml)
-            '            If Not (oXfmElmt) Is Nothing Then
-            '                AddContentXml(oXfmElmt)
-
-            '                ' If the form has been successful, then check for a redirect
-            '                ' If the redirectpage is a number then continue
-            '                If Not (oXfmElmt.SelectSingleNode("//instance/formState[node()='success']") Is Nothing) Then
-
-            '                    ' Activation was succesful, let's prepare the redirect
-
-            '                    ' Clear the cache.
-            '                    Dim cSql As String = "DELETE dbo.tblXmlCache " _
-            '                            & " WHERE cCacheSessionID = '" & moSession.SessionID & "' " _
-            '                            & "         AND nCacheDirId = " & Eonic.SqlFmt(mnUserId)
-            '                    moDbHelper.ExeProcessSqlorIgnore(cSql)
-
-            '                    ' Check if the redirect is another page or just redirect to the current url
-            '                    If Not (oXfmElmt.SelectSingleNode("//instance/RedirectPage[number(.)=number(.)]") Is Nothing) Then
-            '                        msRedirectOnEnd = moConfig("ProjectPath") & "/?pgid=" & adXfm.Instance.SelectSingleNode("RedirectPage").InnerText
-            '                    Else
-            '                        msRedirectOnEnd = mcOriginalURL
-            '                    End If
-            '                    bRedirectStarted = True
-            '                    moSession("RedirectReason") = "activation"
-            '                End If
-            '            End If
-            '        End If
-
-
-
-            '    Case "User_Contact"
-            '        If mnUserId > 0 Then
-            '            Select Case moRequest("ewCmd")
-            '                Case "addContact", "editContact"
-            '                    Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(moRequest("id"), mnUserId)
-            '                    If Not adXfm.valid Then
-            '                        AddContentXml(oXfmElmt)
-            '                    Else
-            '                        RefreshUserXML()
-            '                    End If
-            '                Case "delContact"
-            '                    Dim oContactElmt As XmlElement
-            '                    For Each oContactElmt In GetUserXML(mnUserId).SelectNodes("descendant-or-self::Contact")
-            '                        Dim oId As XmlElement = oContactElmt.SelectSingleNode("nContactKey")
-            '                        If Not oId Is Nothing Then
-            '                            If oId.InnerText = moRequest("id") Then
-            '                                moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, moRequest("id"))
-            '                                RefreshUserXML()
-            '                            End If
-            '                        End If
-            '                    Next
-            '            End Select
-            '        End If
-
-            'End Select
-
-
-            'LogSingleUserSession()
-
-
-            'If moRequest("ewEdit") <> "" Then
-            '    UserEditProcess()
-            'End If
-
-            'Return sReturnValue
-
         Catch ex As Exception
             'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo))
@@ -4288,6 +3941,11 @@ Public Class Web
             If Not moSession Is Nothing Then newElem2.InnerText = moSession("previousPage")
             newElem.AppendChild(newElem2)
 
+            newElem2 = moPageXml.CreateElement("Item")
+            newElem2.SetAttribute("name", "SESSION_REFERRER")
+            If Not moSession Is Nothing Then newElem2.InnerText = Referrer
+            newElem.AppendChild(newElem2)
+
             If moConfig("ProjectPath") <> "" Then
                 newElem2 = moPageXml.CreateElement("Item")
                 newElem2.SetAttribute("name", "APPLICATION_ROOT")
@@ -4413,6 +4071,14 @@ Public Class Web
                     root.AppendChild(setting)
                     match = match.NextMatch()
                 End While
+
+                'create a random bundle version number
+                Dim rnsetting = moPageXml.CreateElement("add")
+                rnsetting.setAttribute("key", "bundleVersion")
+                Dim rn As New Random
+                rnsetting.setAttribute("value", rn.Next(10000, 99999))
+                root.AppendChild(rnsetting)
+
                 moCtx.Application("ewSettings") = root.InnerXml
             Else
                 root = moPageXml.CreateElement("Settings")
@@ -6232,12 +5898,15 @@ Public Class Web
                                     "</div>"
                     gnResponseCode = 404
                     sErrorModule = "BuildPageXml"
+                    bPageCache = False
                 Case 1006
                     strMessageText = "Access Denied"
                     strMessageHtml = "<div><h2>Access Denied</h2>" &
                                     "</div>"
                     'gnResponseCode = 401
                     sErrorModule = "BuildPageXml"
+
+                    bPageCache = False
                 Case 1007
                     strMessageText = "File Not Found"
                     strMessageHtml = "<div><h2>File Not Found</h2>" &
@@ -6245,11 +5914,15 @@ Public Class Web
                     'gnResponseCode = 404
                     sErrorModule = "Get Document"
 
+                    bPageCache = False
+
                 Case 1008
                     strMessageText = "Invalid Licence"
                     strMessageHtml = "<div><h2>Please get a valid EonicWeb Licence</h2>" &
                                     "</div>"
                     sErrorModule = "BuildPageXml"
+
+                    bPageCache = False
             End Select
 
             If gbDebug Then
@@ -7436,21 +7109,24 @@ Public Class Web
     Public ReadOnly Property Referrer() As String
         Get
             Try
+
                 If Not moSession Is Nothing Then
-                    If moSession("Referrer") = "" And Not moRequest.UrlReferrer Is Nothing Then
-                        moSession.Add("Referrer", moRequest.UrlReferrer.AbsoluteUri)
-                        Return moSession("Referrer")
-                    ElseIf Not moSession("Referrer") = "" Then
-                        Return moSession("Referrer")
-                    End If
+                    mcSessionReferrer = moSession("Referrer")
                 Else
+                    mcSessionReferrer = moRequest.UrlReferrer.AbsoluteUri
+                End If
+
+                If mcSessionReferrer Is Nothing Then
                     If Not moRequest.UrlReferrer Is Nothing Then
-                        Return moRequest.UrlReferrer.AbsoluteUri
-                    Else
-                        Return ""
+                        If moRequest.UrlReferrer.Host <> moRequest.ServerVariables("HTTP_HOST") Then
+                            moSession.Add("Referrer", moRequest.UrlReferrer.AbsoluteUri)
+                            mcSessionReferrer = moSession("Referrer")
+                        End If
                     End If
                 End If
-                Return ""
+
+                Return mcSessionReferrer
+
             Catch ex As Exception
                 Return ""
             End Try
@@ -7957,13 +7633,20 @@ Public Class Web
             End If
 
             cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename & Ext
-            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & filename
 
-            If FullFilePath.Length > 255 Then
-                FullFilePath = Left(FullFilePath, 240) & Ext
-            Else
-                FullFilePath = FullFilePath & Ext
+            Dim cleanfilename As String = goServer.UrlDecode(filename)
+
+            If cleanfilename.Length > 260 Then
+                cleanfilename = Left(cleanfilename, 260)
             End If
+
+            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & goServer.UrlDecode(cleanfilename)
+
+            ' If FullFilePath.Length > 255 Then
+            ' FullFilePath = Left(FullFilePath, 240) & Ext
+            ' Else
+            ' FullFilePath = FullFilePath & Ext
+            ' End If
 
             If filepath = "" Then filepath = "/"
             Dim sError As String = oFS.CreatePath(filepath)

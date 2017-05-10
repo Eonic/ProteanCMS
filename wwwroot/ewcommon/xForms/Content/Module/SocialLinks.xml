@@ -46,6 +46,7 @@
       <bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?(?:plus\.)?google\.com\/*"/>
       <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:uk\.)?pinterest\.com\/*"/>
       <bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
+      <bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -144,12 +145,16 @@
         <input bind="cContentYoutube" class="short">
           <label>Youtube URL</label>
         </input>
+        <input bind="cContentInstagram" class="short">
+          <label>Instagram URL</label>
+        </input>
         <hint class="long">
           All URL's must start with http:// ... etc.
         </hint>
         <input bind="uploadSprite" class="pickImageFile bs-only">
           <label>Upload sprite from file</label>
           <value></value>
+          <hint>Here is an example sprite to <a href="/ewcommon/images/icons/social/social-sprite.png">download</a></hint>
         </input>
       </group>
       <group>

@@ -485,7 +485,7 @@ Public Class xForm
         End Try
     End Sub
 
-    Public Sub load(ByRef oElmt As XmlElement, Optional ByVal bWithRepeats As Boolean = False)
+    Overridable Sub load(ByRef oElmt As XmlElement, Optional ByVal bWithRepeats As Boolean = False)
         Dim cProcessInfo As String = ""
         'Boolean to determine if the XML has been loaded from a file
         'Dim bXmlLoad As Boolean = False

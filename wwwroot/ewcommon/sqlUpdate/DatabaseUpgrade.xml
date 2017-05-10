@@ -333,7 +333,8 @@
       </Sub2>
       <Sub2 Number="81">
         <Sub3 Number="0">
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.81.0/fxn_GetPagePath.sql"/>
+          <Action Order="0" Type="Drop" ObjectType="Function" ObjectName="fxn_GetPagePath"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.81.0/fxn_GetPagePath.sql"/>
         </Sub3>
       </Sub2>
       <Sub2 Number="96">

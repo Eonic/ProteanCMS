@@ -8,7 +8,7 @@
 				<nVersion/>
 				<cContentForiegnRef/>
 				<cContentName/>
-				<cContentSchemaName>NewsArticle</cContentSchemaName>
+				<cContentSchemaName>NewsArticle</cContentSchemaName> 
 				<cContentXmlBrief>
 					<Content showRelated="Tag,Contact">
 						<Headline/>
@@ -76,7 +76,7 @@
     </bind>
 	</model>
 	<group ref="EditContent" class="2col">
-		<label>Edit News Article</label>
+		<label>News Article</label>
     <group class="ContentColumn1">
 		  <group ref="Settings" class="leftSettings">
 			  <input bind="nContentKey" class="hidden">

@@ -16,7 +16,7 @@ Imports System.Web.Security
 Imports System.Collections
 Imports System.Configuration
 Imports System.Xml
-
+Imports Newtonsoft.Json
 
 Namespace Integration.Directory
 
@@ -56,20 +56,33 @@ Namespace Integration.Directory
                     Return nUserId
                 Else
                     'Get user Instance from Xform
-                    ' Dim UserXml As XmlElement = GetUserSchemaXml()
+                    Dim UserXml As XmlElement = GetUserSchemaXml().FirstChild()
                     'Populate Instance info from Facebook User
-
+                    UserXml.SelectSingleNode("FirstName").InnerText = fbUser.first_name
+                    UserXml.SelectSingleNode("LastName").InnerText = fbUser.last_name
+                    UserXml.SelectSingleNode("Gender").InnerText = fbUser.gender
+                    UserXml.SelectSingleNode("Email").InnerText = fbUser.email
                     'Create User as best we can
+                    Dim cUserName As String = fbUser.email
+                    If cUserName = "" Then
+                        cUserName = fbUser.first_name & fbUser.last_name
+                        'Check if username exists if so the add numbers till not
+                        Dim counter As Long = 1
+                        Do While _myWeb.moDbHelper.checkUserUnique(cUserName) = False
+                            cUserName = cUserName & counter
+                            counter = counter + 1
+                        Loop
+                    End If
 
                     'If data not complete set status as requires data
-
+                    nUserId = MyBase._myWeb.moDbHelper.insertDirectory("fb-" & fbUser.id, "User", cUserName, "", UserXml.OuterXml,,, fbUser.email)
                     'Add ExternalAuthInfo
-
-                    'Return New User Id.
+                    CreateExternalAuth(fbUser.id, nUserId)
+                    Return nUserId
                 End If
 
             Catch ex As Exception
-
+                Return 0
             End Try
 
         End Function
@@ -84,18 +97,17 @@ Namespace Integration.Directory
                 Dim at As HttpWebRequest = DirectCast(HttpWebRequest.Create(targetUri), HttpWebRequest)
 
                 Dim str As New System.IO.StreamReader(at.GetResponse().GetResponseStream())
-                Dim token As String = str.ReadToEnd().ToString().Replace("access_token=", "")
+                Dim strResult As String = str.ReadToEnd()
 
-                ' Split the access token and expiration from the single string
-                Dim combined As String() = token.Split("&"c)
-                AccessToken = combined(0)
+                Dim jsonResult = JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(strResult)
+                Dim AccessToken As String = jsonResult.Item("access_token").ToString()
 
                 ' Exchange the code for an extended access token
-                Dim eatTargetUri As New Uri(Convert.ToString("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" + facebookId + "&client_secret=" + facebookKey + "&fb_exchange_token=") & accessToken)
+                Dim eatTargetUri As New Uri("https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=" + facebookId + "&client_secret=" + facebookKey + "&fb_exchange_token=" & AccessToken)
                 Dim eat As HttpWebRequest = DirectCast(HttpWebRequest.Create(eatTargetUri), HttpWebRequest)
 
                 Dim eatStr As New StreamReader(eat.GetResponse().GetResponseStream())
-                Dim eatToken As String = eatStr.ReadToEnd().ToString().Replace("access_token=", "")
+                Dim eatToken As String = eatStr.ReadToEnd().ToString()
 
                 ' Split the access token and expiration from the single string
                 Dim eatWords As String() = eatToken.Split("&"c)

@@ -2001,8 +2001,10 @@ Partial Public Module xmlTools
 
             Try
                 Dim bReset As Boolean = False
-                If Not myWeb.moRequest("reBundle") Is Nothing Then
-                    bReset = True
+                If Not myWeb.moRequest Is Nothing Then
+                    If Not myWeb.moRequest("reBundle") Is Nothing Then
+                        bReset = True
+                    End If
                 End If
 
                 If gbDebug Then
@@ -2447,7 +2449,7 @@ Public Class XmlHelper
 
         Public Shadows Sub Process(ByVal oXml As XmlDocument, ByVal oResponse As HttpResponse)
             If Not CanProcess Then Exit Sub
-            Dim sProcessInfo As String = ""
+            Dim sProcessInfo As String = "Processing:" & msXslFile
             Try
                 If mbCompiled Then
 
@@ -2512,7 +2514,7 @@ Public Class XmlHelper
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "runProcess", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oResponse.Write(msException)
                 bError = True
             End Try
@@ -2555,7 +2557,7 @@ Public Class XmlHelper
         Public Shadows Sub Process(ByVal oXml As XmlDocument, ByRef oWriter As IO.TextWriter)
             If Not CanProcess Then Exit Sub
             bError = False
-            Dim sProcessInfo As String = ""
+            Dim sProcessInfo As String = "Processing: " & msXslFile
             Try
                 If mbCompiled Then
                     If msException = "" Then
@@ -2581,7 +2583,7 @@ Public Class XmlHelper
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "runProcess", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oWriter.Write(msException)
                 bError = True
             End Try
@@ -2589,7 +2591,7 @@ Public Class XmlHelper
 
         Public Function ProcessDocument(ByVal oXml As XmlDocument) As XmlDocument
             If Not CanProcess Then Return Nothing
-            Dim sProcessInfo As String = ""
+            Dim sProcessInfo As String = "Proceesing:" & msXslFile
             Dim oWriter As TextWriter = New StringWriter
             Try
 
@@ -2664,7 +2666,7 @@ Public Class XmlHelper
             Catch ex As Exception
                 bError = True
                 currentError = ex
-                returnException("Eonic.XmlHelper.Transform", "runProcess", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Eonic.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug)
                 oWriter.Write(msException)
                 Return Nothing
             End Try
@@ -2698,7 +2700,7 @@ Public Class XmlHelper
                             Dim fso As New fsHelper()
                             fso.DeleteFile(fi.FullName)
                         Catch ex2 As Exception
-                            returnException("Eonic.XmlHelper.Transform", "runProcess", ex2, msXslFile, sProcessInfo)
+                            returnException("Eonic.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         End Try
                     Next
 
@@ -2713,7 +2715,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 bError = True
-                returnException("Eonic.XmlHelper.Transform", "runProcess", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Eonic.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function
@@ -2763,7 +2765,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 bError = True
-                returnException("Eonic.XmlHelper.Transform", "runProcess", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Eonic.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function
