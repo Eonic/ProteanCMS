@@ -1,1 +1,0 @@
-ALTER TABLE [tblCartShippingMethods] ADD cCurrency nvarchar(50) NULL;

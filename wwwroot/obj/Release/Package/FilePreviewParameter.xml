@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="IIS Web Application Name" description="" value="nccademo" tags="IisApp">
-    <parameterEntry kind="ProviderPath" scope="IisApp" match="^c:\\users\\trevors\\documents\\visual\ studio\ 2017\\Projects\\WebApplication1\\WebApplication1\\obj\\Release\\Package\\PackageTmp$" />
-    <parameterEntry kind="ProviderPath" scope="setAcl" match="^c:\\users\\trevors\\documents\\visual\ studio\ 2017\\Projects\\WebApplication1\\WebApplication1\\obj\\Release\\Package\\PackageTmp$" />
-  </parameter>
-</parameters>
