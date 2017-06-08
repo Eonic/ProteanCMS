@@ -47,16 +47,18 @@
                 </a>
               </div>
               <ul class="nav navbar-nav">
-			<xsl:apply-templates select="AdminMenu/MenuItem" mode="adminMenuItem"/>
-	      </ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session">
-                    <i class="fa fa-power-off">
-                    </i> LOG OFF
-                  </a>
-                </li>
-              </ul>
+			             <xsl:apply-templates select="AdminMenu/MenuItem" mode="adminMenuItem"/>
+	            </ul>
+              <xsl:if test="User">
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session">
+                      <i class="fa fa-power-off">
+                      </i> LOG OFF
+                    </a>
+                  </li>
+                </ul>
+              </xsl:if>
             </nav>
             <nav class="navbar navbar-inverse admin-sub-menu hidden-xs" role="navigation">
               <div class="navbar-header">
@@ -94,7 +96,7 @@
 			</div>
 			<div id="footer">
 				<div id="footerCopyright" class="container text-muted">
-					© Eonic Associates LLP | 2002-2016
+					© Eonic Associates LLP | 2002-2017
 					T: +44 (0)1892 534044 |
 					E: <a href="mailto:info@eonic.co.uk" title="Email Eonic">info@eonic.co.uk</a>
 				</div>

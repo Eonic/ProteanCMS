@@ -1934,6 +1934,9 @@ DoOptions:
 
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
+                MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server")
+                MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
+
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "DB Name")
                 MyBase.addBind("ewDatabaseName", "web/add[@key='DatabaseName']/@value", "true()")
 
@@ -1951,11 +1954,11 @@ DoOptions:
                 'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                 'Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                ' Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                '  If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
-                    'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
-                    Dim oDefaultCfgXml As New XmlDocument
+                'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                Dim oDefaultCfgXml As New XmlDocument
                     oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config.xml"))
 
                     MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
@@ -1968,16 +1971,16 @@ DoOptions:
                         MyBase.validate()
                         If MyBase.valid Then
 
-                            'lets insure all the essential files are in place
-                            Dim CreateDirs As New FileStructureSetup
-                            If Not CreateDirs.Execute() Then
+                        'lets insure all the essential files are in place
+                        '   Dim CreateDirs As New FileStructureSetup
+                        '   If Not CreateDirs.Execute() Then
+                        '
+                        '   MyBase.valid = False
+                        ' MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
 
-                                MyBase.valid = False
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
+                        '  Else
 
-                            Else
-
-                                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
                                 If Not oCfg Is Nothing Then
                                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
@@ -2010,14 +2013,14 @@ DoOptions:
                                     MyBase.valid = False
                                 End If
                                 oDbt = Nothing
-                            End If
-                            CreateDirs = Nothing
+                        ' End If
+                        'CreateDirs = Nothing
 
-                        End If
                     End If
-                    oImp.UndoImpersonation()
-                    'lets take a guess at the DB Name
-                    If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
+                    End If
+                '   oImp.UndoImpersonation()
+                'lets take a guess at the DB Name
+                If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
                         Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = GuessDBName()
                     End If
 
@@ -2025,9 +2028,9 @@ DoOptions:
                         Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "4.1.0.0"
                     End If
 
-                Else
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
-                End If
+                ' Else
+                '  MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+                '  End If
 
                 MyBase.addValues()
                 Return MyBase.moXformElmt

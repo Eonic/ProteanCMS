@@ -1001,197 +1001,207 @@ Public Class Web
         Dim sCachePath As String = ""
         Dim sServeFile As String = ""
         Try
-            Select Case moResponseType
-                Case pageResponseType.ajaxadmin
-                    GetAjaxHTML("MenuNode")
-                Case Else
 
-                    If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
-                        bPageCache = False
-                    End If
+            If moDbHelper.ConnectionValid Then
 
-                    If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-                        If Not moRequest("reBundle") Is Nothing Then
-                            ClearPageCache()
+
+                Select Case moResponseType
+                    Case pageResponseType.ajaxadmin
+                        GetAjaxHTML("MenuNode")
+                    Case Else
+
+                        If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                            bPageCache = False
                         End If
 
-                        sCachePath = goServer.UrlDecode(mcOriginalURL) & ".html"
+                        If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
-                        If sCachePath = "/.html" Then
-                            sCachePath = "/home.html"
-                        End If
+                            If Not moRequest("reBundle") Is Nothing Then
+                                ClearPageCache()
+                            End If
 
-                        Dim nCacheTimeout As Long = 24
-                        If IsNumeric(moConfig("PageCacheTimeout")) Then
-                            nCacheTimeout = moConfig("PageCacheTimeout")
-                        End If
+                            sCachePath = goServer.UrlDecode(mcOriginalURL) & ".html"
 
-                        If moFSHelper.VirtualFileExistsAndRecent(mcPageCacheFolder & sCachePath, nCacheTimeout) Then
+                            If sCachePath = "/.html" Then
+                                sCachePath = "/home.html"
+                            End If
+
+                            Dim nCacheTimeout As Long = 24
+                            If IsNumeric(moConfig("PageCacheTimeout")) Then
+                                nCacheTimeout = moConfig("PageCacheTimeout")
+                            End If
+
+                            If moFSHelper.VirtualFileExistsAndRecent(mcPageCacheFolder & sCachePath, nCacheTimeout) Then
                                 sServeFile = mcPageCacheFolder & sCachePath
                             End If
                         End If
 
                         moResponse.HeaderEncoding = System.Text.Encoding.UTF8
-                    moResponse.ContentEncoding = System.Text.Encoding.UTF8
+                        moResponse.ContentEncoding = System.Text.Encoding.UTF8
 
-                    If Not msException = "" Then
-                        'If there is an error we can add our own header.
-                        'this means external programs can check that there is an error
-                        moResponse.AddHeader("X-EonicError", "An Error has occured")
-                        gnResponseCode = 500
-                        moResponse.ContentType = "text/html"
-                        bPageCache = False
-                    Else
-                        ' Set the Content Type
-                        moResponse.ContentType = mcContentType
-                        ' Set the Content Disposition
-                        If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                            moResponse.AddHeader("Content-Disposition", mcContentDisposition)
-                        End If
-                    End If
-
-                    moResponse.Expires = 0
-                    moResponse.AppendHeader("Generator", gcGenerator)
-
-                    If sServeFile = "" Then
-                        sProcessInfo = "Transform PageXML Using XSLT"
-                        If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
-                            sProcessInfo = "In Admin Mode"
-                            If moAdmin Is Nothing Then moAdmin = New Admin(Me)
-                            'Dim oAdmin As Admin = New Admin(Me)
-                            'Dim oAdmin As Eonic.Web.Admin = New Eonic.Web.Admin(Me)
-                            moAdmin.open(moPageXml)
-                            moAdmin.adminProcess(Me)
-                            moAdmin.close()
-                            moAdmin = Nothing
+                        If Not msException = "" Then
+                            'If there is an error we can add our own header.
+                            'this means external programs can check that there is an error
+                            moResponse.AddHeader("X-EonicError", "An Error has occured")
+                            gnResponseCode = 500
+                            moResponse.ContentType = "text/html"
+                            bPageCache = False
                         Else
-                            If moPageXml.OuterXml = "" Then
-                                sProcessInfo = "Getting Page XML"
-                                GetPageXML()
+                            ' Set the Content Type
+                            moResponse.ContentType = mcContentType
+                            ' Set the Content Disposition
+                            If Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                moResponse.AddHeader("Content-Disposition", mcContentDisposition)
                             End If
                         End If
 
-                        If msRedirectOnEnd <> "" Then
-                            moPageXml = Nothing
-                            Close()
-                        Else
-                            ' Check if the XML Output has an optional IP restriction placed against it.
-                            If mbOutputXml Then
-                                If moConfig("XmlAllowedIPList") <> "" Then
-                                    If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
-                                End If
-                            End If
-                            If mbOutputXml = True Then
-                                Select Case LCase(mcContentType)
-                                    Case "application/xml"
-                                        moResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
-                                    Case "application/json"
+                        moResponse.Expires = 0
+                        moResponse.AppendHeader("Generator", gcGenerator)
 
-                                        moResponse.Write(Newtonsoft.Json.JsonConvert.SerializeXmlNode(moPageXml.DocumentElement, Newtonsoft.Json.Formatting.None))
-
-                                End Select
-
+                        If sServeFile = "" Then
+                            sProcessInfo = "Transform PageXML Using XSLT"
+                            If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                                sProcessInfo = "In Admin Mode"
+                                If moAdmin Is Nothing Then moAdmin = New Admin(Me)
+                                'Dim oAdmin As Admin = New Admin(Me)
+                                'Dim oAdmin As Eonic.Web.Admin = New Eonic.Web.Admin(Me)
+                                moAdmin.open(moPageXml)
+                                moAdmin.adminProcess(Me)
+                                moAdmin.close()
+                                moAdmin = Nothing
                             Else
+                                If moPageXml.OuterXml = "" Then
+                                    sProcessInfo = "Getting Page XML"
+                                    GetPageXML()
+                                End If
+                            End If
 
-                                PerfMon.Log("Web", "GetPageHTML-loadxsl")
-                                Dim styleFile As String
-                                If Me.mbAdminMode = True Then
-                                    If LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) = "false" Or mbPopupMode = True Then
-                                        styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
-                                    Else
-                                        If LCase(moConfig("AdminXsl")) = "common" Then
-                                            'uses the default admin xsl
-                                            styleFile = CStr(goServer.MapPath("/ewcommon/xsl/admin/page.xsl"))
-                                        ElseIf moConfig("AdminXsl") <> "" Then
-                                            'uses a specified admin XSL
-                                            styleFile = moConfig("AdminXsl")
-                                        Else
-                                            'uses the sites main XSL
+                            If msRedirectOnEnd <> "" Then
+                                moPageXml = Nothing
+                                Close()
+                            Else
+                                ' Check if the XML Output has an optional IP restriction placed against it.
+                                If mbOutputXml Then
+                                    If moConfig("XmlAllowedIPList") <> "" Then
+                                        If Not (Tools.Text.IsIPAddressInList(moRequest.ServerVariables("REMOTE_ADDR"), moConfig("XmlAllowedIPList"))) Then mbOutputXml = False
+                                    End If
+                                End If
+                                If mbOutputXml = True Then
+                                    Select Case LCase(mcContentType)
+                                        Case "application/xml"
+                                            moResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
+                                        Case "application/json"
+
+                                            moResponse.Write(Newtonsoft.Json.JsonConvert.SerializeXmlNode(moPageXml.DocumentElement, Newtonsoft.Json.Formatting.None))
+
+                                    End Select
+
+                                Else
+
+                                    PerfMon.Log("Web", "GetPageHTML-loadxsl")
+                                    Dim styleFile As String
+                                    If Me.mbAdminMode = True Then
+                                        If LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) = "false" Or mbPopupMode = True Then
                                             styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                        Else
+                                            If LCase(moConfig("AdminXsl")) = "common" Then
+                                                'uses the default admin xsl
+                                                styleFile = CStr(goServer.MapPath("/ewcommon/xsl/admin/page.xsl"))
+                                            ElseIf moConfig("AdminXsl") <> "" Then
+                                                'uses a specified admin XSL
+                                                styleFile = moConfig("AdminXsl")
+                                            Else
+                                                'uses the sites main XSL
+                                                styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                            End If
                                         End If
-                                    End If
-                                Else
-                                    If moResponseType = pageResponseType.Page Then
-                                        moResponse.AddHeader("X-Frame-Options", "DENY")
-
-                                    End If
-                                    styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
-                                End If
-
-                                Dim brecompile As Boolean = False
-
-                                If moRequest("recompile") <> "" Then
-                                    'add delete xsltc flag to web.config
-                                    If moRequest("recompile") = "del" Then
-                                        brecompile = True
-                                        msRedirectOnEnd = Nothing
                                     Else
-                                        msRedirectOnEnd = "/?recompile=del"
-                                        bRestartApp = True
-                                        Eonic.Config.UpdateConfigValue(Me, "eonic/web", "CompliedTransform", "rebuild")
+                                        If moResponseType = pageResponseType.Page Then
+                                            moResponse.AddHeader("X-Frame-Options", "DENY")
+
+                                        End If
+                                        styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
                                     End If
 
-                                End If
+                                    Dim brecompile As Boolean = False
 
-                                Dim oTransform As New Eonic.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
+                                    If moRequest("recompile") <> "" Then
+                                        'add delete xsltc flag to web.config
+                                        If moRequest("recompile") = "del" Then
+                                            brecompile = True
+                                            msRedirectOnEnd = Nothing
+                                        Else
+                                            msRedirectOnEnd = "/?recompile=del"
+                                            bRestartApp = True
+                                            Eonic.Config.UpdateConfigValue(Me, "eonic/web", "CompliedTransform", "rebuild")
+                                        End If
 
-                                PerfMon.Log("Web", "GetPageHTML-startxsl")
-                                If moConfig("XslTimeout") <> "" Then
-                                    oTransform.TimeOut = moConfig("XslTimeout")
-                                End If
-                                oTransform.mbDebug = gbDebug
-                                If bPageCache Then
-
-                                    Dim textWriter As New System.IO.StringWriter
-                                    oTransform.ProcessTimed(moPageXml, textWriter)
-                                    'save the page
-                                    SavePage(sCachePath, textWriter.ToString())
-                                    sServeFile = mcPageCacheFolder & sCachePath
-
-                                Else
-                                    oTransform.ProcessTimed(moPageXml, moResponse)
-                                    'oTransform.Process(moPageXml, moResponse)
-
-                                    PerfMon.Log("Web", "GetPageHTML-endxsl")
-                                    oTransform.Close()
-                                    oTransform = Nothing
-
-                                    'moResponse.SuppressContent = False
-                                    If gnResponseCode <> 200 Then
-                                        ' TODO: This is IIS7 specific, needs addressing for IIS6
-                                        moResponse.TrySkipIisCustomErrors = True
-                                        moResponse.StatusCode = gnResponseCode
-                                    End If
-                                    If Not moSession Is Nothing Then
-                                        moSession("previousPage") = mcOriginalURL
                                     End If
 
-                                End If
+                                    Dim oTransform As New Eonic.XmlHelper.Transform(Me, styleFile, gbCompiledTransform, , brecompile)
+
+                                    PerfMon.Log("Web", "GetPageHTML-startxsl")
+                                    If moConfig("XslTimeout") <> "" Then
+                                        oTransform.TimeOut = moConfig("XslTimeout")
+                                    End If
+                                    oTransform.mbDebug = gbDebug
+                                    If bPageCache Then
+
+                                        Dim textWriter As New System.IO.StringWriter
+                                        oTransform.ProcessTimed(moPageXml, textWriter)
+                                        'save the page
+                                        SavePage(sCachePath, textWriter.ToString())
+                                        sServeFile = mcPageCacheFolder & sCachePath
+
+                                    Else
+                                        oTransform.ProcessTimed(moPageXml, moResponse)
+                                        'oTransform.Process(moPageXml, moResponse)
+
+                                        PerfMon.Log("Web", "GetPageHTML-endxsl")
+                                        oTransform.Close()
+                                        oTransform = Nothing
+
+                                        'moResponse.SuppressContent = False
+                                        If gnResponseCode <> 200 Then
+                                            ' TODO: This is IIS7 specific, needs addressing for IIS6
+                                            moResponse.TrySkipIisCustomErrors = True
+                                            moResponse.StatusCode = gnResponseCode
+                                        End If
+                                        If Not moSession Is Nothing Then
+                                            moSession("previousPage") = mcOriginalURL
+                                        End If
+
+                                    End If
 
                                     'we don't need this anymore.
                                     If Not ibIndexMode Then
-                                    If msRedirectOnEnd = "" Then
-                                        PerfMon.Write()
-                                        moPageXml = Nothing
-                                        Close()
+                                        If msRedirectOnEnd = "" Then
+                                            PerfMon.Write()
+                                            moPageXml = Nothing
+                                            Close()
+                                        Else
+                                            moPageXml = Nothing
+                                            Close()
+                                        End If
                                     Else
-                                        moPageXml = Nothing
-                                        Close()
+                                        moPageXml = New XmlDocument
                                     End If
-                                Else
-                                    moPageXml = New XmlDocument
                                 End If
                             End If
                         End If
-                    End If
 
-                    If sServeFile <> "" Then
-                        moResponse.AddHeader("X-Frame-Options", "DENY")
-                        moResponse.WriteFile(sServeFile)
-                    End If
+                        If sServeFile <> "" Then
+                            moResponse.AddHeader("X-Frame-Options", "DENY")
+                            moResponse.WriteFile(sServeFile)
+                        End If
 
-            End Select
+                End Select
+            Else
+                If gbDebug Then
+                    msRedirectOnEnd = "/ewcommon/setup/default.ashx"
+                End If
+            End If
 
 
         Catch ex As Exception

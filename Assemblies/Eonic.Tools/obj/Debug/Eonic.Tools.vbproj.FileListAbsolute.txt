@@ -50,7 +50,6 @@ C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.S
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
-C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.Dmf.dll
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
 C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll

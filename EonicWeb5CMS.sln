@@ -1,30 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "EonicWebV5", "Assemblies\EonicWebV5\EonicWebV5.vbproj", "{7D93FD23-F739-4F09-A1B0-F5A8D0451533}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Eonic.Tools", "Assemblies\Eonic.Tools\Eonic.Tools.vbproj", "{80184D17-3466-4657-8AF9-FC237E1EE1FC}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://ewdemo", "http://ewdemo", "{13EB9EF2-018E-4E29-91E0-384867FC8047}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot(2)", "wwwroot\", "{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}"
 	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "false"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
-		Debug.AspNetCompiler.VirtualPath = "/ewdemo"
+		ProjectReferences = "{80184d17-3466-4657-8af9-fc237e1ee1fc}|Eonic.Tools.dll;{7d93fd23-f739-4f09-a1b0-f5a8d0451533}|EonicWebV5.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52465"
 		Debug.AspNetCompiler.PhysicalPath = "wwwroot\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\ewdemo\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52465\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/ewdemo"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52465"
 		Release.AspNetCompiler.PhysicalPath = "wwwroot\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\ewdemo\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52465\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52465"
 		SlnRelativePath = "wwwroot\"
 	EndProjectSection
 EndProject
@@ -42,10 +43,10 @@ Global
 		{80184D17-3466-4657-8AF9-FC237E1EE1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80184D17-3466-4657-8AF9-FC237E1EE1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80184D17-3466-4657-8AF9-FC237E1EE1FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13EB9EF2-018E-4E29-91E0-384867FC8047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13EB9EF2-018E-4E29-91E0-384867FC8047}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13EB9EF2-018E-4E29-91E0-384867FC8047}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{13EB9EF2-018E-4E29-91E0-384867FC8047}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
