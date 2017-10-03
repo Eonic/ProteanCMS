@@ -444,7 +444,7 @@ Partial Public Class Web
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    Dim artIdResults As New List(Of Int16)
+                    Dim artIdResults As New List(Of Long)
 
 
                     ' Process the results
@@ -469,7 +469,7 @@ Partial Public Class Web
                                 ' Only process this result if it's in the paging zone
                                 ' pageStart - 1 To pageEnd - 1
                                 'don't add artId more than twice to results.
-                                Dim thisArtId As Int16
+                                Dim thisArtId As Long
                                 If Not resultDoc.GetField("artid") Is Nothing Then
                                     thisArtId = CInt(resultDoc.GetField("artid").StringValue)
                                 End If

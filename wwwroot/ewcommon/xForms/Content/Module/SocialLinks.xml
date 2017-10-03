@@ -36,7 +36,7 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-      <bind id="cModuleMyName" nodeset="@myName" required="true()" type="string"/>
+      <bind id="cContentMyName" nodeset="@myName" required="true()" type="string"/>
       <bind id="cIconSet" nodeset="@iconSet" required="true()" type="string"/>
       <bind id="cAlign" nodeset="@align" required="true()" type="string"/>
       <bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
@@ -95,7 +95,7 @@
       </group>
       <group class="inline">
         <label>Social Media Links</label>
-        <input bind="cContentMyName" class="short">
+        <input bind="cContentMyName" class="short required">
           <label>Organisation Name</label>
         </input>
         <select1 bind="cIconSet" appearance="minimal" class="required vshort">

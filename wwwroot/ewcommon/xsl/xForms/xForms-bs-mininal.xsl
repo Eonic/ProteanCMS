@@ -300,6 +300,30 @@
     </fieldset>
   </xsl:template>
 
+  <!-- -->
+  <!-- ========================== GROUP In Tabs ========================== -->
+  <xsl:template match="group[contains(@class,'xform-tabs')]" mode="xform">
+    <div>
+      <ul class="nav nav-tabs" role="tablist">
+        <xsl:for-each select="group">
+          <li role="presentation">
+              <xsl:if test="position()=1"><xsl:attribute name="class">active</xsl:attribute></xsl:if>
+            <a href="#tab-{@id}" aria-controls="home" role="tab" data-toggle="tab">
+              <xsl:apply-templates select="label"/>
+            </a>
+          </li>
+        </xsl:for-each>
+      </ul>
+      <div class="tab-content">
+        <xsl:for-each select="group">
+          <div role="tabpanel" class="tab-pane" id="tab-{@id}">
+            <xsl:if test="position()=1"><xsl:attribute name="class">tab-pane active</xsl:attribute></xsl:if>
+            <xsl:apply-templates select="." mode="xform"/>
+          </div>
+        </xsl:for-each>
+      </div>
+    </div>
+  </xsl:template>
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_header">
     <xsl:variable name="bind" select="@bind"/>
@@ -510,7 +534,7 @@
 
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
-        <xsl:text>col-sm-10</xsl:text>
+        <xsl:text>col-sm-9</xsl:text>
       </xsl:if>
     </xsl:variable>
     
@@ -520,6 +544,8 @@
         <xsl:value-of select="name()"/>
         <xsl:text>-wrapper appearance-</xsl:text>
         <xsl:value-of select="@appearance"/>
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$fmhz"/>
         <xsl:if test="help | hint">
           <xsl:text> input-group</xsl:text>
         </xsl:if>
@@ -571,7 +597,10 @@
   <!-- ========================== CONTROL : SUBMIT (with xFormQuiz bespokeness) ========================== -->
   <!-- -->
 
-  <xsl:template match="submit[@ref!='']" mode="xform">
+
+  <!-- Commented out to test multi-language on shopping cart -->
+  
+  <!--xsl:template match="submit[@ref!='']" mode="xform">
     <xsl:variable name="class">
       <xsl:text>button</xsl:text>
       <xsl:if test="@class!=''">
@@ -584,7 +613,7 @@
         <xsl:apply-templates select="label" mode="submitText"/>
       </xsl:attribute>
     </input>
-  </xsl:template>
+  </xsl:template-->
 
   <xsl:template match="submit" mode="xform">
     <xsl:variable name="class">
@@ -662,8 +691,17 @@
 
   <!-- for overloading in translations -->
   <xsl:template match="label" mode="submitText">
-    <xsl:value-of select="node()"/>
+    <xsl:choose>
+      <!-- for Multilanguage-->
+      <xsl:when test="span[contains(@class,'term')]">
+        <xsl:apply-templates select="span" mode="term" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="node()"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
+  
   <xsl:template match="submit[contains(@class,'principle')]" mode="xform">
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
@@ -698,7 +736,17 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{label/node()}" class="{$class}"  onclick="disableButton(this);">
+    <xsl:variable name="buttonValue">
+      <xsl:choose>
+        <xsl:when test="@value!=''">
+          <xsl:value-of select="@value"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="label/node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
@@ -748,7 +796,17 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{label/node()}" class="{$class}"  onclick="disableButton(this);">
+    <xsl:variable name="buttonValue">
+      <xsl:choose>
+        <xsl:when test="@value!=''">
+          <xsl:value-of select="@value"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="label/node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
       <xsl:if test="@data-pleasewaitmessage != ''">
         <xsl:attribute name="data-pleasewaitmessage">
           <xsl:value-of select="@data-pleasewaitmessage"/>
@@ -1455,8 +1513,6 @@
     </xsl:if>
   </xsl:template>
 
-
-
   <!-- ========================== CONTROL : Colour Picker ========================== -->
   <!-- -->
   <xsl:template match="input[contains(@class,'colorPicker')]" mode="xform_control">
@@ -1652,7 +1708,7 @@
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text> </xsl:text>
+      <xsl:text></xsl:text>
     </textarea>
   </xsl:template>
   <!-- -->
@@ -2298,7 +2354,7 @@
             </xsl:if>
           </xsl:if>
         </input>
-        <xsl:apply-templates select="label/node()" mode="cleanXhtml"/>
+        <xsl:apply-templates select="label" mode="xform-label"/>
         <xsl:text> </xsl:text>
       </label>
 
@@ -2608,7 +2664,15 @@
 
   <xsl:template match="label" mode="legend">
     <legend>
-      <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+      <xsl:choose>
+        <!-- for Multilanguage-->
+        <xsl:when test="span[contains(@class,'term')]">
+          <xsl:apply-templates select="span" mode="term" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </legend>
   </xsl:template>
 
@@ -2621,7 +2685,7 @@
   <xsl:template match="label">
     <xsl:param name="cLabel"/>
     <xsl:param name="bRequired"/>
-    <xsl:if test ="./node()!=''">
+    <xsl:if test ="./node()!='' or span[contains(@class,'term')]">
       <label>
         <xsl:if test="$cLabel!=''">
           <xsl:attribute name="for">
@@ -2636,7 +2700,7 @@
             <xsl:text> readonly</xsl:text>
           </xsl:if>
           <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
-            <xsl:text> col-sm-2 control-label</xsl:text>
+            <xsl:text> col-sm-3 control-label</xsl:text>
           </xsl:if>
         </xsl:attribute>
         <xsl:for-each select="@*">
@@ -2650,7 +2714,7 @@
             <xsl:apply-templates select="span" mode="term" />
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+            <xsl:apply-templates select="." mode="xform-label"/> 
           </xsl:otherwise>
         </xsl:choose>
         <!--<xsl:value-of select="./node()"/>-->
@@ -2659,6 +2723,11 @@
         </xsl:if>
       </label>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="label" mode="xform-label">
+
+      <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
   </xsl:template>
 
   <xsl:template match="label[parent::input[contains(@class,'hidden')]]">

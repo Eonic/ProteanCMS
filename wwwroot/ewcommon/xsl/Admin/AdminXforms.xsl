@@ -1577,7 +1577,8 @@
                     <xsl:variable name="reationPickList">
                       <xsl:call-template name="getSelectOptionsFunction">
                         <xsl:with-param name="query">
-                          Content.<xsl:value-of select="$contentType"/>
+                          <xsl:text>Content.</xsl:text>
+                          <xsl:value-of select="$contentType"/>
                         </xsl:with-param>
                       </xsl:call-template>
                     </xsl:variable>

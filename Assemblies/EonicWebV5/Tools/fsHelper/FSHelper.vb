@@ -691,14 +691,14 @@ Partial Public Class fsHelper
 
     Public Function OptimiseImages(ByVal path As String, Optional ByRef nFileCount As Long = 0, Optional ByRef nSavings As Long = 0, ByVal Optional lossless As Boolean = True) As String
         Try
-            Dim thisDir As New DirectoryInfo(mcRoot & path)
+            Dim thisDir As New DirectoryInfo(goServer.MapPath(path))
             Dim ofile As FileInfo
             Dim ofolder As DirectoryInfo
 
             Dim nLengthBefore As Long = 0
 
             For Each ofolder In thisDir.GetDirectories()
-                OptimiseImages(path & "\" & ofolder.Name, nFileCount, nSavings, lossless)
+                OptimiseImages(path & "/" & ofolder.Name, nFileCount, nSavings, lossless)
             Next
 
             For Each ofile In thisDir.GetFiles

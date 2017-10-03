@@ -104,7 +104,12 @@ Public Class Image
                 Else
                     Resize(nWidth, nHeight)
                 End If
+            Else
+                If ((nWidth = oImg.Width) And (nHeight = oImg.Height)) Then
+                    oImg = ImageResize(oImg, nHeight, nWidth)
+                End If
             End If
+
         Catch ex As Exception
             RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SetMaxSize", ex, ""))
         End Try
@@ -449,7 +454,21 @@ Public Class Image
                 eps.Param(0) = New EncoderParameter(Imaging.Encoder.Quality, 100)
                 Dim cEncoder As String = "image/jpeg"
                 Dim ici As ImageCodecInfo = GetEncoderInfo(cEncoder)
-                theImg.Save(szFileName, ici, eps)
+                Try
+                    theImg.Save(szFileName, ici, eps)
+                Catch ex As Exception
+
+                    System.IO.File.Delete(szFileName)
+
+                    Using m = New MemoryStream()
+                        theImg.Save(m, ImageFormat.Jpeg)
+                        Dim img = Image.FromStream(m)
+                        img.Save(szFileName)
+                    End Using
+
+                    ' theImg.Save(szFileName)
+                End Try
+
 
                 Dim imgFile As New FileInfo(szFileName)
                 If compression = 100 Then
@@ -1086,6 +1105,7 @@ Public Class Image
                 Return Nothing
             End Try
         End Function
+
 
         ''' <summary>
         ''' Warp the provided text GraphicsPath by a variable amount

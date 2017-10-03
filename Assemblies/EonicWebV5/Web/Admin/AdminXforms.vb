@@ -3680,7 +3680,7 @@ Partial Public Class Web
                 Try
                     MyBase.NewFrm("EditImage")
 
-                    MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>")
+                    MyBase.Instance.InnerXml = cImgHtml.Replace(""">", """/>").Replace("&", "&amp;")
                     If cClassName = "" Then
                         oElmt = MyBase.Instance.FirstChild
                         cClassName = oElmt.GetAttribute("class")
@@ -5806,9 +5806,12 @@ Partial Public Class Web
 
                     tempElement = MyBase.addDiv(oGrp2Elmt, sellerNotes, "orderNotes", False)
 
-                    Dim sellerNotesXml As String = tempElement.InnerXml
-                    sellerNotesXml = sellerNotesXml.Replace(ControlChars.Lf, "<br/>")
-                    tempElement.InnerXml = sellerNotesXml
+                    Dim aSellerNotes As String() = Split(sellerNotes, "/n")
+                    Dim cSellerNotesHtml As String = "<ul>"
+                    For snCount As Integer = 0 To UBound(aSellerNotes)
+                        cSellerNotesHtml = cSellerNotesHtml + "<li>" + Eonic.Tools.Xml.convertEntitiesToCodes(aSellerNotes(snCount)) + "</li>"
+                    Next
+                    tempElement.InnerXml = cSellerNotesHtml + "</ul>"
 
                     MyBase.addTextArea(oGrp2Elmt, "cNotesAmend", False, "Update Seller Notes", "", "5")
 
@@ -5852,13 +5855,17 @@ Partial Public Class Web
                         End Select
 
                         Dim updateNotes As String = goRequest("cNotesAmend")
-                        If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
+                        '  If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & ControlChars.CrLf & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & updateNotes
+                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
 
+                        aSellerNotes = Split(MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText, "/n")
+                        cSellerNotesHtml = "<ul>"
+                        For snCount As Integer = 0 To UBound(aSellerNotes)
+                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + Eonic.Tools.Xml.convertEntitiesToCodes(aSellerNotes(snCount)) + "</li>"
+                        Next
+                        tempElement.InnerXml = cSellerNotesHtml + "</ul>"
 
-                        sellerNotesXml = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerXml.Replace(ControlChars.Lf, "<br/>")
-                        tempElement.InnerXml = sellerNotesXml
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
                         If MyBase.valid Then

@@ -3197,6 +3197,9 @@ EonicWebV5
 <member name="T:Eonic.PayPalAPI.RecurringFlagType">
 <remarks/>
 </member>
+<member name="F:Eonic.PayPalAPI.RecurringFlagType.Y">
+<remarks/>
+</member>
 <member name="T:Eonic.PayPalAPI.PaymentReasonType">
 <remarks/>
 </member>

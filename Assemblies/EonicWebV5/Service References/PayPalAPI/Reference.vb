@@ -195,7 +195,7 @@ Namespace PayPalAPI
     End Interface
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -257,7 +257,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -389,7 +389,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -437,7 +437,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -471,7 +471,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -505,7 +505,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -539,7 +539,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -685,7 +685,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -733,7 +733,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum CurrencyCodeType
@@ -1265,7 +1265,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1551,7 +1551,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum RecurringPaymentsProfileStatusType
@@ -1573,7 +1573,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AutoBillType
@@ -1586,7 +1586,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1662,7 +1662,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1976,7 +1976,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum CountryCodeType
@@ -2742,7 +2742,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AddressOwnerCodeType
@@ -2758,7 +2758,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AddressStatusCodeType
@@ -2774,7 +2774,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AddressNormalizationStatusCodeType
@@ -2793,7 +2793,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2911,7 +2911,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BillingPeriodType
@@ -2936,7 +2936,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3166,7 +3166,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum CreditCardTypeType
@@ -3194,7 +3194,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3396,7 +3396,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PayPalUserStatusCodeType
@@ -3409,7 +3409,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3499,7 +3499,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3575,7 +3575,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum WalletItemType
@@ -3594,7 +3594,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3642,7 +3642,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3662,7 +3662,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3752,7 +3752,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -3772,95 +3772,95 @@ Namespace PayPalAPI
         Private dCCProcessorResponseField As String
         
         Private dCCReturnCodeField As String
-
+        
         Private pendingReasonField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ProfileID() As String
             Get
                 Return Me.profileIDField
             End Get
             Set
-                Me.profileIDField = Value
+                Me.profileIDField = value
                 Me.RaisePropertyChanged("ProfileID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ProfileStatus() As RecurringPaymentsProfileStatusType
             Get
                 Return Me.profileStatusField
             End Get
             Set
-                Me.profileStatusField = Value
+                Me.profileStatusField = value
                 Me.RaisePropertyChanged("ProfileStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ProfileStatusSpecified() As Boolean
             Get
                 Return Me.profileStatusFieldSpecified
             End Get
             Set
-                Me.profileStatusFieldSpecified = Value
+                Me.profileStatusFieldSpecified = value
                 Me.RaisePropertyChanged("ProfileStatusSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property DCCProcessorResponse() As String
             Get
                 Return Me.dCCProcessorResponseField
             End Get
             Set
-                Me.dCCProcessorResponseField = Value
+                Me.dCCProcessorResponseField = value
                 Me.RaisePropertyChanged("DCCProcessorResponse")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property DCCReturnCode() As String
             Get
                 Return Me.dCCReturnCodeField
             End Get
             Set
-                Me.dCCReturnCodeField = Value
+                Me.dCCReturnCodeField = value
                 Me.RaisePropertyChanged("DCCReturnCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property PendingReason() As String
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -3868,47 +3868,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DoNonReferencedCreditResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private amountField As BasicAmountType
-
+        
         Private transactionIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -3916,145 +3916,145 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DoReferenceTransactionResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private billingAgreementIDField As String
-
+        
         Private paymentInfoField As PaymentInfoType
-
+        
         Private amountField As BasicAmountType
-
+        
         Private aVSCodeField As String
-
+        
         Private cVV2CodeField As String
-
+        
         Private transactionIDField As String
-
+        
         Private paymentAdviceCodeField As String
-
+        
         Private msgSubIDField As String
-
+        
         Private pendingReasonField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property BillingAgreementID() As String
             Get
                 Return Me.billingAgreementIDField
             End Get
             Set
-                Me.billingAgreementIDField = Value
+                Me.billingAgreementIDField = value
                 Me.RaisePropertyChanged("BillingAgreementID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PaymentInfo() As PaymentInfoType
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property AVSCode() As String
             Get
                 Return Me.aVSCodeField
             End Get
             Set
-                Me.aVSCodeField = Value
+                Me.aVSCodeField = value
                 Me.RaisePropertyChanged("AVSCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property CVV2Code() As String
             Get
                 Return Me.cVV2CodeField
             End Get
             Set
-                Me.cVV2CodeField = Value
+                Me.cVV2CodeField = value
                 Me.RaisePropertyChanged("CVV2Code")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property PaymentAdviceCode() As String
             Get
                 Return Me.paymentAdviceCodeField
             End Get
             Set
-                Me.paymentAdviceCodeField = Value
+                Me.paymentAdviceCodeField = value
                 Me.RaisePropertyChanged("PaymentAdviceCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property PendingReason() As String
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -4062,747 +4062,747 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private transactionIDField As String
-
+        
         Private ebayTransactionIDField As String
-
+        
         Private parentTransactionIDField As String
-
+        
         Private receiptIDField As String
-
+        
         Private transactionTypeField As PaymentTransactionCodeType
-
+        
         Private paymentTypeField As PaymentCodeType
-
+        
         Private paymentTypeFieldSpecified As Boolean
-
+        
         Private refundSourceCodeTypeField As RefundSourceCodeType
-
+        
         Private refundSourceCodeTypeFieldSpecified As Boolean
-
+        
         Private expectedeCheckClearDateField As Date
-
+        
         Private expectedeCheckClearDateFieldSpecified As Boolean
-
+        
         Private paymentDateField As Date
-
+        
         Private paymentDateFieldSpecified As Boolean
-
+        
         Private grossAmountField As BasicAmountType
-
+        
         Private feeAmountField As BasicAmountType
-
+        
         Private financingFeeAmountField As BasicAmountType
-
+        
         Private financingTotalCostField As BasicAmountType
-
+        
         Private financingMonthlyPaymentField As BasicAmountType
-
+        
         Private financingTermField As String
-
+        
         Private isFinancingField As String
-
+        
         Private settleAmountField As BasicAmountType
-
+        
         Private taxAmountField As BasicAmountType
-
+        
         Private exchangeRateField As String
-
+        
         Private paymentStatusField As PaymentStatusCodeType
-
+        
         Private pendingReasonField As PendingStatusCodeType
-
+        
         Private pendingReasonFieldSpecified As Boolean
-
+        
         Private reasonCodeField As ReversalReasonCodeType
-
+        
         Private reasonCodeFieldSpecified As Boolean
-
+        
         Private holdDecisionField As String
-
+        
         Private shippingMethodField As String
-
+        
         Private protectionEligibilityField As String
-
+        
         Private protectionEligibilityTypeField As String
-
+        
         Private receiptReferenceNumberField As String
-
+        
         Private pOSTransactionTypeField As POSTransactionCodeType
-
+        
         Private pOSTransactionTypeFieldSpecified As Boolean
-
+        
         Private shipAmountField As String
-
+        
         Private shipHandleAmountField As String
-
+        
         Private shipDiscountField As String
-
+        
         Private insuranceAmountField As String
-
+        
         Private subjectField As String
-
+        
         Private storeIDField As String
-
+        
         Private terminalIDField As String
-
+        
         Private sellerDetailsField As SellerDetailsType
-
+        
         Private paymentRequestIDField As String
-
+        
         Private fMFDetailsField As FMFDetailsType
-
+        
         Private enhancedPaymentInfoField As EnhancedPaymentInfoType
-
+        
         Private paymentErrorField As ErrorType
-
+        
         Private instrumentDetailsField As InstrumentDetailsType
-
+        
         Private offerDetailsField As OfferDetailsType
-
+        
         Private binEligibilityField As String
-
+        
         Private softDescriptorField As String
-
+        
         Private softDescriptorCityField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property EbayTransactionID() As String
             Get
                 Return Me.ebayTransactionIDField
             End Get
             Set
-                Me.ebayTransactionIDField = Value
+                Me.ebayTransactionIDField = value
                 Me.RaisePropertyChanged("EbayTransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ParentTransactionID() As String
             Get
                 Return Me.parentTransactionIDField
             End Get
             Set
-                Me.parentTransactionIDField = Value
+                Me.parentTransactionIDField = value
                 Me.RaisePropertyChanged("ParentTransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property ReceiptID() As String
             Get
                 Return Me.receiptIDField
             End Get
             Set
-                Me.receiptIDField = Value
+                Me.receiptIDField = value
                 Me.RaisePropertyChanged("ReceiptID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property TransactionType() As PaymentTransactionCodeType
             Get
                 Return Me.transactionTypeField
             End Get
             Set
-                Me.transactionTypeField = Value
+                Me.transactionTypeField = value
                 Me.RaisePropertyChanged("TransactionType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property PaymentType() As PaymentCodeType
             Get
                 Return Me.paymentTypeField
             End Get
             Set
-                Me.paymentTypeField = Value
+                Me.paymentTypeField = value
                 Me.RaisePropertyChanged("PaymentType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentTypeSpecified() As Boolean
             Get
                 Return Me.paymentTypeFieldSpecified
             End Get
             Set
-                Me.paymentTypeFieldSpecified = Value
+                Me.paymentTypeFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property RefundSourceCodeType() As RefundSourceCodeType
             Get
                 Return Me.refundSourceCodeTypeField
             End Get
             Set
-                Me.refundSourceCodeTypeField = Value
+                Me.refundSourceCodeTypeField = value
                 Me.RaisePropertyChanged("RefundSourceCodeType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RefundSourceCodeTypeSpecified() As Boolean
             Get
                 Return Me.refundSourceCodeTypeFieldSpecified
             End Get
             Set
-                Me.refundSourceCodeTypeFieldSpecified = Value
+                Me.refundSourceCodeTypeFieldSpecified = value
                 Me.RaisePropertyChanged("RefundSourceCodeTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property ExpectedeCheckClearDate() As Date
             Get
                 Return Me.expectedeCheckClearDateField
             End Get
             Set
-                Me.expectedeCheckClearDateField = Value
+                Me.expectedeCheckClearDateField = value
                 Me.RaisePropertyChanged("ExpectedeCheckClearDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ExpectedeCheckClearDateSpecified() As Boolean
             Get
                 Return Me.expectedeCheckClearDateFieldSpecified
             End Get
             Set
-                Me.expectedeCheckClearDateFieldSpecified = Value
+                Me.expectedeCheckClearDateFieldSpecified = value
                 Me.RaisePropertyChanged("ExpectedeCheckClearDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property PaymentDate() As Date
             Get
                 Return Me.paymentDateField
             End Get
             Set
-                Me.paymentDateField = Value
+                Me.paymentDateField = value
                 Me.RaisePropertyChanged("PaymentDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentDateSpecified() As Boolean
             Get
                 Return Me.paymentDateFieldSpecified
             End Get
             Set
-                Me.paymentDateFieldSpecified = Value
+                Me.paymentDateFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property GrossAmount() As BasicAmountType
             Get
                 Return Me.grossAmountField
             End Get
             Set
-                Me.grossAmountField = Value
+                Me.grossAmountField = value
                 Me.RaisePropertyChanged("GrossAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property FeeAmount() As BasicAmountType
             Get
                 Return Me.feeAmountField
             End Get
             Set
-                Me.feeAmountField = Value
+                Me.feeAmountField = value
                 Me.RaisePropertyChanged("FeeAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property FinancingFeeAmount() As BasicAmountType
             Get
                 Return Me.financingFeeAmountField
             End Get
             Set
-                Me.financingFeeAmountField = Value
+                Me.financingFeeAmountField = value
                 Me.RaisePropertyChanged("FinancingFeeAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property FinancingTotalCost() As BasicAmountType
             Get
                 Return Me.financingTotalCostField
             End Get
             Set
-                Me.financingTotalCostField = Value
+                Me.financingTotalCostField = value
                 Me.RaisePropertyChanged("FinancingTotalCost")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property FinancingMonthlyPayment() As BasicAmountType
             Get
                 Return Me.financingMonthlyPaymentField
             End Get
             Set
-                Me.financingMonthlyPaymentField = Value
+                Me.financingMonthlyPaymentField = value
                 Me.RaisePropertyChanged("FinancingMonthlyPayment")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property FinancingTerm() As String
             Get
                 Return Me.financingTermField
             End Get
             Set
-                Me.financingTermField = Value
+                Me.financingTermField = value
                 Me.RaisePropertyChanged("FinancingTerm")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>  _
         Public Property IsFinancing() As String
             Get
                 Return Me.isFinancingField
             End Get
             Set
-                Me.isFinancingField = Value
+                Me.isFinancingField = value
                 Me.RaisePropertyChanged("IsFinancing")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>  _
         Public Property SettleAmount() As BasicAmountType
             Get
                 Return Me.settleAmountField
             End Get
             Set
-                Me.settleAmountField = Value
+                Me.settleAmountField = value
                 Me.RaisePropertyChanged("SettleAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>  _
         Public Property TaxAmount() As BasicAmountType
             Get
                 Return Me.taxAmountField
             End Get
             Set
-                Me.taxAmountField = Value
+                Me.taxAmountField = value
                 Me.RaisePropertyChanged("TaxAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>  _
         Public Property ExchangeRate() As String
             Get
                 Return Me.exchangeRateField
             End Get
             Set
-                Me.exchangeRateField = Value
+                Me.exchangeRateField = value
                 Me.RaisePropertyChanged("ExchangeRate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>  _
         Public Property PaymentStatus() As PaymentStatusCodeType
             Get
                 Return Me.paymentStatusField
             End Get
             Set
-                Me.paymentStatusField = Value
+                Me.paymentStatusField = value
                 Me.RaisePropertyChanged("PaymentStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=20)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=20)>  _
         Public Property PendingReason() As PendingStatusCodeType
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PendingReasonSpecified() As Boolean
             Get
                 Return Me.pendingReasonFieldSpecified
             End Get
             Set
-                Me.pendingReasonFieldSpecified = Value
+                Me.pendingReasonFieldSpecified = value
                 Me.RaisePropertyChanged("PendingReasonSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=21)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=21)>  _
         Public Property ReasonCode() As ReversalReasonCodeType
             Get
                 Return Me.reasonCodeField
             End Get
             Set
-                Me.reasonCodeField = Value
+                Me.reasonCodeField = value
                 Me.RaisePropertyChanged("ReasonCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ReasonCodeSpecified() As Boolean
             Get
                 Return Me.reasonCodeFieldSpecified
             End Get
             Set
-                Me.reasonCodeFieldSpecified = Value
+                Me.reasonCodeFieldSpecified = value
                 Me.RaisePropertyChanged("ReasonCodeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>  _
         Public Property HoldDecision() As String
             Get
                 Return Me.holdDecisionField
             End Get
             Set
-                Me.holdDecisionField = Value
+                Me.holdDecisionField = value
                 Me.RaisePropertyChanged("HoldDecision")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>  _
         Public Property ShippingMethod() As String
             Get
                 Return Me.shippingMethodField
             End Get
             Set
-                Me.shippingMethodField = Value
+                Me.shippingMethodField = value
                 Me.RaisePropertyChanged("ShippingMethod")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=24)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=24)>  _
         Public Property ProtectionEligibility() As String
             Get
                 Return Me.protectionEligibilityField
             End Get
             Set
-                Me.protectionEligibilityField = Value
+                Me.protectionEligibilityField = value
                 Me.RaisePropertyChanged("ProtectionEligibility")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>  _
         Public Property ProtectionEligibilityType() As String
             Get
                 Return Me.protectionEligibilityTypeField
             End Get
             Set
-                Me.protectionEligibilityTypeField = Value
+                Me.protectionEligibilityTypeField = value
                 Me.RaisePropertyChanged("ProtectionEligibilityType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>  _
         Public Property ReceiptReferenceNumber() As String
             Get
                 Return Me.receiptReferenceNumberField
             End Get
             Set
-                Me.receiptReferenceNumberField = Value
+                Me.receiptReferenceNumberField = value
                 Me.RaisePropertyChanged("ReceiptReferenceNumber")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=27)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=27)>  _
         Public Property POSTransactionType() As POSTransactionCodeType
             Get
                 Return Me.pOSTransactionTypeField
             End Get
             Set
-                Me.pOSTransactionTypeField = Value
+                Me.pOSTransactionTypeField = value
                 Me.RaisePropertyChanged("POSTransactionType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property POSTransactionTypeSpecified() As Boolean
             Get
                 Return Me.pOSTransactionTypeFieldSpecified
             End Get
             Set
-                Me.pOSTransactionTypeFieldSpecified = Value
+                Me.pOSTransactionTypeFieldSpecified = value
                 Me.RaisePropertyChanged("POSTransactionTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=28)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=28)>  _
         Public Property ShipAmount() As String
             Get
                 Return Me.shipAmountField
             End Get
             Set
-                Me.shipAmountField = Value
+                Me.shipAmountField = value
                 Me.RaisePropertyChanged("ShipAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=29)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=29)>  _
         Public Property ShipHandleAmount() As String
             Get
                 Return Me.shipHandleAmountField
             End Get
             Set
-                Me.shipHandleAmountField = Value
+                Me.shipHandleAmountField = value
                 Me.RaisePropertyChanged("ShipHandleAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=30)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=30)>  _
         Public Property ShipDiscount() As String
             Get
                 Return Me.shipDiscountField
             End Get
             Set
-                Me.shipDiscountField = Value
+                Me.shipDiscountField = value
                 Me.RaisePropertyChanged("ShipDiscount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=31)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=31)>  _
         Public Property InsuranceAmount() As String
             Get
                 Return Me.insuranceAmountField
             End Get
             Set
-                Me.insuranceAmountField = Value
+                Me.insuranceAmountField = value
                 Me.RaisePropertyChanged("InsuranceAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=32)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=32)>  _
         Public Property Subject() As String
             Get
                 Return Me.subjectField
             End Get
             Set
-                Me.subjectField = Value
+                Me.subjectField = value
                 Me.RaisePropertyChanged("Subject")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=33)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=33)>  _
         Public Property StoreID() As String
             Get
                 Return Me.storeIDField
             End Get
             Set
-                Me.storeIDField = Value
+                Me.storeIDField = value
                 Me.RaisePropertyChanged("StoreID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=34)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=34)>  _
         Public Property TerminalID() As String
             Get
                 Return Me.terminalIDField
             End Get
             Set
-                Me.terminalIDField = Value
+                Me.terminalIDField = value
                 Me.RaisePropertyChanged("TerminalID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=35)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=35)>  _
         Public Property SellerDetails() As SellerDetailsType
             Get
                 Return Me.sellerDetailsField
             End Get
             Set
-                Me.sellerDetailsField = Value
+                Me.sellerDetailsField = value
                 Me.RaisePropertyChanged("SellerDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=36)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=36)>  _
         Public Property PaymentRequestID() As String
             Get
                 Return Me.paymentRequestIDField
             End Get
             Set
-                Me.paymentRequestIDField = Value
+                Me.paymentRequestIDField = value
                 Me.RaisePropertyChanged("PaymentRequestID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=37)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=37)>  _
         Public Property FMFDetails() As FMFDetailsType
             Get
                 Return Me.fMFDetailsField
             End Get
             Set
-                Me.fMFDetailsField = Value
+                Me.fMFDetailsField = value
                 Me.RaisePropertyChanged("FMFDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=38)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=38)>  _
         Public Property EnhancedPaymentInfo() As EnhancedPaymentInfoType
             Get
                 Return Me.enhancedPaymentInfoField
             End Get
             Set
-                Me.enhancedPaymentInfoField = Value
+                Me.enhancedPaymentInfoField = value
                 Me.RaisePropertyChanged("EnhancedPaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=39)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=39)>  _
         Public Property PaymentError() As ErrorType
             Get
                 Return Me.paymentErrorField
             End Get
             Set
-                Me.paymentErrorField = Value
+                Me.paymentErrorField = value
                 Me.RaisePropertyChanged("PaymentError")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=40)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=40)>  _
         Public Property InstrumentDetails() As InstrumentDetailsType
             Get
                 Return Me.instrumentDetailsField
             End Get
             Set
-                Me.instrumentDetailsField = Value
+                Me.instrumentDetailsField = value
                 Me.RaisePropertyChanged("InstrumentDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=41)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=41)>  _
         Public Property OfferDetails() As OfferDetailsType
             Get
                 Return Me.offerDetailsField
             End Get
             Set
-                Me.offerDetailsField = Value
+                Me.offerDetailsField = value
                 Me.RaisePropertyChanged("OfferDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=42)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=42)>  _
         Public Property BinEligibility() As String
             Get
                 Return Me.binEligibilityField
             End Get
             Set
-                Me.binEligibilityField = Value
+                Me.binEligibilityField = value
                 Me.RaisePropertyChanged("BinEligibility")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=43)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=43)>  _
         Public Property SoftDescriptor() As String
             Get
                 Return Me.softDescriptorField
             End Get
             Set
-                Me.softDescriptorField = Value
+                Me.softDescriptorField = value
                 Me.RaisePropertyChanged("SoftDescriptor")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=44)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=44)>  _
         Public Property SoftDescriptorCity() As String
             Get
                 Return Me.softDescriptorCityField
             End Get
             Set
-                Me.softDescriptorCityField = Value
+                Me.softDescriptorCityField = value
                 Me.RaisePropertyChanged("SoftDescriptorCity")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -4810,368 +4810,368 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentTransactionCodeType
-
+        
         '''<remarks/>
         none
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("web-accept")>
+        <System.Xml.Serialization.XmlEnumAttribute("web-accept")>  _
         webaccept
-
+        
         '''<remarks/>
         cart
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("send-money")>
+        <System.Xml.Serialization.XmlEnumAttribute("send-money")>  _
         sendmoney
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-failed")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-failed")>  _
         subscrfailed
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-cancel")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-cancel")>  _
         subscrcancel
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-payment")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-payment")>  _
         subscrpayment
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-signup")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-signup")>  _
         subscrsignup
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-eot")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-eot")>  _
         subscreot
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("subscr-modify")>
+        <System.Xml.Serialization.XmlEnumAttribute("subscr-modify")>  _
         subscrmodify
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("mercht-pmt")>
+        <System.Xml.Serialization.XmlEnumAttribute("mercht-pmt")>  _
         merchtpmt
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("mass-pay")>
+        <System.Xml.Serialization.XmlEnumAttribute("mass-pay")>  _
         masspay
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("virtual-terminal")>
+        <System.Xml.Serialization.XmlEnumAttribute("virtual-terminal")>  _
         virtualterminal
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("integral-evolution")>
+        <System.Xml.Serialization.XmlEnumAttribute("integral-evolution")>  _
         integralevolution
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("express-checkout")>
+        <System.Xml.Serialization.XmlEnumAttribute("express-checkout")>  _
         expresscheckout
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("pro-hosted")>
+        <System.Xml.Serialization.XmlEnumAttribute("pro-hosted")>  _
         prohosted
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("pro-api")>
+        <System.Xml.Serialization.XmlEnumAttribute("pro-api")>  _
         proapi
-
+        
         '''<remarks/>
         credit
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentCodeType
-
+        
         '''<remarks/>
         none
-
+        
         '''<remarks/>
         echeck
-
+        
         '''<remarks/>
         instant
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum RefundSourceCodeType
-
+        
         '''<remarks/>
         any
-
+        
         '''<remarks/>
         [default]
-
+        
         '''<remarks/>
         instant
-
+        
         '''<remarks/>
         echeck
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentStatusCodeType
-
+        
         '''<remarks/>
         None
-
+        
         '''<remarks/>
         Completed
-
+        
         '''<remarks/>
         Failed
-
+        
         '''<remarks/>
         Pending
-
+        
         '''<remarks/>
         Denied
-
+        
         '''<remarks/>
         Refunded
-
+        
         '''<remarks/>
         Reversed
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("Canceled-Reversal")>
+        <System.Xml.Serialization.XmlEnumAttribute("Canceled-Reversal")>  _
         CanceledReversal
-
+        
         '''<remarks/>
         Processed
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("Partially-Refunded")>
+        <System.Xml.Serialization.XmlEnumAttribute("Partially-Refunded")>  _
         PartiallyRefunded
-
+        
         '''<remarks/>
         Voided
-
+        
         '''<remarks/>
         Expired
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("In-Progress")>
+        <System.Xml.Serialization.XmlEnumAttribute("In-Progress")>  _
         InProgress
-
+        
         '''<remarks/>
         Created
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("Completed-Funds-Held")>
+        <System.Xml.Serialization.XmlEnumAttribute("Completed-Funds-Held")>  _
         CompletedFundsHeld
-
+        
         '''<remarks/>
         Instant
-
+        
         '''<remarks/>
         Delayed
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PendingStatusCodeType
-
+        
         '''<remarks/>
         none
-
+        
         '''<remarks/>
         echeck
-
+        
         '''<remarks/>
         intl
-
+        
         '''<remarks/>
         verify
-
+        
         '''<remarks/>
         address
-
+        
         '''<remarks/>
         unilateral
-
+        
         '''<remarks/>
         other
-
+        
         '''<remarks/>
         upgrade
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("multi-currency")>
+        <System.Xml.Serialization.XmlEnumAttribute("multi-currency")>  _
         multicurrency
-
+        
         '''<remarks/>
         authorization
-
+        
         '''<remarks/>
         order
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("payment-review")>
+        <System.Xml.Serialization.XmlEnumAttribute("payment-review")>  _
         paymentreview
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("regulatory-review")>
+        <System.Xml.Serialization.XmlEnumAttribute("regulatory-review")>  _
         regulatoryreview
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("delayed-disbursement")>
+        <System.Xml.Serialization.XmlEnumAttribute("delayed-disbursement")>  _
         delayeddisbursement
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ReversalReasonCodeType
-
+        
         '''<remarks/>
         none
-
+        
         '''<remarks/>
         chargeback
-
+        
         '''<remarks/>
         guarantee
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("buyer-complaint")>
+        <System.Xml.Serialization.XmlEnumAttribute("buyer-complaint")>  _
         buyercomplaint
-
+        
         '''<remarks/>
         refund
-
+        
         '''<remarks/>
         other
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum POSTransactionCodeType
-
+        
         '''<remarks/>
         F
-
+        
         '''<remarks/>
         S
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class SellerDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private sellerIdField As String
-
+        
         Private sellerUserNameField As String
-
+        
         Private sellerRegistrationDateField As Date
-
+        
         Private sellerRegistrationDateFieldSpecified As Boolean
-
+        
         Private payPalAccountIDField As String
-
+        
         Private secureMerchantAccountIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property SellerId() As String
             Get
                 Return Me.sellerIdField
             End Get
             Set
-                Me.sellerIdField = Value
+                Me.sellerIdField = value
                 Me.RaisePropertyChanged("SellerId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property SellerUserName() As String
             Get
                 Return Me.sellerUserNameField
             End Get
             Set
-                Me.sellerUserNameField = Value
+                Me.sellerUserNameField = value
                 Me.RaisePropertyChanged("SellerUserName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property SellerRegistrationDate() As Date
             Get
                 Return Me.sellerRegistrationDateField
             End Get
             Set
-                Me.sellerRegistrationDateField = Value
+                Me.sellerRegistrationDateField = value
                 Me.RaisePropertyChanged("SellerRegistrationDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property SellerRegistrationDateSpecified() As Boolean
             Get
                 Return Me.sellerRegistrationDateFieldSpecified
             End Get
             Set
-                Me.sellerRegistrationDateFieldSpecified = Value
+                Me.sellerRegistrationDateFieldSpecified = value
                 Me.RaisePropertyChanged("SellerRegistrationDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property PayPalAccountID() As String
             Get
                 Return Me.payPalAccountIDField
             End Get
             Set
-                Me.payPalAccountIDField = Value
+                Me.payPalAccountIDField = value
                 Me.RaisePropertyChanged("PayPalAccountID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property SecureMerchantAccountID() As String
             Get
                 Return Me.secureMerchantAccountIDField
             End Get
             Set
-                Me.secureMerchantAccountIDField = Value
+                Me.secureMerchantAccountIDField = value
                 Me.RaisePropertyChanged("SecureMerchantAccountID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5179,79 +5179,79 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class FMFDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private acceptFiltersField() As RiskFilterDetailsType
-
+        
         Private pendingFiltersField() As RiskFilterDetailsType
-
+        
         Private denyFiltersField() As RiskFilterDetailsType
-
+        
         Private reportFiltersField() As RiskFilterDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlArrayAttribute(Order:=0),
-         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=False)>
+        <System.Xml.Serialization.XmlArrayAttribute(Order:=0),  _
+         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=false)>  _
         Public Property AcceptFilters() As RiskFilterDetailsType()
             Get
                 Return Me.acceptFiltersField
             End Get
             Set
-                Me.acceptFiltersField = Value
+                Me.acceptFiltersField = value
                 Me.RaisePropertyChanged("AcceptFilters")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlArrayAttribute(Order:=1),
-         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=False)>
+        <System.Xml.Serialization.XmlArrayAttribute(Order:=1),  _
+         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=false)>  _
         Public Property PendingFilters() As RiskFilterDetailsType()
             Get
                 Return Me.pendingFiltersField
             End Get
             Set
-                Me.pendingFiltersField = Value
+                Me.pendingFiltersField = value
                 Me.RaisePropertyChanged("PendingFilters")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlArrayAttribute(Order:=2),
-         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=False)>
+        <System.Xml.Serialization.XmlArrayAttribute(Order:=2),  _
+         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=false)>  _
         Public Property DenyFilters() As RiskFilterDetailsType()
             Get
                 Return Me.denyFiltersField
             End Get
             Set
-                Me.denyFiltersField = Value
+                Me.denyFiltersField = value
                 Me.RaisePropertyChanged("DenyFilters")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlArrayAttribute(Order:=3),
-         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=False)>
+        <System.Xml.Serialization.XmlArrayAttribute(Order:=3),  _
+         System.Xml.Serialization.XmlArrayItemAttribute("Filters", IsNullable:=false)>  _
         Public Property ReportFilters() As RiskFilterDetailsType()
             Get
                 Return Me.reportFiltersField
             End Get
             Set
-                Me.reportFiltersField = Value
+                Me.reportFiltersField = value
                 Me.RaisePropertyChanged("ReportFilters")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5259,61 +5259,61 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class RiskFilterDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private idField As Integer
-
+        
         Private nameField As String
-
+        
         Private descriptionField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Id() As Integer
             Get
                 Return Me.idField
             End Get
             Set
-                Me.idField = Value
+                Me.idField = value
                 Me.RaisePropertyChanged("Id")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Description() As String
             Get
                 Return Me.descriptionField
             End Get
             Set
-                Me.descriptionField = Value
+                Me.descriptionField = value
                 Me.RaisePropertyChanged("Description")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5321,19 +5321,19 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>  _
     Partial Public Class EnhancedPaymentInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5341,89 +5341,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ErrorType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private shortMessageField As String
-
+        
         Private longMessageField As String
-
+        
         Private errorCodeField As String
-
+        
         Private severityCodeField As SeverityCodeType
-
+        
         Private errorParametersField() As ErrorParameterType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ShortMessage() As String
             Get
                 Return Me.shortMessageField
             End Get
             Set
-                Me.shortMessageField = Value
+                Me.shortMessageField = value
                 Me.RaisePropertyChanged("ShortMessage")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property LongMessage() As String
             Get
                 Return Me.longMessageField
             End Get
             Set
-                Me.longMessageField = Value
+                Me.longMessageField = value
                 Me.RaisePropertyChanged("LongMessage")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="token", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="token", Order:=2)>  _
         Public Property ErrorCode() As String
             Get
                 Return Me.errorCodeField
             End Get
             Set
-                Me.errorCodeField = Value
+                Me.errorCodeField = value
                 Me.RaisePropertyChanged("ErrorCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property SeverityCode() As SeverityCodeType
             Get
                 Return Me.severityCodeField
             End Get
             Set
-                Me.severityCodeField = Value
+                Me.severityCodeField = value
                 Me.RaisePropertyChanged("SeverityCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("ErrorParameters", Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute("ErrorParameters", Order:=4)>  _
         Public Property ErrorParameters() As ErrorParameterType()
             Get
                 Return Me.errorParametersField
             End Get
             Set
-                Me.errorParametersField = Value
+                Me.errorParametersField = value
                 Me.RaisePropertyChanged("ErrorParameters")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5431,66 +5431,66 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum SeverityCodeType
-
+        
         '''<remarks/>
         Warning
-
+        
         '''<remarks/>
         [Error]
-
+        
         '''<remarks/>
         PartialSuccess
-
+        
         '''<remarks/>
         CustomCode
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ErrorParameterType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private valueField As String
-
+        
         Private paramIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Value() As String
             Get
                 Return Me.valueField
             End Get
             Set
-                Me.valueField = Value
+                Me.valueField = value
                 Me.RaisePropertyChanged("Value")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property ParamID() As String
             Get
                 Return Me.paramIDField
             End Get
             Set
-                Me.paramIDField = Value
+                Me.paramIDField = value
                 Me.RaisePropertyChanged("ParamID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5498,47 +5498,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class InstrumentDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private instrumentCategoryField As String
-
+        
         Private instrumentIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property InstrumentCategory() As String
             Get
                 Return Me.instrumentCategoryField
             End Get
             Set
-                Me.instrumentCategoryField = Value
+                Me.instrumentCategoryField = value
                 Me.RaisePropertyChanged("InstrumentCategory")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property InstrumentID() As String
             Get
                 Return Me.instrumentIDField
             End Get
             Set
-                Me.instrumentIDField = Value
+                Me.instrumentIDField = value
                 Me.RaisePropertyChanged("InstrumentID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5546,47 +5546,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class OfferDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private offerCodeField As String
-
+        
         Private bMLOfferInfoField As BMLOfferInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property OfferCode() As String
             Get
                 Return Me.offerCodeField
             End Get
             Set
-                Me.offerCodeField = Value
+                Me.offerCodeField = value
                 Me.RaisePropertyChanged("OfferCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property BMLOfferInfo() As BMLOfferInfoType
             Get
                 Return Me.bMLOfferInfoField
             End Get
             Set
-                Me.bMLOfferInfoField = Value
+                Me.bMLOfferInfoField = value
                 Me.RaisePropertyChanged("BMLOfferInfo")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5594,33 +5594,33 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class BMLOfferInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private offerTrackingIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property OfferTrackingID() As String
             Get
                 Return Me.offerTrackingIDField
             End Get
             Set
-                Me.offerTrackingIDField = Value
+                Me.offerTrackingIDField = value
                 Me.RaisePropertyChanged("OfferTrackingID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5628,47 +5628,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetBillingAgreementCustomerDetailsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private billingAddressField As AddressType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property BillingAddress() As AddressType
             Get
                 Return Me.billingAddressField
             End Get
             Set
-                Me.billingAddressField = Value
+                Me.billingAddressField = value
                 Me.RaisePropertyChanged("BillingAddress")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5676,75 +5676,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DoMobileCheckoutPaymentResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private customField As String
-
+        
         Private invoiceIDField As String
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private paymentInfoField As PaymentInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Custom() As String
             Get
                 Return Me.customField
             End Get
             Set
-                Me.customField = Value
+                Me.customField = value
                 Me.RaisePropertyChanged("Custom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property InvoiceID() As String
             Get
                 Return Me.invoiceIDField
             End Get
             Set
-                Me.invoiceIDField = Value
+                Me.invoiceIDField = value
                 Me.RaisePropertyChanged("InvoiceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property PaymentInfo() As PaymentInfoType
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5752,89 +5752,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class AuthorizationInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private paymentStatusField As PaymentStatusCodeType
-
+        
         Private pendingReasonField As PendingStatusCodeType
-
+        
         Private pendingReasonFieldSpecified As Boolean
-
+        
         Private protectionEligibilityField As String
-
+        
         Private protectionEligibilityTypeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property PaymentStatus() As PaymentStatusCodeType
             Get
                 Return Me.paymentStatusField
             End Get
             Set
-                Me.paymentStatusField = Value
+                Me.paymentStatusField = value
                 Me.RaisePropertyChanged("PaymentStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PendingReason() As PendingStatusCodeType
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PendingReasonSpecified() As Boolean
             Get
                 Return Me.pendingReasonFieldSpecified
             End Get
             Set
-                Me.pendingReasonFieldSpecified = Value
+                Me.pendingReasonFieldSpecified = value
                 Me.RaisePropertyChanged("PendingReasonSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ProtectionEligibility() As String
             Get
                 Return Me.protectionEligibilityField
             End Get
             Set
-                Me.protectionEligibilityField = Value
+                Me.protectionEligibilityField = value
                 Me.RaisePropertyChanged("ProtectionEligibility")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property ProtectionEligibilityType() As String
             Get
                 Return Me.protectionEligibilityTypeField
             End Get
             Set
-                Me.protectionEligibilityTypeField = Value
+                Me.protectionEligibilityTypeField = value
                 Me.RaisePropertyChanged("ProtectionEligibilityType")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5842,75 +5842,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DoCaptureResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private authorizationIDField As String
-
+        
         Private paymentInfoField As PaymentInfoType
-
+        
         Private msgSubIDField As String
-
+        
         Private partnerFundingSourceIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property AuthorizationID() As String
             Get
                 Return Me.authorizationIDField
             End Get
             Set
-                Me.authorizationIDField = Value
+                Me.authorizationIDField = value
                 Me.RaisePropertyChanged("AuthorizationID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PaymentInfo() As PaymentInfoType
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property PartnerFundingSourceID() As String
             Get
                 Return Me.partnerFundingSourceIDField
             End Get
             Set
-                Me.partnerFundingSourceIDField = Value
+                Me.partnerFundingSourceIDField = value
                 Me.RaisePropertyChanged("PartnerFundingSourceID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5918,47 +5918,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class CoupledPaymentInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private coupledPaymentRequestIDField As String
-
+        
         Private coupledPaymentIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property CoupledPaymentRequestID() As String
             Get
                 Return Me.coupledPaymentRequestIDField
             End Get
             Set
-                Me.coupledPaymentRequestIDField = Value
+                Me.coupledPaymentRequestIDField = value
                 Me.RaisePropertyChanged("CoupledPaymentRequestID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property CoupledPaymentID() As String
             Get
                 Return Me.coupledPaymentIDField
             End Get
             Set
-                Me.coupledPaymentIDField = Value
+                Me.coupledPaymentIDField = value
                 Me.RaisePropertyChanged("CoupledPaymentID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -5966,145 +5966,145 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DoExpressCheckoutPaymentResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private tokenField As String
-
+        
         Private paymentInfoField() As PaymentInfoType
-
+        
         Private billingAgreementIDField As String
-
+        
         Private redirectRequiredField As String
-
+        
         Private noteField As String
-
+        
         Private msgSubIDField As String
-
+        
         Private successPageRedirectRequestedField As String
-
+        
         Private userSelectedOptionsField As UserSelectedOptionType
-
+        
         Private coupledPaymentInfoField() As CoupledPaymentInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Token() As String
             Get
                 Return Me.tokenField
             End Get
             Set
-                Me.tokenField = Value
+                Me.tokenField = value
                 Me.RaisePropertyChanged("Token")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentInfo", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentInfo", Order:=1)>  _
         Public Property PaymentInfo() As PaymentInfoType()
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property BillingAgreementID() As String
             Get
                 Return Me.billingAgreementIDField
             End Get
             Set
-                Me.billingAgreementIDField = Value
+                Me.billingAgreementIDField = value
                 Me.RaisePropertyChanged("BillingAgreementID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property RedirectRequired() As String
             Get
                 Return Me.redirectRequiredField
             End Get
             Set
-                Me.redirectRequiredField = Value
+                Me.redirectRequiredField = value
                 Me.RaisePropertyChanged("RedirectRequired")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Note() As String
             Get
                 Return Me.noteField
             End Get
             Set
-                Me.noteField = Value
+                Me.noteField = value
                 Me.RaisePropertyChanged("Note")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property SuccessPageRedirectRequested() As String
             Get
                 Return Me.successPageRedirectRequestedField
             End Get
             Set
-                Me.successPageRedirectRequestedField = Value
+                Me.successPageRedirectRequestedField = value
                 Me.RaisePropertyChanged("SuccessPageRedirectRequested")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property UserSelectedOptions() As UserSelectedOptionType
             Get
                 Return Me.userSelectedOptionsField
             End Get
             Set
-                Me.userSelectedOptionsField = Value
+                Me.userSelectedOptionsField = value
                 Me.RaisePropertyChanged("UserSelectedOptions")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("CoupledPaymentInfo", Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute("CoupledPaymentInfo", Order:=8)>  _
         Public Property CoupledPaymentInfo() As CoupledPaymentInfoType()
             Get
                 Return Me.coupledPaymentInfoField
             End Get
             Set
-                Me.coupledPaymentInfoField = Value
+                Me.coupledPaymentInfoField = value
                 Me.RaisePropertyChanged("CoupledPaymentInfo")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6112,117 +6112,117 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class UserSelectedOptionType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private shippingCalculationModeField As String
-
+        
         Private insuranceOptionSelectedField As String
-
+        
         Private shippingOptionIsDefaultField As String
-
+        
         Private shippingOptionAmountField As BasicAmountType
-
+        
         Private shippingOptionNameField As String
-
+        
         Private scheduledShippingDateField As String
-
+        
         Private scheduledShippingPeriodField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ShippingCalculationMode() As String
             Get
                 Return Me.shippingCalculationModeField
             End Get
             Set
-                Me.shippingCalculationModeField = Value
+                Me.shippingCalculationModeField = value
                 Me.RaisePropertyChanged("ShippingCalculationMode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property InsuranceOptionSelected() As String
             Get
                 Return Me.insuranceOptionSelectedField
             End Get
             Set
-                Me.insuranceOptionSelectedField = Value
+                Me.insuranceOptionSelectedField = value
                 Me.RaisePropertyChanged("InsuranceOptionSelected")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ShippingOptionIsDefault() As String
             Get
                 Return Me.shippingOptionIsDefaultField
             End Get
             Set
-                Me.shippingOptionIsDefaultField = Value
+                Me.shippingOptionIsDefaultField = value
                 Me.RaisePropertyChanged("ShippingOptionIsDefault")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property ShippingOptionAmount() As BasicAmountType
             Get
                 Return Me.shippingOptionAmountField
             End Get
             Set
-                Me.shippingOptionAmountField = Value
+                Me.shippingOptionAmountField = value
                 Me.RaisePropertyChanged("ShippingOptionAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property ShippingOptionName() As String
             Get
                 Return Me.shippingOptionNameField
             End Get
             Set
-                Me.shippingOptionNameField = Value
+                Me.shippingOptionNameField = value
                 Me.RaisePropertyChanged("ShippingOptionName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property ScheduledShippingDate() As String
             Get
                 Return Me.scheduledShippingDateField
             End Get
             Set
-                Me.scheduledShippingDateField = Value
+                Me.scheduledShippingDateField = value
                 Me.RaisePropertyChanged("ScheduledShippingDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property ScheduledShippingPeriod() As String
             Get
                 Return Me.scheduledShippingPeriodField
             End Get
             Set
-                Me.scheduledShippingPeriodField = Value
+                Me.scheduledShippingPeriodField = value
                 Me.RaisePropertyChanged("ScheduledShippingPeriod")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6230,61 +6230,61 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class RefreshTokenStatusDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private refreshTokenStatusField As String
-
+        
         Private refreshTokenField As String
-
+        
         Private immutableIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>  _
         Public Property RefreshTokenStatus() As String
             Get
                 Return Me.refreshTokenStatusField
             End Get
             Set
-                Me.refreshTokenStatusField = Value
+                Me.refreshTokenStatusField = value
                 Me.RaisePropertyChanged("RefreshTokenStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property RefreshToken() As String
             Get
                 Return Me.refreshTokenField
             End Get
             Set
-                Me.refreshTokenField = Value
+                Me.refreshTokenField = value
                 Me.RaisePropertyChanged("RefreshToken")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ImmutableID() As String
             Get
                 Return Me.immutableIDField
             End Get
             Set
-                Me.immutableIDField = Value
+                Me.immutableIDField = value
                 Me.RaisePropertyChanged("ImmutableID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6292,47 +6292,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ExternalRememberMeStatusDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private externalRememberMeStatusField As String
-
+        
         Private externalRememberMeIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>  _
         Public Property ExternalRememberMeStatus() As String
             Get
                 Return Me.externalRememberMeStatusField
             End Get
             Set
-                Me.externalRememberMeStatusField = Value
+                Me.externalRememberMeStatusField = value
                 Me.RaisePropertyChanged("ExternalRememberMeStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ExternalRememberMeID() As String
             Get
                 Return Me.externalRememberMeIDField
             End Get
             Set
-                Me.externalRememberMeIDField = Value
+                Me.externalRememberMeIDField = value
                 Me.RaisePropertyChanged("ExternalRememberMeID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6340,61 +6340,61 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentRequestInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private transactionIdField As String
-
+        
         Private paymentRequestIDField As String
-
+        
         Private paymentErrorField As ErrorType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property TransactionId() As String
             Get
                 Return Me.transactionIdField
             End Get
             Set
-                Me.transactionIdField = Value
+                Me.transactionIdField = value
                 Me.RaisePropertyChanged("TransactionId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PaymentRequestID() As String
             Get
                 Return Me.paymentRequestIDField
             End Get
             Set
-                Me.paymentRequestIDField = Value
+                Me.paymentRequestIDField = value
                 Me.RaisePropertyChanged("PaymentRequestID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property PaymentError() As ErrorType
             Get
                 Return Me.paymentErrorField
             End Get
             Set
-                Me.paymentErrorField = Value
+                Me.paymentErrorField = value
                 Me.RaisePropertyChanged("PaymentError")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6402,89 +6402,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class IncentiveAppliedDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private paymentRequestIDField As String
-
+        
         Private itemIdField As String
-
+        
         Private externalTxnIdField As String
-
+        
         Private discountAmountField As BasicAmountType
-
+        
         Private subTypeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property PaymentRequestID() As String
             Get
                 Return Me.paymentRequestIDField
             End Get
             Set
-                Me.paymentRequestIDField = Value
+                Me.paymentRequestIDField = value
                 Me.RaisePropertyChanged("PaymentRequestID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ItemId() As String
             Get
                 Return Me.itemIdField
             End Get
             Set
-                Me.itemIdField = Value
+                Me.itemIdField = value
                 Me.RaisePropertyChanged("ItemId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ExternalTxnId() As String
             Get
                 Return Me.externalTxnIdField
             End Get
             Set
-                Me.externalTxnIdField = Value
+                Me.externalTxnIdField = value
                 Me.RaisePropertyChanged("ExternalTxnId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property DiscountAmount() As BasicAmountType
             Get
                 Return Me.discountAmountField
             End Get
             Set
-                Me.discountAmountField = Value
+                Me.discountAmountField = value
                 Me.RaisePropertyChanged("DiscountAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property SubType() As String
             Get
                 Return Me.subTypeField
             End Get
             Set
-                Me.subTypeField = Value
+                Me.subTypeField = value
                 Me.RaisePropertyChanged("SubType")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6492,131 +6492,131 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class IncentiveDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private uniqueIdentifierField As String
-
+        
         Private siteAppliedOnField As IncentiveSiteAppliedOnType
-
+        
         Private siteAppliedOnFieldSpecified As Boolean
-
+        
         Private totalDiscountAmountField As BasicAmountType
-
+        
         Private statusField As IncentiveAppliedStatusType
-
+        
         Private statusFieldSpecified As Boolean
-
+        
         Private errorCodeField As String
-
+        
         Private incentiveAppliedDetailsField() As IncentiveAppliedDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property UniqueIdentifier() As String
             Get
                 Return Me.uniqueIdentifierField
             End Get
             Set
-                Me.uniqueIdentifierField = Value
+                Me.uniqueIdentifierField = value
                 Me.RaisePropertyChanged("UniqueIdentifier")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property SiteAppliedOn() As IncentiveSiteAppliedOnType
             Get
                 Return Me.siteAppliedOnField
             End Get
             Set
-                Me.siteAppliedOnField = Value
+                Me.siteAppliedOnField = value
                 Me.RaisePropertyChanged("SiteAppliedOn")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property SiteAppliedOnSpecified() As Boolean
             Get
                 Return Me.siteAppliedOnFieldSpecified
             End Get
             Set
-                Me.siteAppliedOnFieldSpecified = Value
+                Me.siteAppliedOnFieldSpecified = value
                 Me.RaisePropertyChanged("SiteAppliedOnSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property TotalDiscountAmount() As BasicAmountType
             Get
                 Return Me.totalDiscountAmountField
             End Get
             Set
-                Me.totalDiscountAmountField = Value
+                Me.totalDiscountAmountField = value
                 Me.RaisePropertyChanged("TotalDiscountAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Status() As IncentiveAppliedStatusType
             Get
                 Return Me.statusField
             End Get
             Set
-                Me.statusField = Value
+                Me.statusField = value
                 Me.RaisePropertyChanged("Status")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property StatusSpecified() As Boolean
             Get
                 Return Me.statusFieldSpecified
             End Get
             Set
-                Me.statusFieldSpecified = Value
+                Me.statusFieldSpecified = value
                 Me.RaisePropertyChanged("StatusSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=4)>  _
         Public Property ErrorCode() As String
             Get
                 Return Me.errorCodeField
             End Get
             Set
-                Me.errorCodeField = Value
+                Me.errorCodeField = value
                 Me.RaisePropertyChanged("ErrorCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("IncentiveAppliedDetails", Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute("IncentiveAppliedDetails", Order:=5)>  _
         Public Property IncentiveAppliedDetails() As IncentiveAppliedDetailsType()
             Get
                 Return Me.incentiveAppliedDetailsField
             End Get
             Set
-                Me.incentiveAppliedDetailsField = Value
+                Me.incentiveAppliedDetailsField = value
                 Me.RaisePropertyChanged("IncentiveAppliedDetails")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -6624,445 +6624,445 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum IncentiveSiteAppliedOnType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-UNKNOWN")>
+        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-UNKNOWN")>  _
         INCENTIVESITEAPPLIEDONUNKNOWN
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-MERCHANT")>
+        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-MERCHANT")>  _
         INCENTIVESITEAPPLIEDONMERCHANT
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-PAYPAL")>
+        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-SITE-APPLIED-ON-PAYPAL")>  _
         INCENTIVESITEAPPLIEDONPAYPAL
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum IncentiveAppliedStatusType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-APPLIED-STATUS-SUCCESS")>
+        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-APPLIED-STATUS-SUCCESS")>  _
         INCENTIVEAPPLIEDSTATUSSUCCESS
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-APPLIED-STATUS-ERROR")>
+        <System.Xml.Serialization.XmlEnumAttribute("INCENTIVE-APPLIED-STATUS-ERROR")>  _
         INCENTIVEAPPLIEDSTATUSERROR
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetExpressCheckoutDetailsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private tokenField As String
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private customField As String
-
+        
         Private invoiceIDField As String
-
+        
         Private contactPhoneField As String
-
+        
         Private billingAgreementAcceptedStatusField As Boolean
-
+        
         Private billingAgreementAcceptedStatusFieldSpecified As Boolean
-
+        
         Private redirectRequiredField As String
-
+        
         Private billingAddressField As AddressType
-
+        
         Private noteField As String
-
+        
         Private checkoutStatusField As String
-
+        
         Private payPalAdjustmentField As BasicAmountType
-
+        
         Private paymentDetailsField() As PaymentDetailsType
-
+        
         Private userSelectedOptionsField As UserSelectedOptionType
-
+        
         Private incentiveDetailsField() As IncentiveDetailsType
-
+        
         Private giftMessageField As String
-
+        
         Private giftReceiptEnableField As String
-
+        
         Private giftWrapNameField As String
-
+        
         Private giftWrapAmountField As BasicAmountType
-
+        
         Private buyerMarketingEmailField As String
-
+        
         Private surveyQuestionField As String
-
+        
         Private surveyChoiceSelectedField() As String
-
+        
         Private paymentRequestInfoField() As PaymentRequestInfoType
-
+        
         Private externalRememberMeStatusDetailsField As ExternalRememberMeStatusDetailsType
-
+        
         Private refreshTokenStatusDetailsField As RefreshTokenStatusDetailsType
-
+        
         Private paymentInfoField() As PaymentInfoType
-
+        
         Private cartChangeToleranceField As String
-
+        
         Private instrumentDetailsField As InstrumentDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Token() As String
             Get
                 Return Me.tokenField
             End Get
             Set
-                Me.tokenField = Value
+                Me.tokenField = value
                 Me.RaisePropertyChanged("Token")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Custom() As String
             Get
                 Return Me.customField
             End Get
             Set
-                Me.customField = Value
+                Me.customField = value
                 Me.RaisePropertyChanged("Custom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property InvoiceID() As String
             Get
                 Return Me.invoiceIDField
             End Get
             Set
-                Me.invoiceIDField = Value
+                Me.invoiceIDField = value
                 Me.RaisePropertyChanged("InvoiceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property ContactPhone() As String
             Get
                 Return Me.contactPhoneField
             End Get
             Set
-                Me.contactPhoneField = Value
+                Me.contactPhoneField = value
                 Me.RaisePropertyChanged("ContactPhone")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property BillingAgreementAcceptedStatus() As Boolean
             Get
                 Return Me.billingAgreementAcceptedStatusField
             End Get
             Set
-                Me.billingAgreementAcceptedStatusField = Value
+                Me.billingAgreementAcceptedStatusField = value
                 Me.RaisePropertyChanged("BillingAgreementAcceptedStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property BillingAgreementAcceptedStatusSpecified() As Boolean
             Get
                 Return Me.billingAgreementAcceptedStatusFieldSpecified
             End Get
             Set
-                Me.billingAgreementAcceptedStatusFieldSpecified = Value
+                Me.billingAgreementAcceptedStatusFieldSpecified = value
                 Me.RaisePropertyChanged("BillingAgreementAcceptedStatusSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property RedirectRequired() As String
             Get
                 Return Me.redirectRequiredField
             End Get
             Set
-                Me.redirectRequiredField = Value
+                Me.redirectRequiredField = value
                 Me.RaisePropertyChanged("RedirectRequired")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property BillingAddress() As AddressType
             Get
                 Return Me.billingAddressField
             End Get
             Set
-                Me.billingAddressField = Value
+                Me.billingAddressField = value
                 Me.RaisePropertyChanged("BillingAddress")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property Note() As String
             Get
                 Return Me.noteField
             End Get
             Set
-                Me.noteField = Value
+                Me.noteField = value
                 Me.RaisePropertyChanged("Note")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property CheckoutStatus() As String
             Get
                 Return Me.checkoutStatusField
             End Get
             Set
-                Me.checkoutStatusField = Value
+                Me.checkoutStatusField = value
                 Me.RaisePropertyChanged("CheckoutStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property PayPalAdjustment() As BasicAmountType
             Get
                 Return Me.payPalAdjustmentField
             End Get
             Set
-                Me.payPalAdjustmentField = Value
+                Me.payPalAdjustmentField = value
                 Me.RaisePropertyChanged("PayPalAdjustment")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentDetails", Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentDetails", Order:=11)>  _
         Public Property PaymentDetails() As PaymentDetailsType()
             Get
                 Return Me.paymentDetailsField
             End Get
             Set
-                Me.paymentDetailsField = Value
+                Me.paymentDetailsField = value
                 Me.RaisePropertyChanged("PaymentDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property UserSelectedOptions() As UserSelectedOptionType
             Get
                 Return Me.userSelectedOptionsField
             End Get
             Set
-                Me.userSelectedOptionsField = Value
+                Me.userSelectedOptionsField = value
                 Me.RaisePropertyChanged("UserSelectedOptions")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("IncentiveDetails", Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute("IncentiveDetails", Order:=13)>  _
         Public Property IncentiveDetails() As IncentiveDetailsType()
             Get
                 Return Me.incentiveDetailsField
             End Get
             Set
-                Me.incentiveDetailsField = Value
+                Me.incentiveDetailsField = value
                 Me.RaisePropertyChanged("IncentiveDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property GiftMessage() As String
             Get
                 Return Me.giftMessageField
             End Get
             Set
-                Me.giftMessageField = Value
+                Me.giftMessageField = value
                 Me.RaisePropertyChanged("GiftMessage")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>  _
         Public Property GiftReceiptEnable() As String
             Get
                 Return Me.giftReceiptEnableField
             End Get
             Set
-                Me.giftReceiptEnableField = Value
+                Me.giftReceiptEnableField = value
                 Me.RaisePropertyChanged("GiftReceiptEnable")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>  _
         Public Property GiftWrapName() As String
             Get
                 Return Me.giftWrapNameField
             End Get
             Set
-                Me.giftWrapNameField = Value
+                Me.giftWrapNameField = value
                 Me.RaisePropertyChanged("GiftWrapName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>  _
         Public Property GiftWrapAmount() As BasicAmountType
             Get
                 Return Me.giftWrapAmountField
             End Get
             Set
-                Me.giftWrapAmountField = Value
+                Me.giftWrapAmountField = value
                 Me.RaisePropertyChanged("GiftWrapAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>  _
         Public Property BuyerMarketingEmail() As String
             Get
                 Return Me.buyerMarketingEmailField
             End Get
             Set
-                Me.buyerMarketingEmailField = Value
+                Me.buyerMarketingEmailField = value
                 Me.RaisePropertyChanged("BuyerMarketingEmail")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>  _
         Public Property SurveyQuestion() As String
             Get
                 Return Me.surveyQuestionField
             End Get
             Set
-                Me.surveyQuestionField = Value
+                Me.surveyQuestionField = value
                 Me.RaisePropertyChanged("SurveyQuestion")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("SurveyChoiceSelected", Order:=20)>
+        <System.Xml.Serialization.XmlElementAttribute("SurveyChoiceSelected", Order:=20)>  _
         Public Property SurveyChoiceSelected() As String()
             Get
                 Return Me.surveyChoiceSelectedField
             End Get
             Set
-                Me.surveyChoiceSelectedField = Value
+                Me.surveyChoiceSelectedField = value
                 Me.RaisePropertyChanged("SurveyChoiceSelected")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentRequestInfo", Order:=21)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentRequestInfo", Order:=21)>  _
         Public Property PaymentRequestInfo() As PaymentRequestInfoType()
             Get
                 Return Me.paymentRequestInfoField
             End Get
             Set
-                Me.paymentRequestInfoField = Value
+                Me.paymentRequestInfoField = value
                 Me.RaisePropertyChanged("PaymentRequestInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>  _
         Public Property ExternalRememberMeStatusDetails() As ExternalRememberMeStatusDetailsType
             Get
                 Return Me.externalRememberMeStatusDetailsField
             End Get
             Set
-                Me.externalRememberMeStatusDetailsField = Value
+                Me.externalRememberMeStatusDetailsField = value
                 Me.RaisePropertyChanged("ExternalRememberMeStatusDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>  _
         Public Property RefreshTokenStatusDetails() As RefreshTokenStatusDetailsType
             Get
                 Return Me.refreshTokenStatusDetailsField
             End Get
             Set
-                Me.refreshTokenStatusDetailsField = Value
+                Me.refreshTokenStatusDetailsField = value
                 Me.RaisePropertyChanged("RefreshTokenStatusDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentInfo", Order:=24)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentInfo", Order:=24)>  _
         Public Property PaymentInfo() As PaymentInfoType()
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>  _
         Public Property CartChangeTolerance() As String
             Get
                 Return Me.cartChangeToleranceField
             End Get
             Set
-                Me.cartChangeToleranceField = Value
+                Me.cartChangeToleranceField = value
                 Me.RaisePropertyChanged("CartChangeTolerance")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>  _
         Public Property InstrumentDetails() As InstrumentDetailsType
             Get
                 Return Me.instrumentDetailsField
             End Get
             Set
-                Me.instrumentDetailsField = Value
+                Me.instrumentDetailsField = value
                 Me.RaisePropertyChanged("InstrumentDetails")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -7070,663 +7070,663 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private orderTotalField As BasicAmountType
-
+        
         Private itemTotalField As BasicAmountType
-
+        
         Private shippingTotalField As BasicAmountType
-
+        
         Private handlingTotalField As BasicAmountType
-
+        
         Private taxTotalField As BasicAmountType
-
+        
         Private orderDescriptionField As String
-
+        
         Private customField As String
-
+        
         Private invoiceIDField As String
-
+        
         Private buttonSourceField As String
-
+        
         Private notifyURLField As String
-
+        
         Private shipToAddressField As AddressType
-
+        
         Private multiShippingField As String
-
+        
         Private fulfillmentReferenceNumberField As String
-
+        
         Private fulfillmentAddressField As AddressType
-
+        
         Private paymentCategoryTypeField As PaymentCategoryType
-
+        
         Private paymentCategoryTypeFieldSpecified As Boolean
-
+        
         Private locationTypeField As LocationType
-
+        
         Private locationTypeFieldSpecified As Boolean
-
+        
         Private shippingMethodField As ShippingServiceCodeType
-
+        
         Private shippingMethodFieldSpecified As Boolean
-
+        
         Private profileAddressChangeDateField As Date
-
+        
         Private profileAddressChangeDateFieldSpecified As Boolean
-
+        
         Private paymentDetailsItemField() As PaymentDetailsItemType
-
+        
         Private insuranceTotalField As BasicAmountType
-
+        
         Private shippingDiscountField As BasicAmountType
-
+        
         Private insuranceOptionOfferedField As String
-
+        
         Private allowedPaymentMethodField As AllowedPaymentMethodType
-
+        
         Private allowedPaymentMethodFieldSpecified As Boolean
-
+        
         Private enhancedPaymentDataField As EnhancedPaymentDataType
-
+        
         Private sellerDetailsField As SellerDetailsType
-
+        
         Private noteTextField As String
-
+        
         Private transactionIdField As String
-
+        
         Private paymentActionField As PaymentActionCodeType
-
+        
         Private paymentActionFieldSpecified As Boolean
-
+        
         Private paymentRequestIDField As String
-
+        
         Private orderURLField As String
-
+        
         Private softDescriptorField As String
-
+        
         Private branchLevelField As String
-
+        
         Private offerDetailsField As OfferDetailsType
-
+        
         Private recurringField As RecurringFlagType
-
+        
         Private recurringFieldSpecified As Boolean
-
+        
         Private paymentReasonField As PaymentReasonType
-
+        
         Private paymentReasonFieldSpecified As Boolean
-
+        
         Private locationIDField As String
-
+        
         Private redeemedOffersField() As DiscountInfoType
-
+        
         Private cummulativePointsField() As DiscountInfoType
 
         Private merchantDataField() As TupleType
 
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property OrderTotal() As BasicAmountType
             Get
                 Return Me.orderTotalField
             End Get
             Set
-                Me.orderTotalField = Value
+                Me.orderTotalField = value
                 Me.RaisePropertyChanged("OrderTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ItemTotal() As BasicAmountType
             Get
                 Return Me.itemTotalField
             End Get
             Set
-                Me.itemTotalField = Value
+                Me.itemTotalField = value
                 Me.RaisePropertyChanged("ItemTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ShippingTotal() As BasicAmountType
             Get
                 Return Me.shippingTotalField
             End Get
             Set
-                Me.shippingTotalField = Value
+                Me.shippingTotalField = value
                 Me.RaisePropertyChanged("ShippingTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property HandlingTotal() As BasicAmountType
             Get
                 Return Me.handlingTotalField
             End Get
             Set
-                Me.handlingTotalField = Value
+                Me.handlingTotalField = value
                 Me.RaisePropertyChanged("HandlingTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property TaxTotal() As BasicAmountType
             Get
                 Return Me.taxTotalField
             End Get
             Set
-                Me.taxTotalField = Value
+                Me.taxTotalField = value
                 Me.RaisePropertyChanged("TaxTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property OrderDescription() As String
             Get
                 Return Me.orderDescriptionField
             End Get
             Set
-                Me.orderDescriptionField = Value
+                Me.orderDescriptionField = value
                 Me.RaisePropertyChanged("OrderDescription")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property Custom() As String
             Get
                 Return Me.customField
             End Get
             Set
-                Me.customField = Value
+                Me.customField = value
                 Me.RaisePropertyChanged("Custom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property InvoiceID() As String
             Get
                 Return Me.invoiceIDField
             End Get
             Set
-                Me.invoiceIDField = Value
+                Me.invoiceIDField = value
                 Me.RaisePropertyChanged("InvoiceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property ButtonSource() As String
             Get
                 Return Me.buttonSourceField
             End Get
             Set
-                Me.buttonSourceField = Value
+                Me.buttonSourceField = value
                 Me.RaisePropertyChanged("ButtonSource")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property NotifyURL() As String
             Get
                 Return Me.notifyURLField
             End Get
             Set
-                Me.notifyURLField = Value
+                Me.notifyURLField = value
                 Me.RaisePropertyChanged("NotifyURL")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property ShipToAddress() As AddressType
             Get
                 Return Me.shipToAddressField
             End Get
             Set
-                Me.shipToAddressField = Value
+                Me.shipToAddressField = value
                 Me.RaisePropertyChanged("ShipToAddress")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property MultiShipping() As String
             Get
                 Return Me.multiShippingField
             End Get
             Set
-                Me.multiShippingField = Value
+                Me.multiShippingField = value
                 Me.RaisePropertyChanged("MultiShipping")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property FulfillmentReferenceNumber() As String
             Get
                 Return Me.fulfillmentReferenceNumberField
             End Get
             Set
-                Me.fulfillmentReferenceNumberField = Value
+                Me.fulfillmentReferenceNumberField = value
                 Me.RaisePropertyChanged("FulfillmentReferenceNumber")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property FulfillmentAddress() As AddressType
             Get
                 Return Me.fulfillmentAddressField
             End Get
             Set
-                Me.fulfillmentAddressField = Value
+                Me.fulfillmentAddressField = value
                 Me.RaisePropertyChanged("FulfillmentAddress")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property PaymentCategoryType() As PaymentCategoryType
             Get
                 Return Me.paymentCategoryTypeField
             End Get
             Set
-                Me.paymentCategoryTypeField = Value
+                Me.paymentCategoryTypeField = value
                 Me.RaisePropertyChanged("PaymentCategoryType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentCategoryTypeSpecified() As Boolean
             Get
                 Return Me.paymentCategoryTypeFieldSpecified
             End Get
             Set
-                Me.paymentCategoryTypeFieldSpecified = Value
+                Me.paymentCategoryTypeFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentCategoryTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>  _
         Public Property LocationType() As LocationType
             Get
                 Return Me.locationTypeField
             End Get
             Set
-                Me.locationTypeField = Value
+                Me.locationTypeField = value
                 Me.RaisePropertyChanged("LocationType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property LocationTypeSpecified() As Boolean
             Get
                 Return Me.locationTypeFieldSpecified
             End Get
             Set
-                Me.locationTypeFieldSpecified = Value
+                Me.locationTypeFieldSpecified = value
                 Me.RaisePropertyChanged("LocationTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>  _
         Public Property ShippingMethod() As ShippingServiceCodeType
             Get
                 Return Me.shippingMethodField
             End Get
             Set
-                Me.shippingMethodField = Value
+                Me.shippingMethodField = value
                 Me.RaisePropertyChanged("ShippingMethod")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ShippingMethodSpecified() As Boolean
             Get
                 Return Me.shippingMethodFieldSpecified
             End Get
             Set
-                Me.shippingMethodFieldSpecified = Value
+                Me.shippingMethodFieldSpecified = value
                 Me.RaisePropertyChanged("ShippingMethodSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>  _
         Public Property ProfileAddressChangeDate() As Date
             Get
                 Return Me.profileAddressChangeDateField
             End Get
             Set
-                Me.profileAddressChangeDateField = Value
+                Me.profileAddressChangeDateField = value
                 Me.RaisePropertyChanged("ProfileAddressChangeDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ProfileAddressChangeDateSpecified() As Boolean
             Get
                 Return Me.profileAddressChangeDateFieldSpecified
             End Get
             Set
-                Me.profileAddressChangeDateFieldSpecified = Value
+                Me.profileAddressChangeDateFieldSpecified = value
                 Me.RaisePropertyChanged("ProfileAddressChangeDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentDetailsItem", Order:=18)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentDetailsItem", Order:=18)>  _
         Public Property PaymentDetailsItem() As PaymentDetailsItemType()
             Get
                 Return Me.paymentDetailsItemField
             End Get
             Set
-                Me.paymentDetailsItemField = Value
+                Me.paymentDetailsItemField = value
                 Me.RaisePropertyChanged("PaymentDetailsItem")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=19)>  _
         Public Property InsuranceTotal() As BasicAmountType
             Get
                 Return Me.insuranceTotalField
             End Get
             Set
-                Me.insuranceTotalField = Value
+                Me.insuranceTotalField = value
                 Me.RaisePropertyChanged("InsuranceTotal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=20)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=20)>  _
         Public Property ShippingDiscount() As BasicAmountType
             Get
                 Return Me.shippingDiscountField
             End Get
             Set
-                Me.shippingDiscountField = Value
+                Me.shippingDiscountField = value
                 Me.RaisePropertyChanged("ShippingDiscount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=21)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=21)>  _
         Public Property InsuranceOptionOffered() As String
             Get
                 Return Me.insuranceOptionOfferedField
             End Get
             Set
-                Me.insuranceOptionOfferedField = Value
+                Me.insuranceOptionOfferedField = value
                 Me.RaisePropertyChanged("InsuranceOptionOffered")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=22)>  _
         Public Property AllowedPaymentMethod() As AllowedPaymentMethodType
             Get
                 Return Me.allowedPaymentMethodField
             End Get
             Set
-                Me.allowedPaymentMethodField = Value
+                Me.allowedPaymentMethodField = value
                 Me.RaisePropertyChanged("AllowedPaymentMethod")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property AllowedPaymentMethodSpecified() As Boolean
             Get
                 Return Me.allowedPaymentMethodFieldSpecified
             End Get
             Set
-                Me.allowedPaymentMethodFieldSpecified = Value
+                Me.allowedPaymentMethodFieldSpecified = value
                 Me.RaisePropertyChanged("AllowedPaymentMethodSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=23)>  _
         Public Property EnhancedPaymentData() As EnhancedPaymentDataType
             Get
                 Return Me.enhancedPaymentDataField
             End Get
             Set
-                Me.enhancedPaymentDataField = Value
+                Me.enhancedPaymentDataField = value
                 Me.RaisePropertyChanged("EnhancedPaymentData")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=24)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=24)>  _
         Public Property SellerDetails() As SellerDetailsType
             Get
                 Return Me.sellerDetailsField
             End Get
             Set
-                Me.sellerDetailsField = Value
+                Me.sellerDetailsField = value
                 Me.RaisePropertyChanged("SellerDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=25)>  _
         Public Property NoteText() As String
             Get
                 Return Me.noteTextField
             End Get
             Set
-                Me.noteTextField = Value
+                Me.noteTextField = value
                 Me.RaisePropertyChanged("NoteText")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=26)>  _
         Public Property TransactionId() As String
             Get
                 Return Me.transactionIdField
             End Get
             Set
-                Me.transactionIdField = Value
+                Me.transactionIdField = value
                 Me.RaisePropertyChanged("TransactionId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=27)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=27)>  _
         Public Property PaymentAction() As PaymentActionCodeType
             Get
                 Return Me.paymentActionField
             End Get
             Set
-                Me.paymentActionField = Value
+                Me.paymentActionField = value
                 Me.RaisePropertyChanged("PaymentAction")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentActionSpecified() As Boolean
             Get
                 Return Me.paymentActionFieldSpecified
             End Get
             Set
-                Me.paymentActionFieldSpecified = Value
+                Me.paymentActionFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentActionSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=28)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=28)>  _
         Public Property PaymentRequestID() As String
             Get
                 Return Me.paymentRequestIDField
             End Get
             Set
-                Me.paymentRequestIDField = Value
+                Me.paymentRequestIDField = value
                 Me.RaisePropertyChanged("PaymentRequestID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=29)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=29)>  _
         Public Property OrderURL() As String
             Get
                 Return Me.orderURLField
             End Get
             Set
-                Me.orderURLField = Value
+                Me.orderURLField = value
                 Me.RaisePropertyChanged("OrderURL")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=30)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=30)>  _
         Public Property SoftDescriptor() As String
             Get
                 Return Me.softDescriptorField
             End Get
             Set
-                Me.softDescriptorField = Value
+                Me.softDescriptorField = value
                 Me.RaisePropertyChanged("SoftDescriptor")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=31)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=31)>  _
         Public Property BranchLevel() As String
             Get
                 Return Me.branchLevelField
             End Get
             Set
-                Me.branchLevelField = Value
+                Me.branchLevelField = value
                 Me.RaisePropertyChanged("BranchLevel")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=32)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=32)>  _
         Public Property OfferDetails() As OfferDetailsType
             Get
                 Return Me.offerDetailsField
             End Get
             Set
-                Me.offerDetailsField = Value
+                Me.offerDetailsField = value
                 Me.RaisePropertyChanged("OfferDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=33)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=33)>  _
         Public Property Recurring() As RecurringFlagType
             Get
                 Return Me.recurringField
             End Get
             Set
-                Me.recurringField = Value
+                Me.recurringField = value
                 Me.RaisePropertyChanged("Recurring")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RecurringSpecified() As Boolean
             Get
                 Return Me.recurringFieldSpecified
             End Get
             Set
-                Me.recurringFieldSpecified = Value
+                Me.recurringFieldSpecified = value
                 Me.RaisePropertyChanged("RecurringSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=34)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=34)>  _
         Public Property PaymentReason() As PaymentReasonType
             Get
                 Return Me.paymentReasonField
             End Get
             Set
-                Me.paymentReasonField = Value
+                Me.paymentReasonField = value
                 Me.RaisePropertyChanged("PaymentReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentReasonSpecified() As Boolean
             Get
                 Return Me.paymentReasonFieldSpecified
             End Get
             Set
-                Me.paymentReasonFieldSpecified = Value
+                Me.paymentReasonFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentReasonSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=35)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=35)>  _
         Public Property LocationID() As String
             Get
                 Return Me.locationIDField
             End Get
             Set
-                Me.locationIDField = Value
+                Me.locationIDField = value
                 Me.RaisePropertyChanged("LocationID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("RedeemedOffers", Order:=36)>
+        <System.Xml.Serialization.XmlElementAttribute("RedeemedOffers", Order:=36)>  _
         Public Property RedeemedOffers() As DiscountInfoType()
             Get
                 Return Me.redeemedOffersField
             End Get
             Set
-                Me.redeemedOffersField = Value
+                Me.redeemedOffersField = value
                 Me.RaisePropertyChanged("RedeemedOffers")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("CummulativePoints", Order:=37)>
+        <System.Xml.Serialization.XmlElementAttribute("CummulativePoints", Order:=37)>  _
         Public Property CummulativePoints() As DiscountInfoType()
             Get
                 Return Me.cummulativePointsField
             End Get
             Set
-                Me.cummulativePointsField = Value
+                Me.cummulativePointsField = value
                 Me.RaisePropertyChanged("CummulativePoints")
             End Set
         End Property
-
+        
         '''<remarks/>
         <System.Xml.Serialization.XmlArrayAttribute(Order:=38),
          System.Xml.Serialization.XmlArrayItemAttribute("MerchantDataTuple", GetType(TupleType), IsNullable:=False)>
@@ -7741,7 +7741,7 @@ Namespace PayPalAPI
         End Property
 
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -7749,361 +7749,361 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentCategoryType
-
+        
         '''<remarks/>
         InternationalShipping
-
+        
         '''<remarks/>
         LocalDelivery
-
+        
         '''<remarks/>
         BOPIS
-
+        
         '''<remarks/>
         PUDO
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum LocationType
-
+        
         '''<remarks/>
         Consumer
-
+        
         '''<remarks/>
         Store
-
+        
         '''<remarks/>
         PickupDropoff
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ShippingServiceCodeType
-
+        
         '''<remarks/>
         UPSGround
-
+        
         '''<remarks/>
         UPS3rdDay
-
+        
         '''<remarks/>
         UPS2ndDay
-
+        
         '''<remarks/>
         UPSNextDay
-
+        
         '''<remarks/>
         USPSPriority
-
+        
         '''<remarks/>
         USPSParcel
-
+        
         '''<remarks/>
         USPSMedia
-
+        
         '''<remarks/>
         USPSFirstClass
-
+        
         '''<remarks/>
         ShippingMethodStandard
-
+        
         '''<remarks/>
         ShippingMethodExpress
-
+        
         '''<remarks/>
         ShippingMethodNextDay
-
+        
         '''<remarks/>
         USPSExpressMail
-
+        
         '''<remarks/>
         USPSGround
-
+        
         '''<remarks/>
         Download
-
+        
         '''<remarks/>
         WillCall_Or_Pickup
-
+        
         '''<remarks/>
         CustomCode
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentDetailsItemType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private nameField As String
-
+        
         Private numberField As String
-
+        
         Private quantityField As String
-
+        
         Private taxField As BasicAmountType
-
+        
         Private amountField As BasicAmountType
-
+        
         Private ebayItemPaymentDetailsItemField As EbayItemPaymentDetailsItemType
-
+        
         Private promoCodeField As String
-
+        
         Private productCategoryField As ProductCategoryType
-
+        
         Private productCategoryFieldSpecified As Boolean
-
+        
         Private descriptionField As String
-
+        
         Private itemWeightField As MeasureType
-
+        
         Private itemLengthField As MeasureType
-
+        
         Private itemWidthField As MeasureType
-
+        
         Private itemHeightField As MeasureType
-
+        
         Private itemURLField As String
-
+        
         Private enhancedItemDataField As EnhancedItemDataType
-
+        
         Private itemCategoryField As ItemCategoryType
-
+        
         Private itemCategoryFieldSpecified As Boolean
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Number() As String
             Get
                 Return Me.numberField
             End Get
             Set
-                Me.numberField = Value
+                Me.numberField = value
                 Me.RaisePropertyChanged("Number")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=2)>  _
         Public Property Quantity() As String
             Get
                 Return Me.quantityField
             End Get
             Set
-                Me.quantityField = Value
+                Me.quantityField = value
                 Me.RaisePropertyChanged("Quantity")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Tax() As BasicAmountType
             Get
                 Return Me.taxField
             End Get
             Set
-                Me.taxField = Value
+                Me.taxField = value
                 Me.RaisePropertyChanged("Tax")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property EbayItemPaymentDetailsItem() As EbayItemPaymentDetailsItemType
             Get
                 Return Me.ebayItemPaymentDetailsItemField
             End Get
             Set
-                Me.ebayItemPaymentDetailsItemField = Value
+                Me.ebayItemPaymentDetailsItemField = value
                 Me.RaisePropertyChanged("EbayItemPaymentDetailsItem")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property PromoCode() As String
             Get
                 Return Me.promoCodeField
             End Get
             Set
-                Me.promoCodeField = Value
+                Me.promoCodeField = value
                 Me.RaisePropertyChanged("PromoCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property ProductCategory() As ProductCategoryType
             Get
                 Return Me.productCategoryField
             End Get
             Set
-                Me.productCategoryField = Value
+                Me.productCategoryField = value
                 Me.RaisePropertyChanged("ProductCategory")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ProductCategorySpecified() As Boolean
             Get
                 Return Me.productCategoryFieldSpecified
             End Get
             Set
-                Me.productCategoryFieldSpecified = Value
+                Me.productCategoryFieldSpecified = value
                 Me.RaisePropertyChanged("ProductCategorySpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property Description() As String
             Get
                 Return Me.descriptionField
             End Get
             Set
-                Me.descriptionField = Value
+                Me.descriptionField = value
                 Me.RaisePropertyChanged("Description")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property ItemWeight() As MeasureType
             Get
                 Return Me.itemWeightField
             End Get
             Set
-                Me.itemWeightField = Value
+                Me.itemWeightField = value
                 Me.RaisePropertyChanged("ItemWeight")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property ItemLength() As MeasureType
             Get
                 Return Me.itemLengthField
             End Get
             Set
-                Me.itemLengthField = Value
+                Me.itemLengthField = value
                 Me.RaisePropertyChanged("ItemLength")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property ItemWidth() As MeasureType
             Get
                 Return Me.itemWidthField
             End Get
             Set
-                Me.itemWidthField = Value
+                Me.itemWidthField = value
                 Me.RaisePropertyChanged("ItemWidth")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property ItemHeight() As MeasureType
             Get
                 Return Me.itemHeightField
             End Get
             Set
-                Me.itemHeightField = Value
+                Me.itemHeightField = value
                 Me.RaisePropertyChanged("ItemHeight")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property ItemURL() As String
             Get
                 Return Me.itemURLField
             End Get
             Set
-                Me.itemURLField = Value
+                Me.itemURLField = value
                 Me.RaisePropertyChanged("ItemURL")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property EnhancedItemData() As EnhancedItemDataType
             Get
                 Return Me.enhancedItemDataField
             End Get
             Set
-                Me.enhancedItemDataField = Value
+                Me.enhancedItemDataField = value
                 Me.RaisePropertyChanged("EnhancedItemData")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>  _
         Public Property ItemCategory() As ItemCategoryType
             Get
                 Return Me.itemCategoryField
             End Get
             Set
-                Me.itemCategoryField = Value
+                Me.itemCategoryField = value
                 Me.RaisePropertyChanged("ItemCategory")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ItemCategorySpecified() As Boolean
             Get
                 Return Me.itemCategoryFieldSpecified
             End Get
             Set
-                Me.itemCategoryFieldSpecified = Value
+                Me.itemCategoryFieldSpecified = value
                 Me.RaisePropertyChanged("ItemCategorySpecified")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8111,75 +8111,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class EbayItemPaymentDetailsItemType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private itemNumberField As String
-
+        
         Private auctionTransactionIdField As String
-
+        
         Private orderIdField As String
-
+        
         Private cartIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ItemNumber() As String
             Get
                 Return Me.itemNumberField
             End Get
             Set
-                Me.itemNumberField = Value
+                Me.itemNumberField = value
                 Me.RaisePropertyChanged("ItemNumber")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property AuctionTransactionId() As String
             Get
                 Return Me.auctionTransactionIdField
             End Get
             Set
-                Me.auctionTransactionIdField = Value
+                Me.auctionTransactionIdField = value
                 Me.RaisePropertyChanged("AuctionTransactionId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property OrderId() As String
             Get
                 Return Me.orderIdField
             End Get
             Set
-                Me.orderIdField = Value
+                Me.orderIdField = value
                 Me.RaisePropertyChanged("OrderId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property CartID() As String
             Get
                 Return Me.cartIDField
             End Get
             Set
-                Me.cartIDField = Value
+                Me.cartIDField = value
                 Me.RaisePropertyChanged("CartID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8187,123 +8187,123 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ProductCategoryType
-
+        
         '''<remarks/>
         Other
-
+        
         '''<remarks/>
         Airlines
-
+        
         '''<remarks/>
         Antiques
-
+        
         '''<remarks/>
         Art
-
+        
         '''<remarks/>
         Cameras_Photos
-
+        
         '''<remarks/>
         Cars_Boats_Vehicles_Parts
-
+        
         '''<remarks/>
         CellPhones_Telecom
-
+        
         '''<remarks/>
         Coins_PaperMoney
-
+        
         '''<remarks/>
         Collectibles
-
+        
         '''<remarks/>
         Computers_Networking
-
+        
         '''<remarks/>
         ConsumerElectronics
-
+        
         '''<remarks/>
         Jewelry_Watches
-
+        
         '''<remarks/>
         MusicalInstruments
-
+        
         '''<remarks/>
         RealEstate
-
+        
         '''<remarks/>
         SportsMemorabilia_Cards_FanShop
-
+        
         '''<remarks/>
         Stamps
-
+        
         '''<remarks/>
         Tickets
-
+        
         '''<remarks/>
         Travels
-
+        
         '''<remarks/>
         Gambling
-
+        
         '''<remarks/>
         Alcohol
-
+        
         '''<remarks/>
         Tobacco
-
+        
         '''<remarks/>
         MoneyTransfer
-
+        
         '''<remarks/>
         Software
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:CoreComponentTypes")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:CoreComponentTypes")>  _
     Partial Public Class MeasureType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private unitField As String
-
+        
         Private valueField As Double
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute(DataType:="token")>
+        <System.Xml.Serialization.XmlAttributeAttribute(DataType:="token")>  _
         Public Property unit() As String
             Get
                 Return Me.unitField
             End Get
             Set
-                Me.unitField = Value
+                Me.unitField = value
                 Me.RaisePropertyChanged("unit")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlTextAttribute()>
+        <System.Xml.Serialization.XmlTextAttribute()>  _
         Public Property Value() As Double
             Get
                 Return Me.valueField
             End Get
             Set
-                Me.valueField = Value
+                Me.valueField = value
                 Me.RaisePropertyChanged("Value")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8311,19 +8311,19 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>  _
     Partial Public Class EnhancedItemDataType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8331,51 +8331,51 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ItemCategoryType
-
+        
         '''<remarks/>
         Physical
-
+        
         '''<remarks/>
         Digital
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AllowedPaymentMethodType
-
+        
         '''<remarks/>
         [Default]
-
+        
         '''<remarks/>
         InstantPaymentOnly
-
+        
         '''<remarks/>
         AnyFundingSource
-
+        
         '''<remarks/>
         InstantFundingSource
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>  _
     Partial Public Class EnhancedPaymentDataType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8383,174 +8383,179 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentActionCodeType
-
+        
         '''<remarks/>
         None
-
+        
         '''<remarks/>
         Authorization
-
+        
         '''<remarks/>
         Sale
-
+        
         '''<remarks/>
         Order
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum RecurringFlagType
+        
+        '''<remarks/>
         Y
+
+        '''<remarks/>
+        '  y
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentReasonType
-
+        
         '''<remarks/>
         None
-
+        
         '''<remarks/>
         Refund
-
+        
         '''<remarks/>
         ReturnShipment
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DiscountInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private nameField As String
-
+        
         Private descriptionField As String
-
+        
         Private amountField As BasicAmountType
-
+        
         Private redeemedOfferTypeField As RedeemedOfferType
-
+        
         Private redeemedOfferTypeFieldSpecified As Boolean
-
+        
         Private redeemedOfferIdField As String
-
+        
         Private pointsAccruedField As Decimal
-
+        
         Private pointsAccruedFieldSpecified As Boolean
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Description() As String
             Get
                 Return Me.descriptionField
             End Get
             Set
-                Me.descriptionField = Value
+                Me.descriptionField = value
                 Me.RaisePropertyChanged("Description")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property RedeemedOfferType() As RedeemedOfferType
             Get
                 Return Me.redeemedOfferTypeField
             End Get
             Set
-                Me.redeemedOfferTypeField = Value
+                Me.redeemedOfferTypeField = value
                 Me.RaisePropertyChanged("RedeemedOfferType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RedeemedOfferTypeSpecified() As Boolean
             Get
                 Return Me.redeemedOfferTypeFieldSpecified
             End Get
             Set
-                Me.redeemedOfferTypeFieldSpecified = Value
+                Me.redeemedOfferTypeFieldSpecified = value
                 Me.RaisePropertyChanged("RedeemedOfferTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property RedeemedOfferId() As String
             Get
                 Return Me.redeemedOfferIdField
             End Get
             Set
-                Me.redeemedOfferIdField = Value
+                Me.redeemedOfferIdField = value
                 Me.RaisePropertyChanged("RedeemedOfferId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property PointsAccrued() As Decimal
             Get
                 Return Me.pointsAccruedField
             End Get
             Set
-                Me.pointsAccruedField = Value
+                Me.pointsAccruedField = value
                 Me.RaisePropertyChanged("PointsAccrued")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PointsAccruedSpecified() As Boolean
             Get
                 Return Me.pointsAccruedFieldSpecified
             End Get
             Set
-                Me.pointsAccruedFieldSpecified = Value
+                Me.pointsAccruedFieldSpecified = value
                 Me.RaisePropertyChanged("PointsAccruedSpecified")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8558,66 +8563,66 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum RedeemedOfferType
-
+        
         '''<remarks/>
         MERCHANT_COUPON
-
+        
         '''<remarks/>
         LOYALTY_CARD
-
+        
         '''<remarks/>
         MANUFACTURER_COUPON
-
+        
         '''<remarks/>
         RESERVED
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class TupleType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private keyField As String
-
+        
         Private valueField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Key() As String
             Get
                 Return Me.keyField
             End Get
             Set
-                Me.keyField = Value
+                Me.keyField = value
                 Me.RaisePropertyChanged("Key")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Value() As String
             Get
                 Return Me.valueField
             End Get
             Set
-                Me.valueField = Value
+                Me.valueField = value
                 Me.RaisePropertyChanged("Value")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8625,47 +8630,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class AuthorizationResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private statusField As AckCodeType
-
+        
         Private authorizationErrorField() As ErrorType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Status() As AckCodeType
             Get
                 Return Me.statusField
             End Get
             Set
-                Me.statusField = Value
+                Me.statusField = value
                 Me.RaisePropertyChanged("Status")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("AuthorizationError", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute("AuthorizationError", Order:=1)>  _
         Public Property AuthorizationError() As ErrorType()
             Get
                 Return Me.authorizationErrorField
             End Get
             Set
-                Me.authorizationErrorField = Value
+                Me.authorizationErrorField = value
                 Me.RaisePropertyChanged("AuthorizationError")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8673,89 +8678,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AckCodeType
-
+        
         '''<remarks/>
         Success
-
+        
         '''<remarks/>
         Failure
-
+        
         '''<remarks/>
         Warning
-
+        
         '''<remarks/>
         SuccessWithWarning
-
+        
         '''<remarks/>
         FailureWithWarning
-
+        
         '''<remarks/>
         PartialSuccess
-
+        
         '''<remarks/>
         CustomCode
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class SetDataResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private tokenField As String
-
+        
         Private shippingAddressesField() As AddressType
-
+        
         Private setDataErrorField() As ErrorType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Token() As String
             Get
                 Return Me.tokenField
             End Get
             Set
-                Me.tokenField = Value
+                Me.tokenField = value
                 Me.RaisePropertyChanged("Token")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("ShippingAddresses", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute("ShippingAddresses", Order:=1)>  _
         Public Property ShippingAddresses() As AddressType()
             Get
                 Return Me.shippingAddressesField
             End Get
             Set
-                Me.shippingAddressesField = Value
+                Me.shippingAddressesField = value
                 Me.RaisePropertyChanged("ShippingAddresses")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("SetDataError", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute("SetDataError", Order:=2)>  _
         Public Property SetDataError() As ErrorType()
             Get
                 Return Me.setDataErrorField
             End Get
             Set
-                Me.setDataErrorField = Value
+                Me.setDataErrorField = value
                 Me.RaisePropertyChanged("SetDataError")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8763,47 +8768,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ExecuteCheckoutOperationsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private setDataResponseField As SetDataResponseType
-
+        
         Private authorizationResponseField As AuthorizationResponseType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property SetDataResponse() As SetDataResponseType
             Get
                 Return Me.setDataResponseField
             End Get
             Set
-                Me.setDataResponseField = Value
+                Me.setDataResponseField = value
                 Me.RaisePropertyChanged("SetDataResponse")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property AuthorizationResponse() As AuthorizationResponseType
             Get
                 Return Me.authorizationResponseField
             End Get
             Set
-                Me.authorizationResponseField = Value
+                Me.authorizationResponseField = value
                 Me.RaisePropertyChanged("AuthorizationResponse")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8811,75 +8816,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class IncentiveAppliedToType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private bucketIdField As String
-
+        
         Private itemIdField As String
-
+        
         Private incentiveAmountField As BasicAmountType
-
+        
         Private subTypeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property BucketId() As String
             Get
                 Return Me.bucketIdField
             End Get
             Set
-                Me.bucketIdField = Value
+                Me.bucketIdField = value
                 Me.RaisePropertyChanged("BucketId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ItemId() As String
             Get
                 Return Me.itemIdField
             End Get
             Set
-                Me.itemIdField = Value
+                Me.itemIdField = value
                 Me.RaisePropertyChanged("ItemId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property IncentiveAmount() As BasicAmountType
             Get
                 Return Me.incentiveAmountField
             End Get
             Set
-                Me.incentiveAmountField = Value
+                Me.incentiveAmountField = value
                 Me.RaisePropertyChanged("IncentiveAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property SubType() As String
             Get
                 Return Me.subTypeField
             End Get
             Set
-                Me.subTypeField = Value
+                Me.subTypeField = value
                 Me.RaisePropertyChanged("SubType")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -8887,145 +8892,145 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class IncentiveDetailType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private redemptionCodeField As String
-
+        
         Private displayCodeField As String
-
+        
         Private programIdField As String
-
+        
         Private incentiveTypeField As IncentiveTypeCodeType
-
+        
         Private incentiveTypeFieldSpecified As Boolean
-
+        
         Private incentiveDescriptionField As String
-
+        
         Private appliedToField() As IncentiveAppliedToType
-
+        
         Private statusField As String
-
+        
         Private errorCodeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property RedemptionCode() As String
             Get
                 Return Me.redemptionCodeField
             End Get
             Set
-                Me.redemptionCodeField = Value
+                Me.redemptionCodeField = value
                 Me.RaisePropertyChanged("RedemptionCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property DisplayCode() As String
             Get
                 Return Me.displayCodeField
             End Get
             Set
-                Me.displayCodeField = Value
+                Me.displayCodeField = value
                 Me.RaisePropertyChanged("DisplayCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ProgramId() As String
             Get
                 Return Me.programIdField
             End Get
             Set
-                Me.programIdField = Value
+                Me.programIdField = value
                 Me.RaisePropertyChanged("ProgramId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property IncentiveType() As IncentiveTypeCodeType
             Get
                 Return Me.incentiveTypeField
             End Get
             Set
-                Me.incentiveTypeField = Value
+                Me.incentiveTypeField = value
                 Me.RaisePropertyChanged("IncentiveType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property IncentiveTypeSpecified() As Boolean
             Get
                 Return Me.incentiveTypeFieldSpecified
             End Get
             Set
-                Me.incentiveTypeFieldSpecified = Value
+                Me.incentiveTypeFieldSpecified = value
                 Me.RaisePropertyChanged("IncentiveTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property IncentiveDescription() As String
             Get
                 Return Me.incentiveDescriptionField
             End Get
             Set
-                Me.incentiveDescriptionField = Value
+                Me.incentiveDescriptionField = value
                 Me.RaisePropertyChanged("IncentiveDescription")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("AppliedTo", Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute("AppliedTo", Order:=5)>  _
         Public Property AppliedTo() As IncentiveAppliedToType()
             Get
                 Return Me.appliedToField
             End Get
             Set
-                Me.appliedToField = Value
+                Me.appliedToField = value
                 Me.RaisePropertyChanged("AppliedTo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property Status() As String
             Get
                 Return Me.statusField
             End Get
             Set
-                Me.statusField = Value
+                Me.statusField = value
                 Me.RaisePropertyChanged("Status")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property ErrorCode() As String
             Get
                 Return Me.errorCodeField
             End Get
             Set
-                Me.errorCodeField = Value
+                Me.errorCodeField = value
                 Me.RaisePropertyChanged("ErrorCode")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9033,72 +9038,72 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum IncentiveTypeCodeType
-
+        
         '''<remarks/>
         Coupon
-
+        
         '''<remarks/>
         eBayGiftCertificate
-
+        
         '''<remarks/>
         eBayGiftCard
-
+        
         '''<remarks/>
         PayPalRewardVoucher
-
+        
         '''<remarks/>
         MerchantGiftCertificate
-
+        
         '''<remarks/>
         eBayRewardVoucher
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetIncentiveEvaluationResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private incentiveDetailsField() As IncentiveDetailType
-
+        
         Private requestIdField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("IncentiveDetails", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute("IncentiveDetails", Order:=0)>  _
         Public Property IncentiveDetails() As IncentiveDetailType()
             Get
                 Return Me.incentiveDetailsField
             End Get
             Set
-                Me.incentiveDetailsField = Value
+                Me.incentiveDetailsField = value
                 Me.RaisePropertyChanged("IncentiveDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property RequestId() As String
             Get
                 Return Me.requestIdField
             End Get
             Set
-                Me.requestIdField = Value
+                Me.requestIdField = value
                 Me.RaisePropertyChanged("RequestId")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9106,103 +9111,103 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetAccessPermissionDetailsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private firstNameField As String
-
+        
         Private lastNameField As String
-
+        
         Private emailField As String
-
+        
         Private accessPermissionNameField() As String
-
+        
         Private accessPermissionStatusField() As String
-
+        
         Private payerIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property FirstName() As String
             Get
                 Return Me.firstNameField
             End Get
             Set
-                Me.firstNameField = Value
+                Me.firstNameField = value
                 Me.RaisePropertyChanged("FirstName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property LastName() As String
             Get
                 Return Me.lastNameField
             End Get
             Set
-                Me.lastNameField = Value
+                Me.lastNameField = value
                 Me.RaisePropertyChanged("LastName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Email() As String
             Get
                 Return Me.emailField
             End Get
             Set
-                Me.emailField = Value
+                Me.emailField = value
                 Me.RaisePropertyChanged("Email")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("AccessPermissionName", Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute("AccessPermissionName", Order:=3)>  _
         Public Property AccessPermissionName() As String()
             Get
                 Return Me.accessPermissionNameField
             End Get
             Set
-                Me.accessPermissionNameField = Value
+                Me.accessPermissionNameField = value
                 Me.RaisePropertyChanged("AccessPermissionName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("AccessPermissionStatus", Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute("AccessPermissionStatus", Order:=4)>  _
         Public Property AccessPermissionStatus() As String()
             Get
                 Return Me.accessPermissionStatusField
             End Get
             Set
-                Me.accessPermissionStatusField = Value
+                Me.accessPermissionStatusField = value
                 Me.RaisePropertyChanged("AccessPermissionStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property PayerID() As String
             Get
                 Return Me.payerIDField
             End Get
             Set
-                Me.payerIDField = Value
+                Me.payerIDField = value
                 Me.RaisePropertyChanged("PayerID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9210,75 +9215,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetAuthDetailsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private firstNameField As String
-
+        
         Private lastNameField As String
-
+        
         Private emailField As String
-
+        
         Private payerIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property FirstName() As String
             Get
                 Return Me.firstNameField
             End Get
             Set
-                Me.firstNameField = Value
+                Me.firstNameField = value
                 Me.RaisePropertyChanged("FirstName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property LastName() As String
             Get
                 Return Me.lastNameField
             End Get
             Set
-                Me.lastNameField = Value
+                Me.lastNameField = value
                 Me.RaisePropertyChanged("LastName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Email() As String
             Get
                 Return Me.emailField
             End Get
             Set
-                Me.emailField = Value
+                Me.emailField = value
                 Me.RaisePropertyChanged("Email")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property PayerID() As String
             Get
                 Return Me.payerIDField
             End Get
             Set
-                Me.payerIDField = Value
+                Me.payerIDField = value
                 Me.RaisePropertyChanged("PayerID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9286,89 +9291,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class APICredentialsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private usernameField As String
-
+        
         Private passwordField As String
-
+        
         Private signatureField As String
-
+        
         Private certificateField As String
-
+        
         Private typeField As APIAuthenticationType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Username() As String
             Get
                 Return Me.usernameField
             End Get
             Set
-                Me.usernameField = Value
+                Me.usernameField = value
                 Me.RaisePropertyChanged("Username")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Password() As String
             Get
                 Return Me.passwordField
             End Get
             Set
-                Me.passwordField = Value
+                Me.passwordField = value
                 Me.RaisePropertyChanged("Password")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Signature() As String
             Get
                 Return Me.signatureField
             End Get
             Set
-                Me.signatureField = Value
+                Me.signatureField = value
                 Me.RaisePropertyChanged("Signature")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Certificate() As String
             Get
                 Return Me.certificateField
             End Get
             Set
-                Me.certificateField = Value
+                Me.certificateField = value
                 Me.RaisePropertyChanged("Certificate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Type() As APIAuthenticationType
             Get
                 Return Me.typeField
             End Get
             Set
-                Me.typeField = Value
+                Me.typeField = value
                 Me.RaisePropertyChanged("Type")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9376,260 +9381,260 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum APIAuthenticationType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("Auth-None")>
+        <System.Xml.Serialization.XmlEnumAttribute("Auth-None")>  _
         AuthNone
-
+        
         '''<remarks/>
         Cert
-
+        
         '''<remarks/>
         Sign
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class GetBoardingDetailsResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private statusField As BoardingStatusType
-
+        
         Private startDateField As Date
-
+        
         Private lastUpdatedField As Date
-
+        
         Private reasonField As String
-
+        
         Private programNameField As String
-
+        
         Private programCodeField As String
-
+        
         Private campaignIDField As String
-
+        
         Private userWithdrawalLimitField As UserWithdrawalLimitTypeType
-
+        
         Private userWithdrawalLimitFieldSpecified As Boolean
-
+        
         Private partnerCustomField As String
-
+        
         Private accountOwnerField As PayerInfoType
-
+        
         Private credentialsField As APICredentialsType
-
+        
         Private configureAPIsField As String
-
+        
         Private emailVerificationStatusField As String
-
+        
         Private vettingStatusField As String
-
+        
         Private bankAccountVerificationStatusField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Status() As BoardingStatusType
             Get
                 Return Me.statusField
             End Get
             Set
-                Me.statusField = Value
+                Me.statusField = value
                 Me.RaisePropertyChanged("Status")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property StartDate() As Date
             Get
                 Return Me.startDateField
             End Get
             Set
-                Me.startDateField = Value
+                Me.startDateField = value
                 Me.RaisePropertyChanged("StartDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property LastUpdated() As Date
             Get
                 Return Me.lastUpdatedField
             End Get
             Set
-                Me.lastUpdatedField = Value
+                Me.lastUpdatedField = value
                 Me.RaisePropertyChanged("LastUpdated")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Reason() As String
             Get
                 Return Me.reasonField
             End Get
             Set
-                Me.reasonField = Value
+                Me.reasonField = value
                 Me.RaisePropertyChanged("Reason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property ProgramName() As String
             Get
                 Return Me.programNameField
             End Get
             Set
-                Me.programNameField = Value
+                Me.programNameField = value
                 Me.RaisePropertyChanged("ProgramName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property ProgramCode() As String
             Get
                 Return Me.programCodeField
             End Get
             Set
-                Me.programCodeField = Value
+                Me.programCodeField = value
                 Me.RaisePropertyChanged("ProgramCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property CampaignID() As String
             Get
                 Return Me.campaignIDField
             End Get
             Set
-                Me.campaignIDField = Value
+                Me.campaignIDField = value
                 Me.RaisePropertyChanged("CampaignID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property UserWithdrawalLimit() As UserWithdrawalLimitTypeType
             Get
                 Return Me.userWithdrawalLimitField
             End Get
             Set
-                Me.userWithdrawalLimitField = Value
+                Me.userWithdrawalLimitField = value
                 Me.RaisePropertyChanged("UserWithdrawalLimit")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property UserWithdrawalLimitSpecified() As Boolean
             Get
                 Return Me.userWithdrawalLimitFieldSpecified
             End Get
             Set
-                Me.userWithdrawalLimitFieldSpecified = Value
+                Me.userWithdrawalLimitFieldSpecified = value
                 Me.RaisePropertyChanged("UserWithdrawalLimitSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property PartnerCustom() As String
             Get
                 Return Me.partnerCustomField
             End Get
             Set
-                Me.partnerCustomField = Value
+                Me.partnerCustomField = value
                 Me.RaisePropertyChanged("PartnerCustom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property AccountOwner() As PayerInfoType
             Get
                 Return Me.accountOwnerField
             End Get
             Set
-                Me.accountOwnerField = Value
+                Me.accountOwnerField = value
                 Me.RaisePropertyChanged("AccountOwner")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property Credentials() As APICredentialsType
             Get
                 Return Me.credentialsField
             End Get
             Set
-                Me.credentialsField = Value
+                Me.credentialsField = value
                 Me.RaisePropertyChanged("Credentials")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property ConfigureAPIs() As String
             Get
                 Return Me.configureAPIsField
             End Get
             Set
-                Me.configureAPIsField = Value
+                Me.configureAPIsField = value
                 Me.RaisePropertyChanged("ConfigureAPIs")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property EmailVerificationStatus() As String
             Get
                 Return Me.emailVerificationStatusField
             End Get
             Set
-                Me.emailVerificationStatusField = Value
+                Me.emailVerificationStatusField = value
                 Me.RaisePropertyChanged("EmailVerificationStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property VettingStatus() As String
             Get
                 Return Me.vettingStatusField
             End Get
             Set
-                Me.vettingStatusField = Value
+                Me.vettingStatusField = value
                 Me.RaisePropertyChanged("VettingStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property BankAccountVerificationStatus() As String
             Get
                 Return Me.bankAccountVerificationStatusField
             End Get
             Set
-                Me.bankAccountVerificationStatusField = Value
+                Me.bankAccountVerificationStatusField = value
                 Me.RaisePropertyChanged("BankAccountVerificationStatus")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9637,82 +9642,82 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BoardingStatusType
-
+        
         '''<remarks/>
         Unknown
-
+        
         '''<remarks/>
         Completed
-
+        
         '''<remarks/>
         Cancelled
-
+        
         '''<remarks/>
         Pending
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum UserWithdrawalLimitTypeType
-
+        
         '''<remarks/>
         Unknown
-
+        
         '''<remarks/>
         Limited
-
+        
         '''<remarks/>
         Unlimited
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PayeeInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private payeeEmailField As String
-
+        
         Private payeeIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property PayeeEmail() As String
             Get
                 Return Me.payeeEmailField
             End Get
             Set
-                Me.payeeEmailField = Value
+                Me.payeeEmailField = value
                 Me.RaisePropertyChanged("PayeeEmail")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PayeeID() As String
             Get
                 Return Me.payeeIDField
             End Get
             Set
-                Me.payeeIDField = Value
+                Me.payeeIDField = value
                 Me.RaisePropertyChanged("PayeeID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9720,131 +9725,131 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class BAUpdateResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private billingAgreementIDField As String
-
+        
         Private billingAgreementDescriptionField As String
-
+        
         Private billingAgreementStatusField As MerchantPullStatusCodeType
-
+        
         Private billingAgreementCustomField As String
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private billingAgreementMaxField As BasicAmountType
-
+        
         Private billingAddressField As AddressType
-
+        
         Private payeeInfoField As PayeeInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property BillingAgreementID() As String
             Get
                 Return Me.billingAgreementIDField
             End Get
             Set
-                Me.billingAgreementIDField = Value
+                Me.billingAgreementIDField = value
                 Me.RaisePropertyChanged("BillingAgreementID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property BillingAgreementDescription() As String
             Get
                 Return Me.billingAgreementDescriptionField
             End Get
             Set
-                Me.billingAgreementDescriptionField = Value
+                Me.billingAgreementDescriptionField = value
                 Me.RaisePropertyChanged("BillingAgreementDescription")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property BillingAgreementStatus() As MerchantPullStatusCodeType
             Get
                 Return Me.billingAgreementStatusField
             End Get
             Set
-                Me.billingAgreementStatusField = Value
+                Me.billingAgreementStatusField = value
                 Me.RaisePropertyChanged("BillingAgreementStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property BillingAgreementCustom() As String
             Get
                 Return Me.billingAgreementCustomField
             End Get
             Set
-                Me.billingAgreementCustomField = Value
+                Me.billingAgreementCustomField = value
                 Me.RaisePropertyChanged("BillingAgreementCustom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property BillingAgreementMax() As BasicAmountType
             Get
                 Return Me.billingAgreementMaxField
             End Get
             Set
-                Me.billingAgreementMaxField = Value
+                Me.billingAgreementMaxField = value
                 Me.RaisePropertyChanged("BillingAgreementMax")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property BillingAddress() As AddressType
             Get
                 Return Me.billingAddressField
             End Get
             Set
-                Me.billingAddressField = Value
+                Me.billingAddressField = value
                 Me.RaisePropertyChanged("BillingAddress")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property PayeeInfo() As PayeeInfoType
             Get
                 Return Me.payeeInfoField
             End Get
             Set
-                Me.payeeInfoField = Value
+                Me.payeeInfoField = value
                 Me.RaisePropertyChanged("PayeeInfo")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -9852,172 +9857,172 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MerchantPullStatusCodeType
-
+        
         '''<remarks/>
         Active
-
+        
         '''<remarks/>
         Canceled
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentTransactionSearchResultType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private timestampField As Date
-
+        
         Private timezoneField As String
-
+        
         Private typeField As String
-
+        
         Private payerField As String
-
+        
         Private payerDisplayNameField As String
-
+        
         Private transactionIDField As String
-
+        
         Private statusField As String
-
+        
         Private grossAmountField As BasicAmountType
-
+        
         Private feeAmountField As BasicAmountType
-
+        
         Private netAmountField As BasicAmountType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Timestamp() As Date
             Get
                 Return Me.timestampField
             End Get
             Set
-                Me.timestampField = Value
+                Me.timestampField = value
                 Me.RaisePropertyChanged("Timestamp")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Timezone() As String
             Get
                 Return Me.timezoneField
             End Get
             Set
-                Me.timezoneField = Value
+                Me.timezoneField = value
                 Me.RaisePropertyChanged("Timezone")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Type() As String
             Get
                 Return Me.typeField
             End Get
             Set
-                Me.typeField = Value
+                Me.typeField = value
                 Me.RaisePropertyChanged("Type")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Payer() As String
             Get
                 Return Me.payerField
             End Get
             Set
-                Me.payerField = Value
+                Me.payerField = value
                 Me.RaisePropertyChanged("Payer")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property PayerDisplayName() As String
             Get
                 Return Me.payerDisplayNameField
             End Get
             Set
-                Me.payerDisplayNameField = Value
+                Me.payerDisplayNameField = value
                 Me.RaisePropertyChanged("PayerDisplayName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property Status() As String
             Get
                 Return Me.statusField
             End Get
             Set
-                Me.statusField = Value
+                Me.statusField = value
                 Me.RaisePropertyChanged("Status")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property GrossAmount() As BasicAmountType
             Get
                 Return Me.grossAmountField
             End Get
             Set
-                Me.grossAmountField = Value
+                Me.grossAmountField = value
                 Me.RaisePropertyChanged("GrossAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property FeeAmount() As BasicAmountType
             Get
                 Return Me.feeAmountField
             End Get
             Set
-                Me.feeAmountField = Value
+                Me.feeAmountField = value
                 Me.RaisePropertyChanged("FeeAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property NetAmount() As BasicAmountType
             Get
                 Return Me.netAmountField
             End Get
             Set
-                Me.netAmountField = Value
+                Me.netAmountField = value
                 Me.RaisePropertyChanged("NetAmount")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10025,117 +10030,117 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class MerchantPullInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private mpStatusField As MerchantPullStatusCodeType
-
+        
         Private mpMaxField As BasicAmountType
-
+        
         Private mpCustomField As String
-
+        
         Private descField As String
-
+        
         Private invoiceField As String
-
+        
         Private customField As String
-
+        
         Private paymentSourceIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property MpStatus() As MerchantPullStatusCodeType
             Get
                 Return Me.mpStatusField
             End Get
             Set
-                Me.mpStatusField = Value
+                Me.mpStatusField = value
                 Me.RaisePropertyChanged("MpStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property MpMax() As BasicAmountType
             Get
                 Return Me.mpMaxField
             End Get
             Set
-                Me.mpMaxField = Value
+                Me.mpMaxField = value
                 Me.RaisePropertyChanged("MpMax")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property MpCustom() As String
             Get
                 Return Me.mpCustomField
             End Get
             Set
-                Me.mpCustomField = Value
+                Me.mpCustomField = value
                 Me.RaisePropertyChanged("MpCustom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Desc() As String
             Get
                 Return Me.descField
             End Get
             Set
-                Me.descField = Value
+                Me.descField = value
                 Me.RaisePropertyChanged("Desc")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Invoice() As String
             Get
                 Return Me.invoiceField
             End Get
             Set
-                Me.invoiceField = Value
+                Me.invoiceField = value
                 Me.RaisePropertyChanged("Invoice")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property Custom() As String
             Get
                 Return Me.customField
             End Get
             Set
-                Me.customField = Value
+                Me.customField = value
                 Me.RaisePropertyChanged("Custom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property PaymentSourceID() As String
             Get
                 Return Me.paymentSourceIDField
             End Get
             Set
-                Me.paymentSourceIDField = Value
+                Me.paymentSourceIDField = value
                 Me.RaisePropertyChanged("PaymentSourceID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10143,61 +10148,61 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class MerchantPullPaymentResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private paymentInfoField As PaymentInfoType
-
+        
         Private merchantPullInfoField As MerchantPullInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PaymentInfo() As PaymentInfoType
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property MerchantPullInfo() As MerchantPullInfoType
             Get
                 Return Me.merchantPullInfoField
             End Get
             Set
-                Me.merchantPullInfoField = Value
+                Me.merchantPullInfoField = value
                 Me.RaisePropertyChanged("MerchantPullInfo")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10205,47 +10210,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ThreeDSecureResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private vpasField As String
-
+        
         Private eciSubmitted3DSField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Vpas() As String
             Get
                 Return Me.vpasField
             End Get
             Set
-                Me.vpasField = Value
+                Me.vpasField = value
                 Me.RaisePropertyChanged("Vpas")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property EciSubmitted3DS() As String
             Get
                 Return Me.eciSubmitted3DSField
             End Get
             Set
-                Me.eciSubmitted3DSField = Value
+                Me.eciSubmitted3DSField = value
                 Me.RaisePropertyChanged("EciSubmitted3DS")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10253,47 +10258,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ThreeDSecureInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private threeDSecureRequestField As ThreeDSecureRequestType
-
+        
         Private threeDSecureResponseField As ThreeDSecureResponseType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ThreeDSecureRequest() As ThreeDSecureRequestType
             Get
                 Return Me.threeDSecureRequestField
             End Get
             Set
-                Me.threeDSecureRequestField = Value
+                Me.threeDSecureRequestField = value
                 Me.RaisePropertyChanged("ThreeDSecureRequest")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ThreeDSecureResponse() As ThreeDSecureResponseType
             Get
                 Return Me.threeDSecureResponseField
             End Get
             Set
-                Me.threeDSecureResponseField = Value
+                Me.threeDSecureResponseField = value
                 Me.RaisePropertyChanged("ThreeDSecureResponse")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10301,75 +10306,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class OfferCouponInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private typeField As String
-
+        
         Private idField As String
-
+        
         Private amountField As String
-
+        
         Private amountCurrencyField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Type() As String
             Get
                 Return Me.typeField
             End Get
             Set
-                Me.typeField = Value
+                Me.typeField = value
                 Me.RaisePropertyChanged("Type")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ID() As String
             Get
                 Return Me.idField
             End Get
             Set
-                Me.idField = Value
+                Me.idField = value
                 Me.RaisePropertyChanged("ID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Amount() As String
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property AmountCurrency() As String
             Get
                 Return Me.amountCurrencyField
             End Get
             Set
-                Me.amountCurrencyField = Value
+                Me.amountCurrencyField = value
                 Me.RaisePropertyChanged("AmountCurrency")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10377,75 +10382,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class AuctionInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private buyerIDField As String
-
+        
         Private closingDateField As Date
-
+        
         Private closingDateFieldSpecified As Boolean
-
+        
         Private multiItemField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property BuyerID() As String
             Get
                 Return Me.buyerIDField
             End Get
             Set
-                Me.buyerIDField = Value
+                Me.buyerIDField = value
                 Me.RaisePropertyChanged("BuyerID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ClosingDate() As Date
             Get
                 Return Me.closingDateField
             End Get
             Set
-                Me.closingDateField = Value
+                Me.closingDateField = value
                 Me.RaisePropertyChanged("ClosingDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ClosingDateSpecified() As Boolean
             Get
                 Return Me.closingDateFieldSpecified
             End Get
             Set
-                Me.closingDateFieldSpecified = Value
+                Me.closingDateFieldSpecified = value
                 Me.RaisePropertyChanged("ClosingDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property multiItem() As String
             Get
                 Return Me.multiItemField
             End Get
             Set
-                Me.multiItemField = Value
+                Me.multiItemField = value
                 Me.RaisePropertyChanged("multiItem")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10453,47 +10458,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class SubscriptionTermsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private amountField As BasicAmountType
-
+        
         Private periodField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property period() As String
             Get
                 Return Me.periodField
             End Get
             Set
-                Me.periodField = Value
+                Me.periodField = value
                 Me.RaisePropertyChanged("period")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10501,201 +10506,201 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class SubscriptionInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private subscriptionIDField As String
-
+        
         Private subscriptionDateField As Date
-
+        
         Private subscriptionDateFieldSpecified As Boolean
-
+        
         Private effectiveDateField As Date
-
+        
         Private effectiveDateFieldSpecified As Boolean
-
+        
         Private retryTimeField As Date
-
+        
         Private retryTimeFieldSpecified As Boolean
-
+        
         Private usernameField As String
-
+        
         Private passwordField As String
-
+        
         Private recurrencesField As String
-
+        
         Private termsField() As SubscriptionTermsType
-
+        
         Private reattemptField As String
-
+        
         Private recurringField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property SubscriptionID() As String
             Get
                 Return Me.subscriptionIDField
             End Get
             Set
-                Me.subscriptionIDField = Value
+                Me.subscriptionIDField = value
                 Me.RaisePropertyChanged("SubscriptionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property SubscriptionDate() As Date
             Get
                 Return Me.subscriptionDateField
             End Get
             Set
-                Me.subscriptionDateField = Value
+                Me.subscriptionDateField = value
                 Me.RaisePropertyChanged("SubscriptionDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property SubscriptionDateSpecified() As Boolean
             Get
                 Return Me.subscriptionDateFieldSpecified
             End Get
             Set
-                Me.subscriptionDateFieldSpecified = Value
+                Me.subscriptionDateFieldSpecified = value
                 Me.RaisePropertyChanged("SubscriptionDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property EffectiveDate() As Date
             Get
                 Return Me.effectiveDateField
             End Get
             Set
-                Me.effectiveDateField = Value
+                Me.effectiveDateField = value
                 Me.RaisePropertyChanged("EffectiveDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property EffectiveDateSpecified() As Boolean
             Get
                 Return Me.effectiveDateFieldSpecified
             End Get
             Set
-                Me.effectiveDateFieldSpecified = Value
+                Me.effectiveDateFieldSpecified = value
                 Me.RaisePropertyChanged("EffectiveDateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property RetryTime() As Date
             Get
                 Return Me.retryTimeField
             End Get
             Set
-                Me.retryTimeField = Value
+                Me.retryTimeField = value
                 Me.RaisePropertyChanged("RetryTime")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RetryTimeSpecified() As Boolean
             Get
                 Return Me.retryTimeFieldSpecified
             End Get
             Set
-                Me.retryTimeFieldSpecified = Value
+                Me.retryTimeFieldSpecified = value
                 Me.RaisePropertyChanged("RetryTimeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Username() As String
             Get
                 Return Me.usernameField
             End Get
             Set
-                Me.usernameField = Value
+                Me.usernameField = value
                 Me.RaisePropertyChanged("Username")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property Password() As String
             Get
                 Return Me.passwordField
             End Get
             Set
-                Me.passwordField = Value
+                Me.passwordField = value
                 Me.RaisePropertyChanged("Password")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property Recurrences() As String
             Get
                 Return Me.recurrencesField
             End Get
             Set
-                Me.recurrencesField = Value
+                Me.recurrencesField = value
                 Me.RaisePropertyChanged("Recurrences")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("Terms", Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute("Terms", Order:=7)>  _
         Public Property Terms() As SubscriptionTermsType()
             Get
                 Return Me.termsField
             End Get
             Set
-                Me.termsField = Value
+                Me.termsField = value
                 Me.RaisePropertyChanged("Terms")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property reattempt() As String
             Get
                 Return Me.reattemptField
             End Get
             Set
-                Me.reattemptField = Value
+                Me.reattemptField = value
                 Me.RaisePropertyChanged("reattempt")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property recurring() As String
             Get
                 Return Me.recurringField
             End Get
             Set
-                Me.recurringField = Value
+                Me.recurringField = value
                 Me.RaisePropertyChanged("recurring")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10703,47 +10708,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class OptionType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private nameField As String
-
+        
         Private valueField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAttributeAttribute()>
+        <System.Xml.Serialization.XmlAttributeAttribute()>  _
         Public Property value() As String
             Get
                 Return Me.valueField
             End Get
             Set
-                Me.valueField = Value
+                Me.valueField = value
                 Me.RaisePropertyChanged("value")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10751,229 +10756,229 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentItemType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private ebayItemTxnIdField As String
-
+        
         Private nameField As String
-
+        
         Private numberField As String
-
+        
         Private quantityField As String
-
+        
         Private salesTaxField As String
-
+        
         Private shippingAmountField As String
-
+        
         Private handlingAmountField As String
-
+        
         Private invoiceItemDetailsField As InvoiceItemType
-
+        
         Private couponIDField As String
-
+        
         Private couponAmountField As String
-
+        
         Private couponAmountCurrencyField As String
-
+        
         Private loyaltyCardDiscountAmountField As String
-
+        
         Private loyaltyCardDiscountCurrencyField As String
-
+        
         Private amountField As BasicAmountType
-
+        
         Private optionsField() As OptionType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property EbayItemTxnId() As String
             Get
                 Return Me.ebayItemTxnIdField
             End Get
             Set
-                Me.ebayItemTxnIdField = Value
+                Me.ebayItemTxnIdField = value
                 Me.RaisePropertyChanged("EbayItemTxnId")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Number() As String
             Get
                 Return Me.numberField
             End Get
             Set
-                Me.numberField = Value
+                Me.numberField = value
                 Me.RaisePropertyChanged("Number")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property Quantity() As String
             Get
                 Return Me.quantityField
             End Get
             Set
-                Me.quantityField = Value
+                Me.quantityField = value
                 Me.RaisePropertyChanged("Quantity")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property SalesTax() As String
             Get
                 Return Me.salesTaxField
             End Get
             Set
-                Me.salesTaxField = Value
+                Me.salesTaxField = value
                 Me.RaisePropertyChanged("SalesTax")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property ShippingAmount() As String
             Get
                 Return Me.shippingAmountField
             End Get
             Set
-                Me.shippingAmountField = Value
+                Me.shippingAmountField = value
                 Me.RaisePropertyChanged("ShippingAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property HandlingAmount() As String
             Get
                 Return Me.handlingAmountField
             End Get
             Set
-                Me.handlingAmountField = Value
+                Me.handlingAmountField = value
                 Me.RaisePropertyChanged("HandlingAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property InvoiceItemDetails() As InvoiceItemType
             Get
                 Return Me.invoiceItemDetailsField
             End Get
             Set
-                Me.invoiceItemDetailsField = Value
+                Me.invoiceItemDetailsField = value
                 Me.RaisePropertyChanged("InvoiceItemDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property CouponID() As String
             Get
                 Return Me.couponIDField
             End Get
             Set
-                Me.couponIDField = Value
+                Me.couponIDField = value
                 Me.RaisePropertyChanged("CouponID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property CouponAmount() As String
             Get
                 Return Me.couponAmountField
             End Get
             Set
-                Me.couponAmountField = Value
+                Me.couponAmountField = value
                 Me.RaisePropertyChanged("CouponAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property CouponAmountCurrency() As String
             Get
                 Return Me.couponAmountCurrencyField
             End Get
             Set
-                Me.couponAmountCurrencyField = Value
+                Me.couponAmountCurrencyField = value
                 Me.RaisePropertyChanged("CouponAmountCurrency")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property LoyaltyCardDiscountAmount() As String
             Get
                 Return Me.loyaltyCardDiscountAmountField
             End Get
             Set
-                Me.loyaltyCardDiscountAmountField = Value
+                Me.loyaltyCardDiscountAmountField = value
                 Me.RaisePropertyChanged("LoyaltyCardDiscountAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property LoyaltyCardDiscountCurrency() As String
             Get
                 Return Me.loyaltyCardDiscountCurrencyField
             End Get
             Set
-                Me.loyaltyCardDiscountCurrencyField = Value
+                Me.loyaltyCardDiscountCurrencyField = value
                 Me.RaisePropertyChanged("LoyaltyCardDiscountCurrency")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("Options", Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute("Options", Order:=14)>  _
         Public Property Options() As OptionType()
             Get
                 Return Me.optionsField
             End Get
             Set
-                Me.optionsField = Value
+                Me.optionsField = value
                 Me.RaisePropertyChanged("Options")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -10981,355 +10986,355 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class InvoiceItemType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private nameField As String
-
+        
         Private descriptionField As String
-
+        
         Private eANField As String
-
+        
         Private sKUField As String
-
+        
         Private returnPolicyIdentifierField As String
-
+        
         Private priceField As BasicAmountType
-
+        
         Private itemPriceField As BasicAmountType
-
+        
         Private itemCountField As Double
-
+        
         Private itemCountFieldSpecified As Boolean
-
+        
         Private itemCountUnitField As UnitOfMeasure
-
+        
         Private itemCountUnitFieldSpecified As Boolean
-
+        
         Private discountField() As DiscountType
-
+        
         Private taxableField As Boolean
-
+        
         Private taxableFieldSpecified As Boolean
-
+        
         Private taxRateField As Double
-
+        
         Private taxRateFieldSpecified As Boolean
-
+        
         Private additionalFeesField() As AdditionalFeeType
-
+        
         Private reimbursableField As Boolean
-
+        
         Private reimbursableFieldSpecified As Boolean
-
+        
         Private mPNField As String
-
+        
         Private iSBNField As String
-
+        
         Private pLUField As String
-
+        
         Private modelNumberField As String
-
+        
         Private styleNumberField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Description() As String
             Get
                 Return Me.descriptionField
             End Get
             Set
-                Me.descriptionField = Value
+                Me.descriptionField = value
                 Me.RaisePropertyChanged("Description")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property EAN() As String
             Get
                 Return Me.eANField
             End Get
             Set
-                Me.eANField = Value
+                Me.eANField = value
                 Me.RaisePropertyChanged("EAN")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property SKU() As String
             Get
                 Return Me.sKUField
             End Get
             Set
-                Me.sKUField = Value
+                Me.sKUField = value
                 Me.RaisePropertyChanged("SKU")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property ReturnPolicyIdentifier() As String
             Get
                 Return Me.returnPolicyIdentifierField
             End Get
             Set
-                Me.returnPolicyIdentifierField = Value
+                Me.returnPolicyIdentifierField = value
                 Me.RaisePropertyChanged("ReturnPolicyIdentifier")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property Price() As BasicAmountType
             Get
                 Return Me.priceField
             End Get
             Set
-                Me.priceField = Value
+                Me.priceField = value
                 Me.RaisePropertyChanged("Price")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property ItemPrice() As BasicAmountType
             Get
                 Return Me.itemPriceField
             End Get
             Set
-                Me.itemPriceField = Value
+                Me.itemPriceField = value
                 Me.RaisePropertyChanged("ItemPrice")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property ItemCount() As Double
             Get
                 Return Me.itemCountField
             End Get
             Set
-                Me.itemCountField = Value
+                Me.itemCountField = value
                 Me.RaisePropertyChanged("ItemCount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ItemCountSpecified() As Boolean
             Get
                 Return Me.itemCountFieldSpecified
             End Get
             Set
-                Me.itemCountFieldSpecified = Value
+                Me.itemCountFieldSpecified = value
                 Me.RaisePropertyChanged("ItemCountSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property ItemCountUnit() As UnitOfMeasure
             Get
                 Return Me.itemCountUnitField
             End Get
             Set
-                Me.itemCountUnitField = Value
+                Me.itemCountUnitField = value
                 Me.RaisePropertyChanged("ItemCountUnit")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ItemCountUnitSpecified() As Boolean
             Get
                 Return Me.itemCountUnitFieldSpecified
             End Get
             Set
-                Me.itemCountUnitFieldSpecified = Value
+                Me.itemCountUnitFieldSpecified = value
                 Me.RaisePropertyChanged("ItemCountUnitSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("Discount", Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute("Discount", Order:=9)>  _
         Public Property Discount() As DiscountType()
             Get
                 Return Me.discountField
             End Get
             Set
-                Me.discountField = Value
+                Me.discountField = value
                 Me.RaisePropertyChanged("Discount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property Taxable() As Boolean
             Get
                 Return Me.taxableField
             End Get
             Set
-                Me.taxableField = Value
+                Me.taxableField = value
                 Me.RaisePropertyChanged("Taxable")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property TaxableSpecified() As Boolean
             Get
                 Return Me.taxableFieldSpecified
             End Get
             Set
-                Me.taxableFieldSpecified = Value
+                Me.taxableFieldSpecified = value
                 Me.RaisePropertyChanged("TaxableSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property TaxRate() As Double
             Get
                 Return Me.taxRateField
             End Get
             Set
-                Me.taxRateField = Value
+                Me.taxRateField = value
                 Me.RaisePropertyChanged("TaxRate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property TaxRateSpecified() As Boolean
             Get
                 Return Me.taxRateFieldSpecified
             End Get
             Set
-                Me.taxRateFieldSpecified = Value
+                Me.taxRateFieldSpecified = value
                 Me.RaisePropertyChanged("TaxRateSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("AdditionalFees", Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute("AdditionalFees", Order:=12)>  _
         Public Property AdditionalFees() As AdditionalFeeType()
             Get
                 Return Me.additionalFeesField
             End Get
             Set
-                Me.additionalFeesField = Value
+                Me.additionalFeesField = value
                 Me.RaisePropertyChanged("AdditionalFees")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property Reimbursable() As Boolean
             Get
                 Return Me.reimbursableField
             End Get
             Set
-                Me.reimbursableField = Value
+                Me.reimbursableField = value
                 Me.RaisePropertyChanged("Reimbursable")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ReimbursableSpecified() As Boolean
             Get
                 Return Me.reimbursableFieldSpecified
             End Get
             Set
-                Me.reimbursableFieldSpecified = Value
+                Me.reimbursableFieldSpecified = value
                 Me.RaisePropertyChanged("ReimbursableSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=14)>  _
         Public Property MPN() As String
             Get
                 Return Me.mPNField
             End Get
             Set
-                Me.mPNField = Value
+                Me.mPNField = value
                 Me.RaisePropertyChanged("MPN")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=15)>  _
         Public Property ISBN() As String
             Get
                 Return Me.iSBNField
             End Get
             Set
-                Me.iSBNField = Value
+                Me.iSBNField = value
                 Me.RaisePropertyChanged("ISBN")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=16)>  _
         Public Property PLU() As String
             Get
                 Return Me.pLUField
             End Get
             Set
-                Me.pLUField = Value
+                Me.pLUField = value
                 Me.RaisePropertyChanged("PLU")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=17)>  _
         Public Property ModelNumber() As String
             Get
                 Return Me.modelNumberField
             End Get
             Set
-                Me.modelNumberField = Value
+                Me.modelNumberField = value
                 Me.RaisePropertyChanged("ModelNumber")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=18)>  _
         Public Property StyleNumber() As String
             Get
                 Return Me.styleNumberField
             End Get
             Set
-                Me.styleNumberField = Value
+                Me.styleNumberField = value
                 Me.RaisePropertyChanged("StyleNumber")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11337,183 +11342,183 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum UnitOfMeasure
-
+        
         '''<remarks/>
         EA
-
+        
         '''<remarks/>
         Hours
-
+        
         '''<remarks/>
         Days
-
+        
         '''<remarks/>
         Seconds
-
+        
         '''<remarks/>
         CrateOf12
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlEnumAttribute("6Pack")>
+        <System.Xml.Serialization.XmlEnumAttribute("6Pack")>  _
         Item6Pack
-
+        
         '''<remarks/>
         GLI
-
+        
         '''<remarks/>
         GLL
-
+        
         '''<remarks/>
         LTR
-
+        
         '''<remarks/>
         INH
-
+        
         '''<remarks/>
         FOT
-
+        
         '''<remarks/>
         MMT
-
+        
         '''<remarks/>
         CMQ
-
+        
         '''<remarks/>
         MTR
-
+        
         '''<remarks/>
         MTK
-
+        
         '''<remarks/>
         MTQ
-
+        
         '''<remarks/>
         GRM
-
+        
         '''<remarks/>
         KGM
-
+        
         '''<remarks/>
         KG
-
+        
         '''<remarks/>
         LBR
-
+        
         '''<remarks/>
         ANN
-
+        
         '''<remarks/>
         CEL
-
+        
         '''<remarks/>
         FAH
-
+        
         '''<remarks/>
         RESERVED
     End Enum
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class DiscountType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private nameField As String
-
+        
         Private descriptionField As String
-
+        
         Private amountField As BasicAmountType
-
+        
         Private redeemedOfferTypeField As RedeemedOfferType
-
+        
         Private redeemedOfferTypeFieldSpecified As Boolean
-
+        
         Private redeemedOfferIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Name() As String
             Get
                 Return Me.nameField
             End Get
             Set
-                Me.nameField = Value
+                Me.nameField = value
                 Me.RaisePropertyChanged("Name")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Description() As String
             Get
                 Return Me.descriptionField
             End Get
             Set
-                Me.descriptionField = Value
+                Me.descriptionField = value
                 Me.RaisePropertyChanged("Description")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property RedeemedOfferType() As RedeemedOfferType
             Get
                 Return Me.redeemedOfferTypeField
             End Get
             Set
-                Me.redeemedOfferTypeField = Value
+                Me.redeemedOfferTypeField = value
                 Me.RaisePropertyChanged("RedeemedOfferType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RedeemedOfferTypeSpecified() As Boolean
             Get
                 Return Me.redeemedOfferTypeFieldSpecified
             End Get
             Set
-                Me.redeemedOfferTypeFieldSpecified = Value
+                Me.redeemedOfferTypeFieldSpecified = value
                 Me.RaisePropertyChanged("RedeemedOfferTypeSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property RedeemedOfferID() As String
             Get
                 Return Me.redeemedOfferIDField
             End Get
             Set
-                Me.redeemedOfferIDField = Value
+                Me.redeemedOfferIDField = value
                 Me.RaisePropertyChanged("RedeemedOfferID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11521,47 +11526,47 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class AdditionalFeeType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private typeField As String
-
+        
         Private amountField As BasicAmountType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Type() As String
             Get
                 Return Me.typeField
             End Get
             Set
-                Me.typeField = Value
+                Me.typeField = value
                 Me.RaisePropertyChanged("Type")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11569,117 +11574,117 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentItemInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private invoiceIDField As String
-
+        
         Private customField As String
-
+        
         Private memoField As String
-
+        
         Private salesTaxField As String
-
+        
         Private paymentItemField() As PaymentItemType
-
+        
         Private subscriptionField As SubscriptionInfoType
-
+        
         Private auctionField As AuctionInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property InvoiceID() As String
             Get
                 Return Me.invoiceIDField
             End Get
             Set
-                Me.invoiceIDField = Value
+                Me.invoiceIDField = value
                 Me.RaisePropertyChanged("InvoiceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Custom() As String
             Get
                 Return Me.customField
             End Get
             Set
-                Me.customField = Value
+                Me.customField = value
                 Me.RaisePropertyChanged("Custom")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property Memo() As String
             Get
                 Return Me.memoField
             End Get
             Set
-                Me.memoField = Value
+                Me.memoField = value
                 Me.RaisePropertyChanged("Memo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property SalesTax() As String
             Get
                 Return Me.salesTaxField
             End Get
             Set
-                Me.salesTaxField = Value
+                Me.salesTaxField = value
                 Me.RaisePropertyChanged("SalesTax")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("PaymentItem", Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute("PaymentItem", Order:=4)>  _
         Public Property PaymentItem() As PaymentItemType()
             Get
                 Return Me.paymentItemField
             End Get
             Set
-                Me.paymentItemField = Value
+                Me.paymentItemField = value
                 Me.RaisePropertyChanged("PaymentItem")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property Subscription() As SubscriptionInfoType
             Get
                 Return Me.subscriptionField
             End Get
             Set
-                Me.subscriptionField = Value
+                Me.subscriptionField = value
                 Me.RaisePropertyChanged("Subscription")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property Auction() As AuctionInfoType
             Get
                 Return Me.auctionField
             End Get
             Set
-                Me.auctionField = Value
+                Me.auctionField = value
                 Me.RaisePropertyChanged("Auction")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11687,61 +11692,61 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ReceiverInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private businessField As String
-
+        
         Private receiverField As String
-
+        
         Private receiverIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Business() As String
             Get
                 Return Me.businessField
             End Get
             Set
-                Me.businessField = Value
+                Me.businessField = value
                 Me.RaisePropertyChanged("Business")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Receiver() As String
             Get
                 Return Me.receiverField
             End Get
             Set
-                Me.receiverField = Value
+                Me.receiverField = value
                 Me.RaisePropertyChanged("Receiver")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ReceiverID() As String
             Get
                 Return Me.receiverIDField
             End Get
             Set
-                Me.receiverIDField = Value
+                Me.receiverIDField = value
                 Me.RaisePropertyChanged("ReceiverID")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11749,229 +11754,229 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class PaymentTransactionType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private receiverInfoField As ReceiverInfoType
-
+        
         Private payerInfoField As PayerInfoType
-
+        
         Private tPLReferenceIDField As String
-
+        
         Private paymentInfoField As PaymentInfoType
-
+        
         Private paymentItemInfoField As PaymentItemInfoType
-
+        
         Private offerCouponInfoField As OfferCouponInfoType
-
+        
         Private secondaryAddressField As AddressType
-
+        
         Private userSelectedOptionsField As UserSelectedOptionType
-
+        
         Private giftMessageField As String
-
+        
         Private giftReceiptField As String
-
+        
         Private giftWrapNameField As String
-
+        
         Private giftWrapAmountField As BasicAmountType
-
+        
         Private buyerEmailOptInField As String
-
+        
         Private surveyQuestionField As String
-
+        
         Private surveyChoiceSelectedField() As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property ReceiverInfo() As ReceiverInfoType
             Get
                 Return Me.receiverInfoField
             End Get
             Set
-                Me.receiverInfoField = Value
+                Me.receiverInfoField = value
                 Me.RaisePropertyChanged("ReceiverInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PayerInfo() As PayerInfoType
             Get
                 Return Me.payerInfoField
             End Get
             Set
-                Me.payerInfoField = Value
+                Me.payerInfoField = value
                 Me.RaisePropertyChanged("PayerInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property TPLReferenceID() As String
             Get
                 Return Me.tPLReferenceIDField
             End Get
             Set
-                Me.tPLReferenceIDField = Value
+                Me.tPLReferenceIDField = value
                 Me.RaisePropertyChanged("TPLReferenceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property PaymentInfo() As PaymentInfoType
             Get
                 Return Me.paymentInfoField
             End Get
             Set
-                Me.paymentInfoField = Value
+                Me.paymentInfoField = value
                 Me.RaisePropertyChanged("PaymentInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property PaymentItemInfo() As PaymentItemInfoType
             Get
                 Return Me.paymentItemInfoField
             End Get
             Set
-                Me.paymentItemInfoField = Value
+                Me.paymentItemInfoField = value
                 Me.RaisePropertyChanged("PaymentItemInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property OfferCouponInfo() As OfferCouponInfoType
             Get
                 Return Me.offerCouponInfoField
             End Get
             Set
-                Me.offerCouponInfoField = Value
+                Me.offerCouponInfoField = value
                 Me.RaisePropertyChanged("OfferCouponInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property SecondaryAddress() As AddressType
             Get
                 Return Me.secondaryAddressField
             End Get
             Set
-                Me.secondaryAddressField = Value
+                Me.secondaryAddressField = value
                 Me.RaisePropertyChanged("SecondaryAddress")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property UserSelectedOptions() As UserSelectedOptionType
             Get
                 Return Me.userSelectedOptionsField
             End Get
             Set
-                Me.userSelectedOptionsField = Value
+                Me.userSelectedOptionsField = value
                 Me.RaisePropertyChanged("UserSelectedOptions")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property GiftMessage() As String
             Get
                 Return Me.giftMessageField
             End Get
             Set
-                Me.giftMessageField = Value
+                Me.giftMessageField = value
                 Me.RaisePropertyChanged("GiftMessage")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property GiftReceipt() As String
             Get
                 Return Me.giftReceiptField
             End Get
             Set
-                Me.giftReceiptField = Value
+                Me.giftReceiptField = value
                 Me.RaisePropertyChanged("GiftReceipt")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=10)>  _
         Public Property GiftWrapName() As String
             Get
                 Return Me.giftWrapNameField
             End Get
             Set
-                Me.giftWrapNameField = Value
+                Me.giftWrapNameField = value
                 Me.RaisePropertyChanged("GiftWrapName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=11)>  _
         Public Property GiftWrapAmount() As BasicAmountType
             Get
                 Return Me.giftWrapAmountField
             End Get
             Set
-                Me.giftWrapAmountField = Value
+                Me.giftWrapAmountField = value
                 Me.RaisePropertyChanged("GiftWrapAmount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=12)>  _
         Public Property BuyerEmailOptIn() As String
             Get
                 Return Me.buyerEmailOptInField
             End Get
             Set
-                Me.buyerEmailOptInField = Value
+                Me.buyerEmailOptInField = value
                 Me.RaisePropertyChanged("BuyerEmailOptIn")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=13)>  _
         Public Property SurveyQuestion() As String
             Get
                 Return Me.surveyQuestionField
             End Get
             Set
-                Me.surveyQuestionField = Value
+                Me.surveyQuestionField = value
                 Me.RaisePropertyChanged("SurveyQuestion")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("SurveyChoiceSelected", Order:=14)>
+        <System.Xml.Serialization.XmlElementAttribute("SurveyChoiceSelected", Order:=14)>  _
         Public Property SurveyChoiceSelected() As String()
             Get
                 Return Me.surveyChoiceSelectedField
             End Get
             Set
-                Me.surveyChoiceSelectedField = Value
+                Me.surveyChoiceSelectedField = value
                 Me.RaisePropertyChanged("SurveyChoiceSelected")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11979,19 +11984,19 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:EnhancedDataTypes")>  _
     Partial Public Class EnhancedCompleteRecoupResponseDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -11999,75 +12004,75 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class RefundInfoType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private refundStatusField As PaymentStatusCodeType
-
+        
         Private refundStatusFieldSpecified As Boolean
-
+        
         Private pendingReasonField As PendingStatusCodeType
-
+        
         Private pendingReasonFieldSpecified As Boolean
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property RefundStatus() As PaymentStatusCodeType
             Get
                 Return Me.refundStatusField
             End Get
             Set
-                Me.refundStatusField = Value
+                Me.refundStatusField = value
                 Me.RaisePropertyChanged("RefundStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property RefundStatusSpecified() As Boolean
             Get
                 Return Me.refundStatusFieldSpecified
             End Get
             Set
-                Me.refundStatusFieldSpecified = Value
+                Me.refundStatusFieldSpecified = value
                 Me.RaisePropertyChanged("RefundStatusSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property PendingReason() As PendingStatusCodeType
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PendingReasonSpecified() As Boolean
             Get
                 Return Me.pendingReasonFieldSpecified
             End Get
             Set
-                Me.pendingReasonFieldSpecified = Value
+                Me.pendingReasonFieldSpecified = value
                 Me.RaisePropertyChanged("PendingReasonSpecified")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -12075,89 +12080,89 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class ButtonSearchResultType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private hostedButtonIDField As String
-
+        
         Private buttonTypeField As String
-
+        
         Private itemNameField As String
-
+        
         Private modifyDateField As Date
-
+        
         Private modifyDateFieldSpecified As Boolean
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property HostedButtonID() As String
             Get
                 Return Me.hostedButtonIDField
             End Get
             Set
-                Me.hostedButtonIDField = Value
+                Me.hostedButtonIDField = value
                 Me.RaisePropertyChanged("HostedButtonID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ButtonType() As String
             Get
                 Return Me.buttonTypeField
             End Get
             Set
-                Me.buttonTypeField = Value
+                Me.buttonTypeField = value
                 Me.RaisePropertyChanged("ButtonType")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ItemName() As String
             Get
                 Return Me.itemNameField
             End Get
             Set
-                Me.itemNameField = Value
+                Me.itemNameField = value
                 Me.RaisePropertyChanged("ItemName")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property ModifyDate() As Date
             Get
                 Return Me.modifyDateField
             End Get
             Set
-                Me.modifyDateField = Value
+                Me.modifyDateField = value
                 Me.RaisePropertyChanged("ModifyDate")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property ModifyDateSpecified() As Boolean
             Get
                 Return Me.modifyDateFieldSpecified
             End Get
             Set
-                Me.modifyDateFieldSpecified = Value
+                Me.modifyDateFieldSpecified = value
                 Me.RaisePropertyChanged("ModifyDateSpecified")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -12165,188 +12170,188 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ExternalRememberMeOptOutResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ReverseTransactionResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetPalDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateRecurringPaymentsProfileResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BillOutstandingAmountResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ManageRecurringPaymentsProfileStatusResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetRecurringPaymentsProfileDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateRecurringPaymentsProfileResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoNonReferencedCreditResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoReferenceTransactionResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateBillingAgreementResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBillingAgreementCustomerDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetCustomerBillingAgreementResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBalanceResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoMobileCheckoutPaymentResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetMobileCheckoutResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetMobileStatusResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateMobilePaymentResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateAuthorizationResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoAuthorizationResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPAuthorizationResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoVoidResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoReauthorizationResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoCaptureResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoCancelResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoDirectPaymentResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ManagePendingTransactionStatusResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoExpressCheckoutPaymentResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPExpressCheckoutPaymentResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetExpressCheckoutDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(ExecuteCheckoutOperationsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetExpressCheckoutResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetIncentiveEvaluationResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetAccessPermissionDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateAccessPermissionsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetAccessPermissionsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetAuthDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetAuthFlowParamResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBoardingDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(EnterBoardingResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(AddressVerifyResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BAUpdateResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(MassPayResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(TransactionSearchResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BillUserResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetTransactionDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(CancelRecoupResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(CompleteRecoupResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(InitiateRecoupResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(RefundTransactionResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMButtonSearchResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMGetInventoryResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMSetInventoryResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMGetButtonDetailsResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMManageButtonStatusResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMUpdateButtonResponseType)),
-     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMCreateButtonResponseType)),
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ExternalRememberMeOptOutResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ReverseTransactionResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetPalDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateRecurringPaymentsProfileResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BillOutstandingAmountResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ManageRecurringPaymentsProfileStatusResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetRecurringPaymentsProfileDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateRecurringPaymentsProfileResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoNonReferencedCreditResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoReferenceTransactionResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateBillingAgreementResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBillingAgreementCustomerDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetCustomerBillingAgreementResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBalanceResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoMobileCheckoutPaymentResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetMobileCheckoutResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetMobileStatusResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(CreateMobilePaymentResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateAuthorizationResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoAuthorizationResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPAuthorizationResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoVoidResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoReauthorizationResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoCaptureResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoCancelResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoDirectPaymentResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ManagePendingTransactionStatusResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoExpressCheckoutPaymentResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPExpressCheckoutPaymentResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetExpressCheckoutDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ExecuteCheckoutOperationsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetExpressCheckoutResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetIncentiveEvaluationResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetAccessPermissionDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(UpdateAccessPermissionsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetAccessPermissionsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetAuthDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(SetAuthFlowParamResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetBoardingDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(EnterBoardingResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(AddressVerifyResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BAUpdateResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(MassPayResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(TransactionSearchResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BillUserResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(GetTransactionDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(CancelRecoupResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(CompleteRecoupResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(InitiateRecoupResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(RefundTransactionResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMButtonSearchResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMGetInventoryResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMSetInventoryResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMGetButtonDetailsResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMManageButtonStatusResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMUpdateButtonResponseType)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(BMCreateButtonResponseType)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public MustInherit Class AbstractResponseType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private timestampField As Date
-
+        
         Private timestampFieldSpecified As Boolean
-
+        
         Private ackField As AckCodeType
-
+        
         Private correlationIDField As String
-
+        
         Private errorsField() As ErrorType
-
+        
         Private versionField As String
-
+        
         Private buildField As String
-
+        
         Private anyField As System.Xml.XmlElement
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Timestamp() As Date
             Get
                 Return Me.timestampField
             End Get
             Set
-                Me.timestampField = Value
+                Me.timestampField = value
                 Me.RaisePropertyChanged("Timestamp")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property TimestampSpecified() As Boolean
             Get
                 Return Me.timestampFieldSpecified
             End Get
             Set
-                Me.timestampFieldSpecified = Value
+                Me.timestampFieldSpecified = value
                 Me.RaisePropertyChanged("TimestampSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Ack() As AckCodeType
             Get
                 Return Me.ackField
             End Get
             Set
-                Me.ackField = Value
+                Me.ackField = value
                 Me.RaisePropertyChanged("Ack")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property CorrelationID() As String
             Get
                 Return Me.correlationIDField
             End Get
             Set
-                Me.correlationIDField = Value
+                Me.correlationIDField = value
                 Me.RaisePropertyChanged("CorrelationID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("Errors", Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute("Errors", Order:=3)>  _
         Public Property Errors() As ErrorType()
             Get
                 Return Me.errorsField
             End Get
             Set
-                Me.errorsField = Value
+                Me.errorsField = value
                 Me.RaisePropertyChanged("Errors")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property Version() As String
             Get
                 Return Me.versionField
             End Get
             Set
-                Me.versionField = Value
+                Me.versionField = value
                 Me.RaisePropertyChanged("Version")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property Build() As String
             Get
                 Return Me.buildField
             End Get
             Set
-                Me.buildField = Value
+                Me.buildField = value
                 Me.RaisePropertyChanged("Build")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlAnyElementAttribute([Namespace]:="", Order:=6)>
+        <System.Xml.Serialization.XmlAnyElementAttribute([Namespace]:="", Order:=6)>  _
         Public Property Any() As System.Xml.XmlElement
             Get
                 Return Me.anyField
             End Get
             Set
-                Me.anyField = Value
+                Me.anyField = value
                 Me.RaisePropertyChanged("Any")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -12354,720 +12359,720 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class ExternalRememberMeOptOutResponseType
         Inherits AbstractResponseType
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class ReverseTransactionResponseType
         Inherits AbstractResponseType
-
+        
         Private reverseTransactionResponseDetailsField As ReverseTransactionResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property ReverseTransactionResponseDetails() As ReverseTransactionResponseDetailsType
             Get
                 Return Me.reverseTransactionResponseDetailsField
             End Get
             Set
-                Me.reverseTransactionResponseDetailsField = Value
+                Me.reverseTransactionResponseDetailsField = value
                 Me.RaisePropertyChanged("ReverseTransactionResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class GetPalDetailsResponseType
         Inherits AbstractResponseType
-
+        
         Private palField As String
-
+        
         Private localeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Pal() As String
             Get
                 Return Me.palField
             End Get
             Set
-                Me.palField = Value
+                Me.palField = value
                 Me.RaisePropertyChanged("Pal")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Locale() As String
             Get
                 Return Me.localeField
             End Get
             Set
-                Me.localeField = Value
+                Me.localeField = value
                 Me.RaisePropertyChanged("Locale")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class UpdateRecurringPaymentsProfileResponseType
         Inherits AbstractResponseType
-
+        
         Private updateRecurringPaymentsProfileResponseDetailsField As UpdateRecurringPaymentsProfileResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property UpdateRecurringPaymentsProfileResponseDetails() As UpdateRecurringPaymentsProfileResponseDetailsType
             Get
                 Return Me.updateRecurringPaymentsProfileResponseDetailsField
             End Get
             Set
-                Me.updateRecurringPaymentsProfileResponseDetailsField = Value
+                Me.updateRecurringPaymentsProfileResponseDetailsField = value
                 Me.RaisePropertyChanged("UpdateRecurringPaymentsProfileResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class BillOutstandingAmountResponseType
         Inherits AbstractResponseType
-
+        
         Private billOutstandingAmountResponseDetailsField As BillOutstandingAmountResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property BillOutstandingAmountResponseDetails() As BillOutstandingAmountResponseDetailsType
             Get
                 Return Me.billOutstandingAmountResponseDetailsField
             End Get
             Set
-                Me.billOutstandingAmountResponseDetailsField = Value
+                Me.billOutstandingAmountResponseDetailsField = value
                 Me.RaisePropertyChanged("BillOutstandingAmountResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class ManageRecurringPaymentsProfileStatusResponseType
         Inherits AbstractResponseType
-
+        
         Private manageRecurringPaymentsProfileStatusResponseDetailsField As ManageRecurringPaymentsProfileStatusResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property ManageRecurringPaymentsProfileStatusResponseDetails() As ManageRecurringPaymentsProfileStatusResponseDetailsType
             Get
                 Return Me.manageRecurringPaymentsProfileStatusResponseDetailsField
             End Get
             Set
-                Me.manageRecurringPaymentsProfileStatusResponseDetailsField = Value
+                Me.manageRecurringPaymentsProfileStatusResponseDetailsField = value
                 Me.RaisePropertyChanged("ManageRecurringPaymentsProfileStatusResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class GetRecurringPaymentsProfileDetailsResponseType
         Inherits AbstractResponseType
-
+        
         Private getRecurringPaymentsProfileDetailsResponseDetailsField As GetRecurringPaymentsProfileDetailsResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property GetRecurringPaymentsProfileDetailsResponseDetails() As GetRecurringPaymentsProfileDetailsResponseDetailsType
             Get
                 Return Me.getRecurringPaymentsProfileDetailsResponseDetailsField
             End Get
             Set
-                Me.getRecurringPaymentsProfileDetailsResponseDetailsField = Value
+                Me.getRecurringPaymentsProfileDetailsResponseDetailsField = value
                 Me.RaisePropertyChanged("GetRecurringPaymentsProfileDetailsResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class CreateRecurringPaymentsProfileResponseType
         Inherits AbstractResponseType
-
+        
         Private createRecurringPaymentsProfileResponseDetailsField As CreateRecurringPaymentsProfileResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property CreateRecurringPaymentsProfileResponseDetails() As CreateRecurringPaymentsProfileResponseDetailsType
             Get
                 Return Me.createRecurringPaymentsProfileResponseDetailsField
             End Get
             Set
-                Me.createRecurringPaymentsProfileResponseDetailsField = Value
+                Me.createRecurringPaymentsProfileResponseDetailsField = value
                 Me.RaisePropertyChanged("CreateRecurringPaymentsProfileResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoNonReferencedCreditResponseType
         Inherits AbstractResponseType
-
+        
         Private doNonReferencedCreditResponseDetailsField As DoNonReferencedCreditResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property DoNonReferencedCreditResponseDetails() As DoNonReferencedCreditResponseDetailsType
             Get
                 Return Me.doNonReferencedCreditResponseDetailsField
             End Get
             Set
-                Me.doNonReferencedCreditResponseDetailsField = Value
+                Me.doNonReferencedCreditResponseDetailsField = value
                 Me.RaisePropertyChanged("DoNonReferencedCreditResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoReferenceTransactionResponseType
         Inherits AbstractResponseType
-
+        
         Private doReferenceTransactionResponseDetailsField As DoReferenceTransactionResponseDetailsType
-
+        
         Private fMFDetailsField As FMFDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property DoReferenceTransactionResponseDetails() As DoReferenceTransactionResponseDetailsType
             Get
                 Return Me.doReferenceTransactionResponseDetailsField
             End Get
             Set
-                Me.doReferenceTransactionResponseDetailsField = Value
+                Me.doReferenceTransactionResponseDetailsField = value
                 Me.RaisePropertyChanged("DoReferenceTransactionResponseDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property FMFDetails() As FMFDetailsType
             Get
                 Return Me.fMFDetailsField
             End Get
             Set
-                Me.fMFDetailsField = Value
+                Me.fMFDetailsField = value
                 Me.RaisePropertyChanged("FMFDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class CreateBillingAgreementResponseType
         Inherits AbstractResponseType
-
+        
         Private billingAgreementIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property BillingAgreementID() As String
             Get
                 Return Me.billingAgreementIDField
             End Get
             Set
-                Me.billingAgreementIDField = Value
+                Me.billingAgreementIDField = value
                 Me.RaisePropertyChanged("BillingAgreementID")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class GetBillingAgreementCustomerDetailsResponseType
         Inherits AbstractResponseType
-
+        
         Private getBillingAgreementCustomerDetailsResponseDetailsField As GetBillingAgreementCustomerDetailsResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property GetBillingAgreementCustomerDetailsResponseDetails() As GetBillingAgreementCustomerDetailsResponseDetailsType
             Get
                 Return Me.getBillingAgreementCustomerDetailsResponseDetailsField
             End Get
             Set
-                Me.getBillingAgreementCustomerDetailsResponseDetailsField = Value
+                Me.getBillingAgreementCustomerDetailsResponseDetailsField = value
                 Me.RaisePropertyChanged("GetBillingAgreementCustomerDetailsResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class SetCustomerBillingAgreementResponseType
         Inherits AbstractResponseType
-
+        
         Private tokenField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Token() As String
             Get
                 Return Me.tokenField
             End Get
             Set
-                Me.tokenField = Value
+                Me.tokenField = value
                 Me.RaisePropertyChanged("Token")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class GetBalanceResponseType
         Inherits AbstractResponseType
-
+        
         Private balanceField As BasicAmountType
-
+        
         Private balanceTimeStampField As Date
-
+        
         Private balanceHoldingsField() As BasicAmountType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Balance() As BasicAmountType
             Get
                 Return Me.balanceField
             End Get
             Set
-                Me.balanceField = Value
+                Me.balanceField = value
                 Me.RaisePropertyChanged("Balance")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property BalanceTimeStamp() As Date
             Get
                 Return Me.balanceTimeStampField
             End Get
             Set
-                Me.balanceTimeStampField = Value
+                Me.balanceTimeStampField = value
                 Me.RaisePropertyChanged("BalanceTimeStamp")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("BalanceHoldings", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute("BalanceHoldings", Order:=2)>  _
         Public Property BalanceHoldings() As BasicAmountType()
             Get
                 Return Me.balanceHoldingsField
             End Get
             Set
-                Me.balanceHoldingsField = Value
+                Me.balanceHoldingsField = value
                 Me.RaisePropertyChanged("BalanceHoldings")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoMobileCheckoutPaymentResponseType
         Inherits AbstractResponseType
-
+        
         Private doMobileCheckoutPaymentResponseDetailsField As DoMobileCheckoutPaymentResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property DoMobileCheckoutPaymentResponseDetails() As DoMobileCheckoutPaymentResponseDetailsType
             Get
                 Return Me.doMobileCheckoutPaymentResponseDetailsField
             End Get
             Set
-                Me.doMobileCheckoutPaymentResponseDetailsField = Value
+                Me.doMobileCheckoutPaymentResponseDetailsField = value
                 Me.RaisePropertyChanged("DoMobileCheckoutPaymentResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class SetMobileCheckoutResponseType
         Inherits AbstractResponseType
-
+        
         Private tokenField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Token() As String
             Get
                 Return Me.tokenField
             End Get
             Set
-                Me.tokenField = Value
+                Me.tokenField = value
                 Me.RaisePropertyChanged("Token")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class GetMobileStatusResponseType
         Inherits AbstractResponseType
-
+        
         Private isActivatedField As String
-
+        
         Private isPasswordSetField As String
-
+        
         Private paymentPendingField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=0)>  _
         Public Property IsActivated() As String
             Get
                 Return Me.isActivatedField
             End Get
             Set
-                Me.isActivatedField = Value
+                Me.isActivatedField = value
                 Me.RaisePropertyChanged("IsActivated")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=1)>  _
         Public Property IsPasswordSet() As String
             Get
                 Return Me.isPasswordSetField
             End Get
             Set
-                Me.isPasswordSetField = Value
+                Me.isPasswordSetField = value
                 Me.RaisePropertyChanged("IsPasswordSet")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(DataType:="integer", Order:=2)>  _
         Public Property PaymentPending() As String
             Get
                 Return Me.paymentPendingField
             End Get
             Set
-                Me.paymentPendingField = Value
+                Me.paymentPendingField = value
                 Me.RaisePropertyChanged("PaymentPending")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class CreateMobilePaymentResponseType
         Inherits AbstractResponseType
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class UpdateAuthorizationResponseType
         Inherits AbstractResponseType
-
+        
         Private transactionIDField As String
-
+        
         Private authorizationInfoField As AuthorizationInfoType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=1)>  _
         Public Property AuthorizationInfo() As AuthorizationInfoType
             Get
                 Return Me.authorizationInfoField
             End Get
             Set
-                Me.authorizationInfoField = Value
+                Me.authorizationInfoField = value
                 Me.RaisePropertyChanged("AuthorizationInfo")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPAuthorizationResponseType)),
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPAuthorizationResponseType)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoAuthorizationResponseType
         Inherits AbstractResponseType
-
+        
         Private transactionIDField As String
-
+        
         Private amountField As BasicAmountType
-
+        
         Private authorizationInfoField As AuthorizationInfoType
-
+        
         Private msgSubIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=2)>  _
         Public Property AuthorizationInfo() As AuthorizationInfoType
             Get
                 Return Me.authorizationInfoField
             End Get
             Set
-                Me.authorizationInfoField = Value
+                Me.authorizationInfoField = value
                 Me.RaisePropertyChanged("AuthorizationInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoUATPAuthorizationResponseType
         Inherits DoAuthorizationResponseType
-
+        
         Private uATPDetailsField As UATPDetailsType
-
+        
         Private authorizationCodeField As String
-
+        
         Private invoiceIDField As String
-
+        
         Private msgSubID1Field As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property UATPDetails() As UATPDetailsType
             Get
                 Return Me.uATPDetailsField
             End Get
             Set
-                Me.uATPDetailsField = Value
+                Me.uATPDetailsField = value
                 Me.RaisePropertyChanged("UATPDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property AuthorizationCode() As String
             Get
                 Return Me.authorizationCodeField
             End Get
             Set
-                Me.authorizationCodeField = Value
+                Me.authorizationCodeField = value
                 Me.RaisePropertyChanged("AuthorizationCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property InvoiceID() As String
             Get
                 Return Me.invoiceIDField
             End Get
             Set
-                Me.invoiceIDField = Value
+                Me.invoiceIDField = value
                 Me.RaisePropertyChanged("InvoiceID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute("MsgSubID", Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute("MsgSubID", Order:=3)>  _
         Public Property MsgSubID1() As String
             Get
                 Return Me.msgSubID1Field
             End Get
             Set
-                Me.msgSubID1Field = Value
+                Me.msgSubID1Field = value
                 Me.RaisePropertyChanged("MsgSubID1")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Partial Public Class UATPDetailsType
         Inherits Object
         Implements System.ComponentModel.INotifyPropertyChanged
-
+        
         Private uATPNumberField As String
-
+        
         Private expMonthField As Integer
-
+        
         Private expYearField As Integer
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property UATPNumber() As String
             Get
                 Return Me.uATPNumberField
             End Get
             Set
-                Me.uATPNumberField = Value
+                Me.uATPNumberField = value
                 Me.RaisePropertyChanged("UATPNumber")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property ExpMonth() As Integer
             Get
                 Return Me.expMonthField
             End Get
             Set
-                Me.expMonthField = Value
+                Me.expMonthField = value
                 Me.RaisePropertyChanged("ExpMonth")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property ExpYear() As Integer
             Get
                 Return Me.expYearField
             End Get
             Set
-                Me.expYearField = Value
+                Me.expYearField = value
                 Me.RaisePropertyChanged("ExpYear")
             End Set
         End Property
-
+        
         Public Event PropertyChanged As System.ComponentModel.PropertyChangedEventHandler Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
-
+        
         Protected Sub RaisePropertyChanged(ByVal propertyName As String)
             Dim propertyChanged As System.ComponentModel.PropertyChangedEventHandler = Me.PropertyChangedEvent
             If (Not (propertyChanged) Is Nothing) Then
@@ -13075,312 +13080,312 @@ Namespace PayPalAPI
             End If
         End Sub
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoVoidResponseType
         Inherits AbstractResponseType
-
+        
         Private authorizationIDField As String
-
+        
         Private msgSubIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property AuthorizationID() As String
             Get
                 Return Me.authorizationIDField
             End Get
             Set
-                Me.authorizationIDField = Value
+                Me.authorizationIDField = value
                 Me.RaisePropertyChanged("AuthorizationID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoReauthorizationResponseType
         Inherits AbstractResponseType
-
+        
         Private authorizationIDField As String
-
+        
         Private authorizationInfoField As AuthorizationInfoType
-
+        
         Private msgSubIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property AuthorizationID() As String
             Get
                 Return Me.authorizationIDField
             End Get
             Set
-                Me.authorizationIDField = Value
+                Me.authorizationIDField = value
                 Me.RaisePropertyChanged("AuthorizationID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=1)>  _
         Public Property AuthorizationInfo() As AuthorizationInfoType
             Get
                 Return Me.authorizationInfoField
             End Get
             Set
-                Me.authorizationInfoField = Value
+                Me.authorizationInfoField = value
                 Me.RaisePropertyChanged("AuthorizationInfo")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoCaptureResponseType
         Inherits AbstractResponseType
-
+        
         Private doCaptureResponseDetailsField As DoCaptureResponseDetailsType
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents", Order:=0)>  _
         Public Property DoCaptureResponseDetails() As DoCaptureResponseDetailsType
             Get
                 Return Me.doCaptureResponseDetailsField
             End Get
             Set
-                Me.doCaptureResponseDetailsField = Value
+                Me.doCaptureResponseDetailsField = value
                 Me.RaisePropertyChanged("DoCaptureResponseDetails")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoCancelResponseType
         Inherits AbstractResponseType
-
+        
         Private msgSubIDField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property MsgSubID() As String
             Get
                 Return Me.msgSubIDField
             End Get
             Set
-                Me.msgSubIDField = Value
+                Me.msgSubIDField = value
                 Me.RaisePropertyChanged("MsgSubID")
             End Set
         End Property
     End Class
-
+    
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),
-     System.SerializableAttribute(),
-     System.Diagnostics.DebuggerStepThroughAttribute(),
-     System.ComponentModel.DesignerCategoryAttribute("code"),
-     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:api:PayPalAPI")>  _
     Partial Public Class DoDirectPaymentResponseType
         Inherits AbstractResponseType
-
+        
         Private amountField As BasicAmountType
-
+        
         Private aVSCodeField As String
-
+        
         Private cVV2CodeField As String
-
+        
         Private transactionIDField As String
-
+        
         Private transactionPendingReasonField As String
-
+        
         Private pendingReasonField As PendingStatusCodeType
-
+        
         Private pendingReasonFieldSpecified As Boolean
-
+        
         Private paymentStatusField As PaymentStatusCodeType
-
+        
         Private paymentStatusFieldSpecified As Boolean
-
+        
         Private fMFDetailsField As FMFDetailsType
-
+        
         Private threeDSecureResponseField As ThreeDSecureResponseType
-
+        
         Private paymentAdviceCodeField As String
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=0)>  _
         Public Property Amount() As BasicAmountType
             Get
                 Return Me.amountField
             End Get
             Set
-                Me.amountField = Value
+                Me.amountField = value
                 Me.RaisePropertyChanged("Amount")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=1)>  _
         Public Property AVSCode() As String
             Get
                 Return Me.aVSCodeField
             End Get
             Set
-                Me.aVSCodeField = Value
+                Me.aVSCodeField = value
                 Me.RaisePropertyChanged("AVSCode")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=2)>  _
         Public Property CVV2Code() As String
             Get
                 Return Me.cVV2CodeField
             End Get
             Set
-                Me.cVV2CodeField = Value
+                Me.cVV2CodeField = value
                 Me.RaisePropertyChanged("CVV2Code")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=3)>  _
         Public Property TransactionID() As String
             Get
                 Return Me.transactionIDField
             End Get
             Set
-                Me.transactionIDField = Value
+                Me.transactionIDField = value
                 Me.RaisePropertyChanged("TransactionID")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=4)>  _
         Public Property TransactionPendingReason() As String
             Get
                 Return Me.transactionPendingReasonField
             End Get
             Set
-                Me.transactionPendingReasonField = Value
+                Me.transactionPendingReasonField = value
                 Me.RaisePropertyChanged("TransactionPendingReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=5)>  _
         Public Property PendingReason() As PendingStatusCodeType
             Get
                 Return Me.pendingReasonField
             End Get
             Set
-                Me.pendingReasonField = Value
+                Me.pendingReasonField = value
                 Me.RaisePropertyChanged("PendingReason")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PendingReasonSpecified() As Boolean
             Get
                 Return Me.pendingReasonFieldSpecified
             End Get
             Set
-                Me.pendingReasonFieldSpecified = Value
+                Me.pendingReasonFieldSpecified = value
                 Me.RaisePropertyChanged("PendingReasonSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=6)>  _
         Public Property PaymentStatus() As PaymentStatusCodeType
             Get
                 Return Me.paymentStatusField
             End Get
             Set
-                Me.paymentStatusField = Value
+                Me.paymentStatusField = value
                 Me.RaisePropertyChanged("PaymentStatus")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlIgnoreAttribute()>
+        <System.Xml.Serialization.XmlIgnoreAttribute()>  _
         Public Property PaymentStatusSpecified() As Boolean
             Get
                 Return Me.paymentStatusFieldSpecified
             End Get
             Set
-                Me.paymentStatusFieldSpecified = Value
+                Me.paymentStatusFieldSpecified = value
                 Me.RaisePropertyChanged("PaymentStatusSpecified")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=7)>  _
         Public Property FMFDetails() As FMFDetailsType
             Get
                 Return Me.fMFDetailsField
             End Get
             Set
-                Me.fMFDetailsField = Value
+                Me.fMFDetailsField = value
                 Me.RaisePropertyChanged("FMFDetails")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=8)>  _
         Public Property ThreeDSecureResponse() As ThreeDSecureResponseType
             Get
                 Return Me.threeDSecureResponseField
             End Get
             Set
-                Me.threeDSecureResponseField = Value
+                Me.threeDSecureResponseField = value
                 Me.RaisePropertyChanged("ThreeDSecureResponse")
             End Set
         End Property
-
+        
         '''<remarks/>
-        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>
+        <System.Xml.Serialization.XmlElementAttribute(Order:=9)>  _
         Public Property PaymentAdviceCode() As String
             Get
                 Return Me.paymentAdviceCodeField
@@ -13393,7 +13398,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13432,7 +13437,7 @@ Namespace PayPalAPI
     
     '''<remarks/>
     <System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPExpressCheckoutPaymentResponseType)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13470,7 +13475,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13494,7 +13499,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13518,7 +13523,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13542,7 +13547,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13566,7 +13571,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13590,7 +13595,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13614,7 +13619,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13638,7 +13643,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13662,7 +13667,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13686,7 +13691,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13710,7 +13715,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13734,7 +13739,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13758,7 +13763,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13866,7 +13871,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MatchStatusCodeType
@@ -13882,7 +13887,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13906,7 +13911,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13916,7 +13921,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13940,7 +13945,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -13978,7 +13983,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14016,7 +14021,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14026,7 +14031,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14050,7 +14055,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14060,7 +14065,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14182,7 +14187,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14206,7 +14211,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14342,7 +14347,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14432,7 +14437,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14536,7 +14541,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14546,7 +14551,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14878,7 +14883,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ButtonTypeType
@@ -14915,7 +14920,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ButtonCodeType
@@ -14934,7 +14939,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ButtonSubTypeType
@@ -14947,7 +14952,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -14995,7 +15000,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15085,7 +15090,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum OptionTypeListType
@@ -15104,7 +15109,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15250,7 +15255,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ButtonImageType
@@ -15266,7 +15271,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BuyNowTextType
@@ -15279,7 +15284,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum SubscribeTextType
@@ -15292,7 +15297,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15302,7 +15307,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15368,7 +15373,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15434,7 +15439,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15468,7 +15473,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15614,7 +15619,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15928,7 +15933,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -15990,7 +15995,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16052,7 +16057,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum StatusChangeActionType
@@ -16068,7 +16073,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16130,7 +16135,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum FailedPaymentActionType
@@ -16143,7 +16148,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16275,7 +16280,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16393,7 +16398,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16511,7 +16516,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16545,7 +16550,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16579,7 +16584,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16641,7 +16646,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -16843,7 +16848,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17059,7 +17064,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MerchantPullPaymentCodeType
@@ -17075,7 +17080,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17249,7 +17254,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17339,7 +17344,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BillingCodeType
@@ -17361,7 +17366,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17605,7 +17610,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17667,7 +17672,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17701,7 +17706,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -17931,7 +17936,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MobilePaymentCodeType
@@ -17950,7 +17955,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MobileRecipientCodeType
@@ -17963,7 +17968,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -18109,7 +18114,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -18367,7 +18372,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -18583,7 +18588,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -18617,7 +18622,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19001,7 +19006,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19077,7 +19082,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum CoupleType
@@ -19087,7 +19092,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19121,7 +19126,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19155,7 +19160,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19217,7 +19222,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19279,7 +19284,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19313,7 +19318,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19347,7 +19352,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19381,7 +19386,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19429,7 +19434,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19477,7 +19482,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19581,7 +19586,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ApprovalTypeType
@@ -19594,7 +19599,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ApprovalSubTypeType
@@ -19613,7 +19618,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19801,7 +19806,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum UserChannelCodeType
@@ -19832,7 +19837,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19866,7 +19871,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19928,7 +19933,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -19962,7 +19967,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20010,7 +20015,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20058,7 +20063,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20106,7 +20111,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20154,7 +20159,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20202,7 +20207,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20264,7 +20269,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20368,7 +20373,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20514,7 +20519,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20534,7 +20539,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -20596,7 +20601,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum UserSelectedFundingSourceType
@@ -20621,7 +20626,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -21691,7 +21696,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum SolutionTypeType
@@ -21704,7 +21709,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum LandingPageType
@@ -21720,7 +21725,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ChannelType
@@ -21733,7 +21738,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum TotalType
@@ -21746,7 +21751,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -21836,7 +21841,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum IncentiveRequestCodeType
@@ -21849,7 +21854,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum IncentiveRequestDetailLevelCodeType
@@ -21862,7 +21867,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -21966,7 +21971,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22112,7 +22117,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22216,7 +22221,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22460,7 +22465,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22732,7 +22737,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22808,7 +22813,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BankAccountTypeType
@@ -22821,7 +22826,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -22897,7 +22902,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -23225,7 +23230,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BusinessTypeType
@@ -23253,7 +23258,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BusinessCategoryType
@@ -23373,7 +23378,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum BusinessSubCategoryType
@@ -24448,7 +24453,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AverageTransactionPriceType
@@ -24499,7 +24504,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum AverageMonthlyVolumeType
@@ -24534,7 +24539,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum SalesVenueType
@@ -24557,7 +24562,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PercentageRevenueFromOnlineSalesType
@@ -24584,7 +24589,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -24730,7 +24735,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum MarketingCategoryType
@@ -24821,7 +24826,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -24925,7 +24930,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25155,7 +25160,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25175,7 +25180,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25195,7 +25200,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25215,7 +25220,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25320,7 +25325,7 @@ Namespace PayPalAPI
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BMManageButtonStatusRequestType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BMUpdateButtonRequestType)),  _
      System.Xml.Serialization.XmlIncludeAttribute(GetType(BMCreateButtonRequestType)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25396,7 +25401,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum DetailLevelCodeType
@@ -25412,7 +25417,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25450,7 +25455,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25474,7 +25479,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25484,7 +25489,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25508,7 +25513,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25532,7 +25537,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25556,7 +25561,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25580,7 +25585,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25604,7 +25609,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25628,7 +25633,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25680,7 +25685,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25704,7 +25709,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25728,7 +25733,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25752,7 +25757,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25776,7 +25781,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25800,7 +25805,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25824,7 +25829,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25848,7 +25853,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25872,7 +25877,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -25966,7 +25971,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum TransactionEntityType
@@ -25988,7 +25993,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26054,7 +26059,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26302,7 +26307,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26354,7 +26359,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26406,7 +26411,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26557,7 +26562,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum CompleteCodeType
@@ -26570,7 +26575,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26622,7 +26627,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum APIType
@@ -26638,7 +26643,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26690,7 +26695,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26728,7 +26733,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum FMFPendingTransactionActionType
@@ -26742,7 +26747,7 @@ Namespace PayPalAPI
     
     '''<remarks/>
     <System.Xml.Serialization.XmlIncludeAttribute(GetType(DoUATPExpressCheckoutPaymentRequestType)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26794,7 +26799,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26804,7 +26809,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26828,7 +26833,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26852,7 +26857,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26876,7 +26881,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26900,7 +26905,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26924,7 +26929,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26948,7 +26953,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26972,7 +26977,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -26996,7 +27001,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27020,7 +27025,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27044,7 +27049,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27068,7 +27073,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27120,7 +27125,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27200,7 +27205,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27280,7 +27285,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ReceiverInfoCodeType
@@ -27296,7 +27301,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27572,7 +27577,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentTransactionClassCodeType
@@ -27645,7 +27650,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum PaymentTransactionStatusCodeType
@@ -27667,7 +27672,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27719,7 +27724,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27743,7 +27748,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27767,7 +27772,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27791,7 +27796,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -27815,7 +27820,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28092,7 +28097,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum RefundType
@@ -28111,7 +28116,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28177,7 +28182,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28201,7 +28206,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28351,7 +28356,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28375,7 +28380,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28427,7 +28432,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="urn:ebay:apis:eBLBaseComponents")>  _
     Public Enum ButtonStatusType
@@ -28437,7 +28442,7 @@ Namespace PayPalAPI
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -28727,7 +28732,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29003,7 +29008,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29083,7 +29088,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29163,7 +29168,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29243,7 +29248,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29323,7 +29328,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29403,7 +29408,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29483,7 +29488,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29563,7 +29568,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29643,7 +29648,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29723,7 +29728,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29803,7 +29808,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29883,7 +29888,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -29963,7 +29968,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30043,7 +30048,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30123,7 +30128,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30203,7 +30208,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30283,7 +30288,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30363,7 +30368,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30443,7 +30448,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30523,7 +30528,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30603,7 +30608,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30683,7 +30688,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30763,7 +30768,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30843,7 +30848,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -30923,7 +30928,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -31614,7 +31619,7 @@ Namespace PayPalAPI
     End Interface
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -31694,7 +31699,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -31774,7 +31779,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -31854,7 +31859,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -31934,7 +31939,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32014,7 +32019,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32094,7 +32099,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32174,7 +32179,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32254,7 +32259,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32334,7 +32339,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32414,7 +32419,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32494,7 +32499,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32574,7 +32579,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32654,7 +32659,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32734,7 +32739,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32814,7 +32819,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32894,7 +32899,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -32974,7 +32979,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33054,7 +33059,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33134,7 +33139,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33214,7 +33219,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33294,7 +33299,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33374,7 +33379,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33454,7 +33459,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33534,7 +33539,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33614,7 +33619,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33694,7 +33699,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33774,7 +33779,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33854,7 +33859,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -33934,7 +33939,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -34014,7 +34019,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -34094,7 +34099,7 @@ Namespace PayPalAPI
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2102.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _

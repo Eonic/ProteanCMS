@@ -706,9 +706,14 @@ ProcessFlow:
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
+
+
+
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "EditContent"
+
+
                         ' Get a version Id if it's passed through.
                         Dim cVersionKey As String = myWeb.moRequest("verId") & ""
                         bClearEditContext = False
@@ -2794,7 +2799,10 @@ ProcessFlow:
                         Case "Display"
 
                             Dim nStatus As Long
-                            nStatus = myWeb.moDbHelper.getObjectStatus(dbHelper.objectTypes.CartOrder, myWeb.moRequest("id"))
+
+
+                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
+                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
 
                             oPageDetail.AppendChild(moAdXfm.xFrmUpdateOrder(myWeb.moRequest("id"), cSchemaName))
 

@@ -15,7 +15,7 @@
 	</bind>
   </model>
 	<group ref="PaymentDetails">
-		<label>Confirm Order - Enter Purchase Order Reference.</label>
+		<label>Confirm Order - Enter Purchase Order Reference</label>
 		<input bind="PONumber" class="textbox required">
 			<label>Purchase Order Reference</label>
 			<value/>

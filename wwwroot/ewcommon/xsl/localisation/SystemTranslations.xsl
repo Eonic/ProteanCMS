@@ -57,11 +57,7 @@
   <!-- Submit Button Text -->
   
   <xsl:template match="label[node()='Make Secure Payment']" mode="submitText">
-    <xsl:choose>
-      <xsl:when test="$lang='en-pr'">Giv'us yer pieces of eight</xsl:when>
-      <xsl:when test="$lang='de'">Sichere Zahlungsart wählen</xsl:when>
-      <xsl:otherwise>Continue With Purchase</xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="term4046"/>
   </xsl:template>
 
   <xsl:template match="label[node()='Proceed']" mode="submitText">
@@ -81,11 +77,7 @@
   </xsl:template>
 
   <xsl:template match="label[node()='Submit']" mode="submitText">
-    <xsl:choose>
-      <xsl:when test="$lang='en-pr'">Submit</xsl:when>
-      <xsl:when test="$lang='de'">Abschicken</xsl:when>
-      <xsl:otherwise>Submit</xsl:otherwise>
-    </xsl:choose>
+    <xsl:call-template name="term4044"/>
   </xsl:template>
 
 
@@ -514,6 +506,11 @@
       <xsl:when test="$lang='en-pr'">Click here to return to the news article list</xsl:when>
       <xsl:otherwise>Click here to return to the news article list</xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+
+  <xsl:template match="span[@class='term2007']" mode="term">
+    <xsl:call-template name="term2007" />
   </xsl:template>
 
   <xsl:template name="term2007">
@@ -1299,7 +1296,8 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+
   
   <!--  ==  Recipes  =============================================================================  -->
   <xsl:template name="term2075">
@@ -1367,7 +1365,10 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
+  
+  <xsl:template match="span[@class='term2080']" mode="term">
+    <xsl:call-template name="term2080" />
+  </xsl:template>
 
   <xsl:template name="term2080">
     <xsl:choose>
@@ -1777,7 +1778,16 @@
     </xsl:choose>
   </xsl:template>
 
-
+  <xsl:template name="term2117">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Get 'em</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Place Order</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
 
 
@@ -2415,6 +2425,40 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="term3048b">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Total</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Total Items</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3048c">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Total</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Total Ex Tax</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <xsl:template name="term3048d">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Total</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Tax at</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="term3048">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
@@ -2562,10 +2606,10 @@
   <xsl:template name="term3061">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Update Cart</xsl:text>
+        <xsl:text>Update Order</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Update Cart</xsl:text>
+        <xsl:text>Update Order</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2573,10 +2617,10 @@
   <xsl:template name="term3062">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>Empty Cart</xsl:text>
+        <xsl:text>Empty Order</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Empty Cart</xsl:text>
+        <xsl:text>Empty Order</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2795,7 +2839,50 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="term3082">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Show Order Details</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Show Order Details</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
+  <xsl:template name="term3083">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Update</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Update</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3084">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Delivery Method</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Delivery Method</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3085">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>I agree to the Terms and Conditions</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <!-- ################################################################################################ -->
   <!-- EonicWeb Membership Template phrases -->
   <!-- 4000+ -->
@@ -2821,6 +2908,7 @@
   <xsl:template match="span[@class='term4001']" mode="term">
     <xsl:call-template name="term4001" />
   </xsl:template>
+  
   <xsl:template name="term4001">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">Passkey</xsl:when>
@@ -2835,16 +2923,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--<xsl:template name="term4001">
-		<xsl:choose>
-			<xsl:when test="$lang='en-pr'">
-				<xsl:text>First name</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>First name</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>-->
+  <xsl:template match="span[@class='term4002']" mode="term">
+    <xsl:call-template name="term4002" />
+  </xsl:template>
 
   <xsl:template name="term4002">
     <xsl:choose>
@@ -2855,6 +2936,10 @@
         <xsl:text>Last name</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4003']" mode="term">
+    <xsl:call-template name="term4003" />
   </xsl:template>
 
   <xsl:template name="term4003">
@@ -2868,6 +2953,10 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="span[@class='term4004']" mode="term">
+    <xsl:call-template name="term4004" />
+  </xsl:template>
+
   <xsl:template name="term4004">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
@@ -2879,6 +2968,10 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="span[@class='term4005']" mode="term">
+    <xsl:call-template name="term4005" />
+  </xsl:template>
+  
   <xsl:template name="term4005">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
@@ -3134,6 +3227,312 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="span[@class='term4028']" mode="term">
+    <xsl:call-template name="term4028" />
+  </xsl:template>
+  
+  <xsl:template name="term4028">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Logon</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Logon</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4029']" mode="term">
+    <xsl:call-template name="term4029" />
+  </xsl:template>
+
+  <xsl:template name="term4029">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>First name</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>First name</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4030">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Chest</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Box</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4031">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Your Address Details</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Your Address Details</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4032">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Use This Address</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Use This Address</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4033']" mode="term">
+    <xsl:call-template name="term4033" />
+  </xsl:template>
+
+  <xsl:template name="term4033">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Billing Address</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Billing Address</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4034']" mode="term">
+    <xsl:call-template name="term4034" />
+  </xsl:template>
+
+  <xsl:template name="term4034">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Delivery Address</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Delivery Address</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4035']" mode="term">
+    <xsl:call-template name="term4035" />
+  </xsl:template>
+
+  <xsl:template name="term4035">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Name</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Name</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+    <xsl:template match="span[@class='term4036']" mode="term">
+    <xsl:call-template name="term4036" />
+  </xsl:template>
+  
+  <xsl:template name="term4036">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Company</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Company</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4037']" mode="term">
+    <xsl:call-template name="term4037" />
+  </xsl:template>
+
+  <xsl:template name="term4037">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Address</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Address</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4038']" mode="term">
+    <xsl:call-template name="term4038" />
+  </xsl:template>
+
+  <xsl:template name="term4038">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Port</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>City</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4039']" mode="term">
+    <xsl:call-template name="term4039" />
+  </xsl:template>
+
+  <xsl:template name="term4039">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>County</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>County / State</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="span[@class='term4040']" mode="term">
+    <xsl:call-template name="term4040" />
+  </xsl:template>
+  
+  <xsl:template name="term4040">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Postcode</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Postcode</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4041']" mode="term">
+    <xsl:call-template name="term4041" />
+  </xsl:template>
+
+  <xsl:template name="term4041">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Country</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Country</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4042']" mode="term">
+    <xsl:call-template name="term4042" />
+  </xsl:template>
+  
+  <xsl:template name="term4042">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Tel</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Tel</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="span[@class='term4043']" mode="term">
+    <xsl:call-template name="term4043" />
+  </xsl:template>
+  
+  <xsl:template name="term4043">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Fax</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Fax</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4044">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Submit</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Submit</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <xsl:template name="term4045">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Please agree to our terms of business</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Please agree to our terms of business</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4046">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Continue With Purchase</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Continue With Purchase</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4047">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Select Delivery Option</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Select Delivery Option</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4048">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Confirm Order - Enter Purchase Order Reference.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Confirm Order - Enter Purchase Order Reference.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4049">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Purchase Order Reference</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Purchase Order Reference</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4050">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Comments</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Comments</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <!-- ################################################################################################ -->
   <!-- SOCIAL NETWORKING!!!!  NO. 5000 - 5500-->
   <!-- ################################################################################################ -->
@@ -3228,8 +3627,31 @@
   <xsl:template match="Page" mode="formatPrice">
     <xsl:param name="price"/>
     <xsl:param name="currency"/>
-    <xsl:value-of select="$currency"/>
-    <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
+  <xsl:param name="pCurrencyCode"/>
+    <xsl:variable name="vCurrencyCode">
+      <xsl:choose>
+        <xsl:when test="pCurrencyCode!=''">
+          <xsl:value-of select="$pCurrencyCode"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$currencyCode"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+      <xsl:choose>
+          <xsl:when test="$lang='de' or $lang='fr' or $lang='fi' or $lang='sp' or $lang='pt'">
+            <span itemprop="price" content="{format-number($price,'###,###,##0.00')}">
+              <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
+            </span>
+            <span itemprop="priceCurrency" content="{$vCurrencyCode}">
+              <xsl:value-of select="$currency"/>
+            </span>
+          </xsl:when>
+          <xsl:otherwise>
+            <span itemprop="priceCurrency" content="{$vCurrencyCode}"><xsl:value-of select="$currency"/></span>
+            <span itemprop="price" content="{format-number($price,'###,###,##0.00')}"><xsl:value-of select="format-number($price,'###,###,##0.00')"/></span>
+          </xsl:otherwise>
+      </xsl:choose>
   </xsl:template>
 
   <!-- -->
@@ -3237,17 +3659,30 @@
   <xsl:template name="formatPrice">
     <xsl:param name="price"/>
     <xsl:param name="currency"/>
+    <xsl:param name="pCurrencyCode"/>
+    <xsl:variable name="vCurrencyCode">
       <xsl:choose>
-      
-          <xsl:when test="$lang='de'">
-              <xsl:value-of select="translate(format-number($price,'###,###,##0.00'),',.','.,')"/>
+        <xsl:when test="pCurrencyCode!=''">
+          <xsl:value-of select="$pCurrencyCode"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$currencyCode"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+      <xsl:choose>
+          <xsl:when test="$lang='de' or $lang='fr' or $lang='fi' or $lang='sp' or $lang='pt'">
+            <span itemprop="price" content="{format-number($price,'###,###,##0.00')}">
+              <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
+            </span>
+            <span itemprop="priceCurrency" content="{$vCurrencyCode}">
               <xsl:value-of select="$currency"/>
+            </span>
           </xsl:when>
           <xsl:otherwise>
-              <xsl:value-of select="$currency"/>
-              <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
+            <span itemprop="priceCurrency" content="{$vCurrencyCode}"><xsl:value-of select="$currency"/></span>
+            <span itemprop="price" content="{format-number($price,'###,###,##0.00')}"><xsl:value-of select="format-number($price,'###,###,##0.00')"/></span>
           </xsl:otherwise>
-          
       </xsl:choose>
   </xsl:template>
 

@@ -26,8 +26,10 @@
 
 	<xsl:template match="Page">
 		
-		<urlset xmlns="http://www.google.com/schemas/sitemap/0.84">
-			<xsl:apply-templates select="Menu/MenuItem" mode="listPages">
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+      <xsl:apply-templates select="Menu/MenuItem" mode="listPages">
 				<xsl:with-param name="level" select="10"/>
 			</xsl:apply-templates>
 		</urlset>
@@ -37,20 +39,19 @@
 	<xsl:template match="MenuItem" mode="listPages">
 		<xsl:param name="level"/>
 		<xsl:if test="not(contains(@url, 'http')) and not(DisplayName/@noindex='true')">
-      
-			<url xmlns="http://www.google.com/schemas/sitemap/0.84">
+      <url xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 				<loc>
           <xsl:apply-templates select="." mode="getHref">
             <xsl:with-param name="absoluteURL" select="true()" />
           </xsl:apply-templates>
 				</loc>
-				<priority>
+        <!--priority>
 					<xsl:choose>
-            <!-- when home -->
+
 						<xsl:when test="$level=10">
 							<xsl:text>1.0</xsl:text>
 						</xsl:when>
-            <!-- when content - up 1 priority -->
+     
             <xsl:when test="not(node())">
               <xsl:value-of select="format-number(($level + 1) div 10,'0.0')"/>
             </xsl:when>
@@ -58,7 +59,7 @@
 							<xsl:value-of select="format-number($level div 10,'0.0')"/>
 						</xsl:otherwise>
 					</xsl:choose>
-				</priority>
+				</priority-->
         
         <!-- better to not state than to be incorrect -->
 				<!--<lastmod>
@@ -96,6 +97,7 @@
       <xsl:when test="@url!=''">
         <xsl:choose>
           <xsl:when test="format-number(@url,'0')!='NaN'">
+            <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
           </xsl:when>
           <xsl:when test="contains(@url,'http')">

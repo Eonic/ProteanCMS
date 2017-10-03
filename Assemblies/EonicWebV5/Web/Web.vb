@@ -164,11 +164,12 @@ Public Class Web
     Public bRestartApp As Boolean = False
     Public moResponseType As pageResponseType
     Private bPageCache As Boolean = False
-    Private mcPageCacheFolder As String = "\ewCache"
+    Public mbSetNoBrowserCache As Boolean = False
+    Public mcPageCacheFolder As String = "\ewCache"
     Private mcSessionReferrer As String = Nothing
 
 
-
+    Private _workingSetPrivateMemoryCounter As PerformanceCounter
 
 #End Region
 #Region "Enums"
@@ -196,9 +197,6 @@ Public Class Web
         Dim sProcessInfo As String = ""
         Try
 
-            If moDbHelper Is Nothing Then
-                moDbHelper = GetDbHelper()
-            End If
 
             moFSHelper = New fsHelper(moCtx)
 
@@ -207,8 +205,11 @@ Public Class Web
                 PerfMon.Log("Web", "New")
             End If
 
-            Open()
-
+            ' If moDbHelper Is Nothing Then
+            ' moDbHelper = GetDbHelper()
+            '  End If
+            ' Open()
+            '
         Catch ex As Exception
             'returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo))
@@ -507,6 +508,43 @@ Public Class Web
         Dim cCloneContext As String = ""
         Dim rootPageIdFromConfig As String = ""
         Try
+            'Open DB Connections
+            If moDbHelper Is Nothing Then
+                moDbHelper = GetDbHelper()
+            End If
+            If Not moSession Is Nothing Then
+                If moSession("adminMode") = "true" Then
+                    mbAdminMode = True
+                    moDbHelper.gbAdminMode = mbAdminMode
+                End If
+            End If
+            'Get system page ID's for application level
+            If goApp("PageNotFoundId") Is Nothing Then
+                goApp("PageNotFoundId") = moDbHelper.getPageIdFromPath("System+Pages/Page+Not+Found", False, False)
+            End If
+            If goApp("PageAccessDeniedId") Is Nothing Then
+                goApp("PageAccessDeniedId") = moDbHelper.getPageIdFromPath("System+Pages/Access+Denied", False, False)
+            End If
+            If goApp("PageLoginRequiredId") Is Nothing Then
+                goApp("PageLoginRequiredId") = moDbHelper.getPageIdFromPath("System+Pages/Login+Required", False, False)
+            End If
+            If goApp("PageErrorId") Is Nothing Then
+                goApp("PageErrorId") = moDbHelper.getPageIdFromPath("System+Pages/Eonic+Error", False, False)
+            End If
+
+            gnPageNotFoundId = goApp("PageNotFoundId")
+            gnPageAccessDeniedId = goApp("PageAccessDeniedId")
+            gnPageLoginRequiredId = goApp("PageLoginRequiredId")
+            gnPageErrorId = goApp("PageErrorId")
+
+
+            mcPagePath = moRequest("path")
+
+            If gbCart Or gbQuote Then
+                InitialiseCart()
+                'moCart = New Cart(Me)
+                moDiscount = New Cart.Discount(Me)
+            End If
 
             ' Facility to allow the generation bespoke errors.
             If Not (moRequest("ewerror") Is Nothing) Then
@@ -555,8 +593,6 @@ Public Class Web
             If Tools.Number.IsStringNumeric(rootPageIdFromConfig) Then RootPageId = Convert.ToInt32(rootPageIdFromConfig)
 
             Dim newPageId As Long = 0
-
-            mcPagePath = moRequest("path")
 
             If mnPageId < 1 Then
                 If Not moRequest("pgid") = "" Then
@@ -659,14 +695,6 @@ Public Class Web
                 End If
             End If
 
-            ' Set the rewrite URL
-            ' Check both IIS7 URLRewrite ad ISAPI Rewrite variants
-            If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
-                mcOriginalURL = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
-            ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_REWRITE_URL")))) Then
-                mcOriginalURL = moRequest.ServerVariables("HTTP_X_REWRITE_URL")
-            End If
-
         Catch ex As Exception
 
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Open", ex, sProcessInfo))
@@ -727,6 +755,9 @@ Public Class Web
 
         Dim sProcessInfo As String = ""
         Try
+            ' _workingSetPrivateMemoryCounter = New PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess.ProcessName)
+
+            'sProcessInfo = Process.GetCurrentProcess.ProcessName
 
             ' Set the debug mode
             moConfig = moConfig
@@ -738,28 +769,25 @@ Public Class Web
                 End Select
             End If
 
-            If PerfMon Is Nothing Then PerfMon = New PerfLog(moConfig("DatabaseName"))
-
-            If Not moSession Is Nothing Then
-                'only bother if we are not doing a scheduler thingie
-                If moRequest("perfmon") = "on" Then
-                    PerfMon.Start()
-                ElseIf moRequest("perfmon") = "off" Then
-                    PerfMon.Stop()
-                ElseIf moSession("Logging") = "On" Then
-                    PerfMon.Start()
+            If moRequest("perfmon") <> "" Or moSession("Logging") = "On" Then
+                If PerfMon Is Nothing Then PerfMon = New PerfLog(moConfig("DatabaseName"))
+                If Not moSession Is Nothing Then
+                    'only bother if we are not doing a scheduler thingie
+                    If moRequest("perfmon") = "on" Then
+                        PerfMon.Start()
+                    ElseIf moRequest("perfmon") = "off" Then
+                        PerfMon.Stop()
+                    ElseIf moSession("Logging") = "On" Then
+                        PerfMon.Start()
+                    End If
                 End If
             End If
+
 
             If moRequest("ewCmd") = "admin" Then
                 If Not moSession Is Nothing Then moSession("adminMode") = "true"
             End If
-            If Not moSession Is Nothing Then
-                If moSession("adminMode") = "true" Then
-                    mbAdminMode = True
-                    moDbHelper.gbAdminMode = mbAdminMode
-                End If
-            End If
+
 
             RootPageId = GetConfigItemAsInteger("RootPageId", 0)
             gnAuthUsers = GetConfigItemAsInteger("AuthenticatedUsersGroupId", 0)
@@ -815,23 +843,8 @@ Public Class Web
             End If
             gcMenuContentCountTypes = moConfig("MenuContentCountTypes")
             gcMenuContentBriefTypes = moConfig("MenuContentBriefTypes")
-            If goApp("PageNotFoundId") Is Nothing Then
-                goApp("PageNotFoundId") = moDbHelper.getPageIdFromPath("System+Pages/Page+Not+Found", False, False)
-            End If
-            If goApp("PageAccessDeniedId") Is Nothing Then
-                goApp("PageAccessDeniedId") = moDbHelper.getPageIdFromPath("System+Pages/Access+Denied", False, False)
-            End If
-            If goApp("PageLoginRequiredId") Is Nothing Then
-                goApp("PageLoginRequiredId") = moDbHelper.getPageIdFromPath("System+Pages/Login+Required", False, False)
-            End If
-            If goApp("PageErrorId") Is Nothing Then
-                goApp("PageErrorId") = moDbHelper.getPageIdFromPath("System+Pages/Eonic+Error", False, False)
-            End If
 
-            gnPageNotFoundId = goApp("PageNotFoundId")
-            gnPageAccessDeniedId = goApp("PageAccessDeniedId")
-            gnPageLoginRequiredId = goApp("PageLoginRequiredId")
-            gnPageErrorId = goApp("PageErrorId")
+
 
             ' Get referenced assembly info
             ' Given that assemblies are loaded at an application level, we can store the info we find in an application object
@@ -880,13 +893,27 @@ Public Class Web
         Try
             cProcessInfo = "set session variables"
 
+            ' Set the rewrite URL
+            ' Check both IIS7 URLRewrite ad ISAPI Rewrite variants
+            If Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")))) Then
+                mcOriginalURL = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
+            ElseIf Not (String.IsNullOrEmpty(CStr("" & moRequest.ServerVariables("HTTP_X_REWRITE_URL")))) Then
+                mcOriginalURL = moRequest.ServerVariables("HTTP_X_REWRITE_URL")
+            End If
+
             Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/cart")
 
             If moRequest.ContentType <> "" Then
                 mcContentType = moRequest.ContentType
             End If
 
-            Select Case LCase(moRequest("contentType"))
+            Dim ContentType As String = LCase(moRequest("contentType"))
+
+            If mcOriginalURL.StartsWith("/ewapi/") Then
+                ContentType = "json"
+            End If
+
+            Select Case ContentType
                 Case "xml"
                     mcContentType = "application/xml"
                     mbOutputXml = True
@@ -936,6 +963,9 @@ Public Class Web
                         If gnResponseCode = 200 And moRequest.Form.Count = 0 And mnUserId = 0 And Not (moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").Contains("?")) Then
                             bPageCache = IIf(LCase(moConfig("PageCache")) = "on", True, False)
                         End If
+                        If Not moRequest("reBundle") Is Nothing Then
+                            bPageCache = True
+                        End If
                     End If
             End Select
 
@@ -970,11 +1000,7 @@ Public Class Web
                 End Try
             End If
 
-            If gbCart Or gbQuote Then
-                InitialiseCart()
-                'moCart = New Cart(Me)
-                moDiscount = New Cart.Discount(Me)
-            End If
+
 
             Dim commonfolders As New ArrayList
 
@@ -1003,7 +1029,16 @@ Public Class Web
         Try
             Select Case moResponseType
                 Case pageResponseType.ajaxadmin
+                    'TS 21-06-2017 Moved from New() as not required for cached pages I think.
+                    Open()
                     GetAjaxHTML("MenuNode")
+
+                Case pageResponseType.json
+
+                    Dim moApi As New Eonic.API()
+                    moApi.InitialiseVariables()
+                    moApi.JSONRequest()
+
                 Case Else
 
                     If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
@@ -1015,10 +1050,13 @@ Public Class Web
                         If Not moRequest("reBundle") Is Nothing Then
                             ClearPageCache()
                         End If
+                        sCachePath = goServer.UrlDecode(mcOriginalURL)
+                        If sCachePath.Contains("?") Then
+                            sCachePath = sCachePath.Substring(0, sCachePath.IndexOf("?"))
+                        End If
+                        sCachePath = sCachePath & ".html"
 
-                        sCachePath = goServer.UrlDecode(mcOriginalURL) & ".html"
-
-                        If sCachePath = "/.html" Then
+                        If sCachePath = "/.html" Or sCachePath = ".html" Then
                             sCachePath = "/home.html"
                         End If
 
@@ -1028,33 +1066,23 @@ Public Class Web
                         End If
 
                         If moFSHelper.VirtualFileExistsAndRecent(mcPageCacheFolder & sCachePath, nCacheTimeout) Then
-                                sServeFile = mcPageCacheFolder & sCachePath
-                            End If
-                        End If
-
-                        moResponse.HeaderEncoding = System.Text.Encoding.UTF8
-                    moResponse.ContentEncoding = System.Text.Encoding.UTF8
-
-                    If Not msException = "" Then
-                        'If there is an error we can add our own header.
-                        'this means external programs can check that there is an error
-                        moResponse.AddHeader("X-EonicError", "An Error has occured")
-                        gnResponseCode = 500
-                        moResponse.ContentType = "text/html"
-                        bPageCache = False
-                    Else
-                        ' Set the Content Type
-                        moResponse.ContentType = mcContentType
-                        ' Set the Content Disposition
-                        If Not String.IsNullOrEmpty(mcContentDisposition) Then
-                            moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                            sServeFile = mcPageCacheFolder & sCachePath
                         End If
                     End If
+
+                    moResponse.HeaderEncoding = System.Text.Encoding.UTF8
+                    moResponse.ContentEncoding = System.Text.Encoding.UTF8
+
+
 
                     moResponse.Expires = 0
                     moResponse.AppendHeader("Generator", gcGenerator)
 
                     If sServeFile = "" Then
+
+                        'TS 21-06-2017 Moved from New() as not required for cached pages I think.
+                        Open()
+
                         sProcessInfo = "Transform PageXML Using XSLT"
                         If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
                             sProcessInfo = "In Admin Mode"
@@ -1072,6 +1100,28 @@ Public Class Web
                             End If
                         End If
 
+                        If Not msException = "" Then
+                            'If there is an error we can add our own header.
+                            'this means external programs can check that there is an error
+                            moResponse.AddHeader("X-EonicError", "An Error has occured")
+                            gnResponseCode = 500
+                            moResponse.ContentType = "text/html"
+                            bPageCache = False
+                        Else
+                            ' Set the Content Type
+                            moResponse.ContentType = mcContentType
+                            ' Set the Content Disposition
+                            If Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                moResponse.AddHeader("Content-Disposition", mcContentDisposition)
+                            End If
+
+                            'ONLY CACHE html PAGES
+                            If mcContentType <> "text/html" And Not String.IsNullOrEmpty(mcContentDisposition) Then
+                                bPageCache = False
+                            End If
+
+                        End If
+
                         If msRedirectOnEnd <> "" Then
                             moPageXml = Nothing
                             Close()
@@ -1087,11 +1137,8 @@ Public Class Web
                                     Case "application/xml"
                                         moResponse.Write("<?xml version=""1.0"" encoding=""UTF-8""?>" & moPageXml.OuterXml)
                                     Case "application/json"
-
                                         moResponse.Write(Newtonsoft.Json.JsonConvert.SerializeXmlNode(moPageXml.DocumentElement, Newtonsoft.Json.Formatting.None))
-
                                 End Select
-
                             Else
 
                                 PerfMon.Log("Web", "GetPageHTML-loadxsl")
@@ -1114,7 +1161,11 @@ Public Class Web
                                 Else
                                     If moResponseType = pageResponseType.Page Then
                                         moResponse.AddHeader("X-Frame-Options", "DENY")
-
+                                    End If
+                                    If mbSetNoBrowserCache Then
+                                        moResponse.Cache.SetNoStore()
+                                        moResponse.Cache.AppendCacheExtension("no-cache")
+                                        moResponse.Expires = 0
                                     End If
                                     styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
                                 End If
@@ -1141,43 +1192,49 @@ Public Class Web
                                     oTransform.TimeOut = moConfig("XslTimeout")
                                 End If
                                 oTransform.mbDebug = gbDebug
+
                                 If bPageCache Then
 
-                                    Dim textWriter As New System.IO.StringWriter
+                                    Dim textWriter As New StringWriterWithEncoding(System.Text.Encoding.UTF8)
+
                                     oTransform.ProcessTimed(moPageXml, textWriter)
                                     'save the page
-                                    SavePage(sCachePath, textWriter.ToString())
-                                    sServeFile = mcPageCacheFolder & sCachePath
-
+                                    If Not oTransform.bError Then
+                                        SavePage(sCachePath, textWriter.ToString())
+                                        sServeFile = mcPageCacheFolder & sCachePath
+                                    Else
+                                        moResponse.AddHeader("X-EonicError", "An Error has occured")
+                                        gnResponseCode = 500
+                                        moResponse.Write(textWriter.ToString())
+                                    End If
                                 Else
                                     oTransform.ProcessTimed(moPageXml, moResponse)
-                                    'oTransform.Process(moPageXml, moResponse)
-
-                                    PerfMon.Log("Web", "GetPageHTML-endxsl")
-                                    oTransform.Close()
-                                    oTransform = Nothing
-
-                                    'moResponse.SuppressContent = False
-                                    If gnResponseCode <> 200 Then
-                                        ' TODO: This is IIS7 specific, needs addressing for IIS6
-                                        moResponse.TrySkipIisCustomErrors = True
-                                        moResponse.StatusCode = gnResponseCode
-                                    End If
-                                    If Not moSession Is Nothing Then
-                                        moSession("previousPage") = mcOriginalURL
-                                    End If
-
                                 End If
 
-                                    'we don't need this anymore.
-                                    If Not ibIndexMode Then
+                                'moResponse.SuppressContent = False
+                                If gnResponseCode <> 200 Then
+                                    ' TODO: This is IIS7 specific, needs addressing for IIS6
+                                    moResponse.TrySkipIisCustomErrors = True
+                                    moResponse.StatusCode = gnResponseCode
+                                End If
+
+                                PerfMon.Log("Web", "GetPageHTML-endxsl")
+                                oTransform.Close()
+                                oTransform = Nothing
+
+                                'we don't need this anymore.
+                                If Not ibIndexMode Then
                                     If msRedirectOnEnd = "" Then
                                         PerfMon.Write()
                                         moPageXml = Nothing
-                                        Close()
+                                        If sServeFile = "" Then
+                                            Close()
+                                        End If
                                     Else
                                         moPageXml = Nothing
-                                        Close()
+                                        If sServeFile = "" Then
+                                            Close()
+                                        End If
                                     End If
                                 Else
                                     moPageXml = New XmlDocument
@@ -1186,9 +1243,19 @@ Public Class Web
                         End If
                     End If
 
+                    If Not moSession Is Nothing Then
+                        moSession("previousPage") = mcOriginalURL
+                    End If
+
                     If sServeFile <> "" Then
                         moResponse.AddHeader("X-Frame-Options", "DENY")
-                        moResponse.WriteFile(sServeFile)
+                        Dim filelen As Int16 = goServer.MapPath("/").Length + sServeFile.Length
+                        If filelen > 260 Then
+                            moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/") & sServeFile))
+                        Else
+                            moResponse.WriteFile(sServeFile)
+                        End If
+                        Close()
                     End If
 
             End Select
@@ -1518,7 +1585,8 @@ Public Class Web
         PerfMon.Log("Web", methodName)
 
         Try
-
+            'TS 21-06-2017 Moved from New() as not required for cached pages I think.
+            Open()
             ' Determine and set the mimeType
             ' AJG - application/xhtml+xml is interpretly correctly by many browsers, especially IE
             ' Default Content type returned to be XHTML (to clear warning on XHTML validator)
@@ -4034,7 +4102,7 @@ Public Class Web
             If moCtx.Application("ewSettings") Is Nothing Then
                 root = moPageXml.CreateElement("Settings")
 
-                'Please never add any setting here you don not want to be publicly accessible.
+                'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.GoogleAnalyticsUniversalID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
@@ -7593,7 +7661,7 @@ Public Class Web
 
     End Function
 
-    Private Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
+    Public Sub SavePage(ByVal cUrl As String, ByVal cBody As String)
         PerfMon.Log("Indexer", "IndexPage")
         Dim cProcessInfo As String = ""
         Dim filename As String = ""
@@ -7622,7 +7690,7 @@ Public Class Web
             Dim oFS As New Eonic.fsHelper(moCtx)
             oFS.mcStartFolder = goServer.MapPath("\") & mcPageCacheFolder
 
-            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename & Ext
+            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename
 
             'Tidy up the filename
             filename = Eonic.Tools.FileHelper.ReplaceIllegalChars(filename)
@@ -7632,7 +7700,7 @@ Public Class Web
                 filepath.Remove(0, 1)
             End If
 
-            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename & Ext
+            cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename
 
             Dim cleanfilename As String = goServer.UrlDecode(filename)
 
@@ -7651,7 +7719,7 @@ Public Class Web
             If filepath = "" Then filepath = "/"
             Dim sError As String = oFS.CreatePath(filepath)
             If sError = "1" Then
-                System.IO.File.WriteAllText(goServer.MapPath("/") & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/") & FullFilePath, cBody, System.Text.Encoding.UTF8)
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If

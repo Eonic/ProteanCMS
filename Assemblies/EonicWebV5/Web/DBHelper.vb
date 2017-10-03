@@ -1091,6 +1091,9 @@ Imports System
 
                 ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                 If Not (nPageId > 1 And (sPath <> "")) Then
+
+                    'first don't cache the page
+                    myWeb.bPageCache = False
                     'page path cannot be found we have an error that we raise later
                     If sFullPath <> "System+Pages/Page+Not+Found" Then
                         nPageId = myWeb.gnPageNotFoundId
@@ -4895,6 +4898,10 @@ restart:
                         'root.SetAttribute("permission", getPermissionLevel(nPermLevel))
                         If odr("cDirXml") <> "" Then
                             root.InnerXml = odr("cDirXml")
+                            Dim attr As XmlAttribute
+                            For Each attr In root.FirstChild.Attributes
+                                root.SetAttribute(attr.Name, attr.Value)
+                            Next
                             root.InnerXml = root.SelectSingleNode("*").InnerXml
                         End If
                         ' Ignore if myWeb is nothing
@@ -4915,13 +4922,13 @@ restart:
                         cJoinType = "INNER"
                     End If
 
-                    sSql = "SELECT	d.*," & _
-                            " r.nRelKey As Member" & _
-                            " FROM	tblDirectory d" & _
-                            " " & cJoinType & " JOIN tblDirectoryRelation r" & _
-                            " ON r.nDirParentid = d.nDirKey " & _
-                            " AND r.nDirChildId = " & nUserId & _
-                            " WHERE   d.cDirSchema <> 'User'" & _
+                    sSql = "SELECT	d.*," &
+                            " r.nRelKey As Member" &
+                            " FROM	tblDirectory d" &
+                            " " & cJoinType & " JOIN tblDirectoryRelation r" &
+                            " ON r.nDirParentid = d.nDirKey " &
+                            " AND r.nDirChildId = " & nUserId &
+                            " WHERE   d.cDirSchema <> 'User'" &
                             " ORDER BY d.cDirName"
 
                     odr = getDataReader(sSql)
@@ -4933,6 +4940,10 @@ restart:
                             oElmt.SetAttribute("isMember", "yes")
                         End If
                         oElmt.InnerXml = odr("cDirXml")
+                        Dim attr As XmlAttribute
+                        For Each attr In oElmt.FirstChild.Attributes
+                            oElmt.SetAttribute(attr.Name, attr.Value)
+                        Next
                         oElmt.InnerXml = oElmt.FirstChild.InnerXml
                         If Not cOverrideUserGroups = "on" Then
                             If Not IsDBNull(odr("Member")) Then
@@ -6209,7 +6220,7 @@ restart:
 
                 Dim sSql As String
 
-                sSql = "Update tblActivityLog set cActivityDetail = '" & cActivityDetail & "' where nActivityKey = " & activityID
+                sSql = "Update tblActivityLog set cActivityDetail = '" & cActivityDetail & "', dDateTime = " & sqlDateTime(Now()) & " where nActivityKey = " & activityID
 
                 ExeProcessSql(ssql)
 
@@ -6640,11 +6651,12 @@ restart:
 
                 Dim FeedCheck As String = ""
                 If FeedRef <> "" Then
-                    Dim sSQL As String = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" & FeedRef & "%' and not(cActivityDetail like '%Complete') and dDateTime > " & sqlDateTime(DateAdd(DateInterval.Hour, -3, Now())) & " order by dDateTime DESC"
+                    Dim sSQL As String = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" & FeedRef & "%' and not(cActivityDetail like '%Complete') and dDateTime > " & sqlDateTime(DateAdd(DateInterval.Minute, -60, Now())) & " order by dDateTime DESC"
                     FeedCheck = Me.ExeProcessSqlScalar(sSQL)
                 End If
 
                 If FeedCheck <> "" Then
+                    Me.logActivity(ActivityType.Custom1, mnUserId, 0, 0, "Previous Feed Still Processing:" & FeedCheck)
                     Return "Previous Feed Still Processing:" & FeedCheck
                     Exit Function
                 Else
@@ -6655,6 +6667,7 @@ restart:
                         Dim sProcessesQty As String = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9)
                         If IsNumeric(sProcessesQty) Then
                             startNo = CLng(sProcessesQty)
+                            Me.logActivity(ActivityType.Custom1, mnUserId, 0, 0, "Previous Feed Restarted:" & startNo)
                         Else
                             Return "StartNo not found:" & FeedCheck
                             Exit Function
@@ -6744,7 +6757,7 @@ restart:
 
                     Dim logId As Long = Me.logActivity(ActivityType.ContentImport, mnUserId, 0, 0, ReturnMessage & " Started")
 
-                        Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, ReParseXsl, False)
+                    Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, ReParseXsl, False)
                     'oTransform.XSLFile = ReParseXsl
                     'oTransform.Compiled = False
 
@@ -6754,37 +6767,42 @@ restart:
 
                     Dim doneEvents(totalInstances) As System.Threading.ManualResetEvent
 
+                    Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
+
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
 
                         completeCount = completeCount + 1
-                            If completeCount > startNo Then
+                        If completeCount > startNo Then
 
-                                Dim stateObj As New dbImport.ImportStateObj()
-                                stateObj.oInstance = oInstance
-                                stateObj.LogId = logId
-                                stateObj.FeedRef = FeedRef
-                                stateObj.CompleteCount = completeCount
-                                stateObj.totalInstances = totalInstances
-                                stateObj.bSkipExisting = bSkipExisting
-                                stateObj.bResetLocations = bResetLocations
-                                stateObj.bOrphan = bOrphan
-                                stateObj.bDeleteNonEntries = bDeleteNonEntries
-                                stateObj.cDeleteTempTableName = cDeleteTempTableName
-                                stateObj.moTransform = oTransform
+                            Dim stateObj As New dbImport.ImportStateObj()
+                            stateObj.oInstance = oInstance
+                            stateObj.LogId = logId
+                            stateObj.FeedRef = FeedRef
+                            stateObj.CompleteCount = completeCount
+                            stateObj.totalInstances = totalInstances
+                            stateObj.bSkipExisting = bSkipExisting
+                            stateObj.bResetLocations = bResetLocations
+                            stateObj.bOrphan = bOrphan
+                            stateObj.bDeleteNonEntries = bDeleteNonEntries
+                            stateObj.cDeleteTempTableName = cDeleteTempTableName
+                            stateObj.moTransform = oTransform
 
-                                If oInstance.NextSibling Is Nothing Then
-                                    cProcessInfo = "Is Last"
-                                End If
-
-                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
-
-                                stateObj = Nothing
+                            If oInstance.NextSibling Is Nothing Then
+                                cProcessInfo = "Is Last"
+                                eventsDoneEvt.Set()
                             End If
-                        Next
 
-                    Return ReturnMessage
+                            System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
 
-                    System.Threading.WaitHandle.WaitAll(doneEvents)
+                            stateObj = Nothing
+                        End If
+                    Next
+
+
+
+                    eventsDoneEvt.WaitOne()
+
+                    'System.Threading.WaitHandle.WaitAll(doneEvents)
 
                     'Me.updateActivity(logId, "Importing " & totalInstances & "Objects, " & completeCount & " Complete")
 
@@ -6919,9 +6937,17 @@ restart:
 
                     updateActivity(logId, ReturnMessage & " Complete")
 
+                    'Clear Page Cache
+
+                    myWeb.ClearPageCache()
+
+
+                    Return ReturnMessage
+
+                Else
+                    Return ""
                 End If
 
-                Return ""
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportObjects", ex, cProcessInfo))
@@ -7953,9 +7979,9 @@ restart:
 
                         ' Get the relations data and transform it into XML 
                         Dim oDs1 As New DataSet
-                        PerfMon.Log("DBHelper", "addBulkRelatedContent - GetData")
+                        PerfMon.Log("DBHelper", "addBulkRelatedContent - GetDataSTART")
                         oDs1 = GetDataSet(sSql, "Relation")
-                        PerfMon.Log("DBHelper", "addBulkRelatedContent - GetDataEND - " & sSql)
+                        PerfMon.Log("DBHelper", "addBulkRelatedContent - GetDataEND", sSql)
                         With oDs1.Tables(0)
                             .Columns("parId").ColumnMapping = Data.MappingType.Attribute
                             .Columns("id").ColumnMapping = Data.MappingType.Attribute
@@ -9652,6 +9678,11 @@ ReturnMe:
                         Else
                             Return convertEntitiesToString(value)
                         End If
+
+                    Case "Xml"
+
+                        Return value.innerXml
+
                     Case Else
                         Return value
                 End Select
@@ -9966,6 +9997,27 @@ ReturnMe:
                     & vbLf & TransactionDetails
                 Next
 
+                updateDataset(oDs, "Order")
+
+            Catch ex As Exception
+                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
+        Public Sub SetClientNotes(ByVal CartId As Long, ByVal Notes As String)
+            Dim sSql As String = ""
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String
+            Try
+
+                'Update Seller Notes:
+                sSql = "select * from tblCartOrder where nCartOrderKey = " & CartId
+                oDs = getDataSetForUpdate(sSql, "Order", "Cart")
+                For Each oRow In oDs.Tables("Order").Rows
+                    oRow("cClientNotes") = Notes
+                Next
                 updateDataset(oDs, "Order")
 
             Catch ex As Exception
@@ -10321,6 +10373,7 @@ ReturnMe:
             Dim ErrorMsg As String = ""
             Dim ErrorId As Long
             Dim cProcessInfo As String
+            Dim fRef As String = ""
             Dim modbhelper As dbHelper = New dbHelper(oConnString, mnUserId, moCtx)
 
             Try
@@ -10352,7 +10405,7 @@ ReturnMe:
                 'End If
 
                 Dim fRefNode As XmlElement = ImportStateObj.oInstance.SelectSingleNode(cTableName & "/" & cTableFRef)
-                Dim fRef As String = fRefNode.InnerText
+                fRef = fRefNode.InnerText
 
                 'We absolutly do not do anything if no fRef
                 If Not fRef = "" Then
@@ -10476,7 +10529,7 @@ ReturnMe:
                 modbhelper = Nothing
 
             Catch ex As Exception
-                modbhelper.logActivity(dbHelper.ActivityType.Alert, 0, 0, ErrorId,, ex.Message)
+                modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0, 0, ErrorId, "error with fRef=" & fRef & " " & Right(ex.StackTrace, 700), ex.Message)
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""))
             End Try
         End Sub

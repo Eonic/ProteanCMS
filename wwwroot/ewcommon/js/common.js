@@ -8,7 +8,6 @@ var oQueryParams = {};
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
     oQueryParams = $.getURLParams();
-
     cleanDatepicker();
     initialiseXforms();
     initialiseLightBox();
@@ -1609,8 +1608,18 @@ function incrementQuantity(inputName, operator) {
         }
 
     }
+}
 
+function incrementQuantityNum(inputName, operator, amount) {
+    if (operator == '+') {
+        document.getElementById(inputName).value = (document.getElementById(inputName).value * 1) + amount;
+    }
+    else {
+        if (document.getElementById(inputName).value > 0) {
+            document.getElementById(inputName).value = (document.getElementById(inputName).value * 1) - amount;
+        }
 
+    }
 }
 
 function PadDigits(n, totalDigits) {
@@ -2651,7 +2660,7 @@ $.fn.optionTree = function(tree, options) {
            //var containerWidth = $(this).parent().outerWidth(true) - rightPad - firstItemWidth - 50;
            var containerWidth = $(this).parent().outerWidth(true) - removeExtraWidth;
            $(this).css("width", containerWidth);
-
+           
            //alert(containerWidth);
            var accumulatedWidth = 100
            var dropdownStart = '<li class="dropdown add-more-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a><ul class="dropdown-menu pull-right">';

@@ -268,9 +268,9 @@ Namespace Providers
 
                             Case "Cheque"
                                 ' to be done
-                                'Case "PayPalPro"
+                                ' Case "PayPalPro"
 
-                                '    ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
+                             '   ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
 
                             Case "PayPalExpress"
 

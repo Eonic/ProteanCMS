@@ -50,7 +50,7 @@
       <bind id="cDisplayName" nodeset="DisplayName" required="false()" type="string"/>
       <bind nodeset="DisplayName">
         <bind id="cLinkTitle" nodeset="@title" required="false()" type="string"/>
-        <bind id="cLinkType" nodeset="@linkType" required="true()" type="string"/>
+        <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
         <bind id="cXcludeFromSiteNav" nodeset="@exclude" required="false()" type="string"/>
         <bind id="cXcludeFromSearchEngines" nodeset="@noindex" required="false()" type="string"/>
         <bind id="cXcludeNav" nodeset="@nonav" required="false()" type="string"/>

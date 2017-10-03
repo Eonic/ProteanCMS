@@ -73,19 +73,26 @@ Public Class API
 
             Dim s As Stream = moRequest.InputStream
             Dim sr As New StreamReader(s)
-            Dim jObj As Newtonsoft.Json.Linq.JObject = Newtonsoft.Json.Linq.JObject.Parse(sr.ReadLine())
+            Dim jsonString As String = sr.ReadLine()
+            Dim jObj As Newtonsoft.Json.Linq.JObject = Nothing
+            If Not jsonString Is Nothing Then
+                jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
+            End If
 
             Dim calledType As Type
+
+            If LCase(ProviderName) = "web.cart" Then ProviderName = ""
 
             If ProviderName <> "" Then
                 'case for external Providers
                 Dim moPrvConfig As Eonic.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("eonic/messagingProviders")
                 Dim assemblyInstance As [Assembly] = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(ProviderName).Parameters("path")))
                 'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
+                classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
                 calledType = assemblyInstance.GetType(classPath, True)
             Else
                 'case for methods within EonicWeb Core DLL
-                calledType = System.Type.GetType(classPath, True)
+                calledType = System.Type.GetType("Eonic." & Replace(classPath, ".", "+"), True)
             End If
 
             Dim o As Object = Activator.CreateInstance(calledType)
@@ -101,7 +108,7 @@ Public Class API
         Catch ex As Exception
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "JSONRequest", ex, sProcessInfo))
             'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-            moResponse.Write(msException)
+            moResponse.Write(ex.Message)
             Me.Finalize()
         Finally
 

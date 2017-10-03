@@ -22,6 +22,19 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
+  <xsl:variable name="sitename">
+    <xsl:choose>
+      <xsl:when test="$siteURL=''">
+      <xsl:text>http</xsl:text>
+      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+      <xsl:text>://</xsl:text>
+      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+    </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$siteURL"/>
+      </xsl:otherwise>
+   </xsl:choose>
+  </xsl:variable>
   <xsl:variable name="href">
     <xsl:if test="$siteURL=''">
       <xsl:text>http</xsl:text>
@@ -89,6 +102,17 @@
       <xsl:otherwise>GBP</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
+  <!-- Cart Needed for FormatPrice in system translations -->
+  <xsl:variable name="currencyCode">
+    <xsl:choose>
+      <xsl:when test="/Page/Cart">
+        <xsl:value-of select="/Page/Cart/@currency"/>
+      </xsl:when>
+      <xsl:otherwise>GBP</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  
   <xsl:variable name="currencySymbol">
     <xsl:choose>
       <xsl:when test="/Page/Cart">
@@ -97,6 +121,7 @@
       <xsl:otherwise>£</xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
   <xsl:variable name="querySymbol">
     <xsl:choose>
       <xsl:when test="/Page/@adminMode">&amp;</xsl:when>
@@ -181,6 +206,8 @@
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
 
+
+
   <xsl:template match="Page">
     <xsl:variable name="pageLang">
       <xsl:choose>
@@ -196,15 +223,20 @@
       </xsl:choose>
     </xsl:variable>
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
-      <xsl:choose>
-        <xsl:when test="ContentDetail">
-          <xsl:attribute name="prefix">og: http://ogp.me/ns/article#</xsl:attribute>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:attribute name="prefix">og: http://ogp.me/ns/website#</xsl:attribute>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:apply-templates select="." mode="htmlattr"/>
+
       <head>
+        <xsl:choose>
+          <xsl:when test="ContentDetail">
+            <xsl:attribute name="prefix">
+              <xsl:apply-templates select="ContentDetail/Content" mode="opengraph-namespace"/>
+            </xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->
         <title>
           <xsl:apply-templates select="." mode="PageTitle"/>
@@ -272,6 +304,22 @@
     </html>
   </xsl:template>
 
+  <xsl:template match="Page" mode="metacharset">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  </xsl:template>
+
+  <xsl:template match="Page[Contents/Content[@name='EncType']]" mode="metacharset">
+    <meta http-equiv="Content-Type" content="text/html; charset={Contents/Content[@name='EncType' or @name='EncType']}"/>
+  </xsl:template>
+
+  <xsl:template match="Page" mode="htmlattr">
+    
+  </xsl:template>
+
+  <xsl:template match="Content" mode="opengraph-namespace">
+    <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
+  </xsl:template>
+    
   <xsl:template name="favicon">
     <!--link rel="icon" type="image/ico" href="{/Page/@baseUrl}/favicon.ico"/-->
   </xsl:template>
@@ -524,7 +572,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.js" async="async">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
 
@@ -539,7 +587,7 @@
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick.js" async="async">/* */</script>
+          <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
              <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
           <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -806,7 +854,7 @@
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
     <!-- Includes initialisation template if at least one method is in use: -->
-    <xsl:if test="$page/Contents/Content[(@type='SocialNetworkingSettings' and Bookmarks/Methods/@*='true') or (@moduleType='NewsList' and (@commentPlatform!='' or @commentPlatform!='none'))]">
+    <xsl:if test="$page/Contents/Content[(@type='SocialNetworkingSettings' and Bookmarks/Methods/@*='true') or (@moduleType='NewsList' and not(@commentPlatform='' or @commentPlatform='none'))]">
       <xsl:call-template name="initialiseSocialBookmarks"/>
     </xsl:if>
     
@@ -869,95 +917,18 @@
     <xsl:if test="@cssFramework='bs3' or $adminMode">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
-    <xsl:choose>
-      <xsl:when test="Contents/Content[@name='EncType']">
-        <meta http-equiv="Content-Type" content="text/html; charset={Contents/Content[@name='EncType' or @name='EncType']}"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-      </xsl:otherwise>
-    </xsl:choose>
+
     <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
       <xsl:apply-templates select="." mode="getMetaDescription"/>
     </xsl:if>
     <!--New OG Tags for Facebook-->
-    <xsl:variable name="pageTitle">
-      <xsl:apply-templates select="." mode="PageTitle"/>
-    </xsl:variable>
 
+
+    <xsl:apply-templates select="." mode="opengraphdata"/>
     
-    <xsl:choose>
-      <xsl:when test="ContentDetail">
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content="{$pageTitle}"/>
-        <meta property="og:image">
-          <xsl:attribute name="content">
-            <xsl:if test="$siteURL=''">
-              <xsl:text>http</xsl:text>
-              <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-              <xsl:text>://</xsl:text>
-              <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-            </xsl:if>
-            <xsl:choose>
-              <!-- IF use display -->
-              <xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">
-                <xsl:value-of select="ContentDetail/Content/Images/img[@class='display']/@src"/>
-              </xsl:when>
-              <!-- Else Full Size use that -->
-              <xsl:when test="ContentDetail/Content/Images/img[@class='detail']/@src and ContentDetail/Content/Images/img[@class='detail']/@src!=''">
-                <xsl:value-of select="ContentDetail/Content/Images/img[@class='detail']/@src"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:call-template name="default-og-img"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:attribute>
-        </meta>
-      </xsl:when>
-      <xsl:otherwise>
-        <meta property="og:type" content="website" />
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
-            <meta property="og:title">
-            <xsl:attribute name="content">
-              <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
-            </xsl:attribute>
-            </meta>
-          </xsl:when>
-          <xsl:otherwise>
-            <meta property="og:title" content="{$pageTitle}"/>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:choose>
-          <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogImage']">
-            <meta property="og:image">
-              <xsl:attribute name="content">
-                <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage']/node()"/>
-              </xsl:attribute>
-            </meta>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
-              <meta property="og:image">
-                <xsl:attribute name="content">
-                  <xsl:if test="$siteURL=''">
-                    <xsl:text>http</xsl:text>
-                    <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-                    <xsl:text>://</xsl:text>
-                    <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-                  </xsl:if>
-                  <xsl:value-of select="$currentPage/Images/img[@class='display']/@src"/>
-                </xsl:attribute>
-                <!-- could add code for thumbnailizer in here -->
-              </meta>
-            </xsl:if>
-          </xsl:otherwise>
-        </xsl:choose>
-
-      </xsl:otherwise>
-    </xsl:choose>
     <meta property="og:url" content="{$href}" />
-    <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
+   
+     <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
       <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
     </xsl:if>
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
@@ -1013,7 +984,105 @@
     <!-- important for web indexes -->
     <meta name="generator" content="{/Page/Request/ServerVariables/Item[@name='GENERATOR']/node()}"/>
   </xsl:template>
+  
+  <xsl:template match="Page" mode="opengraphdata">
+   <xsl:variable name="pageTitle">
+      <xsl:apply-templates select="." mode="PageTitle"/>
+   </xsl:variable>
+   <meta property="og:type" content="website" />
+        <xsl:choose>
+          <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
+            <meta property="og:title">
+            <xsl:attribute name="content">
+              <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
+            </xsl:attribute>
+            </meta>
+          </xsl:when>
+          <xsl:otherwise>
+            <meta property="og:title" content="{$pageTitle}"/>
+          </xsl:otherwise>
+        </xsl:choose>
+           <xsl:variable name="contentMetaDescription">
+              <xsl:call-template name="truncate-string">
+                <xsl:with-param name="text">
+                  <xsl:value-of select="Contents/Content[@name='MetaDescription' or @name='metaDescription']"/>
+                  <xsl:value-of select="Content[@name='MetaDescription-Specific']"/>  
+                </xsl:with-param>
+                <xsl:with-param name="length" select="160"/>
+              </xsl:call-template>
+            </xsl:variable>
+        <meta property="og:description" content="{$contentMetaDescription}"/>
+        <xsl:choose>
+          <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogImage']">
+            <meta property="og:image">
+              <xsl:attribute name="content">
+                <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage']/node()"/>
+              </xsl:attribute>
+            </meta>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
+              <meta property="og:image">
+                <xsl:attribute name="content">
+                  <xsl:if test="$siteURL=''">
+                    <xsl:text>http</xsl:text>
+                    <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                    <xsl:text>://</xsl:text>
+                    <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+                  </xsl:if>
+                  <xsl:value-of select="$currentPage/Images/img[@class='display']/@src"/>
+                </xsl:attribute>
+                <!-- could add code for thumbnailizer in here -->
+              </meta>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+  </xsl:template>
 
+  <xsl:template match="Page[ContentDetail]" mode="opengraphdata">
+     <xsl:variable name="pageTitle">
+      <xsl:apply-templates select="." mode="PageTitle"/>
+   </xsl:variable>
+    <xsl:variable name="contentMetaDescription">
+              <xsl:call-template name="truncate-string">
+                <xsl:with-param name="text">
+                  <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
+                </xsl:with-param>
+                <xsl:with-param name="length" select="160"/>
+              </xsl:call-template>
+    </xsl:variable>
+        <meta property="og:title" content="{$pageTitle}"/>
+        <meta property="og:description" content="{$contentMetaDescription}"/>
+        <meta property="og:image">
+          <xsl:attribute name="content">
+            <xsl:if test="$siteURL=''">
+              <xsl:text>http</xsl:text>
+              <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+              <xsl:text>://</xsl:text>
+              <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            </xsl:if>
+            <xsl:choose>
+              <!-- IF use display -->
+              <xsl:when test="ContentDetail/Content/Images/img[@class='display']/@src and ContentDetail/Content/Images/img[@class='display']/@src!=''">
+                <xsl:value-of select="ContentDetail/Content/Images/img[@class='display']/@src"/>
+              </xsl:when>
+              <!-- Else Full Size use that -->
+              <xsl:when test="ContentDetail/Content/Images/img[@class='detail']/@src and ContentDetail/Content/Images/img[@class='detail']/@src!=''">
+                <xsl:value-of select="ContentDetail/Content/Images/img[@class='detail']/@src"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="default-og-img"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:attribute>
+        </meta>
+      <xsl:apply-templates select="ContentDetail/Content" mode="opengraphdata"/>
+  </xsl:template>
+  
+  <xsl:template match="Content" mode="opengraphdata">
+    <meta property="og:type" content="article" />
+  </xsl:template>
+    
   <xsl:template match="Page" mode="getMetaDescription">
     <!-- when detail get body -->
     <xsl:choose>
@@ -1028,7 +1097,7 @@
                 <xsl:with-param name="text">
                   <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getContentMetaDescription"/>
                 </xsl:with-param>
-                <xsl:with-param name="length" select="250"/>
+                <xsl:with-param name="length" select="160"/>
               </xsl:call-template>
             </xsl:variable>
             <meta name="description" content="{$contentMetaDescription}"/>
@@ -1040,6 +1109,8 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+
 
   <xsl:template match="Content" mode="getContentMetaDescription">
     <xsl:choose>
@@ -1075,6 +1146,12 @@
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
 
           <xsl:variable name="href">
+            <xsl:if test="$siteURL=''">
+              <xsl:text>http</xsl:text>
+              <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+              <xsl:text>://</xsl:text>
+              <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            </xsl:if>
             <xsl:choose>
               <xsl:when test="/Page/ContentDetail">
                 <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
@@ -2832,7 +2909,7 @@
 
   <!-- Main Title - Acts as the prominant h1 for the page -->
   <xsl:template match="/" mode="getMainTitle">
-    <h1>
+    <xsl:variable name="titleText">
       <xsl:if test="not(/Page/ContentDetail)">
         <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
           <xsl:with-param name="type">PlainText</xsl:with-param>
@@ -2854,7 +2931,12 @@
           <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getDisplayName" />
         </xsl:otherwise>
       </xsl:choose>
-    </h1>
+    </xsl:variable>
+    <xsl:if test="titleText!=''">
+      <h1>
+        <xsl:copy-of select="$titleText"/>
+      </h1>
+    </xsl:if>
   </xsl:template>
 
 
@@ -3549,7 +3631,7 @@
       <xsl:when test="$page[@cssFramework='bs3']">
         <div class="morelink">
           <span>
-            <a href="{$link}" title="{$altText}" class="btn btn-default btn-sm">
+            <a href="{$link}" title="{$altText}" class="btn btn-default btn-sm" itemprop="mainEntityOfPage">
               <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
                 <xsl:attribute name="rel">external</xsl:attribute>
                 <xsl:attribute name="class">extLink</xsl:attribute>
@@ -3573,7 +3655,7 @@
       <xsl:otherwise>
         <div class="morelink">
           <span>
-            <a href="{$link}" title="{$altText}">
+            <a href="{$link}" title="{$altText}" itemprop="mainEntityOfPage">
               <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
                 <xsl:attribute name="rel">external</xsl:attribute>
                 <xsl:attribute name="class">extLink</xsl:attribute>
@@ -4785,7 +4867,7 @@
         </xsl:for-each>
 
         <!-- ##### VALIDATION - Attribute "align" can not be used for this element. ##### -->
-        <xsl:if test="not(@class) and (@align or contains(@style,'float: '))">
+        <xsl:if test="(not(@class) and (@align or contains(@style,'float: '))) or ancestor::Content[@responsiveImg='true']">
           <xsl:attribute name="class">
             <xsl:variable name="float" select="substring-before(substring-after(@style,'float: '),';')"/>
             <xsl:variable name="align" select="@align"/>
@@ -4798,6 +4880,7 @@
                 <xsl:value-of select="$float"/>
               </xsl:otherwise>
             </xsl:choose>
+            <xsl:if test="ancestor::Content[@responsiveImg='true']"> img-responsive</xsl:if>
           </xsl:attribute>
         </xsl:if>
 
@@ -5444,6 +5527,17 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      <xsl:variable name="cropvar">
+        <xsl:choose>
+          <xsl:when test="$crop='true'">
+            <xsl:value-of select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+      	 	<xsl:apply-templates select="." mode="getThCrop"/>
+          </xsl:otherwise>
+        </xsl:choose>
+
+      </xsl:variable>
 
 
       <!-- IF Image to resize -->
@@ -5459,7 +5553,7 @@
               <xsl:text>x</xsl:text>
               <xsl:value-of select="$max-height"/>
               <xsl:text>/~th-</xsl:text>
-              <xsl:if test="$crop='true'">
+              <xsl:if test="$cropvar='true'">
                 <xsl:text>crop-</xsl:text>
               </xsl:if>
               <xsl:if test="not($no-stretch)">
@@ -5468,14 +5562,14 @@
             </xsl:with-param>
             <xsl:with-param name="file-suffix" select="''"/>
             <xsl:with-param name="quality" select="100"/>
-            <xsl:with-param name="crop" select="$crop" />
+            <xsl:with-param name="crop" select="$cropvar" />
             <xsl:with-param name="no-stretch" select="$no-stretch" />
             <xsl:with-param name="forceResize" select="$forceResize" />
           </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
         <xsl:variable name="image">
-          <img>
+          <img itemprop="image">
             <!-- SRC -->
             <xsl:attribute name="src">
               <xsl:value-of select="$newSrc"/>
@@ -5518,6 +5612,8 @@
       </xsl:if>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template match="Content | MenuItem | Discount | productDetail" mode="getThCrop"><xsl:value-of select="false()"/></xsl:template>
 
   <xsl:template match="Content[@type='Document']" mode="displayThumbnail">
     <xsl:param name="crop" select="false()" />
@@ -5756,7 +5852,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" itemprop="image">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -5790,7 +5886,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" itemprop="image">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -5812,7 +5908,7 @@
             <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
             <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
             <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}"/>
+            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}" itemprop="image"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -6840,6 +6936,7 @@
             </xsl:with-param>
             <xsl:with-param name="currency" select="$currencySymbol"/>
           </xsl:apply-templates>
+          <xsl:text> </xsl:text>
           <span class="priceSuffix">
             <xsl:value-of select="Prices/Price[@currency=$currency and @type='rrp']/@suffix"/>
           </span>
@@ -7300,9 +7397,14 @@
     <xsl:param name="text"/>
     <xsl:param name="replace"/>
     <xsl:param name="with"/>
-    <xsl:if test="$text!='' and $replace!=''">
+    <xsl:choose>
+     <xsl:when test="$text!='' and $replace!=''">
       <xsl:value-of select="ew:replacestring($text,$replace,$with)"/>
-    </xsl:if>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$text"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="clean-title">

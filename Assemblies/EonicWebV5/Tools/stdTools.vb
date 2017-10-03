@@ -113,6 +113,8 @@ Public Module stdTools
                 "<a href=""javascript:history.back();"">Click Here to return to the previous page.</a></div>"
 
                 Try
+                    ' bDebug = True
+
                     If bDebug Then
                         sProcessInfo = "In Debug"
                         oElmt.InnerXml = strErrorHtml
@@ -169,7 +171,7 @@ Public Module stdTools
                                 dbAuth = oConfig("DatabaseAuth")
                             End If
 
-                            Dim cEwConnStr As String = "Data Source=" & oConfig("DatabaseServer") & "; " & _
+                            Dim cEwConnStr As String = "Data Source=" & oConfig("DatabaseServer") & "; " &
                             "Initial Catalog=" & oConfig("DatabaseName") & "; " & dbAuth
 
                             sProcessInfo = "Loading Error Page Settings - Conn Open"
@@ -1086,6 +1088,39 @@ Public Module stdTools
     '        returnException("stdTools", "SetDefaultSortColumn", ex, "", "", gbDebug)
     '    End Try
     'End Sub
+
+    Public Class StringWriterWithEncoding
+        Inherits IO.StringWriter
+
+        Private _encoding As System.Text.Encoding
+
+        Public Sub New(encoding As System.Text.Encoding)
+            MyBase.New()
+            _encoding = encoding
+        End Sub
+
+        Public Sub New(encoding As System.Text.Encoding, formatProvider As IFormatProvider)
+            MyBase.New(formatProvider)
+            _encoding = encoding
+        End Sub
+
+        Public Sub New(encoding As System.Text.Encoding, sb As System.Text.StringBuilder)
+            MyBase.New(sb)
+            _encoding = encoding
+        End Sub
+
+        Public Sub New(encoding As System.Text.Encoding, sb As System.Text.StringBuilder, formatProvider As IFormatProvider)
+            MyBase.New(sb, formatProvider)
+            _encoding = encoding
+        End Sub
+
+        Public Overrides ReadOnly Property Encoding As System.Text.Encoding
+            Get
+                Return _encoding
+            End Get
+        End Property
+
+    End Class
 
 #Region "Deprecated"
 

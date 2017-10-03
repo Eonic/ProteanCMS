@@ -48,10 +48,13 @@ Public Class FeedHandler
             "Initial Catalog=" & oConfig("DatabaseName") & "; " &
             oConfig("DatabaseAuth"), 1)
             oDBH.myWeb = New Eonic.Web(System.Web.HttpContext.Current)
+            oDBH.myWeb.InitializeVariables()
+            oDBH.myWeb.Open()
+
             oAdmXFrm.goConfig = oConfig
             oAdmXFrm.moDbHelper = oDBH
             oAdmXFrm.myWeb = oDBH.myWeb
-            oAdmXFrm.myWeb.InitializeVariables()
+
             'set the main values
             cFeedURL = Replace(cURL, "&amp;", "&") 'when saving a url it can replace ampersands
             cXSLTransformPath = cXSLPath
@@ -149,10 +152,12 @@ Public Class FeedHandler
                 oRequest.Timeout = oConfig("FeedTimeout")
             End If
 
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " & cFeedURL)
+
             oResponse = DirectCast(oRequest.GetResponse(), HttpWebResponse)
             oReader = New StreamReader(oResponse.GetResponseStream())
             oFeedXML = oReader.ReadToEnd
-
+            '  oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "received url: " & cFeedURL)
             ' The problem with masking namespaces is that you have to deal with any node that calls that namespace.
             'oFeedXML = Replace(oFeedXML, "xmlns:", "exemelnamespace")
             'oFeedXML = Replace(oFeedXML, "xmlns", "exemelnamespace")
@@ -170,14 +175,14 @@ Public Class FeedHandler
             Dim cFeedItemXML As String
             Dim oTW As IO.TextWriter = New StringWriter()
             Dim oTR As IO.TextReader
-
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start transform url: " & cFeedURL)
             oTransform.XSLFile = cXSLTransformPath
             oTransform.Compiled = False
             oTransform.Process(oResXML, oTW)
             oTR = New StringReader(oTW.ToString())
             cFeedItemXML = oTR.ReadToEnd
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End transform url: " & cFeedURL)
 
-            Dim oInstanceXML As New XmlDocument
 
             ' Strip out the xmlns
             cFeedItemXML = Regex.Replace(cFeedItemXML, "xmlns(\:\w*)?=""[^""]*""", "")
@@ -190,14 +195,17 @@ Public Class FeedHandler
             'Fix any missing &amp;
             ' cFeedItemXML = Regex.Replace(cFeedItemXML, "/&(?!amp;)/", "&amp;")
 
+            File.WriteAllText(goServer.MapPath("/recivedFeedTransformed.xml"), cFeedItemXML)
 
-            oInstanceXML.InnerXml = cFeedItemXML
+            Dim oInstanceXML As New XmlDocument
+            oInstanceXML.LoadXml(cFeedItemXML)
+            ' oInstanceXML.InnerXml = cFeedItemXML
 
             ' Populate empty url nodes
             For Each oUrlNode As XmlElement In oInstanceXML.SelectNodes("//url[.='']")
                 oUrlNode.InnerText = cFeedURL
             Next
-
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start Tidy")
             ' If the Body has been cast as CData then the html will not have been converted
             Dim sContent As String
             For Each oBodyItem As XmlElement In oInstanceXML.SelectNodes("//*[(local-name()='Body' and not(@htmlTransform='off')) or @htmlTransform='on']")
@@ -212,10 +220,11 @@ Public Class FeedHandler
                     End Try
                 End If
             Next
-
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End Tidy")
             Return oInstanceXML
 
         Catch ex As Exception
+            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "error getting url: " & ex.Message & ex.StackTrace)
             AddExternalError(ex)
             If oFeedXML <> "" Then AddExternalMessage(oFeedXML)
             Return Nothing

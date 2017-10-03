@@ -66,43 +66,47 @@ Namespace Security
             ' bCheckAdmin seems to be a bit of a hangover - it's a white elephant, so for now, I'll ignore it
             Try
 
+                If cInGroup = "AzureWebApp" Then
+                    Return True
+                Else
+                    If RevertToSelf() <> 0 Then
+                        If LogonUserA(strUserName, strDomain, strPassword,
+                           LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, token) <> 0 Then
+                            If DuplicateToken(token, 2, tokenDuplicate) <> 0 Then
+                                tempWindowsIdentity = New WindowsIdentity(tokenDuplicate)
 
-                If RevertToSelf() <> 0 Then
-                    If LogonUserA(strUserName, strDomain, strPassword, _
-                       LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, token) <> 0 Then
-                        If DuplicateToken(token, 2, tokenDuplicate) <> 0 Then
-                            tempWindowsIdentity = New WindowsIdentity(tokenDuplicate)
+                                If strDomain <> "" Then
+                                    isDomAdmin = New WindowsPrincipal(tempWindowsIdentity).IsInRole(strDomain & "\" & cInGroup)
+                                Else
+                                    isDomAdmin = New WindowsPrincipal(tempWindowsIdentity).IsInRole(cInGroup)
+                                End If
 
-                            If strDomain <> "" Then
-                                isDomAdmin = New WindowsPrincipal(tempWindowsIdentity).IsInRole(strDomain & "\" & cInGroup)
-                            Else
-                                isDomAdmin = New WindowsPrincipal(tempWindowsIdentity).IsInRole(cInGroup)
+                                ImpersonationContext = tempWindowsIdentity.Impersonate()
+                                If Not (ImpersonationContext Is Nothing) Then
+                                    ''if we are checking for admin then return that value
+                                    'If bCheckAdmin Then
+                                    '    ImpersonateValidUser = True
+                                    'Else
+                                    '    Return isDomAdmin
+                                    'End If
+
+                                    Return isDomAdmin
+                                End If
                             End If
-
-                            ImpersonationContext = tempWindowsIdentity.Impersonate()
-                            If Not (ImpersonationContext Is Nothing) Then
-                                ''if we are checking for admin then return that value
-                                'If bCheckAdmin Then
-                                '    ImpersonateValidUser = True
-                                'Else
-                                '    Return isDomAdmin
-                                'End If
-
-                                Return isDomAdmin
-                            End If
+                        Else
+                            Return False
                         End If
-                    Else
-                        Return False
+                    End If
+
+                    If Not tokenDuplicate.Equals(IntPtr.Zero) Then
+                        CloseHandle(tokenDuplicate)
+                    End If
+
+                    If Not token.Equals(IntPtr.Zero) Then
+                        CloseHandle(token)
                     End If
                 End If
 
-                If Not tokenDuplicate.Equals(IntPtr.Zero) Then
-                    CloseHandle(tokenDuplicate)
-                End If
-
-                If Not token.Equals(IntPtr.Zero) Then
-                    CloseHandle(token)
-                End If
             Catch ex As Exception
 
                 RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Impersonate", "ImpersonateValidUser", ex, ""))
@@ -113,7 +117,9 @@ Namespace Security
 
 
         Public Sub UndoImpersonation()
-            ImpersonationContext.Undo()
+            If Not IsNothing(ImpersonationContext) Then
+                ImpersonationContext.Undo()
+            End If
         End Sub
     End Class
 End Namespace

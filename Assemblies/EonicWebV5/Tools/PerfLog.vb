@@ -138,8 +138,8 @@ Public Class PerfLog
                 nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
 
 
-                Dim cEntryFull As String = "INSERT INTO tblPerfMon" & _
-                " ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure],Description, Step, [Time],TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds)" & _
+                Dim cEntryFull As String = "INSERT INTO tblPerfMon" &
+                " ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure],Description, Step, [Time],TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds)" &
                 " VALUES("
                 cEntryFull &= "'"
                 cEntryFull &= moServer.MachineName & "','"
@@ -190,20 +190,11 @@ Public Class PerfLog
                 'nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
                 'nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
                 dLast = Now
-            Else
 
-                'oPerfMonRequests = New System.Diagnostics.PerformanceCounter("ASP.NET v2.0.50727", "Requests Current")
-                'Dim cEntryFull As String = oPerfMonRequests.RawValue
+                'Else
 
-                'Dim oLN As TimeSpan = Now - dLast
-                'nTimeAccumalative += oLN.TotalMilliseconds
-
-                Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
-                Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
-
-                'Dim currentProcess As System.Diagnostics.Process = Process.GetCurrentProcess
-
-                'Dim nProcDif As Integer = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
+                '   Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
+                '   Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
 
             End If
         Catch ex As Exception
@@ -243,7 +234,7 @@ Public Class PerfLog
                         Try
                             oCmd.ExecuteNonQuery()
                         Catch ex As Exception
-
+                            cProcessInfo = oCmd.CommandText
                         End Try
                     End If
                 Next

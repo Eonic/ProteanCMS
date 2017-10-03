@@ -1869,6 +1869,21 @@
             </xsl:attribute>
           </xsl:if>
           <a href="#{@id}" data-toggle="tab">
+            <xsl:if test="@icon!=''">
+              <i>
+                <xsl:attribute name="class">
+                  <xsl:text>fa fa-3x center-block </xsl:text>
+                  <xsl:value-of select="@icon"/>
+                </xsl:attribute>
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>
+            </xsl:if>
+            <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
+              <span class="upload-icon">
+                <img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+              </span>
+            </xsl:if>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
           </a>
@@ -2622,7 +2637,7 @@
     <!-- if geo (lat/long) - initialise straight -->
     var <xsl:value-of select="$mCentreLoc"/> = new google.maps.LatLng(<xsl:value-of select="descendant-or-self::latitude/node()"/>
     <xsl:text>,</xsl:text>
-    <xsl:value-of select="descendant-or-self::latitude/node()"/>
+    <xsl:value-of select="descendant-or-self::longitude/node()"/>
     <xsl:text>);</xsl:text>
     <!-- Map Options -->
     <xsl:text>var </xsl:text>
@@ -2643,7 +2658,36 @@
     <xsl:text>"), </xsl:text>
     <xsl:value-of select="$mOptionsName"/>
     <xsl:text>);</xsl:text>
+    <!-- Adjust CSS to size map correctly. -->
+    <xsl:text>adjustGMapSizes(</xsl:text>
+    <xsl:text>$("#</xsl:text>
+    <xsl:value-of select="$gMapId"/>
+    <xsl:text>"));</xsl:text>
+    
+    <xsl:apply-templates select="." mode="getGmapLocation">
+        <xsl:with-param name="gMapId" select="$gMapId"/>
+    </xsl:apply-templates>
+    
   </xsl:template>
+
+  <!-- Gets Geocode from Postal Address  -->
+  <xsl:template match="Content[@type='Organisation']" mode="getGmapLocation">
+    <xsl:param name="gMapId" />
+    <!--
+			Form has already been set with default coords,
+			We are doing an address look up and resetting the centering.
+		-->
+
+        <xsl:variable name="jsLatLng">
+          <xsl:apply-templates select="Organization/location/GeoCoordinates" mode="getJsLatLng"/>
+        </xsl:variable>
+        <xsl:value-of select="$gMapId"/>.setCenter(<xsl:value-of select="$jsLatLng"/>);
+          <xsl:apply-templates select="." mode="setGMapMarker">
+            <xsl:with-param name="jsPositionValue" select="$jsLatLng"/>
+            <xsl:with-param name="mapId" select="$gMapId"/>
+          </xsl:apply-templates>
+  </xsl:template>
+
 
   <!-- Returns the code for creating a new LatLng object based on the stored geocoordinates -->
   <xsl:template match="Geo" mode="getJsLatLng">
@@ -2661,6 +2705,7 @@
     <xsl:value-of select="longitude"/>
     <xsl:text>)</xsl:text>
   </xsl:template>
+  
   <!-- Gets Geocode from Postal Address  -->
   <xsl:template match="Content[Location/@loc='address']" mode="getGmapLocation">
     <xsl:param name="gMapId" />
@@ -2768,6 +2813,33 @@
       });
     </xsl:if>
   </xsl:template>
+  
+   <!--set up bubble for location-->
+  <xsl:template match="Content[@type='Organisation']" mode="setGMapMarker">
+    <xsl:param name="jsPositionValue"/>
+    <xsl:param name="mapId"/>
+    var marker<xsl:value-of select="@id"/> = new google.maps.Marker({
+    map: gmap<xsl:value-of select="$mapId"/>,
+    position: <xsl:value-of select="$jsPositionValue"/>
+    });
+    <!-- If Description - Create the bubble!! -->
+    <xsl:if test="Strap/node()">
+      <xsl:variable name="strapNode">
+        <xsl:apply-templates select="." mode="processHTMLforJS"/>
+      </xsl:variable>
+      <!-- Html String -->
+      var contentString<xsl:value-of select="@id"/> = '<xsl:copy-of select="$strapNode"/>';
+      <!-- Info window-->
+      var infowindow<xsl:value-of select="@id"/> = new google.maps.InfoWindow({
+      content: contentString<xsl:value-of select="@id"/>
+      });
+      <!-- Click Listener -->
+      google.maps.event.addListener(marker<xsl:value-of select="@id"/>, 'click', function () {
+      infowindow<xsl:value-of select="@id"/>.open(gmap<xsl:value-of select="$mapId"/>, marker<xsl:value-of select="@id"/>);
+      });
+    </xsl:if>
+  </xsl:template>
+
 
   <!-- Plotting location on map-->
   <xsl:template match="Content[@type='Location']" mode="getLocationsLocation">
@@ -2800,6 +2872,38 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="processHTMLforJS">
+    <xsl:variable name="locName">
+      <xsl:apply-templates select="Name/node()" mode="cleanXhtml-escape-js"/>
+    </xsl:variable>
+    <xsl:variable name="locStrap">
+      <p>
+        <xsl:copy-of select="Strap/node()"/>
+      </p>
+    </xsl:variable>
+    <xsl:variable name="locAddress">
+      <xsl:apply-templates select="Location/Address" mode="getAddress" />
+    </xsl:variable>
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <div class="mapPopup">
+      <h3>
+        <xsl:call-template name="escape-js">
+          <xsl:with-param name="string">
+            <xsl:value-of select="$locName"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </h3>
+      <xsl:if test="Location/@loc='address'">
+        <xsl:apply-templates select="ms:node-set($locAddress)/*" mode="cleanXhtml-escape-js" />
+      </xsl:if>
+      <xsl:if test="Strap/node()!=''">
+        <xsl:apply-templates select="ms:node-set($locStrap)/*" mode="cleanXhtml-escape-js" />
+      </xsl:if>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Content[@type='Organisation']" mode="processHTMLforJS">
     <xsl:variable name="locName">
       <xsl:apply-templates select="Name/node()" mode="cleanXhtml-escape-js"/>
     </xsl:variable>
@@ -3380,9 +3484,9 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item newsarticle">
+    <div class="listItem list-group-item newsarticle" itemscope="" itemtype="http://schema.org/Blog">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem list-group-item NewsArticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner media">
@@ -3394,22 +3498,36 @@
           <span class="hidden">|</span>
         </xsl:if>
         <div class="media-body">
-          <h4 class="media-heading">
+          <h4 class="media-heading" itemprop="headline">
             <a href="{$parentURL}" title="Read More - {Headline/node()}">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </a>
           </h4>
+          <span class="hidden" itemtype="Organization" itemprop="publisher">
+            <span itemprop="name">
+              <xsl:value-of select="$sitename"/>
+            </span>
+          </span>
           <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
           <xsl:if test="@publish!=''">
-            <p class="date">
+            <p class="date" itemprop="datePublished">
               <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
               <xsl:call-template name="DisplayDate">
                 <xsl:with-param name="date" select="@publish"/>
               </xsl:call-template>
             </p>
           </xsl:if>
+          <xsl:if test="@update!=''">
+            <p class="hidden" itemprop="dateModified">
+              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+              <xsl:call-template name="DisplayDate">
+                <xsl:with-param name="date" select="@update"/>
+              </xsl:call-template>
+            </p>
+          </xsl:if>
+
           <xsl:if test="Strapline/node()!=''">
-            <div class="summary">
+            <div class="summary" itemprop="description">
               <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
             </div>
           </xsl:if>
@@ -3441,7 +3559,7 @@
     </xsl:variable>
     <div class="listItem list-group-item newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'newsarticle'"/>
+        <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <a href="{$parentURL}">
@@ -3488,26 +3606,26 @@
         <xsl:with-param name="valueName">debug</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-    <div class="detail newsarticle hnews">
+    <div class="detail newsarticle" itemscope="" itemtype="http://schema.org/Blog">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'detail hnews newsarticle'"/>
+        <xsl:with-param name="class" select="'detail newsarticle'"/>
       </xsl:apply-templates>
-      <h2 class="entry-title content-title">
+      <h2 class="entry-title content-title" itemprop="headline">
         <xsl:apply-templates select="." mode="getDisplayName" />
       </h2>
       <xsl:apply-templates select="." mode="displayDetailImage"/>
       <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthor"/>
       <xsl:if test="@publish!=''">
-        <p class="dtstamp" title="{@publish}">
+        <p class="dtstamp" title="{@publish}" itemprop="datePublished">
           <xsl:call-template name="DisplayDate">
             <xsl:with-param name="date" select="@publish"/>
           </xsl:call-template>
         </p>
       </xsl:if>
-      <span class="strapline-detail">
+      <span class="strapline-detail" itemprop="description">
         <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
       </span>
-      <div class="description entry-content">
+      <div class="description entry-content" itemprop="text">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
       <!-- Terminus class fix to floating content -->
@@ -3861,7 +3979,7 @@
     </xsl:variable>
     <div class="author">
       <xsl:if test="Images/img/@src!=''">
-        <a href="{$parentURL}" title="click here to view more details on {GivenName/node()} {Surname/node()}">
+        <a href="{$parentURL}" rel="author" title="click here to view more details on {GivenName/node()} {Surname/node()}">
           <xsl:apply-templates select="." mode="displayThumbnail">
             <xsl:with-param name="width">76</xsl:with-param>
             <xsl:with-param name="height">76</xsl:with-param>
@@ -3870,7 +3988,7 @@
         </a>
       </xsl:if>
       <xsl:text>by </xsl:text>
-      <a href="{$parentURL}">
+      <a href="{$parentURL}" rel="author">
         <xsl:attribute name="title">
           <xsl:call-template name="term2072" />
           <xsl:text>&#160;</xsl:text>
@@ -3915,7 +4033,7 @@
     </xsl:variable>
     <div class="author">
       <xsl:text>by </xsl:text>
-      <a href="{$parentURL}">
+      <a href="{$parentURL}" rel="author">
         <xsl:attribute name="title">
           <xsl:call-template name="term2072" />
           <xsl:text>&#160;</xsl:text>
@@ -4527,7 +4645,6 @@
           </xsl:apply-templates>
         </div>
         <div class="col-md-4">
-          Map
           <xsl:apply-templates select="." mode="organizationDetailMap"/>
         </div>
       </div>
@@ -4536,7 +4653,7 @@
 
   <xsl:template match="Content" mode="organizationDetailMap">
     <div class="GoogleMap">
-      <div id="gmap{@id}" class="gmap-canvas">To see this map you must have Javascript enabled</div>
+      <div id="gmap{@id}" class="gmap-canvas" data-mapheight="300">To see this map you must have Javascript enabled</div>
     </div>
   </xsl:template>
 
@@ -6454,6 +6571,20 @@
       </div>
     </div>
   </xsl:template>
+  
+  <xsl:template match="Content[@type='Product']" mode="opengraph-namespace">
+    <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#</xsl:text>
+  </xsl:template>
+  
+  <xsl:template match="Content[@type='Product']" mode="opengraphdata">
+    <meta property="og:type" content="product" />
+    <meta property="product:upc" content="{StockCode/node()}" />
+    <meta property="product:sale_price:currency" content="{$currencyCode}" />
+    <xsl:variable name="price">
+      <xsl:value-of select="Prices/Price[@currency=$currency and @type='sale']/node()"/>
+    </xsl:variable>
+    <meta property="product:sale_price:amount" content="{$price}" />
+  </xsl:template>
 
   <!-- Product Detail -->
   <xsl:template match="Content[@type='Product']" mode="ContentDetail">
@@ -7389,7 +7520,7 @@
       <h1>
         <xsl:value-of select="Name/node()"/>
       </h1>
-      <div class="tags">
+      <div class="tags cols cols3">
         <xsl:apply-templates select="Content" mode="displayBrief"/>
         <xsl:text> </xsl:text>
       </div>
@@ -9434,8 +9565,15 @@
     <!-- ###### -->
     <div class="advanced-carousel-container">
       <div class="advanced-carousel">
-        <ul>
-          <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+        <ul style="display:none">
+          <xsl:choose>
+            <xsl:when test="Content[@type='AdvancedCarouselSlide']">
+              <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </ul>
       </div>
     </div>
@@ -11416,7 +11554,9 @@
         <div class="terminus">&#160;</div>
       </div>
       <div class="col-md-8">
-        <xsl:apply-templates select="." mode="VideoDetailDisplay"/>
+        <xsl:apply-templates select="." mode="VideoDetailDisplay">
+          <xsl:with-param name="classes" select="'col-md-8'"/>
+        </xsl:apply-templates>
       </div>
     </div>
   </xsl:template>
@@ -11679,7 +11819,10 @@
 
   <!-- Video Detail -->
   <xsl:template match="Content[@type='Video']" mode="VideoDetailDisplay">
-    <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+    <xsl:param name="classes"/>
+    <xsl:apply-templates select="." mode="inlinePopupOptions">
+      <xsl:with-param name="class" select="$classes"/>
+    </xsl:apply-templates>
     <div id="Video{@id}" class="Video">
       <xsl:attribute name="class">
         <xsl:apply-templates select="." mode="videoClasses"/>

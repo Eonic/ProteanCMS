@@ -75,9 +75,9 @@ Public Class Setup
         'deals with the error
         returnException(e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug)
         'close connection pooling
-        If Not moDbHelper Is Nothing Then
+        If Not myWeb.moDbHelper Is Nothing Then
             Try
-                moDbHelper.CloseConnection()
+                myWeb.moDbHelper.CloseConnection()
             Catch ex As Exception
 
             End Try
@@ -143,9 +143,9 @@ Public Class Setup
 
             'lets open our DB Helper if database is defined
             If Not goConfig("DatabaseName") = Nothing Then
-                moDbHelper = New Web.dbHelper(goConfig("DatabaseServer"), goConfig("DatabaseName"), mnUserId, moCtx)
-
-                moDbHelper.moPageXml = moPageXml
+                myWeb.moDbHelper = New Web.dbHelper(goConfig("DatabaseServer"), goConfig("DatabaseName"), mnUserId, moCtx)
+                myWeb.moDbHelper.myWeb = myWeb
+                myWeb.moDbHelper.moPageXml = moPageXml
 
                 If myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table) Then
                     mbSchemaExists = True
@@ -188,9 +188,11 @@ Public Class Setup
 
     Sub AddResponse(ByVal cResponse As String)
         If cPostFlushActions = "" Then
-            Dim oElmt As XmlElement = oResponse.OwnerDocument.CreateElement("ProgressResponse")
-            oElmt.InnerText = cResponse
-            oResponse.AppendChild(oElmt)
+            If Not oResponse Is Nothing Then
+                Dim oElmt As XmlElement = oResponse.OwnerDocument.CreateElement("ProgressResponse")
+                oElmt.InnerText = cResponse
+                oResponse.AppendChild(oElmt)
+            End If
         Else
             goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace(cResponse, "'", "\'") & "<br/>');</script>" & vbCrLf)
         End If
@@ -338,10 +340,10 @@ Public Class Setup
             setupProcessXml()
             If mnUserId > 1 Then
                 'lets check the current users permission level
-                If Not moDbHelper.checkUserRole("Administrator") Then
+                If Not myWeb.moDbHelper.checkUserRole("Administrator") Then
                     mcEwCmd = "LogOff"
                 Else
-                    oPageElmt.AppendChild(moDbHelper.GetUserXML(mnUserId))
+                    oPageElmt.AppendChild(myWeb.moDbHelper.GetUserXML(mnUserId))
                     setupMenuXml()
                 End If
             ElseIf mnUserId > 0 Then
@@ -432,7 +434,7 @@ Recheck:
                             mcEwCmd = "Logon"
                         Else
                             mnUserId = myWeb.mnUserId
-                            oRoot.AppendChild(moDbHelper.GetUserXML(mnUserId))
+                            oRoot.AppendChild(myWeb.moDbHelper.GetUserXML(mnUserId))
                             If mnUserId > 0 Then
                                 mcEwCmd = "Home"
                             Else
@@ -444,8 +446,8 @@ Recheck:
                         mcEwCmd = "Logon"
                     End If
                     'set the userId on the DBHelper
-                    If Not moDbHelper Is Nothing Then
-                        moDbHelper.mnUserId = mnUserId
+                    If Not myWeb.moDbHelper Is Nothing Then
+                        myWeb.moDbHelper.mnUserId = mnUserId
                     End If
                 End If
             End If
@@ -507,7 +509,7 @@ Recheck:
                         End If
                     Case "CleanAudit"
                         If goRequest("ewCmd2") = "Do" Then
-                            AddResponse(moDbHelper.CleanAuditOrphans())
+                            AddResponse(myWeb.moDbHelper.CleanAuditOrphans())
                             cStep = 1
                         End If
                     Case "UpgradeSchema"
@@ -523,7 +525,7 @@ Recheck:
                         If goRequest("ewCmd2") = "Do" Then
                             Dim oFsh As New fsHelper(myWeb.moCtx)
                             oFsh.mcRoot = myWeb.goServer.MapPath("/")
-                            AddResponse(oFsh.OptimiseImages("/Images"))
+                            AddResponse(oFsh.OptimiseImages("/Images", 0, 0, False))
                             cStep = 1
                         End If
 
@@ -702,7 +704,7 @@ Recheck:
                 If cLatestVersion = cCurrentVersion Then Return True
 
                 'Remove all foreign keys
-                moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
+                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
                 msException = ""
                 'If Not msException = "" Then
                 '    AddResponse(msException)
@@ -741,7 +743,7 @@ Recheck:
                                                             Case "File"
                                                                 Dim nCount As Long
                                                                 AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
-                                                                nCount = moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")))
+                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")))
                                                                 If nCount = -1 Then
                                                                     AddResponse("File execution Completed...")
                                                                 Else
@@ -820,49 +822,49 @@ Recheck:
             goResponse.Flush()
             'Run The Script
             '############################
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/Structure.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/Structure.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/Structure.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_SearchXML.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_SearchXML.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_SearchXML.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_addAudit.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_addAudit.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_addAudit.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getStatus.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getStatus.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getStatus.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_checkPermission.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_checkPermission.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_checkPermission.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserCompanies.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserCompanies.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserCompanies.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_shippingTotal.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_shippingTotal.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_shippingTotal.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserDepts.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserDepts.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserDepts.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserRoles.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/fxn_getUserRoles.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/fxn_getUserRoles.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsers.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetUsers.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getContentStructure.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getContentStructure.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/getContentStructure.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetDirectoryItems.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetDirectoryItems.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetDirectoryItems.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/getUsersCompanyAllParents.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsers.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsersActive.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetAllUsersInActive.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsersActive.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spGetCompanyUsersInActive.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spSearchUsers.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/spSearchUsers.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/spSearchUsers.SQL'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/4.0.1.40/tblOptOutAddresses.sql'")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql"))
             AddResponse("Run File '/ewcommon/sqlupdate/toV4/4.0.1.45/fxn_getContentParents.sql'")
 
             AddResponse("Completed Initial Build")
@@ -910,20 +912,20 @@ Recheck:
 
             'create system roles
 
-            nRoleId = moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-            moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
-            nRoleId = moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-            moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
+            nRoleId = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+            myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
+            nRoleId = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+            myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
 
             Dim defaultPageXml As String = "<DisplayName title="""" linkType=""internal"" exclude=""false"" noindex=""false""/><Images><img class=""icon"" /><img class=""thumbnail"" /><img class=""detail"" /></Images><Description/>"
 
-            gnTopLevel = moDbHelper.insertStructure("0", "", "Home", defaultPageXml, "Modules_1_column")
-            moDbHelper.insertStructure(gnTopLevel, "", "About Us", defaultPageXml, "Modules_1_column")
-            moDbHelper.insertStructure(gnTopLevel, "", "Products", defaultPageXml, "Modules_1_column")
-            moDbHelper.insertStructure(gnTopLevel, "", "Services", defaultPageXml, "Modules_1_column")
+            gnTopLevel = myWeb.moDbHelper.insertStructure("0", "", "Home", defaultPageXml, "Modules_1_column")
+            myWeb.moDbHelper.insertStructure(gnTopLevel, "", "About Us", defaultPageXml, "Modules_1_column")
+            myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Products", defaultPageXml, "Modules_1_column")
+            myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Services", defaultPageXml, "Modules_1_column")
 
-            Dim infoId As Long = moDbHelper.insertStructure(gnTopLevel, "", "Information", defaultPageXml, "Modules_1_column")
-            moDbHelper.insertStructure(infoId, "", "Contact Us", defaultPageXml, "Modules_1_column")
+            Dim infoId As Long = myWeb.moDbHelper.insertStructure(gnTopLevel, "", "Information", defaultPageXml, "Modules_1_column")
+            myWeb.moDbHelper.insertStructure(infoId, "", "Contact Us", defaultPageXml, "Modules_1_column")
 
             Return True
         Catch ex As Exception
@@ -940,7 +942,7 @@ Recheck:
             'create the version table if not exists
             Dim sFilePath As String = "/ewcommon/sqlupdate/toV4/4.1.1.35/tblSchemaVersion.sql"
             If Not myWeb.moDbHelper.checkDBObjectExists("tblSchemaVersion", Tools.Database.objectTypes.Table) Then
-                moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath))
+                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath))
             End If
 
             Dim aVersionNumber() As String = Split(cVersionNumber, ".")
@@ -949,7 +951,7 @@ Recheck:
             Dim oDr As DataRow
             sSql = "select * from tblSchemaVersion where nVersionKey = 1"
 
-            oDs = moDbHelper.getDataSetForUpdate(sSql, "VersionNo")
+            oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "VersionNo")
 
             If oDs.Tables("VersionNo").Rows.Count > 0 Then
                 oDr = oDs.Tables("VersionNo").Rows(0)
@@ -968,7 +970,7 @@ Recheck:
                 oDs.Tables("VersionNo").Rows.Add(oDr)
             End If
 
-            moDbHelper.updateDataset(oDs, "VersionNo", False)
+            myWeb.moDbHelper.updateDataset(oDs, "VersionNo", False)
 
             ' oDs.Dispose()
             oDs = Nothing
@@ -1012,7 +1014,7 @@ Recheck:
 
             If myWeb.moDbHelper.checkDBObjectExists("tblSchemaVersion", Tools.Database.objectTypes.Table) Then
                 sSql = "select * from tblSchemaVersion where nVersionKey = 1"
-                oDs = moDbHelper.GetDataSet(sSql, "VersionNo")
+                oDs = myWeb.moDbHelper.GetDataSet(sSql, "VersionNo")
                 For Each oDr In oDs.Tables("VersionNo").Rows
                     sVersionNumber = oDr("MajorVersion") & "." & oDr("MinorVersion") & "." & oDr("Release") & "." & oDr("Build") & "."
                 Next
@@ -1062,12 +1064,12 @@ Recheck:
                 AddResponse(" No Directory information to import. Creating deafults.")
                 Dim nRolex As Integer
                 Dim nUserx As Integer
-                nUserx = moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>")
+                nUserx = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>")
                 'create system roles
-                nRolex = moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-                moDbHelper.maintainDirectoryRelation(nRolex, nUserx)
-                nRolex = moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-                moDbHelper.maintainDirectoryRelation(nRolex, nUserx)
+                nRolex = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+                myWeb.moDbHelper.maintainDirectoryRelation(nRolex, nUserx)
+                nRolex = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+                myWeb.moDbHelper.maintainDirectoryRelation(nRolex, nUserx)
                 Return True
                 Exit Function
             End If
@@ -1076,19 +1078,19 @@ Recheck:
             AddResponse("Creating System Roles")
             Dim nRoleId As Long
             'create system roles
-            mnUserId = moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>")
-            nRoleId = moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-            moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
-            nRoleId = moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
-            moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
+            mnUserId = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", "buster", "<User><FirstName/><MiddleName/><LastName/><Position/><Email/><Notes/></User>")
+            nRoleId = myWeb.moDbHelper.insertDirectory("Administrator", "Role", "Administrator", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+            myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
+            nRoleId = myWeb.moDbHelper.insertDirectory("DefaultUser", "Role", "Default User", "", "<Role><Name>Administrator</Name><Notes/></Role>")
+            myWeb.moDbHelper.maintainDirectoryRelation(nRoleId, mnUserId)
 
 
             'Directory Table
             AddResponse("Migrating Directory Table")
             sSqlStr = "Select * From tbl_ewu_Directory"
-            oDSDIR = moDbHelper.GetDataSet(sSqlStr, "Directory", "dsDIR")
+            oDSDIR = myWeb.moDbHelper.GetDataSet(sSqlStr, "Directory", "dsDIR")
 
-            moDbHelper.addTableToDataSet(oDSDIR, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 2", "Contacts")
+            myWeb.moDbHelper.addTableToDataSet(oDSDIR, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 2", "Contacts")
             oDSDIR.Relations.Add("CartContacts", oDSDIR.Tables("Directory").Columns("nDirId"), oDSDIR.Tables("Contacts").Columns("nContactParentId"), False)
             oDSDIR.Relations("CartContacts").Nested = True
 
@@ -1120,7 +1122,7 @@ Recheck:
                 strforiegnRef = IIf(IsDBNull(oDirElmt.GetAttribute("nDirId")), "", oDirElmt.GetAttribute("nDirId"))
                 strName = IIf(IsDBNull(oDirElmt.GetAttribute("cDirDN")), "", oDirElmt.GetAttribute("cDirDN"))
                 strPassword = IIf(IsDBNull(oDirElmt.GetAttribute("cDirPassword")), "", oDirElmt.GetAttribute("cDirPassword"))
-                nDirId = moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML)
+                nDirId = myWeb.moDbHelper.insertDirectory(strforiegnRef, strSchema, strName, strPassword, strXML)
 
                 For Each oConElmt In oDirElmt.SelectNodes("Contacts")
                     AddResponse("Migrating Contact " & oConElmt.GetAttribute("nContactKey") & "")
@@ -1144,8 +1146,8 @@ Recheck:
                     If oConElmt.GetAttribute("cContactFax") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oConElmt.GetAttribute("cContactFax") & "',"
                     If oConElmt.GetAttribute("cContactEmail") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oConElmt.GetAttribute("cContactEmail") & "',"
                     cSQLP2 &= "Null,"
-                    cSQLP2 &= moDbHelper.getAuditId() & ")"
-                    moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
+                    cSQLP2 &= myWeb.moDbHelper.getAuditId() & ")"
+                    myWeb.moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
                 Next
 
                 'now we need to loop back through and and sort the relations
@@ -1154,8 +1156,8 @@ Recheck:
                     Dim myArr() As String = Split(oDirElmt.GetAttribute("cDirMemberOfIdArr"), ",")
                     Dim i As Integer
                     For i = 0 To UBound(myArr)
-                        Dim myID As Integer = moDbHelper.FindDirectoryByForiegn(CInt(Trim(myArr(i))))
-                        If myID > 0 Then moDbHelper.maintainDirectoryRelation(myID, nDirId)
+                        Dim myID As Integer = myWeb.moDbHelper.FindDirectoryByForiegn(CInt(Trim(myArr(i))))
+                        If myID > 0 Then myWeb.moDbHelper.maintainDirectoryRelation(myID, nDirId)
                     Next
                 End If
 
@@ -1196,9 +1198,9 @@ Recheck:
 
             bUsesDirectory = moDbHelper.doesTableExist("tbl_ewu_Directory")
 
-            oDS = moDbHelper.GetDataSet("Select * from tbl_ewm_structure", "Menu", "Structure")
+            oDS = myWeb.moDbHelper.GetDataSet("Select * from tbl_ewm_structure", "Menu", "Structure")
             'checknest(oDS, dbT)
-            moDbHelper.addTableToDataSet(oDS, "SELECT tbl_ewm_content.*, tbl_ewm_contentType.cContentTypeName AS cContentTypeName FROM tbl_ewm_content INNER JOIN tbl_ewm_contentType ON tbl_ewm_content.nContentType = tbl_ewm_contentType.nContentTypeKey", "Content")
+            myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT tbl_ewm_content.*, tbl_ewm_contentType.cContentTypeName AS cContentTypeName FROM tbl_ewm_content INNER JOIN tbl_ewm_contentType ON tbl_ewm_content.nContentType = tbl_ewm_contentType.nContentTypeKey", "Content")
 
 
             oDS.Relations.Add("Rel0", oDS.Tables("Menu").Columns("nID"), oDS.Tables("Menu").Columns("nParentID"), False)
@@ -1209,13 +1211,13 @@ Recheck:
             oDS.Relations.Add("Rel1", oDS.Tables("Menu").Columns("nID"), oDS.Tables("Content").Columns("nContentParID"), False)
             oDS.Relations("Rel1").Nested = True
 
-            moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewm_contentLocation", "Location")
+            myWeb.moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewm_contentLocation", "Location")
 
 
             If bUsesDirectory Then
-                moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewu_permissions", "Permissions")
+                myWeb.moDbHelper.addTableToDataSet(oDS, "Select * from tbl_ewu_permissions", "Permissions")
                 oDS.Relations.Add("Rel2", oDS.Tables("Menu").Columns("nID"), oDS.Tables("Permissions").Columns("nPermKey"), False)
-                moDbHelper.addTableToDataSet(oDS, "Select * From tblDirectory", "Directory")
+                myWeb.moDbHelper.addTableToDataSet(oDS, "Select * From tblDirectory", "Directory")
             End If
 
             oDS.EnforceConstraints = False
@@ -1243,16 +1245,16 @@ Recheck:
                     Case 3
                         nMenStatus = 0
                 End Select
-                nParID = moDbHelper.insertStructure( _
-                            nParID, _
-                            oMenuElmt.GetAttribute("nId"), _
-                             CleanName(oMenuElmt.GetAttribute("cName")), _
-                             "<DisplayName>" & oMenuElmt.GetAttribute("cName") & "</DisplayName><Description />", _
-                            oMenuElmt.GetAttribute("cTemplateName"), _
-                            nMenStatus, _
-                            IIf(oMenuElmt.GetAttribute("dPublishDate") = "", Nothing, oMenuElmt.GetAttribute("dPublishDate")), _
-                             IIf(oMenuElmt.GetAttribute("dExpireDate") = "", Nothing, oMenuElmt.GetAttribute("dExpireDate")), _
-                            "", _
+                nParID = myWeb.moDbHelper.insertStructure(
+                            nParID,
+                            oMenuElmt.GetAttribute("nId"),
+                             CleanName(oMenuElmt.GetAttribute("cName")),
+                             "<DisplayName>" & oMenuElmt.GetAttribute("cName") & "</DisplayName><Description />",
+                            oMenuElmt.GetAttribute("cTemplateName"),
+                            nMenStatus,
+                            IIf(oMenuElmt.GetAttribute("dPublishDate") = "", Nothing, oMenuElmt.GetAttribute("dPublishDate")),
+                             IIf(oMenuElmt.GetAttribute("dExpireDate") = "", Nothing, oMenuElmt.GetAttribute("dExpireDate")),
+                            "",
                             IIf(oMenuElmt.GetAttribute("nDisplayOrder") = "", 0, oMenuElmt.GetAttribute("nDisplayOrder")))
                 oMenuElmt.SetAttribute("NewID", nParID)
                 AddResponse("   Writing Page:" & oMenuElmt.GetAttribute("cName") & "   ")
@@ -1277,15 +1279,15 @@ Recheck:
                     Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), _
                     oContElmt.GetAttribute("cContentXML"), "detail")
 
-                    nContentId = moDbHelper.insertContent( _
-                    oContElmt.GetAttribute("nContentKey"), _
-                     CleanName(oContElmt.GetAttribute("cContentPlaceName"), True), _
-                     Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), _
-                    sContentBrief, _
-                    sContentDetail, _
-                    nParID, _
-                    IIf(oContElmt.GetAttribute("dPublishDate") = "", Nothing, oContElmt.GetAttribute("dPublishDate")), _
-                    IIf(oContElmt.GetAttribute("dExpireDate") = "", Nothing, oContElmt.GetAttribute("dExpireDate")), _
+                    nContentId = myWeb.moDbHelper.insertContent(
+                    oContElmt.GetAttribute("nContentKey"),
+                     CleanName(oContElmt.GetAttribute("cContentPlaceName"), True),
+                     Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""),
+                    sContentBrief,
+                    sContentDetail,
+                    nParID,
+                    IIf(oContElmt.GetAttribute("dPublishDate") = "", Nothing, oContElmt.GetAttribute("dPublishDate")),
+                    IIf(oContElmt.GetAttribute("dExpireDate") = "", Nothing, oContElmt.GetAttribute("dExpireDate")),
                     nContStatus)
 
                     Dim bCascade As Boolean = False
@@ -1293,15 +1295,15 @@ Recheck:
                         bCascade = True
                     End If
 
-                    moDbHelper.setContentLocation(nParID, nContentId, True, bCascade)
+                    myWeb.moDbHelper.setContentLocation(nParID, nContentId, True, bCascade)
 
                     oContElmt.SetAttribute("NewID", nContentId)
                 Next
                 If bUsesDirectory Then ' Permissions
                     For Each oPermElmt In oMenuElmt.SelectNodes("Permissions")
                         Dim nUser As Long = 0
-                        nUser = moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"))
-                        moDbHelper.maintainPermission(nParID, nUser, oPermElmt.GetAttribute("nPermLevel"))
+                        nUser = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"))
+                        myWeb.moDbHelper.maintainPermission(nParID, nUser, oPermElmt.GetAttribute("nPermLevel"))
                     Next
                 End If
             Next
@@ -1314,7 +1316,7 @@ Recheck:
                     oMenuElmt = oContElmt.ParentNode.SelectSingleNode("Menu[@cName='" & Replace(oContElmt.GetAttribute("cContentPlaceName"), "'", "") & "']")
                     sSql = "update tblContent set cContentName = 'page_" & oMenuElmt.GetAttribute("NewID") & "_tn' where nContentKey=" & oContElmt.GetAttribute("NewID")
                     AddResponse("<p>Renaming Image: '" & oContElmt.GetAttribute("cContentPlaceName") & "' - 'page_" & oMenuElmt.GetAttribute("NewID") & "_tn'</p>")
-                    moDbHelper.ExeProcessSql(sSql)
+                    myWeb.moDbHelper.ExeProcessSql(sSql)
                 End If
             Next
 
@@ -1322,9 +1324,9 @@ Recheck:
             AddResponse("Migrating Locations:")
             For Each oLocElmt In oDataXML.SelectNodes("descendant-or-self::Location")
                 'nParID, nContentId
-                nParID = moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"))
-                nContentId = moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"))
-                moDbHelper.setContentLocation(nParID, nContentId, False)
+                nParID = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"))
+                nContentId = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"))
+                myWeb.moDbHelper.setContentLocation(nParID, nContentId, False)
             Next
 
 
@@ -1339,7 +1341,7 @@ Recheck:
     End Function
 
     Public Function Migrate_Shipping() As Boolean
-        Dim dbh As Web.dbHelper = moDbHelper
+        Dim dbh As Web.dbHelper = myWeb.moDbHelper
         Dim oDS As DataSet
         Dim oDXML As New XmlDocument
         Dim oLocElmt As XmlElement
@@ -1353,10 +1355,10 @@ Recheck:
 
             AddResponse("Migrating Shipping")
             'ifSqlObjectExistsDropIt(tbl_ewc_shippingLocations, "table")
-            If Not moDbHelper.TableExists("tbl_ewc_shippingLocations") Then Return True
-            oDS = moDbHelper.GetDataSet("SELECT * FROM tbl_ewc_shippingLocations", "Locations", "Shipping")
-            moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingOptions", "Options")
-            moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingRelations", "Relations")
+            If Not myWeb.moDbHelper.TableExists("tbl_ewc_shippingLocations") Then Return True
+            oDS = myWeb.moDbHelper.GetDataSet("SELECT * FROM tbl_ewc_shippingLocations", "Locations", "Shipping")
+            myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingOptions", "Options")
+            myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_shippingRelations", "Relations")
 
             'Add new column for IDs for local stuff and make all attributes
             If oDS Is Nothing Then Return True
@@ -1396,8 +1398,8 @@ Recheck:
                 If oLocElmt.GetAttribute("cLocationISOa3") = "" Then cSQL &= "Null," Else cSQL &= "'" & oLocElmt.GetAttribute("cLocationISOa3") & "',"
                 If oLocElmt.GetAttribute("cLocationCode") = "" Then cSQL &= "Null," Else cSQL &= "'" & oLocElmt.GetAttribute("cLocationCode") & "',"
                 If oLocElmt.GetAttribute("nLocationTaxRate") = "" Then cSQL &= "Null," Else cSQL &= "'" & oLocElmt.GetAttribute("nLocationTaxRate") & "',"
-                cSQL &= moDbHelper.getAuditId() & ")"
-                nParID = moDbHelper.GetIdInsertSql(cSQL)
+                cSQL &= myWeb.moDbHelper.getAuditId() & ")"
+                nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL)
                 oLocElmt.SetAttribute("NewID", nParID)
             Next
 
@@ -1427,8 +1429,8 @@ Recheck:
                 If oMetElmt.GetAttribute("nShipOptHandlingPercentage") = "" Then cSQL &= "Null," Else cSQL &= oMetElmt.GetAttribute("nShipOptHandlingPercentage") & ","
                 If oMetElmt.GetAttribute("nShipOptHandlingFixedCost") = "" Then cSQL &= "Null," Else cSQL &= oMetElmt.GetAttribute("nShipOptHandlingFixedCost") & ","
                 If oMetElmt.GetAttribute("nShipOptTaxRate") = "" Then cSQL &= "Null," Else cSQL &= oMetElmt.GetAttribute("nShipOptTaxRate") & ","
-                cSQL &= moDbHelper.getAuditId() & ")"
-                nParID = moDbHelper.GetIdInsertSql(cSQL)
+                cSQL &= myWeb.moDbHelper.getAuditId() & ")"
+                nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL)
                 oMetElmt.SetAttribute("NewID", nParID)
             Next
             AddResponse("Migrating Relations")
@@ -1436,16 +1438,16 @@ Recheck:
             For Each oRelElmt In oDXML.SelectNodes("descendant-or-self::Relations")
                 Dim nOpt As Integer
                 Dim nLoc As Integer
-                If Not oRelElmt.GetAttribute("nShpOptId") = "" Then nOpt = moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"))
-                If Not oRelElmt.GetAttribute("nShpLocId") = "" Then nLoc = moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"))
+                If Not oRelElmt.GetAttribute("nShpOptId") = "" Then nOpt = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"))
+                If Not oRelElmt.GetAttribute("nShpLocId") = "" Then nLoc = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"))
                 'only add it if there is something to add on both ends of the relation
                 If Not (nOpt = 0 Or nLoc = 0) Then
                     cSQL = "INSERT INTO tblCartShippingRelations (nShpOptID, nShpLocId, nAuditId) VALUES("
                     cSQL &= nOpt & ","
                     cSQL &= nLoc & ","
 
-                    cSQL &= moDbHelper.getAuditId() & ")"
-                    nParID = moDbHelper.GetIdInsertSql(cSQL)
+                    cSQL &= myWeb.moDbHelper.getAuditId() & ")"
+                    nParID = myWeb.moDbHelper.GetIdInsertSql(cSQL)
                     oRelElmt.SetAttribute("NewID", nParID)
                 End If
             Next
@@ -1457,7 +1459,7 @@ Recheck:
     End Function
 
     Public Function Migrate_Cart() As Boolean
-        Dim dbh As Web.dbHelper = moDbHelper
+        Dim dbh As Web.dbHelper = myWeb.moDbHelper
         Dim oDS As DataSet
         Dim oDXML As New XmlDocument
         Dim oOrdElmt As XmlElement
@@ -1471,11 +1473,11 @@ Recheck:
         Dim cSQLP2 As String
         Try
             AddResponse("Migrating Orders")
-            If Not moDbHelper.TableExists("tbl_ewc_cartOrder") Then Return True
-            oDS = moDbHelper.GetDataSet("SELECT * FROM tbl_ewc_cartOrder", "Orders", "Cart")
+            If Not dbh.TableExists("tbl_ewc_cartOrder") Then Return True
+            oDS = dbh.GetDataSet("SELECT * FROM tbl_ewc_cartOrder", "Orders", "Cart")
 
-            moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_cartItem", "Items")
-            moDbHelper.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 1", "Contacts")
+            dbh.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_cartItem", "Items")
+            dbh.addTableToDataSet(oDS, "SELECT * FROM tbl_ewc_Contact where nContactParentType = 1", "Contacts")
 
             oDS.Relations.Add("CartItems", oDS.Tables("Orders").Columns("nCartOrderKey"), oDS.Tables("Items").Columns("nCartItemKey"), False)
             oDS.Relations("CartItems").Nested = True
@@ -1530,8 +1532,8 @@ Recheck:
                 If oOrdElmt.GetAttribute("cSellerNotes") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oOrdElmt.GetAttribute("cSellerNotes") & "',"
                 If oOrdElmt.GetAttribute("nTaxRate") = "" Then cSQLP2 &= "0," Else cSQLP2 &= oOrdElmt.GetAttribute("nTaxRate") & ","
                 If oOrdElmt.GetAttribute("nGiftListID") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oOrdElmt.GetAttribute("nGiftListID") & "',"
-                cSQLP2 &= moDbHelper.getAuditId() & ")"
-                nParID = moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
+                cSQLP2 &= dbh.getAuditId() & ")"
+                nParID = dbh.GetIdInsertSql(cSQLP1 & cSQLP2)
 
                 'Now the cart Items
                 For Each oItElmt In oOrdElmt.SelectNodes("Items")
@@ -1557,8 +1559,8 @@ Recheck:
                     If oItElmt.GetAttribute("nQuantity") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= oItElmt.GetAttribute("nQuantity") & ","
                     'If oItElmt.GetAttribute("nDiscount") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= oItElmt.GetAttribute("nDiscount") & ","
                     If oItElmt.GetAttribute("nWeight") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= oItElmt.GetAttribute("nWeight") & ","
-                    cSQLP2 &= moDbHelper.getAuditId() & ")"
-                    nParID2 = moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
+                    cSQLP2 &= dbh.getAuditId() & ")"
+                    nParID2 = dbh.GetIdInsertSql(cSQLP1 & cSQLP2)
 
                     'Now for splitting out the options
                     'basically loops through and checks if there is anything in option 1 or 2, if there is add it(ish)
@@ -1587,8 +1589,8 @@ DoOptions:
                             cSQLP2 &= "0," 'quantity
                             'cSQLP2 &= "0," 'Discount
                             cSQLP2 &= "0,"
-                            cSQLP2 &= moDbHelper.getAuditId() & ")"
-                            moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
+                            cSQLP2 &= dbh.getAuditId() & ")"
+                            dbh.GetIdInsertSql(cSQLP1 & cSQLP2)
                         End If
                         nOptNo += 1
                         GoTo DoOptions
@@ -1617,8 +1619,8 @@ DoOptions:
                     If oConElmt.GetAttribute("cContactFax") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oConElmt.GetAttribute("cContactFax") & "',"
                     If oConElmt.GetAttribute("cContactEmail") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oConElmt.GetAttribute("cContactEmail") & "',"
                     cSQLP2 &= "Null,"
-                    cSQLP2 &= moDbHelper.getAuditId() & ")"
-                    moDbHelper.GetIdInsertSql(cSQLP1 & cSQLP2)
+                    cSQLP2 &= dbh.getAuditId() & ")"
+                    dbh.GetIdInsertSql(cSQLP1 & cSQLP2)
                 Next
             Next
             Return True
@@ -1678,9 +1680,9 @@ DoOptions:
         'deletes v4 Tables
         Try
             'AddResponse("Removing V4 Tables")
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
             msException = ""
-            moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/ClearDB.SQL"))
+            myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/ClearDB.SQL"))
             AddResponse("Run File (/ewcommon/sqlupdate/toV4/ClearDB.SQL)")
             Return saveVersionNumber("0.0.0.0")
         Catch ex As Exception
@@ -1706,7 +1708,7 @@ DoOptions:
         Try
             sSqlStr = "if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[" & sTableName & "]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)"
             sSqlStr = sSqlStr & "drop table [dbo].[" & sTableName & "] "
-            moDbHelper.ExeProcessSql(sSqlStr)
+            myWeb.moDbHelper.ExeProcessSql(sSqlStr)
         Catch ex As Exception
             AddResponseError(ex) 'returnException(mcModuleName, "ifTableExistsDropIt", ex, "", cProcessInfo, gbDebug)
         End Try
@@ -1729,7 +1731,7 @@ DoOptions:
 
             sSqlStr = "if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[" & sName & "]') and " & sObjProperty & ")"
             sSqlStr = sSqlStr & "drop " & LCase(sObjectType) & " [dbo].[" & sName & "] "
-            moDbHelper.ExeProcessSql(sSqlStr)
+            myWeb.moDbHelper.ExeProcessSql(sSqlStr)
 
         Catch ex As Exception
             AddResponseError(ex) 'returnException(mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
@@ -1785,7 +1787,7 @@ DoOptions:
 
             If bIsXml Then
                 ' Try to validate the xml
-                moDbHelper.importShippingLocations2(oXml)
+                myWeb.moDbHelper.importShippingLocations2(oXml)
             End If
 
             AddResponse("Import Shipping Locations'")
@@ -1870,14 +1872,14 @@ DoOptions:
         cSQL &= nEventType & ","
         cSQL &= "'" & cDetail & "',"
         cSQL &= "'" & cSessionId & "')"
-        Return moDbHelper.GetIdInsertSql(cSQL)
+        Return myWeb.moDbHelper.GetIdInsertSql(cSQL)
     End Function
 
     Friend Sub UpdateLogDetail(ByVal nActivityKey As Integer, ByVal cActivityDetail As String)
         Dim cSQL As String = "UPDATE tblActivityLog " _
                                 & "SET cActivityDetail = '" & SqlFmt(cActivityDetail) & "' " _
                                 & "WHERE nActivityKey = " & SqlFmt(nActivityKey)
-        moDbHelper.ExeProcessSql(cSQL)
+        myWeb.moDbHelper.ExeProcessSql(cSQL)
     End Sub
 
 

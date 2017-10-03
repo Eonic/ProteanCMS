@@ -633,15 +633,17 @@ Public Class xForm
                     expr.SetContext(nsMgr)
                     obj = xPathNav.Select(expr)
                     obj.MoveNext()
-                    objValue = obj.Current.Value
 
+                    If LCase(obj.Current.Name) = "instance" Then
+                        'object not found so we returns root instance we don't want all nodes returned in a dirty long string
+                        objValue = ""
+                    Else
+                        objValue = obj.Current.Value
+                    End If
                 Else
                     'nodeset has not been specified so value = submitted value
                     objValue = goRequest(oBindElmt.GetAttribute("id"))
                 End If
-
-
-
 
                 ' Evaulate the value by type
                 Dim cExtensions As String = oBindElmt.GetAttribute("allowedExt")
@@ -652,10 +654,10 @@ Public Class xForm
                         cExtensions = "doc,docx,xls,xlsx,pdf,ppt,jpg,gif,png"
                     End If
                 End If
+
                 If oBindElmt.GetAttribute("type") <> "" Then
                     sMessage = evaluateByType(objValue, oBindElmt.GetAttribute("type"), cExtensions, LCase(oBindElmt.GetAttribute("required")) = "true()")
                 End If
-
 
                 If sMessage <> "" Then
                     bIsValid = False

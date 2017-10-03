@@ -172,7 +172,6 @@ Partial Public Class Web
                     oCartXml.SetAttribute("delayStart", delayStart)
                     oCartXml.SetAttribute("startDate", xmlDate(Now()))
 
-
                     oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
                     oCartXml.SetAttribute("payableType", "Initial Payment")
 

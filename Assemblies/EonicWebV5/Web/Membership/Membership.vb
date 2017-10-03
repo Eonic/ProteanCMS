@@ -105,7 +105,9 @@ Partial Public Class Web
                     Dim resultPassword As String = String.Concat(md5Password, ":", cSalt) 'Adds the salt to the end of the hashed password
                     cPassword = resultPassword 'Store the resultant password with salt in the database
                 Else
+
                     cPassword = Eonic.Tools.Encryption.HashString(cPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
+
                 End If
 
                 'ensure the password is XML safe
@@ -156,8 +158,8 @@ Partial Public Class Web
                     cPassword = Eonic.Tools.Encryption.HashString(cPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
                 End If
 
-                'ensure the password is XML safe
-                Dim oConvDoc As New XmlDocument
+                    'ensure the password is XML safe
+                    Dim oConvDoc As New XmlDocument
                 Dim oConvElmt As XmlElement = oConvDoc.CreateElement("PW")
                 oConvElmt.InnerText = cPassword
                 cPassword = oConvElmt.InnerXml

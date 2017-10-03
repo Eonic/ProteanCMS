@@ -123,7 +123,8 @@
       <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue pull-left">
         <i class="fa fa-chevron-left">
           <xsl:text> </xsl:text>
-        </i><xsl:text> </xsl:text>Continue Shopping
+        </i><xsl:text> </xsl:text>
+        <xsl:call-template name="term3060" />
       </button>
     </form>
   </xsl:template>
@@ -217,15 +218,32 @@
       <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
         <xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
           <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-default btn-sm pull-right">
-            <i class="fa fa-pencil">&#160;</i>&#160;Edit <xsl:value-of select="@type"/>
+            <i class="fa fa-pencil">&#160;</i>&#160;<xsl:call-template name="term4022"/>&#160;
+            <xsl:choose>
+              <xsl:when test="@type = 'Billing Address'">
+                <xsl:call-template name="term4033"/>
+              </xsl:when>
+              <xsl:when test="@type = 'Delivery Address'"><xsl:call-template name="term4034"/></xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="@type"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </a>
         </xsl:if>
       </xsl:if>
       <h4 class="addressTitle">
-        <xsl:value-of select="@type"/>
+        <xsl:choose>
+          <xsl:when test="@type = 'Billing Address'">
+            <xsl:call-template name="term4033"/>
+          </xsl:when>
+          <xsl:when test="@type = 'Delivery Address'">
+            <xsl:call-template name="term4034"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@type"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:text>&#160;</xsl:text>
-        <!--Details-->
-        <!--xsl:call-template name="term3070" /-->
       </h4>
       <p>
         <xsl:value-of select="GivenName"/>
@@ -358,7 +376,8 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Continue Shopping
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3060" />
           </button>
           <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
@@ -382,7 +401,8 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Continue Shopping
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3060" />
         </button>
         <!--<button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
@@ -412,7 +432,9 @@
     <div id="template_1_Column" class="template template_1_Column">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h2 class="title">Your Address Details</h2>
+          <h2 class="title">
+            <xsl:call-template name="term4031" />
+          </h2>
         </div>
         <div class="panel-body">
           <xsl:apply-templates select="." mode="orderEditAddresses"/>
@@ -568,17 +590,20 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Continue Shopping
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Update Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Empty Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3062" />
         </button>
         <xsl:apply-templates select="." mode="orderItems">
           <xsl:with-param name="editQty">true</xsl:with-param>
@@ -620,17 +645,20 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Continue Shopping
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Update Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Empty Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
         <xsl:apply-templates select="." mode="orderItems">
@@ -641,17 +669,20 @@
         <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
           <i class="fa fa-chevron-left">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Continue Shopping
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3060" />
         </button>
         <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
           <i class="fa fa-refresh">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Update Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3061" />
         </button>
         <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Empty Order
+          </i><xsl:text> </xsl:text>
+          <xsl:call-template name="term3062" />
         </button>
         <!--</div>-->
         <div class="terminus">&#160;</div>
@@ -684,17 +715,20 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Continue Shopping
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Update Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Empty Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
         </div>
@@ -707,17 +741,20 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Continue Shopping
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Update Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Empty Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
         </div>
@@ -738,8 +775,9 @@
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div class="panel panel-default cartBox payment-tcs">
       <div class="panel-heading">
-        <h2 class="title">Please agree to our terms of business</h2>
-
+        <h2 class="title">
+          <xsl:call-template name="term4045" />
+        </h2>
       </div>
       <div class="panel-body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='optionsForm']" mode="xform"/>
@@ -760,17 +798,20 @@
           <button type="submit" name="cartBrief" value="Continue Shopping" class="btn btn-info btn-sm continue">
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Continue Shopping
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3060" />
           </button>
           <button type="submit" name="cartUpdate" value="Update Order" class="btn btn-info btn-sm update">
             <i class="fa fa-refresh">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Update Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3061" />
           </button>
           <button type="submit" name="cartQuit" value="Empty Order" class="btn btn-info btn-sm empty">
             <i class="fa fa-trash-o">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Empty Order
+            </i><xsl:text> </xsl:text>
+            <xsl:call-template name="term3062" />
           </button>
           <div class="terminus">&#160;</div>
         </form>
@@ -791,7 +832,9 @@
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div class="panel panel-default ccForm">
       <div class="panel-heading">
-        <h2 class="title">Please enter your payment details</h2>
+        <h2 class="title">
+          <xsl:call-template name="term3019" />
+        </h2>
       </div>
       <div class="panel-body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PayForm' or @name='Secure3D' or @name='Secure3DReturn')]" mode="xform"/>
@@ -1582,7 +1625,213 @@
       </button>
     </div>
   </xsl:template>
+  
+  <!--#-->
+  <!--############################## Order Process - 3DSecureReturn  ################################-->
+  <!--#-->
 
+  <xsl:template match="Page[Cart/Order[@cmd='Redirect3ds']]" mode="bodyBuilder">
+    <body>
+      <xsl:apply-templates select="." mode="bodyStyle"/>
+      <div class="Site">
+        <xsl:apply-templates select="Cart/Order" mode="orderProcess"/>
+      </div>
+    </body>
+  </xsl:template>
+
+  <xsl:template match="Order[@cmd='Redirect3ds']" mode="orderProcessTitle">
+    <h2>
+      <!--Your Order - Please enter your payment details.-->
+      Creating Invoice Please wait...
+    </h2>
+  </xsl:template>
+
+  <xsl:template match="Order[@cmd='Redirect3ds']" mode="orderProcess">
+    <xsl:apply-templates select="." mode="orderProcessTitle"/>
+    <xsl:apply-templates select="." mode="orderErrorReports"/>
+    <xsl:apply-templates select="." mode="orderEditAddresses"/>
+    <xsl:apply-templates select="." mode="displayNotes"/>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='Secure3DReturn']" mode="xform"/>
+  </xsl:template>
+
+  <xsl:template match="Content[@name='Secure3D']" mode="xform">
+    <form method="{model/submission/@method}" target="threeDS">
+      <xsl:attribute name="class">
+        <xsl:text>ewXform</xsl:text>
+        <xsl:if test="model/submission/@class!=''">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="model/submission/@class"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:attribute name="action">
+        <xsl:value-of select="model/submission/@action" disable-output-escaping="yes"/>
+      </xsl:attribute>
+      <xsl:if test="model/submission/@id!=''">
+        <xsl:attribute name="id">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+        <xsl:attribute name="name">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="model/submission/@event!=''">
+        <xsl:attribute name="onsubmit">
+          <xsl:value-of select="model/submission/@event"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert " mode="xform2"/>
+      <xsl:if test="count(submit) &gt; 0">
+        <p class="buttons">
+          <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
+            <span class="required">
+              <span class="req">*</span>
+              <xsl:call-template name="msg_required"/>
+            </span>
+          </xsl:if>
+          <xsl:apply-templates select="submit" mode="xform"/>
+        </p>
+      </xsl:if>
+      <div class="terminus">&#160;</div>
+    </form>
+    <iframe name="threeDS" id="threeDS"></iframe>
+    <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
+  </xsl:template>
+
+  <xsl:template match="Content[@name='Secure3DReturn']" mode="xform">
+    <form method="{model/submission/@method}" action="" target="_top">
+      <xsl:attribute name="class">
+        <xsl:text>ewXform</xsl:text>
+        <xsl:if test="model/submission/@class!=''">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="model/submission/@class"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+        <xsl:attribute name="action">
+          <xsl:value-of select="model/submission/@action"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="model/submission/@id!=''">
+        <xsl:attribute name="id">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+        <xsl:attribute name="name">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="model/submission/@event!=''">
+        <xsl:attribute name="onsubmit">
+          <xsl:value-of select="model/submission/@event"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="descendant::upload">
+        <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+      </xsl:if>
+      <div class="buttons">
+        <xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert " mode="xform2"/>
+
+        <xsl:if test="count(submit) &gt; 0">
+          <xsl:apply-templates select="submit" mode="xform"/>
+        </xsl:if>
+      </div>
+    </form>
+    <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn .buttons').hide();$('#Secure3DReturn').submit();});</script>
+  </xsl:template>
+
+  <xsl:template match="Content[@name='Redirect3ds']" mode="xform">
+    <form method="{model/submission/@method}" action="" target="_top">
+      <xsl:attribute name="class">
+        <xsl:text>ewXform</xsl:text>
+        <xsl:if test="model/submission/@class!=''">
+          <xsl:text> </xsl:text>
+          <xsl:value-of select="model/submission/@class"/>
+        </xsl:if>
+      </xsl:attribute>
+      <xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+        <xsl:attribute name="action">
+          <xsl:value-of select="model/submission/@action"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="model/submission/@id!=''">
+        <xsl:attribute name="id">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+        <xsl:attribute name="name">
+          <xsl:value-of select="model/submission/@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="model/submission/@event!=''">
+        <xsl:attribute name="onsubmit">
+          <xsl:value-of select="model/submission/@event"/>
+        </xsl:attribute>
+      </xsl:if>
+
+      <xsl:if test="descendant::upload">
+        <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+      </xsl:if>
+
+      <!--<xsl:copy-of select="/" />-->
+      <!--xsl:apply-templates select="self::Content" mode="tinyMCEinit"/-->
+
+      <xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert " mode="xform2"/>
+
+      <xsl:if test="count(submit) &gt; 0">
+        <p class="buttons">
+          <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
+            <span class="required">
+              <span class="req">*</span>
+              <xsl:call-template name="msg_required"/>
+            </span>
+          </xsl:if>
+          <xsl:apply-templates select="submit" mode="xform"/>
+        </p>
+      </xsl:if>
+      <div class="terminus">&#160;</div>
+    </form>
+    <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn').submit();});</script>
+  </xsl:template>
+
+
+  <xsl:template match="group | repeat" mode="xform2">
+    <xsl:param name="class"/>
+    <fieldset>
+      <xsl:if test="$class!='' or @class!='' ">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:if>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="." mode="editXformMenu"/>
+      <xsl:if test="label">
+        <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      </xsl:if>
+
+      <!-- Qui? -->
+      <!--<xsl:text> </xsl:text>-->
+
+      <ol>
+        <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
+        <xsl:if test="count(submit) &gt; 0">
+          <li>
+            <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
+              <label class="required">
+                <span class="req">*</span>
+                <xsl:call-template name="msg_required"/>
+              </label>
+            </xsl:if>
+            <!-- For xFormQuiz change how these buttons work -->
+            <xsl:apply-templates select="submit" mode="xform"/>
+            <div class="terminus">&#160;</div>
+          </li>
+
+        </xsl:if>
+      </ol>
+    </fieldset>
+  </xsl:template>
   <!--#-->
   <!--############################## Error Reports ################################-->
   <!--#-->

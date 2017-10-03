@@ -2133,6 +2133,21 @@
             </xsl:attribute>
           </xsl:if>
           <a href="#{@id}" data-toggle="tab">
+            <xsl:if test="@icon!=''">
+              <i>
+                <xsl:attribute name="class">
+                  <xsl:text>fa fa-3x center-block </xsl:text>
+                  <xsl:value-of select="@icon"/>
+                </xsl:attribute>
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>
+            </xsl:if>
+            <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
+              <span class="upload-icon">
+                <img src="{@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+              </span>
+            </xsl:if>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
           </a>
@@ -2407,6 +2422,7 @@
         <xsl:apply-templates select="node()" mode="cleanXhtml"/>
       </xsl:otherwise>
     </xsl:choose>
+ 
   </xsl:template>
 
 
@@ -7207,6 +7223,20 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="Content[@type='Product']" mode="opengraph-namespace">
+    <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#</xsl:text>
+  </xsl:template>
+  
+  <xsl:template match="Content[@type='Product']" mode="opengraphdata">
+    <meta property="og:type" content="product" />
+    <meta property="product:upc" content="{StockCode/node()}" />
+    <meta property="product:sale_price:currency" content="GBP" />
+    <xsl:variable name="price">
+      <xsl:value-of select="Prices/Price[@currency=$currency and @type='sale']/node()"/>
+    </xsl:variable>
+    <meta property="product:sale_price:amount" content="{$price}" />
+  </xsl:template>
+  
   <!-- Product Detail -->
   <xsl:template match="Content[@type='Product']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
@@ -9778,7 +9808,7 @@
         <span class="hidden">|</span>
         <!--</xsl:if>-->
 
-        <div class="pull-left">
+        <div class="pull-left vacancy-facts">
           <dl class="dl-horizontal">
             <xsl:if test="@publish and @publish!=''">
               <dt class="date">
@@ -9846,7 +9876,7 @@
             </xsl:if>
           </dl>
         </div>
-        <div class="pull-left">
+        <div class="pull-left vacancy-description">
           <xsl:if test="Summary/node()!=''">
             <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
           </xsl:if>
@@ -10121,7 +10151,7 @@
         </ul>
         <div class="terminus">&#160;</div>
       </div>
-      <div class="cols{@cols}">
+      <div class="cols{@cols} list-group">
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
@@ -10170,7 +10200,7 @@
   <!-- FAQ Brief -->
   <xsl:template match="Content[@type='FAQ']" mode="displayBrief">
     <xsl:param name="sortBy"/>
-    <div class="listItem faq">
+    <div class="listItem list-group-item faq">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
@@ -10652,14 +10682,14 @@
     <div class="advanced-carousel-container">
       <div class="advanced-carousel" style="height:{@CarouselHeight}px">
         <ul style="display:none">
-	<xsl:choose>
-	<xsl:when test="Content[@type='AdvancedCarouselSlide']">
-          <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
-        </xsl:when>
-	<xsl:otherwise>
-	 <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
-	</xsl:otherwise>
-	</xsl:choose>
+	        <xsl:choose>
+	        <xsl:when test="Content[@type='AdvancedCarouselSlide']">
+                  <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+                </xsl:when>
+	        <xsl:otherwise>
+	         <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+	        </xsl:otherwise>
+	        </xsl:choose>
         </ul>
       </div>
     </div>
@@ -12459,7 +12489,7 @@
                 </i>
                 <i class="fa fa-youtube fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
-                </i>test
+                </i>
               </span>
             </a>
           </xsl:if>
@@ -12846,7 +12876,9 @@
         <div class="terminus">&#160;</div>
       </div>
       <div class="col-md-8">
-        <xsl:apply-templates select="." mode="VideoDetailDisplay"/>
+        <xsl:apply-templates select="." mode="VideoDetailDisplay">
+          <xsl:with-param name="classes" select="'col-md-8'"/>    
+        </xsl:apply-templates>
       </div>
     </div>
   </xsl:template>
@@ -12936,72 +12968,6 @@
     </div>
   </xsl:template>
 
-  <!-- YouTube video -->
-  <xsl:template match="Content[@moduleType='Video' and @videoType='YouTube'][ancestor::Page[@cssFramework='bs3']]" mode="displayBrief">
-    <xsl:variable name="code">
-      <xsl:variable name="raw" select="YouTube/@code"/>
-      <xsl:choose>
-        <!-- http://youtu.be/abcd1234 -->
-        <xsl:when test="contains($raw, 'youtu.be/')">
-          <xsl:value-of select="substring(substring-after($raw, 'youtu.be/'), 1, 11)"/>
-        </xsl:when>
-        <!-- http://youtube.com/watch?v=abcd1234 -->
-        <xsl:when test="contains($raw, 'v=')">
-          <xsl:value-of select="substring(substring-after($raw, 'v='), 1, 11)"/>
-        </xsl:when>
-        <xsl:when test="contains($raw, 'youtube.com/embed/')">
-          <xsl:value-of select="substring(substring-after($raw, 'youtube.com/embed/'), 1, 11)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="substring($raw, 1, 11)"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <div id="Video{@id}" class="Video">
-      <xsl:if test="@size!='Manual'">
-        <xsl:attribute name="class">
-          <xsl:text>embed-responsive </xsl:text>
-          <xsl:choose>
-            <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-            <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
-      </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
-        <xsl:attribute name="src">
-          <xsl:text>http</xsl:text>
-          <xsl:if test="YouTube/@useHttps='true'">
-            <xsl:text>s</xsl:text>
-          </xsl:if>
-          <xsl:text>://www.youtube.com/embed/</xsl:text>
-          <xsl:value-of select="$code"/>
-          <xsl:text>?wmode=transparent&amp;rel=0</xsl:text>
-          <xsl:if test="YouTube/@showSuggested='true'">&amp;rel=1</xsl:if>
-        </xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="@size='Manual'">
-            <xsl:if test="@width!=''">
-              <xsl:attribute name="width">
-                <xsl:value-of select="@width"/>
-              </xsl:attribute>
-            </xsl:if>
-            <xsl:if test="@height!=''">
-              <xsl:attribute name="height">
-                <xsl:value-of select="@height"/>
-              </xsl:attribute>
-            </xsl:if>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name="class">
-              <xsl:text>embed-responsive-item</xsl:text>
-            </xsl:attribute>
-          </xsl:otherwise>
-        </xsl:choose>
-
-        <xsl:text> </xsl:text>
-      </iframe>
-    </div>
-  </xsl:template>
 
   <xsl:template match="Content[@moduleType='Video' and @videoType='YouTube']" mode="displayBrief">
     <xsl:variable name="code">
@@ -13069,9 +13035,77 @@
     </div>
   </xsl:template>
 
+  <!-- YouTube video -->
+  <xsl:template match="Content[@moduleType='Video' and @videoType='YouTube'][ancestor::Page[@cssFramework='bs3']]" mode="displayBrief">
+    <xsl:variable name="code">
+      <xsl:variable name="raw" select="YouTube/@code"/>
+      <xsl:choose>
+        <!-- http://youtu.be/abcd1234 -->
+        <xsl:when test="contains($raw, 'youtu.be/')">
+          <xsl:value-of select="substring(substring-after($raw, 'youtu.be/'), 1, 11)"/>
+        </xsl:when>
+        <!-- http://youtube.com/watch?v=abcd1234 -->
+        <xsl:when test="contains($raw, 'v=')">
+          <xsl:value-of select="substring(substring-after($raw, 'v='), 1, 11)"/>
+        </xsl:when>
+        <xsl:when test="contains($raw, 'youtube.com/embed/')">
+          <xsl:value-of select="substring(substring-after($raw, 'youtube.com/embed/'), 1, 11)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="substring($raw, 1, 11)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <div id="Video{@id}" class="Video">
+      <xsl:if test="@size!='Manual'">
+        <xsl:attribute name="class">
+          <xsl:text>embed-responsive </xsl:text>
+          <xsl:choose>
+            <xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
+            <xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+      </xsl:if>
+      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen" >
+        <xsl:attribute name="src">
+          <xsl:text>http</xsl:text>
+          <xsl:if test="YouTube/@useHttps='true'">
+            <xsl:text>s</xsl:text>
+          </xsl:if>
+          <xsl:text>://www.youtube.com/embed/</xsl:text>
+          <xsl:value-of select="$code"/>
+          <xsl:text>?wmode=transparent&amp;rel=0</xsl:text>
+          <xsl:if test="YouTube/@showSuggested='true'">&amp;rel=1</xsl:if>
+        </xsl:attribute>
+        <xsl:choose>
+          <xsl:when test="@size='Manual'">
+            <xsl:if test="@width!=''">
+              <xsl:attribute name="width">
+                <xsl:value-of select="@width"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@height!=''">
+              <xsl:attribute name="height">
+                <xsl:value-of select="@height"/>
+              </xsl:attribute>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="class">
+              <xsl:text>embed-responsive-item</xsl:text>
+            </xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:text> </xsl:text>
+      </iframe>
+    </div>
+  </xsl:template>
+  
   <!-- Vimeo video -->
 
-  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo'][ancestor::Page[@cssFramework='bs3']]" mode="displayBrief">
+
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="displayBrief">
     <xsl:variable name="code">
       <xsl:variable name="raw" select="Vimeo/@code"/>
       <xsl:choose>
@@ -13133,8 +13167,9 @@
       </iframe>
     </div>
   </xsl:template>
-
-  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo']" mode="displayBrief">
+  
+  
+  <xsl:template match="Content[@moduleType='Video' and @videoType='Vimeo'][ancestor::Page[@cssFramework='bs3']]" mode="displayBrief">
     <xsl:variable name="code">
       <xsl:variable name="raw" select="Vimeo/@code"/>
       <xsl:choose>
@@ -13373,7 +13408,10 @@
  
   <!-- Video Detail -->
   <xsl:template match="Content[@type='Video']" mode="VideoDetailDisplay">
-    <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+    <xsl:param name="classes"/>
+    <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="$classes"/>
+      </xsl:apply-templates>
     <div id="Video{@id}" class="Video">
       <xsl:attribute name="class">
         <xsl:apply-templates select="." mode="videoClasses"/>

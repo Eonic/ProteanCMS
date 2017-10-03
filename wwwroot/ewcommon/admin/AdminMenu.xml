@@ -53,7 +53,7 @@
       <MenuItem name="Delete Dir Item" cmd="DeleteDirItem" display="false"/>
       <MenuItem name="Dir Permissions" cmd="DirPermissions" display="false"/>
       <MenuItem name="Maintain Relations" cmd="MaintainRelations" display="false" feature="Membership" icon="fa-link"/>
-      <MenuItem name="List User Contacts" cmd="ListUserContacts" display="false" feature="Membership" icon="fa-map-marker"/>
+      <MenuItem name="List User Addresses" cmd="ListUserContacts" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Add User Contact" cmd="AddUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="List Companies" cmd="ListCompanies" display="false" feature="Membership"/>

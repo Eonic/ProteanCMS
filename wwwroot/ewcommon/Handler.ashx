@@ -10,10 +10,15 @@ Public Class Handler : Implements IHttpHandler
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         context.Response.ContentType = "text/plain"
 
+        Dim jsa As New Eonic.Web.Cart.JSONActions
+        context.Response.Write(jsa.GetType().ToString())
 
-        Dim assemblyInstance As [Assembly] = [Assembly].Load("Eonic.Zygostatics")
+        ' Dim calledType As Type
+        '  calledType = System.Type.GetType("Eonic.Web.Cart.JSONActions", True)
 
-        context.Response.Write(assemblyInstance.FullName)
+        '  Dim assemblyInstance As [Assembly] = [Assembly].Load("Eonic.Zygostatics")
+
+        ' context.Response.Write(calledType.FullName)
 
 
     End Sub

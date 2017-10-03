@@ -1232,7 +1232,7 @@ Partial Public Module xmlTools
         ''' <remarks></remarks>
         Public Function ResizeImage(ByVal cVirtualPath As String, ByVal maxWidth As Long, ByVal maxHeight As Long, ByVal sSuffix As String) As String
             Try
-                Return ResizeImage(cVirtualPath, maxWidth, maxHeight, "", sSuffix, 100, False, False)
+                Return ResizeImage(cVirtualPath, maxWidth, maxHeight, "", sSuffix, 99, False, False)
             Catch ex As Exception
                 Return "Error"
             End Try
@@ -1375,6 +1375,7 @@ Partial Public Module xmlTools
                     End If
 
                 End If
+
 
             Catch ex As Exception
                 ' PerfMon.Log("xmlTools", "ResizeImage - End")
@@ -1596,6 +1597,14 @@ Partial Public Module xmlTools
                     Case "CountriesId"
                         Dim oCart As New Eonic.Web.Cart(myWeb)
                         oCart.populateCountriesDropDown(oXfrms, SelectElmt, "", True)
+                    Case "Currency"
+                        Dim moPaymentCfg As XmlNode
+                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+                        Dim oCurrencyElmt As XmlElement
+                        For Each oCurrencyElmt In moPaymentCfg.SelectNodes("currencies/Currency")
+                            'going to need to do something about languages
+                            oXfrms.addOption(SelectElmt, oCurrencyElmt.SelectSingleNode("name").InnerText, oCurrencyElmt.GetAttribute("ref"))
+                        Next
 
                     Case "Library"
 
@@ -1998,12 +2007,17 @@ Partial Public Module xmlTools
 
             Dim sReturnString As String = ""
             Dim sReturnError As String = ""
+            Dim bReset As Boolean = False
 
             Try
-                Dim bReset As Boolean = False
-                If Not myWeb.moRequest Is Nothing Then
-                    If Not myWeb.moRequest("reBundle") Is Nothing Then
-                        bReset = True
+                If myWeb Is Nothing Then
+                    'ONLY HAPPENS ON ERROR PAGES
+                    gbDebug = True
+                Else
+                    If Not myWeb.moRequest Is Nothing Then
+                        If Not myWeb.moRequest("reBundle") Is Nothing Then
+                            bReset = True
+                        End If
                     End If
                 End If
 
@@ -2066,8 +2080,10 @@ Partial Public Module xmlTools
 
                             oCssWebClient = Nothing
                             fsh = Nothing
-                            oImp.UndoImpersonation()
-                            oImp = Nothing
+                            If Not IsNothing(oImp) Then
+                                oImp.UndoImpersonation()
+                                oImp = Nothing
+                            End If
                         End If
 
                     End If
@@ -2077,8 +2093,9 @@ Partial Public Module xmlTools
                 sReturnString = Nothing
 
             Catch ex As Exception
-
                 'OnComponentError(myWeb, New Eonic.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
+
+                'Return ex.StackTrace.Replace(vbCr & vbLf, String.Empty).Replace(vbLf, String.Empty).Replace(vbCr, String.Empty) & ex.Message
 
                 Return ex.Message
             End Try
@@ -2151,7 +2168,7 @@ Public Class XmlHelper
         Dim oStyle As Xsl.XslTransform
         Dim oCStyle As Xsl.XslCompiledTransform
         Dim bFinished As Boolean = False
-        Private bError As Boolean = False
+        Public bError As Boolean = False
         Public currentError As Exception
         Public xsltArgs As Xsl.XsltArgumentList
         Dim compiledFolder As String = "\xsltc\"
@@ -2386,6 +2403,7 @@ Public Class XmlHelper
                         d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
                         d = Nothing
                         Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
+                        bError = True
                     End If
                 End If
                 d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
@@ -2408,6 +2426,7 @@ Public Class XmlHelper
                         d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
                         d = Nothing
                         Err.Raise(1010, "TranformXSL", "The XSL took longer than " & (mnTimeoutSec / 1000) & " seconds to process")
+                        bError = True
                     End If
                 End If
                 d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))

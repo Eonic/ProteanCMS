@@ -197,7 +197,8 @@ Public Module Text
             ' Find if an IP address exists in a comma/pipe-delimited IP address range.
             Dim bFound As Boolean = False
 
-            If cIPAddress <> "" Then
+            If cIPAddress <> "" And Not (IsNothing(cIPAddressList)) Then
+
                 Dim oRE As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("(,|^)" & Replace(cIPAddress, ".", "\.") & "(,|$)")
                 If oRE.IsMatch(cIPAddressList) Then bFound = True
             End If

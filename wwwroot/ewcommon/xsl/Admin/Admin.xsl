@@ -1665,8 +1665,16 @@
                   </li>
                   </xsl:otherwise>
                 </xsl:choose>
-            
-                
+                <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
+                <li>
+                  <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
+                    <i class="fa fa-refresh">
+                      <xsl:text> </xsl:text>
+                    </i>
+                    <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
+                  </a>
+                </li>
+                </xsl:if>
               </ul>
             </div>
           </div>
@@ -3490,6 +3498,11 @@
             <xsl:with-param name="name">MetaAbstract</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Organisation</xsl:with-param>
+            <xsl:with-param name="name">MetaOrganisation</xsl:with-param>
+            <xsl:with-param name="type">Organisation</xsl:with-param>
+          </xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="google">
@@ -3629,7 +3642,7 @@
       <td>
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type and @parId!=/Page/@id]">
-            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
+            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Master</a>
@@ -3639,7 +3652,7 @@
               </i><xsl:text> </xsl:text>Add Here</a>
           </xsl:when>
           <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
-            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
+            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit</a>
@@ -4872,7 +4885,7 @@
               <i class="fa fa-map-marker fa-white">
                 <xsl:text> </xsl:text>
               </i>
-              <xsl:text> </xsl:text>Contacts</a>
+              <xsl:text> </xsl:text>Addresses</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
             <a href="?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
@@ -5807,6 +5820,125 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="Order" mode="displayNotes">
+    <xsl:variable name="parentURL">
+      <xsl:call-template name="getContentParURL"/>
+    </xsl:variable>
+    <xsl:if test="Notes/Notes/node()!='' or Notes/PromotionalCode/node()!=''">
+      <xsl:if test="Notes/Notes/node()!=''">
+        <h3>
+          <!--Additional information for Your Order-->
+          <xsl:call-template name="term3010" />
+        </h3>
+        <xsl:for-each select="Notes/Notes/*">
+          <xsl:if test="node()!=''">
+            <p>
+              <xsl:choose>
+                <xsl:when test="@label and @label!=''">
+                  <xsl:value-of select="@label"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="name()"/>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:text>: </xsl:text>
+              <xsl:value-of select="node()"/>
+            </p>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:if>
+      <xsl:if test="Notes/PromotionalCode/node()!=''">
+        <p>
+          <!--Promotional Code entered-->
+          <xsl:call-template name="term3011" />
+          <xsl:text>:&#160;</xsl:text>
+          <xsl:apply-templates select="Notes/PromotionalCode/node()" mode="cleanXhtml"/>
+        </p>
+      </xsl:if>
+      <xsl:if test="not(@readonly) and Notes/Notes/node()!=''">
+        <p class="optionButtons">
+          <a href="{$parentURL}?cartCmd=Notes" class="button">
+            <xsl:attribute name="title">
+              <!--Click here to edit the notes on this order.-->
+              <xsl:call-template name="term3012" />
+            </xsl:attribute>
+            <!--Edit Notes-->
+            <xsl:call-template name="term3013" />
+          </a>
+        </p>
+      </xsl:if>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Contact" mode="cart">
+    <xsl:param name="parentURL"/>
+    <xsl:param name="cartType"/>
+    <xsl:variable name="secureURL">
+      <xsl:call-template name="getSecureURL"/>
+    </xsl:variable>
+    <xsl:variable name="type">
+      <xsl:value-of select="substring-before(@type,' ')"/>
+    </xsl:variable>
+    <div>
+      <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
+        <xsl:if test="/Page/Cart/Order/@cmd!='MakePayment'">
+          <a href="{$parentURL}?pgid={/Page/@id}&amp;{$cartType}Cmd={$type}" class="btn btn-default btn-sm pull-right">
+            <i class="fa fa-pencil">&#160;</i>&#160;Edit <xsl:value-of select="@type"/>
+          </a>
+        </xsl:if>
+      </xsl:if>
+      <h4 class="addressTitle">
+        <xsl:value-of select="@type"/>
+        <xsl:text>&#160;</xsl:text>
+        <!--Details-->
+        <!--xsl:call-template name="term3070" /-->
+      </h4>
+      <p>
+        <xsl:value-of select="GivenName"/>
+        <br/>
+        <xsl:if test="Company/node()!=''">
+          <xsl:value-of select="Company"/>,
+          <br/>
+        </xsl:if>
+
+        <xsl:value-of select="Street"/>,
+        <br/>
+        <xsl:value-of select="City"/>,
+        <br/>
+        <xsl:if test="State/node()!=''">
+          <xsl:value-of select="State"/>
+          .<xsl:text> </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="PostalCode"/>.
+        <br/>
+        <xsl:if test="Country/node()!=''">
+          <xsl:value-of select="Country"/>
+          <br/>
+        </xsl:if>
+        <!--Tel-->
+        <xsl:call-template name="term3071" />
+        <xsl:text>:&#160;</xsl:text>
+        <xsl:value-of select="Telephone"/>
+        <br/>
+        <xsl:if test="Fax/node()!=''">
+          <!--Fax-->
+          <xsl:call-template name="term3072" />
+          <xsl:text>:&#160;</xsl:text>
+          <xsl:value-of select="Fax"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="Email/node()!=''">
+          <!--Email-->
+          <xsl:call-template name="term3073" />
+          <xsl:text>:&#160;</xsl:text>
+          <xsl:value-of select="Email"/>
+          <br/>
+        </xsl:if>
+      </p>
+
+    </div>
+
+  </xsl:template>
 
   <!-- ################################# Order Item ######################################## -->
   <!--#-->
@@ -8082,6 +8214,12 @@
                 </xsl:with-param>
                 <xsl:with-param name="showTime">true</xsl:with-param>
               </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$origName='cPrimaryDetail'">
+              <xsl:value-of select="node()"/>
+              <xsl:if test="parent::*/nSecondaryId/node()!='0'">
+                / <xsl:value-of select="parent::*/nSecondaryId/node()"/>
+              </xsl:if>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="node()"/>

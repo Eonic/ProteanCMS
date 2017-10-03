@@ -189,8 +189,16 @@ Partial Public Class Web
                         nThisYear = nThisYear - 1
                     Loop
 
-                    'Get content by date range
-                    myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & " and a.dpublishDate <= " & sqlDate(endDate))
+                    If myWeb.mbAdminMode And endDate = Date.Today Then
+                        'Get content by date range and future posts
+                        myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate))
+
+                    Else
+                        'Get content by date range
+                        myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & " and a.dpublishDate <= " & sqlDate(endDate))
+
+                    End If
+
                     'remove content detail
                     If Not myWeb.moContentDetail Is Nothing Then
                         myWeb.moPageXml.DocumentElement.RemoveChild(myWeb.moPageXml.DocumentElement.SelectSingleNode("ContentDetail"))

@@ -2,7 +2,8 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 	<xsl:import href="Admin.xsl"/>
 	<xsl:import href="../Tools/Functions.xsl"/>
-  <xsl:import href="../xForms/xForms-bs-mininal.xsl"/>
+	<xsl:import href="../xForms/xForms.xsl"/>
+  <xsl:import href="../xForms/xForms-bs.xsl"/>
   <xsl:import href="../localisation/SystemTranslations.xsl"/>
 	
 	<xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>

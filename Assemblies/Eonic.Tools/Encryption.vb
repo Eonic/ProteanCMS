@@ -17,7 +17,7 @@ Public Module Encryption
         Try
             If OriginalString = "" Then Return ""
             Dim oHash As New Eonic.Tools.Encryption.Hash(Provider)
-            Dim oEnc As New Eonic.Tools.Encryption.EncData(OriginalString)
+            Dim oEnc = New Eonic.Tools.Encryption.EncData(OriginalString)
             oEnc = oHash.Calculate(oEnc)
             oHash.Dispose()
             'TS changed this to Hex from text

@@ -241,10 +241,16 @@ Check:
                                     moDbHelper.mnUserId = CLng(sValidResponse)
                                     If Not goSession Is Nothing Then
                                         goSession("nUserId") = myWeb.mnUserId
+
+                                        Dim UserXml As XmlElement = myWeb.GetUserXML()
+                                        If UserXml.GetAttribute("defaultCurrency") <> "" Then
+                                            goSession("cCurrency") = UserXml.GetAttribute("defaultCurrency")
+                                        End If
+
                                     End If
 
-                                    ' Set the remember me cookie
-                                    If bRememberMe Then
+                                        ' Set the remember me cookie
+                                        If bRememberMe Then
                                         If goRequest("cRemember") = "true" Then
                                             Dim oCookie As System.Web.HttpCookie
                                             If Not (myWeb.moRequest.Cookies("RememberMeUserName") Is Nothing) Then goResponse.Cookies.Remove("RememberMeUserName")
@@ -1540,6 +1546,8 @@ Check:
                         If mnUserId <> 0 Then
 
                             myWeb.RefreshUserXML()
+
+                            myWeb.GetUserXML(mnUserId)
 
                             'moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML().CloneNode(True), True))
                         End If
