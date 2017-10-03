@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PageLayouts imgPath="/ewcommon/images/pagelayouts">
-  <ModuleTypes>
-    <ModuleGroup name="Search features" icon="fa fa-search">
-      <Module type="Search" name="Search">Search Module - Can be custimised, several types of search available</Module>
-    </ModuleGroup>
-  </ModuleTypes>
-</PageLayouts>

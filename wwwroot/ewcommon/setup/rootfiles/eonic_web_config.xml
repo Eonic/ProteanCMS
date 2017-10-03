@@ -3,6 +3,7 @@
 		<add key="VersionNumber" value="0.0.0.0"/>
     <!-- database settings -->
 		<add key="DatabaseType" value="SQL"/>
+    <add key="DatabaseServer" value="localhost" />
 		<add key="DatabaseName" value=""/>
 		<add key="DatabaseUsername" value=""/>
 		<add key="DatabasePassword" value=""/>

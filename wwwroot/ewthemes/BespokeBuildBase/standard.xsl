@@ -7,7 +7,7 @@
   <xsl:import href="../../../../../ewcommon_v5-1/xsl/cart/newcart-bs.xsl"/>-->
   <xsl:import href="../../ewcommon/xsl/MinimalImports.xsl"/>
   <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
-  <xsl:import href="D:/home/site/wwwroot/xsl/InstalledModules.xsl"/>
+  <xsl:import href="../../xsl/InstalledModules.xsl"/>
   
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
