@@ -68,7 +68,7 @@ Public Class CssWebClient
 
                 PerfMon.Log("CssWebClient", "SendCssHttpHandlerRequest", "start-" & Serviceurl)
 
-                If goRequest.ServerVariables("SERVER_PORT") <> "80" Then
+                If goRequest.ServerVariables("SERVER_NAME") = "localhost" And goRequest.ServerVariables("SERVER_PORT") <> "80" Then
                     Serviceurl = ":" & goRequest.ServerVariables("SERVER_PORT") & Serviceurl
                 End If
 

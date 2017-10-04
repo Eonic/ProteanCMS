@@ -7206,6 +7206,74 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="getFileTypeIcon">
+    <xsl:param name="extension" />
+    <xsl:choose>
+      <xsl:when test="$extension='.pdf'">
+        <!--Adobe PDF-->
+        <i class="fa fa-file-pdf-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="$extension='.doc' or $extension='.docx'">
+        <!--Word Document-->
+        <i class="fa fa-file-word-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.xls') or contains($extension,'.xlsx')">
+        <!--Excel Spreadsheet-->
+        <i class="fa fa-file-excel-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.zip')">
+        <!--Zip Archive-->
+        <i class="fa fa-file-archive-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.ppt')">
+        <!--PowerPoint Presentation-->
+
+        <i class="fa fa-file-powerpoint-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="$extension='.mdb' or $extension='.accdb'">
+        <!--Access Database-->
+        <i class="fa fa-database">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.jpg')">
+        <!--JPEG Image file-->
+        <i class="fa fa-file-image-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.gif')">
+        <!--GIF Image file-->
+        <i class="fa fa-file-image-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+      <xsl:when test="contains($extension,'.png')">
+        <!--PNG Image file-->
+        <i class="fa fa-file-image-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:when>
+
+      <xsl:otherwise>
+        <!--Unknown File Type-->
+        <i class="fa fa-file-o">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="getBrowserVersion">
     <xsl:choose>
       <!-- When using chromeframe - treat browser as chrome -->

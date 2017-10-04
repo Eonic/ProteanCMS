@@ -294,6 +294,7 @@ Public Class Services
         Dim bResult As Boolean
         Dim sResult As String = ""
         Dim myWeb As New Eonic.Web(oCtx)
+        myWeb.Open()
         Try
 
             Dim oIndexer As New Eonic.IndexerAsync(myWeb)
@@ -424,6 +425,7 @@ Public Class Services
     Public Function UserAlerts() As XmlDocument
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
                 Dim oAlerts As New Eonic.Web.Membership.Alerts(myWeb)
@@ -447,6 +449,8 @@ Public Class Services
         Dim oDb As New Eonic.Tools.Database
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
+
             CreateResponse()
             If CheckUserIP() Then
 
@@ -471,6 +475,7 @@ Public Class Services
         Dim oDb As New Eonic.Tools.Database
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
 
@@ -497,6 +502,7 @@ Public Class Services
         Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/versioncontrol")
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
 
@@ -541,6 +547,7 @@ Public Class Services
     Public Function Syndicate(ByVal distributors As String, ByVal contentTypes As String, ByVal page As Integer, ByVal iterate As Boolean) As XmlDocument
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
                 Dim oSyndication As New Eonic.Syndication(myWeb, distributors, contentTypes, page, iterate)
@@ -576,6 +583,7 @@ Public Class Services
     Public Function SyndicateExtended(ByVal distributors As String, ByVal contentTypes As String, ByVal page As Integer, ByVal iterate As Boolean, ByVal extendedSettings As XmlElement) As XmlDocument
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
                 Dim oSyndication As New Eonic.Syndication(myWeb, distributors, contentTypes, page, iterate, extendedSettings)
@@ -611,6 +619,7 @@ Public Class Services
         Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/versioncontrol")
         Try
             myWeb = New Eonic.Web
+            myWeb.Open()
             CreateResponse()
             Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
             Dim sSql As String

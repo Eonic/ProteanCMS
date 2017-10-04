@@ -768,8 +768,14 @@ Public Class Web
                     Case Else : gbDebug = False
                 End Select
             End If
+            Dim bSessionLogging As Boolean = False
+            If Not moSession Is Nothing Then
+                If moSession("Logging") = "On" Then
+                    bSessionLogging = True
+                End If
+            End If
 
-            If moRequest("perfmon") <> "" Or moSession("Logging") = "On" Then
+            If moRequest("perfmon") <> "" Or bSessionLogging Then
                 If PerfMon Is Nothing Then PerfMon = New PerfLog(moConfig("DatabaseName"))
                 If Not moSession Is Nothing Then
                     'only bother if we are not doing a scheduler thingie
