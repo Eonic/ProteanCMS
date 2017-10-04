@@ -1158,7 +1158,7 @@ Public Class Web
                                             styleFile = CStr(goServer.MapPath("/ewcommon/xsl/admin/page.xsl"))
                                         ElseIf moConfig("AdminXsl") <> "" Then
                                             'uses a specified admin XSL
-                                            styleFile = moConfig("AdminXsl")
+                                            styleFile = CStr(goServer.MapPath(moConfig("AdminXsl")))
                                         Else
                                             'uses the sites main XSL
                                             styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
@@ -2361,7 +2361,8 @@ Public Class Web
                     'we should not hit this because addCurrency should establish it.
                     moCart = New Cart(Me)
                 End If
-
+                'reinitialize variables because we might've changed some
+                moCart.InitializeVariables()
                 moCart.apply()
                 'get any discount information for this page
                 moDiscount.getAvailableDiscounts(moPageXml.DocumentElement)

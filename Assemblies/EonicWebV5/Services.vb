@@ -539,6 +539,8 @@ Public Class Services
             returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
+            myWeb.Close()
+            myWeb = Nothing
         End Try
         Return oRXML
     End Function
@@ -573,6 +575,8 @@ Public Class Services
             returnException(mcModuleName, "Syndicate", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
+            myWeb.Close()
+            myWeb = Nothing
         End Try
 
         Return oRXML
@@ -609,6 +613,8 @@ Public Class Services
             returnException(mcModuleName, "SyndicateExtended", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
+            myWeb.Close()
+            myWeb = Nothing
         End Try
         Return oRXML
     End Function
@@ -752,6 +758,8 @@ Public Class Services
             returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
+            myWeb.Close()
+            myWeb = Nothing
         End Try
         Return oRXML
     End Function

@@ -87,8 +87,6 @@ Imports System
                 goServer = moCtx.Server
                 'End If
 
-
-
                 ResetConnection("Data Source=" & goConfig("DatabaseServer") & "; " & _
                     "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
                     GetDBAuth())
@@ -149,7 +147,6 @@ Imports System
                 MyBase.ConnectTimeout = 15
                 MyBase.MinPoolSize = 0
                 MyBase.MaxPoolSize = 100
-
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             End Try

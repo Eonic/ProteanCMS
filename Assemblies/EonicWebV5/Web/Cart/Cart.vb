@@ -756,6 +756,7 @@ Partial Public Class Web
 
                         If IsNumeric(cRes) AndAlso cRes > 0 Then
                             myWeb.mnUserId = CInt(cRes)
+                            mnEwUserId = myWeb.mnUserId
                             myWeb.moSession("nUserId") = cRes
 
                             Dim cRequestPage As String = myWeb.moRequest("pgid")
