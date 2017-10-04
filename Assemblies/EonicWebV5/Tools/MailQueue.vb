@@ -140,6 +140,7 @@ Public Class MailQueue
             Dim oWeb As New Eonic.Web
 
             oWeb.InitializeVariables()
+            oWeb.Open()
             oWeb.mnPageId = nPageId
             oWeb.mnUserId = nUserId
             oWeb.mbAdminMode = False

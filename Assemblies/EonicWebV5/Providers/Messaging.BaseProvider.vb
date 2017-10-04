@@ -688,6 +688,7 @@ ProcessFlow:
 
                         Dim oWeb As New Web
                         oWeb.InitializeVariables()
+                        oWeb.Open()
                         oWeb.mnPageId = nPageId
                         oWeb.mbAdminMode = False
 

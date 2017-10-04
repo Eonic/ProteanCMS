@@ -1069,6 +1069,7 @@ Public Class Messaging
 
             Dim oWeb As New Web
             oWeb.InitializeVariables()
+            oWeb.Open()
             oWeb.mnPageId = nPageId
             oWeb.mbAdminMode = False
 
@@ -1138,6 +1139,7 @@ Public Class Messaging
 
             Dim oWeb As New Web
             oWeb.InitializeVariables()
+            oWeb.Open()
             oWeb.mnPageId = nPageId
             oWeb.mbAdminMode = False
 

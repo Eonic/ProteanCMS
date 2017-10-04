@@ -188,6 +188,7 @@ Public Class Indexer
             Dim xWeb As New Eonic.Web
 
             xWeb.InitializeVariables()
+            xWeb.Open()
             xWeb.mnUserId = 1
             xWeb.mbAdminMode = False
             xWeb.ibIndexMode = True

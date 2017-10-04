@@ -535,6 +535,7 @@ processFlow:
                         Dim oWeb As Eonic.Web = New Web
                         oWeb.moPageXml = moPageXml
                         oWeb.InitializeVariables()
+                        oWeb.Open()
                         If oNotesXform.Instance.SelectSingleNode("Query/@contentType") Is Nothing Then
                             oWeb.GetPageContentFromSelect(" CAST(cContentXmlDetail as xml).exist('" & sXpath & "') = 1")
                         Else

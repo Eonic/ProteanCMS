@@ -661,6 +661,7 @@ Public Class IndexerAsync
 
             Try
                 myWeb.InitializeVariables()
+                myWeb.Open()
                 myWeb.mnUserId = 1
                 myWeb.mbAdminMode = False
                 myWeb.ibIndexMode = True

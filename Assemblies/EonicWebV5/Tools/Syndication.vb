@@ -610,6 +610,7 @@ Public Class Syndication
 
                 ' Build the page XML
                 _myWeb.InitializeVariables()
+                _myWeb.Open()
                 _myWeb.BuildPageXML()
 
                 ' Initialise the Contents Node

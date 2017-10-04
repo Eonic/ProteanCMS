@@ -1793,6 +1793,7 @@ Partial Public Module xmlTools
 
                 Dim newWeb As New Eonic.Web(myWeb.moCtx)
                 newWeb.InitializeVariables()
+                newWeb.Open()
                 'newWeb.ibIndexMode = True
                 newWeb.mnPageId = PageId
                 newWeb.mbIgnorePath = True
