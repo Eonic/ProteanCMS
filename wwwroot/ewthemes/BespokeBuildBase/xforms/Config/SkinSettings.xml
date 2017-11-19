@@ -44,7 +44,6 @@
         <add key="BespokeBuildBase.background-attachment" value="scroll"/>
         <add key="BespokeBuildBase.background-attachment" value="scroll"/>
         <add key="BespokeBuildBase.contrast-color" value="#000" />
-        <add key="BespokeBuildBase.header-bg" value="#fff" />
       </theme>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />

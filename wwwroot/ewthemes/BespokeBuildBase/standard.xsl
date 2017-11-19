@@ -5,9 +5,10 @@
 
   <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/CommonImports.xsl"/>
   <xsl:import href="../../../../../ewcommon_v5-1/xsl/cart/newcart-bs.xsl"/>-->
-  <xsl:import href="../../ewcommon/xsl/MinimalImports.xsl"/>
+  <xsl:import href="../../../../../ewcommon_v5-1/xsl/MinimalImports.xsl"/>
   <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
-  <xsl:import href="../../xsl/InstalledModules.xsl"/>
+  <xsl:import href="D:\HostingSpaces\EonicSites\v5demo\wwwroot\xsl/InstalledModules.xsl"/>
+  <xsl:import href="CustomBoxStyles.xsl"/>
   
 
   <!-- ############################################ THEME VARIABLES ############################################### -->
@@ -114,20 +115,6 @@
 
   <!-- ############################################ BOX STYLES ############################################### -->
 
-  <xsl:template match="*" mode="siteBoxStyles">
-    <xsl:param name="value" />
-    <!-- EXAMPLE BESPOKE BOX-->
-    <div data-value="panel-action">
-      <div class="panel panel-action">
-        <div class="panel-heading">
-          <h6 class="panel-title">Panel Action</h6>
-        </div>
-        <div class="panel-body">
-          <xsl:text> </xsl:text>
-        </div>
-      </div>
-    </div>
-  </xsl:template>
 
   <xsl:template match="Content[@type='Module']" mode="themeModuleExtras">
     <xsl:if test="@modAnim!=''">
@@ -139,60 +126,7 @@
       </xsl:attribute>
     </xsl:if>
   </xsl:template>
-  <!-- ############################################ LAYOUT BG STYLES ############################################### -->
 
-  <xsl:template match="*[ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="siteBGStyles">
-    <xsl:param name="value" />
-    <!-- EXAMPLE BESPOKE BOX-->
-    <option value="darkBG">
-      <xsl:if test="$value='darkBG'">
-        <xsl:attribute name="selected">selected</xsl:attribute>
-      </xsl:if>
-      <xsl:text>dark background</xsl:text>
-    </option>
-  </xsl:template>
-
-  <!-- TinyMCE styles  - leave empty, overwrite as needed per site Example Follows www.tinymce.com/tryit/custom_formats.php -->
-
-  <xsl:template match="textarea" mode="tinymceStyles">
-    style_formats: [
-    {title: 'Headers', items: [
-    {title: 'h1', block: 'h1'},
-    {title: 'h2', block: 'h2'},
-    {title: 'h3', block: 'h3'},
-    {title: 'h4', block: 'h4'},
-    {title: 'h5', block: 'h5'},
-    {title: 'h6', block: 'h6'}
-    ]},
-
-    {title: 'Inline', items: [
-    {title: 'Bold', inline: 'b', icon: 'bold'},
-    {title: 'Italic', inline: 'i', icon: 'italic'},
-    {title: 'Underline', inline: 'span', styles : {textDecoration : 'underline'}, icon: 'underline'},
-    {title: 'Strikethrough', inline: 'span', styles : {textDecoration : 'line-through'}, icon: 'strikethrough'},
-    {title: 'Superscript', inline: 'sup', icon: 'superscript'},
-    {title: 'Subscript', inline: 'sub', icon: 'subscript'},
-    {title: 'Code', inline: 'code', icon: 'code'},
-    ]},
-
-    {title: 'Blocks', items: [
-    {title: 'Paragraph', block: 'p'},
-    {title: 'Blockquote', block: 'blockquote'},
-    {title: 'Div', block: 'div'},
-    {title: 'Pre', block: 'pre'}
-    ]},
-
-    {title: 'Alignment', items: [
-    {title: 'Left', block: 'div', styles : {textAlign : 'left'}, icon: 'alignleft'},
-    {title: 'Center', block: 'div', styles : {textAlign : 'center'}, icon: 'aligncenter'},
-    {title: 'Right', block: 'div', styles : {textAlign : 'right'}, icon: 'alignright'},
-    {title: 'Justify', block: 'div', styles : {textAlign : 'justify'}, icon: 'alignjustify'}
-    ]},
-    {title: 'Lead', inline: 'span', classes: 'lead'},
-    {title: 'Small', inline: 'span', classes: 'small'},
-    {title: 'Button', inline: 'span', classes: 'btn btn-default'}
-    ],
-  </xsl:template>
 
   <!-- ############################################ IMAGE SIZES ############################################### -->
 

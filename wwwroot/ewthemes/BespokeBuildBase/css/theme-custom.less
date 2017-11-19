@@ -23,6 +23,7 @@ body{background:url(@background-image) @background-repeat @background-position @
 	}
 	.lead{font-weight:@font-weight-base;}
     .text-muted{color:@gray}
+    .center-block{text-align:center;}
 }
 //------------------------------------------------
 //ICONS
@@ -143,6 +144,7 @@ body{background:url(@background-image) @background-repeat @background-position @
 .Site{
 	.btn{
         float:@btn-align-footer;
+        white-space:normal;
         &:focus{outline:none;}
 	}
 	.button{
@@ -199,6 +201,10 @@ body{background:url(@background-image) @background-repeat @background-position @
     section.darkBG{
         .background-coloring(#000);
         .background-spacing;
+    }
+    .center-nobox-footer{
+        text-align:center;
+        a.btn{float:none;}
     }
 }
 
@@ -971,6 +977,7 @@ body{background:url(@background-image) @background-repeat @background-position @
 	    padding-bottom:0px;
         background-color:@footer-bg;
 	    color:@footer-color;
+        label{color:@footer-color;}
         h1,h2,h3,h4,h5,h6{color:@footer-color;}
         a{.link-color(@footer-link);}
         .morelink .btn{.btn-mixin()}
@@ -981,7 +988,8 @@ body{background:url(@background-image) @background-repeat @background-position @
 		    #developerLink{.dev-link();}
 	    }
         .footer-nav{
-		    .pill-clean;
+		    .navbar-spacing-clean(10px 15px);
+            .navbar-color-clean(@footer-link,@footer-color);
 		    margin-bottom:@box-margin;
 	    }
         .listItem .morelink a.btn when (@btn-clean = true){.link-color(@footer-link;)}
@@ -1052,8 +1060,26 @@ body .cc-cookies{
 	background:none;
 	filter:progid:DXImageTransform.Microsoft.gradient(enabled = false)!important;
 }
-.box-content(@background:@body-bg){
+.box-content(@background:@body-bg;@color:contrast(@background,#fff,@text-color)){
     background:@background;
 	padding:@box-padding-vertical @box-padding-horizontal;
 	border-radius:@border-radius-base;
+    color:@color;
+}
+.quote-clean{
+    blockquote{
+        padding:0;
+        margin:0;
+        border:0;
+        font-size:@font-size-base;
+        footer{
+            &:before{content:''}
+            cite{
+                font-size:@font-size-base;
+                color:@text-color;
+                line-height:@line-height-base;
+                font-style:normal;
+            }
+        }
+    }
 }

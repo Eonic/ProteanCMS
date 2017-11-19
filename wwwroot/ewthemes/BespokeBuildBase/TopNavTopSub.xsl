@@ -186,14 +186,14 @@
             <!--~~~~~~~~~~~~~~ XS INFO MENU ~~~~~~~~~~~~~~ -->
             <xsl:if test="Menu/MenuItem/MenuItem[@name='Information']/MenuItem">
               <ul class="nav navbar-nav info-nav xs-only">
-                <xsl:if test="$HomeInfo='true'">
+                <!--<xsl:if test="$HomeInfo='true'">
                   <li class="first not-xs">
                     <xsl:if test="$currentPage/@name='Home'">
                       <xsl:attribute name="class">first not-xs active </xsl:attribute>
                     </xsl:if>
                     <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
                   </li>
-                </xsl:if>
+                </xsl:if>-->
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Information']/MenuItem[not(DisplayName/@exclude='true')]">
                   <li>
                     <xsl:apply-templates select="." mode="menuLink"/>
