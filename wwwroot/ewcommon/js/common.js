@@ -28,6 +28,8 @@ $(document).ready(function () {
         var autoplay = $(this).data("autoplay");
         var autoplaySpeed = $(this).data("autoplayspeed");
         var equalHeight = $(this).data("height");
+        var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
+        var vSpeed = ($(this).data("speed") === undefined ? "300" : $(this).data("speed"));
         var breakpoint = 768;
         var smToShow = 1;
         if (slidestoShow > 1) {
@@ -35,7 +37,7 @@ $(document).ready(function () {
         }
         var dots = $(this).data("dots");
         $(this).on('init', function (event, slick) {
-           // alert(equalHeight);
+            // alert(equalHeight);
             if (equalHeight === undefined || equalHeight === true) {
                 var highestBox = 0;
                 //MATCH HEIGHT FOR CONTENT SCROLLER
@@ -45,7 +47,7 @@ $(document).ready(function () {
                         highestBox = $(this).outerHeight();
                     }
                 });
-               // alert('highestbox=' + highestBox);
+                // alert('highestbox=' + highestBox);
                 //add heights to items
                 $(this).find(".lIinner").outerHeight(highestBox);
                 $(this).find(".slick-slide").outerHeight(highestBox);
@@ -56,8 +58,10 @@ $(document).ready(function () {
             infinite: true,
             slidesToShow: slidestoShow,
             slidesToScroll: 1,
+            speed: vSpeed,
             autoplay: autoplay,
             autoplaySpeed: autoplaySpeed,
+            cssEase: vCssEase,
             responsive: [
                 {
                     breakpoint: breakpoint,
@@ -80,7 +84,7 @@ $(document).ready(function () {
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $('.content-scroller .cols').resize();
-       // alert('hi');
+        // alert('hi');
     })
 
     //if (typeof stopKeepAlives == 'undefined') { keepAlive(); }

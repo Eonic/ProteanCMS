@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
 	<xsl:output method="text" indent="yes" omit-xml-declaration="yes" encoding="utf-8"/>
-	<xsl:template match="Page">
+	
+  <xsl:template match="Page">
 
 		<xsl:for-each select="ContentDetail/Content/Report">
 			<xsl:apply-templates select="." mode="reportTitles"/>
@@ -12,11 +13,25 @@
 	
 
 	<xsl:template match="*"  mode="reportTitles">
-		<!--do nothing-->
+		<xsl:for-each select="Item[1]/*">
+      <xsl:text>"</xsl:text>
+			<xsl:value-of select="node()"/>
+			<xsl:text>"</xsl:text>
+      <xsl:if test="not(last())">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="*" mode="reportRow">
-		<!--do nothing-->
+		<xsl:for-each select="*">
+      <xsl:text>"</xsl:text>
+			<xsl:value-of select="node()"/>
+			<xsl:text>"</xsl:text>
+      <xsl:if test="not(last())">
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
 	</xsl:template>
 	
 	<xsl:template match="Report[@cReportType='CartDownload']" mode="reportTitles">

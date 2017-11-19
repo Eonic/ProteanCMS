@@ -163,7 +163,7 @@ Public Class Web
     Public gnShowRelatedBriefDepth As Integer = 2
     Public bRestartApp As Boolean = False
     Public moResponseType As pageResponseType
-    Private bPageCache As Boolean = False
+    Public bPageCache As Boolean = False
     Public mbSetNoBrowserCache As Boolean = False
     Public mcPageCacheFolder As String = "\ewCache"
     Private mcSessionReferrer As String = Nothing
@@ -554,11 +554,8 @@ Public Class Web
 
             'if we access base via soap the session is not available
             If Not moSession Is Nothing Then
-
-                'below code has beem moved to membership base provider
                 Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
                 mnUserId = oMembershipProv.Activities.GetUserId(Me)
-
             End If
 
             'We need the userId placed into dbhelper.
@@ -975,6 +972,18 @@ Public Class Web
                     End If
             End Select
 
+
+            If Not moSession Is Nothing Then
+                'this simply gets the userId earlier if it is in the session.
+                'behaviour to check single session or transfer from the cart is still called from Open()
+                Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
+                mnUserId = oMembershipProv.Activities.GetUserSessionId(Me)
+                If mnUserId > 0 Then
+                    bPageCache = False
+                End If
+            End If
+
+
             mnArtId = mnArtId
             mnPageId = mnPageId
             mnUserId = mnUserId
@@ -1103,6 +1112,8 @@ Public Class Web
                             If moPageXml.OuterXml = "" Then
                                 sProcessInfo = "Getting Page XML"
                                 GetPageXML()
+
+
                             End If
                         End If
 
@@ -1128,6 +1139,10 @@ Public Class Web
 
                         End If
 
+                        If bPageCache = False Then
+                            sServeFile = ""
+                        End If
+
                         If msRedirectOnEnd <> "" Then
                             moPageXml = Nothing
                             Close()
@@ -1150,7 +1165,7 @@ Public Class Web
                                 PerfMon.Log("Web", "GetPageHTML-loadxsl")
                                 Dim styleFile As String
                                 If Me.mbAdminMode = True Then
-                                    If LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) = "false" Or mbPopupMode = True Then
+                                    If LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) = "false" Or mbPopupMode = True Or mcContentType <> "text/html" Then
                                         styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
                                     Else
                                         If LCase(moConfig("AdminXsl")) = "common" Then

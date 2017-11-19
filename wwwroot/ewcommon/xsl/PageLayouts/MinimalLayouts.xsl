@@ -532,7 +532,7 @@
           <xsl:apply-templates select="." mode="displayBrief"/>
           <xsl:if test="@linkText!='' and @link!=''">
             <div class="entryFooter">
-              <xsl:if test="@iconStyle='Centre'">
+              <xsl:if test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
                 <xsl:attribute name="class">entryFooter center-nobox-footer</xsl:attribute>
               </xsl:if>
               <xsl:apply-templates select="." mode="moreLink">
@@ -2149,7 +2149,7 @@
     <div class="FormattedText">
       <xsl:if test="@maxWidth!=''">
         <xsl:choose>
-          <xsl:when test="@iconStyle='Centre'">
+          <xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
             <xsl:attribute name="class">FormattedText central-text</xsl:attribute>
             <xsl:attribute name='style'>
               <xsl:text>max-width:</xsl:text>
@@ -2552,7 +2552,12 @@
   <!-- Module -->
   <xsl:template match="Content[@moduleType='GoogleMapv3']" mode="displayBrief">
     <div class="GoogleMap">
-      <div id="gmap{@id}" class="gmap-canvas">To see this map you must have Javascript enabled</div>
+      <div id="gmap{@id}" class="gmap-canvas">
+        <xsl:if test="@height!=''">
+          <xsl:attribute name="data-mapheight">
+            <xsl:value-of select="@height"/>
+          </xsl:attribute>
+        </xsl:if>To see this map you must have Javascript enabled</div>
     </div>
     <xsl:if test="/Page/@adminMode">
       <xsl:apply-templates select="Content[@type='Location']" mode="displayBrief"/>
@@ -2604,6 +2609,9 @@
     <xsl:value-of select="TypeButtons/node()"/>
     <xsl:text>,mapTypeId:google.maps.MapTypeId.</xsl:text>
     <xsl:value-of select="View/node()"/>
+    <xsl:if test="Zoom/@disableMouseWheel='true'">
+      ,scrollwheel:  false
+    </xsl:if>
     <xsl:text>};</xsl:text>
     <!-- Initialise map item -->
     <xsl:text>var </xsl:text>

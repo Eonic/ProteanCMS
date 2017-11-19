@@ -59,7 +59,6 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\Fonet.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\JavaScriptEngineSwitcher.Msie.dll
-D:\HostingSpaces\_objSource\EonicWebV5\bin\Lucene.Net.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\Microsoft.Owin.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\Microsoft.Owin.Security.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\Microsoft.Web.Infrastructure.dll
@@ -96,3 +95,5 @@ D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\Eonic.Resources.resources
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbproj.GenerateResource.Cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.dll
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.xml
+D:\HostingSpaces\_objSource\EonicWebV5\bin\Lucene.Net.dll
+D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbproj.CoreCompileInputs.cache

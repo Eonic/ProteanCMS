@@ -1222,6 +1222,28 @@ Check:
 
 #End Region
 
+                Public Overridable Function GetUserSessionId(ByRef myWeb As Eonic.Base) As Long
+
+                    Dim sProcessInfo As String = ""
+                    Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
+                    Dim mnUserId As Integer = myWeb.mnUserId
+
+                    Try
+                        If moSession("nUserId") <> 0 Then
+                            myWeb.mnUserId = moSession("nUserId")
+                        Else
+                            myWeb.mnUserId = 0
+                        End If
+
+                        Return myWeb.mnUserId
+
+                    Catch ex As Exception
+                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserSessionId", ex, sProcessInfo))
+                        Return Nothing
+                    End Try
+                End Function
+
+
                 Public Overridable Function GetUserId(ByRef myWeb As Eonic.Base) As String
                     PerfMon.Log("Web", "getUserId")
                     Dim sProcessInfo As String = ""
@@ -1286,7 +1308,12 @@ Check:
                                 ' based on the session id).
                                 If gbCart AndAlso moRequest("refSessionId") <> "" Then
 
-                                    Dim nCartUserId As Long = moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(moRequest("refSessionId")) & "'", , , 0)
+                                    Dim nCartUserId As Long = 0
+
+                                    If Not moDbHelper Is Nothing Then
+                                        nCartUserId = moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(moRequest("refSessionId")) & "'", , , 0)
+                                    End If
+
                                     If nCartUserId <> moSession("nUserId") Then
                                         mnUserId = 0
                                     Else
@@ -1501,6 +1528,8 @@ Check:
 
                                 ' ProviderActions(myWeb, "logonAction")
 
+                                'do not cache
+                                myWeb.bPageCache = False
                                 myWeb.logonRedirect(cLogonCmd)
                             Else
                                 myWeb.AddContentXml(oXfmElmt)

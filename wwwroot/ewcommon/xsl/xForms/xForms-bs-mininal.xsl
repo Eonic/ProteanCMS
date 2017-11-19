@@ -946,6 +946,9 @@
       <xsl:if test="contains(@class,'readonly') or contains(@class,'displayOnly') ">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
       </xsl:if>
+      <xsl:if test="contains(@autofocus,'autofocus')">
+        <xsl:attribute name="autofocus">autofocus</xsl:attribute>
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="@class!=''">
           <xsl:attribute name="class">

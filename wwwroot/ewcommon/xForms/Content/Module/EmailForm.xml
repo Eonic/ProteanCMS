@@ -48,7 +48,9 @@
                   <bind nodeset="Email">
                     <bind id="UserEmail" nodeset="@honeypot" constraint="ews:emailer/ews:oBodyXML/ews:Items/ews:Email/@honeypot=''" />
                   </bind>
-                </bind>            
+                </bind>
+                <bind id="Name" nodeset="fromName" required="false()" type="string" />
+                <bind id="Email" nodeset="fromEmail" required="true()" type="email" />
               </bind>
             </model>
             <group>
@@ -171,15 +173,15 @@
           <input bind="cRecipientEmail" class="required">
             <label>Recipient email</label>
           </input>
-          <input bind="cSenderEmail">
+          <!--input bind="cSenderEmail">
             <label>Default sender email</label>
-          </input>
+          </input-->
           <input bind="cCcRecipientEmail">
             <label>CC Recipient email</label>
           </input>
-          <input bind="cSenderName">
+          <!--input bind="cSenderName">
             <label>Default sender name</label>
-          </input>
+          </input-->
           <input bind="cBccRecipientEmail">
             <label>BCC Recipient email</label>
           </input>

@@ -779,10 +779,10 @@ Public Class xForm
 
             If cValidationError <> "" And missedError Then
                 'the 2nd node should be group first should be the first group
-                Dim firstGroup As XmlElement = moXformElmt.SelectSingleNode("*[2]")
+                Dim lastGroup As XmlElement = moXformElmt.SelectSingleNode("*[2]/*[last()]")
 
-                If Not firstGroup Is Nothing Then
-                    addNote(firstGroup, noteTypes.Alert, cValidationError)
+                If Not lastGroup Is Nothing Then
+                    addNote(lastGroup, noteTypes.Alert, cValidationError)
                 End If
 
             End If

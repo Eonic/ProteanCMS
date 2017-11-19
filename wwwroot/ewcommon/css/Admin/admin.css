@@ -1645,15 +1645,15 @@ img.helpTip
     padding: 2px 4px 2px 4px;
 }
 
-.btn-primary{color:#fff;background-color:#7a8288;border-color:#7a8288}
+/*.btn-primary{color:#fff;background-color:#7a8288;border-color:#7a8288}
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary{color:#fff;background-color:#676d73;border-color:#5d6368}
 .btn-primary:active,.btn-primary.active,.open .dropdown-toggle.btn-primary{background-image:none}
 .btn-primary.disabled,.btn-primary[disabled],fieldset[disabled] .btn-primary,.btn-primary.disabled:hover,.btn-primary[disabled]:hover,fieldset[disabled] .btn-primary:hover,.btn-primary.disabled:focus,.btn-primary[disabled]:focus,fieldset[disabled] .btn-primary:focus,.btn-primary.disabled:active,.btn-primary[disabled]:active,fieldset[disabled] .btn-primary:active,.btn-primary.disabled.active,.btn-primary[disabled].active,fieldset[disabled] .btn-primary.active{background-color:#7a8288;border-color:#7a8288}
-.btn-primary .caret,.btn-success .caret,.btn-warning .caret,.btn-danger .caret,.btn-info .caret{border-top-color:#fff}
+.btn-primary .caret,.btn-success .caret,.btn-warning .caret,.btn-danger .caret,.btn-info .caret{border-top-color:#fff}*/
 .dropup .btn-default .caret{border-bottom-color:#fff}
 .dropup .btn-primary .caret,.dropup .btn-success .caret,.dropup .btn-warning .caret,.dropup .btn-danger .caret,.dropup .btn-info .caret{border-bottom-color:#fff}
-.btn-primary{background-image:-webkit-gradient(linear,0 0,0 100%,from(#8a9196),color-stop(60%,#7a8288),to(#70787d));background-image:-webkit-linear-gradient(#8a9196,#7a8288 60%,#70787d);background-image:-moz-linear-gradient(top,#8a9196,#7a8288 60%,#70787d);background-image:linear-gradient(#8a9196,#7a8288 60%,#70787d);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8a9196',endColorstr='#ff70787d',GradientType=0)}
-.btn-primary:hover{background-image:-webkit-gradient(linear,0 0,0 100%,from(#404448),color-stop(40%,#4e5458),to(#585e62));background-image:-webkit-linear-gradient(#404448,#4e5458 40%,#585e62);background-image:-moz-linear-gradient(top,#404448,#4e5458 40%,#585e62);background-image:linear-gradient(#404448,#4e5458 40%,#585e62);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff404448',endColorstr='#ff585e62',GradientType=0)}
+/*.btn-primary{background-image:-webkit-gradient(linear,0 0,0 100%,from(#8a9196),color-stop(60%,#7a8288),to(#70787d));background-image:-webkit-linear-gradient(#8a9196,#7a8288 60%,#70787d);background-image:-moz-linear-gradient(top,#8a9196,#7a8288 60%,#70787d);background-image:linear-gradient(#8a9196,#7a8288 60%,#70787d);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff8a9196',endColorstr='#ff70787d',GradientType=0)}
+.btn-primary:hover{background-image:-webkit-gradient(linear,0 0,0 100%,from(#404448),color-stop(40%,#4e5458),to(#585e62));background-image:-webkit-linear-gradient(#404448,#4e5458 40%,#585e62);background-image:-moz-linear-gradient(top,#404448,#4e5458 40%,#585e62);background-image:linear-gradient(#404448,#4e5458 40%,#585e62);background-repeat:no-repeat;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff404448',endColorstr='#ff585e62',GradientType=0)}*/
 @media (max-width: 767px) {
   .fileupload-buttonbar .toggle,
   .files .toggle,

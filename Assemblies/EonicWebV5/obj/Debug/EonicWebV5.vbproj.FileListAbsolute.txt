@@ -51,6 +51,7 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\MsieJavaScriptEngine.resources.
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbprojResolveAssemblyReference.cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\Eonic.Resources.resources
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbproj.GenerateResource.Cache
+D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.dll
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.xml
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.pdb

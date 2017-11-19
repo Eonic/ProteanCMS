@@ -18,7 +18,6 @@ Public Class CartCallback : Implements IHttpHandler
         Dim SellerNotes As String = ""
 
         oEw.InitializeVariables()
-oEw.Open()
 
         Try
 

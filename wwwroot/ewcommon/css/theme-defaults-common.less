@@ -1,281 +1,340 @@
 ﻿
-.caption-mixin(@text-color,@text-size,@text-font) {
-        position:absolute;
-        color:@text-color;
-        font-weight:700;
-        font-size:@text-size;
-        line-height:@line-height-base;
-        font-family:@text-font;
-        padding:2px 4px;
-        margin:0px;
-        border-width:0px;
-        border-style:none;
-		h1 {
-			font-size:@font-size-h1;
-        	font-weight:700;
-        	color:@text-color !important;
-		}
-		h2 {
-        	font-size:@font-size-h2;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h3 {
-        	font-size:@font-size-h3;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h4 {
-        	font-size:@font-size-h4;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h5 {
-        	font-size:@font-size-h5;
-        	font-weight:700;
-			color:@text-color !important;
-		}		
-        h6 {
-        	font-size:@font-size-h6;
-        	font-weight:700;
-			color:@text-color !important;
-		}
+
+@caption-font-size-h1: @font-size-h1;
+@caption-font-size-h2: @font-size-h2;
+@caption-font-size-h3: @font-size-h3;
+@caption-font-size-h4: @font-size-h4;
+@caption-font-size-h5: @font-size-h5;
+@caption-font-size-h6: @font-size-h6;
+
+@caption-heading-font: @headings-font-family;
+
+
+@caption-background: #fff;
+
+.caption-mixin(@text-color,@text-size,@text-font)
+{
+    position: absolute;
+    color: @text-color;
+    font-weight: 700;
+    font-size: @text-size;
+    line-height: @line-height-base;
+    font-family: @text-font;
+    padding: 2px 4px;
+    margin: 0px;
+    border-width: 0px;
+    border-style: none;
+
+    h1 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h1;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h2 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h2;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h3 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h3;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h4 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h4;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h5 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h5;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h6 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h6;
+        font-weight: 700;
+        color: @text-color !important;
+    }
 }
+
 
 
 .captionbg-mixin(@text-color,@text-size,@text-font) {
-        position: absolute;
-        color:@text-color;
+    position: absolute;
+    color: @text-color;
+    font-weight: 700;
+    font-size: @text-size;
+    line-height: @line-height-base;
+    font-family: @text-font;
+    padding: 2px 4px;
+    margin: 0px;
+    border-width: 0px;
+    border-style: none;
+    Letter-spacing: 0;
+    display: inline;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: @caption-heading-font;
+        display: inline-block;
+        font-size: @font-size-base;
         font-weight: 700;
-        font-size: @text-size;
-        line-height:@line-height-base;
-        font-family: @text-font;
-        padding: 2px 4px;
-        margin: 0px;
-        border-width: 0px;
-        border-style: none;
-        Letter-spacing: 0;
- 		display:inline;
-		h1, h2, h3, h4, h5, h6{
-			display: inline-block;
-			font-size:@font-size-base;
-        	font-weight:700;
-        	color:#fff !important;
-			background-color: @text-color;
-			padding:10px 15px 10px 15px;
-			margin-bottom:10px;
-			clear:right;
-			line-height:@line-height-base;
-		}
-		h1 {
-			font-size:@font-size-base-h1;
-			padding:10px 15px 10px 15px;
-		}
-		h2 {
-			font-size:@font-size-h2;
-			padding:10px 15px 10px 15px;
-		}
-		h3 {
-			font-size:@font-size-h3;
-			padding:10px 15px 10px 15px;
-		}
-		h4 {
-			font-size:@font-size-h4;
-			padding:10px 15px 10px 15px;
-		}
-		span {
-			background-color: @text-color;
-			padding:10px 15px 10px 15px;
-        	line-height: @line-height-base;
-		}	
+        color: #fff !important;
+        background-color: @text-color;
+        padding: 10px 15px 10px 15px;
+        margin-bottom: 10px;
+        clear: right;
+        line-height: @line-height-base;
+    }
+
+    h1 {
+        font-size: @caption-font-size-h1;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h2 {
+        font-size: @caption-font-size-h2;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h3 {
+        font-size: @caption-font-size-h3;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h4 {
+        font-size: @caption-font-size-h4;
+        padding: 10px 15px 10px 15px;
+    }
+
+    span {
+        background-color: @text-color;
+        padding: 10px 15px 10px 15px;
+        line-height: @line-height-base;
+    }
 }
 
 .captionWhite-mixin(@text-color,@text-size,@text-font) {
-        position:absolute;
-        color:@text-color !important;
-        font-weight:700;
-        font-size:@text-size;
-        line-height:@line-height-base;
-        font-family:@text-font;
-        padding:2px 4px;
-        margin:0px;
-        border-width:0px;
-        border-style:none;
-        text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
-		h1 {
-			font-size:@font-size-h1;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h2 {
-			font-size:@font-size-h2;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h3 {
-			font-size:@font-size-h3;
-        	font-weight:700;
-			color:@text-color !important;
-		}
-		h4 {
-			font-size:@font-size-h4;
-        	font-weight:700;
-			color:@text-color !important;
-		}
+    position: absolute;
+    color: @text-color !important;
+    font-weight: 700;
+    font-size: @text-size;
+    line-height: @line-height-base;
+    font-family: @text-font;
+    padding: 2px 4px;
+    margin: 0px;
+    border-width: 0px;
+    border-style: none;
+    text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+
+    h1 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h1;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h2 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h2;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h3 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h3;
+        font-weight: 700;
+        color: @text-color !important;
+    }
+
+    h4 {
+        font-family: @caption-heading-font;
+        font-size: @caption-font-size-h4;
+        font-weight: 700;
+        color: @text-color !important;
+    }
 }
 
 .captionbg_Black-mixin(@text-color,@text-size,@text-font) {
-        position: absolute;
-        color: rgb(0, 0, 0);
+    position: absolute;
+    color: rgb(0, 0, 0);
+    font-weight: 700;
+    font-size: @text-size;
+    line-height: @line-height-base;
+    font-family: @text-font;
+    padding: 2px 4px;
+    margin: 0px;
+    border-width: 0px;
+    border-style: none;
+    Letter-spacing: 0;
+    color: @text-color !important;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: @caption-heading-font;
+        display: inline-block;
+        font-size: @font-size-base;
         font-weight: 700;
-        font-size: @text-size;
+        color: @text-color !important;
+        background-color: @caption-background;
+        padding: 10px 15px 10px 15px;
+        margin-bottom: 10px;
+        clear: right;
         line-height: @line-height-base;
-        font-family: @text-font;
-        padding: 2px 4px;
-        margin: 0px;
-        border-width: 0px;
-        border-style: none;
-        Letter-spacing: 0;
-        color:@text-color!important;
-		h1, h2, h3, h4, h5, h6{
-			display: inline-block;
-			font-size:@font-size-base;
-        	font-weight:700;
-        	color:@text-color!important;
-			background-color: #fff;
-			padding:10px 15px 10px 15px;
-			margin-bottom:10px;
-			clear:right;
-			line-height:@line-height-base;
-		}
-		h1 {
-			font-size:@font-size-h1;
-			padding:10px 15px 10px 15px;
-		}
-		h2 {
-			font-size:@font-size-h2;
-			padding:10px 15px 10px 15px;
-		}
-		h3 {
-			font-size:@font-size-h3;
-			padding:10px 15px 10px 15px;
-		}
-		h4 {
-			font-size:@font-size-h4;
-			padding:10px 15px 10px 15px;
-		}
-		span,p {
-			background-color: #fff;
-			padding:10px 15px 10px 15px;
-        	line-height: @line-height-base;
-		}	
-        
+    }
+
+    h1 {
+        font-size: @caption-font-size-h1;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h2 {
+        font-size: @caption-font-size-h2;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h3 {
+        font-size: @caption-font-size-h3;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h4 {
+        font-size: @caption-font-size-h4;
+        padding: 10px 15px 10px 15px;
+    }
+
+    span, p {
+        background-color: #fff;
+        padding: 10px 15px 10px 15px;
+        line-height: @line-height-base;
+    }
 }
 
 .captionbg_White-mixin(@text-color,@text-size,@text-font) {
-        position: absolute;
-        color: #fff;
+    position: absolute;
+    color: #fff;
+    font-weight: 700;
+    font-size: @text-size;
+    line-height: @line-height-base;
+    font-family: @text-font;
+    padding: 2px 4px;
+    margin: 0px;
+    border-width: 0px;
+    border-style: none;
+    Letter-spacing: 0;
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: @caption-heading-font;
+        display: inline-block;
+        font-size: @font-size-base;
         font-weight: 700;
-        font-size: @text-size;
+        color: #fff !important;
+        background-color: fade(@text-color, 50%);
+        padding: 10px 15px 10px 15px;
+        margin-bottom: 10px;
+        clear: right;
         line-height: @line-height-base;
-        font-family: @text-font;
-        padding: 2px 4px;
-        margin: 0px;
-        border-width: 0px;
-        border-style: none;
-        Letter-spacing: 0;
-		h1, h2, h3, h4, h5, h6{
-			display: inline-block;
-			font-size:@font-size-base;
-        	font-weight:700;
-        	color:#fff !important;
-			background-color: fade(@text-color, 50%);
-			padding:10px 15px 10px 15px;
-			margin-bottom:10px;
-			clear:right;
-			line-height:@line-height-base;
-		}
-		h1 {
-			font-size:@font-size-h1;
-			padding:10px 15px 10px 15px;
-		}
-		h2 {
-			font-size:@font-size-h2;
-			padding:10px 15px 10px 15px;
-		}
-		h3 {
-			font-size:@font-size-h3;
-			padding:10px 15px 10px 15px;
-		}
-		h4 {
-			font-size:@font-size-h4;
-			padding:10px 15px 10px 15px;
-		}
-		span {
-			background-color: @text-color;
-			padding:10px 15px 10px 15px;
-        	line-height: @line-height-base;
-		}	
+    }
+
+    h1 {
+        font-size: @caption-font-size-h1;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h2 {
+        font-size: @caption-font-size-h2;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h3 {
+        font-size: @caption-font-size-h3;
+        padding: 10px 15px 10px 15px;
+    }
+
+    h4 {
+        font-size: @caption-font-size-h4;
+        padding: 10px 15px 10px 15px;
+    }
+
+    span {
+        background-color: @text-color;
+        padding: 10px 15px 10px 15px;
+        line-height: @line-height-base;
+    }
 }
 
 .Site {
-
-//headings
-    .tp-caption.primary_heading{
-        .caption-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+    //headings
+    .tp-caption.primary_heading {
+        .caption-mixin(@brand-primary,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.action_heading {
-        .caption-mixin(@brand-action,@font-size-h3,@headings-font-family)
+        .caption-mixin(@brand-action,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.info_heading {
-        .caption-mixin(@brand-info,@font-size-h3,@headings-font-family)
+        .caption-mixin(@brand-info,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.success_heading {
-        .caption-mixin(@brand-success,@font-size-h3,@headings-font-family)
+        .caption-mixin(@brand-success,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.warning_heading {
-        .caption-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+        .caption-mixin(@brand-warning,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.danger_heading {
-        .caption-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+        .caption-mixin(@brand-danger,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.white_heading {
-        .captionWhite-mixin(#ffffff,@font-size-h3,@headings-font-family)
+        .captionWhite-mixin(#ffffff,@caption-font-size-h3,@headings-font-family)
     }
 
-     .tp-caption.black_heading {
-        .caption-mixin(#000000,@font-size-h3,@headings-font-family)
+    .tp-caption.black_heading {
+        .caption-mixin(#000000,@caption-font-size-h3,@headings-font-family)
     }
-//Headings with white backgrounds
-     .tp-caption.whitebg_blackHeading{
-         .captionbg_Black-mixin(#000,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_primaryHeading{
-         .captionbg_Black-mixin(@brand-primary,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_actionHeading{
-         .captionbg_Black-mixin(@brand-action,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_infoHeading{
-         .captionbg_Black-mixin(@brand-info,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_successHeading{
-         .captionbg_Black-mixin(@brand-success,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_warningHeading{
-         .captionbg_Black-mixin(@brand-warning,@font-size-h3,@font-family-base)
-     }
-     .tp-caption.whitebg_dangerHeading{
-         .captionbg_Black-mixin(@brand-danger,@font-size-h3,@font-family-base)
-     }
+    //Headings with white backgrounds
+    .tp-caption.whitebg_blackHeading {
+        .captionbg_Black-mixin(#000,@caption-font-size-h3,@font-family-base)
+    }
 
-//body text
+    .tp-caption.whitebg_primaryHeading {
+        .captionbg_Black-mixin(@brand-primary,@caption-font-size-h3,@font-family-base)
+    }
+
+    .tp-caption.whitebg_actionHeading {
+        .captionbg_Black-mixin(@brand-action,@caption-font-size-h3,@font-family-base)
+    }
+
+    .tp-caption.whitebg_infoHeading {
+        .captionbg_Black-mixin(@brand-info,@caption-font-size-h3,@font-family-base)
+    }
+
+    .tp-caption.whitebg_successHeading {
+        .captionbg_Black-mixin(@brand-success,@caption-font-size-h3,@font-family-base)
+    }
+
+    .tp-caption.whitebg_warningHeading {
+        .captionbg_Black-mixin(@brand-warning,@caption-font-size-h3,@font-family-base)
+    }
+
+    .tp-caption.whitebg_dangerHeading {
+        .captionbg_Black-mixin(@brand-danger,@caption-font-size-h3,@font-family-base)
+    }
+    //body text
     .tp-caption.primary_body {
         .caption-mixin(@brand-primary,@font-size-base,@font-family-base)
     }
@@ -304,43 +363,43 @@
         .captionWhite-mixin(#ffffff,@font-size-base,@font-family-base)
     }
 
-     .tp-caption.black_body {
+    .tp-caption.black_body {
         .caption-mixin(#000000,@font-size-base,@font-family-base)
     }
-
-     //bg colour white text
+    //bg colour white text
     .tp-caption.primarybg_headingw {
-        .captionbg_White-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+        .captionbg_White-mixin(@brand-primary,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.actionbg_headingw {
-        .captionbg_White-mixin(@brand-action,@font-size-h3,@headings-font-family)
+        .captionbg_White-mixin(@brand-action,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.infobg_headingw {
-        .captionbg_White-mixin(@brand-info,@font-size-h3,@headings-font-family)
+        .captionbg_White-mixin(@brand-info,@caption-font-size-h3,@headings-font-family)
     }
 
-    .tp-caption.successbg_headingw{
-        .captionbg_White-mixin(@brand-success,@font-size-h3,@headings-font-family)
+    .tp-caption.successbg_headingw {
+        .captionbg_White-mixin(@brand-success,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.warningbg_headingw {
-        .captionbg_White-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+        .captionbg_White-mixin(@brand-warning,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.dangerbg_headingw {
-        .captionbg_White-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+        .captionbg_White-mixin(@brand-danger,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.blackbg_headingw {
-        .captionbg_Black-mixin(#fff,@font-size-h3,@headings-font-family)
-    }
-      .tp-caption.whitebg_headingw {
-        .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(#fff,@caption-font-size-h3,@headings-font-family)
     }
 
-     .tp-caption.primarybg_bodyw {
+    .tp-caption.whitebg_headingw {
+        .captionbg_White-mixin(#000,@caption-font-size-h3,@headings-font-family)
+    }
+
+    .tp-caption.primarybg_bodyw {
         .captionbg_White-mixin(@brand-primary,@font-size-base,@font-family-base)
     }
 
@@ -352,7 +411,7 @@
         .captionbg_White-mixin(@brand-info,@font-size-base,@font-family-base)
     }
 
-    .tp-caption.successbg_bodyw{
+    .tp-caption.successbg_bodyw {
         .captionbg_White-mixin(@brand-success,@font-size-base,@font-family-base)
     }
 
@@ -367,40 +426,39 @@
     .tp-caption.blackbg_bodyw {
         .captionbg_White-mixin(#fff,@font-size-base,@font-family-base)
     }
-      .tp-caption.whitebg_bodyw {
+
+    .tp-caption.whitebg_bodyw {
         .captionbg_White-mixin(#000,@font-size-base,@font-family-base)
     }
-
-
-//BG colour heading black text
+    //BG colour heading black text
     .tp-caption.primarybg_heading {
-        .captionbg_Black-mixin(@brand-primary,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-primary,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.actionbg_heading {
-        .captionbg_Black-mixin(@brand-action,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-action,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.infobg_heading {
-        .captionbg_Black-mixin(@brand-info,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-info,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.successbg_heading {
-        .captionbg_Black-mixin(@brand-success,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-success,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.warningbg_heading {
-        .captionbg_Black-mixin(@brand-warning,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-warning,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.dangerbg_heading {
-        .captionbg_Black-mixin(@brand-danger,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(@brand-danger,@caption-font-size-h3,@headings-font-family)
     }
 
     .tp-caption.blackbg_heading {
-        .captionbg_Black-mixin(#000,@font-size-h3,@headings-font-family)
+        .captionbg_Black-mixin(#000,@caption-font-size-h3,@headings-font-family)
     }
-//BG colour body black text
+    //BG colour body black text
     .tp-caption.primarybg_body {
         .captionbg_Black-mixin(@brand-primary,@font-size-base,@font-family-base)
     }
@@ -429,13 +487,10 @@
         .captionbg_Black-mixin(#ffffff,@font-size-base,@font-family-base)
     }
 
-    .tp-caption.WhiteheadingBbg_heading{
+    .tp-caption.WhiteheadingBbg_heading {
         .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
     }
-
-
-
- //heading jumbo
+    //heading jumbo
     .tp-caption.primary_heading_jumbo {
         .caption-mixin(@brand-primary,@jumbotron-font-size,@headings-font-family)
     }
@@ -458,14 +513,15 @@
 
     .tp-caption.danger_heading_jumbo {
         .caption-mixin(@brand-danger,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
 
     .tp-caption.black_heading_jumbo {
         .caption-mixin(#000,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
+
     .tp-caption.white_heading_jumbo {
         .captionWhite-mixin(#fff,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
 
     .tp-caption.primary_body_jumbo {
         .caption-mixin(@brand-primary,@jumbotron-font-size,@font-family-base)
@@ -490,7 +546,7 @@
     .tp-caption.danger_body_jumbo {
         .caption-mixin(@brand-danger,@jumbotron-font-size,@font-family-base)
     }
-    
+
     .tp-caption.black_body_jumbo {
         .caption-mixin(#000,@jumbotron-font-size,@font-family-base)
     }
@@ -498,8 +554,7 @@
     .tp-caption.white_body_jumbo {
         .captionWhite-mixin(#fff,@jumbotron-font-size,@font-family-base)
     }
-
-//heading jumbo bg
+    //heading jumbo bg
     .tp-caption.primary_heading_jumbobg {
         .captionbg_White-mixin(@brand-primary,@jumbotron-font-size,@headings-font-family)
     }
@@ -522,14 +577,15 @@
 
     .tp-caption.danger_heading_jumbobg {
         .captionbg_White-mixin(@brand-danger,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
 
     .tp-caption.black_heading_jumbobg {
         .captionbg_White-mixin(#000,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
+
     .tp-caption.white_heading_jumbobg {
         .captionbg_Black-mixin(#fff,@jumbotron-font-size,@headings-font-family)
-    } 
+    }
 
     .tp-caption.primary_body_jumbobg {
         .captionbg_White-mixin(@brand-primary,@jumbotron-font-size,@font-family-base)
@@ -554,26 +610,23 @@
     .tp-caption.danger_body_jumbobg {
         .captionbg_White-mixin(@brand-danger,@jumbotron-font-size,@font-family-base)
     }
-    
+
     .tp-caption.black_body_jumbobg {
         .captionbg_White-mixin(#000,@jumbotron-font-size,@font-family-base)
     }
+
     .tp-caption.white_body_jumbobg {
         .captionbg_Black-mixin(#fff,@jumbotron-font-size,@font-family-base)
     }
-
-//BG colour body black text
-   
-
-    .tp-caption.WhiteheadingBbg_headingw{
-        .captionbg_White-mixin(#000,@font-size-h3,@headings-font-family)
+    //BG colour body black text
+    .tp-caption.WhiteheadingBbg_headingw {
+        .captionbg_White-mixin(#000,@caption-font-size-h3,@headings-font-family)
     }
 
 
-    .tp-bullets{
-    z-index:999;
+    .tp-bullets {
+        z-index: 999;
     }
-
 }
 
 html,

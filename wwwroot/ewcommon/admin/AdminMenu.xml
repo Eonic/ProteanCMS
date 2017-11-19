@@ -80,7 +80,8 @@
         <MenuItem name="E-Mail Layout" cmd="EditMailLayout" display="true" icon="fa-columns"/>
         <MenuItem name="Send Preview" cmd="PreviewMail" display="true" icon="fa-eye"/>
         <MenuItem name="Send E-Mail" cmd="SendMail" display="true" icon="fa-exchange"/>
-        <MenuItem name="AddMailModule" cmd="AddMailModule" display="false"/>
+        <MenuItem name="Add Mail Module" cmd="AddMailModule" display="false" icon="fa-th-large"/>
+        <MenuItem name="Edit Content" cmd="EditMailContent" display="false" icon="fa-edit"/>
         <!--<MenuItem name="Edit Content" cmd="EditContent" display="false"/>-->
         <MenuItem name="Preview" cmd="MailPreviewOn" display="true" icon="fa-eye"/>
       </MenuItem>

@@ -916,7 +916,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm')]" mode="adminBreadcrumb">
+  <xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm') or @ewCmd='EditMailContent']" mode="adminBreadcrumb">
     <xsl:if test="/Page/@id != ''">
       <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbSt"/>
     </xsl:if>
@@ -3871,7 +3871,7 @@
               <div class="alert alert-info" role="alert">
                 <xsl:if test="$MaxUploadWidth='0'"><i class="fa fa-floppy-o fa-2x pull-left">&#160;</i>Maximum Filesize for uploads 4MB. For bigger files ask about FTP access.<br/></xsl:if>
                   <xsl:if test="$MaxUploadWidth!='0'"><i class="fa fa-compress fa-2x pull-left">&#160;</i>
-                  Images will automatcially reduce to a maximum of <xsl:value-of select="$MaxUploadWidth"/> x <xsl:value-of select="$MaxUploadHeight"/></xsl:if>
+                  Images will automatically reduce to a maximum of <xsl:value-of select="$MaxUploadWidth"/> x <xsl:value-of select="$MaxUploadHeight"/></xsl:if>
               </div>
 
               <div class="alert alert-danger" role="alert"><i class="fa fa-warning fa-2x pull-left">&#160;</i>Please ensure you have permission to use all images uploaded.You could be at risk of legal claims if you upload unlicenced images.</div>

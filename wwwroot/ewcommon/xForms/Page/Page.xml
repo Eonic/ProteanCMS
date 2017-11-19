@@ -215,7 +215,7 @@
     <group class="col2">
       <group class="inline">
         <label>Page Names</label>
-        <input bind="cStructName" class="required">
+        <input bind="cStructName" class="required" autofocus="autofocus">
           <label>Page name</label>
           <help class="inline">
             <p>

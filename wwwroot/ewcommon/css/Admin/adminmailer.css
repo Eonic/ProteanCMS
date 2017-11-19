@@ -1,0 +1,27 @@
+.Site table > thead > tr > th, .Site table > tbody > tr > th, .Site table > tfoot > tr > th, .Site table > thead > tr > td, .Site table > tbody > tr > td, .Site table > tfoot > tr > td {
+    padding: 0px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.Mail table, table.Mail{
+    background-color:initial;
+}
+.alert-info {
+    background-color: #ffffff;
+}
+.Mail {
+margin-top:75px;
+}
+
+td {
+    border-top: none !important;
+}
+
+.ContentList tbody tr td div table tbody tr td font table {
+    width: 17%;
+}
+
+.entryFooter table {
+    width: 17%;
+}

@@ -34,6 +34,7 @@ D:\HostingSpaces\_objSource\Eonic.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Debug\Microsoft.Owin.Security.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\_objSource\Eonic.Tools\obj\Debug\Eonic.Tools.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Debug\Eonic.Tools.dll
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Debug\Eonic.Tools.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Debug\Eonic.Tools.pdb

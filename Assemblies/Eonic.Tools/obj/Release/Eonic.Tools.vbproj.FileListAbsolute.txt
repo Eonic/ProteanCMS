@@ -38,3 +38,4 @@ D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.vbprojResolveAss
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.dll
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.pdb
+D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.vbproj.CoreCompileInputs.cache

@@ -10,7 +10,6 @@ Public Class ewDownload : Implements IHttpHandler, IRequiresSessionState
         
         Dim oEw As Eonic.Web = New Eonic.Web
         oEw.InitializeVariables()
-	oEw.Open()
         oEw.returnPageAsPDF(context)
         oEw = Nothing
         

@@ -221,6 +221,8 @@
                     <xsl:for-each select="Item">
                         <br/>
                         <span class="optionList">
+                          <xsl:value-of select="Name"/>
+                          <xsl:text> </xsl:text>
                             <xsl:apply-templates select="option" mode="optionDetail"/>
                             <xsl:if test="@price!=0">
                                 <strong>

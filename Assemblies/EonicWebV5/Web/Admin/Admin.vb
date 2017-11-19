@@ -1657,7 +1657,7 @@ ProcessFlow:
                         sAdminLayout = "AdminXForm"
                         oPageDetail.AppendChild(moAdXfm.xFrmStartIndex())
                         '-- Call all of the process for the newsletter functionaltiy
-                    Case "MailingList", "NormalMail", "MailPreviewOn", "AdvancedMail", "AddMailModule", "EditMail", "EditMailLayout", "NewMail", "PreviewMail", "SendMail", "SendMailPersonalised", "SendMailunPersonalised", "MailHistory", "MailOptOut", "ProcessMailbox", "DeletePageMail", "SyncMailList", "ListMailLists"
+                    Case "MailingList", "NormalMail", "MailPreviewOn", "AdvancedMail", "AddMailModule", "EditMailContent", "EditMail", "EditMailLayout", "NewMail", "PreviewMail", "SendMail", "SendMailPersonalised", "SendMailunPersonalised", "MailHistory", "MailOptOut", "ProcessMailbox", "DeletePageMail", "SyncMailList", "ListMailLists"
                         bMailMenu = True
 
                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")

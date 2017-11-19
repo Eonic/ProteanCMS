@@ -323,7 +323,6 @@ $(document).ready(function () {
     //   $('.pickImageModal').on('shown.bs.modal', function () {
     $('.pickImageModal').on('loaded', function () {
         var currentModal = $(this)
-
         //activateTreeview
         $('#template_FileSystem #MenuTree').ajaxtreeview({
             loadPath: treeviewPath,
@@ -361,13 +360,13 @@ $(document).ready(function () {
 
             event.preventDefault()
             var formData = $(this).serialize();
-            var target = '/?contentType=popup' + $(this).attr("action");
+            var targetUrl = $(this).attr("action") + '&contentType=popup';
             $('.modal-dialog').addClass('loading')
             $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
 
             $.ajax({
                 type: 'post',
-                url: target,
+                url: targetUrl,
                 data: formData,
                 dataType: 'html',
                 success: function (msg) {

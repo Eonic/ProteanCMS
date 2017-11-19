@@ -31,6 +31,7 @@
       <ContentType type="Event" name="Event">An event in the future</ContentType>
       <ContentType type="NewsArticle" name="News Article">Piece of news information</ContentType>
       <ContentType type="Calendar" name="Calendar">A calendar for displaying events and other content.</ContentType>
+      <ContentType type="NewsArticleHeadlines" name="News Article Headline Links">List of headlines linking to article list within the same email</ContentType>
     </ContentTypeGroup>
     <ContentTypeGroup name="Purchaseables">
       <ContentType type="Product" name="Product">A simple product that users can buy</ContentType>

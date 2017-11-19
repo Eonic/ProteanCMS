@@ -172,7 +172,11 @@ Partial Public Class Web
                     oCartXml.SetAttribute("delayStart", delayStart)
                     oCartXml.SetAttribute("startDate", xmlDate(Now()))
 
-                    oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
+                    'oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
+                    'Payable amount should be the setup cost TS commented out the above line 01/11/2017
+
+                    oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total"))
+
                     oCartXml.SetAttribute("payableType", "Initial Payment")
 
                 Catch ex As Exception

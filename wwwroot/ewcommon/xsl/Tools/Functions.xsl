@@ -572,7 +572,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
 
@@ -587,7 +587,7 @@
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/slick-carousel/slick.js">/* */</script>
              <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
           <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -922,11 +922,11 @@
       <xsl:apply-templates select="." mode="getMetaDescription"/>
     </xsl:if>
     <!--New OG Tags for Facebook-->
-
-
     <xsl:apply-templates select="." mode="opengraphdata"/>
-    
     <meta property="og:url" content="{$href}" />
+    
+    <!--json-ld-->
+    <xsl:apply-templates select="." mode="json-ld"/>
    
      <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
       <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
@@ -1081,6 +1081,17 @@
   
   <xsl:template match="Content" mode="opengraphdata">
     <meta property="og:type" content="article" />
+  </xsl:template>
+  
+  <!--json-ld-->
+  <xsl:template match="Page" mode="json-ld">
+  </xsl:template>
+
+  <xsl:template match="Page[ContentDetail]" mode="json-ld">
+    <xsl:apply-templates select="ContentDetail/Content" mode="json-ld"/>
+  </xsl:template>
+  
+  <xsl:template match="Content" mode="json-ld">  
   </xsl:template>
     
   <xsl:template match="Page" mode="getMetaDescription">
@@ -2910,13 +2921,6 @@
   <!-- Main Title - Acts as the prominant h1 for the page -->
   <xsl:template match="/" mode="getMainTitle">
     <xsl:variable name="titleText">
-      <xsl:if test="not(/Page/ContentDetail)">
-        <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
-          <xsl:with-param name="type">PlainText</xsl:with-param>
-          <xsl:with-param name="text">Add alternative title</xsl:with-param>
-          <xsl:with-param name="name">title</xsl:with-param>
-        </xsl:apply-templates>
-      </xsl:if>
       <xsl:choose>
         <xsl:when test="/Page/ContentDetail and /Page[@cssFramework!='bs3']">
           <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getDisplayName" />
@@ -2932,7 +2936,14 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="titleText!=''">
+    <xsl:if test="not(/Page/ContentDetail)">
+      <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
+        <xsl:with-param name="type">PlainText</xsl:with-param>
+        <xsl:with-param name="text">Add alternative title</xsl:with-param>
+        <xsl:with-param name="name">title</xsl:with-param>
+      </xsl:apply-templates>
+    </xsl:if>
+    <xsl:if test="$titleText!=''">
       <h1>
         <xsl:copy-of select="$titleText"/>
       </h1>

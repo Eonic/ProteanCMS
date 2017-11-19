@@ -907,8 +907,9 @@ Recheck:
             Dim AdminPassword As String = goConfig("DatabasePassword")
             If AdminPassword = "" Then AdminPassword = "buster"
             Dim UserEmail As String = "support@eonic.co.uk"
+            myWeb.Open()
 
-            mnUserId = moDbHelper.insertDirectory("AdminV4", "User", "Admin", AdminPassword, "<User><FirstName>Website</FirstName><MiddleName/><LastName>Administrator</LastName><Position/><Email>" & UserEmail & "</Email><Notes/></User>")
+            mnUserId = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", AdminPassword, "<User><FirstName>Website</FirstName><MiddleName/><LastName>Administrator</LastName><Position/><Email>" & UserEmail & "</Email><Notes/></User>")
 
             'create system roles
 

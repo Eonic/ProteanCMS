@@ -2001,12 +2001,16 @@
                 </a>
               </li>
             </xsl:if>
-
+            <xsl:variable name="isMail">
+              <xsl:if test="$page/@ewCmd='NormalMail'">
+                <xsl:text>Mail</xsl:text>
+              </xsl:if>
+            </xsl:variable>
             <xsl:choose>
               <!-- NEED A TRIGGER FOR ONLY CASCADED STUFF TO EDIT ON PARID <xsl:when test="@parId=/Page/@id">-->
               <xsl:when test="false()">
                 <li>
-                  <a href="?ewCmd=EditContent&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content">
+                  <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content">
                     <i class="fa fa-pencil-square-o">&#160;</i>&#160;
                     Edit
                   </a>
@@ -2014,14 +2018,14 @@
               </xsl:when>
               <xsl:when test="@status='3' and @versionid!=''">
                 <li>
-                  <a href="?ewCmd=EditContent&amp;id={@id}&amp;pgid={@parId}&amp;verId={@versionid}" title="Click here to edit this content">
+                  <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}&amp;verId={@versionid}" title="Click here to edit this content">
                     <i class="fa fa-pencil-square">&#160;</i>&#160;Edit Pending Change
                   </a>
                 </li>
               </xsl:when>
               <xsl:otherwise>
                 <li>
-                  <a href="?ewCmd=EditContent&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content">
+                  <a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content">
                     <i class="fa fa-pencil-square">&#160;</i>&#160;Edit
                   </a>
                 </li>

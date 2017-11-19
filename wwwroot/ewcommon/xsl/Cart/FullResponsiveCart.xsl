@@ -1260,9 +1260,15 @@
         </div>
       </xsl:if>
       <!-- ################################# Line Options Info ################################# -->
-      <xsl:for-each select="Item">
+      <xsl:if test="Item">
         <span class="optionList">
-          <xsl:apply-templates select="option" mode="optionDetail"/>
+          <xsl:for-each select="Item">
+            <xsl:value-of select="Name"/>
+            <xsl:apply-templates select="option" mode="optionDetail"/>
+          <xsl:if test="not(position()=last())">
+            <xsl:text> / </xsl:text>
+          </xsl:if>
+          </xsl:for-each>
           <!-- <xsl:if test="@price!=0">
 							  Remmed by Rob
 							  <xsl:value-of select="$currency"/>
@@ -1274,8 +1280,7 @@
 							  </xsl:apply-templates>
 						  </xsl:if>-->
         </span>
-      </xsl:for-each>
-
+        </xsl:if>
       <!-- ################################# Line Discount Info ################################# -->
       <xsl:if test="Discount">
         <xsl:for-each select="DiscountPrice/DiscountPriceLine">
@@ -1335,16 +1340,20 @@
             <xsl:value-of select="@nDiscountKey"/>
           </xsl:variable>
           <div class="discount">
-            <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
-            <xsl:value-of select="@oldUnits - @Units"/>&#160;Unit<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>
+            <strong>DISCOUNT:<xsl:text> </xsl:text><xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/></strong>
+            <xsl:text> </xsl:text>
+            (<xsl:value-of select="@oldUnits - @Units"/>&#160;Item<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>)
             <!-- Remmed by Rob 
 							  <xsl:value-of select="$currency"/>
                               <xsl:value-of select="format-number(@TotalSaving,'#0.00')"/>
 							  -->
+            <xsl:text> </xsl:text>
+            Total Saving: <xsl:text> </xsl:text>
             <xsl:apply-templates select="/Page" mode="formatPrice">
               <xsl:with-param name="price" select="@TotalSaving"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
+            
           </div>
         </xsl:for-each>
       </xsl:if>
@@ -1462,7 +1471,9 @@
     </div>
     <xsl:if test="not(/Page/Cart/@displayPrice='false')">
       <div class="linePrice">
-        <xsl:if test="DiscountPrice/@OriginalUnitPrice &gt; @price">
+        <xsl:variable name="itemPrice" select="@itemTotal div @quantity"/>
+        
+        <xsl:if test="DiscountPrice/@OriginalUnitPrice &gt; $itemPrice">
           <strike>
             <!-- Remmed by Rob 
 					  <xsl:value-of select="$currency"/>
@@ -1479,8 +1490,9 @@
 				  <xsl:value-of select="$currency"/>
                   <xsl:value-of select="format-number(@price,'#0.00')"/>
 				  -->
+        
         <xsl:apply-templates select="/Page" mode="formatPrice">
-          <xsl:with-param name="price" select="@price"/>
+          <xsl:with-param name="price" select="$itemPrice"/>
           <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
         </xsl:apply-templates>
         <xsl:for-each select="Item[@price &gt; 0]">
@@ -2416,7 +2428,7 @@
       <xsl:when test="Content[@type='SKU']">
         <!--and @SkuOptions='skus'-->
         <div class="selectOptions">
-          <select class="skuOptions">
+          <select class="skuOptions form-control">
             <!--<xsl:if test="count(Content[@type='SKU']) &gt; 1">
               <option value="">Please select option</option>
             </xsl:if>-->
@@ -2436,9 +2448,9 @@
           <xsl:if test="@name!=''">
             <div class="selectOptions">
               <xsl:if test="@selectType!='hidden'">
-                <h4>
+                <label>
                   <xsl:value-of select="@name"/>
-                </h4>
+                </label>
               </xsl:if>
               <xsl:choose>
                 <xsl:when test="@selectType='Radio'">
@@ -2468,7 +2480,7 @@
                   </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
-                  <select size="1" name="opt_{ancestor::Content/@id}_{position()}">
+                  <select size="1" name="opt_{ancestor::Content/@id}_{position()}" class="form-control">
                     <xsl:apply-templates select="option" mode="List_Options_Dropdown">
                       <xsl:with-param name="grpIdx" select="position()"/>
                     </xsl:apply-templates>

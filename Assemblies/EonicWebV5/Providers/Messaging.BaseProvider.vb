@@ -561,7 +561,52 @@ ProcessFlow:
                                 Else
                                     sAdminLayout = "AdminXForm"
                                 End If
+                            Case "EditMailContent"
 
+                                ' Get a version Id if it's passed through.
+                                Dim cVersionKey As String = myWeb.moRequest("verId") & ""
+                                bClearEditContext = False
+                                bLoadStructure = True
+                                If Not (IsNumeric(cVersionKey)) Then cVersionKey = "0"
+                                Dim nContentId As Long
+                                nContentId = 0
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", CLng(myWeb.moRequest("pgid")), , , nContentId, , , CLng(cVersionKey)))
+
+                                If moAdXfm.valid Then
+                                    '  bAdminMode = False
+                                    sAdminLayout = ""
+                                    mcEwCmd = myWeb.moSession("ewCmd")
+
+                                    'if we have a parent releationship lets add it
+                                    If myWeb.moRequest("contentParId") <> "" AndAlso IsNumeric(myWeb.moRequest("contentParId")) Then
+                                        myWeb.moDbHelper.insertContentRelation(myWeb.moRequest("contentParId"), nContentId)
+                                    End If
+                                    If myWeb.moRequest("EditXForm") <> "" Then
+                                            '    bAdminMode = True
+                                            sAdminLayout = "AdminXForm"
+                                            mcEwCmd = "EditXForm"
+                                            oPageDetail = oWeb.GetContentDetailXml(, myWeb.moRequest("id"))
+                                        Else
+                                            myWeb.mnArtId = 0
+                                            oPageDetail.RemoveAll()
+
+                                            ' Check for an optional command to redireect to
+                                            If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
+
+                                                myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
+
+                                            ElseIf myWeb.moSession("lastPage") <> "" Then
+                                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                                myWeb.moSession("lastPage") = ""
+                                            Else
+                                                oPageDetail.RemoveAll()
+                                                moAdXfm.valid = False
+                                                GoTo ProcessFlow
+                                            End If
+                                        End If
+                                    Else
+                                        sAdminLayout = "AdminXForm"
+                                End If
                             Case "PreviewMail"
 
                                 Dim cSubject As String = ""

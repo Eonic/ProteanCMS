@@ -1364,11 +1364,13 @@ Imports System
                             If mnUserId > 0 Then
                                 nPageId = myWeb.gnPageAccessDeniedId
                             Else
+                                myWeb.moSession("LogonRedirect") = myWeb.mcPagePath
                                 nPageId = myWeb.gnPageLoginRequiredId
                             End If
                         End If
 
                         If oPerm = "VIEW by Authenticated Users" And mnUserId = 0 Then
+                            myWeb.moSession("LogonRedirect") = myWeb.mcPagePath
                             nPageId = myWeb.gnPageLoginRequiredId
                         End If
 

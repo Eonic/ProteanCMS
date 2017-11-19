@@ -2432,7 +2432,7 @@
     <div class="FormattedText">
       <xsl:if test="@maxWidth!=''">
         <xsl:choose>
-          <xsl:when test="@iconStyle='Centre'">
+          <xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
             <xsl:attribute name="class">FormattedText central-text</xsl:attribute>
             <xsl:attribute name='style'>
               <xsl:text>max-width:</xsl:text>
@@ -2916,6 +2916,9 @@
     <xsl:value-of select="TypeButtons/node()"/>
     <xsl:text>,mapTypeId:google.maps.MapTypeId.</xsl:text>
     <xsl:value-of select="View/node()"/>
+    <xsl:if test="Zoom/@disableMouseWheel='true'">
+      ,scrollwheel:  false
+    </xsl:if>
     <xsl:text>};</xsl:text>
 
     <!-- Initialise map item -->

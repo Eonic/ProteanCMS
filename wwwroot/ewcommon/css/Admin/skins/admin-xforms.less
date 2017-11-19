@@ -151,99 +151,128 @@
 		.rotate(-90deg);
 	}
 }
-.ewAdmin #adminLayout .ewXform{
-	.PermissionButton{width:100%;margin-bottom:5px;}
-	.checkbox-group input{margin-right:5px;}
-	#accordion a i.fa-chevron-down,
-	#accordion .panel:first-child a i.fa-chevron-down,
-	#accordion a.open i.fa-chevron-down,
-	.panel-group .panel-heading a i.fa-chevron-down,
-        #accordion a i.fa-angle-down,
-	#accordion .panel:first-child a i.fa-angle-down,
-	#accordion a.open i.fa-angle-down,
-	.panel-group .panel-heading a i.fa-angle-down{
-		.rotate(0deg);
-	}
-	#accordion a.accordion-load i.fa-chevron-down,
-	#accordion .panel:first-child a.collapsed i.fa-chevron-down,
-	#accordion a.collapsed i.fa-chevron-down,
-	.panel-group a.accordion-toggle i.fa-chevron-down,
-	.panel-group a.collapsed i.fa-chevron-down,
+.ewAdmin #adminLayout .ewXform {
+    .PermissionButton {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .checkbox-group input {
+        margin-right: 5px;
+    }
+
+    #accordion a i.fa-chevron-down,
+    #accordion .panel:first-child a i.fa-chevron-down,
+    #accordion a.open i.fa-chevron-down,
+    .panel-group .panel-heading a i.fa-chevron-down,
+    #accordion a i.fa-angle-down,
+    #accordion .panel:first-child a i.fa-angle-down,
+    #accordion a.open i.fa-angle-down,
+    .panel-group .panel-heading a i.fa-angle-down {
+        .rotate(0deg);
+    }
+
+    #accordion a.accordion-load i.fa-chevron-down,
+    #accordion .panel:first-child a.collapsed i.fa-chevron-down,
+    #accordion a.collapsed i.fa-chevron-down,
+    .panel-group a.accordion-toggle i.fa-chevron-down,
+    .panel-group a.collapsed i.fa-chevron-down,
     #accordion a.accordion-load i.fa-angle-down,
-	#accordion .panel:first-child a.collapsed i.fa-angle-down,
-	#accordion a.collapsed i.fa-angle-down,
-	.panel-group a.accordion-toggle i.fa-angle-down,
-	.panel-group a.collapsed i.fa-angle-down{
-		.rotate(-90deg);
-	}
-	.control-wrapper .form-inline{
-		margin-bottom:6px;
-		.radiocheckbox label,
-		label.radio-inline{
-			margin-right:15px;
-			margin-bottom:6px;
-			margin-left: 0px !important;
-		}
-	}
-	.ItemThumbnail input{
-		outline:none!important;
-		border:0!important;
-		-webkit-box-shadow: none;
-		-moz-box-shadow: none;
-		box-shadow: none;
-		float:left;
-		padding-right:10px;
-	}
-    legend{
-        font-size:18px;
-        padding-bottom:5px;
-        margin-top:15px;
-        margin-bottom:10px;
+    #accordion .panel:first-child a.collapsed i.fa-angle-down,
+    #accordion a.collapsed i.fa-angle-down,
+    .panel-group a.accordion-toggle i.fa-angle-down,
+    .panel-group a.collapsed i.fa-angle-down {
+        .rotate(-90deg);
+    }
+
+    .control-wrapper .form-inline {
+        margin-bottom: 6px;
+
+        .radiocheckbox label,
+        label.radio-inline {
+            margin-right: 15px;
+            margin-bottom: 6px;
+            margin-left: 0px !important;
+        }
+    }
+
+    .ItemThumbnail input {
+        outline: none !important;
+        border: 0 !important;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        float: left;
+        padding-right: 10px;
+    }
+
+    legend {
+        font-size: 18px;
+        padding-bottom: 5px;
+        margin-top: 15px;
+        margin-bottom: 10px;
         text-transform: uppercase;
     }
-	label{
-		font-weight:400;
-		text-transform:uppercase;
-		color:@admin-gray;
-		//font-size:0.9em;
-        margin-top:5px;
-	}
-	.form-control{
-		color:@admin-header-font-color;
-	}
-	.input-group label,
-	.form-group .multiline .control-wrapper label,
-	.radiocheckbox label,
-	label.radio-inline{
-		text-transform:none;
-		color:@admin-header-font-color;
-		font-size:1em;
-	}
-	.form-group{
-		.row.repeated{
-			padding-bottom: 0px;
-			label{display:none;}
-			.form-group{margin-bottom: 0px;}
-		} 
-		.row.rpt-0{ 
-			.btn-delete{margin-top:22px;}
-			label{display:inline-block;}
-		}
-	}
-	.radio-inline input,
-	.radiocheckbox input{
-		-webkit-box-shadow: none;
-		-moz-box-shadow: none;
-		box-shadow: none;
-	}
-	.CodeMirror-wrapping{
-		border: 1px solid #ccc;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
-			
-	}
-	/*.bold-label{
+
+    label {
+        font-weight: 400;
+        text-transform: uppercase;
+        color: @admin-gray;
+        //font-size:0.9em;
+        margin-top: 5px;
+    }
+
+    .form-control {
+        color: @admin-header-font-color;
+    }
+
+    .input-group label,
+    .form-group .multiline .control-wrapper label,
+    .radiocheckbox label,
+    label.radio-inline {
+        text-transform: none;
+        color: @admin-header-font-color;
+        font-size: 1em;
+    }
+
+    .form-group {
+        .row.repeated {
+            padding-bottom: 0px;
+
+            label {
+                display: none;
+            }
+
+            .form-group {
+                margin-bottom: 0px;
+            }
+        }
+
+        .row.rpt-0 {
+            .btn-delete {
+                margin-top: 22px;
+            }
+
+            label {
+                display: inline-block;
+            }
+        }
+    }
+
+    .radio-inline input,
+    .radiocheckbox input {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .CodeMirror-wrapping {
+        border: 1px solid #ccc;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+    /*.bold-label{
 		font-weight:700;
 	}
 	.label-heading{
@@ -251,191 +280,226 @@
 		text-transform:uppercase;
 		width:100%;
 	}*/
-	div.label-border-top{
-		padding-top:15px;
-		border-top:@admin-border;
-		width:100%;
-	}
-	.label-border-bottom,
-	.form-border-bottom{
-		border-bottom:@admin-border;
-		padding-bottom:15px;
-		width:100%;
-	}
-	.no-margin{
-		margin-bottom:0;
-	}
-	/*.admin-space-below{
+    div.label-border-top {
+        padding-top: 15px;
+        border-top: @admin-border;
+        width: 100%;
+    }
+
+    .label-border-bottom,
+    .form-border-bottom {
+        border-bottom: @admin-border;
+        padding-bottom: 15px;
+        width: 100%;
+    }
+
+    .no-margin {
+        margin-bottom: 0;
+    }
+    /*.admin-space-below{
 		margin-bottom:15px;
 	}
 	.admin-space-above{
 		margin-top:15px;
 	}*/
-	.col-md-4{
-		border-right:@admin-border;
-	}
-	.choices .col-md-4{
-		border:none;
-	}
-	label.required{
-		color:@brand-danger!important;
-		font-weight:700;
-	}
-	label.readonly{
-		color:@admin-gray;
-	}
-	fieldset fieldset fieldset fieldset{
-		padding-bottom:20px;
-	}
-	.checkbox-group + fieldset{
-		margin-left:22px !important;
-		padding-bottom:0px !important;
+    .col-md-4 {
+        border-right: @admin-border;
+    }
 
-	}
-	.checkbox-group{
-	margin-bottom:5px;
-	}
-	.horizontal .selectAll label{
-		display: block;
-	}
-	.boxStyle .bfh-selectbox-toggle, .cssStyle .bfh-selectbox-toggle
-	{
-		height:85px;
-		background-color:#fff;
-	}
-	.boxStyle .bfh-selectbox-option, .cssStyle .bfh-selectbox-option
-	{
-		height:75px;
-	}
-	.cssStyle .bfh-selectbox .bfh-selectbox-toggle .bfh-selectbox-option
-	{
-		height:85px;
-	}
-	.boxStyle .bfh-selectbox-toggle .bfh-selectbox-option, .cssStyle .bfh-selectbox-toggle .bfh-selectbox-option
-	{
-		max-height:100px;
-	}
-	.boxStyle .bfh-selectbox-options li
-	{
-		display:inline-block;
-		width:320px;
-	}
-	
-	.cssStyle .bfh-selectbox-options li
-	{
-		display:inline-block;
-		width:100%;
-	}
-	 .cssStyle .bfh-selectbox-options li a
-	{
-		overflow-y:hidden;
-	}
-	.pickIcon .bfh-selectbox-options li
-	{
-    display:inline-block;
-    width:35px;
-    height:35px;
-	}
-	.pickIcon.bfh-selectbox .bfh-selectbox-options ul li > a
-	{
-		padding: 3px 10px;
-		overflow-x: inherit;
-	}
-	.pickByImage button.imageSelect{
-		width:100%;
-		padding:5px;
-		text-align:left;
-		img{
-			padding-right:10px;
-		}
-	}
-	.previewImage{
-		padding-top:10px;
-	}
-	.pickImageInput,
-	.pickImageFile .input-wrapper,
-	input.pickImageFile{
-		height:@admin-field-height;
-	} 
-	#editImage_thumbnail,
-	#editImage_cContentImage,
-	#editImage_cContentFullSizePicture,
-	#editImage_cContentThumbnail,
-	#editImage_cContentDisplay,
-	#editImage_cContentDetail,
-	#editImage_cOrganizationLogo,
-	#editImage_cContentDetailPicture,
-	#editImage_cContentPicture{
-		.input-group-btn a{
-			height:@admin-field-height;
-			border-radius:4px 0 0 4px;
-		}
-		.editpick .btn{
-			height:@admin-field-height;
-			border-radius:0 4px 4px 0;
-		}
-		.pickImageInput{border-radius:0!important;}
-	}
-	#editImageFile_ThemeBackgroundImage{
-		.input-group-btn a{
-			height:@admin-field-height;
-		}
-	}
-	span.input-group-btn{vertical-align:top;}
-	#editImageFile_uploadIcon{
-		.btn{
-			height:@admin-field-height;
-			border-radius:0 4px 4px 0;
-		}
-	}
-	input.colorPicker{height:36px;}
-	
-	.inline .form-group {
-		float: left;
-		display: inline-block;
-		width: 49%;
-		padding-right: 15px;
-		}
-	table{
-		width:100%;
-		.relatedOptionsButton{
-			text-align:right;
-		}
-		th{
-			font-weight:normal;
-		}
-	
-	}
-	input.slider{
-		width: 40px;	
-	}
-	.slider .max{
-		display:none;
-	}
-	.slider .min{
-		display:none;
-	}
-	.slider .step{
-		display:none;
-	}
-	.slider .val{
-		display:none;
-	}
-	.slider .ref{
-		display:none;
-	}
-	div.slider{
-		margin-left:50px;
-		top:-25px;
-	}
-	.DOBcalendar .input-group-btn label.input-group-addon,
-	.calendar .input-group-btn label.input-group-addon{
-		border-right: 1px solid;
-		i{
-			font-size: 14px;
-			padding: 3px 0;
-		}
-	}
+    .choices .col-md-4 {
+        border: none;
+    }
+
+    label.required {
+        color: @brand-danger !important;
+        font-weight: 700;
+    }
+
+    label.readonly {
+        color: @admin-gray;
+    }
+
+    fieldset fieldset fieldset fieldset {
+        padding-bottom: 20px;
+    }
+
+    .checkbox-group + fieldset {
+        margin-left: 22px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .checkbox-group {
+        margin-bottom: 5px;
+    }
+
+    .horizontal .selectAll label {
+        display: block;
+    }
+
+    .boxStyle .bfh-selectbox-toggle, .cssStyle .bfh-selectbox-toggle {
+        height: 85px;
+        background-color: #fff;
+    }
+
+    .boxStyle .bfh-selectbox-option, .cssStyle .bfh-selectbox-option {
+        height: 75px;
+    }
+
+    .cssStyle .bfh-selectbox .bfh-selectbox-toggle .bfh-selectbox-option {
+        height: 85px;
+    }
+
+    .boxStyle .bfh-selectbox-toggle .bfh-selectbox-option, .cssStyle .bfh-selectbox-toggle .bfh-selectbox-option {
+        max-height: 100px;
+    }
+
+    .boxStyle .bfh-selectbox-options li {
+        display: inline-block;
+        width: 320px;
+    }
+
+    .cssStyle .bfh-selectbox-options li {
+        display: inline-block;
+        width: 100%;
+    }
+
+    .cssStyle .bfh-selectbox-options li a {
+        overflow-y: hidden;
+    }
+
+    .pickIcon .bfh-selectbox-options li {
+        display: inline-block;
+        width: 35px;
+        height: 35px;
+    }
+
+    .pickIcon.bfh-selectbox .bfh-selectbox-options ul li > a {
+        padding: 3px 10px;
+        overflow-x: inherit;
+    }
+
+    .pickByImage button.imageSelect {
+        width: 100%;
+        padding: 5px;
+        text-align: left;
+
+        img {
+            padding-right: 10px;
+        }
+    }
+
+    .previewImage {
+        padding-top: 10px;
+    }
+
+    .pickImageInput,
+    .pickImageFile .input-wrapper,
+    input.pickImageFile {
+        height: @admin-field-height;
+    }
+
+    #editImage_thumbnail,
+    #editImage_cContentImage,
+    #editImage_cContentFullSizePicture,
+    #editImage_cContentThumbnail,
+    #editImage_cContentDisplay,
+    #editImage_cContentDetail,
+    #editImage_cOrganizationLogo,
+    #editImage_cContentDetailPicture,
+    #editImage_cContentPicture {
+        .input-group-btn a {
+            height: @admin-field-height;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .editpick .btn {
+            height: @admin-field-height;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .pickImageInput {
+            border-radius: 0 !important;
+        }
+    }
+
+    #editImageFile_ThemeBackgroundImage {
+        .input-group-btn a {
+            height: @admin-field-height;
+        }
+    }
+
+    span.input-group-btn {
+        vertical-align: top;
+    }
+
+    #editImageFile_uploadIcon {
+        .btn {
+            height: @admin-field-height;
+            border-radius: 0 4px 4px 0;
+        }
+    }
+
+    input.colorPicker {
+        height: 36px;
+    }
+
+    .inline .form-group {
+        float: left;
+        display: inline-block;
+        width: 49%;
+        padding-right: 15px;
+    }
+
+    table {
+        width: 100%;
+
+        .relatedOptionsButton {
+            text-align: right;
+        }
+
+        th {
+            font-weight: normal;
+        }
+    }
+
+    input.slider {
+        width: 40px;
+    }
+
+    .slider .max {
+        display: none;
+    }
+
+    .slider .min {
+        display: none;
+    }
+
+    .slider .step {
+        display: none;
+    }
+
+    .slider .val {
+        display: none;
+    }
+
+    .slider .ref {
+        display: none;
+    }
+
+    div.slider {
+        margin-left: 50px;
+        top: -25px;
+    }
+
+    .DOBcalendar .input-group-btn label.input-group-addon,
+    .calendar .input-group-btn label.input-group-addon {
+        border-right: 1px solid;
+
+        i {
+            font-size: 14px;
+            padding: 3px 0;
+        }
+    }
 }
 .mce-edit-area{
 	border-right:1px solid!important;

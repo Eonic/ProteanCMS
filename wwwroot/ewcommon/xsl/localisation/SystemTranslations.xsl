@@ -2882,7 +2882,85 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+  <xsl:template name="term3086">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>(Cookies disabled)</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>(Cookies disabled)</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3087">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Cookies disabled</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>This may be due to some of the following reasons</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3088">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>You may have disabled cookies or they are undetectable. The shopping cart requires cookies to be enabled in order to proceed.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>You may have disabled cookies or they are undetectable. The shopping cart requires cookies to be enabled in order to proceed.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3089">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>The order had been left for over ten minutes without any updates. The details are automatically removed for security purposes.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>The order had been left for over ten minutes without any updates. The details are automatically removed for security purposes.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3090">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>No translation has been made.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>No translation has been made.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
+  <xsl:template name="term3091">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>There is no valid delivery option for this order. This may be due to a combination of location, price, weight or quantity.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>There is no valid delivery option for this order. This may be due to a combination of location, price, weight or quantity.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term3092">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Please call for assistance.</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Please call for assistance.</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!-- ################################################################################################ -->
   <!-- EonicWeb Membership Template phrases -->
   <!-- 4000+ -->

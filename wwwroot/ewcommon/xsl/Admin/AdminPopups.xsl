@@ -197,7 +197,7 @@
               <xsl:text> active </xsl:text>
             </xsl:if>
          </xsl:attribute>
-        <a  href="/?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2={$page/Request/QueryString/Item[@name='ewCmd2']/node()}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+        <a href="/?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
            <i>
             <xsl:attribute name="class">
               <xsl:text>fa fa-lg</xsl:text>

@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
+
   <xsl:variable name="siteURL">
-    <xsl:text>http://</xsl:text>
-    <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+    <xsl:variable name="serverVariableURL">
+      <xsl:call-template name="getServerVariable">
+        <xsl:with-param name="valueName" select="'HTTP_HOST'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="https">
+      <xsl:call-template name="getServerVariable">
+        <xsl:with-param name="valueName" select="'HTTPS'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="not($https='on')">
+        <xsl:text>http://</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>https://</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:value-of select="$serverVariableURL"/>
   </xsl:variable>
 
   <!-- Mailer Default Variables -->
@@ -81,6 +99,7 @@
       <xsl:text>&amp;utm_source=mailingList</xsl:text>
       <xsl:text>&amp;utm_campaign=</xsl:text>
       <xsl:value-of select="translate(/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]/@name,' ','-')"/>
+      <xsl:text>&amp;email=[email]</xsl:text>
     </xsl:if>
   </xsl:template>
 
@@ -125,6 +144,7 @@
           <xsl:apply-templates select="." mode="commonStyle"/>
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
+        <xsl:apply-templates select="." mode="emailStyle"/>
       </head>
       <xsl:apply-templates select="." mode="bodyBuilder"/>
     </html>
@@ -133,10 +153,15 @@
   <xsl:template match="Page" mode="commonStyle">
     <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less"/>
     <xsl:apply-templates select="." mode="adminStyle"/>
+    <link rel="stylesheet" type="text/css" href="/ewcommon/css/admin/adminmailer.css"/>
     <xsl:apply-templates select="." mode="siteStyle"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="siteStyle">
+    <!-- Placeholder -->
+  </xsl:template>
+  
+  <xsl:template match="Page" mode="emailStyle">
     <!-- Placeholder -->
   </xsl:template>
 
@@ -578,7 +603,6 @@
         </xsl:variable>
         <a href="{$href}{$mailer_utm_campaign}" title="{$pageName}">
           <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
-          <xsl:call-template name="mailer_utm_campaign"/>
         </a>
       </xsl:when>
       <xsl:when test="@externalLink!=''">
@@ -1447,7 +1471,6 @@
     <xsl:variable name="img">
       <xsl:element name="img">
         <xsl:for-each select="@*[name()!='onclick']">
-
           <xsl:attribute name="{name()}">
             <xsl:choose>
 
@@ -1527,6 +1550,10 @@
   </xsl:template>
 
   <xsl:template match="Content | MenuItem" mode="displayThumbnail">
+    <xsl:param name="style"/>
+    <xsl:param name="align"/>
+    <xsl:param name="hspace"/>    
+    <xsl:param name="vspace"/>
     <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
     <xsl:if test="Images/img[@src and @src!='']">
 
@@ -1611,6 +1638,26 @@
             <xsl:attribute name="class">
               <xsl:text>photo thumbnail resized</xsl:text>
             </xsl:attribute>
+            <xsl:if test="$style!=''">
+              <xsl:attribute name="style">
+                <xsl:value-of select="$style" />
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="$align!=''">
+              <xsl:attribute name="align">
+                <xsl:value-of select="$align" />
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="$hspace!=''">
+              <xsl:attribute name="hspace">
+                <xsl:value-of select="$hspace" />
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="$vspace!=''">
+              <xsl:attribute name="vspace">
+                <xsl:value-of select="$vspace" />
+              </xsl:attribute>
+            </xsl:if>
           </img>
         </xsl:variable>
         <xsl:apply-templates select="ms:node-set($image)/*" mode="cleanXhtml" />

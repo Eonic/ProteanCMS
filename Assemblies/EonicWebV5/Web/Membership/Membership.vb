@@ -504,6 +504,7 @@ Partial Public Class Web
 
             Public Sub Register(ByRef myWeb As Eonic.Web, ByRef oContentNode As XmlElement)
                 Try
+                    myWeb.bPageCache = False
                     Dim mnUserId As Long = myWeb.mnUserId
                     Dim mbAdminMode As Boolean = myWeb.mbAdminMode
                     Dim moPageXml As XmlDocument = myWeb.moPageXml

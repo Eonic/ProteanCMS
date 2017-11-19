@@ -5130,7 +5130,7 @@ processFlow:
                                         'if collection allready selected... Show only this option
                                         If nShippingMethodId = oRow("nShipOptKey") Then
                                             oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                            nShippingCost = CDbl(oRow("nShippingTotal") & "0")
+                                            nShippingCost = CDbl("0" & oRow("nShippingTotal"))
                                             nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                             oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
                                         End If
@@ -5146,8 +5146,8 @@ processFlow:
                                                 End If
                                                 If bShowMethod Then
                                                     If bFirstRow Then oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = CStr(oRow("nShipOptKey"))
-                                                    nShippingCost = CDbl(oRow("nShippingTotal") & "0")
-                                                    nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                                            nShippingCost = CDbl("0" & oRow("nShippingTotal"))
+                                            nShippingCost = CDbl(FormatNumber(nShippingCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                                                     oOptXform.addOption((oGrpElmt.LastChild), oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2), oRow("nShipOptKey"))
                                                     bFirstRow = False
                                                     nLastID = oRow("nShipOptKey")
