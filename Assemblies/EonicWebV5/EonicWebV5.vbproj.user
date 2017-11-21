@@ -3,4 +3,7 @@
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>C:\HostingSpaces\GitRepos\EonicWeb5\packages\AjaxMin.5.14.5506.26202\lib\net40\</ReferencePath>
+  </PropertyGroup>
 </Project>

@@ -64,3 +64,16 @@ D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.dll
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.xml
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.pdb
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.pdb
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.xml
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.Owin.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Microsoft.Owin.Security.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Newtonsoft.Json.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\bin\Debug\Owin.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.vbprojResolveAssemblyReference.cache
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.vbproj.CoreCompileInputs.cache
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.xml
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.pdb
