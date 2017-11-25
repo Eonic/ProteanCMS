@@ -1799,6 +1799,7 @@ ProcessFlow:
                     End If
                     'no need to get page xml if redirecting, speeds up editing on pages with loads of content.
                     If myWeb.msRedirectOnEnd = "" Then
+                        oWeb.mbPreview = True
                         oWeb.GetPageXML()
                     End If
                 Else

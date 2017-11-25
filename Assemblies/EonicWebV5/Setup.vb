@@ -1937,7 +1937,6 @@ DoOptions:
 
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
-
                 MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Servername")
                 MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
 

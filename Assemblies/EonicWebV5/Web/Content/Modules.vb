@@ -39,7 +39,7 @@ Partial Public Class Web
                     Dim datestring As String = ""
                     Dim startDate As Date
                     Dim endDate As Date
-                    Dim dateQuery As String
+                    Dim dateQuery As String = ""
                     Dim cOrigUrl As String = myWeb.mcOriginalURL
                     Dim cOrigQS As String = ""
                     Dim cPageURL As String = myWeb.mcPagePath.TrimEnd("/")
@@ -68,15 +68,25 @@ Partial Public Class Web
                     " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" &
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & myWeb.mnPageId
-                    sSql = sSql & sFilterSql & " and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "') order by a.dpublishDate"
+                    sSql = sSql & sFilterSql & " and c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "') order by a.dpublishDate desc"
 
                     Dim DateSet As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "ArticleDates")
                     Dim dr As DataRow
                     Dim dEarliestDate As Date = PageDate
+                    'Latest Articles
+                    Dim nFirstPageCount As Integer = CInt("0" + oContentNode.GetAttribute("firstPageCount"))
+                    Dim FirstPageLastDate As Date = Nothing
+                    Dim counter As Long = nFirstPageCount
 
                     For Each dr In DateSet.Tables(0).Rows
-                        If dr("publish") < dEarliestDate Then
-                            dEarliestDate = dr("publish")
+                        If IsDate(dr("publish")) Then
+                            If dr("publish") < dEarliestDate Then
+                                dEarliestDate = dr("publish")
+                            End If
+                            counter = counter - 1
+                            If counter = 0 Then
+                                FirstPageLastDate = dr("publish")
+                            End If
                         End If
                     Next
 
@@ -88,11 +98,20 @@ Partial Public Class Web
                     Dim oContent As New ewXmlElement(oContentNode)
                     Dim NewMenu As ewXmlElement = oContent.AddElement("Menu")
                     Dim contentCount As Integer = 0
-
-
-
-
                     NewMenu.XmlElement.SetAttribute("id", "newsByDate")
+
+                    If nFirstPageCount > 0 Then
+
+                        thisDateQuery = "latest"
+                        NewMenu.AddMenuItem("Latest Articles", thisDateQuery, cPageURL & "/" & oContentNode.GetAttribute("id") & "-/" & thisDateQuery & cOrigQS,,, contentCount)
+                        If dateQuery = thisDateQuery Or dateQuery = "" Then
+                            startDate = FirstPageLastDate
+                            endDate = PageDate
+                            dateQuery = thisDateQuery
+                        End If
+                    End If
+
+
                     'This Week
                     contentCount = getArticleCount(DateSet, mondayDate, PageDate)
                     If contentCount > 0 Then
@@ -218,8 +237,10 @@ Partial Public Class Web
                 Dim ReturnCount As Integer = 0
                 Dim dr As DataRow
                 For Each dr In ods.Tables(0).Rows
-                    If dr("publish") >= startDate And dr("publish") <= endDate Then
-                        ReturnCount = ReturnCount + 1
+                    If IsDate(dr("publish")) Then
+                        If dr("publish") >= startDate And dr("publish") <= endDate Then
+                            ReturnCount = ReturnCount + 1
+                        End If
                     End If
                 Next
                 Return ReturnCount
