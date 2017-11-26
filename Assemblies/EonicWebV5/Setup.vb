@@ -194,7 +194,7 @@ Public Class Setup
                 oResponse.AppendChild(oElmt)
             End If
         Else
-            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace(cResponse, "'", "\'") & "<br/>');</script>" & vbCrLf)
+            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#result').append('" & Replace(cResponse, "'", "\'") & "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" & vbCrLf)
         End If
     End Sub
 
@@ -322,6 +322,7 @@ Public Class Setup
                 buildDatabase(False)
             Case "UpgradeDB"
                 UpdateDatabase()
+                AddResponseComplete("Congratulations - Go to updated website", "/")
             Case "NewDB"
                 buildDatabase(True)
             Case "RestoreZip"
@@ -2027,36 +2028,50 @@ DoOptions:
 
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
-                        If Not oCfg Is Nothing Then
-                            Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
-                            Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
-                            If Not oCgfSect Is Nothing Then
-                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
-                                oCfg.Save()
+                        'Now lets create the database
+                        Dim oDbt As New Eonic.Web.dbHelper(Nothing)
+                        Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
+                        Dim cDbServer As String = Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText
+                        Dim cDbUsername As String = Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText
+                        Dim cDbPassword As String = Instance.SelectSingleNode("web/add[@key='DatabasePassword']/@value").InnerText
+                        If oDbt.createDB(sDbName, cDbServer, cDbUsername, cDbPassword) Then
+                            'success
+                            oDbt.ResetConnection("Data Source=" & cDbServer & "; " &
+                                "Initial Catalog=" & sDbName & "; " &
+                                "user id=" & cDbUsername & "; password=" & cDbPassword)
+                            If oDbt.ConnectionValid Then
+                                MyBase.valid = True
+                            Else
+                                MyBase.valid = False
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "These database connection details could not connect.")
+                            End If
+
+                        Else
+                            MyBase.valid = False
+                            MyBase.addNote(oFrmElmt, noteTypes.Alert, "These database connection details could not connect.")
+                        End If
+
+                        If MyBase.valid Then
+                            If Not oCfg Is Nothing Then
+                                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
+                                Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
+                                If Not oCgfSect Is Nothing Then
+                                    oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                    oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                    'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
+                                    oCfg.Save()
+                                Else
+                                    'update config based on form submission
+                                    oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                                    'save as web.config in the root
+                                    oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
+                                End If
                             Else
                                 'update config based on form submission
                                 oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
                                 'save as web.config in the root
-                                oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
+                                oDefaultCfgXml.Save(goServer.MapPath("web.config"))
                             End If
-                        Else
-                            'update config based on form submission
-                            oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
-                            'save as web.config in the root
-                            oDefaultCfgXml.Save(goServer.MapPath("web.config"))
-                        End If
-
-                        'Now lets create the database
-                        Dim oDbt As New Eonic.Web.dbHelper(Nothing)
-                        Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
-                        If oDbt.createDB(sDbName) Then
-                            'success
-                            MyBase.valid = True
-                        Else
-                            MyBase.valid = False
-                            MyBase.addNote(oFrmElmt, noteTypes.Hint, "These database connection details could not connect.")
                         End If
                         oDbt = Nothing
                     End If

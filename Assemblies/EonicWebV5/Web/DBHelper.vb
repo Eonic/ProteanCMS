@@ -166,8 +166,8 @@ Imports System
                 goSession = moCtx.Session
                 goServer = moCtx.Server
 
-                ResetConnection("Data Source=" & cDbServer & "; " & _
-                                "Initial Catalog=" & cDbName & "; " & _
+                ResetConnection("Data Source=" & cDbServer & "; " &
+                                "Initial Catalog=" & cDbName & "; " &
                                 GetDBAuth())
 
                 myWeb = Nothing
@@ -9757,6 +9757,29 @@ ReturnMe:
             End Try
         End Function
 
+        Public Function createDB(ByVal DatabaseName As String, ByVal DatabaseServer As String, ByVal DatabaseUsername As String, ByVal DatabasePassword As String) As Boolean
+            Dim cProcessInfo As String = "createDB"
+            Try
+                '  Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+                Dim myConn As SqlConnection = New SqlConnection("Data Source=" & DatabaseServer & "; Initial Catalog=master;" & "user id=" & DatabaseUsername & "; password=" & DatabasePassword)
+                Dim sSql As String
+                oConn = myConn
+
+                sSql = "select db_id('" & DatabaseName & "')"
+                If ExeProcessSqlScalar(sSql) Is Nothing Then
+                    ExeProcessSql("CREATE DATABASE " & DatabaseName)
+                    oConn = Nothing
+                    Return True
+                Else
+                    oConn = Nothing
+                    Return True
+                End If
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, ""))
+                Return False
+            End Try
+        End Function
 
         Public Function isClonedPage(ByVal nPageId As Integer) As Boolean
 

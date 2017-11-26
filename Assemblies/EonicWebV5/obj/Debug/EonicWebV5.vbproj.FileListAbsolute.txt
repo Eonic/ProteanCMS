@@ -189,3 +189,7 @@ C:\Users\ewadmin\source\repos\EonicWeb5\Assemblies\EonicWebV5\bin\ru-ru\BundleTr
 C:\Users\ewadmin\source\repos\EonicWeb5\Assemblies\EonicWebV5\bin\ru-ru\BundleTransformer.MicrosoftAjax.resources.dll
 C:\Users\ewadmin\source\repos\EonicWeb5\Assemblies\EonicWebV5\bin\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 C:\Users\ewadmin\source\repos\EonicWeb5\Assemblies\EonicWebV5\bin\ru-ru\MsieJavaScriptEngine.resources.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\bin\ICSharpCode.SharpZipLib.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\bin\Lucene.Net.dll
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\bin\Lucene.Net.pdb
+C:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\bin\Lucene.Net.xml

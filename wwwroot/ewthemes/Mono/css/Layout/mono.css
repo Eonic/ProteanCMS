@@ -1,0 +1,512 @@
+﻿body{line-height: 1.5em;}
+
+/* ####################################   Headings  #################################### */
+
+.Site H1 {FONT-SIZE: 180%;}
+.Site H1.title {FONT-SIZE: 180%;}
+.Site H2 {FONT-SIZE: 150%;}
+.Site H3 {FONT-SIZE: 130%;}
+.Site H4 {FONT-SIZE: 120%;}
+.Site H5 {FONT-SIZE: 110%;}
+.Site H6 {FONT-SIZE: 100%;}
+.Site h1, .Site h2, .Site h3, .Site h4, .Site h5, .Site h6
+{margin-top: 0;	padding-top:0; line-height: 1.2em; margin-bottom: 0.5em; font-weight: normal;}
+/*----------------------------------------------------------------------------------*/
+
+/* #################################### General Styles #################################### */
+
+.Site a
+{
+    text-decoration:none;
+}
+.Site #mainLayout p,
+.Site #mainLayout ul
+{
+    margin-bottom:1em;
+}
+.Site #mainLayout ul
+{
+    padding-left:17px;
+}
+.Site #mainLayout ul li,
+.Site #mainLayout ol li
+{
+    margin-bottom:0em;
+}
+.Site .listItem
+{
+    padding-bottom:5px;
+}
+.Site .terminus
+{
+    font-size:0px;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* #################################### Layout IDs #################################### */
+
+#mainTable
+{
+	margin:auto;
+}
+.Site .wrapper
+{
+    margin:0 auto;
+}
+.Site #mainLayoutContainer 
+{
+	width: auto;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* ################################## BOXES ################################### */
+
+.Site .box
+{
+    padding:0;
+    width:auto;
+    height:1%;
+}
+.Site .box h2.title
+{
+}
+.Site .box .tl, 
+.Site .box .tr
+{
+	padding:0;
+    margin:0;
+    width:auto;
+}
+.Site .box .tr h2
+{
+    width:auto;
+}
+.Site .box .content
+{
+    position:relative;
+}
+
+.Site .content img
+{
+	margin:0 5px 5px;
+}
+.Site .content table td
+{
+	padding:3px;
+}
+.Site .box .bl, .Site .box .br, .Site #headerInfo
+{
+	display: none;
+}
+/* -- Stepper -- */
+.Site .stepper
+{
+    PADDING:3px 5px;
+    width:auto !important;
+}
+.Site .stepper P
+{
+    MARGIN: 0px;
+    TEXT-ALIGN: right;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* ################################## Header ################################### */
+
+.Site #logo 
+{
+	clear: left;
+	float:left;
+	display:block;
+}
+.Site #logo img
+{
+    display:block;
+}
+.Site #mainHeaderText
+{
+    text-align:right;
+}
+.Site #mainTitle 
+{
+	display: none;
+}
+.Site #mainTitle H1
+{
+	MARGIN: 0;
+}
+.Site #location
+{
+    text-align:right;margin-bottom:-19px;font-size: 80%;
+} 
+/*----------------------------------------------------------------------------------*/
+
+/* ################################## Menu setup ################################### */
+/* -- Top Nav -- */
+.Site #topNav  
+{   
+    float:right;
+    text-align:right; 
+    margin:4px 0 0 0;
+}
+.Site #topNav a 
+{ 
+     padding: 0 7px 0 10px;
+     margin: 0;
+     font-weight: normal;
+     text-decoration:none;
+}
+.Site #topNav ul 
+{
+     margin:0;
+     float:right;
+}
+ .Site #topNav ul li
+{ 
+    display:inline;
+    margin: 0;
+    border-right:1px solid #ddd;
+}
+.Site #topNav li.last
+{
+    border-right:none;
+} 
+.Site #topNav ul li a
+{
+	white-space:nowrap;
+}
+
+/* -- Main Menu-- */
+.Site #mainMenu 
+{
+	padding: 0;
+	margin: 0;
+	border-top:1px solid;
+	border-bottom:1px solid;
+}
+.Site #mainMenu ul, 
+.Site #mainMenu li, 
+.Site #subMenu ul, 
+.Site #subMenu li
+{
+    padding:0;
+    margin:0;
+}
+.Site #mainMenu li, 
+.Site #subMenu li
+{
+	list-style:none;
+	display:inline;
+}
+.Site #mainMenu ul li
+{
+    padding:7px 0 7px 0;
+}
+.Site #mainMenu ul a
+{
+	float:left;
+	padding:0px 14px;
+	text-decoration:none;
+	line-height:1.7em;
+	border-right:1px solid;
+}
+.Site #mainMenu ul li.last a
+{
+	border-right:0px solid;
+}
+.Site #mainMenu ul li
+{
+   border-right:0px solid;
+   float:left;
+}
+
+/* -- Top Sub Menu-- */
+.Site #mainMenu1,
+.Site #mainMenu2,
+.Site #mainMenu3,
+.Site #mainMenu4,
+.Site #mainMenu5
+{
+    border-bottom:1px solid;
+}
+.Site #mainMenu1 ul li,
+.Site #mainMenu2 ul li,
+.Site #mainMenu3 ul li,
+.Site #mainMenu4 ul li,
+.Site #mainMenu5 ul li
+{
+    list-style:none;
+    float:left;
+    padding:7px 0;
+}
+.Site #mainMenu1 ul li a,
+.Site #mainMenu2 ul li a,
+.Site #mainMenu3 ul li a,
+.Site #mainMenu4 ul li a,
+.Site #mainMenu5 ul li a
+{
+    padding:0px 14px;
+    border-right:1px solid;
+}
+
+/* -- Side Sub Menu-- */
+.Site #leftCol
+{
+    float:left;
+}
+.Site #subMenu
+{
+	float:left;
+}
+.Site #subMenu ul a
+{
+	line-height:1;
+	display:block;
+	padding:7px 0 7px 10px;
+	margin:0;
+}
+.Site #subMenu ul ul a
+{
+	padding-left:20px;
+}
+.Site #subMenu ul ul ul a
+{
+	padding-left:30px;
+}
+.Site #subMenu ul ul ul ul a
+{
+	padding-left:40px;
+}
+
+/*----------------------------------------------------------------------------------*/
+
+/* ################################## Footer ################################### */
+
+.Site #mainFooter
+{
+	border-top:1px solid;
+	border-bottom:1px solid;
+	padding:7px 0;
+}
+.Site #mainFooter p 
+{
+    margin-bottom:0px;
+}
+.Site #copyright
+{
+	float: left;
+	display: inline!important;
+}
+
+/* -- Developer Link -- */
+.Site #developerLink
+{
+	float: right;
+	display: inline!important;
+	text-align: right;
+	margin-top:0;
+}
+.Site #developerLink a
+{
+	background: transparent url(/ewcommon/images/eonic-web-logo-t-white.png) no-repeat 100% 40%;
+	line-height: 20px;
+	vertical-align:middle;
+	padding: 8px 70px 0px 0;
+	display: block;
+	font-size:70%;
+	color: #ccc;
+	margin-top:-7px;
+}
+.Site #developerLink a:hover
+{
+	background: transparent url(/ewcommon/images/eonic-web-logo-t-grey.png) no-repeat 100% 40%;
+	color: #444;
+}
+
+/*----------------------------------------------------------------------------------*/
+
+/* ############################### Detail Pages ############################ */
+.Site .detail IMG.picture
+{
+    margin-bottom: 10px;
+    margin-left: 15px;
+    position: relative;
+}
+.Site a.pdficon,
+.Site a.docicon,
+.Site a.zipicon,
+.Site a.xlsicon
+{
+    background-repeat:no-repeat;
+    padding-left:20px;
+}
+.Site span.price 
+{
+    font-size: 2em;
+    line-height: 1.5em;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* ################################## Forms ################################### */
+
+
+.Site .buttons input.button, 
+.Site .buttons input.principle, 
+.Site .buttons input.textButton
+{
+	background: #C3D418 none!important;
+	color: #000;
+	color: #000;
+}
+.Site .button,
+.Site .principle,
+.Site .ewXform input.principle,
+.Site .ewXform input.button
+{
+    border:0;
+    padding:5px 10px;
+}
+.Site .hint 
+{
+	line-height: 1.5em;
+}
+.Site .required 
+{
+	width: 250px;
+}
+.Site .dropdown, 
+.Site .textarea, 
+.Site .textbox,
+.Site .textBox,
+.Site .required
+{
+    WIDTH:250px;
+    font-size:1em;
+}
+
+.Site .formMainTable td,
+.Site .formMainTable th
+{
+   padding: 5px;     
+}
+.Site .label
+{
+	FONT-WEIGHT: bold;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* ############################### Header Info ############################ */
+
+.Site #headerInfo
+{
+	position:relative;
+	float:right;
+	width:400px;
+}
+.Site #headerInfo
+{
+	width:400px;
+}
+.Site #logonForm th, 
+.Site #logonForm td
+{
+	vertical-align:middle;
+}
+/*----------------------------------------------------------------------------------*/
+
+/* ############################### Membership and Cart Brief Styles ############################ */
+
+.Site #cartListing 
+{
+	margin-top: 10px;
+}
+.Site #cartBrief
+{
+	 float: right;
+	width:208px;
+	margin-right: 15px;
+	height: 52px;
+	margin-top: 17px;
+}
+.Site #loginBrief
+{
+    float: right;
+    margin-right: 15px;
+    width: 166px;
+}
+.Site .logincartContainer
+{
+    width:404px;
+    float:right;
+    clear:right;
+    margin-bottom:10px;
+}
+.Site .cartBriefWelcome 
+{
+    line-height:1.75em;
+    font-size: 1.077em;
+    font-weight: bold;
+}
+.Site .cartinfo 
+{
+	width: 151px;
+	float:right;
+	clear:right;
+	text-align:right;
+    display:inline;
+}
+.Site #itemCount 
+{
+	font-size: 1.5em;
+	float:left;
+}
+.Site #itemCountLabel
+{ 
+	font-size: 0.7em;
+	margin-right:5px;
+}
+.Site #itemTotal 
+{
+	font-size: 1.5em;
+	float:right;
+}
+.Site #cartBrief a.checkoutButton 
+{
+	display: block;
+	width: 60px;
+	height: 16px;
+	float:right;
+	margin-left: 14px;
+}
+.Site .cartDividerDots 
+{
+	width: 166px;
+	height: 1px;
+	float:right;
+	clear:right;
+	margin-bottom:6px;
+	border-bottom:1px dotted;
+}
+.Site p.loginText
+{
+    font-size: 0.9em;
+}
+.Site #cartBrief
+{
+	background: transparent url(/ewthemes/Classic/images/layout/cartBagIcon.png) no-repeat 0 0;
+}
+.Site #cartBrief a.basketButton, .Site #cartBrief a.checkoutButton 
+{
+	display: block;
+	width: 77px;
+	height: 17px;
+	background: transparent url(/ewthemes/Classic/images/layout/button_bg.png) repeat-x;
+	float:right;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	font-size:0.8em;
+	text-align:center;
+	padding-top:3px;
+}
+/*----------------------------------------------------------------------------------*/

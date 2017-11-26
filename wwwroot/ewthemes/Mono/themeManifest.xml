@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Theme name="Mono" category="business">
+	<Images>
+		<img src="/ewthemes/mono/images/Preview/monoHomeThumbnail.jpg" class="thumbnail"/>
+		<img src="/ewthemes/mono/images/Preview/monoHome.jpg" class="fullsize"/>
+	</Images>
+	<Description>
+    Mono Standard Theme
+  </Description>
+  <RootXslt src="/ewthemes/mono/standard.xsl"/>
+	<Licence type="" copyright=""/>
+	<Attribution></Attribution>
+	<Price>Free</Price>
+	<!--<ColourVersions>
+		<Colour name="Swampthing">
+			<Images>
+				<img src="/ewskins/corporate/thumbnail.jpg" class="thumbnail"/>
+				<img src="/ewskins/corporate/fullsize.jpg" class="fullsize"/>
+			</Images>
+		</Colour>
+	</ColourVersions>-->
+  
+  <!-- Layout Presets -->
+  <Preset name="layout">
+
+    <Layout name="Top Nav Left Side Sub">
+      <img src="images/preview/TopNavSideSub.gif" class="thumbnail"/>
+    </Layout>
+    <Layout name="Top Nav Right Side Sub">
+      <img src="images/preview/TopNavSideSub.gif" class="thumbnail"/>
+    </Layout>
+    <Layout name="Side Nav Left">
+      <img src="images/preview/SideNavLeft.gif" class="thumbnail"/>
+    </Layout>
+    <Layout name="Side Nav Right">
+      <img src="images/preview/SideNavLeft.gif" class="thumbnail"/>
+    </Layout>
+    <Layout name="Top Nav">
+      <img src="images/preview/TopNav.gif" class="thumbnail"/>
+    </Layout>
+
+  </Preset>
+
+  <!-- Colour Presets -->
+  <Preset name="colour">
+
+    <ColourScheme name="Blue Steel">
+      <colour name="font">#000000</colour>
+      <colour name="base">#8E8E8E</colour>
+      <colour name="primary">#6B8AAA</colour>
+      <colour name="secondary">#E26B00</colour>
+      <colour name="tertiary">#C1C1C1</colour>
+      <colour name="quartary">#666666</colour>
+    </ColourScheme>
+
+    <ColourScheme name="Red Steel">
+      <colour name="font">#000000</colour>
+      <colour name="base">#a2a2a2</colour>
+      <colour name="primary">#a20b0b</colour>
+      <colour name="secondary">#666</colour>
+      <colour name="tertiary">#C1C1C1</colour>
+      <colour name="quartary">#666666</colour>
+    </ColourScheme>
+
+    <ColourScheme name="Eonicweb">
+      <colour name="font">#000000</colour>
+      <colour name="base">#999999</colour>
+      <colour name="primary">#642d89</colour>
+      <colour name="secondary">#ef4135</colour>
+      <colour name="tertiary">#666666</colour>
+      <colour name="quartary">#C1C1C1</colour>
+    </ColourScheme>
+
+    <ColourScheme name="Dutch Retro Design">
+      <colour name="font">#000000</colour>
+      <colour name="base">#FF7500</colour>
+      <colour name="primary">#665130</colour>
+      <colour name="secondary">#EBB643</colour>
+      <colour name="tertiary">#DAC500</colour>
+      <colour name="quartary">#668E84</colour>
+    </ColourScheme>
+
+  </Preset>
+
+</Theme>
