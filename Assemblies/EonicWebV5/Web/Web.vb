@@ -167,6 +167,7 @@ Public Class Web
     Public mbSetNoBrowserCache As Boolean = False
     Public mcPageCacheFolder As String = "\ewCache"
     Private mcSessionReferrer As String = Nothing
+    Public mbPreview As Boolean = False
 
 
     Private _workingSetPrivateMemoryCounter As PerformanceCounter
@@ -675,31 +676,30 @@ Public Class Web
                                 gnResponseCode = 500
                             End If
 
-                        End If
-                    End If
-                End If
-
-                If mnArtId < 1 Then
-                    If Not moRequest("artid") = "" Then
-                        mnArtId = Me.GetRequestItemAsInteger("artid", 0)
-                    End If
-                End If
-
-                If ibIndexMode Then
-                    mbAdminMode = False
-                    mnUserId = 1
-                End If
-
-                ' Version Control: Set a permission state for this page.
-                ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
-
-                If Not moSession Is Nothing Then
-                    If gbVersionControl Then
-                        mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
                     End If
                 End If
             End If
 
+            If mnArtId < 1 Then
+                If Not moRequest("artid") = "" Then
+                    mnArtId = Me.GetRequestItemAsInteger("artid", 0)
+                End If
+            End If
+
+            If ibIndexMode Then
+                mbAdminMode = False
+                mnUserId = 1
+            End If
+
+            ' Version Control: Set a permission state for this page.
+            ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
+
+            If Not moSession Is Nothing Then
+                If gbVersionControl Then
+                    mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
+                End If
+                End If
+            End If
 
         Catch ex As Exception
 
@@ -4591,6 +4591,9 @@ Public Class Web
                 ' - checks for page level permissions (indicated by nUserId not being -1) - if these are returned they will need to cleaned up.
                 ' - enumerate who teh permissions have come from (indicated by nUserId not being -1 and badminMode being 1)
                 ' - exclude expired, not yet published and hidden pages if not in adminmode.
+
+
+
                 sSql = "EXEC getContentStructure_v2 @userId=" & nUserId & ", @bAdminMode=" & CInt(mbAdminMode) & ", @dateNow=" & Eonic.sqlDate(mdDate) & ", @authUsersGrp = " & nAuthUsers & ", @bReturnDenied=1"
 
                 sProcessInfo = "GetStructureXML-getContentStrcuture"
@@ -5463,6 +5466,10 @@ Public Class Web
                     GetPageContentXml(oElmt.GetAttribute("id"))
                     IsInTree = True
                 Next
+
+                If mbPreview And IsInTree = False Then
+                    GetPageContentXml(mnPageId)
+                End If
 
                 If Features.ContainsKey("PageVersions") Then
                     If IsInTree = False And mbAdminMode = True Then

@@ -1,29 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
   <xsl:import href="../Tools/Functions.xsl"/>
-  <xsl:import href="../xForms/xForms.xsl"/>
-  <xsl:import href="../xForms/xForms-bs.xsl"/>
+  <xsl:import href="../xForms/xForms-bs-mininal.xsl"/>
 
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml11.dtd" encoding="UTF-8"/>
   <xsl:template match="/">
     <xsl:apply-imports/>
   </xsl:template>
 
+  <xsl:template name="eonicwebLogo">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebLogo']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>/ewcommon/images/admin/skin/eonic5-admin-white.png</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  	<xsl:template name="eonicwebProductName">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>eonic</xsl:text>
+	      <strong>web</strong>
+	      <xsl:text>5</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+	</xsl:template>
+  
+  <xsl:template name="eonicwebCMSName">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebCMSName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCMSName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+		<xsl:call-template name="eonicwebProductName"/>
+		<xsl:text> - Content Management System</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+	</xsl:template>
+  
+  	<xsl:template name="eonicwebAdminSystemName">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+		<xsl:call-template name="eonicwebProductName"/>
+		<xsl:text> admin system</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+	</xsl:template>
+
+  <xsl:template name="eonicwebCopyright">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebCopyright']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        Eonic Associates LLP.
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="eonicwebSupportTelephone">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        +44 (0)1892 534044
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="eonicwebWebsite">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebWebsite']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>www.eonic.co.uk</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="eonicwebSupportEmail">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>support@eonic.co.uk</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  
+    <xsl:variable name="CMSName">
+      <xsl:call-template name="eonicwebProductName"/>
+    </xsl:variable>
+    
   <xsl:template match="Page">
+    <xsl:variable name="CMSLogo">
+      <xsl:call-template name="eonicwebLogo"/>
+    </xsl:variable>
     <html>
       <head>
-        <title>EonicWeb Setup and Maintenance Tool</title>
-	 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>eonicweb5 Setup and Maintenance Tool</title>
+	      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less" />
         <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.less" />
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js">&#160;</script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js">&#160;</script>
         <script src="/ewcommon/bs3/js/bootstrap.js">&#160;</script>
         <script src="/ewcommon/js/common.js" type="text/javascript">&#160;</script>
-	<script src="/ewcommon/js/ewAdmin.js" type="text/javascript">&#160;</script>
-	</head>
+	      <script src="/ewcommon/js/ewAdmin.js" type="text/javascript">&#160;</script>
+	    </head>
         <body class="ewAdmin setup">
           <div id="adminHeader" class="affix-top navbar-fixed-top">
+                  <div id="adminLogo" class="absolute-admin-logo">
+            <img src="{$CMSLogo}" alt="{$CMSName}" class="cms-logo"/>
+            <span class="hidden"><xsl:call-template name="eonicwebCMSName"/></span>
+             <h5>Setup &amp; Maintainance</h5>
+          </div>
             <nav class="navbar navbar-inverse admin-main-menu" role="navigation">
               <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-admin-navbar-collapse-1">
@@ -48,8 +152,9 @@
                 </a>
               </div>
               <ul class="nav navbar-nav">
-			<xsl:apply-templates select="AdminMenu/MenuItem" mode="adminMenuItem"/>
-	      </ul>
+			            <xsl:apply-templates select="AdminMenu/MenuItem" mode="adminMenuItem"/>
+	            </ul>
+              <xsl:if test="User">
               <ul class="nav navbar-nav navbar-right">
                 <li>
                   <a id="logoff" href="/?ewCmd=LogOff" title="Click here to log off from your active session">
@@ -58,6 +163,7 @@
                   </a>
                 </li>
               </ul>
+              </xsl:if>
             </nav>
             <nav class="navbar navbar-inverse admin-sub-menu hidden-xs" role="navigation">
               <div class="navbar-header">
@@ -95,9 +201,10 @@
 			</div>
 			<div id="footer">
 				<div id="footerCopyright" class="container text-muted">
-					© Eonic Associates LLP | 2002-2016
+					© Eonic Associates LLP | 2002-2018
 					T: +44 (0)1892 534044 |
-					E: <a href="mailto:info@eonic.co.uk" title="Email Eonic">info@eonic.co.uk</a>
+					E: <a href="mailto:support@eonic.co.uk" title="Email Eonic">support@eonic.co.uk</a>
+          W: <a href="http://www.eonicweb.net">www.eonicweb.net</a>
 				</div>
 			</div>
 		</body>
@@ -183,7 +290,36 @@
 
   <xsl:template match="Page[@layout='AdminXForm']" mode="SetupBody">
       <div class="adminTemplate" id="template_AdminXForm">
-        <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+        <div class="panel">
+          <div class="panel-body">
+            <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+          </div>
+        </div>
+      </div>
+  </xsl:template>
+  
+    <xsl:template match="Page[@layout='AdminXForm' and ContentDetail/Content[@name='WebSettings']]" mode="SetupBody">
+      <div class="adminTemplate" id="template_AdminXForm">
+        <br/>
+        <br/>
+        <h2>Welcome to your eonic<strong>web</strong>5 Setup</h2>
+        <div class="row">
+          <div class="col-md-6">
+            <h4>eonicweb5 requires access to a MS SQL Server Database.</h4>
+            <p>Before it will run you need to give it the connection details.</p>
+            <p>The servername will be hostname of the server hosting SQL Server. </p>
+            <p>If the DB Name specified does not exist it will be created as long as the username and password have sufficent access rights to do so.</p>
+            <p>If for any reason this step fails you can edit these settings directly in the /eonic.web.config file.</p>
+          </div>
+          <div class="col-md-6">
+            <div class="panel">
+              <div class="panel-body">
+                <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+              </div>
+            </div>
+            </div>
+          </div>
+      
       </div>
   </xsl:template>
 
@@ -191,7 +327,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>EonicWeb Setup and Maintenance</h1>
+          <h1>eonicweb5 Setup and Maintenance</h1>
         </div>
         <div class="content">
           Please choose an action.
@@ -204,7 +340,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>EonicWeb Database Setup</h1>
+          <h1>eonicweb5 Database Setup</h1>
         </div>
         <div class="content">
           Here you can:
@@ -228,7 +364,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>EonicWeb Database Maintenance</h1>
+          <h1>eonicweb5 Database Maintenance</h1>
         </div>
         <div class="content">
           <h2>Here you can:</h2>
@@ -260,7 +396,6 @@
         <div class="content">
           <xsl:choose>
             <xsl:when test="/Page/@Step=1">
-              <h3>Complete</h3>
               <xsl:call-template name="ProgressResponses"/>
             </xsl:when>
             <xsl:when test="/Page/@Step=2">
@@ -292,11 +427,14 @@
         <div class="content">
           <xsl:choose>
             <xsl:when test="/Page/@Step=1">
-              <h3>Completed</h3>
               <xsl:call-template name="ProgressResponses"/>
             </xsl:when>
             <xsl:when test="/Page/@Step=2">
+              <div class="panel panel-default">
+                <div class="panel-body">
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+                  </div>
+                  </div>
               <!--<xsl:call-template name="ProgressResponses"/>-->
             </xsl:when>
             <xsl:otherwise>
@@ -325,7 +463,6 @@
         <div class="content">
           <xsl:choose>
             <xsl:when test="/Page/@Step=1">
-              <h3>Completed</h3>
               <xsl:call-template name="ProgressResponses"/>
             </xsl:when>
             <xsl:when test="/Page/@Step=2">
@@ -388,7 +525,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>Update EonicWeb Database</h1>
+          <h1>Update eonicweb5 Database</h1>
         </div>
         <div class="content">
           <xsl:choose>
@@ -722,17 +859,32 @@
   </xsl:template>
 
   <xsl:template name="ProgressResponses">
-	  <div id="result" class="panel panel-default">
-    <xsl:if test="Contents/ProgressResponses/ProgressResponse">
-      <div class="panel-body content" style="width: 100%; height: 400px; overflow-y: scroll; scrollbar-arrow-color: blue; scrollbar-face-color: #e7e7e7; scrollbar-3dlight-color: #a0a0a0; scrollbar-darkshadow-color:#888888">
+	  <div class="panel panel-default">
+      <div id="result" class="panel-body content" style="width: 100%; height: 400px; overflow-y: scroll; scrollbar-arrow-color: blue; scrollbar-face-color: #e7e7e7; scrollbar-3dlight-color: #a0a0a0; scrollbar-darkshadow-color:#888888">
         <xsl:for-each select="Contents/ProgressResponses/ProgressResponse">
           <p>
             <xsl:value-of select="node()" disable-output-escaping="yes"/>
           </p>
         </xsl:for-each>
+        <xsl:text> </xsl:text>
       </div>
-    </xsl:if>
-     </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="completeModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times">&#160;</i></span></button>
+            <h4 class="modal-title" id="completeModal">Completed</h4>
+          </div>
+          <div class="modal-body">
+            <a id="completeButton" href="/" class="btn btn-success btn-lg btn-block">Go to your new website</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
   </xsl:template>
 
 

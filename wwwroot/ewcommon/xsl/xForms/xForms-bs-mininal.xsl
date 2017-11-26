@@ -2255,7 +2255,21 @@
     </option>
   </xsl:template>
 
-
+  <xsl:template match="item" mode="xform_select_multi">
+    <xsl:param name="selectedValues"/>
+    <xsl:variable name="value" select="value"/>
+    <option>
+      <xsl:attribute name="value">
+        <xsl:value-of select="value"/>
+      </xsl:attribute>
+      <xsl:if test="ms:node-set($selectedValues)/*[node()=$value]">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:copy-of select="label/node()"/>
+      <xsl:text> </xsl:text>
+    </option>
+  </xsl:template>
+  
   <!-- -->
   <xsl:template match="item" mode="xform_radiocheck">
     <xsl:param name="type"/>

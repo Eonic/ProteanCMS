@@ -9737,19 +9737,19 @@ ReturnMe:
             Dim cProcessInfo As String = "createDB"
             Try
                 Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
-                Dim myConn As SqlConnection = New SqlConnection("Data Source=" & oConfig("DatabaseServer") & "; Initial Catalog=master;" & oConfig("DatabaseAuth"))
+                Dim myConn As SqlConnection = New SqlConnection("Data Source=" & oConfig("DatabaseServer") & "; Initial Catalog=master;" & GetDBAuth())
                 Dim sSql As String
                 oConn = myConn
 
                 sSql = "select db_id('" & DatabaseName & "')"
                 If ExeProcessSqlScalar(sSql) Is Nothing Then
                     ExeProcessSql("CREATE DATABASE " & DatabaseName)
+                    oConn = Nothing
+                    Return True
                 Else
                     oConn = Nothing
-                    Return False
+                    Return True
                 End If
-                oConn = Nothing
-                Return True
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, ""))

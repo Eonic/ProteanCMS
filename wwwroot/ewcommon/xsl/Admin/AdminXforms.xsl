@@ -1564,16 +1564,17 @@
       </xsl:choose>
     </xsl:variable>
     <!--This way we get the type of content we relate to dynamically-->
-    <table class="AdminRelatedContent table">
-      <tr>
-        <th>
+    <div class="form-group">
+
+      
+        <label for="Related_{$relationType}">
           <xsl:if test="$relationType!=''">
             <label>
               <xsl:value-of select="$relationType"/>
             </label>
           </xsl:if>
           <!--<small>-->
-          <br/>
+
           <xsl:choose>
             <xsl:when test="contains(@direction,'1way')">
               <xsl:text> (1 Way Relationship)</xsl:text>
@@ -1586,8 +1587,8 @@
             </xsl:otherwise>
           </xsl:choose>
           <!--</small>-->
-        </th>
-        <th class="relatedOptionsButton">
+        </label>
+      <div class="form-group">
           <xsl:choose>
             <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
               Copy the following relationships
@@ -1596,9 +1597,23 @@
               <xsl:variable name="contentCount" select="count(ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType])"/>
               <!-- Limit Number of Related Content-->
               <xsl:if test="contains(@search,'pick')">
+                <xsl:variable name="valueList">
+                  <list>
+                    <xsl:for-each select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
+                      <item><xsl:value-of select="@id"/></item>
+                    </xsl:for-each>
+                  </list>
+                </xsl:variable>
                 <xsl:variable name="value" select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')][1]/@id"/>
-                <div class="input-group">
                   <select name="Related-{$relationType}" id="Related_{$relationType}" class="form-control">
+                    <xsl:if test="@maxRelationNo &gt; 1">
+                      <xsl:attribute name="multiple">multiple</xsl:attribute>
+                    </xsl:if>
+                    <xsl:if test="@size &gt; 1">
+                      <xsl:attribute name="size">
+                        <xsl:value-of select="@size"/>
+                      </xsl:attribute>
+                    </xsl:if>
                     <xsl:variable name="reationPickList">
                       <xsl:call-template name="getSelectOptionsFunction">
                         <xsl:with-param name="query">
@@ -1608,10 +1623,14 @@
                       </xsl:call-template>
                     </xsl:variable>
                     <option value="">None  </option>
-                    <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select">
-                      <xsl:with-param name="selectedValue" select="$value"/>
+                    <xsl:apply-templates select="ms:node-set($reationPickList)/select1/*" mode="xform_select_multi">
+                      <xsl:with-param name="selectedValues" select="$valueList"/>
                     </xsl:apply-templates>
                   </select>
+                <xsl:if test="@maxRelationNo &gt; 1">
+                  <div class="alert alert-info">
+                    <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option</div>
+                </xsl:if>
                   <xsl:if test="contains(@search,'add')">
                     <span class="input-group-btn">
                       <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
@@ -1621,7 +1640,7 @@
                       </button>
                     </span>
                   </xsl:if>
-                </div>
+               
               </xsl:if>
               <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
                 <xsl:if test="contains(@search,'find')">
@@ -1642,8 +1661,6 @@
             </xsl:otherwise>
           </xsl:choose>
 
-        </th>
-      </tr>
       <xsl:if test="not(contains(@search,'pick'))">
         <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
           <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
@@ -1652,7 +1669,8 @@
           <xsl:with-param name="relationDirection" select="$RelType" />
         </xsl:apply-templates>
       </xsl:if>
-    </table>
+      </div>
+    </div>
   </xsl:template>
 
   <xsl:template match="Content" mode="relatedRow">

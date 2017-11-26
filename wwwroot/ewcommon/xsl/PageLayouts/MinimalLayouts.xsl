@@ -7529,7 +7529,9 @@
         <xsl:value-of select="Name/node()"/>
       </h1>
       <div class="tags cols cols3">
-        <xsl:apply-templates select="Content" mode="displayBrief"/>
+        <xsl:apply-templates select="Content" mode="displayBrief">
+          <xsl:sort select="@publish" order="descending"/>
+        </xsl:apply-templates>
         <xsl:text> </xsl:text>
       </div>
       <!-- Terminus class fix to floating content -->

@@ -198,6 +198,20 @@ Public Class Setup
         End If
     End Sub
 
+    Sub AddResponseComplete(ByVal cResponse As String, ByVal LinkPath As String)
+        If cPostFlushActions = "" Then
+            If Not oResponse Is Nothing Then
+                Dim oElmt As XmlElement = oResponse.OwnerDocument.CreateElement("ProgressResponse")
+                oElmt.InnerText = cResponse
+                oResponse.AppendChild(oElmt)
+            End If
+        Else
+            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#completeButton').attr('href','" & LinkPath & "');</script>" & vbCrLf)
+            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#completeButton').html('" & cResponse & "');</script>" & vbCrLf)
+            goResponse.Write("<script language=""javascript"" type=""text/javascript"">$('#completeModal').modal('show');</script>" & vbCrLf)
+        End If
+    End Sub
+
     Sub AddResponseError(ByVal oEx As Exception, Optional ByVal cProcessInfo As String = "")
         If cPostFlushActions = "" Then
             AddResponse(Replace(Replace(Replace(oEx.ToString, Chr(13), "<br/>"), "&gt;", ">"), "&lt;", "<"))
@@ -223,7 +237,7 @@ Public Class Setup
             sProcessInfo = "Transform PageXML using XSLT"
 
             If msRedirectOnEnd <> "" And cPostFlushActions = "" Then
-                '    goResponse.Redirect(msRedirectOnEnd)
+                goResponse.Redirect(msRedirectOnEnd)
                 Exit Sub
             End If
 
@@ -308,6 +322,19 @@ Public Class Setup
                 buildDatabase(False)
             Case "UpgradeDB"
                 UpdateDatabase()
+            Case "NewDB"
+                buildDatabase(True)
+            Case "RestoreZip"
+                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                Dim oDB As New Eonic.Tools.Database
+
+                oDB.DatabaseServer = goConfig("DatabaseServer")
+                oDB.DatabaseUser = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                oDB.DatabasePassword = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                oDB.FTPUser = goConfig("DatabaseFtpUsername")
+                oDB.FtpPassword = goConfig("DatabaseFtpPassword")
+                oDB.RestoreDatabase(goConfig("DatabaseName"), goRequest.Form("ewDatabaseFilename"))
+
         End Select
 
     End Sub
@@ -385,19 +412,16 @@ Public Class Setup
                 mnUserId = CInt(goSession("nUserId"))
             End If
 Recheck:
-
             If goConfig("DatabaseName") = Nothing Then
-
                 'Step 1. Create a Web.Config and various other files.
 
                 Dim oSetXfm As SetupXforms = New SetupXforms(Me)
                 oPageDetail.AppendChild(oSetXfm.xFrmWebSettings())
                 moPageXml.DocumentElement.SetAttribute("layout", "AdminXForm")
-
                 If oSetXfm.valid And (goSession("nUserId") Is Nothing Or goSession("nUserId") = 0) Then
                     goSession("nUserId") = 1
                     msRedirectOnEnd = "/ewcommon/setup/?ewCmd=NewV4&ewCmd2=Do"
-                    GoTo Recheck
+                    ' GoTo Recheck
                 End If
 
             ElseIf mbSchemaExists = False Then
@@ -406,6 +430,7 @@ Recheck:
                 oPageDetail.AppendChild(oSetXfm.xFrmNewDatabase())
                 If oSetXfm.valid Then
                     cStep = 1
+                    cPostFlushActions = "NewDB"
                 Else
                     cStep = 2
                 End If
@@ -664,6 +689,7 @@ Recheck:
         Try
 
             Dim commonfolders As New ArrayList
+            Dim oFS As New fsHelper
 
             myWeb.InitializeVariables()
 
@@ -671,13 +697,21 @@ Recheck:
                 filePath = AltFolder.TrimEnd("/\".ToCharArray) & "/sqlupdate/DatabaseUpgrade.xml"
                 If Not String.IsNullOrEmpty(AltFolder) Then
                     AddResponse("Running: " & filePath)
-                    UpdateDatabase(filePath)
+                    If oFS.VirtualFileExists(filePath) Then
+                        UpdateDatabase(filePath)
+                    Else
+                        AddResponse("No Common Upgrades Found")
+                    End If
                 Else
-                    AddResponse("Not Running: " & filePath)
+                        AddResponse("Not Running: " & filePath)
                 End If
             Next
-
-            UpdateDatabase("/sqlupdate/DatabaseUpgrade.xml")
+            If oFS.VirtualFileExists("/sqlupdate/DatabaseUpgrade.xml") Then
+                UpdateDatabase("/sqlupdate/DatabaseUpgrade.xml")
+            Else
+                AddResponse("No Bespoke Upgrades Found")
+            End If
+            AddResponse("Database Upgrade Complete")
 
         Catch ex As Exception
             AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
@@ -889,6 +923,8 @@ Recheck:
             End If
 
             UpdateDatabase()
+
+            AddResponseComplete("Congratulations - Go to your new Website", "/")
 
             Return saveVersionNumber()
 
@@ -1933,11 +1969,11 @@ DoOptions:
 
                 MyBase.submission("WebSettings", "", "post", "form_check(this)")
 
-                oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "WebSettings", "", "Setup eonicweb5")
+                oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "WebSettings", "", "Enter your MS SQL connection details")
 
                 MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please enter your database connection details.")
 
-                MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Servername")
+                MyBase.addInput(oFrmElmt, "ewDatabaseServer", True, "DB Server Hostname")
                 MyBase.addBind("ewDatabaseServer", "web/add[@key='DatabaseServer']/@value", "true()")
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "DB Name")
@@ -1946,7 +1982,7 @@ DoOptions:
                 MyBase.addInput(oFrmElmt, "ewDatabaseUsername", True, "DB Username")
                 MyBase.addBind("ewDatabaseUsername", "web/add[@key='DatabaseUsername']/@value", "false()")
 
-                MyBase.addInput(oFrmElmt, "ewDatabasePassword", True, "DB Password")
+                MyBase.addInput(oFrmElmt, "ewDatabasePassword", True, "DB Password / CMS Admin Password")
                 MyBase.addBind("ewDatabasePassword", "web/add[@key='DatabasePassword']/@value", "false()")
 
                 MyBase.addInput(oFrmElmt, "ewSiteAdminEmail", True, "Webmaster Email")
@@ -1957,14 +1993,20 @@ DoOptions:
                 'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                 'Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
-                If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
+                '  Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                '  If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
-                    'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
-                    Dim oDefaultCfgXml As New XmlDocument
+                'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
+                Dim oDefaultCfgXml As New XmlDocument
+
+                If oFsh.VirtualFileExists("/eonic.web.config") Then
+                    oDefaultCfgXml.Load(goServer.MapPath("/eonic.web.config"))
+                Else
                     oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config.xml"))
+                End If
 
-                    MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
+
+                MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
 
                     'code here to replace any missing nodes
                     'all of the required config settings
@@ -1972,68 +2014,70 @@ DoOptions:
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-                        If MyBase.valid Then
+                    If MyBase.valid Then
 
-                            'lets insure all the essential files are in place
-                            Dim CreateDirs As New FileStructureSetup
-                            If Not CreateDirs.Execute() Then
+                        'lets insure all the essential files are in place
+                        ' Dim CreateDirs As New FileStructureSetup
+                        'If Not CreateDirs.Execute() Then
 
-                                MyBase.valid = False
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
+                        'MyBase.valid = False
+                        'MyBase.addNote(oFrmElmt, noteTypes.Alert, CreateDirs.errMsg)
 
+                        'Else
+
+                        Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+
+                        If Not oCfg Is Nothing Then
+                            Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
+                            Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
+                            If Not oCgfSect Is Nothing Then
+                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
+                                oCfg.Save()
                             Else
-
-                                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
-
-                                If Not oCfg Is Nothing Then
-                                    Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
-                                    Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
-                                    If Not oCgfSect Is Nothing Then
-                                        oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                        oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                        'oRwSect.SectionInformation.SetRawXml(oDefaultCfgXml.SelectSingleNode("/configuration/system.webServer").OuterXml)
-                                        oCfg.Save()
-                                    Else
-                                        'update config based on form submission
-                                        oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
-                                        'save as web.config in the root
-                                        oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
-                                    End If
-                                Else
-                                    'update config based on form submission
-                                    oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
-                                    'save as web.config in the root
-                                    oDefaultCfgXml.Save(goServer.MapPath("web.config"))
-                                End If
-
-                                'Now lets create the database
-                                Dim oDbt As New Eonic.Web.dbHelper(Nothing)
-                                Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
-                                If oDbt.createDB(sDbName) Then
-                                    'success
-                                    MyBase.valid = True
-                                Else
-                                    MyBase.valid = False
-                                End If
-                                oDbt = Nothing
+                                'update config based on form submission
+                                oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                                'save as web.config in the root
+                                oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
                             End If
-                            CreateDirs = Nothing
-
+                        Else
+                            'update config based on form submission
+                            oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                            'save as web.config in the root
+                            oDefaultCfgXml.Save(goServer.MapPath("web.config"))
                         End If
-                    End If
-                    oImp.UndoImpersonation()
-                    'lets take a guess at the DB Name
-                    If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
-                        Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = GuessDBName()
+
+                        'Now lets create the database
+                        Dim oDbt As New Eonic.Web.dbHelper(Nothing)
+                        Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
+                        If oDbt.createDB(sDbName) Then
+                            'success
+                            MyBase.valid = True
+                        Else
+                            MyBase.valid = False
+                            MyBase.addNote(oFrmElmt, noteTypes.Hint, "These database connection details could not connect.")
+                        End If
+                        oDbt = Nothing
                     End If
 
-                    If Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "" Then
-                        Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "4.1.0.0"
-                    End If
+                    'CreateDirs = Nothing
 
-                Else
-                    MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
                 End If
+                ' End If
+                '  oImp.UndoImpersonation()
+                'lets take a guess at the DB Name
+                If Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = "" Then
+                    Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText = GuessDBName()
+                End If
+
+                ' If Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "" Then
+                '   Instance.SelectSingleNode("web/add[@key='VersionNumber']/@value").InnerText = "4.1.0.0"
+                ' End If
+
+                ' Else
+                '  MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
+                ' End If
 
                 MyBase.addValues()
                 Return MyBase.moXformElmt
@@ -2220,12 +2264,12 @@ DoOptions:
 
                 oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "NewDatabase", "", "New Database")
 
-                MyBase.addNote(oFrmElmt, noteTypes.Hint, "Please select the type of database to create.")
+                MyBase.addNote(oFrmElmt, noteTypes.Hint, "Create the eonicweb5 Database Tables")
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "Database Name")
                 MyBase.addBind("ewDatabaseName", "restore/@name", "true()")
 
-                Dim sel1 As XmlElement = MyBase.addSelect1(oFrmElmt, "ewDatabaseFilename", True, "Select a the type of DB you want to install", "", Eonic.xForm.ApperanceTypes.Full)
+                Dim sel1 As XmlElement = MyBase.addSelect1(oFrmElmt, "ewDatabaseFilename", True, "Install Empty DB or one containing sample data which would be better for initial evaluation of the platform", "", Eonic.xForm.ApperanceTypes.Full)
                 MyBase.addOption(sel1, "Empty Database", "NewV4")
                 MyBase.addOptionsFilesFromDirectory(sel1, DatabaseFilepath, "zip")
                 MyBase.addBind("ewDatabaseFilename", "restore/@filename", "false()")
@@ -2242,23 +2286,12 @@ DoOptions:
                     If MyBase.valid Then
                         DatabaseFilename = goRequest("ewDatabaseFilename")
                         If DatabaseFilename = "NewV4" Then
-                            mySetup.buildDatabase(True)
+                            '  mySetup.buildDatabase(True)
+                            mySetup.cPostFlushActions = "NewDB"
                         Else
+                            mySetup.cPostFlushActions = "RestoreZip"
 
-                            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
-                            Dim oDB As New Eonic.Tools.Database
-                            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
-                                oDB.DatabaseServer = goConfig("DatabaseServer")
-                                oDB.DatabaseUser = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                oDB.DatabasePassword = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                oDB.FTPUser = goConfig("DatabaseFtpUsername")
-                                oDB.FtpPassword = goConfig("DatabaseFtpPassword")
-                                oDB.RestoreDatabase(DatabaseName, DatabaseFilename)
-                                oImp.UndoImpersonation()
-                            Else
-                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "Admin credentials need to be configured correctly in the web.config", True)
-                            End If
 
                         End If
                     End If
@@ -2360,24 +2393,24 @@ Public Class FileStructureSetup
             If Not IO.Directory.Exists(goServer.MapPath(docMediaPath)) Then
                 IO.Directory.CreateDirectory(goServer.MapPath(docMediaPath))
             End If
-            If Not IO.Directory.Exists(goServer.MapPath("/ewThemes")) Then
-                IO.Directory.CreateDirectory(goServer.MapPath("/ewThemes"))
-            End If
-            'now unzip a standard theme
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/ewThemes/mono.zip"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip"))
-            End If
+            'If Not IO.Directory.Exists(goServer.MapPath("/ewThemes")) Then
+            '    IO.Directory.CreateDirectory(goServer.MapPath("/ewThemes"))
+            'End If
+            ''now unzip a standard theme
+            'If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip")) Then
+            '    IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/ewThemes/mono.zip"), _
+            '     goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip"))
+            'End If
 
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono/standard.xsl")) Then
-                Try
-                    Dim fz As New ICSharpCode.SharpZipLib.Zip.FastZip
-                    fz.ExtractZip(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip"), goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/"), "")
-                Catch ex As Exception
-                    'do nothing
-                    errMsg = "Mono Theme did not extract"
-                End Try
-            End If
+            'If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono/standard.xsl")) Then
+            '    Try
+            '        Dim fz As New ICSharpCode.SharpZipLib.Zip.FastZip
+            '        fz.ExtractZip(goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/mono.zip"), goServer.MapPath(goConfig("ProjectPath") & "/ewThemes/"), "")
+            '    Catch ex As Exception
+            '        'do nothing
+            '        errMsg = "Mono Theme did not extract"
+            '    End Try
+            'End If
 
             'End If
             'oImp.UndoImpersonation()
