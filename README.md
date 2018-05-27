@@ -4,6 +4,8 @@
 ## Project Description
 EonicWeb5 CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
 
+The CMS contains full eCommerce and user membership functionality.
+
 ## Background
 Developed over 14 years by leading web design company eonic.co.uk it has been used on hundreds of web projects and has the capacity to cope with almost any customer requirement.
 
