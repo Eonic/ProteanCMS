@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="5.0.121.0">
+<DatabaseUpgrade LatestVersion="5.0.159.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -365,6 +365,14 @@
           <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.121.0/tblContent.sql"/>
         </Sub3>
       </Sub2>
+      <Sub2 Number="159">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.159.0/tblSubscription.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.159.0/tblCartItem.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.159.0/tblSubscriptionRenewal.sql"/>
+        </Sub3>
+      </Sub2>
+      
     </Sub1>
   </Version>
 </DatabaseUpgrade>

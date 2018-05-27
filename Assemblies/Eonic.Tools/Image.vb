@@ -460,15 +460,12 @@ Public Class Image
 
                     System.IO.File.Delete(szFileName)
 
-                    Using m = New MemoryStream()
-                        theImg.Save(m, ImageFormat.Jpeg)
-                        Dim img = Image.FromStream(m)
-                        img.Save(szFileName)
-                    End Using
+                    Dim newImg As New Bitmap(theImg)
+                    theImg.Dispose()
+                    theImg = Nothing
+                    newImg.Save(szFileName, ici, eps)
 
-                    ' theImg.Save(szFileName)
                 End Try
-
 
                 Dim imgFile As New FileInfo(szFileName)
                 If compression = 100 Then
@@ -702,6 +699,103 @@ Public Class Image
 
         Catch ex As Exception
             Return imgPhoto
+        End Try
+
+    End Function
+
+
+    Public Function AddWatermark(ByVal _WatermarkText As String, _WatermarkImgPath As String) As System.Drawing.Image
+
+        Try
+
+            Dim phWidth As Integer = oImg.Width
+            Dim phHeight As Integer = oImg.Height
+
+            Dim bmPhoto As New Bitmap(phWidth, phHeight, PixelFormat.Format24bppRgb)
+            bmPhoto.SetResolution(72, 72)
+
+            Dim grPhoto As Graphics = Graphics.FromImage(bmPhoto)
+
+            grPhoto.SmoothingMode = SmoothingMode.AntiAlias
+            grPhoto.DrawImage(oImg, New Rectangle(0, 0, phWidth, phHeight), 0, 0, phWidth, phHeight, GraphicsUnit.Pixel)
+
+
+            ' Write the Watermark Text centred at the bottom of the image
+            ' Check the font size
+            Dim sizes As Integer() = New Integer() {48, 24, 20, 16, 14, 12, 10, 8, 6, 4}
+            Dim crFont As Font = Nothing
+            Dim crSize As New SizeF()
+            For i As Integer = 0 To 9
+                crFont = New Font("arial", sizes(i), FontStyle.Bold)
+                crSize = grPhoto.MeasureString(_WatermarkText, crFont)
+
+                If CUShort(crSize.Width) < CUShort(phWidth * 0.66) Then
+                    Exit For
+                End If
+            Next
+            'Place at the bottom
+            Dim yPixlesFromBottom As Integer = CInt(Math.Truncate(phHeight * 0.05))
+            Dim yPosFromBottom As Single = ((phHeight - yPixlesFromBottom) - (crSize.Height / 2))
+            Dim xCenterOfImg As Single = (phWidth / 2)
+
+            'Write the text
+            Dim StrFormat As New StringFormat()
+            StrFormat.Alignment = StringAlignment.Center
+
+            Dim semiTransBrush2 As New SolidBrush(Color.FromArgb(153, 0, 0, 0))
+
+            grPhoto.DrawString(_WatermarkText, crFont, semiTransBrush2, New PointF(xCenterOfImg + 1, yPosFromBottom + 1), StrFormat)
+
+            Dim semiTransBrush As New SolidBrush(Color.FromArgb(153, 255, 255, 255))
+
+            grPhoto.DrawString(_WatermarkText, crFont, semiTransBrush, New PointF(xCenterOfImg, yPosFromBottom), StrFormat)
+
+            'Now add the image watermark
+            If _WatermarkImgPath <> "" Then
+
+                Dim imgWatermark As System.Drawing.Image = System.Drawing.Image.FromFile(_WatermarkImgPath)
+                Dim wmWidth As Integer = imgWatermark.Width
+                Dim wmHeight As Integer = imgWatermark.Height
+
+                Dim bmWatermark As New Bitmap(bmPhoto)
+                bmWatermark.SetResolution(oImg.HorizontalResolution, oImg.VerticalResolution)
+
+                Dim grWatermark As Graphics = Graphics.FromImage(bmWatermark)
+
+
+                Dim imageAttributes As New ImageAttributes()
+                Dim colorMap As New ColorMap()
+
+                colorMap.OldColor = Color.FromArgb(255, 0, 255, 0)
+                colorMap.NewColor = Color.FromArgb(0, 0, 0, 0)
+                Dim remapTable As ColorMap() = {colorMap}
+
+                imageAttributes.SetRemapTable(remapTable, ColorAdjustType.Bitmap)
+
+                Dim colorMatrixElements As Single()() = {New Single() {1.0F, 0F, 0F, 0F, 0F}, New Single() {0F, 1.0F, 0F, 0F, 0F}, New Single() {0F, 0F, 1.0F, 0F, 0F}, New Single() {0F, 0F, 0F, 1.0F, 0F}, New Single() {0F, 0F, 0F, 0F, 1.0F}}
+
+                Dim wmColorMatrix As New ColorMatrix(colorMatrixElements)
+
+                imageAttributes.SetColorMatrix(wmColorMatrix, ColorMatrixFlag.[Default], ColorAdjustType.Bitmap)
+
+                Dim xPosOfWm As Integer = 0
+                Dim yPosOfWm As Integer = 0
+
+                grWatermark.DrawImage(imgWatermark, New Rectangle(xPosOfWm, yPosOfWm, wmWidth, wmHeight), 0, 0, wmWidth, wmHeight, GraphicsUnit.Pixel, imageAttributes)
+
+                oImg = bmWatermark
+
+
+                grWatermark.Dispose()
+            Else
+                oImg = bmPhoto
+            End If
+            ' Save(cLocation)
+            Return oImg
+            grPhoto.Dispose()
+
+        Catch ex As Exception
+            Return oImg
         End Try
 
     End Function

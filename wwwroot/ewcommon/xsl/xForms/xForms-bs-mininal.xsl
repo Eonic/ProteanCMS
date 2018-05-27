@@ -158,6 +158,7 @@
         <xsl:if test="@id!=$selectedCase and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>
+        <xsl:text> form-group</xsl:text>
       </xsl:attribute>
 
 
@@ -189,8 +190,8 @@
   <!-- ========================== GROUP Horizontal ========================== -->
   <!-- -->
   <xsl:template match="group[contains(@class,'horizontal_cols') and parent::group] | repeat[contains(@class,'horizontal_cols') and parent::group]" mode="xform">
-    <li>
-      <table cellspacing="0">
+    <div class="responsive-table">
+      <table cellspacing="0" class="table form-columns">
         <thead>
           <xsl:if test="label">
             <tr>
@@ -206,11 +207,13 @@
           </xsl:apply-templates>
           <tr class="horizontal_cols_header">
             <xsl:for-each select="group[1] | repeat[1]">
-              <xsl:if test="label">
-                <th>&#160;</th>
-              </xsl:if>
-              <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert" mode="xform_header"/>
-            </xsl:for-each>
+              <xsl:for-each select="input | secret | select | select1 | range | textarea | upload | hint | help | alert">
+                <th>
+                  <xsl:apply-templates select="." mode="xform_header"/>
+                  <xsl:text> </xsl:text>
+                </th>
+              </xsl:for-each>
+              </xsl:for-each>
           </tr>
         </thead>
         <tbody>
@@ -238,12 +241,12 @@
           </xsl:for-each>
         </tbody>
       </table>
-    </li>
+    </div>
     <xsl:if test="count(submit | trigger) &gt; 0">
-      <li>
+      <div>
         <!-- For xFormQuiz change how these buttons work -->
         <xsl:apply-templates select="submit | trigger" mode="xform"/>
-      </li>
+      </div>
     </xsl:if>
   </xsl:template>
 
@@ -974,21 +977,19 @@
             <xsl:value-of select="$value"/>
           </xsl:attribute>
         </xsl:when>
-
-
         <xsl:otherwise>
-
           <xsl:if test="$inlineHint!=''">
             <xsl:attribute name="placeholder">
               <xsl:value-of select="$inlineHint"/>
             </xsl:attribute>
           </xsl:if>
-
-
-
         </xsl:otherwise>
       </xsl:choose>
-
+      <xsl:if test="@autocomplete!=''">
+        <xsl:attribute name="autocomplete">
+          <xsl:value-of select="@autocomplete"/>
+        </xsl:attribute>
+      </xsl:if>
     </input>
   </xsl:template>
 
@@ -1863,7 +1864,7 @@
     </xsl:variable>
     <xsl:variable name="dependantClass">
       <xsl:value-of select="translate($ref,'[]#=/','')"/>
-      <xsl:text>-dependant</xsl:text>
+      <xsl:text>-dependant form-group</xsl:text>
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="name()='group'">
@@ -2195,7 +2196,7 @@
       </span>
     </xsl:if>
 
-    <div class="{@class}">
+    <div class="{@class} list-group">
       <xsl:choose>
         <!-- when Query to get select options -->
         <xsl:when test="contains(@class,'ewQuery')">
@@ -2218,6 +2219,7 @@
           <xsl:apply-templates select="item | choices" mode="xform_radiocheck">
             <xsl:with-param name="type">checkbox</xsl:with-param>
             <xsl:with-param name="ref" select="$ref"/>
+            <xsl:with-param name="class" select="'list-item-group'"/>
           </xsl:apply-templates>
         </xsl:otherwise>
 
@@ -2462,7 +2464,6 @@
     <xsl:variable name="value" select="value"/>
     <xsl:variable name="class" select="../@class"/>
     <span>
-      test
       <xsl:attribute name="class">
         <xsl:text>radiocheckbox</xsl:text>
         <xsl:if test="contains($class,'multiline')">

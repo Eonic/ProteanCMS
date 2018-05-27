@@ -302,6 +302,7 @@ Public Class Xml
                     'undo any attributes
                     cXpath = Replace(cXpath, "/ews:@", "/@")
                     cXpath = Replace(cXpath, "[ews:@", "[@")
+                    cXpath = Replace(cXpath, "[ews:position()", "[position()")
                 End If
             End If
 
@@ -930,6 +931,40 @@ Public Class Xml
         End Try
     End Function
 
+    Public Shared Function convertEntitiesToCodesFast(ByVal sString As String) As String
+        Try
+            Dim startString As String = sString
+            If sString Is Nothing Then
+                Return ""
+            Else
+
+                sString = Replace(sString, "Xmlns=""""", "")
+
+                Dim chars As Char() = sString.ToCharArray()
+                Dim result As StringBuilder = New StringBuilder(sString.Length + CInt((sString.Length * 0.1)))
+                For Each c As Char In chars
+                    Dim value As Integer = Convert.ToInt32(c)
+                    If value > 127 Then result.AppendFormat("&#{0};", value) Else result.Append(c)
+                Next
+
+                sString = result.ToString()
+
+                If sString Is Nothing Then
+                    Return ""
+                Else
+                    sString = Regex.Replace(sString, "&(?!#?\w+;)", "&amp;")
+                    Return sString
+                End If
+
+
+            End If
+
+        Catch ex As Exception
+            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToCodes", ex, ""))
+            Return ""
+        End Try
+    End Function
+
 
     Public Shared Function convertEntitiesToString(ByVal sString As String) As String
         Try
@@ -1094,6 +1129,40 @@ Public Class Xml
 
     End Sub
 
+    Public Shared Function XmltoDictionary(oXml As XmlElement) As System.Collections.Generic.Dictionary(Of String, String)
+        Try
+
+            Dim myDict = New System.Collections.Generic.Dictionary(Of String, String)
+
+            XmltoDictionaryNode(oXml, myDict, oXml.Name())
+
+            Return myDict
+
+        Catch ex As Exception
+            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionary", ex, ""))
+        End Try
+    End Function
+
+    Private Shared Sub XmltoDictionaryNode(oThisElmt As XmlElement, ByRef myDict As Dictionary(Of String, String), ByVal Prefix As String)
+        Dim oElmt As XmlElement
+        Try
+            For Each Attribute As XmlAttribute In oThisElmt.Attributes
+                myDict.Add(Prefix & ".-" & Attribute.Name, Attribute.Value)
+            Next
+            If oThisElmt.SelectNodes("*").Count = 0 Then
+                If oThisElmt.InnerText <> "" And Not (myDict.ContainsKey(Prefix & "." & oThisElmt.Name)) Then
+                    myDict.Add(Prefix, oThisElmt.InnerText)
+                End If
+            Else
+                For Each oElmt In oThisElmt.SelectNodes("*")
+                    XmltoDictionaryNode(oElmt, myDict, Prefix & "." & oElmt.Name())
+                Next
+            End If
+        Catch ex As Exception
+            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""))
+        End Try
+    End Sub
+
 #End Region
 
 
@@ -1161,6 +1230,7 @@ Public Class Xml
     Public Shared Sub AddExistingNode(ByRef nodeToAddTo As XmlNode, ByVal nodeToBeAdded As XmlNode)
         nodeToAddTo.AppendChild(nodeToAddTo.OwnerDocument.ImportNode(nodeToBeAdded, True))
     End Sub
+
 
 
     Public Class XmlNoNamespaceWriter
@@ -1326,6 +1396,8 @@ Public Class Xml
                             Me.Read()
                         End If
                         Return builder.ToString()
+                    Case Else
+                        Return Nothing
                 End Select
                 builder.Append(ChrW(num))
             End While

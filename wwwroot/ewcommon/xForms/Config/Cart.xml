@@ -23,6 +23,7 @@
         <add key="DeliveryAddressXForm" value="" />
         <add key="MerchantEmailTemplatePath" value="..\xsl\cart\mailOrderMerchant.xsl" />
         <add key="CustomerEmailTemplatePath" value="..\xsl\cart\mailOrderCustomer.xsl" />
+        <add key="CustomerEmailShippedTemplatePath" value="..\xsl\cart\mailOrderCustomerDelivery.xsl" />
         <add key="NoDeliveryAddress" value="off" />
         <add key="SavePayments" value="on" />
         <add key="VatAtUnit" value="on" />
@@ -33,6 +34,7 @@
         <add key="ClearOnAdd" value="off" />
         <add key="DontTaxShipping" value="off" />
         <add key="DefaultDeliveryCountry" value="" />
+        <add key="ShippedValidation" value="on" />
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -55,6 +57,7 @@
     <bind id="ewEmailReceipts" nodeset="cart/add[@key='EmailReceipts']/@value" required="true()" type="string" />
     <bind id="ewMerchantEmailTemplatePath" nodeset="cart/add[@key='MerchantEmailTemplatePath']/@value" required="false()" type="string" />
     <bind id="ewCustomerEmailTemplatePath" nodeset="cart/add[@key='CustomerEmailTemplatePath']/@value" required="false()" type="string" />
+    <bind id="CustomerEmailShippedTemplatePath" nodeset="cart/add[@key='CustomerEmailShippedTemplatePath']/@value" required="false()" type="string" />
     <bind id="ewPriorityCountries" nodeset="cart/add[@key='PriorityCountries']/@value" required="true()" type="string" />
     <bind id="ewSavePayments" nodeset="cart/add[@key='SavePayments']/@value" required="true()" type="string" />
     <bind id="ewVatAtUnit" nodeset="cart/add[@key='VatAtUnit']/@value" required="true()" type="string" />
@@ -64,6 +67,7 @@
     <bind id="ewClearOnAdd" nodeset="cart/add[@key='ClearOnAdd']/@value" required="false()" type="string" />
     <bind id="ewDontTaxShipping" nodeset="cart/add[@key='DontTaxShipping']/@value" required="false()" type="string" />
     <bind id="DefaultDeliveryCountry" nodeset="cart/add[@key='DefaultDeliveryCountry']/@value" required="false()" type="string" />
+    <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
   </model>
   <group ref="CartSettings">
     <label>Cart Settings</label>
@@ -112,7 +116,21 @@
         <label>Customer Email Template Path</label>
         <value />
       </input>
-      
+      <select1 bind="ShippedValidation" appearance="full">
+        <label>Force Shipping Dates</label>
+        <item>
+          <label>Yes</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>off</value>
+        </item>
+      </select1>
+      <input bind="CustomerEmailShippedTemplatePath">
+        <label>Customer Shipped Email Template Path</label>
+        <value />
+      </input>
     </group>
     <group class="inline">
       <label>Configuration</label>

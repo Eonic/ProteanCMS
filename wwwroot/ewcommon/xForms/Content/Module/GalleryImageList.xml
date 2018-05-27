@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" position="" crop=""/>
+          <Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" position="" crop="" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -43,6 +43,12 @@
       <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
       <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+      <bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+      <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+      <bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+      <bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
+      <bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
+      <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
@@ -70,17 +76,30 @@
         <input bind="cModuleTitle" class="long">
           <label>Title or Name</label>
         </input>
-        <select1 bind="cCrop" appearance="full" class="vshort">
-          <label>Crop</label>
-          <item>
-            <label>Yes</label>
-            <value>true</value>
-          </item>
-          <item>
-            <label>No</label>
-            <value>false</value>
-          </item>
-        </select1>
+        <group class="inline">
+          <select1 bind="cCrop" appearance="full" class="vshort">
+            <label>Crop</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+          </select1>
+          <select1 bind="cLightbox" appearance="full" class="vshort">
+            <label>Lightbox</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+          </select1>
+        </group>
         <select1 bind="cDisplay" appearance="full">
           <label>Show Items</label>
           <item>
@@ -227,6 +246,67 @@
           </case>
           <case id="cSortBy_3" />
         </switch>
+      </group>
+      <group class="">
+        <select1 bind="carousel" appearance="full"  class="form-group">
+          <label>Add articles to a carousel</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+            <toggle case="Carousel_true" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+            <toggle case="Carousel_false" event="DOMActivate"/>
+          </item>
+          <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
+        </select1>
+        <switch class="disable">
+          <case id="Carousel_true" >
+            <group class="inline">
+              <select1 bind="autoplay"  appearance="full" class="form-group ">
+                <label>Auto play</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+              <input bind="autoPlaySpeed" class="form-group ">
+                <label>autoplay Speed (milliseconds) </label>
+              </input>
+
+              <select1 bind="carouselBullets" appearance="full"  class="form-group">
+                <label>Show navigation bullets for carousel</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+              <select1 bind="carouselHeight" appearance="full"  class="form-group">
+                <label>Match height of carousel items</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+            </group>
+          </case>
+          <case id="Carousel_false"/>
+        </switch>
+
       </group>
       <!--<group>
         <label>Module Links</label>

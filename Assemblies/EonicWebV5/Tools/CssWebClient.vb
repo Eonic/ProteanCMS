@@ -75,6 +75,7 @@ Public Class CssWebClient
                 If Not InStr(Serviceurl, "http") = 1 Then
                     If LCase(goRequest.ServerVariables("HTTPS")) = "on" Then
                         Serviceurl = "https://" & goRequest.ServerVariables("SERVER_NAME") & Serviceurl
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
                     Else
                         Serviceurl = "http://" & goRequest.ServerVariables("SERVER_NAME") & Serviceurl
                     End If

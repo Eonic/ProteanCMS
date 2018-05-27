@@ -336,6 +336,7 @@
           <!-- Error No. 1000+ : Bespoke errors can be put here-->
         </xsl:choose>
       </div>
+      
     </xsl:if>
     <xsl:if test="error/msg">
       <p class="errorMessage">
@@ -833,7 +834,7 @@
     <div class="panel panel-default ccForm">
       <div class="panel-heading">
         <h2 class="title">
-          <xsl:call-template name="term3019" />
+          <xsl:call-template name="term3020" />
         </h2>
       </div>
       <div class="panel-body">
@@ -1283,7 +1284,7 @@
         </xsl:if>
       <!-- ################################# Line Discount Info ################################# -->
       <xsl:if test="Discount">
-        <xsl:for-each select="DiscountPrice/DiscountPriceLine">
+        <xsl:for-each select="DiscountPrice/DiscountPriceLine[@UnitSaving &gt; 0]">
           <xsl:sort select="@PriceOrder"/>
           <xsl:variable name="DiscID">
             <xsl:value-of select="@nDiscountKey"/>
@@ -1292,8 +1293,11 @@
             <xsl:if test="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']/@src!=''">
               <xsl:copy-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/Images[@class='thumbnail']"/>
             </xsl:if>
-            <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
+            <span class="discountName">
+              <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/cDescription"/>
+            </span>
             <!--RRP-->
+            <!--xsl:text>&#160;</xsl:text>
             <xsl:call-template name="term3053" />
             <xsl:text>:&#160;</xsl:text>
             <strike>
@@ -1301,27 +1305,21 @@
               <xsl:text>:&#160;</xsl:text>
               <xsl:choose>
                 <xsl:when test="position()=1">
-                  <!-- Remmed by Rob
-								  <xsl:value-of select="format-number(ancestor::Item/DiscountPrice/@OriginalUnitPrice,'#0.00')"/>
-								  -->
                   <xsl:apply-templates select="/Page" mode="formatPrice">
                     <xsl:with-param name="price" select="ancestor::Item/DiscountPrice/@OriginalUnitPrice"/>
                     <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
                   </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
-
-                  <!-- Remmed by Rob
-								  <xsl:value-of select="format-number(preceding-sibling::DiscountPriceLine/@UnitPrice,'#0.00')"/>
-								-->
                   <xsl:apply-templates select="/Page" mode="formatPrice">
                     <xsl:with-param name="price" select="preceding-sibling::DiscountPriceLine/@UnitPrice"/>
                     <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
                   </xsl:apply-templates>
                 </xsl:otherwise>
               </xsl:choose>
-            </strike>
+            </strike-->
             <!--less-->
+            <xsl:text>&#160;&#160;&#160;</xsl:text>
             <xsl:call-template name="term3054" />
             <xsl:text>:&#160;</xsl:text>
             <!-- Remmed by Rob 
@@ -1472,7 +1470,6 @@
     <xsl:if test="not(/Page/Cart/@displayPrice='false')">
       <div class="linePrice">
         <xsl:variable name="itemPrice" select="@itemTotal div @quantity"/>
-        
         <xsl:if test="DiscountPrice/@OriginalUnitPrice &gt; $itemPrice">
           <strike>
             <!-- Remmed by Rob 
@@ -1509,55 +1506,28 @@
           </span>
         </xsl:for-each>
       </div>
-      <!--<div class="lineTotal">
-        <xsl:if test="DiscountPrice/@OriginalUnitPrice!=DiscountPrice/@UnitPrice">
-          <xsl:if test="(DiscountPrice/@OriginalUnitPrice * DiscountPrice/@Units) &gt; @itemTotal">
-            <strike>
-              -->
-      <!-- Remmed by Rob
-						<xsl:value-of select="$currency"/>
-                        <xsl:value-of select="format-number(DiscountPrice/@OriginalUnitPrice * DiscountPrice/@Units,'#0.00')"/>
-						-->
-      <!--
-              <xsl:apply-templates select="/Page" mode="formatPrice">
-                <xsl:with-param name="price" select="DiscountPrice/@OriginalUnitPrice * DiscountPrice/@Units"/>
-                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-              </xsl:apply-templates>
-            </strike>
-            <br/>
-          </xsl:if>
-        </xsl:if>
-        -->
-      <!-- Remmed by Rob 
-				  <xsl:value-of select="$currency"/>
-				  -->
-      <!--
+      
+      <div class="lineTotal">
         <xsl:choose>
           <xsl:when test="@itemTotal">
-            -->
-      <!-- Remmed by Rob 
-					  <xsl:value-of select="format-number(@itemTotal,'#0.00')"/>
-					  -->
-      <!--
+					  <!--<xsl:value-of select="format-number(@itemTotal,'#0.00')"/>-->
             <xsl:apply-templates select="/Page" mode="formatPrice">
               <xsl:with-param name="price" select="@itemTotal"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
           </xsl:when>
           <xsl:otherwise>
-            -->
-      <!-- Remmed by Rob 
-						<xsl:value-of select="format-number((@price +(sum(*/@price)))* @quantity,'#0.00')"/>
-						-->
-      <!--
+          	<!--<xsl:value-of select="format-number((@price +(sum(*/@price)))* @quantity,'#0.00')"/>-->
             <xsl:apply-templates select="/Page" mode="formatPrice">
               <xsl:with-param name="price" select="(@price +(sum(*/@price)))* @quantity"/>
               <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
             </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
-      </div>-->
+      </div>
     </xsl:if>
+    
+    
   </xsl:template>
 
   
@@ -1850,6 +1820,9 @@
   <xsl:template match="Order" mode="orderErrorReports">
     <xsl:if test="@errorMsg &gt; 0">
       <div class="alert alert-danger errorMessage">
+        <a href="/" class="btn btn-default pull-right ">
+          <xsl:call-template name="term3093" />
+        </a>
         <xsl:choose>
           <!-- Error No. 1 - 99 : Standard errors from the Cart -->
           <xsl:when test="@errorMsg='1'">
@@ -1888,6 +1861,8 @@
           </xsl:when>
           <!-- Error No. 1000+ : Bespoke errors can be put here-->
         </xsl:choose>
+
+
       </div>
     </xsl:if>
     <xsl:if test="error/msg">
@@ -1904,6 +1879,8 @@
         </xsl:for-each>
         <div class="terminus">&#160;</div>
       </div>
+      
+      
     </xsl:if>
   </xsl:template>
 
@@ -1911,7 +1888,6 @@
   <xsl:template match="group[contains(@ref,'address') and group[contains(@class,'addressGrp')]]" mode="xform">
     <xsl:param name="class"/>
     <fieldset>
-
 
       <xsl:attribute name="class">
         <xsl:value-of select="$class"/>
@@ -2105,6 +2081,7 @@
       <xsl:call-template name="term3021" />
     </h2>
   </xsl:template>
+  
   <xsl:template match="Order[@cmd='ShowInvoice' or @cmd='ShowCallbackInvoice']" mode="orderProcess">
     <xsl:variable name="parentURL">
       <xsl:call-template name="getContentParURL"/>
@@ -2200,7 +2177,7 @@
         <xsl:apply-templates select="." mode="displayNotes"/>
       </div>
     </div>
-    <div class="panel panel-default">
+    <div class="panel panel-default ">
       <div class="panel-body">
         <form method="post" id="cart">
           <xsl:apply-templates select="." mode="orderItems"/>
@@ -2239,9 +2216,9 @@
             <!--Price-->
             <xsl:call-template name="term3042" />
           </div>
-          <!--<div class="lineTotal">
+          <div class="lineTotal">
           <xsl:call-template name="term3043" />
-        </div>-->
+        </div>
         </div>
         <xsl:for-each select="Item">
           <div class="clearfix cart-item">
@@ -2250,7 +2227,45 @@
             </xsl:apply-templates>
           </div>
         </xsl:for-each>
-
+   <xsl:if test="@shippingType &gt; 0">
+          <div class="shipping">
+            <strong>
+              <xsl:choose>
+                <xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
+                  <xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <!--Shipping Cost-->
+                  <xsl:call-template name="term3044" />
+                  <xsl:text>:</xsl:text>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:text>&#160;</xsl:text>
+            </strong>
+            <xsl:choose>
+              <xsl:when test="/Page/Cart/Order/Shipping">
+                <xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
+                <strong>&#160;-&#160;</strong>
+                <xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
+                <strong>&#160;-&#160;</strong>
+                <xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
+              </xsl:otherwise>
+            </xsl:choose>
+            <span class="amount">
+              <xsl:text>&#160;</xsl:text>
+              <!-- Remmed by Rob 
+				<xsl:value-of select="/Page/Cart/@currencySymbol"/>
+                <xsl:value-of select="format-number(@shippingCost,'0.00')"/>-->
+              <xsl:apply-templates select="/Page" mode="formatPrice">
+                <xsl:with-param name="price" select="@shippingCost"/>
+                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+              </xsl:apply-templates>
+            </span>
+          </div>
+        </xsl:if>
         <div class="totals-row">
           <xsl:if test="@vatRate &gt; 0">
             <div class="vat-row">
@@ -2371,45 +2386,7 @@
           </xsl:if>
         </div>
 
-        <xsl:if test="@shippingType &gt; 0">
-          <div class="shipping">
-            <strong>
-              <xsl:choose>
-                <xsl:when test="/Page/Contents/Content[@name='shippingCostLabel']!=''">
-                  <xsl:value-of select="/Page/Contents/Content[@name='shippingCostLabel']"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <!--Shipping Cost-->
-                  <xsl:call-template name="term3044" />
-                  <xsl:text>:</xsl:text>
-                </xsl:otherwise>
-              </xsl:choose>
-              <xsl:text>&#160;</xsl:text>
-            </strong>
-            <xsl:choose>
-              <xsl:when test="/Page/Cart/Order/Shipping">
-                <xsl:value-of select="/Page/Cart/Order/Shipping/Name/node()"/>
-                <strong>&#160;-&#160;</strong>
-                <xsl:value-of select="/Page/Cart/Order/Shipping/Carrier/node()"/>
-                <strong>&#160;-&#160;</strong>
-                <xsl:value-of select="/Page/Cart/Order/Shipping/DeliveryTime/node()"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="/Page/Cart/Order/@shippingDesc"/>
-              </xsl:otherwise>
-            </xsl:choose>
-            <span class="amount">
-              <xsl:text>&#160;</xsl:text>
-              <!-- Remmed by Rob 
-				<xsl:value-of select="/Page/Cart/@currencySymbol"/>
-                <xsl:value-of select="format-number(@shippingCost,'0.00')"/>-->
-              <xsl:apply-templates select="/Page" mode="formatPrice">
-                <xsl:with-param name="price" select="@shippingCost"/>
-                <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-              </xsl:apply-templates>
-            </span>
-          </div>
-        </xsl:if>
+     
       </div>
     </xsl:if>
     <!--<xsl:if test="/Page/Contents/Content[@name='cartMessage']">

@@ -4,7 +4,7 @@
 	
   <xsl:template match="Page">
 
-		<xsl:for-each select="ContentDetail/Content/Report">
+		<xsl:for-each select="ContentDetail/Report">
 			<xsl:apply-templates select="." mode="reportTitles"/>
 			<xsl:apply-templates select="Item" mode="reportRow"/>
 		</xsl:for-each>
@@ -14,13 +14,14 @@
 
 	<xsl:template match="*"  mode="reportTitles">
 		<xsl:for-each select="Item[1]/*">
-      <xsl:text>"</xsl:text>
-			<xsl:value-of select="node()"/>
-			<xsl:text>"</xsl:text>
-      <xsl:if test="not(last())">
+      <xsl:text></xsl:text>
+			<xsl:value-of select="name()"/>
+			<xsl:text></xsl:text>
+      <xsl:if test="not(position() = last())">
         <xsl:text>,</xsl:text>
       </xsl:if>
     </xsl:for-each>
+    <xsl:text>&#10;</xsl:text> 
 	</xsl:template>
 
 	<xsl:template match="*" mode="reportRow">
@@ -28,10 +29,11 @@
       <xsl:text>"</xsl:text>
 			<xsl:value-of select="node()"/>
 			<xsl:text>"</xsl:text>
-      <xsl:if test="not(last())">
+      <xsl:if test="not(position() = last())">
         <xsl:text>,</xsl:text>
       </xsl:if>
     </xsl:for-each>
+    <xsl:text>&#10;</xsl:text> 
 	</xsl:template>
 	
 	<xsl:template match="Report[@cReportType='CartDownload']" mode="reportTitles">

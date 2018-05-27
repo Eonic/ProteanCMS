@@ -1642,7 +1642,29 @@
                   </i>
                   <xsl:text> </xsl:text>SEO Reporting</a>
                 </li>
+                <li>
+                  <!--Not working--> 
+                  <xsl:choose>
+                    <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
+                      <a href="" class="btn btn-success">
+                        <i class="fa fa-check">
+                          <xsl:text> </xsl:text>
+                        </i>
+                        <xsl:text> </xsl:text>Page Cache
+                      </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <a href="" class="btn btn-default">
+                        <i class="fa fa-plus">
+                          <xsl:text> </xsl:text>
+                        </i>
+                        <xsl:text> </xsl:text>Page Cache
+                      </a>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </li>
                 <xsl:choose>
+                  
                     <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
                 <li class="active">
                   <a href="/?ewCmd=WebSettings" class="btn btn-danger">
@@ -3025,9 +3047,13 @@
   </xsl:template>
   
   <xsl:template match="Content" mode="LocateContentNode">
+    <xsl:param name="indent"/>
+    <xsl:variable name="relationType" select="$page/Request/QueryString/Item[@name='relationType']/node()"/>
+    
     <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
       <tr>
         <td>
+          <xsl:value-of select="$indent"/>
           <xsl:value-of select="@name"/>
           <xsl:if test="Content/StockCode/node()">
             <xsl:text> - </xsl:text>
@@ -3048,6 +3074,12 @@
           <xsl:choose>
             <xsl:when test="@related=1">
               <xsl:text>(Related)</xsl:text>
+            <xsl:value-of select="@sType"/>|<xsl:value-of select="$relationType"/>
+            </xsl:when>
+            <xsl:when test="@related=1 and not(contains(@sType,$relationType))">
+             <xsl:text> </xsl:text>
+              <input type="checkbox" name="list" value="{@id}"/>
+              <xsl:text> (Related as </xsl:text><xsl:value-of select="@sType"/><xsl:text>)</xsl:text>
             </xsl:when>
             <xsl:otherwise>
               <!--<label>Relate</label>-->
@@ -3060,11 +3092,15 @@
               </xsl:if>-->
             </xsl:otherwise>
           </xsl:choose>
-
         </td>
       </tr>
     </span>
-
+    <xsl:apply-templates select="Content" mode="LocateContentNode">
+      <xsl:with-param name="indent">
+        <xsl:value-of select="$indent"/>
+        &#160;&#160;&#160;
+      </xsl:with-param>
+    </xsl:apply-templates>
 
   </xsl:template>
   <!-- -->
@@ -3460,6 +3496,11 @@
             <xsl:with-param name="name">ExitModal</xsl:with-param>
             <xsl:with-param name="type">Module</xsl:with-param>
           </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Critical Path CSS</xsl:with-param>
+            <xsl:with-param name="name">criticalPathCSS</xsl:with-param>
+            <xsl:with-param name="type">PlainText</xsl:with-param>
+          </xsl:call-template>
           <tr>
             <th colspan="3">Meta Tags - Hidden information for search engines.</th>
           </tr>
@@ -3542,6 +3583,16 @@
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
           <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Facebook Pixel Id</xsl:with-param>
+            <xsl:with-param name="name">fb-pixel_id</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Facebook Pages</xsl:with-param>
+            <xsl:with-param name="name">fb-pages_id</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Title</xsl:with-param>
             <xsl:with-param name="name">ogTitle</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
@@ -3567,6 +3618,11 @@
           <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">A1 Webstats ID</xsl:with-param>
             <xsl:with-param name="name">MetaA1WebStatsID</xsl:with-param>
+            <xsl:with-param name="type">MetaData</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">A1 Webstats ID V2</xsl:with-param>
+            <xsl:with-param name="name">MetaA1WebStatsIDV2</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
           <xsl:call-template name="editNamedContent">
@@ -3973,6 +4029,7 @@
   
     <xsl:template match="folder" mode="ImageFolder">
       <xsl:param name="rootPath"/>
+                <xsl:variable name="fileCount" select="count(file)"/>
       <xsl:variable name="popup">
         <xsl:choose>
           <xsl:when test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
@@ -3983,6 +4040,11 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      <div class="alert alert-info">
+       <span class="small">
+          Showing <xsl:value-of select="$fileCount"/> files
+        </span>
+      </div>
         <div class="row" id="files">
             <xsl:for-each select="file">
                 <div class="item item-image col-lg-2 col-md-3 col-sm-4">
@@ -4049,9 +4111,17 @@
                                           </a>
                                 </xsl:if>
                             </xsl:when>
+                          <xsl:when test="$Extension='.svg'">
+                            <div class="img-overflow">
+                              <img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}" width="160" height="160" class="{@class} img-responsive"/>
+                            </div>
+                          </xsl:when>
+                          
+                          
                             <xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
                               
                             </xsl:when>
+                          
                           <xsl:when test="$Extension='.swf'">
                             <i class="fa fa-flash fa-5x center-block">
                               <xsl:text> </xsl:text>
@@ -4077,7 +4147,7 @@
                     <div class="thumb-button description">
                      <xsl:choose>
                         <xsl:when test="$popup='true'">
-                          <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                          <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
                             <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                               <i class="fa fa-check-circle-o fa-white">
                                 <xsl:text> </xsl:text>
@@ -4088,6 +4158,10 @@
                        </xsl:when>
                         <xsl:otherwise>
                           <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+                            <a class="btn btn-xs btn-primary" href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
+                              <i class="fa fa-arrows fa-white">
+                                <xsl:text> </xsl:text>
+                              </i></a>
                             <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                               <i class="fa fa-trash-o fa-white">
                                 <xsl:text> </xsl:text>
@@ -4101,11 +4175,17 @@
                       <span class="image-description-name">
                         <xsl:value-of select="@name"/>
                       </span>
-                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
-                        <xsl:value-of select="@width"/>
-                        <xsl:text> x </xsl:text>
-                        <xsl:value-of select="@height"/>
-                      </xsl:if>
+                      <xsl:choose>
+                         <xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                          <xsl:value-of select="@width"/>
+                          <xsl:text> x </xsl:text>
+                          <xsl:value-of select="@height"/>
+                        </xsl:when>
+                      <xsl:otherwise>
+                        &#160;
+                      </xsl:otherwise>
+                      </xsl:choose>
+                     
                     </div>
                 </div>
                 </div>
@@ -7694,9 +7774,20 @@
   <xsl:template match="Page[@layout='ScheduledItemRunNow']" mode="Admin">
     <div class="row" id="template_SystemPages">
       <div class="col-md-12">
-    <textarea rows="20" cols="80">
-      <xsl:copy-of select="ContentDetail/*"/>
-    </textarea>
+        <textarea rows="20" cols="80" id="ace-edit">
+          <xsl:copy-of select="ContentDetail/*"/>
+        </textarea>
+        <script src="/ewcommon/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+
+          $('#ace-edit').val(formatXml($('#ace-edit').val()))
+
+
+          var editor = ace.edit("ace-edit");
+          editor.setOption("maxLines", 1000)
+          editor.setTheme("ace/theme/tomorrow");
+          editor.session.setMode("ace/mode/xml");
+        </script>
         <a href="?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
           <i class="fa fa-play">&#160;</i>&#160;Run Again
         </a>
@@ -7993,12 +8084,12 @@
               </td>
               <td colspan="3">
 
-                <a href="?ewCmd=EditUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
-                  <i class="fa fa-edit">&#160;</i>&#160;Edit</a>
-
-                <a href="?ewCmd=CancelUserSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
-                  <i class="fa fa-edit">&#160;</i>&#160;Cancel
+                <a href="?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                  <i class="fa fa-edit">&#160;</i>&#160;Manage
                 </a>
+                <!--a href="?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
+                  <i class="fa fa-edit">&#160;</i>&#160;Cancel
+                </a-->
 
               </td>
             </tr>
@@ -8022,8 +8113,342 @@
       </div>
     </div>
   </xsl:template>
+
+  <xsl:template match="Page[@layout='ManageUserSubscription']" mode="Admin">
+    <xsl:variable name="thisURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <xsl:variable name="parId" select="@parId" />
+    <xsl:for-each select="ContentDetail/Subscription">
+    <div class="subscription detail">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <xsl:value-of select="@name"/>
+              </h3>
+            </div>
+            <div class="description panel-body">
+              <dl class="tabled">
+                <dt>Start Date</dt>
+                <dd>
+                  <xsl:call-template name="formatdate">
+                    <xsl:with-param name="date" select="@startDate" />
+                    <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                  </xsl:call-template>
+                </dd>
+                <xsl:choose>
+                  <xsl:when test="renewalStatus='Rolling'">
+                    <dt>Renewal Date</dt>
+                    <dd>
+                      <xsl:call-template name="formatdate">
+                        <xsl:with-param name="date" select="@expireDate" />
+                        <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                      </xsl:call-template><br/>
+                    </dd>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <dt>End Date</dt>
+                    <dd>
+                      <xsl:call-template name="formatdate">
+                        <xsl:with-param name="date" select="@expireDate" />
+                        <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                      </xsl:call-template>
+                      <br/>
+
+                    </dd>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <dt>Renewal Amount</dt>
+                <dd>
+                  £ <xsl:value-of select="format-number(@value, '0.00')"/><br/>
+                 </dd>
+                <dt>Type</dt>
+                <dd>
+                  <xsl:value-of select="@renewalStatus"/>
+                </dd>
+                <xsl:if test="@renewalStatus='Cancelled'">
+                  <dt>Cancelled Date</dt>
+                  <dd>
+                    <xsl:call-template name="formatdate">
+                      <xsl:with-param name="date" select="@cancelDate" />
+                      <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                    </xsl:call-template>
+                  </dd>
+                  <dt>Cancelled Reason</dt>
+                  <dd>
+                    <xsl:value-of select="@cancelReason"/>
+                  </dd>
+                  <dt>Cancelled By</dt>
+                  <dd>
+                    User ID <xsl:value-of select="@cancelUserId"/>
+                  </dd>
+                </xsl:if>
+                <dt>Period</dt>
+                <dd>
+                  <xsl:text>Every </xsl:text><xsl:value-of select="@period"/><xsl:text> </xsl:text><xsl:value-of select="Content/Duration/Unit/node()"/><xsl:text>s</xsl:text>
+                </dd>
+              </dl>
+              <xsl:if test="@paymentStatus='active' or @paymentStatus='Manual' ">
+                <div class="alert alert-success">
+                  <xsl:if test="@paymentStatus='active'">
+                    Payment be collected via <strong>
+                      <xsl:value-of select="@providerName"/>
+                    </strong>
+                    <br/>
+                    <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+                  </xsl:if>
+                  <br/>
+                  <br/>
+                  <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                    <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
+                  </a>
+                </div>
+              </xsl:if>
+              <xsl:value-of select="@paymentStatus"/>
+              <xsl:if test="contains(@paymentStatus,'Expires')">
+                <div class="alert alert-success">
+                    Credit Card Payment needs to be processed <strong>
+                      <xsl:value-of select="@providerName"/>
+                    </strong>
+                    <br/>
+                  <xsl:value-of select="@paymentStatus"/>
+                    <br/>
+                    <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+
+                  <br/>
+                  <br/>
+                  <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                    <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
+                  </a>
+                </div>
+              </xsl:if>
+            </div>
+            <div class="panel-footer form-actions">
+              
+                  <xsl:if test="@renewalStatus!='Cancelled'">
+                      <a href="?ewCmd=CancelSubscription&amp;id={@id}" class="btn btn-danger">
+                        <i class="fa fa-times">&#160;</i>&#160;Cancel Immediately
+                      </a>
+                  </xsl:if>
+                  <xsl:if test="@renewalStatus='Rolling'">
+                    <a href="?ewCmd=ExpireSubscription&amp;id={@id}" class="btn btn-warning">
+                        <i class="fa fa-times">&#160;</i>&#160;Set to Expire on Renewal
+                      </a>
+                  </xsl:if>
+
+                </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Renewal History</h3>
+            </div>
+            <div class="description panel-body reponsive-table">
+              <ul class="list-group">
+              <xsl:for-each select="*/Renewal">
+                <li class="list-group-item">
+                    <xsl:call-template name="formatdate">
+                      <xsl:with-param name="date" select="@startDate" />
+                      <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                    </xsl:call-template> to
+                    
+                    <xsl:call-template name="formatdate">
+                      <xsl:with-param name="date" select="@endDate" />
+                      <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+                    </xsl:call-template> 
+                    Paid By
+                    <xsl:value-of select="@providerName"/>
+                
+                    <a class="pull-right btn btn-default" href="/?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@orderId}">Order</a>
+                  </li>
+              
+              </xsl:for-each>
+                </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">User</h3>
+            </div>
+            <div class="description panel-body reponsive-table">
+              <dl class="tabled">
+                <dt>Name</dt>
+                <dd>
+                  <xsl:value-of select="User/FirstName/node()"/>
+                  <xsl:text> </xsl:text>
+                  <xsl:value-of select="User/LastName/node()"/>
+                </dd>
+                <dt>Email</dt>
+                <dd>
+                  <a href="mailto:{User/Email/node()}"><xsl:value-of select="User/Email/node()"/></a>
+                </dd>
+                <xsl:for-each select="User/Contacts/Contact[cContactType='Billing Address']">
+                  <dt>Billing Address</dt>
+                  <dd>
+                    <xsl:value-of select="cContactAddress/node()"/>
+                    <xsl:text>, </xsl:text>
+                    <br/>
+                    <xsl:value-of select="cContactCity/node()"/>
+                    <xsl:text>, </xsl:text>
+                    <br/>
+                    <xsl:value-of select="cContactState/node()"/>
+                    <xsl:text>. </xsl:text>
+                    <xsl:value-of select="cContactZip/node()"/>
+                    <xsl:text>. </xsl:text>
+                  </dd>
+                  <dt>Telephone</dt>
+                  <dd>
+                    <a href="tel:{cContactTel/node()}"><xsl:value-of select="cContactTel/node()"/></a>
+                  </dd>
+                </xsl:for-each>
+                <dt>Groups</dt>
+                <dd>
+                  <xsl:for-each select="User/Group">
+                    <xsl:value-of select="Name/node()"/>
+                    <xsl:if test="@id = ancestor::Content/Usergroups/Group/@id">
+                      [Linked to this subscription]
+                    </xsl:if>
+                    <br/>
+                  </xsl:for-each>
+                </dd>
+
+              </dl>
+            </div>
+          </div>
+          <xsl:apply-templates select="." mode="displayNotes"/>
+        </div>
+      </div>
+    </div>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template match="help[@class='renew-sub']" mode="xform">
+    <div class="alert alert-info">
+      <i class="fa fa-info fa-2x pull-left">
+        <xsl:text> </xsl:text>
+      </i>
+      <xsl:for-each select="ancestor::Content/model/instance/Subscription">
+        We will collect renewal payment via <strong>
+          <xsl:value-of select="@providerName"/>
+        </strong>
+        <br/>
+        <dl class="tabled">
+          <dt>Renewal Cost</dt>
+          <dd>
+            £ <xsl:value-of select="format-number(@value, '0.00')"/><br/>
+          </dd>
+        <dt>New End Date</dt>
+        <dd>
+          <xsl:call-template name="formatdate">
+            <xsl:with-param name="date" select="@newExpire" />
+            <xsl:with-param name="format" select="'dddd dd MMM yyyy'" />
+          </xsl:call-template>
+        </dd>
+        </dl>     
+      </xsl:for-each>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Subscription" mode="displayNotes">
+    
+  </xsl:template>
   
-  
+
+  <!--Subscriptions-->
+  <xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='RecentRenewals']" mode="Admin">
+    <div class="row" id="template_Subscriptions">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+           <table class="table">
+            <tr>
+              <th>User</th>
+              <th>Usernane</th>
+              <th>Subscription</th>
+              <th>Rate</th>
+              <th>Status</th>
+              <th>PayProvider</th>
+              <th>Active</th>
+              <th>Start Date</th>
+              <th>Renewal Due</th>
+            </tr>
+            <xsl:for-each select="/Page/ContentDetail/Subscribers">
+              <tr>
+                <td>
+                  <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+                </td>
+                <td>
+                  <xsl:value-of select="cDirName/node()"/>
+                </td>
+                <td>
+                  <xsl:value-of select="cSubName/node()"/>
+                </td>
+                <td>
+                  <xsl:call-template name="formatPrice">
+                    <xsl:with-param name="price" select="nValueNet/node()"/>
+                    <xsl:with-param name="currency" select="$currencySymbol"/>
+                  </xsl:call-template>
+                </td>
+                <td>
+                  <xsl:value-of select="cRenewalStatus/node()"/>
+                </td>
+                <td>
+                  <xsl:value-of select="cPayMthdProviderName/node()"/>
+                </td>
+                <td>
+                  <xsl:value-of select="bPaymentMethodActive/node()"/>
+                </td>
+                <td>
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="dStartDate/node()"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">false</xsl:with-param>
+                  </xsl:call-template>
+
+                </td>
+                <td>
+                  <xsl:call-template name="DD_Mon_YYYY">
+                    <xsl:with-param name="date">
+                      <xsl:value-of select="dExpireDate/node()"/>
+                    </xsl:with-param>
+                    <xsl:with-param name="showTime">false</xsl:with-param>
+                  </xsl:call-template>
+                </td>
+                <td colspan="3">
+
+                  <a href="?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                    <i class="fa fa-edit">&#160;</i>&#160;Manage
+                  </a>
+
+                </td>
+              </tr>
+              <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+                <xsl:if test="Subscriptions">
+                  <tr>
+                    <td>
+                      <xsl:apply-templates select="." mode="AdminSubscriptions">
+                        <xsl:with-param name="GroupID">
+                          <xsl:value-of select="@nCatKey"/>
+                        </xsl:with-param>
+                      </xsl:apply-templates>
+                    </td>
+                  </tr>
+                </xsl:if>
+              </xsl:if>
+            </xsl:for-each>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+
+
+
   <!--LocateSearch-->
   <xsl:template match="Page[@layout='LocateSearch']" mode="Admin">
     <div class="row" id="tpltLocateSearch">
@@ -8453,6 +8878,67 @@
 
   <xsl:template match="Content[@type='SubCodeList']" mode="DirectoryCodes">
     <xsl:apply-templates select="tblCodes" mode="reportDetail"/>
+  </xsl:template>
+
+  <!-- -->
+  <!--   ##################  Site Index  ##############################   -->
+  <!-- -->
+  <xsl:template match="Page[@layout='SiteIndex' or @ewCmd='SiteIndex']" mode="Admin">
+    <div class="row">
+    <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                Last Index
+              </h3>
+            </div>
+            <div class="panel-body">
+              <xsl:for-each select="ContentDetail/Content/model/instance/IndexInfo/indexInfo">
+              <dl class="tabled">
+                <dt>Start Time</dt>
+                <dd>
+                  <xsl:value-of select="@startTime"/>
+                </dd>
+                <dt>End Time</dt>
+                <dd>
+                  <xsl:value-of select="@endTime"/>
+                </dd>
+                <dt>Pages Index</dt>
+                <dd>
+                  <xsl:value-of select="@pagesIndexed"/>
+                </dd>
+                <dt>Pages Skipped</dt>
+                <dd>
+                  <xsl:value-of select="@pagesSkipped"/>
+                </dd>
+                <dt>Articles Indexed</dt>
+                <dd>
+                  <xsl:value-of select="@contentCount"/>
+                </dd>
+                <dt>Articles Skipped</dt>
+                <dd>
+                  <xsl:value-of select="@contentSkipped"/>
+                </dd>
+                <dt>Documents Indexed</dt>
+                <dd>
+                  <xsl:value-of select="@documentsIndexed"/>
+                </dd>
+                <dt>Documents Skipped</dt>
+                <dd>
+                  <xsl:value-of select="@documentsSkipped"/>
+                </dd>
+              </dl>
+              </xsl:for-each>
+            </div>
+          </div>
+    </div>
+      <div class="col-md-6">
+
+
+    <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+      </div>
+    </div>
+    
   </xsl:template>
 
   <!--BJR Codes-->

@@ -41,7 +41,7 @@
 
 						<h3>The Index details are as follows:</h3>
 						<table cellspacing="0" id="indexerSummary">
-							<xsl:for-each select="/indexInfo/error/Error">
+							<xsl:for-each select="/indexInfo/* | /indexInfo/error/Error">
 								<tr>
 									<th>
 										<xsl:value-of select="name()"/>

@@ -433,6 +433,57 @@ Public Module Text
         End Try
     End Function
 
+
+    Public Function tidyXhtmlFrag(ByVal shtml As String, Optional ByVal bReturnNumbericEntities As Boolean = False, Optional ByVal bEncloseText As Boolean = True, Optional ByVal removeTags As String = "") As String
+
+        '   PerfMon.Log("Web", "tidyXhtmlFrag")
+        Dim sProcessInfo As String = "tidyXhtmlFrag"
+        Dim sTidyXhtml As String = ""
+
+        Try
+
+            If Not removeTags = "" Then
+                shtml = removeTagFromXml(shtml, removeTags)
+            End If
+
+            Using oTdyManaged As TidyManaged.Document = TidyManaged.Document.FromString(shtml)
+                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes
+                oTdyManaged.MakeClean = True
+                oTdyManaged.DropFontTags = True
+                oTdyManaged.ShowWarnings = True
+                oTdyManaged.OutputXhtml = True
+
+                If bReturnNumbericEntities Then
+                    '    oTdyManaged.NumEntities = True
+                End If
+                oTdyManaged.CleanAndRepair()
+                sTidyXhtml = oTdyManaged.Save()
+                oTdyManaged.Dispose()
+            End Using
+
+            Return sTidyXhtml
+
+        Catch ex As Exception
+            ' It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+            Return ex.Message
+            'Return Nothing
+        Finally
+
+            sTidyXhtml = Nothing
+        End Try
+    End Function
+
+    Public Function removeTagFromXml(ByVal xmlString As String, ByVal tagNames As String) As String
+
+        tagNames = Replace(tagNames, " ", "")
+        tagNames = Replace(tagNames, ",", "|")
+
+        xmlString = Regex.Replace(xmlString, "<[/]?(" & tagNames & ":\w+)[^>]*?>", "", RegexOptions.IgnoreCase)
+
+        Return xmlString
+
+    End Function
+
 End Module
 
 

@@ -10,12 +10,8 @@
 .alert-info {
     background-color: #ffffff;
 }
-.Mail {
-margin-top:75px;
-}
-
-td {
-    border-top: none !important;
+.Email, .Mail {
+    margin-top:75px;
 }
 
 .ContentList tbody tr td div table tbody tr td font table {
@@ -24,4 +20,15 @@ td {
 
 .entryFooter table {
     width: 17%;
+}
+
+.ewAdmin .addHere {
+    color: #5cbaf1;
+}
+
+.ewAdmin .addHere {
+    font-size: 11px;
+    font-weight: 400;
+    padding: 3px;
+    letter-spacing: normal;
 }

@@ -59,6 +59,7 @@ Public Class Setup
     Dim oTransform As New Eonic.XmlHelper.Transform()
     Dim msRedirectOnEnd As String = ""
     Dim mbSchemaExists As Boolean = False
+    Dim ConnValid As Boolean = False
     Dim mbDBExists As Boolean = False
 
 #Region "ErrorHandling"
@@ -146,16 +147,24 @@ Public Class Setup
                 myWeb.moDbHelper = New Web.dbHelper(goConfig("DatabaseServer"), goConfig("DatabaseName"), mnUserId, moCtx)
                 myWeb.moDbHelper.myWeb = myWeb
                 myWeb.moDbHelper.moPageXml = moPageXml
+                myWeb.moDbHelper.DatabaseUser = goConfig("DatabaseUsername")
+                myWeb.moDbHelper.DatabasePassword = goConfig("DatabasePassword")
 
-                If myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table) Then
-                    mbSchemaExists = True
-                    mbDBExists = True
-                Else
-                    If myWeb.moDbHelper.checkDBObjectExists(goConfig("DatabaseName"), Tools.Database.objectTypes.Database) Then
+                ConnValid = myWeb.moDbHelper.CredentialsValid()
+                If ConnValid Then
+                    If myWeb.moDbHelper.checkDBObjectExists("tblContent", Tools.Database.objectTypes.Table) Then
+                        mbSchemaExists = True
                         mbDBExists = True
+                    Else
+                        If myWeb.moDbHelper.checkDBObjectExists(goConfig("DatabaseName"), Tools.Database.objectTypes.Database) Then
+                            mbDBExists = True
+                        End If
+                        mnUserId = 1
                     End If
-                    mnUserId = 1
                 End If
+
+
+
             End If
 
             oResponse = moPageXml.CreateElement("ProgressResponses")
@@ -413,7 +422,7 @@ Public Class Setup
                 mnUserId = CInt(goSession("nUserId"))
             End If
 Recheck:
-            If goConfig("DatabaseName") = Nothing Then
+            If goConfig("DatabaseName") = Nothing Or ConnValid = False Then
                 'Step 1. Create a Web.Config and various other files.
 
                 Dim oSetXfm As SetupXforms = New SetupXforms(Me)

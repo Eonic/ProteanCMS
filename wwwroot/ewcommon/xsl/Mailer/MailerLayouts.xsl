@@ -66,8 +66,6 @@
     <xsl:apply-templates select="/Page" mode="HxBoxColour" />
   </xsl:variable>
 
-
-
   <!-- Syle Default Settings -->
   <xsl:template match="Page" mode="emailWidth">650</xsl:template>
   <xsl:template match="Page" mode="emailColPad">10</xsl:template>
@@ -92,10 +90,9 @@
     <xsl:call-template name="mailer_utm_campaign"/>
   </xsl:variable>
 
-
   <xsl:template name="mailer_utm_campaign">
     <xsl:if test="not($adminMode)">
-      <xsl:text>?utm_medium=email</xsl:text>
+      <xsl:text>utm_medium=email</xsl:text>
       <xsl:text>&amp;utm_source=mailingList</xsl:text>
       <xsl:text>&amp;utm_campaign=</xsl:text>
       <xsl:value-of select="translate(/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]/@name,' ','-')"/>
@@ -290,7 +287,6 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='Modules_2_Columns']" mode="Layout">
-
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100% !important" class="template" id="template_2_Columns">
       <xsl:apply-templates select="/" mode="layoutHeader">
         <xsl:with-param name="colspan" select="'2'"/>
@@ -601,12 +597,12 @@
         <xsl:variable name="pageName">
           <xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getDisplayName" />
         </xsl:variable>
-        <a href="{$href}{$mailer_utm_campaign}" title="{$pageName}">
+        <a href="{$href}?{$mailer_utm_campaign}" title="{$pageName}">
           <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
         </a>
       </xsl:when>
       <xsl:when test="@externalLink!=''">
-        <a href="{@externalLink}{$mailer_utm_campaign}" title="{@name}">
+        <a href="{@externalLink}?{$mailer_utm_campaign}" title="{@name}">
           <xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node()))">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -627,10 +623,12 @@
           <xsl:when test="format-number(@link,'0')!='NaN'">
             <xsl:variable name="pageId" select="@link"/>
             <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+            <xsl:text>?</xsl:text>
             <xsl:call-template name="mailer_utm_campaign"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="@link"/>
+            <xsl:text>?</xsl:text>
             <xsl:call-template name="mailer_utm_campaign"/>
           </xsl:otherwise>
         </xsl:choose>
@@ -683,7 +681,7 @@
 
     <!-- Output Module -->
     <table class="ContentList" width="100%" style="width:100%;">
-      <xsl:if test="/Page/@adminMode">
+      <!--<xsl:if test="/Page/@adminMode">
         <tr>
           <td width="100%" style="width:100%;">
             <xsl:attribute name="colspan">
@@ -699,9 +697,8 @@
             </xsl:attribute>
           </td>
         </tr>
-      </xsl:if>
+      </xsl:if>-->
       <xsl:if test="count(ms:node-set($contentList)/*) &gt; 0">
-
         <xsl:call-template name="outputContentListTDs">
           <xsl:with-param name="contentList" select="$contentList" />
           <xsl:with-param name="cols" select="@cols" />
@@ -710,7 +707,6 @@
             <xsl:value-of select="floor(100 div @cols)"/>
           </xsl:with-param>
         </xsl:call-template>
-
       </xsl:if>
     </table>
   </xsl:template>
@@ -724,6 +720,7 @@
       <tr>
         <xsl:for-each select="ms:node-set($contentList)/*[position() &lt;= $cols]">
           <td width="{$colWidth}%" style="width:{$colWidth}%;vertical-align:top;padding:5px;" valign="top">
+          
             <xsl:apply-templates select="." mode="displayBrief">
               <xsl:with-param name="sortBy" select="$sortBy"/>
             </xsl:apply-templates>
@@ -756,14 +753,14 @@
       </xsl:apply-templates>
 
       <h3 class="title">
-        <a href="{$parentURL}{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
+        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
           <font face="{$HxFont}" size="{$HxSize}" color="{$HxColour}" style="{$HxStyle}">
             <xsl:value-of select="Headline/node()" />
           </font>
         </a>
       </h3>
       <xsl:if test="Images/img/@src!=''">
-        <a href="{$parentURL}{$mailer_utm_campaign}" title="Read More - {Headline/node()}" style="border:none; float:right; margin-left:10px;">
+        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}" style="border:none; float:right; margin-left:10px;">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
       </xsl:if>
@@ -786,6 +783,7 @@
           <a style="white-space:nowrap;background:{$HxColour};color:#ffffff;padding:10px;margin-top:15px;">
             <xsl:attribute name="href">
               <xsl:apply-templates select="." mode="getHref" />
+              <xsl:text>?</xsl:text>
               <xsl:call-template name="mailer_utm_campaign"/>
             </xsl:attribute>
             <xsl:attribute name="title">
@@ -814,14 +812,14 @@
       </xsl:apply-templates>
 
       <h3 class="title">
-        <a href="{$parentURL}{$mailer_utm_campaign}" title="Read More - {Headline/node()}" class="url summary">
+        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}" class="url summary">
           <font face="{$HxFont}" size="2" color="{$HxColour}">
             <xsl:value-of select="Headline/node()"/>
           </font>
         </a>
       </h3>
       <xsl:if test="Images/img/@src!=''">
-        <a href="{$parentURL}{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
+        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
 
@@ -863,6 +861,7 @@
           <a style="white-space:nowrap;">
             <xsl:attribute name="href">
               <xsl:apply-templates select="." mode="getHref" />
+              <xsl:text>?</xsl:text>
               <xsl:call-template name="mailer_utm_campaign"/>
             </xsl:attribute>
             <xsl:attribute name="title">
@@ -876,8 +875,8 @@
     </div>
   </xsl:template>
 
-  <!-- Product Brief -->
-  <xsl:template match="Content[@type='Product']" mode="displayBrief">
+  <!-- Product Brief old -->
+  <!--<xsl:template match="Content[@type='Product']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="pos"/>
     <xsl:variable name="parId">
@@ -968,8 +967,114 @@
         </xsl:if>
       </font>
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
+  <!-- Product Brief new -->
+  <xsl:template match="Content[@type='Product']" mode="displayBrief">
+    <xsl:param name="sortBy"/>
+    <xsl:param name="pos"/>
+    <xsl:variable name="parId">
+      <xsl:choose>
+        <xsl:when test="@parId &gt; 0">
+          <xsl:value-of select="@parId"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="/Page/@id"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="self::Content" mode="getHref">
+        <xsl:with-param name="parId" select="$parId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+   
+    <tr class="listItem hproduct">
+
+      <tr>
+        <td colspan="4">
+          <xsl:apply-templates select="." mode="inlinePopupOptions">
+            <xsl:with-param name="class" select="'listItem hproduct'"/>
+            <xsl:with-param name="sortBy" select="$sortBy"/>
+          </xsl:apply-templates>
+          <h3 class="fn title">
+            <a href="{$parentURL}?{$mailer_utm_campaign}" title="{@name}">
+              <b>
+                <font face="{$HxFont}" size="5" color="{$HxColour}">
+                  <xsl:apply-templates select="Name" mode="cleanXhtml"/>
+                </font>
+              </b>
+            </a>
+          </h3>
+        </td>
+     
+      </tr>
+
+      <!--displayPrice-->
+      <tr>
+          <xsl:if test="Images/img/@src!=''">
+      <td align="right" valign="top" style="padding: 10px 20px 10px 40px;">
+        <a href="{$parentURL}?{$mailer_utm_campaign}" class="url">
+          <xsl:apply-templates select="." mode="displayThumbnail"/>
+        </a>
+      </td>
+    </xsl:if>
+        <xsl:if test="Manufacturer/node()!=''">
+          <!--<td class="manufacturer" >-->
+          <td class="brand" >
+            <b>
+              <xsl:call-template name="term2081" />
+              <xsl:text>: </xsl:text>
+            </b>
+            <xsl:apply-templates select="Manufacturer" mode="cleanXhtml"/>
+          </td>
+          <!--</td>-->
+        </xsl:if>
+      </tr>
+      <tr>
+        <td>
+          <xsl:choose>
+            <xsl:when test="Content[@type='SKU']">
+              <xsl:apply-templates select="Content[@type='SKU'][1]" mode="displayPrice" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="." mode="displayPrice" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </td>
+      </tr>
+      <tr >
+        <td >
+          <!--ShortDescription-->
+          <xsl:if test="ShortDescription/node()!=''">
+            <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
+            <br/>
+          </xsl:if>
+
+        </td>
+      </tr>
+    </tr>
+    <!--read more-->
+    <td>
+      <a style="white-space:nowrap; background:{$btnBackground};color:{$btnColour}; font-family:{$bodyFont}; text-decoration:none;padding:{$btnPad};border:0;">
+        <xsl:attribute name="href">
+          <xsl:apply-templates select="." mode="getHref" />
+          <xsl:text>?</xsl:text>
+          <xsl:call-template name="mailer_utm_campaign"/>
+        </xsl:attribute>
+        <xsl:attribute name="title">
+          <xsl:text>view </xsl:text>
+          <xsl:apply-templates select="." mode="getDisplayName" />
+        </xsl:attribute>
+        <xsl:text>read more &gt;</xsl:text>
+      </a>
+    </td>
+
+
+  </xsl:template>
+  <xsl:template match="Content[@type='Product']" mode="getThWidth">250</xsl:template>
+  <xsl:template match="Content[@type='Product']" mode="getThHeight">250</xsl:template>
+  
   <!-- Document Brief -->
   <xsl:template match="Content[@type='Document']" mode="displayBrief">
     <xsl:param name="sortBy"/>
@@ -1021,6 +1126,7 @@
             <a style="white-space:nowrap;">
               <xsl:attribute name="href">
                 <xsl:apply-templates select="." mode="getHref" />
+                <xsl:text>?</xsl:text>
                 <xsl:call-template name="mailer_utm_campaign"/>
               </xsl:attribute>
               <xsl:attribute name="title">
@@ -1114,7 +1220,7 @@
       </xsl:apply-templates>
       <div class="lIinner">
         <h3 class="title">
-          <a href="{$parentURL}{$mailer_utm_campaign}" title="{JobTitle/node()}">
+          <a href="{$parentURL}?{$mailer_utm_campaign}" title="{JobTitle/node()}">
             <xsl:value-of select="JobTitle/node()"/>
           </a>
         </h3>
@@ -1227,6 +1333,7 @@
         <a style="white-space:nowrap;text-align:right;">
           <xsl:attribute name="href">
             <xsl:apply-templates select="." mode="getHref" />
+            <xsl:text>?</xsl:text>
             <xsl:call-template name="mailer_utm_campaign"/>
           </xsl:attribute>
           <xsl:attribute name="title">
@@ -1347,10 +1454,12 @@
               <xsl:when test="format-number(@link,'0')!='NaN'">
                 <xsl:variable name="pageId" select="@link"/>
                 <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                <xsl:text>?</xsl:text>
                 <xsl:call-template name="mailer_utm_campaign"/>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="@link"/>
+                <xsl:text>?</xsl:text>
                 <xsl:call-template name="mailer_utm_campaign"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -1395,7 +1504,7 @@
     <xsl:param name="altText"/>
     <div class="morelink" align="right">
       <span>
-        <a href="{$link}{$mailer_utm_campaign}" title="{$altText}">
+        <a href="{$link}?{$mailer_utm_campaign}" title="{$altText}">
           <font face="{$bodyFont}" size="{$bodySize}">
             <xsl:choose>
               <xsl:when test="$linkText!=''">
@@ -1455,11 +1564,17 @@
         <xsl:otherwise>
           <xsl:value-of select="$siteURL"/>
           <xsl:value-of select="@href"/>
+          <xsl:choose>
+            <xsl:when test="contains(@href,'?')">&amp;</xsl:when>
+            <xsl:otherwise>
+              <xsl:text>?</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
           <xsl:value-of select="$mailer_utm_campaign"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <a href="{$href}" title="{@title}">
+    <a href="{$href}" title="{@title}" style="{@style}">
       <xsl:apply-templates mode="cleanXhtml"/>
     </a>
   </xsl:template>

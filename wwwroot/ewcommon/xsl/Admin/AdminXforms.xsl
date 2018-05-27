@@ -1564,15 +1564,19 @@
       </xsl:choose>
     </xsl:variable>
     <!--This way we get the type of content we relate to dynamically-->
-    <div class="form-group">
-
       
         <label for="Related_{$relationType}">
-          <xsl:if test="$relationType!=''">
-            <label>
+          <xsl:choose>
+            <xsl:when test="label/node()!=''">
+              <xsl:value-of select="label/node()"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="$relationType!=''">
               <xsl:value-of select="$relationType"/>
-            </label>
           </xsl:if>
+            </xsl:otherwise>
+          </xsl:choose>
+          
           <!--<small>-->
 
           <xsl:choose>
@@ -1588,7 +1592,6 @@
           </xsl:choose>
           <!--</small>-->
         </label>
-      <div class="form-group">
           <xsl:choose>
             <xsl:when test="ancestor::Content/model/instance/ContentRelations[@copyRelations='true']">
               Copy the following relationships
@@ -1632,7 +1635,7 @@
                     <i class="fa fa-info">&#160;</i> Press CTRL and click to select more than one option</div>
                 </xsl:if>
                   <xsl:if test="contains(@search,'add')">
-                    <span class="input-group-btn">
+                    <span class="input-group-btn pull-right">
                       <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
                         <i class="fa fa-plus fa-white">
                           <xsl:text> </xsl:text>
@@ -1644,14 +1647,14 @@
               </xsl:if>
               <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
                 <xsl:if test="contains(@search,'find')">
-                  <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs" onclick="disableButton(this);$('#{$formName}').submit();" >
+                  <button ref="repeat" type="button" name="RelateFind_{$contentType}_{$RelType}_{$relationType}" value="Find Existing {$contentType}" class="btn btn-info btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();" >
                     <i class="fa fa-search fa-white">
                       <xsl:text> </xsl:text>
                     </i> Find Existing <xsl:value-of select="$contentType"/>
                   </button>
                 </xsl:if>
                 <xsl:if test="contains(@search,'add')">
-                  <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs" onclick="disableButton(this);$('#{$formName}').submit();">
+                  <button ref="repeat" type="button" name="RelateAdd_{$contentType}_{$RelType}_{$relationType}" value="Add New" class="btn btn-success btn-xs pull-right" onclick="disableButton(this);$('#{$formName}').submit();">
                     <i class="fa fa-plus fa-white">
                       <xsl:text> </xsl:text>
                     </i> Add New
@@ -1669,29 +1672,26 @@
           <xsl:with-param name="relationDirection" select="$RelType" />
         </xsl:apply-templates>
       </xsl:if>
-      </div>
-    </div>
   </xsl:template>
 
   <xsl:template match="Content" mode="relatedRow">
     <xsl:param name="formName"/>
     <xsl:param name="relationType"/>
     <xsl:param name="relationDirection"/>
-    <span class="advancedModeRow" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
-      <tr>
-        <td>
+    <div class="advancedModeRow row" onmouseover="this.className='rowOver row'" onmouseout="this.className='advancedModeRow row'">
+        <div class="col-md-6">
           <xsl:apply-templates select="." mode="relatedBrief"/>
-        </td>
+        </div>
         <xsl:choose>
           <xsl:when test="parent::ContentRelations[@copyRelations='true']">
-            <td class="relatedOptionsButton">
+            <div class="col-md-6">
               <input type="checkbox" name="Relate_{$relationType}_{$relationDirection}" value="{@id}" checked="checked">
                 <xsl:text> </xsl:text>Relate
               </input>
-            </td>
+            </div>
           </xsl:when>
           <xsl:otherwise>
-            <td class="relatedOptionsButton">
+            <div class="col-md-6 buttons">
               <button type="button" name="RelateTop_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
                 <i class="fa fa-arrow-up fa-white">
                   <xsl:text> </xsl:text>
@@ -1746,13 +1746,12 @@
                   <xsl:text> </xsl:text>Delete
                 </a>
               </xsl:if>
-            </td>
+            </div>
           </xsl:otherwise>
         </xsl:choose>
 
 
-      </tr>
-    </span>
+    </div>
   </xsl:template>
 
 
@@ -2153,7 +2152,7 @@
     <xsl:variable name="val" select="value/node()"/>
     <!--<xsl:variable name="class" select="../@class"/>-->
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-    <label for="{$ref}_{$value}">
+    <label for="{$ref}_{$value}" class="list-group-item">
       <xsl:if test="not(contains($class,'multiline'))">
         <xsl:attribute name="class">
           <xsl:text> radio-inline</xsl:text>

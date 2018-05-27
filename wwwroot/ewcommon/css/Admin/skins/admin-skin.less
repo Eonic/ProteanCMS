@@ -93,6 +93,7 @@ NEW BS ADMIN HEADER
 			text-transform:none!important;
 			height:auto!important;
             letter-spacing:normal;
+            text-decoration:none!important;
 		}
 		li.mansonary-size a.btn{
 			
@@ -210,16 +211,20 @@ NEW BS ADMIN HEADER
     }
 
     #MenuTree table td {
-        background-color: transparent!important;
+        background-color: transparent !important;
     }
-    #MenuTree.sideNav li{
-        span.treeNode > i {float:left;}
-        .hitarea{
-            margin-top:10px;
-            padding-top:0;
 
+    #MenuTree.sideNav li {
+        span.treeNode > i {
+            float: left;
+        }
+
+        .hitarea {
+            margin-top: 10px;
+            padding-top: 0;
         }
     }
+
     #collapseInstalled_Themes button img {
         height: 175px;
     }
@@ -231,19 +236,27 @@ NEW BS ADMIN HEADER
     .panel-heading, .panel {
         border-radius: @admin-header-border-radius !important;
     }
+
     .btn-primary i {
         color: @admin-header-color !important;
     }
 
     .btn-toolbar {
-        padding-bottom:10px;
+        padding-bottom: 10px;
     }
+
     .btn-primary,
     .btn-info,
-    .btn-default{
-        &:after{content:none!important}
-        &:before{content:none!important}
+    .btn-default {
+        &:after {
+            content: none !important
+        }
+
+        &:before {
+            content: none !important
+        }
     }
+
     .btn-primary,
     .btn-info {
         background: @admin-header-color-link !important;
@@ -274,7 +287,7 @@ NEW BS ADMIN HEADER
             background: lighten(@admin-header-color-link, 32%) !important;
         }
 
-        font-family: @admin-header-font!important;
+        font-family: @admin-header-font !important;
         text-shadow: none;
         border-width: 1px;
         letter-spacing: 0;
@@ -286,7 +299,7 @@ NEW BS ADMIN HEADER
     }
 
     .btn-danger {
-        background: @admin-danger!important;
+        background: @admin-danger !important;
         border-color: darken(@admin-danger, 10%) !important;
         color: @admin-header-color !important;
 
@@ -298,22 +311,26 @@ NEW BS ADMIN HEADER
     }
 
     .btn-success {
-        background: @admin-success!important;
+        background: @admin-success !important;
         border-color: darken(@admin-success, 10%) !important;
         color: @admin-header-color !important;
+
         &:hover {
             background: lighten(@admin-success, 7%) !important;
         }
+
         border-width: 1px;
     }
 
     .btn-warning {
-        background: @admin-warning!important;
+        background: @admin-warning !important;
         border-color: darken(@admin-warning, 10%) !important;
         color: @admin-header-color !important;
+
         &:hover {
             background: lighten(@admin-warning, 7%) !important;
         }
+
         border-width: 1px;
     }
 
@@ -332,9 +349,9 @@ NEW BS ADMIN HEADER
             color: @admin-header-color;
         }
 
-            a:hover {
-                color: @admin-header-color-link;
-            }
+        a:hover {
+            color: @admin-header-color-link;
+        }
 
         font-size: 12px;
         border-top: 4px solid fadeout(@admin-bg, 60%);
@@ -347,11 +364,12 @@ NEW BS ADMIN HEADER
         .checkboxes label {
             font-weight: 400;
         }
+
         #fileupload .description,
-        .cDisplay-dependant{
-            color:@admin-header-font-color;
-            font-family:@admin-header-font;
-            font-size:13px;
+        .cDisplay-dependant {
+            color: @admin-header-font-color;
+            font-family: @admin-header-font;
+            font-size: 13px;
         }
     }
 
@@ -377,14 +395,36 @@ NEW BS ADMIN HEADER
         .panel-body > .alert:last-child {
             margin-bottom: 0;
         }
-        .scroll_10{
-            height:100px;
+
+        .scroll_10 {
+            height: 100px;
         }
     }
 
     table.manage-lookups .buttonCell {
         min-width: 210px;
     }
+
+    dl.tabled {
+        border: none;
+        padding: 0; 
+        dt {
+            float: left;
+            clear: left;
+            width: 150px;
+            text-align: right;
+            font-weight: bold;
+        }
+        dt::after {
+            content: ":";
+        }
+        dd {
+            margin: 0 0 0 160px;
+            padding: 0 0 0.5em 0;
+        }
+    }
+
+   
 }
 .Site .listItem .ewAdmin .btn,
 .Site .panel .list-group .ewAdmin .btn,
@@ -392,7 +432,8 @@ NEW BS ADMIN HEADER
 	padding-left:5px!important;
 	padding-right:5px!important;
 	border-radius:0px!important;
-	i{font-size:1em;}
+	i{font-size:1em;};
+    text-decoration:none !important;
 }
 #keepalive{
 	display:none;
@@ -676,6 +717,8 @@ NEW BS ADMIN HEADER
 		-moz-border-radius: 0px;
 		border-radius: 0px;
 		height:auto !important;
+        
+    text-decoration:none !important;
 
 	}
 	.ewAdmin .btn-xs{

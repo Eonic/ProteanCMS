@@ -102,6 +102,10 @@
               <value>Left</value>
             </item>
             <item>
+              <label>Right</label>
+              <value>Right</value>
+            </item>
+            <item>
               <label>Centre - Large</label>
               <value>Centre</value>
             </item>

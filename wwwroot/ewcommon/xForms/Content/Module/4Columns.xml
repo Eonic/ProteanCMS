@@ -37,7 +37,7 @@
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::bind[@id='columnPresentationBinds']"/>
-      <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
     <label>Edit 4 Column Module</label>
@@ -53,7 +53,8 @@
 
         <!-- end of hidden fields -->
         <ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::group[@id='columnPresentation']"/>
-          <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+        
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
       </group>
     </group>
     <group>

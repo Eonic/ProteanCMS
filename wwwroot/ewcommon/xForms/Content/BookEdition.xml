@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>BookEdition</cContentSchemaName> 
+        <cContentXmlBrief>
+          <Content showRelated="Book Tag,Contact,Book,Testimonial,Organisation">
+            <EditionName/>
+            <Format/>
+            <Pages/>
+            <PublishedDate/>
+            <ISBN/> 
+            <Illustrator/>
+            <Translator/>
+            <InLanguage/>
+            <Epub fileSize="" textToSpeach="" X-Ray="" WordWise="" screenReader="" EnhancedTypeset="" />
+            <ProductDimensions/>
+            <BuyOnlineURLs/>
+            <Prices>
+              <Price currency="GBP" type="sale" validGroup="all"/>
+              <Price currency="GBP" type="rrp" validGroup="all"/>
+            </Prices>
+            <Description/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+            <Options>
+              <OptGroup type="Options1" selectType="DropDown">
+                <option/>
+                <option/>
+                <option/>
+              </OptGroup>
+              <OptGroup type="Options2" selectType="DropDown">
+                <option/>
+                <option/>
+                <option/>
+              </OptGroup>
+            </Options>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content showRelated="Book Tag,Contact,Book,Testimonial,Publisher">
+            <EditionName/>
+            <Format/>
+            <Pages/>
+            <PublishedDate/>
+            <ISBN/>
+            <Illustrator/>
+            <Translator/>
+            <InLanguage/>
+            <Epub fileSize="" textToSpeach="" X-Ray="" WordWise="" screenReader="" EnhancedTypeset="" />
+            <Audiobook/>
+            <ProductDimensions/>
+            <BuyOnlineURLs/>
+            <Prices>
+              <Price currency="GBP" type="sale" validGroup="all"/>
+              <Price currency="GBP" type="rrp" validGroup="all"/>
+            </Prices>
+            <Description/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+            <Links>
+              <Link>
+                <LinkTitle/>
+                <LinkUrl/>
+              </Link>
+            </Links>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <ChangeNotes/>
+      </tblContent>
+      <Relation type="Author" relatedContentId="" direction="2way"/>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cChangeNotes" nodeset="ChangeNotes" required="false()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+       <bind id="cEditionName" nodeset="cContentName" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cEditionName" nodeset="EditionName" required="false()" type="string"/>
+        <bind id="cFormat" nodeset="Format" required="false()" type="string"/>
+        <bind id="cPublishedDate" nodeset="PublishedDate" required="false()" type="string"/>
+        <bind id="cISBN" nodeset="ISBN" required="false()" type="string"/>
+        <bind id="cillustrator" nodeset="Illustrator" required="false()" type="string"/>
+        <bind id="cTranslator" nodeset="Translator" required="false()" type="string"/>
+        <bind id="cInLanguage" nodeset="InLanguage" required="false()" type="string"/>
+        <bind id="cEpub" nodeset="Epub" required="false()" type="string"/>
+        <bind id="cBuyOnlineURLs" nodeset="BuyOnlineURLs" required="false()" type="string"/>
+        <bind id="cProductDimensions" nodeset="ProductDimensions" required="false()" type="string"/>
+        <bind id="cPages" nodeset="Pages" required="false()" type="string"/>
+        <bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="false()" type="string"/>
+        <bind id="cContentPriceRRP" nodeset="Prices/Price[@type='rrp']" required="false()" type="string"/>
+        <bind id="cShortDescription" nodeset="ShortDescription" required="false()" type="string"/>
+        <bind id="cDescription" nodeset="Description" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind nodeset="cContentXmlBrief/Content/Epub">
+          <bind id="cFileSize" nodeset="@fileSize" required="false()" type="string"/>
+          <bind id="cTextToSpeach" nodeset="@TextToSpeach" required="false()" type="string"/>
+          <bind id="cX-Ray" nodeset="@cX-Ray" required="false()" type="string"/>
+          <bind id="cWordWise" nodeset="@WordWise" required="false()" type="string"/>
+          <bind id="cscreenReader" nodeset="@screenReader" required="false()" type="string"/>
+          <bind id="cEnhancedTypeset" nodeset="@EnhancedTypeset" required="false()" type="string"/>
+        </bind>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content/Audiobook">
+        <bind id="cBridged" nodeset="@bridged" required="false()" type="string"/>
+      </bind>
+        <bind nodeset="Options/OptGroup[@type='Options1']">
+          <bind id="cOptName1" nodeset="@name" required="false()" type="string"/>
+          <bind id="cOptType1" nodeset="@selectType" required="false()" type="string"/>
+          <bind id="cOptRpt1" nodeset="option">
+            <bind id="cOpt1" nodeset="@name" required="false()" type="string"/>
+          </bind>
+        </bind>
+        <bind nodeset="Options/OptGroup[@type='Options2']">
+          <bind id="cOptName2" nodeset="@name" required="false()" type="string"/>
+          <bind id="cOptType2" nodeset="@selectType" required="false()" type="string"/>
+          <bind id="cOptRpt2" nodeset="option">
+            <bind id="cOpt2" nodeset="@name" required="false()" type="string"/>
+          </bind>
+        </bind>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cEditionName" nodeset="EditionName" required="false()" type="string"/>
+        <bind id="cFormat" nodeset="Format" required="false()" type="string"/>
+        <bind id="cPublishedDate" nodeset="PublishedDate" required="false()" type="string"/>
+        <bind id="cISBN" nodeset="ISBN" required="false()" type="string"/>
+        <bind id="cillustrator" nodeset="Illustrator" required="false()" type="string"/>
+        <bind id="cTranslator" nodeset="Translator" required="false()" type="string"/>
+        <bind id="cInLanguage" nodeset="InLanguage" required="false()" type="string"/>
+        <bind id="cEpub" nodeset="Epub" required="false()" type="string"/>
+        <bind id="cBuyOnlineURLs" nodeset="BuyOnlineURLs" required="false()" type="string"/>
+        <bind id="cProductDimensions" nodeset="ProductDimensions" required="false()" type="string"/>
+        <bind id="cPages" nodeset="Pages" required="false()" type="string"/>
+        <bind id="cContentPrice" nodeset="Prices/Price[@type='sale']" required="false()" type="string"/>
+        <bind id="cContentPriceRRP" nodeset="Prices/Price[@type='rrp']" required="false()" type="string"/>
+        <bind id="cShortDescription" nodeset="ShortDescription" required="false()" type="string"/>
+        <bind id="cDescription" nodeset="Description" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind nodeset="cContentXmlDetail/Content/Epub">
+          <bind id="cFileSize" nodeset="@fileSize" required="false()" type="string"/>
+          <bind id="cTextToSpeach" nodeset="@TextToSpeach" required="false()" type="string"/>
+          <bind id="cX-Ray" nodeset="@cX-Ray" required="false()" type="string"/>
+          <bind id="cWordWise" nodeset="@WordWise" required="false()" type="string"/>
+          <bind id="cscreenReader" nodeset="@screenReader" required="false()" type="string"/>
+          <bind id="cEnhancedTypeset" nodeset="@EnhancedTypeset" required="false()" type="string"/>
+        </bind>
+        <bind nodeset="cContentXmlDetail/Content/Audiobook">
+          <bind id="cBridged" nodeset="@bridged" required="false()" type="string"/>
+        </bind>
+        <bind id="LinksRpt" nodeset="Links/Link">
+          <bind id="aLinkTitle" nodeset="LinkTitle" required="false()" type="string"/>
+          <bind id="aLinkUrl" nodeset="LinkUrl" required="false()" type="string"/>
+        </bind>
+      </bind>
+    <bind nodeset="Relation">
+      <bind id="Related-Author" nodeset="@relatedContentId" required="false()" type="string"/>
+      <bind id="cBooks" nodeset="@relatedBookId" required="false()" type="string"/>
+      <bind id="cPublisher" nodeset="@Publisher" required="false()" type="string"/>
+      <bind id="cDocument" nodeset="@relatedDocId" required="false()" type="string"/>
+      <bind id="cTestimonials" nodeset="@relatedTestimonialsId" required="false()" type="string"/>
+    </bind>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Book Edition</label>
+    <group class="ContentColumn1">
+      <group ref="Settings" class="leftSettings">
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <input bind="cChangeNotes" class="">
+          <label>Change Notes</label>
+        </input>
+      </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main Book Image</label>
+          <help class="inline">
+            <p>
+              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+            </p>
+            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+          </help>
+        </input>
+        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative Thumbnail</label>
+        </input>
+        <input bind="cContentDisplay" class="short pickImage">
+          <label>Alternative Picture</label>
+        </input>
+      </group>
+    </group>
+    <group class="ContentColumn2">
+      <group ref="Content" class="Content">
+        <!--Book Edition Details-->
+        <input bind="cEditionName" class="">
+          <label>Edition Name</label>
+        </input>
+        <select1 bind="cFormat" appearance="full" class="vshort">
+          <label>Format</label>
+          <item>
+            <label>Hardback</label>
+            <value>Hardback</value>
+            <toggle case="cHardback" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Paperback</label>
+            <value>Paperback</value>
+            <toggle case="cPaperback" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>E-Book/ Kindle</label>
+            <value>E-Book</value>
+            <toggle case="cEBook" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>Audiobook</label>
+            <value>Audiobook</value>
+            <toggle case="cAudiobook" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cHardback">
+            <group class="inline">
+            <input bind="cISBN">
+              <label>ISBN</label>
+            </input>
+            <input bind="cPages">
+              <label>Number of Pages</label>
+            </input>
+            <input bind="cProductDimensions" >
+              <label>Product Dimensions</label>
+            </input>
+            <input bind="cInLanguage" >
+              <label>InLanguage</label>
+            </input>
+            <input bind="cTranslator" >
+              <label>Translator</label>
+            </input>
+            <input bind="cillustrator">
+              <label>illustrator</label>
+            </input>
+            </group>
+            <group class="inline">
+              <label>Prices</label>
+              <input bind="cContentPrice" class="short">
+                <label>Purchase price</label>
+                <help class="inline">The price a customer will purchase the product for.</help>
+              </input>
+              <input bind="cContentPriceRRP" class="short">
+                <label>RRP</label>
+                <help class="inline">
+                  <p>Optional. If an RRP is specified, it will display to the user;</p>
+                  <p>
+                    RRP: £10.00<br/><b>Now: £8.50</b>
+                  </p>
+                  <p>If ecommerce, the user will still pay the 'purchase price'.</p>
+                </help>
+              </input>
+            </group>
+          </case>
+          <case id="cPaperback">
+            <group class="inline">
+            <input bind="cISBN">
+              <label>ISBN</label>
+            </input>
+            <input bind="cPages">
+              <label>Number of Pages</label>
+            </input>
+            <input bind="cProductDimensions" >
+              <label>Product Dimensions</label>
+            </input>
+            <input bind="cInLanguage" >
+              <label>InLanguage</label>
+            </input>
+            <input bind="cTranslator" >
+              <label>Translator</label>
+            </input>
+            <input bind="cillustrator">
+              <label>illustrator</label>
+            </input>
+            <input bind="cBuyOnlineURLs" class="" >
+              <label>Buy Online URLs</label>
+            </input>
+            </group>
+            <group class="inline">
+              <label>Prices</label>
+              <input bind="cContentPrice" class="short">
+                <label>Purchase price</label>
+                <help class="inline">The price a customer will purchase the product for.</help>
+              </input>
+              <input bind="cContentPriceRRP" class="short">
+                <label>RRP</label>
+                <help class="inline">
+                  <p>Optional. If an RRP is specified, it will display to the user;</p>
+                  <p>
+                    RRP: £10.00<br/><b>Now: £8.50</b>
+                  </p>
+                  <p>If ecommerce, the user will still pay the 'purchase price'.</p>
+                </help>
+              </input>
+            </group>
+          </case>
+          <case id="cEBook">
+            <group class="inline">
+            <input bind="cEpub" class="pickMedia" >
+              <label>Epub file</label>
+            </input>
+            <input bind="cFileSize" class="" >
+              <label>File Size</label>
+            </input>
+            <input bind="cISBN">
+              <label>ASIN</label>
+              <help class="inline">ASIN stands for Amazon Standard Identification Number. Almost every product on our site has its own ASIN, a unique code we use to identify it. For books, the ASIN is the same as the ISBN number, but for all other products a new ASIN is created when the item is uploaded to our catalogue.</help>
+            </input>
+            <input bind="cPages">
+              <label>Number of Pages</label>
+            </input>
+            <select1 bind="cTextToSpeach" appearance="full" class="vshort">
+              <label>Text to Speach</label>
+              <item>
+                <label>Enabled</label>
+                <value>Enabled</value>
+              </item>
+              <item>
+                <label>Disabled </label>
+                <value>Disabled </value>
+              </item>
+              <help class="inline">
+                <p>Text-to-Speech is available for the Kindle Fire HDX, Kindle Fire HD, Kindle Fire, Kindle Touch, Kindle Keyboard, Kindle (2nd generation), Kindle DX, Amazon Echo, Amazon Tap and Echo Dot.</p>
+              </help>
+            </select1>
+            <select1 bind="cX-Ray" appearance="full" class="vshort">
+              <label>X-Ray</label>
+              <item>
+                <label>Enabled</label>
+                <value>Enabled</value>
+              </item>
+              <item>
+                <label>Disabled </label>
+                <value>Disabled </value>
+              </item>
+              <help class="inline">
+                <p>X-Ray is available on touchscreen Kindle E-readers, Kindle Fire 2nd Generation and later, Kindle for iOS and the latest version of Kindle for Android.</p>
+              </help>
+            </select1>
+            <select1 bind="cWordWise" appearance="full" class="vshort">
+              <label>Word Wise</label>
+              <item>
+                <label>Enabled</label>
+                <value>Enabled</value>
+              </item>
+              <item>
+                <label>Disabled </label>
+                <value>Disabled </value>
+              </item>
+              <help class="inline">
+                <p>Word Wise makes it easier to enjoy and quickly understand more challenging books. Short and simple definitions automatically appear above difficult words, so you can keep reading with fewer interruptions. Tap on a word to bring up a simple card with definitions, synonyms, and more. You can adjust the number of hints you see with a simple slider.</p>
+              </help>
+            </select1>
+            <select1 bind="cscreenReader" appearance="full" class="vshort">
+              <label>Screen Reader</label>
+              <item>
+                <label>Supported</label>
+                <value>Supported</value>
+              </item>
+              <item>
+                <label>Unsupport</label>
+                <value>Unsupport</value>
+              </item>
+              <help class="inline">
+                <p>The text of this e-book can be read by popular screen readers. Descriptive text for images (known as “ALT text”) can be read using the Kindle for PC app if the publisher has included it. If this e-book contains other types of non-text content (for example, some charts and maths equations), that content will not currently be read by screen readers.</p>
+              </help>
+            </select1>
+            <select1 bind="cEnhancedTypeset" appearance="full" class="vshort">
+              <label>Enhanced Typeset</label>
+              <item>
+                <label>Enabled</label>
+                <value>Enabled</value>
+              </item>
+              <item>
+                <label>Disabled</label>
+                <value>Disabled</value>
+              </item>
+              <help class="inline">
+                <p>Enhanced typesetting improvements offer faster reading with less eye strain and beautiful page layouts, even at larger font sizes.</p>
+              </help>
+            </select1>
+            </group>
+            <group class="inline">
+              <label>Prices</label>
+              <input bind="cContentPrice" class="short">
+                <label>Purchase price</label>
+                <help class="inline">The price a customer will purchase the product for.</help>
+              </input>
+              <input bind="cContentPriceRRP" class="short">
+                <label>RRP</label>
+                <help class="inline">
+                  <p>Optional. If an RRP is specified, it will display to the user;</p>
+                  <p>
+                    RRP: £10.00<br/><b>Now: £8.50</b>
+                  </p>
+                  <p>If ecommerce, the user will still pay the 'purchase price'.</p>
+                </help>
+              </input>
+            </group>
+          </case>
+          <case id="cAudiobook">
+            <input bind="cISBN">
+              <label>ASIN</label>
+              <help class="inline">ASIN stands for Amazon Standard Identification Number. Almost every product on our site has its own ASIN, a unique code we use to identify it. For books, the ASIN is the same as the ISBN number, but for all other products a new ASIN is created when the item is uploaded to our catalogue.</help>
+            </input>
+            <input bind="cPages">
+              <label>Listerning Length</label>
+            </input>
+            <select1 bind="cBridged" appearance="full" class="vshort">
+              <label>Version</label>
+              <item>
+                <label>Bridged</label>
+                <value>Bridged</value>
+              </item>
+              <item>
+                <label>Unabridge </label>
+                <value>Unabridge </value>
+              </item>
+              <help class="inline">
+                <p>Text-to-Speech is available for the Kindle Fire HDX, Kindle Fire HD, Kindle Fire, Kindle Touch, Kindle Keyboard, Kindle (2nd generation), Kindle DX, Amazon Echo, Amazon Tap and Echo Dot.</p>
+              </help>
+            </select1>
+            <group class="inline">
+              <label>Prices</label>
+              <input bind="cContentPrice" class="short">
+                <label>Purchase price</label>
+                <help class="inline">The price a customer will purchase the product for.</help>
+              </input>
+              <input bind="cContentPriceRRP" class="short">
+                <label>RRP</label>
+                <help class="inline">
+                  <p>Optional. If an RRP is specified, it will display to the user;</p>
+                  <p>
+                    RRP: £10.00<br/><b>Now: £8.50</b>
+                  </p>
+                  <p>If ecommerce, the user will still pay the 'purchase price'.</p>
+                </help>
+              </input>
+            </group>
+          </case>
+        </switch>
+        <group class="">
+          <relatedContent bind="cPublisher" search="pick add" type="Organisation" relationType="Publisher" direction="2way" class="form-border-bottom" maxRelationNo="1">
+            <label>Publisher</label>
+          </relatedContent>
+          <input bind="cPublishedDate" class="calendar">
+            <label>Published Date</label>
+          </input>
+          <group>
+            <label>Links </label>
+            <repeat bind="LinksRpt" class="horizontal">
+              <group class="inline">
+                <input bind="aLinkTitle" class="short">
+                  <label>Title of Link </label>
+                </input>
+                <input bind="aLinkUrl" class="">
+                  <label>Link</label>
+                  <hint>www.eonic.co.uk</hint>
+                </input>
+              </group>
+              <trigger>
+                <label>Del</label>
+                <delete bind="LinksRpt" at="index('LinkRpt')"/>
+              </trigger>
+            </repeat>
+            <trigger>
+              <label>Add Link</label>
+              <insert position="after" bind="LinksRpt" at="index('LinksRpt')" class="add"/>
+            </trigger>
+          </group>
+        </group>
+        <textarea bind="cDescription" class="TextArea xhtml" rows="15" cols="70">
+          <label class="no-margin">Main Description</label>
+        </textarea>
+        <!--relatedContent-->
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Book</label>
+    </submit>
+  </group>
+</Content>

@@ -202,8 +202,14 @@ Partial Public Class fsHelper
             End If
             Dim ImagePath As String = GetFileLibraryPath(LibraryType.Image) & cPath
 
-            Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & Me.mcRoot & cPath))
-            Return "<img src=""" & ImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+            If ImagePath.EndsWith(".svg") Then
+                Return "<img src=""" & ImagePath & """ alt=""""/> "
+            Else
+                Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/" & Me.mcRoot & cPath))
+                Return "<img src=""" & ImagePath & """ height=""" & oImg.Height & """ width=""" & oImg.Width & """ alt=""""/> "
+            End If
+
+
 
         Catch ex As Exception
             returnException(mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug)
@@ -612,6 +618,26 @@ Partial Public Class fsHelper
 
             If dir.Exists And DestDir.Exists Then
                 IO.File.Copy(dir.FullName & "/" & FileName, DestDir.FullName & "\" & FileName, bOverwrite)
+                Return True
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+    End Function
+
+    Public Function MoveFile(ByVal FileName As String, ByVal cFolderSource As String, ByVal cFolderDestination As String, Optional ByVal bOverwrite As Boolean = False) As Boolean
+        PerfMon.Log("fsHelper", "SaveFile")
+        Try
+
+            Dim dir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderSource.Replace("/", "\"))
+            Dim DestDir As New DirectoryInfo(goServer.MapPath("/" & mcRoot) & cFolderDestination.Replace("/", "\"))
+
+            If dir.Exists And DestDir.Exists Then
+                IO.File.Copy(dir.FullName & "\" & FileName, DestDir.FullName & "\" & FileName.Replace(" ", "-"), bOverwrite)
+                IO.File.Delete(dir.FullName & "\" & FileName)
                 Return True
             Else
                 Return False

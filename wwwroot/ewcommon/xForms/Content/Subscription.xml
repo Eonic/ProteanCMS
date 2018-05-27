@@ -71,12 +71,6 @@
               <Group id=""/>
               <Group id=""/>
               <Group id=""/>
-              <Group id=""/>
-              <Group id=""/>
-              <Group id=""/>
-              <Group id=""/>
-              <Group id=""/>
-              <Group id=""/>
             </UserGroups>
             <Prices>
               <Price currency="GBP" validGroup="all" type="sale"/>
@@ -180,12 +174,6 @@
           <bind id="nGroup_2" nodeset="Group[2]/@id" required="false()" type="string"/>
           <bind id="nGroup_3" nodeset="Group[3]/@id" required="false()" type="string"/>
           <bind id="nGroup_4" nodeset="Group[4]/@id" required="false()" type="string"/>
-          <bind id="nGroup_5" nodeset="Group[5]/@id" required="false()" type="string"/>
-          <bind id="nGroup_6" nodeset="Group[6]/@id" required="false()" type="string"/>
-          <bind id="nGroup_7" nodeset="Group[7]/@id" required="false()" type="string"/>
-          <bind id="nGroup_8" nodeset="Group[8]/@id" required="false()" type="string"/>
-          <bind id="nGroup_9" nodeset="Group[9]/@id" required="false()" type="string"/>
-          <bind id="nGroup_10" nodeset="Group[10]/@id" required="false()" type="string"/>
         </bind>
       </bind>
     </bind>
@@ -352,35 +340,17 @@
         </group>
       <group class="inline">
         <label>User Group Membership</label>
-        <select1 bind="nGroup_1">
+        <select1 bind="nGroup_1" class="ewQuery" query="Directory.Group">
           <label>User group</label>
           <help class="inline">When a user has purchased THIS subscription, you can specify which Membership group they will become a member of.  Usually it is a Membership group that has a higher level of access to the site</help>
         </select1>
-        <select1 bind="nGroup_2">
+        <select1 bind="nGroup_2" class="ewQuery" query="Directory.Group">
           <label>User group</label>
         </select1>
-        <select1 bind="nGroup_3">
+        <select1 bind="nGroup_3" class="ewQuery" query="Directory.Group">
           <label>User Group</label>
         </select1>
-        <select1 bind="nGroup_4">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_5">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_6">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_7">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_8">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_9">
-          <label>User Group</label>
-        </select1>
-        <select1 bind="nGroup_10">
+        <select1 bind="nGroup_4" class="ewQuery" query="Directory.Group">
           <label>User Group</label>
         </select1>
       </group>

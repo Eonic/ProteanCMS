@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew fb g" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew" xmlns:fb="https://www.facebook.com/2008/fbml" xmlns:g="http://base.google.com/ns/1.0">
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew fb g xlink" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew" xmlns:fb="https://www.facebook.com/2008/fbml" xmlns:xlink="http://www.w3.org/2000/svg" xmlns:g="http://base.google.com/ns/1.0">
 
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
@@ -26,6 +26,11 @@
       <!-- IF ContentDetail Show ContentDetail -->
       <xsl:when test="ContentDetail">
         <div class="detail-container">
+          <xsl:attribute name="class">
+            <xsl:text>detail-container </xsl:text>
+            <xsl:value-of select="$page/ContentDetail/Content/@type"/>
+            <xsl:text>-detail-container</xsl:text>
+          </xsl:attribute>
           <xsl:apply-templates select="ContentDetail" mode="ContentDetail"/>
           <xsl:apply-templates select="ContentDetail/Content" mode="socialBookmarks" />
         </div>
@@ -452,7 +457,12 @@
         <xsl:apply-templates select="." mode="moduleBox"/>
       </xsl:when>
       <xsl:otherwise>
-        <div id="mod_{@id}" class="module nobox pos-{@position}">
+        <xsl:variable name="thisClass">
+          <xsl:if test="@iconStyle='Centre'"> module-centred</xsl:if>
+          <xsl:if test="@iconStyle='CentreSmall'"> module-centred</xsl:if>
+          <xsl:if test="@iconStyle='Right'"> module-right</xsl:if>
+        </xsl:variable>
+        <div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <xsl:attribute name="class">
             <xsl:text>module nobox pos-</xsl:text>
@@ -468,6 +478,8 @@
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
             <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+            <xsl:value-of select="$thisClass"/>
+
           </xsl:attribute>
           <xsl:if test="@contentType='Module'">
             <xsl:attribute name="class">
@@ -477,6 +489,7 @@
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:apply-templates select="." mode="marginBelow" />
+              <xsl:value-of select="$thisClass"/>
             </xsl:attribute>
             <!--<xsl:if test="@backgroundImage!=''">
               <xsl:attribute name="style">
@@ -500,6 +513,11 @@
               <xsl:apply-templates select="." mode="marginBelow" />
             </xsl:attribute>
           </xsl:if>
+          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+            <div class="panel-image">
+              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            </div>
+          </xsl:if>
           <xsl:choose>
             <xsl:when test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
               <div>
@@ -507,6 +525,9 @@
                 <xsl:text> </xsl:text>
                 <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
                   <h3 class="title">
+                    <xsl:if test="@contentType='Module'">
+                      <xsl:attribute name="class">title layout-title</xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates select="." mode="moduleLink"/>
                   </h3>
                 </xsl:if>
@@ -515,6 +536,9 @@
             <xsl:otherwise>
               <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
                 <h3 class="title">
+                  <xsl:if test="@contentType='Module'">
+                    <xsl:attribute name="class">title layout-title</xsl:attribute>
+                  </xsl:if>
                   <xsl:apply-templates select="." mode="moduleLink"/>
                 </h3>
               </xsl:if>
@@ -524,7 +548,7 @@
             <xsl:apply-templates select="." mode="rssLink" />
           </xsl:if>
           <div class="terminus">&#160;</div>
-          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
             <div class="panel-image">
               <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
             </div>
@@ -638,6 +662,11 @@
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
+              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+                <div class="panel-image">
+                  <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+                </div>
+              </xsl:if>
               <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
                 <div class="panel-heading">
                   <h3 class="panel-title">
@@ -645,12 +674,15 @@
                   </h3>
                 </div>
               </xsl:if>
-              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
                 <div class="panel-image">
                   <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
                 </div>
               </xsl:if>
               <div class="panel-body">
+                <xsl:if test="@iconStyle='Centre'">
+                  <xsl:attribute name="class">panel-body center-block</xsl:attribute>
+                </xsl:if>
                 <xsl:apply-templates select="." mode="displayBrief"/>
               </div>
               <xsl:if test="@linkText!=''">
@@ -701,6 +733,11 @@
             <xsl:apply-templates select="." mode="marginBelow" />
             <xsl:apply-templates select="." mode="themeModuleExtras"/>
           </xsl:attribute>
+          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+            <div class="panel-image">
+              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            </div>
+          </xsl:if>
           <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
             <div class="panel-heading">
               <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -715,7 +752,7 @@
             </div>
           </xsl:if>
           <xsl:if test="not(@listGroup='true')">
-            <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+            <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
               <div class="panel-image">
                 <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
               </div>
@@ -910,6 +947,11 @@
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
+              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+                <div class="panel-image alert-image">
+                  <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+                </div>
+              </xsl:if>
               <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
                 <div class="alert-heading">
 
@@ -918,7 +960,7 @@
                   </h4>
                 </div>
               </xsl:if>
-              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+              <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
                 <div class="panel-image alert-image">
                   <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
                 </div>
@@ -954,6 +996,11 @@
         </xsl:variable>
         <div id="mod_{@id}" class="{$class}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
+          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+            <div class="panel-image alert-image">
+              <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            </div>
+          </xsl:if>
           <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
             <div class="alert-heading">
               <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -967,7 +1014,7 @@
               </h4>
             </div>
           </xsl:if>
-          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+          <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
             <div class="panel-image alert-image">
               <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
             </div>
@@ -1026,6 +1073,11 @@
     </xsl:variable>
     <div id="mod_{@id}" class="{$class}">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
+      <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
+        <div class="panel-image alert-image">
+          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+        </div>
+      </xsl:if>
       <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
         <div class="well-heading">
           <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -1039,7 +1091,7 @@
           </h3>
         </div>
       </xsl:if>
-      <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
+      <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
         <div class="panel-image well-image">
           <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
         </div>
@@ -1614,6 +1666,7 @@
         </xsl:apply-templates>
       </div>
       <div id="column4-{@id}" class="column4 col-md-2">
+        
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -2113,8 +2166,17 @@
         <xsl:variable name="title">
           <xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getTitleAttr" />
         </xsl:variable>
+        
         <a href="{$href}" title="{$title}">
           <xsl:choose>
+            <xsl:when test="img[contains(@src,'.svg')]">
+              <svg id="svg-{@position}" width="{$maxWidth}" height="{$maxHeight}" viewbox="0 0 {$maxWidth} {$maxHeight}" xmlns="http://www.w3.org/2000/svg"
+     xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{$maxWidth}" height="{$maxHeight}" class="img-responsive">
+                  <xsl:text> </xsl:text>
+                </image>
+              </svg>
+            </xsl:when>
             <xsl:when test="@resize='true'">
               <xsl:apply-templates select="." mode="resize-image"/>
             </xsl:when>
@@ -2132,7 +2194,7 @@
       </xsl:when>
       <xsl:when test="@externalLink!=''">
         <a href="{@externalLink}" title="Go to {@externalLink}">
-          <xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node()))">
+          <xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node())) and contains(@externalLink,'http')">
             <xsl:attribute name="rel">external</xsl:attribute>
             <!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
           </xsl:if>
@@ -2582,6 +2644,9 @@
     <xsl:variable name="mOptionsName" select="concat('mOptions',@id)"/>
     <xsl:variable name="mCentreLoc" select="concat('mCentreLoc',@id)"/>
     <!-- Map Centering Co-ords -->
+    <!--if google map id all ready exits not compleat--> 
+    <!--<xsl:text>if ($('#gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>').lengh) {</xsl:text>
+      <xsl:text> $('#gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>').show();</xsl:text>-->
     <xsl:choose>
       <xsl:when test="Location/@loc='address'">
         <!-- Initial set to a location - we will reset this after initialising options - as we have to convert the address -->
@@ -2634,6 +2699,8 @@
         <xsl:with-param name="gMapId" select="$gMapId"/>
       </xsl:apply-templates>
     </xsl:if>
+    <!--if google map id all ready exits not compleat end -->
+    <!--<xsl:text>};</xsl:text>-->
   </xsl:template>
 
   <!-- Each Map has it's set of values - unique by content id -->
@@ -2771,7 +2838,9 @@
             </xsl:call-template>
           </h3>
         </xsl:if>
-        <xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
+        <div class="map-description">
+        <xsl:apply-templates select="Description/*" mode="cleanXhtml"/>
+        </div>
       </div>
     </xsl:variable>
     var marker<xsl:value-of select="@id"/> = new google.maps.Marker({
@@ -2884,9 +2953,7 @@
       <xsl:apply-templates select="Name/node()" mode="cleanXhtml-escape-js"/>
     </xsl:variable>
     <xsl:variable name="locStrap">
-      <p>
-        <xsl:copy-of select="Strap/node()"/>
-      </p>
+        <xsl:apply-templates select="Strap/*" mode="cleanXhtml"/>
     </xsl:variable>
     <xsl:variable name="locAddress">
       <xsl:apply-templates select="Location/Address" mode="getAddress" />
@@ -2906,7 +2973,11 @@
         <xsl:apply-templates select="ms:node-set($locAddress)/*" mode="cleanXhtml-escape-js" />
       </xsl:if>
       <xsl:if test="Strap/node()!=''">
-        <xsl:apply-templates select="ms:node-set($locStrap)/*" mode="cleanXhtml-escape-js" />
+        <xsl:call-template name="escape-js-html">
+          <xsl:with-param name="string">
+            <xsl:copy-of select="$locStrap"/>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:if>
     </div>
   </xsl:template>
@@ -2938,7 +3009,13 @@
         <xsl:apply-templates select="ms:node-set($locAddress)/*" mode="cleanXhtml-escape-js" />
       </xsl:if>
       <xsl:if test="Strap/node()!=''">
-        <xsl:apply-templates select="ms:node-set($locStrap)/*" mode="cleanXhtml-escape-js" />
+        <xsl:call-template name="escape-js">
+          <xsl:with-param name="string">
+            <xsl:value-of select="$locStrap"/>
+          </xsl:with-param>
+        </xsl:call-template>
+        <xsl:copy-of select="$locStrap"/>
+        <!--xsl:apply-templates select="ms:node-set($locStrap)/*" mode="cleanXhtml-escape-js" /-->
       </xsl:if>
     </div>
   </xsl:template>
@@ -3516,7 +3593,7 @@
               <xsl:value-of select="$sitename"/>
             </span>
           </span>
-          <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
+          <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author'][1]" mode="displayAuthorBrief"/>
           <xsl:if test="@publish!=''">
             <p class="date" itemprop="datePublished">
               <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
@@ -3569,39 +3646,81 @@
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
+        
       </xsl:apply-templates>
-      <a href="{$parentURL}">
-        <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
-          <xsl:attribute name="rel">external</xsl:attribute>
-          <xsl:attribute name="class">extLink listItem list-group-item newsarticle</xsl:attribute>
-        </xsl:if>
-        <div class="lIinner">
-          <h3 class="title">
-            <xsl:apply-templates select="." mode="getDisplayName"/>
-          </h3>
-          <xsl:if test="Images/img/@src!=''">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
-            <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-            <span class="hidden">|</span>
-          </xsl:if>
-          <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-          <xsl:if test="@publish!=''">
-            <p class="date">
-              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-              <xsl:call-template name="DisplayDate">
-                <xsl:with-param name="date" select="@publish"/>
-              </xsl:call-template>
-            </p>
-          </xsl:if>
-          <xsl:if test="Strapline/node()!=''">
-            <div class="summary">
-              <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+      <xsl:choose>
+        <xsl:when test="Strapline/descendant-or-self::a">
+          <div class="straphaslinks">
+            <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+              <xsl:attribute name="rel">external</xsl:attribute>
+              <xsl:attribute name="class">extLink listItem list-group-item newsarticle straphaslinks</xsl:attribute>
+            </xsl:if>
+            <div class="lIinner">
+              <h3 class="title">
+                <a href="{$parentURL}">
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+                </a>
+              </h3>
+              <xsl:if test="Images/img/@src!=''">
+                <xsl:apply-templates select="." mode="displayThumbnail"/>
+                <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
+                <span class="hidden">|</span>
+              </xsl:if>
+              <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
+              <xsl:if test="@publish!=''">
+                <p class="date">
+                  <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="@publish"/>
+                  </xsl:call-template>
+                </p>
+              </xsl:if>
+              <xsl:if test="Strapline/node()!=''">
+                <div class="summary">
+                  <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+                </div>
+              </xsl:if>
+              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
+              <div class="terminus">&#160;</div>
             </div>
-          </xsl:if>
-          <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-          <div class="terminus">&#160;</div>
-        </div>
-      </a>
+          </div>
+        </xsl:when>
+        <xsl:otherwise>
+          <a href="{$parentURL}">
+            <xsl:if test="not(substring($link,1,1)='/') and (contains($link,'http://') and $linkType='external')">
+              <xsl:attribute name="rel">external</xsl:attribute>
+              <xsl:attribute name="class">extLink listItem list-group-item newsarticle</xsl:attribute>
+            </xsl:if>
+            <div class="lIinner">
+              <h3 class="title">
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </h3>
+              <xsl:if test="Images/img/@src!=''">
+                <xsl:apply-templates select="." mode="displayThumbnail"/>
+                <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
+                <span class="hidden">|</span>
+              </xsl:if>
+              <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
+              <xsl:if test="@publish!=''">
+                <p class="date">
+                  <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="@publish"/>
+                  </xsl:call-template>
+                </p>
+              </xsl:if>
+              <xsl:if test="Strapline/node()!=''">
+                <div class="summary">
+                  <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
+                </div>
+              </xsl:if>
+              <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
+              <div class="terminus">&#160;</div>
+            </div>
+          </a>
+        </xsl:otherwise>
+      </xsl:choose>
+     
     </div>
   </xsl:template>
 
@@ -3819,13 +3938,13 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="listItem list-group-item vcard">
+    <div class="listItem list-group-item vcard ">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item vcard'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner media">
-        <h4 class="fn">
+        <!--<h4 class="fn">
           <xsl:choose>
             <xsl:when test="@noLink='true'">
               <xsl:attribute name="title">
@@ -3850,7 +3969,7 @@
               </a>
             </xsl:otherwise>
           </xsl:choose>
-        </h4>
+        </h4>-->
         <xsl:if test="Images/img/@src!=''">
           <a href="{$parentURL}" title="click here to view more details on {GivenName/node()} {Surname/node()}">
             <xsl:apply-templates select="." mode="displayThumbnail"/>
@@ -6264,7 +6383,22 @@
     </xsl:variable>
     <!-- Output Module -->
     <div class="GalleryImageList Grid">
-      <div class="cols{@cols}">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix GalleryImageList Grid content-scroller</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
         <!-- If Stepper, display Stepper -->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
@@ -6279,7 +6413,6 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="@crop"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -6288,6 +6421,7 @@
   <xsl:template match="Content[@type='LibraryImage']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="crop"/>
+    <xsl:param name="lightbox"/>
     <xsl:variable name="cropSetting">
       <xsl:choose>
         <xsl:when test="$crop='false'">
@@ -6330,31 +6464,101 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="grid-item">
-      <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'grid-item '"/>
-        <xsl:with-param name="sortBy" select="$sortBy"/>
-      </xsl:apply-templates>
-      <a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox">
-        <div class="thumbnail">
-          <xsl:apply-templates select="." mode="displayThumbnail">
-            <xsl:with-param name="crop" select="$cropSetting" />
-            <xsl:with-param name="class" select="'img-responsive'" />
-            <xsl:with-param name="style" select="'overflow:hidden;'" />
-            <xsl:with-param name="width" select="$lg-max-width"/>
-            <xsl:with-param name="height" select="$lg-max-height"/>
+    <xsl:choose>
+      <xsl:when test="$page[@cssFramework='bs3']">
+        <div class="grid-item">
+          <xsl:apply-templates select="." mode="inlinePopupOptions">
+            <xsl:with-param name="class" select="'grid-item '"/>
+            <xsl:with-param name="sortBy" select="$sortBy"/>
           </xsl:apply-templates>
-          <xsl:if test="Title/node()!='' or Body/node()!=''">
-            <div class="caption">
-              <h4>
-                <xsl:value-of select="Title/node()"/>
-              </h4>
-              <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
-            </div>
-          </xsl:if>
+          <xsl:choose>
+            <xsl:when test="$lightbox='false'">
+              <div class="thumbnail">
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                  <xsl:with-param name="class" select="'img-responsive'" />
+                  <xsl:with-param name="style" select="'overflow:hidden;'" />
+                  <xsl:with-param name="width" select="$lg-max-width"/>
+                  <xsl:with-param name="height" select="$lg-max-height"/>
+                </xsl:apply-templates>
+                <xsl:if test="Title/node()!='' or Body/node()!=''">
+                  <div class="caption">
+                    <h4>
+                      <xsl:value-of select="Title/node()"/>
+                    </h4>
+                    <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+                  </div>
+                </xsl:if>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox">
+                <div class="thumbnail">
+                  <xsl:apply-templates select="." mode="displayThumbnail">
+                    <xsl:with-param name="crop" select="$cropSetting" />
+                    <xsl:with-param name="class" select="'img-responsive'" />
+                    <xsl:with-param name="style" select="'overflow:hidden;'" />
+                    <xsl:with-param name="width" select="$lg-max-width"/>
+                    <xsl:with-param name="height" select="$lg-max-height"/>
+                  </xsl:apply-templates>
+                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                    <div class="caption">
+                      <h4>
+                        <xsl:value-of select="Title/node()"/>
+                      </h4>
+                      <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+                    </div>
+                  </xsl:if>
+                </div>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+
         </div>
-      </a>
-    </div>
+      </xsl:when>
+      <xsl:otherwise>
+
+        <div class="listItem">
+          <xsl:apply-templates select="." mode="inlinePopupOptions">
+            <xsl:with-param name="class" select="'listItem libraryimage'"/>
+            <xsl:with-param name="sortBy" select="$sortBy"/>
+          </xsl:apply-templates>
+          <div class="lIinner">
+            <h3>
+              <xsl:choose>
+                <xsl:when test="$fullSize != ''">
+                  <a href="{$fullSize}" title="{Title/node()}" class="lightbox">
+                    <xsl:attribute name="title">
+                      <xsl:value-of select="Title/node()"/>
+                      <xsl:if test="Author/node()">
+                        <xsl:text> - </xsl:text>
+                        <xsl:value-of select="Author/node()"/>
+                      </xsl:if>
+                    </xsl:attribute>
+                    <xsl:apply-templates select="." mode="displayThumbnail">
+                      <xsl:with-param name="crop" select="true()" />
+                    </xsl:apply-templates>
+                  </a>
+                </xsl:when>
+                <xsl:otherwise>
+                  <a href="{$fullSize}" title="{Title/node()} - {Body/node()}">
+                    <xsl:apply-templates select="." mode="displayThumbnail"/>
+                  </a>
+                </xsl:otherwise>
+
+              </xsl:choose>
+              <xsl:if test="Title/node()!=''">
+                <div class="caption">
+                  <a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="title">
+                    <xsl:value-of select="Title/node()"/>
+                  </a>
+                </div>
+              </xsl:if>
+            </h3>
+          </div>
+        </div>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 
@@ -6734,6 +6938,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </h4>
+           
             <div class="list-group">
               <xsl:apply-templates select="/" mode="List_Related_Products">
                 <xsl:with-param name="parProductID" select="@id"/>
@@ -9574,6 +9779,7 @@
 
     <!-- ###### -->
     <div class="advanced-carousel-container">
+      <div class="cover-container">
       <div class="advanced-carousel">
         <ul style="display:none">
           <xsl:choose>
@@ -9585,6 +9791,7 @@
             </xsl:otherwise>
           </xsl:choose>
         </ul>
+      </div>
       </div>
     </div>
     <script type="text/javascript">
@@ -10033,8 +10240,30 @@
       </xsl:if>
     </div>
   </xsl:template>
-
-
+  
+  <!-- Library Image Brief -->
+  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+    <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
+      <xsl:if test="position()=1">
+        <xsl:attribute name="class">item active</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="Title/node()!='' or Body/node()!=''">
+        <div class="carousel-caption">
+          <div class="carousel-caption-inner">
+            <xsl:if test="Title/node()!=''">
+              <h3 class="caption-title">
+                <xsl:value-of select="Title/node()"/>
+              </h3>
+            </xsl:if>
+            <xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
+            <xsl:if test="@link!=''">
+              <xsl:apply-templates select="." mode="moreLink" />
+            </xsl:if>
+          </div>
+        </div>
+      </xsl:if>
+    </div>
+  </xsl:template>
   <!--  ======================================================================================  -->
   <!--  ==  RECIPIES  ========================================================================  -->
   <!--  ======================================================================================  -->
@@ -10511,6 +10740,7 @@
   <!-- Review Brief -->
   <xsl:template match="Content[@type='Review']" mode="displayBrief">
     <xsl:param name="pos"/>
+    <xsl:param name="class"/>
     <xsl:variable name="parId">
       <xsl:choose>
         <xsl:when test="@parId &gt; 0">
@@ -10526,9 +10756,9 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <div class="listItem hreview">
+    <div class="listItem hreview {$class}">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem'"/>
+        <xsl:with-param name="class" select="concat('listItem hreview ',$class)"/>
       </xsl:apply-templates>
       <div class="lIinner">
         <h3 style="display:none;" class="title item">
@@ -10536,6 +10766,33 @@
             <xsl:value-of select="/Page/ContentDetail/Content/@name"/>
           </a>
         </h3>
+        <xsl:choose>
+          <xsl:when test="Path!=''">
+            <!-- When is a pdf -->
+             <a rel="external">
+            <xsl:attribute name="href">
+              <xsl:choose>
+                <xsl:when test="contains(Path,'http://')">
+                  <xsl:value-of select="Path/node()"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
+                  <xsl:value-of select="@id"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+            <xsl:attribute name="title">
+            </xsl:attribute>
+               <xsl:apply-templates select="." mode="displayThumbnail"/>
+          </a>
+          </xsl:when>
+          <!-- When is a image -->
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="displayDetailImage"/>
+          </xsl:otherwise>
+        </xsl:choose>
+
+
         <span class="rating-foreground rating">
           <span>
             <xsl:attribute name="class">
@@ -10552,17 +10809,78 @@
               <xsl:text>&#160;</xsl:text>
               <xsl:call-template name="term2021" />
             </xsl:attribute>
+            <xsl:choose>
+              <xsl:when test="Rating='5'">
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+              </xsl:when>
+              <xsl:when test="Rating='4'">
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+              </xsl:when>
+              <xsl:when test="Rating='3'">
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+
+              </xsl:when>
+              <xsl:when test="Rating='2'">
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+
+              </xsl:when>
+              <xsl:when test="Rating='1'">
+                <i class="fa fa-star">
+                  <xsl:text> </xsl:text>
+                </i>
+              </xsl:when>
+            </xsl:choose>
           </span>
+          <br/>
         </span>
+       
         <xsl:call-template name="term2018" />
         <xsl:text>&#160;</xsl:text>
         <span class="reviewer">
           <xsl:value-of select="Reviewer"/>
         </span>
         <xsl:text>&#160;</xsl:text>
-        <xsl:call-template name="term2019" />
+        <!--<xsl:call-template name="term2019" />-->
         <xsl:text>&#160;</xsl:text>
-        <span class="dtreviewed">
+        <!--<span class="dtreviewed">
           <xsl:call-template name="DisplayDate">
             <xsl:with-param name="date" select="ReviewDate/node()"/>
           </xsl:call-template>
@@ -10571,7 +10889,10 @@
               <xsl:value-of select="ReviewDate/node()"/>
             </xsl:attribute>
           </span>
-        </span>
+        </span>-->
+
+      
+        
         <span class="summary">
           <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
         </span>
@@ -10627,6 +10948,8 @@
           </xsl:attribute>
         </span>
       </span>
+      
+      <xsl:apply-templates select="Path/node()" mode="displayThumbnail"/>
       <xsl:call-template name="term2018" />
       <xsl:text>&#160;</xsl:text>
       <span class="reviewer">
@@ -10635,7 +10958,7 @@
       <xsl:text>&#160;</xsl:text>
       <xsl:call-template name="term2019" />
       <xsl:text>&#160;</xsl:text>
-      <span class="dtreviewed">
+      <!--<span class="dtreviewed">
         <xsl:call-template name="DisplayDate">
           <xsl:with-param name="date" select="ReviewDate/node()"/>
         </xsl:call-template>
@@ -10644,7 +10967,7 @@
             <xsl:value-of select="ReviewDate/node()"/>
           </xsl:attribute>
         </span>
-      </span>
+      </span>-->
       <span class="summary">
         <xsl:apply-templates select="Summary" mode="cleanXhtml"/>
       </span>
@@ -11043,14 +11366,345 @@
 
   <xsl:template match="Content[@moduleType='SocialLinks']" mode="displayBrief">
     <div class="moduleSocialLinks align-{@align}">
-      <xsl:apply-templates select="." mode="socialLinks">
-        <xsl:with-param name="iconSet" select="@iconSet"/>
-        <xsl:with-param name="myName" select="@myName"/>
-      </xsl:apply-templates>
+      <xsl:choose>
+        <xsl:when test="@blank='true'">
+          <xsl:apply-templates select="." mode="socialLinksBlank">
+            <xsl:with-param name="iconSet" select="@iconSet"/>
+            <xsl:with-param name="myName" select="@myName"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="socialLinks">
+            <xsl:with-param name="iconSet" select="@iconSet"/>
+            <xsl:with-param name="myName" select="@myName"/>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
   <!-- module -->
+  <xsl:template match="Content | ContactPoint" mode="socialLinksBlank">
+    <xsl:param name="myName"/>
+    <xsl:param name="iconSet"/>
+    <div class="socialLinks clearfix iconset-{$iconSet}">
+      <xsl:choose>
+        <xsl:when test="@uploadSprite!=''">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb" style="background-image:url({@uploadSprite})" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw" style="background-image:url({@uploadSprite});background-position:128px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li" style="background-image:url({@uploadSprite});background-position:96px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp" style="background-image:url({@uploadSprite});background-position:64px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi" style="background-image:url({@uploadSprite});background-position:32px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on You Tube" id="social-id-yt" style="background-image:url({@uploadSprite});background-position:160px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig" style="background-image:url({@uploadSprite});background-position:192px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <i class="fa fa-2x fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <i class="fa fa-2x fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          `         <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <i class="fa fa-2x fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <i class="fa fa-2x fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-li">
+              <i class="fa fa-2x fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <i class="fa fa-2x fa-youtube">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-2x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons-square'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <i class="fa fa-3x fa-facebook-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <i class="fa fa-3x fa-twitter-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <i class="fa fa-3x fa-linkedin-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <i class="fa fa-3x fa-google-plus-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi">
+              <i class="fa fa-3x fa-pinterest-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <i class="fa fa-3x fa-youtube-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-3x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons-circle'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-youtube fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>test
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-instagram fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='plain'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
+              <i class="fa fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+              <i class="fa fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+              <i class="fa fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
+              <i class="fa fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+              <i class="fa fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+              <i class="fa fa-youtube ">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/facebook.png" alt="{$myName} on Facebook" title="Follow {$myName} on Facebook" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/twitter.png" alt="{$myName} on Twitter" title="Follow {$myName} on Twitter" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/LinkedIn.png" alt="{$myName} on LinkedIn" title="Follow {$myName} on LinkedIn" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Googleplus.png" alt="{$myName} on Google+" title="Follow {$myName} on Google+" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-li">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Pinterest.png" alt="{$myName} on Pinterest" title="Follow {$myName} on Pinterest" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on YouTube" id="social-id-yt">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/YouTube.png" alt="{$myName} on YouTube" title="Follow {$myName} on YouTube" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-ig">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Instagram.png" alt="{$myName} on Instagram" title="Follow {$myName} on Instagram" />
+            </a>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </div>
+  </xsl:template>
    <!-- module -->
   <xsl:template match="Content | ContactPoint" mode="socialLinks">
     <xsl:param name="myName"/>
@@ -11109,7 +11763,7 @@
               </i>
             </a>
           </xsl:if>
-          <xsl:if test="@linkedInURL!=''">
+         <xsl:if test="@linkedInURL!=''">
             <a href="{@linkedInURL}" title="{$myName} on LinkedIn" id="social-id-li">
               <i class="fa fa-2x fa-linkedin">
                 <xsl:text> </xsl:text>
@@ -11269,7 +11923,7 @@
               </span>
             </a>
           </xsl:if>
-         <xsl:if test="@instagramURL!=''">
+          <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x">
@@ -11325,7 +11979,7 @@
               </i>
             </a>
           </xsl:if>
-         <xsl:if test="@instagramURL!=''">
+          <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
               <i class="fa fa-instagram">
                 <xsl:text> </xsl:text>
@@ -11817,10 +12471,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -11969,10 +12623,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -12613,20 +13267,27 @@
   </xsl:template>
 
 
-  <!-- Book List Module -->
-  <xsl:template match="Content[@type='Module' and @moduleType='BookList']" mode="displayBrief">
+  <!--  ======================================================================================  -->
+  <!--  ==  BACKGROUND CAROUSEL - based on bootstrap carousel=================================  -->
+  <!--  ======================================================================================  -->
+  <xsl:template match="Content[@moduleType='BackgroundCarousel']" mode="displayBrief">
     <!-- Set Variables -->
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-
     <xsl:variable name="contentList">
-      <xsl:apply-templates select="." mode="getContent">
-        <xsl:with-param name="contentType" select="$contentType" />
-        <xsl:with-param name="startPos" select="$startPos" />
-      </xsl:apply-templates>
+      <Content>
+        <xsl:for-each select="@*">
+          <xsl:attribute name="{name()}">
+            <xsl:value-of select="."/>
+          </xsl:attribute>
+        </xsl:for-each>
+        <xsl:apply-templates select="." mode="getContent">
+          <xsl:with-param name="contentType" select="$contentType" />
+          <xsl:with-param name="startPos" select="$startPos" />
+        </xsl:apply-templates>
+      </Content>
     </xsl:variable>
-
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -12637,128 +13298,60 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
     <!-- Output Module -->
-    <div class="clearfix BookList">
-      <xsl:if test="@carousel='true'">
-        <xsl:attribute name="class">
-          <xsl:text>clearfix BookList content-scroller</xsl:text>
-        </xsl:attribute>
+    <xsl:variable name="id" select="concat('bscarousel-',@id)"></xsl:variable>
+    <div id="{$id}" class="carousel slide background-carousel" data-ride="carousel" data-interval="{@interval}" pause="hover" wrap="true">
+      <xsl:if test="@bullets!='true'">
+        <ol class="carousel-indicators">
+          <xsl:for-each select="Content[@type='LibraryImageWithLink']">
+            <li data-target="#{$id}" data-slide-to="{position()-1}">
+              <xsl:if test="position()=1">
+                <xsl:attribute name="class">active</xsl:attribute>
+              </xsl:if>
+              <xsl:text></xsl:text>
+            </li>
+          </xsl:for-each>
+        </ol>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
-        <xsl:if test="@autoplay !=''">
-          <xsl:attribute name="data-autoplay">
-            <xsl:value-of select="@autoplay"/>
-          </xsl:attribute>
-        </xsl:if>
-        <xsl:if test="@autoPlaySpeed !=''">
-          <xsl:attribute name="data-autoPlaySpeed">
-            <xsl:value-of select="@autoPlaySpeed"/>
-          </xsl:attribute>
-        </xsl:if>
-        <!-- If Stepper, display Stepper -->
-        <xsl:if test="@stepCount != '0' and not($page[@cssFramework='bs3'])">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <xsl:choose>
-          <xsl:when test="@linkArticle='true'">
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-              <xsl:with-param name="sortBy" select="@sortBy"/>
-            </xsl:apply-templates>
-          </xsl:otherwise>
-        </xsl:choose>
-        <xsl:if test="@stepCount != '0' and $page[@cssFramework='bs3']">
-          <div class="terminus">&#160;</div>
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>
-        <xsl:text> </xsl:text>
+      <div class="carousel-inner" style="height:{@height}px">
+        <xsl:apply-templates select="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+        </xsl:apply-templates>
       </div>
+      <xsl:if test="@arrows!='true'">
+        <a class="left carousel-control" href="#{$id}" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#{$id}" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </xsl:if>
     </div>
   </xsl:template>
-
-  <!-- Book List Brief -->
-  <xsl:template match="Content[@type='Book']" mode="displayBrief">
-    <xsl:param name="sortBy"/>
-    <!-- articleBrief -->
-    <xsl:variable name="parentURL">
-      <xsl:apply-templates select="." mode="getHref"/>
-    </xsl:variable>
-
-    <div class="listItem list-group-item Book">
-      <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item Book'"/>
-        <xsl:with-param name="sortBy" select="$sortBy"/>
-      </xsl:apply-templates>
-
-      <div class="lIinner media">
-        <xsl:if test="$page[@cssFramework!='bs3']">
-          <h3 class="title">
-            <a href="{$parentURL}" title="Read More - {Headline/node()}">
-              <xsl:apply-templates select="." mode="getDisplayName"/>
-            </a>
-          </h3>
-        </xsl:if>
-        <xsl:if test="Images/img/@src!=''">
-          <a href="{$parentURL}" title="Read More - {Headline/node()}">
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
-          </a>
-          <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-          <span class="hidden">|</span>
-        </xsl:if>
-
-        <div class="media-body">
-          <xsl:if test="$page[@cssFramework='bs3']">
-            <h4 class="media-heading">
-              <a href="{$parentURL}" title="Read More - {Headline/node()}">
-                <xsl:apply-templates select="." mode="getDisplayName"/>
-              </a>
-            </h4>
-          </xsl:if>
-          <xsl:apply-templates select="Content[@type='Contact']" mode="displayAuthorBrief"/>
-          <xsl:if test="@publish!=''">
-            <p class="date">
-              <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-              <xsl:call-template name="DisplayDate">
-                <xsl:with-param name="date" select="@publish"/>
-              </xsl:call-template>
-            </p>
-          </xsl:if>
-          <xsl:if test="Strapline/node()!=''">
-            <div class="summary">
-              <xsl:apply-templates select="Strapline/node()" mode="cleanXhtml"/>
-            </div>
-          </xsl:if>
-          <div class="entryFooter">
-            <xsl:apply-templates select="." mode="displayTags"/>
-            <xsl:apply-templates select="." mode="moreLink">
-              <xsl:with-param name="link" select="$parentURL"/>
-              <xsl:with-param name="altText">
-                <xsl:value-of select="Headline/node()"/>
-              </xsl:with-param>
-            </xsl:apply-templates>
-            <xsl:text> </xsl:text>
+  <!-- Library Image Brief -->
+  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+    <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
+      <xsl:if test="position()=1">
+        <xsl:attribute name="class">item active</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="Title/node()!='' or Body/node()!=''">
+        <div class="carousel-caption">
+          <div class="carousel-caption-inner">
+            <xsl:if test="Title/node()!=''">
+              <h3 class="caption-title">
+                <xsl:value-of select="Title/node()"/>
+              </h3>
+            </xsl:if>
+            <xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
+            <xsl:if test="@link!=''">
+              <xsl:apply-templates select="." mode="moreLink" />
+            </xsl:if>
           </div>
         </div>
-        <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
-        <div class="terminus">&#160;</div>
-      </div>
+      </xsl:if>
     </div>
   </xsl:template>
+
+
+
 </xsl:stylesheet>

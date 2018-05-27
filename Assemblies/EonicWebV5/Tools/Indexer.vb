@@ -878,7 +878,7 @@ Public Class Indexer
         Dim cProcessInfo As String = ""
         Try
             oIndexWriter.Optimize()
-            oIndexWriter.Close()
+            oIndexWriter.Dispose()
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
             oImp.UndoImpersonation()

@@ -13,17 +13,31 @@
           <Content showRelated="Tag">
             <Reviewer/>
             <ReviewDate/>
+            <Url/>
             <Summary/>
             <Rating/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+            <Path/>
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail>
           <Content>
             <Reviewer/>
             <ReviewDate/>
+            <Url/>
             <Summary/>
             <Description/>
             <Rating/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+            <Path/>
           </Content>
         </cContentXmlDetail>
         <nAuditId/>
@@ -47,20 +61,29 @@
       <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">
         <bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
-        <bind id="cContentReviewDate" nodeset="ReviewDate" required="true()" type="string"/>
+        <!--<bind id="cContentReviewDate" nodeset="ReviewDate" required="false()" type="string"/>-->
         <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
-        <bind id="cContentSummary" nodeset="Summary" required="true()" type="string"/>
-        <bind id="cContentRating" nodeset="Rating" required="true()" type="string"/>
+        <bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
+        <bind id="cContentRating" nodeset="Rating" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
       </bind>
       <bind nodeset="cContentXmlDetail/Content">
         <bind id="cContentReviewer" nodeset="Reviewer" required="true()" type="string"/>
-        <bind id="cContentReviewDate" nodeset="ReviewDate" required="true()" type="string"/>
+        <!--<bind id="cContentReviewDate" nodeset="ReviewDate" required="false()" type="string"/>-->
         <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
-        <bind id="cContentSummary" nodeset="Summary" required="true()" type="string"/>
-        <bind id="cContentRating" nodeset="Rating" required="true()" type="string"/>
-        <bind id="cContentDescription" nodeset="Description" required="true()" type="string"/>
+        <bind id="cUrl" nodeset="Url" required="false()" type="string"/>
+        <bind id="cContentSummary" nodeset="Summary" required="false()" type="string"/>
+        <bind id="cContentRating" nodeset="Rating" required="false()" type="string"/>
+        <bind id="cContentDescription" nodeset="Description" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDocPath" nodeset="Path" required="false()" type="string"/>
       </bind>
-      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/> 
     </bind>
   </model>
   <group ref="EditContent" class="2col">
@@ -92,6 +115,31 @@
           <label>Change Notes</label>
         </input>
       </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main Review Image</label>
+          <help class="inline">
+            <p>
+              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+            </p>
+            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+          </help>
+        </input>
+        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative Thumbnail</label>
+        </input>
+        <input bind="cContentDisplay" class="short pickImage">
+          <label>Alternative Picture</label>
+        </input>
+        <group ref="Content2">
+          <label>Document</label>
+          <input bind="cContentDocPath" class=" pickDocument">
+          </input>
+        </group>
+      </group>
     </group>
     <group class="ContentColumn2">
       <group ref="Content" class="Content">
@@ -99,17 +147,12 @@
         <label>Reviewers Name</label>
         <input bind="cContentReviewer" class="required long">
         </input>
-        <label>Review Date</label>
-        <input bind="cContentReviewDate" class="calendar short">
-        </input>
-        <label>Summary</label>
-        <textarea bind="cContentSummary" class="TextArea xhtml" rows="6" cols="70">
-        </textarea>
-        <label>Full Description</label>
-        <textarea bind="cContentDescription" class="TextArea xhtml" rows="15" cols="70">
-        </textarea>
-        <select1 bind="cContentRating" appearance="full" class="required vshort">
+        <select1 bind="cContentRating" appearance="full" class="vshort">
           <label>Rating</label>
+          <item>
+            <label>None</label>
+            <value></value>
+          </item>
           <item>
             <label>1</label>
             <value>1</value>
@@ -131,10 +174,17 @@
             <value>5</value>
           </item>
         </select1>
-        <label></label>
-        <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">
-          <label>Related Tags</label>
-        </relatedContent>
+        <input bind="cUrl" class=" short">
+          <label>Website link of Review</label>
+          <hint>example http://www.eonic.co.uk</hint>
+        </input>
+        <label>Summary</label>
+        <textarea bind="cContentSummary" class="TextArea xhtml" rows="6" cols="70">
+        </textarea>
+        <label>Full Description</label>
+        <textarea bind="cContentDescription" class="TextArea xhtml" rows="15" cols="70">
+        </textarea>
+       
       </group>
     </group>
   </group>

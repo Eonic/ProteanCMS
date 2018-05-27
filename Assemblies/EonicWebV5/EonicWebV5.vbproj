@@ -55,14 +55,20 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Users\trevors\Documents\Visual Studio 2010\Projects\alligatorUK_Local\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.None.None.None</AssemblyFileVersionSettings>
-    <AssemblyInfoVersionSettings>None.None.None.None</AssemblyInfoVersionSettings>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>
+    </AssemblyVersionSettings>
+    <AssemblyFileVersionSettings>
+    </AssemblyFileVersionSettings>
+    <AssemblyInfoVersionSettings>
+    </AssemblyInfoVersionSettings>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <AssemblyVersion>5.0.160.37</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -91,6 +97,9 @@
     <AssemblyVersionSettings>None.None.None.Increment</AssemblyVersionSettings>
     <AssemblyFileVersionSettings>None.None.None.Increment</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>None.None.None.Increment</AssemblyInfoVersionSettings>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -113,36 +122,39 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <Prefer32Bit>false</Prefer32Bit>
-    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
-    <UpdateAssemblyInfoVersion>True</UpdateAssemblyInfoVersion>
-    <AssemblyVersionSettings>None.None.IncrementOnDemand.None</AssemblyVersionSettings>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
     <AssemblyFileVersionSettings>None.None.IncrementOnDemand.None</AssemblyFileVersionSettings>
     <AssemblyInfoVersionSettings>None.None.IncrementOnDemand.None</AssemblyInfoVersionSettings>
     <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AjaxMin, Version=5.14.5506.26196, Culture=neutral, PublicKeyToken=21ef50ce11b5d80f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="AlphaFS, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4d31a58f7d7ad5c9, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2017\Projects\TDLOnline_vs_Local\packages\AlphaFS.2.1.3\lib\net452\AlphaFS.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\AlphaFS.2.1.3\lib\net452\AlphaFS.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BundleTransformer.Core, Version=1.9.92.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\BundleTransformer.Core.1.9.92\lib\net40\BundleTransformer.Core.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\BundleTransformer.Core.1.9.92\lib\net40\BundleTransformer.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BundleTransformer.Less, Version=1.9.107.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\BundleTransformer.Less.1.9.107\lib\net40\BundleTransformer.Less.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\BundleTransformer.Less.1.9.107\lib\net40\BundleTransformer.Less.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="BundleTransformer.MicrosoftAjax, Version=1.9.92.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\BundleTransformer.MicrosoftAjax.1.9.92\lib\net40\BundleTransformer.MicrosoftAjax.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\BundleTransformer.MicrosoftAjax.1.9.92\lib\net40\BundleTransformer.MicrosoftAjax.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CMPCDotNet, Version=2.2.0.28082, Culture=neutral, PublicKeyToken=60064b713d9de8f4, processorArchitecture=MSIL">
@@ -150,37 +162,39 @@
       <HintPath>..\..\ReferencedAssemblies\CardinalCommerce\samplecode\dotnet\lib\CMPCDotNet.dll</HintPath>
     </Reference>
     <Reference Include="ephtmltopdf">
-      <HintPath>..\..\ReferencedAssemblies\HtmlToPdf\Bin\.NET_4.0\ephtmltopdf.dll</HintPath>
+      <HintPath>..\ReferencedAssemblies\HtmlToPdf\Bin\ephtmltopdf.dll</HintPath>
     </Reference>
     <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Core, Version=1.5.0.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\JavaScriptEngineSwitcher.Core.1.5.0\lib\net40\JavaScriptEngineSwitcher.Core.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\JavaScriptEngineSwitcher.Core.1.5.0\lib\net40\JavaScriptEngineSwitcher.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Msie, Version=1.5.4.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\JavaScriptEngineSwitcher.Msie.1.5.4\lib\net40\JavaScriptEngineSwitcher.Msie.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\JavaScriptEngineSwitcher.Msie.1.5.4\lib\net40\JavaScriptEngineSwitcher.Msie.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Iis.Rewrite, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -188,19 +202,19 @@
       <HintPath>..\..\..\..\Program Files\Reference Assemblies\Microsoft\IIS\Microsoft.Web.Iis.Rewrite.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MsieJavaScriptEngine, Version=2.1.2.0, Culture=neutral, PublicKeyToken=a3a2846a37ac0d3e, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\MsieJavaScriptEngine.2.1.2\lib\net45\MsieJavaScriptEngine.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\MsieJavaScriptEngine.2.1.2\lib\net45\MsieJavaScriptEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\EonicWeb5Installer\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -226,7 +240,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.FtpClient, Version=1.0.5824.34026, Culture=neutral, PublicKeyToken=fa4be07daa57c2b7, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FtpClient.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
@@ -239,7 +253,7 @@
     </Reference>
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Services">
@@ -251,18 +265,11 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.Serialization" />
-    <Reference Include="TidyHTML5Managed">
-      <HintPath>..\..\packages\TidyHtml5ManagedRepack.1.1.4\lib\net46\TidyHTML5Managed.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="TidyNet">
-      <HintPath>..\..\ReferencedAssemblies\TidyNet.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\ReferencedAssemblies\dynamic-image-master\src\packages\WebActivatorEx.2.0.2\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Documents\Visual Studio 2015\Projects\NTC_VS_Local\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+      <HintPath>..\EonicWeb5Installer\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -326,6 +333,7 @@
     <Compile Include="Tools\Synchronisation.vb" />
     <Compile Include="Tools\Syndication.vb" />
     <Compile Include="Tools\xForm.vb" />
+    <Compile Include="Tools\xmlTools.xsltExtensions.vb" />
     <Compile Include="Tools\xmlTools.ewXmlElement.vb" />
     <Compile Include="Tools\xmlTools.vb" />
     <Compile Include="Web References\com.pclpls.www\Reference.vb">
@@ -382,6 +390,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Web\Base.vb" />
+    <Compile Include="Web\Content\Content.JSONActions.vb" />
     <Compile Include="Web\Content\Modules.vb" />
     <Compile Include="Web\httpHandler.vb" />
     <Compile Include="Web\DBHelper.vb" />
@@ -413,9 +422,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Service References\eonicweb.com\ewAdminProxy.wsdl" />
     <None Include="Service References\PayPalAPI\CoreComponentTypes1.xsd">
       <SubType>Designer</SubType>
@@ -742,7 +749,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -750,7 +757,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
+    <Error Condition="!Exists('..\EonicWeb5Installer\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\EonicWeb5Installer\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
   </Target>
-  <Import Project="..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
+  <Import Project="..\EonicWeb5Installer\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('..\EonicWeb5Installer\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
 </Project>

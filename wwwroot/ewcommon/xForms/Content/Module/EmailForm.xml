@@ -74,7 +74,7 @@
                 <label>Address</label>
               </textarea>
               <textarea bind="Message" class="textarea" rows="4">
-                <label>How we can help</label>
+                <label>How can we help</label>
               </textarea>          
               <submit submission="mailForm" bind="ewCmd" class="principle">
                 <label>Send</label>
@@ -113,10 +113,10 @@
       <bind id="cRecipientEmail" nodeset="ews2:recipientEmail" required="false()" type="emails"/>
       <bind id="cCcRecipientEmail" nodeset="ews2:ccRecipient" required="false()" type="emails"/>
       <bind id="cBccRecipientEmail" nodeset="ews2:bccRecipient" required="false()" type="emails"/>
-      <bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
-      <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/>
+      <!--bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
+      <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/-->
       <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
-      <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
+      <!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
       <bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
     </bind>
     <bind id="cSubmissionId"  nodeset="tblContent/cContentXmlBrief/Content/model/submission/@id" required="true()" type="string"/>

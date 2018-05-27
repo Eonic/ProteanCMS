@@ -67,10 +67,11 @@ Partial Public Class Web
             ' moXformEditor = myWeb.GetXformEditor()
 
             moAdXfm.open(moPageXML)
-
-            If Not myWeb.moSession("EditContext") Is Nothing Then
-                EditContext = myWeb.moSession("EditContext")
-                clearEditContext = True
+            If Not myWeb.moSession Is Nothing Then
+                If Not myWeb.moSession("EditContext") Is Nothing Then
+                    EditContext = myWeb.moSession("EditContext")
+                    clearEditContext = True
+                End If
             End If
 
             If CStr(moConfig("AdminRootPageId")) = "" Then
@@ -1468,7 +1469,7 @@ ProcessFlow:
                         'placeholder for ecommerce dashboard
                     Case "CartActivity", "CartReports", "CartActivityDrilldown", "CartActivityPeriod", "CartDownload"
                         OrderProcess(oPageDetail, sAdminLayout, "")
-                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersHistory", "OrdersAwaitingPayment"
+                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment"
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
                         OrderProcess(oPageDetail, sAdminLayout, "Quote")
@@ -1654,8 +1655,10 @@ ProcessFlow:
                         oPageDetail.AppendChild(moAdXfm.xFrmDiscountProductRelations(myWeb.moRequest.QueryString("DiscId"), ""))
                     Case "SiteIndex"
                         bLoadStructure = True
-                        sAdminLayout = "AdminXForm"
+                        sAdminLayout = "SiteIndex"
                         oPageDetail.AppendChild(moAdXfm.xFrmStartIndex())
+
+
                         '-- Call all of the process for the newsletter functionaltiy
                     Case "MailingList", "NormalMail", "MailPreviewOn", "AdvancedMail", "AddMailModule", "EditMailContent", "EditMail", "EditMailLayout", "NewMail", "PreviewMail", "SendMail", "SendMailPersonalised", "SendMailunPersonalised", "MailHistory", "MailOptOut", "ProcessMailbox", "DeletePageMail", "SyncMailList", "ListMailLists"
                         bMailMenu = True
@@ -1703,7 +1706,7 @@ ProcessFlow:
                         oWeb.mbAdminMode = False
                         If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
-                    Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "EditSubscription", "MoveSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers"
+                    Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -2234,7 +2237,7 @@ ProcessFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug)
+                returnException(mcModuleName, "FileImportProcess", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -2750,7 +2753,12 @@ ProcessFlow:
                             bShowTree = True
                         End If
                     Case "moveFile"
-
+                        oPageDetail.AppendChild(moAdXfm.xFrmMoveFile(sFolder, sFile, LibType))
+                        If moAdXfm.valid = False Then
+                            sAdminLayout = "AdminXForm"
+                        Else
+                            bShowTree = True
+                        End If
                     Case "pickImage"
                         Dim imagePath As String = IIf(sFolder.Replace("\", "/").EndsWith("/"), sFolder.Replace("\", "/") & sFile, sFolder & "/" & sFile)
                         oPageDetail.AppendChild(moAdXfm.xFrmPickImage(imagePath, sTargetForm, sTargetField, sTargetClass))
@@ -2790,6 +2798,7 @@ ProcessFlow:
 
         Private Sub OrderProcess(ByRef oPageDetail As XmlElement, ByRef sAdminLayout As String, ByVal cSchemaName As String)
             Dim sProcessInfo As String = ""
+            Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/cart")
 
             Try
 
@@ -2815,13 +2824,14 @@ ProcessFlow:
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail, forceRefresh)
 
                             ':TODO Behaviour to manage resending recipts.
-                            If moAdXfm.isSubmitted And moAdXfm.valid Then
-                                If nStatus <> myWeb.moRequest("nStatus") And myWeb.moRequest("nStatus") = Cart.cartProcess.Complete Then
-                                    oCart.mnCartId = myWeb.moRequest("id")
-                                    oCart.addDateAndRef(oPageDetail.LastChild.FirstChild)
-                                    oCart.emailReceipts(oPageDetail.LastChild)
+                            If moCartConfig("SendRecieptsFromAdmin") <> "off" Then
+                                If moAdXfm.isSubmitted And moAdXfm.valid Then
+                                    If nStatus <> myWeb.moRequest("nStatus") And myWeb.moRequest("nStatus") = Cart.cartProcess.Complete Then
+                                        oCart.mnCartId = myWeb.moRequest("id")
+                                        oCart.addDateAndRef(oPageDetail.LastChild.FirstChild)
+                                        oCart.emailReceipts(oPageDetail.LastChild)
+                                    End If
                                 End If
-
                             End If
 
 
@@ -3726,9 +3736,27 @@ Process:
 SP:
             Select Case cCmd
                 Case "CancelSubscription"
-                    oSub.CancelSubscription(myWeb.moRequest("subId"))
-                    cCmd = "ListSubscribers"
-                    GoTo SP
+
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmConfirmCancelSubscription(0, myWeb.moRequest("id"), myWeb.mnUserId, True), True))
+                    If oADX.valid Then
+                        cCmd = "ManageUserSubscription"
+                        'oSub.CancelSubscription(myWeb.moRequest("subId"))
+                        GoTo SP
+                    Else
+                        sAdminLayout = "AdminXForm"
+                    End If
+
+                Case "ExpireSubscription"
+
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmConfirmCancelSubscription(0, myWeb.moRequest("id"), myWeb.mnUserId, True), True))
+                    If oADX.valid Then
+                        cCmd = "ManageUserSubscription"
+                        'oSub.CancelSubscription(myWeb.moRequest("subId"))
+                        GoTo SP
+                    Else
+                        sAdminLayout = "AdminXForm"
+                    End If
+
                 Case "Subscriptions"
                     oSub.ListSubscriptions(oPageDetail)
                 Case "ListSubscribers"
@@ -3750,23 +3778,40 @@ SP:
                         sAdminLayout = "AdminXForm"
                     End If
                 Case "AddSubscription"
-                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditSubscription(0, 0, myWeb.moRequest("grp")), True))
+                    Dim nSubId As Long = 0
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditContent(myWeb.moRequest("id"), "Subscription",,,, nSubId), True))
                     If oADX.valid Then
+                        Dim mySub As New Eonic.Web.Cart.Subscriptions(myWeb)
+                        mySub.SubscriptionToGroup(nSubId, IIf(IsNumeric(myWeb.moRequest("grp")), myWeb.moRequest("grp"), 0))
                         cCmd = "Subscriptions"
                         GoTo SP
                     Else
                         sAdminLayout = "AdminXForm"
                     End If
                 Case "EditSubscription"
-                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditSubscription(myWeb.moRequest("id"), 0, IIf(IsNumeric(myWeb.moRequest("grp")), myWeb.moRequest("grp"), 0)), True))
+                    Dim nSubId As Long = 0
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditContent(myWeb.moRequest("id"), "Subscription",,,, nSubId), True))
                     If oADX.valid Then
+                        Dim mySub As New Eonic.Web.Cart.Subscriptions(myWeb)
+                        mySub.SubscriptionToGroup(nSubId, IIf(IsNumeric(myWeb.moRequest("grp")), myWeb.moRequest("grp"), 0))
                         cCmd = "Subscriptions"
                         GoTo SP
                     Else
                         sAdminLayout = "AdminXForm"
                     End If
-                Case "EditUserSubscription"
-                    'oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.), True))
+
+                Case "RenewSubscription"
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmRenewSubscription(myWeb.moRequest("id")), True))
+                    If oADX.valid Then
+                        cCmd = "ManageUserSubscription"
+                        GoTo SP
+                    Else
+                        sAdminLayout = "AdminXForm"
+                    End If
+                Case "ManageUserSubscription"
+
+                    oSub.GetSubscriptionDetail(oPageDetail, myWeb.moRequest("id"))
+                    sAdminLayout = "ManageUserSubscription"
                     'If oADX.valid Then
                     '    cCmd = "Subscriptions"
                     '    GoTo SP
@@ -3804,6 +3849,19 @@ SP:
                 Case "UpSubscription"
 
                 Case "DownSubscription"
+
+                Case "RecentRenewals"
+                    oSub.ListRecentRenewals(oPageDetail)
+
+                Case "UpcomingRenewals"
+
+                    oSub.ListUpcomingRenewals(oPageDetail)
+
+                Case "ExpiredSubscriptions"
+                    oSub.ListExpiredSubscriptions(oPageDetail)
+
+                Case "RenewalAlerts"
+
 
             End Select
 

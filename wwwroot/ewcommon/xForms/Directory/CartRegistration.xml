@@ -30,8 +30,7 @@
 				<cDescription/>
 			</tblDirectory>
 		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
-		<bind id="cContentSchemaName" nodeset="tblDirectory/cContentSchemaName" required="true()" type="string"/>
+		<submission id="CreateUser" action="" method="post" event="return form_check(this)"/>
 		<bind id="cDirName" nodeset="tblDirectory/cDirName" required="true()" type="string"/>
 		<bind id="cDirPassword" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
 		<bind id="cDirPassword2" nodeset="tblDirectory/cDirPassword" required="true()" type="string"/>
@@ -134,7 +133,7 @@
 			</item>
 		</select>
 		</group>
-		<submit submission="" ref="ewRegSubmit" class="principle">
+		<submit submission="CreateUser" ref="ewRegSubmit" class="principle">
 			<label>Create Customer Account</label>
 		</submit>
 	</group>

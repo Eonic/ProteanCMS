@@ -43,6 +43,7 @@
         <add key="GoogleContentTypes" value="Product,SKU" />
         <add key="ShowRelatedBriefContentTypes" value="" />
         <add key="ShowRelatedBriefDepth" value="" />
+        <add key="ShowRelatedDetailedDepth" value="" />
         <add key="VersionControl" value="off" />
 		    <add key="PageVersions" value="off" />
         <add key="LegacyRedirect" value="off" />
@@ -102,6 +103,7 @@
     <bind id="ewGoogleContentTypes" nodeset="web/add[@key='GoogleContentTypes']/@value" required="false()" type="string" />
     <bind id="ewShowRelatedBriefContentTypes" nodeset="web/add[@key='ShowRelatedBriefContentTypes']/@value" required="false()" type="string" />
     <bind id="ewShowRelatedBriefDepth" nodeset="web/add[@key='ShowRelatedBriefDepth']/@value" required="false()" type="number" />
+     <bind id="ewShowRelatedDetailedDepth" nodeset="web/add[@key='ShowRelatedDetailedDepth']/@value" required="false()" type="number" />
     <bind id="ewVersionControl" nodeset="web/add[@key='VersionControl']/@value" required="false()" type="string" />
     <bind id="ewPageVersions" nodeset="web/add[@key='PageVersions']/@value" required="false()" type="string" />
     <bind id="ewLegacyRedirect" nodeset="web/add[@key='LegacyRedirect']/@value" required="true()" type="string" />
@@ -371,6 +373,10 @@
       <label>Depth to get related content for brief content.</label>
       <value />
     </input>
+       <input bind="ewShowRelatedDetailedDepth">
+         <label>Depth to get related content for detailed content.</label>
+         <value />
+       </input>
      <select1 bind="ewVersionControl" appearance="full">
       <label>Version Control</label>
        <item>

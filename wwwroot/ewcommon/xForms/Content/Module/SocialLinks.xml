@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" moduleType="SocialLinks" box="" title="" link="" linkType="internal" linkText="Read more" bookmarkSettings="global" iconSet="default" align="right"/>
+          <Content position="" moduleType="SocialLinks" box="" title="" link="" linkType="internal" linkText="Read more" bookmarkSettings="global" iconSet="default" align="right" blank="false"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -39,6 +39,7 @@
       <bind id="cContentMyName" nodeset="@myName" required="true()" type="string"/>
       <bind id="cIconSet" nodeset="@iconSet" required="true()" type="string"/>
       <bind id="cAlign" nodeset="@align" required="true()" type="string"/>
+      <bind id="cBlank" nodeset="@blank" required="true()" type="string"/>
       <bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
       <bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
       <bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
@@ -90,6 +91,17 @@
           <item>
             <label>Right</label>
             <value>right</value>
+          </item>
+        </select1>
+        <select1 bind="cBlank" appearance="full">
+          <label>open in new window</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
           </item>
         </select1>
       </group>

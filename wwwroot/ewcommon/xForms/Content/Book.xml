@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Book</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content showRelated="Tag,Contact,Book,Testimonial,BookSeries">
+            <BookName/>
+            <BookTitle/>
+            <BookStrapline/>
+            <Category/>
+            <ISBN10/>
+            <ISBN13/>
+            <Illustrator/>
+            <Translator/>
+            <Reviews/>
+            <Awards/>
+            <FamilyFriendly/>
+            <SampleOfWork/>
+            <Publication/>
+            <PublicationYear/>
+            <CopyRight/>
+            <CopyRightYear/>
+            <ShortDescription/>
+            <FullDescription/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlBrief>
+        <cContentXmlDetail>
+          <Content showRelated="Tag,Contact,Book,Testimonial,Organisation">
+            <BookName/>
+            <BookTitle/>
+            <BookStrapline/>
+            <Category/>
+            <ISBN10/>
+            <ISBN13/>
+            <Illustrator/>
+            <Translator/>
+            <Reviews/>
+            <Awards>
+              <Award>
+                <Title/>
+                <Images>
+                  <img class="thumbnail"/>
+                  <img class="display"/>
+                  <img class="detail"/>
+                </Images>
+                <Url/>
+              </Award>
+            </Awards>
+            <Links>
+              <Link>
+                <LinkTitle/>
+                <LinkUrl/>
+              </Link>
+            </Links>
+            <FamilyFriendly/>
+            <!--<SampleOfWork/>-->
+            <Publication/>
+            <PublicationYear/>
+            <CopyRight/>
+            <CopyRightYear/>
+            <ShortDescription/>
+            <FullDescription/>
+            <Images>
+              <img class="thumbnail"/>
+              <img class="display"/>
+              <img class="detail"/>
+            </Images>
+          </Content>
+        </cContentXmlDetail>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <ChangeNotes/>
+      </tblContent>
+      <Relation type="Author" relatedContentId="" direction="2way"/>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind nodeset="tblContent">
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
+      <bind id="cChangeNotes" nodeset="ChangeNotes" required="false()" type="string"/>
+      <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+      <bind id="cBookTitle" nodeset="cContentName" required="false()" type="string"/>
+      <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cBookTitle" nodeset="BookName" required="true()" type="string"/>
+        <bind id="cBookName" nodeset="BookTitle" required="false()" type="string"/>
+        <bind id="cBookStrapline" nodeset="BookStrapline" required="false()" type="string"/>
+        <bind id="cCategory" nodeset="Category" required="false()" type="string"/>
+        <bind id="cInLanguage" nodeset="InLanguage" required="false()" type="string"/>
+        <bind id="cPublicationYear" nodeset="PublicationYear" required="false()" type="string"/>
+        <bind id="cCopyrightYear" nodeset="CopyRightYear" required="false()" type="string"/>
+        <bind id="cShortDescription" nodeset="ShortDescription" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+      </bind>
+      <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cBookTitle" nodeset="BookName" required="true()" type="string"/>
+        <bind id="cBookName" nodeset="BookTitle" required="false()" type="string"/>
+        <bind id="cBookStrapline" nodeset="BookStrapline" required="false()" type="string"/>
+        <bind id="cISBN10" nodeset="ISBN10" required="false()" type="string"/>
+        <bind id="cISBN13" nodeset="ISBN13" required="false()" type="string"/>
+        <bind id="cInLanguage" nodeset="InLanguage" required="false()" type="string"/>
+        <bind id="cReviews" nodeset="Reviews" required="false()" type="string"/>
+        <bind id="cAwards" nodeset="Awards" required="false()" type="string"/>
+        <bind id="cFamilyFriendly" nodeset="FamilyFriendly" required="false()" type="string"/>
+        <bind id="cPublicationYear" nodeset="PublicationYear" required="false()" type="string"/>
+        <bind id="cCopyrightYear" nodeset="CopyRightYear" required="false()" type="string"/>
+        <bind id="cShortDescription" nodeset="ShortDescription" required="false()" type="string"/>
+        <bind id="cFullDescription" nodeset="FullDescription" required="false()" type="string"/>
+        <bind id="cContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+        <bind id="cContentDisplay" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
+        <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="AwardsRpt" nodeset="Awards/Award">
+            <bind id="aTitle" nodeset="Title" required="false()" type="string"/>
+            <bind id="cAwardContentThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
+            <bind id="aUrl" nodeset="Url" required="false()" type="string"/>
+        </bind>
+        <bind id="LinksRpt" nodeset="Links/Link">
+          <bind id="aLinkTitle" nodeset="LinkTitle" required="false()" type="string"/>
+          <bind id="aLinkUrl" nodeset="LinkUrl" required="false()" type="string"/>
+        </bind>
+      </bind>
+    </bind>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit Book</label>
+    <group class="ContentColumn1">
+      <group ref="Settings" class="leftSettings">
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <label>Settings</label>
+        <input bind="dPublishDate" class="calendar short">
+          <label>Publish Date</label>
+        </input>
+        <input bind="dExpireDate" class="calendar short">
+          <label>Expire Date</label>
+        </input>
+        <select1 bind="nStatus" appearance="full" class="vshort">
+          <label>Status</label>
+          <item>
+            <label>Live</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>Hidden</label>
+            <value>0</value>
+          </item>
+        </select1>
+        <input bind="cChangeNotes" class="">
+          <label>Change Notes</label>
+        </input>
+      </group>
+      <group class="Content">
+        <label>Images</label>
+        <input bind="cContentFullSizePicture" class="short pickImage">
+          <label>Main Book Image</label>
+          <help class="inline">
+            <p>
+              This image should generally be no larger than <b>800x600 pixels, at 72dpi.</b>
+            </p>
+            <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+            <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+          </help>
+        </input>
+        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <input bind="cContentThumbnail" class="short pickImage">
+          <label>Alternative Thumbnail</label>
+        </input>
+        <input bind="cContentDisplay" class="short pickImage">
+          <label>Alternative Picture</label>
+        </input>
+      </group>
+    </group>
+    <group class="ContentColumn2">
+      <!--Book Details-->
+      <group ref="Content" class="Content">
+        <label>Book Details</label>
+        <group class="inline">
+          <input bind="cBookTitle">
+            <label>Book Title</label>
+          </input>
+          <input bind="cBookName">
+            <label>Alt Title</label>
+          </input>
+        </group>
+        <input bind="cBookStrapline">
+          <label>Book Strapline</label>
+        </input>
+        <group class="inline">
+          <input bind="cISBN10">
+            <label>ISBN-10</label>
+          </input>
+          <input bind="cISBN13">
+            <label>ISBN-13</label>
+          </input>
+        </group>
+        <group>
+          <textarea bind="cShortDescription" class="TextArea xhtml" rows="5" cols="70">
+            <label class="no-margin">Short Description</label>
+          </textarea>
+          <textarea bind="cFullDescription" class="TextArea xhtml" rows="15" cols="70">
+            <label class="no-margin">Full Description</label>
+          </textarea>
+          <relatedContent search="find add" type="Genre" relationType="Genre" direction="2way">
+            <label>Genres</label>
+          </relatedContent>
+          
+          <relatedContent search="find add" type="BookSeries" relationType="" direction="2way">
+            <label>Series</label>
+          </relatedContent> 
+      
+          <relatedContent search="find add" type="Document" relationType="SampleOfwork" direction="2way">
+            <label>Sample Chapter</label>
+          </relatedContent>   
+        </group>
+        <group class="">
+          <label>Publication &amp; Copyright</label>
+          <relatedContent search="find add" type="Organisation" relationType="Publisher" direction="2way">
+            <label>Publisher</label>
+          </relatedContent>
+          <input bind="cPublicationYear">
+            <label>Publication Year</label>
+          </input>
+        </group>
+        <group>
+          <relatedContent search="find add" type="Contact" relationType="Copyright" direction="2way">
+            <label>Author Copyright</label>
+          </relatedContent>
+          <input bind="cCopyrightYear">
+            <label>Copyright Year</label>
+          </input>
+        </group>
+        <group class="">
+          <label>Author, illustrator, Translator</label>
+          <relatedContent search="find add " type="Contact" relationType="Author" direction="2way" >
+            <label>Author</label>
+          </relatedContent>
+          <relatedContent search="find add " type="Contact" relationType="Translator" direction="2way">
+            <label>Translator</label>
+          </relatedContent>
+          <relatedContent search="find add " type="Contact" relationType="Illustrator" direction="2way">
+            <label>Illustrator</label>
+          </relatedContent>
+          <relatedContent search="find add " type="Contact" relationType="Foreword" direction="2way">
+            <label>Foreword</label>
+          </relatedContent>
+          <relatedContent search="find add " type="Contact" relationType="Introduction" direction="2way">
+            <label>Introduction</label>
+          </relatedContent>
+          <relatedContent search="find add " type="Contact" relationType="Afterword" direction="2way">
+            <label>Afterword</label>
+          </relatedContent>
+         <relatedContent search="find add " type="Contact" relationType="Preface" direction="2way">
+            <label>Preface</label>
+          </relatedContent>
+        </group>
+        <group>
+          <label>Purchase Links</label>
+          <repeat bind="LinksRpt" class="horizontal">
+            <group class="inline">
+              <input bind="aLinkTitle" class="short">
+                <label>Title of Link </label>
+              </input>
+              <input bind="aLinkUrl" class="">
+                <label>Link</label>
+                <hint>www.eonic.co.uk</hint>
+              </input>
+            </group>
+            <trigger>
+              <label>Del</label>
+              <delete bind="LinksRpt" at="index('LinkRpt')"/>
+            </trigger>
+          </repeat>
+          <trigger>
+            <label>Add Link</label>
+            <insert position="after" bind="LinksRpt" at="index('LinksRpt')" class="add"/>
+          </trigger>
+        </group>
+        <group>
+          <label>Awards </label>
+          <repeat bind="AwardsRpt" class="horizontal">
+            <group class="inline">
+              <input bind="aTitle" class="short">
+                <label>Award Title</label>
+              </input>
+              <input bind="aUrl" class="">
+                <label>Website of Award</label>
+                <hint>www.eonic.co.uk</hint>
+              </input>
+            </group>
+            <input bind="cAwardContentThumbnail" class="short pickImage">
+              <label>Award Image</label>
+            </input>
+            <trigger>
+              <label>Del</label>
+              <delete bind="AwardsRpt" at="index('AwardsRpt')"/>
+            </trigger>
+          </repeat>
+          <trigger>
+            <label>Add Award</label>
+            <insert position="after" bind="AwardsRpt" at="index('AwardsRpt')" class="add"/>
+          </trigger>        
+        </group>
+        
+        <group>
+          <label> Review &amp; Testimonials</label>
+          <!--Reviews related new contentype reader revew pro review-->
+          <relatedContent search="find add" type="Review" relationType="ProReview" direction="2way">
+            <label>Professional  Review</label>
+          </relatedContent>
+          <relatedContent search="find add" type="Review" relationType="ReaderReview" direction="2way">
+            <label>Reader Review</label>
+          </relatedContent>
+          <relatedContent  search="find add" type="Testimonial" relationType="Testimonial" direction="2way" class="" maxRelationNo="1">
+            <label>Testimonials</label>
+          </relatedContent>
+   
+        </group>
+        <group>
+          <label>Editions</label>
+          <relatedContent search="find add" type="BookEdition" relationType="BookEdition" direction="2way">
+            <label>Editions</label>
+          </relatedContent>
+        </group>
+        <group>
+          <label>Related Titles </label>
+          <!--relatedContent-->
+          <relatedContent search="find add" type="Book" relationType="CollectionOf" direction="2way">
+            <label>Related Titles </label>
+          </relatedContent>
+        </group>
+        <group>
+          <label>Related Series </label>
+          <!--relatedContent-->
+          <relatedContent search="find add" type="BookSeries" relationType="" direction="2way">
+            <label>Part of collection / series </label>
+          </relatedContent>
+        </group>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Book</label>
+    </submit>
+  </group>
+</Content>

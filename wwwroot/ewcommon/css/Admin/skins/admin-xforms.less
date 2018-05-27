@@ -27,7 +27,8 @@
 
 // - FORMS
 .ewAdmin .popover-content,
-.ewAdmin .popover-title{
+.ewAdmin .popover-title,
+.relatedContent-group{
 	color:#333;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	padding: 8px 14px;
@@ -157,7 +158,7 @@
         margin-bottom: 5px;
     }
 
-    .checkbox-group input {
+    .checkbox-group input, .select1-group input {
         margin-right: 5px;
     }
 
@@ -220,6 +221,10 @@
         color: @admin-gray;
         //font-size:0.9em;
         margin-top: 5px;
+    }
+
+    label.list-group-item {
+        margin-top: 0px;
     }
 
     .form-control {
@@ -499,6 +504,21 @@
             font-size: 14px;
             padding: 3px 0;
         }
+    }
+
+    div.advancedModeRow, div.rowOver {
+        padding: 3px;
+        padding-top: 6px;
+        border-bottom: 1px solid #e5e5e5;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+        .buttons {
+            text-align: right;
+        }
+    }
+
+    div.rowOver {
+        background-color: #e5e5e5;
     }
 }
 .mce-edit-area{
@@ -1079,3 +1099,8 @@
 	}
 }
 #AddModule > .panel-body > .control-wrapper{width:100%}
+
+
+.ace-editor{
+    height:500px !important;
+}

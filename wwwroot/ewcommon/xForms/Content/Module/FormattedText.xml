@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" moduleType="FormattedText" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" /> 
+          <Content position="" moduleType="FormattedText" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" imagePosition="below"/> 
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -40,6 +40,7 @@
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
       <bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
+      <bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
       <bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -65,6 +66,17 @@
           <label>Panel Image</label>
           <value></value>
         </input>
+        <select1 bind="imagePosition" appearance="full">
+          <label class="bold-label">Place image above or below heading?</label>
+          <item>
+            <label>above</label>
+            <value>above</value>
+          </item>
+          <item>
+            <label>below</label>
+            <value>below</value>
+          </item>
+        </select1>
         <input bind="maxWidth" class="bs-only">
           <label>Max Width</label>
           <value></value>

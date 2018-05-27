@@ -345,13 +345,13 @@ Public Class Services
         Return oRXML
     End Function
 
-    <WebMethod()> _
-    Public Function Feed(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer) As XmlDocument
+    <WebMethod()>
+    Public Function Feed(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, ByVal cItemNodeName As String) As XmlDocument
         Try
             CreateResponse()
             If CheckUserIP() Then
                 Dim oResElmt As XmlElement = oResponseElmt.OwnerDocument.CreateElement("Response")
-                Dim oFeeder As New Eonic.FeedHandler(cURL, cXSLPath, nPageId, nSaveMode, oResElmt)
+                Dim oFeeder As New Eonic.FeedHandler(cURL, cXSLPath, nPageId, nSaveMode, oResElmt, cItemNodeName)
                 bResult = oFeeder.ProcessFeeds()
                 Dim cSubResponse As String = oResElmt.InnerXml
                 AddResponse(cSubResponse)
@@ -369,16 +369,22 @@ Public Class Services
 
     End Function
 
-    <WebMethod()> _
+    <WebMethod()>
     Public Function SubscriptionProcess() As XmlDocument
+        Dim myWeb As New Eonic.Web(HttpContext.Current)
+        myWeb.gbCart = False
+        myWeb.Open()
         Try
             CreateResponse()
             If CheckUserIP() Then
-                Dim oSubscriptions As New Eonic.Web.Cart.Subscriptions(New Eonic.Web)
-                bResult = oSubscriptions.SubcriptionReminders()
+                Dim oResElmt As XmlElement = oResponseElmt.OwnerDocument.CreateElement("Response")
+                Dim oSubscriptions As New Eonic.Web.Cart.Subscriptions(myWeb)
+                oResElmt.InnerXml = oSubscriptions.SubcriptionReminders().OuterXml
                 If bResult Then AddResponse("Reminders Complete")
                 'bResult = oSubscriptions.CheckExpiringSubscriptions()
                 'If bResult Then AddResponse("Expiring Subscriptions Complete")
+                Dim cSubResponse As String = oResElmt.InnerXml
+                AddResponse(cSubResponse)
             End If
         Catch ex As System.Exception
             bResult = False

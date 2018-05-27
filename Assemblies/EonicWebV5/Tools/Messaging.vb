@@ -22,7 +22,8 @@ Public Class Messaging
 
     Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
 
-    Public goApp As System.Web.HttpApplicationState = moCtx.Application
+    Public goApp As System.Web.HttpApplicationState = IIf(moCtx Is Nothing, Nothing, moCtx.Application)
+
     Public goRequest As System.Web.HttpRequest = moCtx.Request
     Public goResponse As System.Web.HttpResponse = moCtx.Response
     Public goSession As System.Web.SessionState.HttpSessionState = moCtx.Session
@@ -290,7 +291,9 @@ Public Class Messaging
             ' Transform for HTML
             oXml.DocumentElement.SetAttribute("output", "html")
             oTransform.Process(oXml, sWriter)
-            If oTransform.HasError Then Throw New Exception("There was an error transforming the email (Output: HTML).")
+            If oTransform.HasError Then
+                Throw New Exception("There was an error transforming the email (Output: HTML).")
+            End If
             messageHtml = sWriter.ToString()
             sWriter.Close()
 

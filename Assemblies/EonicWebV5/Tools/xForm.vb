@@ -1399,17 +1399,16 @@ Public Class xForm
 
                     Dim newFilePath As String = fsHelper.URLToPath(goServer.MapPath("\images") & filePath & "\" & newFileName)
 
+                    'now lets set the image element variables
+                    imgPath = fsHelper.PathToURL("\images" & filePath & "\" & newFileName)
+                    imgWidth = oIh.Width.ToString
+                    imgHeight = oIh.Height.ToString
+
                     If nQuality > 0 Then
                         oIh.Save(newFilePath, nQuality)
                     Else
                         oIh.Save(newFilePath)
                     End If
-
-
-                    'now lets set the image element variables
-                    imgPath = fsHelper.PathToURL("\images" & filePath & "\" & newFileName)
-                    imgWidth = oIh.Width.ToString
-                    imgHeight = oIh.Height.ToString
 
                     ' To avoid duplicate uploads for duplicate bind elements, check for ewImagehandlers that match ids
                     ' By setting attributes we can pass these on to other handlers later on in processing 
@@ -1465,6 +1464,7 @@ Public Class xForm
         Dim bReadOnly As Boolean = False
         Dim cProcessInfo As String = ""
         Dim sDataType As String = ""
+        Dim cleanXpath As String = ""
 
         Try
 
@@ -1523,6 +1523,7 @@ Public Class xForm
                             End If
                             sXpath = getBindXpath(oBindElmt)
                             If sXpath = "" Then sXpath = "."
+                            cleanXpath = sXpath
 
                             sXpath = addNsToXpath(sXpath, nsMgr)
 
@@ -1560,7 +1561,13 @@ Public Class xForm
 
                 End If
                 If sXpath <> "" Then
+                    Try
+                        If Instance.SelectSingleNode(sXpath, nsMgr) Is Nothing Then
 
+                        End If
+                    Catch ex As Exception
+                        cProcessInfo = sXpath & cleanXpath
+                    End Try
 
                     If Instance.SelectSingleNode(sXpath, nsMgr) Is Nothing Then
                         sValue = "invalid path"
@@ -2242,6 +2249,32 @@ Public Class xForm
             For Each fi In files
                 If Extension = "" Or Extension = fi.Extension Then
                     addOption(oSelectNode, fi.Name, DirectoryPath & "\" & fi.Name)
+                End If
+            Next
+
+        Catch ex As Exception
+            returnException(mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
+        End Try
+    End Sub
+
+    Sub addOptionsFoldersFromDirectory(ByRef oSelectNode As XmlElement, ByVal DirectoryPath As String)
+
+        Dim cProcessInfo As String = ""
+        Dim fullDirPath As String = DirectoryPath
+        Try
+            If DirectoryPath.StartsWith("/") Then
+                fullDirPath = goServer.MapPath(DirectoryPath)
+            End If
+
+
+            Dim dir As New DirectoryInfo(fullDirPath)
+            Dim folders As DirectoryInfo() = dir.GetDirectories
+            Dim fo As DirectoryInfo
+
+            For Each fo In folders
+                If Not fo.Name.StartsWith("~") And Not fo.Name.StartsWith("_vti") Then
+                    addOption(oSelectNode, DirectoryPath.Replace("\", "/") & "/" & fo.Name, DirectoryPath & "/" & fo.Name)
+                    addOptionsFoldersFromDirectory(oSelectNode, DirectoryPath & "\" & fo.Name)
                 End If
             Next
 

@@ -68,14 +68,14 @@ Namespace Integration.Directory
                         cUserName = fbUser.first_name & fbUser.last_name
                         'Check if username exists if so the add numbers till not
                         Dim counter As Long = 1
-                        Do While _myWeb.moDbHelper.checkUserUnique(cUserName) = False
+                        Do While myWeb.moDbHelper.checkUserUnique(cUserName) = False
                             cUserName = cUserName & counter
                             counter = counter + 1
                         Loop
                     End If
 
                     'If data not complete set status as requires data
-                    nUserId = MyBase._myWeb.moDbHelper.insertDirectory("fb-" & fbUser.id, "User", cUserName, "", UserXml.OuterXml,,, fbUser.email)
+                    nUserId = MyBase.myWeb.moDbHelper.insertDirectory("fb-" & fbUser.id, "User", cUserName, "", UserXml.OuterXml,,, fbUser.email)
                     'Add ExternalAuthInfo
                     CreateExternalAuth(fbUser.id, nUserId)
                     Return nUserId

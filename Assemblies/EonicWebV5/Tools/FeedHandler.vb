@@ -9,6 +9,7 @@ Imports VB = Microsoft.VisualBasic
 Imports System.Net
 Imports System.Text.RegularExpressions
 Imports Eonic.Tools
+Imports System.Xml.Linq
 Imports System
 
 
@@ -22,6 +23,7 @@ Public Class FeedHandler
     Public bResult As Boolean = True
     Public oResultElmt As XmlElement
     Public TotalsElmt As XmlElement
+    Public FeedItemNode As String
 
     Public oDBH As Web.dbHelper
     Public oTransform As Eonic.XmlHelper.Transform
@@ -41,7 +43,7 @@ Public Class FeedHandler
     End Enum
 
 
-    Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing)
+    Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing, Optional ByVal cItemNodeName As String = "")
         PerfMon.Log("FeedHandler", "New")
         Try
             oDBH = New Web.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
@@ -49,8 +51,7 @@ Public Class FeedHandler
             oConfig("DatabaseAuth"), 1)
             oDBH.myWeb = New Eonic.Web(System.Web.HttpContext.Current)
             oDBH.myWeb.InitializeVariables()
-            oDBH.myWeb.Open()
-
+            'oDBH.myWeb.Open()
             oAdmXFrm.goConfig = oConfig
             oAdmXFrm.moDbHelper = oDBH
             oAdmXFrm.myWeb = oDBH.myWeb
@@ -60,6 +61,7 @@ Public Class FeedHandler
             cXSLTransformPath = cXSLPath
             nHostPageID = nPageId
             nSave = nSaveMode
+            FeedItemNode = cItemNodeName
             oResultElmt = oResultRecorderElmt
             TotalsElmt = Xml.addElement(oResultElmt, "Totals")
             _updateExistingItems = True
@@ -104,32 +106,156 @@ Public Class FeedHandler
 
         Try
             'get the feed instances
-            Dim oInstanceXML As XmlDocument = GetFeedItems()
-            If Not oInstanceXML Is Nothing Then
-                'sort the guids so we have something to compare
-                'UpdateGuids(oInstanceXML)
-                'now we need to compare them to existing feed items on the page
-                'and depending on the save mode, ignore/delete
-                'we wont overwrite details in case the admin has edited some text
 
-                If LCase(oConfig("Debug")) = "on" Then
-                    oInstanceXML.Save(goServer.MapPath("/parsedFeed.xml"))
-                End If
+            'sort the guids so we have something to compare
+            'UpdateGuids(oInstanceXML)
+            'now we need to compare them to existing feed items on the page
+            'and depending on the save mode, ignore/delete
+            'we wont overwrite details in case the admin has edited some text
 
-                If LCase(oConfig("FeedMode")) = "import" Then
-                    Me.AddExternalMessage(oDBH.importObjects(oInstanceXML.DocumentElement, cFeedURL, cXSLTransformPath))
-                Else
-                    CompareFeedItems(oInstanceXML)
-                End If
 
-            Else
-                Me.AddExternalMessage("No Feed Items")
-            End If
+
+            Select Case LCase(oConfig("FeedMode"))
+                Case "import"
+                    Dim oInstanceXML As XmlDocument = GetFeedItems()
+                    If Not oInstanceXML Is Nothing Then
+                        If LCase(oConfig("Debug")) = "on" Then
+                            oInstanceXML.Save(goServer.MapPath("/parsedFeed.xml"))
+                        End If
+                        Me.AddExternalMessage(oDBH.importObjects(oInstanceXML.DocumentElement, cFeedURL, cXSLTransformPath))
+                    Else
+                        Me.AddExternalMessage("No Feed Items")
+                    End If
+                Case "stream"
+                    Me.AddExternalMessage(ImportStream())
+                Case Else
+                    Dim oInstanceXML As XmlDocument = GetFeedItems()
+                    If Not oInstanceXML Is Nothing Then
+                        CompareFeedItems(oInstanceXML)
+                    Else
+                        Me.AddExternalMessage("No Feed Items")
+                    End If
+
+            End Select
+
+
             If Not msException = "" Then
                 bResult = False
                 AddExternalMessage(msException)
             End If
             Return bResult
+        Catch ex As Exception
+            AddExternalError(ex)
+        End Try
+    End Function
+
+    Public Function ImportStream() As String
+
+        Dim instanceNodeName As String = FeedItemNode
+        Dim origInstance As XElement
+        Dim ProcessedQty As Long = 0
+        Dim completeCount As Long = 0
+        Dim startNo As Long = 0
+        Dim processInfo As String
+
+        Try
+
+            oTransform.Compiled = True
+            oTransform.XslFilePath = cXSLTransformPath
+
+            Dim ReturnMessage As String = "Streaming Feed "
+            Dim logId As Long = oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Started")
+
+            Dim cDeleteTempTableName As String = cFeedURL.Replace(".xml", "")
+            Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
+            Dim Tasks As New Eonic.Web.dbImport(oDBH.oConn.ConnectionString, 0)
+            System.Threading.ThreadPool.SetMaxThreads(10, 10)
+            Dim doneEvents(0) As System.Threading.ManualResetEvent
+
+            Dim settings As XmlWriterSettings = New XmlWriterSettings()
+            settings.Indent = True
+            settings.OmitXmlDeclaration = True
+            settings.NewLineOnAttributes = False
+            settings.ConformanceLevel = ConformanceLevel.Document
+            settings.CheckCharacters = True
+
+            'is the feed XML
+            Using reader As XmlReader = XmlReader.Create(cFeedURL)
+                Dim name As XElement = Nothing
+                Dim item As XElement = Nothing
+                Dim sDoc As String = ""
+                reader.MoveToContent()
+                While reader.Read()
+                    If reader.NodeType = XmlNodeType.Element AndAlso reader.Name = instanceNodeName Then
+
+                        origInstance = TryCast(XElement.ReadFrom(reader), XElement)
+
+                        Dim oWriter As TextWriter = New StringWriter
+                        Dim xWriter As XmlWriter = XmlWriter.Create(oWriter, settings)
+
+                        Try
+                            'Dim ro As New ReaderOptions()
+                            'ro.OmitDuplicateNamespaces = True
+                            Dim xreader As XmlReader = origInstance.CreateReader()
+                            xreader.MoveToContent()
+                            oTransform.Process(xreader, xWriter)
+
+                            sDoc = oWriter.ToString()
+                            sDoc = Regex.Replace(sDoc, "&gt;", ">")
+                            sDoc = Regex.Replace(sDoc, "&lt;", "<")
+                            sDoc = Eonic.Tools.Xml.convertEntitiesToCodesFast(sDoc)
+                            Dim filename As String
+                            Dim xDoc As New XmlDocument
+                            xDoc.LoadXml(sDoc)
+                            Dim oInstance As XmlElement
+                            For Each oInstance In xDoc.DocumentElement.SelectNodes("descendant-or-self::instance")
+                                Dim stateObj As New Eonic.Web.dbImport.ImportStateObj()
+                                stateObj.oInstance = oInstance
+                                stateObj.LogId = logId
+                                stateObj.FeedRef = cFeedURL
+                                stateObj.CompleteCount = completeCount
+                                stateObj.totalInstances = 0
+                                stateObj.bSkipExisting = False
+                                stateObj.bResetLocations = True
+                                stateObj.bOrphan = False
+                                stateObj.bDeleteNonEntries = False
+                                stateObj.cDeleteTempTableName = cDeleteTempTableName
+                                stateObj.moTransform = oTransform
+
+                                ' If oInstance.NextSibling Is Nothing Then
+                                '     cProcessInfo = "Is Last"
+                                '      eventsDoneEvt.Set()
+                                ' End If
+
+                                System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                                stateObj = Nothing
+                                completeCount = completeCount + 1
+                            Next
+
+                            If LCase(oConfig("Debug")) = "on" Then
+                                filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-")
+                                xDoc.Save(System.Web.HttpContext.Current.Request.MapPath("/") & "/importtest/" & filename & ".xml")
+                            End If
+
+                            xDoc = Nothing
+                            origInstance = Nothing
+                            oWriter = Nothing
+                            xWriter = Nothing
+
+                        Catch ex2 As Exception
+                            processInfo = sDoc
+                            AddExternalError(ex2)
+                        End Try
+
+
+                    End If
+                End While
+                eventsDoneEvt.Set()
+
+            End Using
+
+            Return completeCount & " Items Processed"
+
         Catch ex As Exception
             AddExternalError(ex)
         End Try

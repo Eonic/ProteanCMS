@@ -166,8 +166,8 @@ Imports System
                 goSession = moCtx.Session
                 goServer = moCtx.Server
 
-                ResetConnection("Data Source=" & cDbServer & "; " &
-                                "Initial Catalog=" & cDbName & "; " &
+                ResetConnection("Data Source=" & cDbServer & "; " & _
+                                "Initial Catalog=" & cDbName & "; " & _
                                 GetDBAuth())
 
                 myWeb = Nothing
@@ -246,6 +246,7 @@ Imports System
             Lookup = 30
             CartDelivery = 31
             CartCarrier = 32
+            SubscriptionRenewal = 33
 
             '100-199 reserved for LMS
             CpdLog = 100
@@ -288,6 +289,7 @@ Imports System
             tblLookup = 30
             tblCartOrderDelivery = 31
             tblCartCarrier = 32
+            tblSubscriptionRenewal = 33
 
             '100-199 reserved for LMS
             tblCpdLog = 100
@@ -644,6 +646,8 @@ Imports System
                     Return "nDeliveryKey"
                 Case 32
                     Return "nCarrierKey"
+                Case 33
+                    Return "nSubRenewalKey"
                     '100-199 reserved for LMS
                 Case 100
                     Return "nCpdLogKey"
@@ -1412,6 +1416,10 @@ Imports System
             Dim sProcessInfo As String = ""
 
             Try
+
+                If myWeb.moSession Is Nothing Then
+                    Return PermissionLevel.Denied
+                End If
                 'Check if we are Domain Super Admin
                 'RJP 7 Nov 2012. Amended to use Lower Case to prevent against case sensitive entries in Eonic.Web.Config, previously used the string "md5"
                 If myWeb.moSession("ewAuth") = Eonic.Tools.Encryption.HashString(myWeb.moSession.SessionID & goConfig("AdminPassword"), LCase(myWeb.moConfig("MembershipEncryption")), True) Then
@@ -1802,7 +1810,7 @@ Imports System
                         oDr = Nothing
                     Case objectTypes.Subscription
                         Dim oXML As New XmlDocument
-                        sSql = "SELECT cSubscriptionXML, nUserId FROM tblSubscriptions WHERE nSubscriptionKey = " & nId
+                        sSql = "SELECT cSubscriptionXML, nUserId FROM tblSubscription WHERE nSubKey = " & nId
                         Dim nSubUserId As Integer
                         oDr = getDataReader(sSql)
                         While oDr.Read
@@ -1813,7 +1821,7 @@ Imports System
                         Dim oElmt As XmlElement = oXML.DocumentElement.SelectSingleNode("descendant-or-self::UserGroups")
                         Dim oGrpElmt As XmlElement
 
-                        sSql = "SELECT cSubXML FROM tblSubscriptions WHERE nDirId = " & nSubUserId & " AND (NOT (nSubKey = " & nId & "))"
+                        sSql = "SELECT cSubXML FROM tblSubscription WHERE nDirId = " & nSubUserId & " AND (NOT (nSubKey = " & nId & "))"
                         Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Content")
                         Dim oXML2 As New XmlDocument
                         oXML2.InnerXml = Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<")
@@ -1834,12 +1842,12 @@ Imports System
                             End If
                         Next
 
-                        sSql = "Select nAuditId From tblSubscriptions where nSubKey = " & nId
+                        sSql = "Select nAuditId From tblSubscription where nSubKey = " & nId
                         oDr = getDataReader(sSql)
                         While oDr.Read
                             DeleteObject(objectTypes.Audit, oDr.GetValue(0))
                         End While
-                        ExeProcessSql("Delete from tblSubscriptions where nSubKey = " & nId)
+                        ExeProcessSql("Delete from tblSubscription where nSubKey = " & nId)
                         oDr.Close()
                         oDr = Nothing
                     Case objectTypes.CartShippingMethod
@@ -2198,7 +2206,14 @@ restart:
                     cProcessInfo = "Updating Object Type: " & ObjectType & "(Table: " & getTable(ObjectType) & ", Object Id: " & nKey
                     Select Case ObjectType
                         Case objectTypes.Content
-
+                            Dim oPrimId As XmlElement = oInstance.SelectSingleNode("tblContent/nContentPrimaryId")
+                            If oPrimId.InnerText = "" Then
+                                oPrimId.InnerText = "0"
+                            End If
+                            Dim oVerId As XmlElement = oInstance.SelectSingleNode("tblContent/nVersion")
+                            If oVerId.InnerText = "" Then
+                                oVerId.InnerText = "0"
+                            End If
                             If gbVersionControl Then
                                 'out to a subroutine for versioning
                                 contentVersioning(oInstance, ObjectType, nKey)
@@ -2215,7 +2230,10 @@ restart:
                         objectTypes.CartDiscountDirRelations, objectTypes.CartDiscountProdCatRelations,
                         objectTypes.CartDiscountRules, objectTypes.CartProductCategories,
                         objectTypes.Codes, objectTypes.QuestionaireResult, objectTypes.CourseResult,
-                        objectTypes.Certificate, objectTypes.CpdLog, objectTypes.QuestionaireResultDetail, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery
+                        objectTypes.Certificate, objectTypes.CpdLog, objectTypes.QuestionaireResultDetail, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery,
+                            objectTypes.Subscription, objectTypes.SubscriptionRenewal
+
+
                             '
                             ' Check for Audit Id - if not found, we should be able to retrieve one from the database.
                             nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
@@ -2265,7 +2283,8 @@ restart:
                             objectTypes.CartDiscountRules, objectTypes.CartProductCategories,
                             objectTypes.QuestionaireResult, objectTypes.QuestionaireResultDetail, objectTypes.CourseResult,
                             objectTypes.Codes, objectTypes.ContentVersion,
-                             objectTypes.Certificate, objectTypes.CpdLog, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery
+                            objectTypes.Certificate, objectTypes.CpdLog, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery,
+                            objectTypes.Subscription, objectTypes.SubscriptionRenewal
 
                             'we are using getAuditId to create a new audit record.
                             nAuditId = setObjectInstance(objectTypes.Audit, oInstance)
@@ -6535,8 +6554,10 @@ restart:
                     oElmt = moPageXml.CreateElement(cOrderType)
                     oElmt.InnerXml = oDr("cCartXml")
                     oElmtOrder = oElmt.FirstChild
-                    oElmtOrder.SetAttribute("id", oDr("nCartOrderKey"))
-                    oContentsXML.AppendChild(oElmt.FirstChild)
+                    If Not oElmtOrder Is Nothing Then
+                        oElmtOrder.SetAttribute("id", oDr("nCartOrderKey"))
+                        oContentsXML.AppendChild(oElmt.FirstChild)
+                    End If
                 Next
 
             Catch ex As Exception
@@ -7544,9 +7565,12 @@ restart:
                     Dim cNodeType As String = oElmt2.GetAttribute("type")
                     Dim cRelationType As String = oElmt2.GetAttribute("rtype")
                     Dim cPosition As String = oElmt2.GetAttribute("position")
-
+                    Dim cRelationQuery As String = ""
+                    If cRelationType <> "" Then
+                        cRelationQuery = " and @rType='" & cRelationType & "'"
+                    End If
                     'ensure this items is not allready in this location....
-                    If oContent.SelectSingleNode("*[@id='" & nNodeId & "']") Is Nothing Then
+                    If oContent.SelectSingleNode("*[@id='" & nNodeId & "'" & cRelationQuery & "]") Is Nothing Then
 
                         'Allow related content to be added to the specified types always (Module is default)
                         If oElmt2.HasAttribute("showRelated") Then
@@ -8279,7 +8303,7 @@ restart:
 
         End Sub
 
-        Public Function RelatedContentSearch(ByVal nRootNode As Integer, ByVal cSchemaName As String, ByVal bChildren As Boolean, ByVal cSearchExpression As String, ByVal nParentId As Integer, Optional ByVal nIgnoreID As Integer = 0, Optional ByVal oRelated() As String = Nothing) As XmlElement
+        Public Function RelatedContentSearch(ByVal nRootNode As Integer, ByVal cSchemaName As String, ByVal bChildren As Boolean, ByVal cSearchExpression As String, ByVal nParentId As Integer, Optional ByVal nIgnoreID As Integer = 0, Optional ByVal oRelated() As String = Nothing, Optional ByVal bIncRelated As Boolean = False) As XmlElement
             PerfMon.Log("DBHelper", "RelatedContentSearch")
             Try
                 Dim sSearch As String = cSearchExpression
@@ -8409,7 +8433,7 @@ restart:
 
                 Dim bFound As Boolean = False
 
-
+                Dim idList As String = ""
                 ' Get each content node and check it against the Search Array
                 For Each oTempNode As XmlElement In oFullData.SelectNodes("SearchRelateable/Content")
 
@@ -8419,8 +8443,40 @@ restart:
                             bFound = True
                         End If
                     Next
-
+                    If bIncRelated Then
+                        idList = idList & oTempNode.GetAttribute("id") & ","
+                    End If
                 Next
+                idList = idList.Trim(",")
+
+                If bIncRelated Then
+                    cSQL = "SELECT c.nContentKey AS id, distinctlist.parId, c.cContentForiegnRef AS ref, c.cContentName AS name,  	c.cContentSchemaName AS type,  " &
+                    "c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " &
+                    "INNER JOIN (SELECT DISTINCT c.nContentKey AS id , rel.nContentParentId AS parId FROM tblContent c INNER JOIN tblContentRelation rel ON c.nContentKey = rel.nContentChildId " &
+                    "WHERE (cContentSchemaName = 'Product' or cContentSchemaName = 'SKU' ) 	AND rel.nContentParentId IN (" & idList & ")) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName"
+
+                    oDs = GetDataSet(cSQL, "Content", "SearchRelated")
+                    oDs.EnforceConstraints = False
+                    oDs.Tables("Content").Columns("id").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("parId").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("ref").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("name").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("type").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("publishDate").ColumnMapping = Data.MappingType.Attribute
+                    oDs.Tables("Content").Columns("content").ColumnMapping = Data.MappingType.SimpleContent
+
+                    Dim oRelatedData As XmlElement = moPageXml.CreateElement("RelatedData")
+                    oRelatedData.InnerXml = oDs.GetXml.ToString
+
+                    Dim oRelNode As XmlElement
+                    For Each oRelNode In oRelatedData.SelectNodes("SearchRelated/Content")
+                        oRelNode = SimpleTidyContentNode(oRelNode)
+                        Dim ParId As String = oRelNode.GetAttribute("parId")
+                        Dim ParNode As XmlElement = oResults.SelectSingleNode("Content[@id='" & ParId & "']")
+                        ParNode.AppendChild(oRelNode)
+                    Next
+
+                End If
 
                 oResults.SetAttribute("nParentID", nParentId)
                 oResults.SetAttribute("cSchemaName", cSchemaName)
@@ -10228,7 +10284,10 @@ ReturnMe:
                             filename.Add(Now.ToString("yyyyMMddhhmmss"))
                     End Select
 
-                    myWeb.mcContentDisposition = "attachment;filename=" & String.Join("-", filename.ToArray()) & "." & outputFormat
+                    If Not myWeb.mbOutputXml Then
+                        myWeb.mcContentDisposition = "attachment;filename=" & String.Join("-", filename.ToArray()) & "." & outputFormat
+                    End If
+
                 End If
 
 
@@ -10550,6 +10609,8 @@ ReturnMe:
                 If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
                     modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.FeedRef & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
                 End If
+
+                fRefNode = Nothing
 
                 modbhelper = Nothing
 

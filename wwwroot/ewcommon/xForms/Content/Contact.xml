@@ -130,7 +130,6 @@
             <bind id="cContentPostalCode" nodeset="PostalCode" required="false()" type="string"/>
           </bind>-->
         </bind>
-
         <bind id="cContentTelephone" nodeset="Telephone" required="false()" type="string"/>
         <bind id="cContentFax" nodeset="Fax" required="false()" type="string"/>
         <bind id="cContentMobile" nodeset="Mobile" required="false()" type="string"/>
@@ -196,6 +195,12 @@
         <input bind="cContentDisplay" class="short pickImage">
           <label>Alternative picture</label>
         </input>
+      </group>
+      <group class="Content">
+        <label>Video</label>
+        <relatedContent search="find add" type="Video" relationType="Video" direction="2way">
+          <label>Related Video</label>
+        </relatedContent>
       </group>
     </group>
     <group>

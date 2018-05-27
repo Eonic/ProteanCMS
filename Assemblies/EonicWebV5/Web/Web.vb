@@ -261,56 +261,59 @@ Public Class Web
     Private Function CheckLicence(ByVal mode As licenceMode) As Boolean
         Dim sProcessInfo As String = ""
         Try
-            Dim EncyrptionKey As String = "1ad54c70-5fa7-44c5-8059-ab68e136cc63"
-            Dim Hostname As String
-            Dim Enc As New Eonic.Encryption
-            Dim ServerIP As String
 
-            If moRequest Is Nothing Then
-                Hostname = "127.0.0.1"
-                ServerIP = "127.0.0.1"
-            Else
-                Hostname = moRequest.ServerVariables("SERVER_NAME")
-                ServerIP = moRequest.ServerVariables("LOCAL_ADDR")
-            End If
+            Return True
 
-            Dim Hash As String = Enc.GenerateMD5Hash(EncyrptionKey & Hostname)
+            'Dim EncyrptionKey As String = "1ad54c70-5fa7-44c5-8059-ab68e136cc63"
+            'Dim Hostname As String
+            'Dim Enc As New Eonic.Encryption
+            'Dim ServerIP As String
 
-            If goApp Is Nothing Then
-                Return True
-            Else
-                If goApp(Hash) Is Nothing Then
+            'If moRequest Is Nothing Then
+            '    Hostname = "127.0.0.1"
+            '    ServerIP = "127.0.0.1"
+            'Else
+            '    Hostname = moRequest.ServerVariables("SERVER_NAME")
+            '    ServerIP = moRequest.ServerVariables("LOCAL_ADDR")
+            'End If
 
-                    Dim Valid As Boolean = False
+            'Dim Hash As String = Enc.GenerateMD5Hash(EncyrptionKey & Hostname)
 
-                    Select Case mode
-                        Case licenceMode.Demo, licenceMode.Development
-                            'Runs on local host
-                            If ServerIP = "::1" Or ServerIP = "127.0.0.1" Then
-                                Valid = True
-                            End If
-                            If Hostname.EndsWith("eonicweb.dev") Or Hostname.EndsWith("ds01.eonic.co.uk") Then
-                                Valid = True
-                            End If
+            'If goApp Is Nothing Then
+            '    Return True
+            'Else
+            '    If goApp(Hash) Is Nothing Then
 
-                        Case licenceMode.Live
-                            'This is where we put the clever licencing stuff later on.
-                            Valid = True
+            '        Dim Valid As Boolean = False
 
-                    End Select
+            '        Select Case mode
+            '            Case licenceMode.Demo, licenceMode.Development
+            '                'Runs on local host
+            '                If ServerIP = "::1" Or ServerIP = "127.0.0.1" Then
+            '                    Valid = True
+            '                End If
+            '                If Hostname.EndsWith("eonicweb.dev") Or Hostname.EndsWith("ds01.eonic.co.uk") Then
+            '                    Valid = True
+            '                End If
 
-                    If Valid = True Then
-                        goApp(Hash) = True
-                        Return True
-                    Else
-                        goApp(Hash) = Nothing
-                        Return False
-                    End If
+            '            Case licenceMode.Live
+            '                'This is where we put the clever licencing stuff later on.
+            '                Valid = True
 
-                Else
-                    Return True
-                End If
-            End If
+            '        End Select
+
+            '        If Valid = True Then
+            '            goApp(Hash) = True
+            '            Return True
+            '        Else
+            '            goApp(Hash) = Nothing
+            '            Return False
+            '        End If
+
+            '    Else
+            '        Return True
+            '    End If
+            'End If
 
         Catch ex As Exception
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckLicence", ex, sProcessInfo))
@@ -551,7 +554,10 @@ Public Class Web
                 If gbCart Or gbQuote Then
                     InitialiseCart()
                     'moCart = New Cart(Me)
-                    moDiscount = New Cart.Discount(Me)
+                    If Not moCart Is Nothing Then
+                        moDiscount = New Cart.Discount(Me)
+                        moDiscount.mcCurrency = moCart.mcCurrency
+                    End If
                 End If
 
                 ' Facility to allow the generation bespoke errors.
@@ -1541,13 +1547,18 @@ Public Class Web
                             Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                             cContentDetailName = Eonic.Tools.Text.CleanName(cContentDetailName, False, True)
                             Dim RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
+                            If RequestedContentName.contains("?") Then
+                                RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
+                                'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
+                            End If
+
                             If RequestedContentName <> cContentDetailName Then
-                                mnPageId = gnPageNotFoundId
-                                oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                mnEonicWebError = 1005
+                                    mnPageId = gnPageNotFoundId
+                                    oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                    mnEonicWebError = 1005
+                                End If
                             End If
                         End If
-                    End If
 
                     Me.CheckMultiParents(oPageElmt, mnPageId)
                 Else
@@ -5381,11 +5392,11 @@ Public Class Web
                     Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
                     ' If legacyRdirection is on, this means that we need to use the new format SEO friendly URLs
                     cURL = oMenuItem.GetAttribute("url")
-                    If moConfig("LegacyRedirect") = "on" Then
-                        cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                    Else
-                        cURL &= "/Item" & oDR(0).ToString
-                    End If
+                    'If moConfig("LegacyRedirect") = "on" Then
+                    cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                    ' Else
+                    '     cURL &= "/Item" & oDR(0).ToString
+                    ' End If
                     oContElmt.SetAttribute("url", cURL)
                     oContElmt.SetAttribute("name", oDR(1).ToString)
                     oContElmt.SetAttribute("publish", Eonic.Tools.Xml.XmlDate(oDR(3).ToString, False))

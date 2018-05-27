@@ -828,6 +828,10 @@ Check:
                             'any additonal validation goes here
                             Select Case cDirectorySchemaName
                                 Case "User", "UserMyAccount"
+                                    If MyBase.valid = False Then
+                                        MyBase.addNote("cDirName", xForm.noteTypes.Alert, MyBase.validationError)
+                                    End If
+
 
                                     'Username exists?
                                     If MyBase.Instance.SelectSingleNode("*/cDirName").InnerXml <> MyBase.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml Then
@@ -905,7 +909,6 @@ Check:
                                     End If
                                 Else
                                     'add new
-
                                     id = moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Directory, MyBase.Instance)
 
                                     'update the instance with the id
@@ -913,19 +916,25 @@ Check:
                                     addNewitemToParId = (parId > 0)
                                     MyBase.addNote("EditContent", xForm.noteTypes.Alert, "This user has been added.", True)
 
+                                    'add addresses
+                                    If Not MyBase.Instance.SelectSingleNode("tblCartContact") Is Nothing Then
+                                        MyBase.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
+                                        moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.CartContact, MyBase.Instance)
+                                    End If
+
                                     ' Save the member code, if applicable
                                     useMemberCode(cCodeUsed, id)
 
-                                    ' If member codes were being applied then reconstruct the Group Instance.
-                                    If gbMemberCodes And cCodeUsed <> "" Then
-                                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
-                                        MyBase.Instance.ReplaceChild(oGrpElmt, MyBase.Instance.LastChild)
+                                        ' If member codes were being applied then reconstruct the Group Instance.
+                                        If gbMemberCodes And cCodeUsed <> "" Then
+                                            oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
+                                            MyBase.Instance.ReplaceChild(oGrpElmt, MyBase.Instance.LastChild)
+                                        End If
+
                                     End If
 
-                                End If
-
-                                'lets add the user to any groups
-                                If cDirectorySchemaName = "User" And maintainMembershipsOnAdd Then
+                                    'lets add the user to any groups
+                                    If cDirectorySchemaName = "User" And maintainMembershipsOnAdd Then
                                     maintainMembershipsFromXForm(id)
 
                                     'we want to ad the user to a specified group from a pick list of groups.

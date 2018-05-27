@@ -35,6 +35,7 @@
       <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
       <bind id="nPreviousMonthsListed" nodeset="@previousMonthsListed" required="false()" type="string"/>
+      <bind id="nFirstPageCount" nodeset="@firstPageCount" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -69,6 +70,9 @@
         </info>
         <input bind="nPreviousMonthsListed" class="long">
           <label>List no of Previous Months</label>
+        </input>
+        <input bind="nFirstPageCount" class="long">
+          <label>No of items on first page</label>
         </input>
       </group>
     </group>

@@ -23,7 +23,7 @@ Namespace Integration.Directory
 
         ' Core class variables
         Protected _moduleName As String = "Eonic.Integration.Directory"
-        Protected _myWeb As Eonic.Web
+        Protected myWeb As Eonic.Web
         Private _diagnostics As String = ""
         Protected _providerName As String
 
@@ -48,8 +48,8 @@ Namespace Integration.Directory
         Public Sub New(ByRef aWeb As Eonic.Web)
             Try
                 If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
-                _myWeb = aWeb
-                _directoryId = _myWeb.mnUserId
+                myWeb = aWeb
+                _directoryId = myWeb.mnUserId
                 _moduleName &= "." & Me.Name()
                 If IsAuthorisedUser Then LoadCredentials()
             Catch ex As Exception
@@ -60,7 +60,7 @@ Namespace Integration.Directory
         Public Sub New(ByRef aWeb As Eonic.Web, ByRef directoryId As Long)
             Try
                 If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
-                _myWeb = aWeb
+                myWeb = aWeb
                 _directoryId = directoryId
                 _moduleName &= "." & Me.Name()
                 If IsAuthorisedUser Then LoadCredentials()
@@ -104,7 +104,7 @@ Namespace Integration.Directory
         ''' <remarks></remarks>
         Public ReadOnly Property IsAuthorisedUser() As Boolean
             Get
-                Return _myWeb.mbAdminMode Or (_myWeb.mnUserId = _directoryId)
+                Return myWeb.mbAdminMode Or (myWeb.mnUserId = _directoryId)
             End Get
         End Property
 
@@ -122,7 +122,7 @@ Namespace Integration.Directory
 
         Function ValidateExternalAuth(ByVal ExternalId As String) As Long
             Try
-                Dim oDr As SqlClient.SqlDataReader = _myWeb.moDbHelper.getDataReader("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
+                Dim oDr As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader("select TOP 1 nDirectoryId from tblDirectoryExternalAuth where cProviderName = '" & _providerName & "' and cProviderId='" & ExternalId & "'")
 
                 If oDr.HasRows Then
                     While oDr.Read
@@ -145,7 +145,7 @@ Namespace Integration.Directory
                     Return checkId
                 Else
                     Dim sSql As String = "insert into tblDirectoryExternalAuth (nDirectoryId,cProviderName,cProviderId) VALUES (" & nUserId & ", '" & _providerName & "','" & ExternalId & "')"
-                    ExtAuthId = _myWeb.moDbHelper.GetIdInsertSql(sSql)
+                    ExtAuthId = myWeb.moDbHelper.GetIdInsertSql(sSql)
                 End If
                 If ExtAuthId > 0 Then
                     Return ExtAuthId
@@ -161,7 +161,7 @@ Namespace Integration.Directory
         Function GetUserSchemaXml() As XmlElement
 
             Dim oXform As New Eonic.xForm
-            oXform.load("/xforms/directory/User.xml", _myWeb.maCommonFolders)
+            oXform.load("/xforms/directory/User.xml", myWeb.maCommonFolders)
             Return oXform.Instance.SelectSingleNode("tblDirectory/cDirXml")
 
         End Function
@@ -192,11 +192,11 @@ Namespace Integration.Directory
                 _isDirectoryItemLoaded = False
 
                 ' Load the directory item
-                directoryInstance = _myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, _directoryId)
+                directoryInstance = myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, _directoryId)
 
                 ' Validate it
                 If Not String.IsNullOrEmpty(directoryInstance) Then
-                    _directoryInstance = _myWeb.moPageXml.CreateElement("instance")
+                    _directoryInstance = myWeb.moPageXml.CreateElement("instance")
                     _directoryInstance.InnerXml = directoryInstance
                     _isDirectoryItemLoaded = True
                 End If
@@ -218,7 +218,7 @@ Namespace Integration.Directory
             Else
                 If _credentials.SerializeToDirectoryInstance(_directoryInstance) Then
                     ' Save the instance.
-                    _myWeb.moDbHelper.setObjectInstance(objectTypes.Directory, _directoryInstance, _directoryId)
+                    myWeb.moDbHelper.setObjectInstance(objectTypes.Directory, _directoryInstance, _directoryId)
                 End If
             End If
 
@@ -234,9 +234,9 @@ Namespace Integration.Directory
                 If _credentials.RemoveFromDirectoryInstance(_directoryInstance) Then
                     ' Save the instance.
                     Dim userid As Long = 0
-                    Dim updateStatus As String = _myWeb.moDbHelper.setObjectInstance(objectTypes.Directory, _directoryInstance, _directoryId)
+                    Dim updateStatus As String = myWeb.moDbHelper.setObjectInstance(objectTypes.Directory, _directoryInstance, _directoryId)
                     If Tools.CheckAndReturnStringAsNumber(updateStatus, userid, GetType(Long)) Then
-                        _myWeb.AddResponse(Me.Name & ".DeleteCredentials.Success", "User account has been successfully unlinked from " & Me.Name, , ResponseType.Hint)
+                        myWeb.AddResponse(Me.Name & ".DeleteCredentials.Success", "User account has been successfully unlinked from " & Me.Name, , ResponseType.Hint)
                     Else
                         Throw New Exception("Unable to save credentials.")
                     End If
@@ -258,7 +258,7 @@ Namespace Integration.Directory
 
         ' Core class variables
         Protected _moduleName As String = "Eonic.Integration.Directory.Helper"
-        Protected _myWeb As Eonic.Web
+        Protected myWeb As Eonic.Web
         Private _diagnostics As String = ""
 
         Private _integrationsEnabled As Boolean = False
@@ -273,8 +273,8 @@ Namespace Integration.Directory
         Public Sub New(ByRef aWeb As Eonic.Web)
             Try
                 If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
-                _myWeb = aWeb
-                _integrationsEnabled = _myWeb.moConfig("UserIntegrations") = "on"
+                myWeb = aWeb
+                _integrationsEnabled = myWeb.moConfig("UserIntegrations") = "on"
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web)", ex, ""))
             End Try
@@ -288,13 +288,13 @@ Namespace Integration.Directory
 
         Public ReadOnly Property ContentCheckboxEnabled() As Boolean
             Get
-                Return Not (_myWeb.moConfig("UserIntegrationsContentCheckbox") = "off")
+                Return Not (myWeb.moConfig("UserIntegrationsContentCheckbox") = "off")
             End Get
         End Property
 
         Private ReadOnly Property ContentCheckboxContentTypes() As String
             Get
-                Dim types As String = _myWeb.moConfig("UserIntegrationsContentCheckboxTypes") & ""
+                Dim types As String = myWeb.moConfig("UserIntegrationsContentCheckboxTypes") & ""
                 Return types.Trim
             End Get
         End Property
@@ -314,14 +314,14 @@ Namespace Integration.Directory
                 If Enabled() Then
 
                     ' Check the user
-                    If _myWeb.mnUserId > 0 Then
+                    If myWeb.mnUserId > 0 Then
 
                         Dim userXml As XmlElement = postableContentDocument.CreateElement("User")
-                        Dim userInnerXml As String = _myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, _myWeb.mnUserId)
+                        Dim userInnerXml As String = myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, myWeb.mnUserId)
                         userXml.InnerXml = userInnerXml
 
                         ' Get the content brief
-                        Dim content As XmlElement = _myWeb.GetContentBriefXml(, contentId)
+                        Dim content As XmlElement = myWeb.GetContentBriefXml(, contentId)
                         Dim contentSchema As String = ""
                         Tools.Xml.NodeState(content, "//cContentSchemaName", , , , , , contentSchema)
 
@@ -332,10 +332,10 @@ Namespace Integration.Directory
                         '    Or if Request posts "overrideAutomatedIntegrationPostings" then we look at 
                         '   the Request item "postToIntegrations" to see which integrations to select.
                         Dim integrationsSelector As String = ""
-                        If _myWeb.moRequest("overrideAutomatedIntegrationPostings") = "true" Then
+                        If myWeb.moRequest("overrideAutomatedIntegrationPostings") = "true" Then
 
                             ' Override the settings - search for postToIntegrations
-                            For Each post As String In (_myWeb.moRequest("postToIntegrations") & "").Split(",")
+                            For Each post As String In (myWeb.moRequest("postToIntegrations") & "").Split(",")
                                 If Not String.IsNullOrEmpty(post) Then integrationsSelector &= "@provider='" & post & "' or "
                             Next
                             If Not String.IsNullOrEmpty(integrationsSelector) Then
@@ -353,17 +353,17 @@ Namespace Integration.Directory
                         If credentials.Count > 0 And Not String.IsNullOrEmpty(integrationsSelector) Then
 
                             ' Check if the content is on a page that can be viewed by non-authenticated users.
-                            Dim tempAdminMode As Boolean = _myWeb.mbAdminMode
-                            _myWeb.mbAdminMode = False
+                            Dim tempAdminMode As Boolean = myWeb.mbAdminMode
+                            myWeb.mbAdminMode = False
 
                             ' Check if the content is live
-                            If _myWeb.moDbHelper.IsAuditedObjectLive(objectTypes.Directory, contentId) Then
+                            If myWeb.moDbHelper.IsAuditedObjectLive(objectTypes.Directory, contentId) Then
 
                                 ' Get the primary location
-                                Dim primaryLocation As Long = _myWeb.moDbHelper.GetDataValue("SELECT TOP 1 nStructId FROM tblContentLocation WHERE bPrimary = 1 AND nContentId=" & contentId, , , 0)
+                                Dim primaryLocation As Long = myWeb.moDbHelper.GetDataValue("SELECT TOP 1 nStructId FROM tblContentLocation WHERE bPrimary = 1 AND nContentId=" & contentId, , , 0)
                                 If primaryLocation > 0 Then
 
-                                    Dim siteStructureForBeginners As XmlElement = _myWeb.GetStructureXML(0)
+                                    Dim siteStructureForBeginners As XmlElement = myWeb.GetStructureXML(0)
 
                                     ' Check that primary location is a live page
                                     If Tools.Xml.NodeState(siteStructureForBeginners, "//MenuItem[@id=" & primaryLocation & "]") <> Tools.Xml.XmlNodeState.NotInstantiated Then
@@ -380,7 +380,7 @@ Namespace Integration.Directory
                                         contentsElement = postableContentDocument.CreateElement("Contents")
                                         pageElement.AppendChild(contentsElement)
                                         If Not String.IsNullOrEmpty(Eonic.Web.gcEwBaseUrl) Then pageElement.SetAttribute("baseUrl", Eonic.Web.gcEwBaseUrl)
-                                        _myWeb.GetRequestVariablesXml(pageElement)
+                                        myWeb.GetRequestVariablesXml(pageElement)
 
                                         contentsElement.AppendChild(postableContentDocument.ImportNode(content, True))
 
@@ -405,7 +405,7 @@ Namespace Integration.Directory
                                         ' The format is as follows:
                                         ' <post provider="provider" url="url to content">content to post</post>
                                         Dim textWriter As New System.IO.StringWriter
-                                        Dim oTransform As New Eonic.XmlHelper.Transform(_myWeb, styleFile, False)
+                                        Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, styleFile, False)
                                         oTransform.mbDebug = gbDebug
                                         oTransform.ProcessTimed(postableContentDocument, textWriter)
                                         oTransform.Close()
@@ -428,15 +428,15 @@ Namespace Integration.Directory
                                                 Then
 
                                                 ' Everything's good, let's try to post it.
-                                                Dim constructorArguments() As Object = {_myWeb, Convert.ToInt64(_myWeb.mnUserId)}
+                                                Dim constructorArguments() As Object = {myWeb, Convert.ToInt64(myWeb.mnUserId)}
                                                 Dim methodArguments() As Object = {post.InnerXml.Trim, New Uri(post.GetAttribute("url"), UriKind.Absolute), Convert.ToInt64(contentId)}
-                                                Invoke.InvokeObjectMethod( _
-                                                    integrationBase & post.GetAttribute("provider") & ".Post", _
-                                                    constructorArguments, _
-                                                    methodArguments, _
-                                                    Me, _
-                                                    "_OnError", _
-                                                    "OnError" _
+                                                Invoke.InvokeObjectMethod(
+                                                    integrationBase & post.GetAttribute("provider") & ".Post",
+                                                    constructorArguments,
+                                                    methodArguments,
+                                                    Me,
+                                                    "_OnError",
+                                                    "OnError"
                                                     )
 
                                             End If
@@ -451,7 +451,7 @@ Namespace Integration.Directory
                             End If
 
                             ' Important - revert back to the previous setting
-                            _myWeb.mbAdminMode = tempAdminMode
+                            myWeb.mbAdminMode = tempAdminMode
 
                         End If
 
@@ -479,7 +479,7 @@ Namespace Integration.Directory
 
                     ' Get the user XML
                     Dim userXml As XmlElement = form.moXformElmt.OwnerDocument.CreateElement("User")
-                    userXml.InnerXml = _myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, _myWeb.mnUserId)
+                    userXml.InnerXml = myWeb.moDbHelper.getObjectInstance(objectTypes.Directory, myWeb.mnUserId)
 
                     ' Only continue if there are credentials
                     Dim credentials As XmlNodeList = userXml.SelectNodes("//Credentials")

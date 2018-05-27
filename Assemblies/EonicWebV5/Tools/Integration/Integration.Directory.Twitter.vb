@@ -43,17 +43,17 @@ Namespace Integration.Directory
                     callbackParameters.Add("integration", "Twitter.AccessTokens")
                     callbackParameters.Add("dirId", MyBase.DirectoryId.ToString())
 
-                    Dim callback As Uri = BuildURIFromRequest(_myWeb.moRequest, callbackParameters)
+                    Dim callback As Uri = BuildURIFromRequest(myWeb.moRequest, callbackParameters)
 
                     Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
                     Dim authenticationLink As String = twitterAPI.GetAuthenticationLink(twitterConsumerKey, twitterConsumerSecret, callback.ToString())
 
-                    _myWeb.AddResponse("Twitter.AuthenticationLink", authenticationLink, , ResponseType.Redirect)
-                    _myWeb.msRedirectOnEnd = authenticationLink
+                    myWeb.AddResponse("Twitter.AuthenticationLink", authenticationLink, , ResponseType.Redirect)
+                    myWeb.msRedirectOnEnd = authenticationLink
                     Return authenticationLink
                 Else
 
-                    _myWeb.AddResponse("Twitter.GetRequestToken.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
+                    myWeb.AddResponse("Twitter.GetRequestToken.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
                     Return ""
 
                 End If
@@ -68,8 +68,8 @@ Namespace Integration.Directory
 
         Public Sub AccessTokens()
             Try
-                Dim token As String = _myWeb.moRequest("oauth_token")
-                Dim verifier As String = _myWeb.moRequest("oauth_verifier")
+                Dim token As String = myWeb.moRequest("oauth_token")
+                Dim verifier As String = myWeb.moRequest("oauth_verifier")
                 AccessTokens(token, verifier)
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "AccessTokens()", ex, ""))
@@ -84,7 +84,7 @@ Namespace Integration.Directory
 
                     If String.IsNullOrEmpty(token) Or String.IsNullOrEmpty(verifier) Then
                         ' token or Verifier are not populated
-                        _myWeb.AddResponse("Twitter.AccessTokens.NullArguments", "Either the token or the verifier were blank", , ResponseType.Alert)
+                        myWeb.AddResponse("Twitter.AccessTokens.NullArguments", "Either the token or the verifier were blank", , ResponseType.Alert)
 
                     Else
                         twitterAPI.GetAccessTokens(twitterConsumerKey, twitterConsumerSecret, token, verifier)
@@ -105,12 +105,12 @@ Namespace Integration.Directory
 
                         SaveCredentials()
 
-                        _myWeb.AddResponse("Twitter.AccessTokens.Success", "User account has been successfully linked to Twitter", , ResponseType.Hint)
+                        myWeb.AddResponse("Twitter.AccessTokens.Success", "User account has been successfully linked to Twitter", , ResponseType.Hint)
 
                     End If
                 Else
 
-                    _myWeb.AddResponse("Twitter.AccessTokens.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
+                    myWeb.AddResponse("Twitter.AccessTokens.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
 
                 End If
 
@@ -126,7 +126,7 @@ Namespace Integration.Directory
             Try
 
 
-                Dim status As String = _myWeb.moRequest("status")
+                Dim status As String = myWeb.moRequest("status")
                 Update(status)
 
             Catch ex As Exception
@@ -139,10 +139,10 @@ Namespace Integration.Directory
 
 
                 If Not IsAuthorisedUser Then
-                    _myWeb.AddResponse("Twitter.Update.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
+                    myWeb.AddResponse("Twitter.Update.Unauthorised", "The user requesting this method is not authorised", , ResponseType.Alert)
 
                 ElseIf Not Me.IsProviderCredentialLoaded Then
-                    _myWeb.AddResponse("Twitter.Update.NoCredentials", "Could not load credentials for user Id" & DirectoryId, , ResponseType.Alert)
+                    myWeb.AddResponse("Twitter.Update.NoCredentials", "Could not load credentials for user Id" & DirectoryId, , ResponseType.Alert)
 
                 Else
                     ' Load the credentials
@@ -150,10 +150,10 @@ Namespace Integration.Directory
                     Dim secret As String = _credentials.GetSetting("OAuth_TokenSecret")
 
                     If String.IsNullOrEmpty(token) Or String.IsNullOrEmpty(token) Then
-                        _myWeb.AddResponse("Twitter.Update.NullArguments", "No valid credentials are available", , ResponseType.Alert)
+                        myWeb.AddResponse("Twitter.Update.NullArguments", "No valid credentials are available", , ResponseType.Alert)
 
                     ElseIf String.IsNullOrEmpty(status) Then
-                        _myWeb.AddResponse("Twitter.Update.NullStatus", "The status is blank", , ResponseType.Alert)
+                        myWeb.AddResponse("Twitter.Update.NullStatus", "The status is blank", , ResponseType.Alert)
 
                     Else
                         Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
@@ -166,7 +166,7 @@ Namespace Integration.Directory
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Update(String)", ex, ""))
-                _myWeb.AddResponse("Twitter.Update.Failed", "The update failed - see error log for more detail", , ResponseType.Alert)
+                myWeb.AddResponse("Twitter.Update.Failed", "The update failed - see error log for more detail", , ResponseType.Alert)
             End Try
         End Sub
 
@@ -196,7 +196,7 @@ Namespace Integration.Directory
 
                     Me.Update(content & shortenedURL)
 
-                    _myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.IntegrationTwitterPost, Me.DirectoryId, 0, contentId, shortenedURL)
+                    myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.IntegrationTwitterPost, Me.DirectoryId, 0, contentId, shortenedURL)
 
                 End If
 

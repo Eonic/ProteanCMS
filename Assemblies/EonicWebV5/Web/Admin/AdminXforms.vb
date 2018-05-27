@@ -2586,9 +2586,9 @@ Partial Public Class Web
                     zcReturnSchema = cContentSchemaName
 
                     ' ok lets load in an xform from the file location.
-                    If cContentSchemaName = "Subscription" Then
-                        Return xFrmEditSubscription(id, pgid)
-                    End If
+                    ' If cContentSchemaName = "Subscription" Then
+                    ' Return xFrmEditSubscription(id, pgid)
+                    ' End If
 
                     Dim cXformName As String = cContentSchemaName
                     If AlternateFormName <> "" Then cXformName = AlternateFormName
@@ -2783,7 +2783,12 @@ Partial Public Class Web
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-                                    moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                    End If
                                 End If
 
                                 'TS 10-01-2014 fix for cascade on saved items... To Be tested
@@ -3295,6 +3300,25 @@ Partial Public Class Web
                     MyBase.submission("DeleteFile", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Delete File")
 
+                    MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This file is used in these content Items")
+                    'search for file in content and pages
+                    Dim oFsh As fsHelper = New fsHelper
+                    oFsh.initialiseVariables(nType)
+                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
+                    Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
+                    Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
+                    If odr.HasRows Then
+                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Do While odr.Read
+                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                        Loop
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                    Else
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                    End If
+                    odr = Nothing
+
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
 
                     MyBase.addSubmit(oFrmElmt, "", "Delete file")
@@ -3318,6 +3342,89 @@ Partial Public Class Web
 
                         Else
                             MyBase.addValues()
+                        End If
+                    Else
+                        MyBase.addValues()
+                    End If
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Public Function xFrmMoveFile(ByVal cPath As String, ByVal cName As String, ByVal nType As fsHelper.LibraryType) As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim sValidResponse As String
+                Dim cProcessInfo As String = ""
+
+                Try
+                    'load the xform to be edited
+                    moDbHelper.moPageXml = moPageXML
+
+
+                    MyBase.NewFrm("MoveFile")
+
+                    MyBase.submission("MoveFile", "", "post")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Move File")
+
+                    'search for file in content and pages
+                    Dim oFsh As fsHelper = New fsHelper
+                    oFsh.initialiseVariables(nType)
+
+
+
+                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
+                    Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
+                    Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
+                    If odr.HasRows Then
+                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Do While odr.Read
+                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                        Loop
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                    Else
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                    End If
+                    odr = Nothing
+
+                    Dim oSelElmt As XmlElement = MyBase.addSelect1(oFrmElmt, "destPath", False, "Move To")
+                    MyBase.addOptionsFoldersFromDirectory(oSelElmt, "/" & oFsh.mcRoot)
+
+                    MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to move this file? - """ & cPath & "\" & cName & """", , "alert-danger")
+
+                    MyBase.addSubmit(oFrmElmt, "", "Move file")
+
+                    MyBase.Instance.InnerXml = "<delete/>"
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+
+                            Dim oFs As fsHelper = New fsHelper
+                            oFs.initialiseVariables(nType)
+                            Dim cDestPath As String = myWeb.moRequest("destPath").Replace(oFs.mcRoot, "").Replace("//", "/")
+
+                            If oFs.MoveFile(cName, cPath, cDestPath) Then
+
+                                Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
+                                Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
+                                moDbHelper.ExeProcessSql(sSQLUpd)
+
+                            Else
+                                MyBase.valid = False
+                                MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
+                                MyBase.addValues()
+
+                            End If
+
+
+                        Else
+                                MyBase.addValues()
                         End If
                     Else
                         MyBase.addValues()
@@ -5286,17 +5393,17 @@ Partial Public Class Web
                     MyBase.addInput(oFrmElmt, "nStructParId", True, "ParId", "hidden")
                     MyBase.addBind("nStructParId", "tblCartShippingLocations/nLocationParId", "true()")
 
-                    oSelElmt = MyBase.addSelect1(oFrmElmt, "nLocationType", True, "Type", "", ApperanceTypes.Full)
+                    oSelElmt = MyBase.addSelect1(oFrmElmt, "nLocationType", True, "Type", "required", ApperanceTypes.Full)
                     MyBase.addOption(oSelElmt, "Global", 0)
                     MyBase.addOption(oSelElmt, "Continental", 1)
                     MyBase.addOption(oSelElmt, "Country", 2)
                     MyBase.addOption(oSelElmt, "Region", 3)
                     MyBase.addBind("nLocationType", "tblCartShippingLocations/nLocationType", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cNameFull", True, "Full Name")
+                    MyBase.addInput(oFrmElmt, "cNameFull", True, "Full Name", "required")
                     MyBase.addBind("cNameFull", "tblCartShippingLocations/cLocationNameFull", "true()")
 
-                    MyBase.addInput(oFrmElmt, "cNameShort", True, "Short Name")
+                    MyBase.addInput(oFrmElmt, "cNameShort", True, "Short Name", "required")
                     MyBase.addBind("cNameShort", "tblCartShippingLocations/cLocationNameShort", "true()")
 
                     MyBase.addInput(oFrmElmt, "cISOnum", True, "ISO Num")
@@ -5708,13 +5815,14 @@ Partial Public Class Web
                         If goRequest("nStatus") <> "9" Then shippedStatus &= " (Confirmation e-mail will be sent to customer)"
                     End If
 
+                    Dim completedMsg As String = ""
+                    If moCartConfig("SendRecieptsFromAdmin") <> "off" Then
+                        completedMsg = " - Payment Recieved (resends receipt)"
+                    End If
 
                     'update the status if we have submitted it allready
                     If goRequest("nStatus") <> "" Then nStatus = CInt(goRequest("nStatus"))
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Update" & cSchemaName, "", "UpdateOrder")
-
-
-
 
                     oGrp1Elmt = MyBase.addGroup(oFrmElmt, "Status", "", cSchemaName & " Status")
                     oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nStatus", True, "Status", "", ApperanceTypes.Full)
@@ -5728,22 +5836,22 @@ Partial Public Class Web
                             MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
                             MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
                         Case 7 ' Refunded
-                            MyBase.addOption(oSelElmt, "Completed", 6)
+                            MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
                         Case 8 ' Failed
                             MyBase.addOption(oSelElmt, "Abandoned", 11)
                             MyBase.addOption(oSelElmt, "Delete", 12)
                         Case 9 ' Shipped
-                            MyBase.addOption(oSelElmt, "Completed", 6)
+                            MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
                         Case 10 'Deposit Paid
                             MyBase.addOption(oSelElmt, "Deposit Paid", 10)
-                            MyBase.addOption(oSelElmt, "Completed", 6)
+                            MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
                         Case 13 'Awaiting Payment
                             MyBase.addOption(oSelElmt, "Awaiting Payment", 13)
-                            MyBase.addOption(oSelElmt, "Completed - Payment Recieved(sends receipt)", 6)
+                            MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
 
@@ -5764,6 +5872,10 @@ Partial Public Class Web
                             validationOn = "false()"
                         End If
 
+                        If LCase(moCartConfig("ShippedValidation")) = "off" Then
+                            validationOn = "false()"
+                        End If
+
                         If moDbHelper.checkDBObjectExists("tblCartCarrier") Then
 
                             Dim oCarrierElmt As XmlElement = MyBase.addGroup(oCase3, "Carrier", "inline", cSchemaName & " Carrier")
@@ -5780,10 +5892,15 @@ Partial Public Class Web
                             MyBase.addInput(oCarrierElmt, "cCarrierNotes", True, "Carrier Notes", "long")
                             MyBase.addBind("cCarrierNotes", "tblCartOrderDelivery/cCarrierNotes", "false()")
 
-                            MyBase.addInput(oCarrierElmt, "dExpectedDeliveryDate", True, "Target Delivery Date", "calendar")
+                            Dim validClass As String = ""
+                            If validationOn = "true()" Then
+                                validClass = " required"
+                            End If
+
+                            MyBase.addInput(oCarrierElmt, "dExpectedDeliveryDate", True, "Target Delivery Date", "calendar" & validClass)
                             MyBase.addBind("dExpectedDeliveryDate", "tblCartOrderDelivery/dExpectedDeliveryDate", validationOn)
 
-                            MyBase.addInput(oCarrierElmt, "dCollectionDate", True, "Collection Date", "calendar")
+                            MyBase.addInput(oCarrierElmt, "dCollectionDate", True, "Collection Date", "calendar" & validClass)
                             MyBase.addBind("dCollectionDate", "tblCartOrderDelivery/dCollectionDate", validationOn)
 
                             Dim deliveryInstance As XmlElement = moPageXML.CreateElement("instance")
@@ -5796,10 +5913,9 @@ Partial Public Class Web
                             'set the order id
                             MyBase.Instance.SelectSingleNode("tblCartOrderDelivery/nOrderId").InnerText = nOrderId
                         End If
-
                     End If
 
-                        oGrp2Elmt = MyBase.addGroup(oFrmElmt, "Notes", "", "Notes")
+                    oGrp2Elmt = MyBase.addGroup(oFrmElmt, "Notes", "", "Notes")
 
                     ' Get the seller notes
                     Dim sellerNotes As String = Me.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText
@@ -5904,10 +6020,11 @@ Partial Public Class Web
 
                                 Dim CustomerEmailShippedTemplatePath As String = IIf(moCartConfig("CustomerEmailShippedTemplatePath") <> "", moCartConfig("CustomerEmailShippedTemplatePath"), "/xsl/Cart/mailOrderCustomerDelivery.xsl")
 
-                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
+                                cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
+
                                 oMsg = Nothing
 
-                                End If
+                            End If
 
 
                             End If
@@ -5935,9 +6052,9 @@ Partial Public Class Web
                     Dim cParentContentName As String = convertEntitiesToCodes(moDbHelper.getNameByKey(dbHelper.objectTypes.Content, nParentID))
 
                     MyBase.NewFrm("FindRelatedContent")
-                    MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" & _
-                          "<cSchemaName>" & cContentType & "</cSchemaName>" & _
-                        "<cSection/><nSearchChildren/><cParentContentName>" & cParentContentName & "</cParentContentName><redirect>" & redirect & "</redirect><cSearch/>"
+                    MyBase.Instance.InnerXml = "<nParentContentId>" & nParentID & "</nParentContentId>" &
+                          "<cSchemaName>" & cContentType & "</cSchemaName>" &
+                        "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" & cParentContentName & "</cParentContentName><redirect>" & redirect & "</redirect><cSearch/>"
 
                     'MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                     MyBase.submission("AddRelated", "", "post", "form_check(this)")
@@ -5988,6 +6105,12 @@ Partial Public Class Web
                     MyBase.addOption(oSelElmt2, "Search all sub-pages", 1)
                     MyBase.addBind("nSearchChildren", "nSearchChildren", "false()")
 
+                    If cContentType.Contains("Product") And cContentType.Contains("SKU") Then
+                        oSelElmt2 = MyBase.addSelect(oFrmElmt, "nIncludeRelated", True, "&#160;", "", ApperanceTypes.Full)
+                        MyBase.addOption(oSelElmt2, "Include Related Sku's", 1)
+                        MyBase.addBind("nIncludeRelated", "nIncludeRelated", "false()")
+                    End If
+
                     'search button
                     MyBase.addSubmit(oFrmElmt, "Search", "Search", "ewSubmit")
 
@@ -6004,6 +6127,7 @@ Partial Public Class Web
                             Dim nRoot As Integer = MyBase.Instance.SelectSingleNode("cSection").InnerText
                             Dim bChilds As Boolean = IIf(MyBase.Instance.SelectSingleNode("nSearchChildren").InnerText = "1", True, False)
                             Dim cExpression As String = MyBase.Instance.SelectSingleNode("cSearch").InnerText
+                            Dim bIncRelated As Boolean = IIf(MyBase.Instance.SelectSingleNode("nIncludeRelated").InnerText = "1", True, False)
 
                             Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
                             Dim oDre As SqlDataReader = moDbHelper.getDataReader(sSQL)
@@ -6014,7 +6138,7 @@ Partial Public Class Web
                             oDre.Close()
                             If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
 
-                            oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(",")))
+                            oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated))
 
                         End If
 
@@ -6929,51 +7053,115 @@ Partial Public Class Web
                 End Try
             End Function
 
-            Public Function xFrmEditSubscription(ByVal nContentId As Integer, ByVal nPageID As Integer, Optional ByVal nGroup As Integer = 0) As XmlElement
+            'Moved to edit content instead
+
+            'Public Function xFrmEditSubscription(ByVal nContentId As Integer, ByVal nPageID As Integer, Optional ByVal nGroup As Integer = 0) As XmlElement
+            '    Dim cProcessInfo As String = ""
+            '    Try
+            '        MyBase.NewFrm("EditSubscription")
+            '        MyBase.load("/xforms/content/Subscription.xml", myWeb.maCommonFolders)
+
+            '        If nContentId > 0 Then
+            '            MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, nContentId)
+            '        End If
+            '        Dim i As Integer = 1
+            '        Dim bDone As Boolean = False
+            '        Dim cItems As String = ""
+            '        Do Until bDone = True
+            '            Dim oElmt As XmlElement = MyBase.moXformElmt.SelectSingleNode("group/group/group/select1[@bind ='nGroup_" & i & "']")
+            '            If Not oElmt Is Nothing Then
+            '                If Not cItems = "" Then
+            '                    oElmt.InnerXml = cItems
+            '                Else
+            '                    Dim oDR As SqlDataReader = moDbHelper.getDataReader("SELECT NULL As nDirKey, '-------' As cDirName UNION Select nDirKey, cDirName From tblDirectory WHERE cDirSchema = 'Group' Order By cDirName")
+            '                    Do While oDR.Read
+            '                        MyBase.addOption(oElmt, oDR(1), IIf(IsDBNull(oDR(0)), "", oDR(0)))
+            '                    Loop
+            '                    oDR.Close()
+            '                    cItems = oElmt.InnerXml
+            '                End If
+            '                i += 1
+            '            Else
+            '                bDone = True
+            '            End If
+            '        Loop
+
+            '        If MyBase.isSubmitted Then
+            '            MyBase.updateInstanceFromRequest()
+            '            MyBase.validate()
+            '            If MyBase.valid Then
+            '                Dim nCId As Integer = moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Content, MyBase.Instance)
+            '                If nPageID > 0 Then moDbHelper.setContentLocation(nPageID, nCId, True)
+            '                If nGroup > 0 Then
+            '                    Dim mySub As New Eonic.Web.Cart.Subscriptions(myWeb)
+            '                    mySub.SubscriptionToGroup(nCId, nGroup)
+            '                End If
+            '            End If
+            '        End If
+
+            '        MyBase.addValues()
+            '        Return MyBase.moXformElmt
+            '    Catch ex As Exception
+            '        returnException(mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+            '        Return Nothing
+            '    End Try
+            'End Function
+
+
+            Public Function xFrmRenewSubscription(ByVal nSubscriptionId As String) As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
-                    MyBase.NewFrm("EditSubscription")
-                    MyBase.load("/xforms/content/Subscription.xml", myWeb.maCommonFolders)
 
-                    If nContentId > 0 Then
-                        MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, nContentId)
-                    End If
-                    Dim i As Integer = 1
-                    Dim bDone As Boolean = False
-                    Dim cItems As String = ""
-                    Do Until bDone = True
-                        Dim oElmt As XmlElement = MyBase.moXformElmt.SelectSingleNode("group/group/group/select1[@bind ='nGroup_" & i & "']")
-                        If Not oElmt Is Nothing Then
-                            If Not cItems = "" Then
-                                oElmt.InnerXml = cItems
-                            Else
-                                Dim oDR As SqlDataReader = moDbHelper.getDataReader("SELECT NULL As nDirKey, '-------' As cDirName UNION Select nDirKey, cDirName From tblDirectory WHERE cDirSchema = 'Group' Order By cDirName")
-                                Do While oDR.Read
-                                    MyBase.addOption(oElmt, oDR(1), IIf(IsDBNull(oDR(0)), "", oDR(0)))
-                                Loop
-                                oDR.Close()
-                                cItems = oElmt.InnerXml
+                    Dim oSub As New Cart.Subscriptions(myWeb)
+
+                    MyBase.NewFrm("RenewSubscription")
+                    MyBase.submission("RenewSubscription", "", "post")
+                    Dim oFrmElmt As XmlElement
+
+                    oSub.GetSubscriptionDetail(MyBase.Instance, nSubscriptionId)
+                    Dim SubXml = MyBase.Instance.FirstChild
+                    'calculate new expiry date
+
+                    Dim renewInterval As DateInterval = DateInterval.Day
+                    Select Case SubXml.GetAttribute("periodUnit")
+                        Case "Week"
+                            renewInterval = DateInterval.WeekOfYear
+                        Case "Year"
+                            renewInterval = DateInterval.Year
+                    End Select
+                    Dim SubId As Long = SubXml.GetAttribute("id")
+
+                    Dim dNewStart As Date = DateAdd(DateInterval.Day, 1, CDate(SubXml.GetAttribute("expireDate")))
+                    Dim dNewEnd As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")), dNewStart)
+                    Dim RenewalCost As Double = CDbl(SubXml.GetAttribute("value"))
+                    SubXml.setAttribute("newStart", xmlDate(dNewStart))
+                    SubXml.setAttribute("newExpire", xmlDate(dNewEnd))
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "RenewSubscription")
+
+                    MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
+                    MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+                    Dim oSelElmt As XmlElement = MyBase.addSelect(oFrmElmt, "emailClient", True, "", "", ApperanceTypes.Full)
+                    MyBase.addOption(oSelElmt, "Email Renewal Invoice", "yes")
+
+
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Renew Subscription", True, "renew-sub")
+
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Confirm", "Confirm Renewal", "Confirm", "btn-success principle", "fa-repeat")
+
+                    If Me.isSubmitted Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                            myWeb.msRedirectOnEnd = "/?ewCmd=RenewSubscription"
+                        ElseIf MyBase.getSubmitted = "Confirm" Then
+                            Dim bEmailClient As Boolean = False
+                            If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
+                            oSub.RenewSubscription(nSubscriptionId, True)
+                            MyBase.valid = True
+                                Return MyBase.moXformElmt
                             End If
-                            i += 1
-                        Else
-                            bDone = True
                         End If
-                    Loop
-
-                    If MyBase.isSubmitted Then
-                        MyBase.updateInstanceFromRequest()
-                        MyBase.validate()
-                        If MyBase.valid Then
-                            Dim nCId As Integer = moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Content, MyBase.Instance)
-                            If nPageID > 0 Then moDbHelper.setContentLocation(nPageID, nCId, True)
-                            If nGroup > 0 Then
-                                Dim mySub As New Eonic.Web.Cart.Subscriptions(myWeb)
-                                mySub.SubscriptionToGroup(nCId, nGroup)
-                            End If
-                        End If
-                    End If
-
-                    MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
@@ -6995,19 +7183,59 @@ Partial Public Class Web
                     MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
 
+                    MyBase.addInput(oFrmElmt, "cStatedReason", False, "Reason for cancelation")
 
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Are you sure you wish to cancel this subscription", True)
 
-                    MyBase.addSubmit(oFrmElmt, "Cancel", "Cancel", "Cancel")
-                    MyBase.addSubmit(oFrmElmt, "Continue", "Continue", "Continue")
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Cancel", "Cancel Subscription", "Cancel", "btn-warning principle", "fa-stop")
 
                     If Me.isSubmitted Then
-                        If MyBase.getSubmitted = "Cancel" Then
-                            Return Nothing
-                        ElseIf MyBase.getSubmitted = "Continue" Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                        ElseIf MyBase.getSubmitted = "Cancel" Then
                             Dim oSub As New Cart.Subscriptions(myWeb)
-                            oSub.CancelSubscription(nSubscriptionId)
-                            Return Nothing
+                            oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"))
+                            MyBase.valid = True
+                            Return MyBase.moXformElmt
+                        End If
+                    End If
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Public Function xFrmConfirmExpireSubscription(ByVal nUserId As String, ByVal nSubscriptionId As String, ByVal nCurrentUser As Integer, ByVal bAdminMode As Boolean) As XmlElement
+
+                Try
+                    If Not IsNumeric(nUserId) Then nUserId = 0
+                    If Not IsNumeric(nSubscriptionId) Then nSubscriptionId = 0
+                    MyBase.NewFrm("CancelSubscription")
+                    MyBase.submission("CancelSubscription", "", "post")
+                    Dim oFrmElmt As XmlElement
+
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "ExpireSubscription")
+
+                    MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
+                    MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
+
+                    MyBase.addInput(oFrmElmt, "cStatedReason", False, "Reason for expiry")
+
+                    MyBase.addNote(oFrmElmt, noteTypes.Hint, "Are you sure you wish this subscription to expire", True)
+
+                    MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
+                    MyBase.addSubmit(oFrmElmt, "Expire", "Expire Subscription", "Expire", "btn-warning principle", "fa-stop")
+
+                    If Me.isSubmitted Then
+                        If MyBase.getSubmitted = "Back" Then
+                            Return MyBase.moXformElmt
+                        ElseIf MyBase.getSubmitted = "Expire" Then
+                            Dim oSub As New Cart.Subscriptions(myWeb)
+                            oSub.ExpireSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"))
+                            MyBase.valid = True
+                            Return MyBase.moXformElmt
                         End If
                     End If
                     Return MyBase.moXformElmt
@@ -8043,8 +8271,8 @@ Partial Public Class Web
 
                         If myWeb.moConfig("debug") = "on" Then
                             Dim oSelectElmt3 As XmlElement
-                            oSelectElmt3 = MyBase.addSelect1(oFrmElmt, "xml", True, "Response Xml", , ApperanceTypes.Full)
-                            MyBase.addOption(oSelectElmt3, "on", "true")
+                            oSelectElmt3 = MyBase.addSelect1(oFrmElmt, "contentType", True, "Response Xml", , ApperanceTypes.Full)
+                            MyBase.addOption(oSelectElmt3, "on", "xml")
                             MyBase.addOption(oSelectElmt3, "off", "")
                         End If
                         MyBase.addBind("xml", "file/@xml", "true()")

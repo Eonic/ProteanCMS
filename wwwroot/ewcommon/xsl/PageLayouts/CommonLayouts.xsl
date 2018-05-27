@@ -6724,7 +6724,6 @@
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
     <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
-
     <xsl:variable name="contentList">
       <Content>
         <xsl:for-each select="@*">
@@ -6738,7 +6737,6 @@
         </xsl:apply-templates>
       </Content>
     </xsl:variable>
-
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -6749,11 +6747,24 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-
     <!-- Output Module -->
     <div class="GalleryImageList Grid">
-
-      <div class="cols{@cols}">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix GalleryImageList Grid content-scroller</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
         <!-- If Stepper, display Stepper -->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
@@ -6767,8 +6778,8 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="@crop"/>
+          <xsl:with-param name="lightbox" select="@lightbox"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
@@ -6778,6 +6789,7 @@
   <xsl:template match="Content[@type='LibraryImage']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="crop"/>
+    <xsl:param name="lightbox"/>
     <xsl:variable name="cropSetting">
       <xsl:choose>
         <xsl:when test="$crop='false'">
@@ -6827,25 +6839,49 @@
             <xsl:with-param name="class" select="'grid-item '"/>
             <xsl:with-param name="sortBy" select="$sortBy"/>
           </xsl:apply-templates>
-          <a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox">
-            <div class="thumbnail">
-              <xsl:apply-templates select="." mode="displayThumbnail">
-                <xsl:with-param name="crop" select="$cropSetting" />
-                <xsl:with-param name="class" select="'img-responsive'" />
-                <xsl:with-param name="style" select="'overflow:hidden;'" />
-                <xsl:with-param name="width" select="$lg-max-width"/>
-                <xsl:with-param name="height" select="$lg-max-height"/>
-              </xsl:apply-templates>
-              <xsl:if test="Title/node()!='' or Body/node()!=''">
-                <div class="caption">
-                  <h4>
-                    <xsl:value-of select="Title/node()"/>
-                  </h4>
-                  <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+          <xsl:choose>
+            <xsl:when test="$lightbox='false'">
+              <div class="thumbnail">
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                  <xsl:with-param name="class" select="'img-responsive'" />
+                  <xsl:with-param name="style" select="'overflow:hidden;'" />
+                  <xsl:with-param name="width" select="$lg-max-width"/>
+                  <xsl:with-param name="height" select="$lg-max-height"/>
+                </xsl:apply-templates>
+                <xsl:if test="Title/node()!='' or Body/node()!=''">
+                  <div class="caption">
+                    <h4>
+                      <xsl:value-of select="Title/node()"/>
+                    </h4>
+                    <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+                  </div>
+                </xsl:if>
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{$fullSize}" title="{Title/node()} - {Body/node()}" class="responsive-lightbox">
+                <div class="thumbnail">
+                  <xsl:apply-templates select="." mode="displayThumbnail">
+                    <xsl:with-param name="crop" select="$cropSetting" />
+                    <xsl:with-param name="class" select="'img-responsive'" />
+                    <xsl:with-param name="style" select="'overflow:hidden;'" />
+                    <xsl:with-param name="width" select="$lg-max-width"/>
+                    <xsl:with-param name="height" select="$lg-max-height"/>
+                  </xsl:apply-templates>
+                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                    <div class="caption">
+                      <h4>
+                        <xsl:value-of select="Title/node()"/>
+                      </h4>
+                      <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+                    </div>
+                  </xsl:if>
                 </div>
-              </xsl:if>
-            </div>
-          </a>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
+          
         </div>
       </xsl:when>
       <xsl:otherwise>
@@ -11153,7 +11189,8 @@
       </xsl:if>
     </div>
   </xsl:template>
-
+  
+ 
 
   <!--  ======================================================================================  -->
   <!--  ==  RECIPIES  ========================================================================  -->
@@ -12271,13 +12308,345 @@
 
   <xsl:template match="Content[@moduleType='SocialLinks']" mode="displayBrief">
     <div class="moduleSocialLinks align-{@align}">
-      <xsl:apply-templates select="." mode="socialLinks">
-        <xsl:with-param name="iconSet" select="@iconSet"/>
-        <xsl:with-param name="myName" select="@myName"/>
-      </xsl:apply-templates>
+      <xsl:choose>
+        <xsl:when test="@blank='true'">
+          <xsl:apply-templates select="." mode="socialLinksBlank">
+            <xsl:with-param name="iconSet" select="@iconSet"/>
+            <xsl:with-param name="myName" select="@myName"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="socialLinks">
+            <xsl:with-param name="iconSet" select="@iconSet"/>
+            <xsl:with-param name="myName" select="@myName"/>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
+  <!-- module -->
+  <xsl:template match="Content | ContactPoint" mode="socialLinksBlank">
+    <xsl:param name="myName"/>
+    <xsl:param name="iconSet"/>
+    <div class="socialLinks clearfix iconset-{$iconSet}">
+      <xsl:choose>
+        <xsl:when test="@uploadSprite!=''">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb" style="background-image:url({@uploadSprite})" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw" style="background-image:url({@uploadSprite});background-position:128px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li" style="background-image:url({@uploadSprite});background-position:96px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp" style="background-image:url({@uploadSprite});background-position:64px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi" style="background-image:url({@uploadSprite});background-position:32px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on You Tube" id="social-id-yt" style="background-image:url({@uploadSprite});background-position:160px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig" style="background-image:url({@uploadSprite});background-position:192px 0" class="social-sprite">
+              &#160;
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <i class="fa fa-2x fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <i class="fa fa-2x fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          `         <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <i class="fa fa-2x fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <i class="fa fa-2x fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-li">
+              <i class="fa fa-2x fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <i class="fa fa-2x fa-youtube">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-2x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons-square'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <i class="fa fa-3x fa-facebook-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <i class="fa fa-3x fa-twitter-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <i class="fa fa-3x fa-linkedin-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <i class="fa fa-3x fa-google-plus-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi">
+              <i class="fa fa-3x fa-pinterest-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <i class="fa fa-3x fa-youtube-square">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-3x fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='icons-circle'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-pi">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" id="social-id-yt">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-youtube fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>test
+              </span>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-instagram fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:when test="$iconSet='plain'">
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" class="social-id-fb">
+              <i class="fa fa-facebook">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+              <i class="fa fa-twitter">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+              <i class="fa fa-linkedin">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" class="social-id-gp">
+              <i class="fa fa-google-plus">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+              <i class="fa fa-pinterest">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+              <i class="fa fa-youtube ">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" id="social-id-ig">
+              <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="@facebookURL!=''">
+            <a href="{@facebookURL}" target="_blank" title="{$myName} on Facebook" id="social-id-fb">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/facebook.png" alt="{$myName} on Facebook" title="Follow {$myName} on Facebook" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@twitterURL!=''">
+            <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" id="social-id-tw">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/twitter.png" alt="{$myName} on Twitter" title="Follow {$myName} on Twitter" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@linkedInURL!=''">
+            <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" id="social-id-li">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/LinkedIn.png" alt="{$myName} on LinkedIn" title="Follow {$myName} on LinkedIn" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@googlePlusURL!=''">
+            <a href="{@googlePlusURL}" target="_blank" title="{$myName} on Google+" id="social-id-gp">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Googleplus.png" alt="{$myName} on Google+" title="Follow {$myName} on Google+" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@pinterestURL!=''">
+            <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-li">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Pinterest.png" alt="{$myName} on Pinterest" title="Follow {$myName} on Pinterest" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@youtubeURL!=''">
+            <a href="{@youtubeURL}" target="_blank" title="{$myName} on YouTube" id="social-id-yt">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/YouTube.png" alt="{$myName} on YouTube" title="Follow {$myName} on YouTube" />
+            </a>
+          </xsl:if>
+          <xsl:if test="@instagramURL!=''">
+            <a href="{@instagramURL}" target="_blank" title="{$myName} on Pinterest" id="social-id-ig">
+              <img src="/ewcommon/images/icons/social/{$iconSet}/Instagram.png" alt="{$myName} on Instagram" title="Follow {$myName} on Instagram" />
+            </a>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </div>
+  </xsl:template>
   <!-- module -->
   <xsl:template match="Content | ContactPoint" mode="socialLinks">
     <xsl:param name="myName"/>
@@ -12496,7 +12865,7 @@
               </span>
             </a>
           </xsl:if>
-         <xsl:if test="@instagramURL!=''">
+          <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x">
@@ -12552,7 +12921,7 @@
               </i>
             </a>
           </xsl:if>
-         <xsl:if test="@instagramURL!=''">
+          <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
               <i class="fa fa-instagram">
                 <xsl:text> </xsl:text>
@@ -12600,87 +12969,6 @@
       </xsl:choose>
     </div>
   </xsl:template>
-
-
-
-  <!--<xsl:template match="Content[@moduleType='SocialBookmarks']" mode="displayBrief">
-    <div class="">
-
-      -->
-  <!-- Facebook Like -->
-  <!--
-      <div class="fb-like-box">
-        <fb:like class=" fb_edge_widget_with_comment fb_iframe_widget" profile_id="18807449704" href="http://facebook.com/mashable" width="286" height="55">
-          <span>
-            <iframe src="http://www.facebook.com/plugins/like.php?api_key=116628718381794&amp;channel_url=http%3A%2F%2Fstatic.ak.fbcdn.net%2Fconnect%2Fxd_proxy.php%3Fversion%3D3%23cb%3Dfcfbe75ce4cb9e%26origin%3Dhttp%253A%252F%252Fmashable.com%252Ff173c0e6c9a04b4%26relation%3Dparent.parent%26transport%3Dpostmessage&amp;href=http%3A%2F%2Ffacebook.com%2Fmashable&amp;layout=standard&amp;locale=en_US&amp;node_type=link&amp;sdk=joey&amp;show_faces=true&amp;width=286" class="fb_ltr" title="Like this content on Facebook." style="border: medium none; overflow: hidden; height: 24px; width: 286px;" name="fd7688e4c2388a" id="f275753365c06ac" scrolling="no"></iframe>
-          </span>
-        </fb:like>
-      </div>
-
-      -->
-  <!-- Google +1 -->
-  <!--
-      <div class="gplusone">
-        -->
-  <!-- Place this tag where you want the +1 button to render -->
-  <!--
-        <g:plusone size="small"></g:plusone>
-      </div>
-
-      -->
-  <!-- Tweet -->
-  <!--
-      <div class="twitter-follow">
-        <iframe title="" style="width: 300px; height: 20px;" class="twitter-follow-button" src="http://platform0.twitter.com/widgets/follow_button.html?_=1309341725133&amp;align=&amp;button=blue&amp;id=twitter_tweet_button_0&amp;lang=en&amp;link_color=&amp;screen_name=mashable&amp;show_count=&amp;show_screen_name=&amp;text_color=" allowtransparency="true" frameborder="0" scrolling="no"></iframe>
-      </div>
-
-      <div class="subscribeOptions">
-        <ul class="social">
-          -->
-  <!-- LinkedIn -->
-  <!--
-          <li class="linkedin">
-            <a target="_blank" href="http://www.linkedin.com/today/mashable.com" title="LinkedIn" rel="nofollow external">LinkedIn</a>
-          </li>
-
-          -->
-  <!-- YouTube -->
-  <!--
-          <li class="youtube">
-            <a target="_blank" href="http://www.youtube.com/mashable" title="YouTube" rel="nofollow external">YouTube</a>
-          </li>
-
-          -->
-  <!-- StumbleUpon -->
-  <!--
-          <li class="stumbleupon">
-            <a target="_blank" href="http://www.stumbleupon.com/stumbler/mashable/" title="StumbleUpon" rel="nofollow external">Stumble</a>
-          </li>
-          <li class="rss">
-            <a target="_blank" class="tooltip-anchor" href="http://feeds.mashable.com/Mashable" title="RSS Feed" rel="nofollow external">RSS </a>
-            <div class="tooltip">
-              <p>
-                <strong>RSS Feed</strong>
-                <br/>567,545+ Subscribers
-              </p>
-            </div>
-          </li>
-        </ul>
-        <div class="separator"></div>
-        <ul class="apps">
-          <li>
-            <a target="_blank" class="andr" href="http://mashable.com/2010/08/02/mashable-android-app/" title="Android" rel="nofollow external">Android</a>
-          </li>
-          <li>
-            <a target="_blank" class="iphone" href="http://itunes.apple.com/us/app/mashable/id356202138?mt=8" title="iPhone" rel="nofollow external">iPhone</a>
-          </li>
-          <li>
-            <a target="_blank" class="ipad" href="http://itunes.apple.com/us/app/mashable-for-ipad/id370097986?mt=8" title="iPad" rel="nofollow external">iPad</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </xsl:template>-->
   
   
   
@@ -13312,10 +13600,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -13399,10 +13687,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -14419,6 +14707,90 @@
       </xsl:if>
     </div>
   </xsl:template>
-  
+
+  <!--  ======================================================================================  -->
+  <!--  ==  BACKGROUND CAROUSEL - based on bootstrap carousel=================================  -->
+  <!--  ======================================================================================  -->
+  <xsl:template match="Content[@moduleType='BackgroundCarousel']" mode="displayBrief">
+    <!-- Set Variables -->
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+    <xsl:variable name="contentList">
+      <Content>
+        <xsl:for-each select="@*">
+          <xsl:attribute name="{name()}">
+            <xsl:value-of select="."/>
+          </xsl:attribute>
+        </xsl:for-each>
+        <xsl:apply-templates select="." mode="getContent">
+          <xsl:with-param name="contentType" select="$contentType" />
+          <xsl:with-param name="startPos" select="$startPos" />
+        </xsl:apply-templates>
+      </Content>
+    </xsl:variable>
+    <xsl:variable name="totalCount">
+      <xsl:choose>
+        <xsl:when test="@display='related'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!-- Output Module -->
+    <xsl:variable name="id" select="concat('bscarousel-',@id)"></xsl:variable>
+    <div id="{$id}" class="carousel slide background-carousel" data-ride="carousel" data-interval="{@interval}" pause="hover" wrap="true">
+      <xsl:if test="@bullets!='true'">
+        <ol class="carousel-indicators">
+          <xsl:for-each select="Content[@type='LibraryImageWithLink']">
+            <li data-target="#{$id}" data-slide-to="{position()-1}">
+              <xsl:if test="position()=1">
+                <xsl:attribute name="class">active</xsl:attribute>
+              </xsl:if>
+              <xsl:text></xsl:text>
+            </li>
+          </xsl:for-each>
+        </ol>
+      </xsl:if>
+      <div class="carousel-inner" style="height:{@height}px">
+        <xsl:apply-templates select="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+        </xsl:apply-templates>
+      </div>
+      <xsl:if test="@arrows!='true'">
+        <a class="left carousel-control" href="#{$id}" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a class="right carousel-control" href="#{$id}" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </xsl:if>
+    </div>
+  </xsl:template>
+  <!-- Library Image Brief -->
+  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+    <div class="item" style="background-image:url({Images/img[@class='detail']/@src});">
+      <xsl:if test="position()=1">
+        <xsl:attribute name="class">item active</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="Title/node()!='' or Body/node()!=''">
+        <div class="carousel-caption">
+          <div class="carousel-caption-inner">
+            <xsl:if test="Title/node()!=''">
+              <h3 class="caption-title">
+                <xsl:value-of select="Title/node()"/>
+              </h3>
+            </xsl:if>
+            <xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
+            <xsl:if test="@link!=''">
+              <xsl:apply-templates select="." mode="moreLink" />
+            </xsl:if>
+          </div>
+        </div>
+      </xsl:if>
+    </div>
+  </xsl:template>
 
 </xsl:stylesheet>

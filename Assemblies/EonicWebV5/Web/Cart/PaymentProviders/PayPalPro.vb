@@ -141,6 +141,8 @@ Namespace Providers
 
                         If oOrder.GetAttribute("startDate") <> "" Then
                             startDate = CDate(oOrder.GetAttribute("startDate"))
+                        Else
+                            startDate = Now()
                         End If
 
                         moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
@@ -441,21 +443,17 @@ Namespace Providers
 
                                     Dim ppRecuringProfileDetails As New PayPalAPI.RecurringPaymentsProfileDetailsType()
 
-                                    If startDate = Nothing Then
-                                        If delayStart Then
-                                            Select Case repeatInterval
-                                                Case "day"
-                                                    startDate = DateAdd(DateInterval.Day, repeatFrequency, Now())
-                                                Case "week"
-                                                    startDate = DateAdd(DateInterval.WeekOfYear, repeatFrequency, Now())
-                                                Case "month"
-                                                    startDate = DateAdd(DateInterval.Month, repeatFrequency, Now())
-                                                Case "year"
-                                                    startDate = DateAdd(DateInterval.Year, repeatFrequency, Now())
-                                            End Select
-                                        Else
-                                            startDate = Now()
-                                        End If
+                                    If delayStart Then
+                                        Select Case repeatInterval
+                                            Case "day"
+                                                startDate = DateAdd(DateInterval.Day, repeatFrequency, Now())
+                                            Case "week"
+                                                startDate = DateAdd(DateInterval.WeekOfYear, repeatFrequency, Now())
+                                            Case "month"
+                                                startDate = DateAdd(DateInterval.Month, repeatFrequency, Now())
+                                            Case "year"
+                                                startDate = DateAdd(DateInterval.Year, repeatFrequency, Now())
+                                        End Select
                                     End If
 
                                     ppRecuringProfileDetails.BillingStartDate = startDate

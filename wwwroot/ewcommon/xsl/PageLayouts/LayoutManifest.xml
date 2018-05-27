@@ -86,6 +86,7 @@
       <!-- Pants, needs more dev -->
       <!--<Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>-->
       <Module type="BookList" name="Book List">BookList</Module>
+      <Module type="BookSeriesList" name="Book Series List">Book Series List</Module>
       <Module type="TagList" name="Tag List">Tag List</Module>
       <Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>
       <Module type="ContactList" name="Contact List">Contacts List</Module>
@@ -105,6 +106,7 @@
       <Module type="GalleryImageList" name="Image Gallery List">Please use only one image gallery per page</Module>
       <Module type="Carousel" name="Carousel" targetCssFramework="bs3">Create a carousel of images with optional captions and links</Module>
       <Module type="AdvancedCarousel" name="Advanced Carousel" targetCssFramework="bs3">Create all singing and dancing animations.</Module>
+      <Module type="BackgroundCarousel" name="Background Carousel" targetCssFramework="bs3">Create a carousel of background images with optional captions and links</Module>
       <Module type="ImageFader" name="Image Fader">Fades through a series of images</Module>
       <Module type="SlideCarousel" name="Slide Carousel">Not suitable for responsive websites. Please use only one slide carousel per page</Module>
       <Module type="SliderGallery" name="Slide Gallery With Thumbnails">Please use only one slide gallery per page</Module>

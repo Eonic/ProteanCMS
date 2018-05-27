@@ -539,7 +539,7 @@ Partial Public Class Web
                         If moRequest("oAuthReg") <> "" And myWeb.msRedirectOnEnd = "" Then
                             Dim sRedirectPath = ""
                             Dim appId = ""
-                            Dim redirectURI = "http://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=" & moRequest("oAuthReg")
+                            Dim redirectURI = "https://" & moRequest.ServerVariables("SERVER_NAME") & myWeb.mcPageURL & "?oAuthResp=" & moRequest("oAuthReg")
                             Select Case moRequest("oAuthReg")
                                 Case "facebook"
                                     sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?"

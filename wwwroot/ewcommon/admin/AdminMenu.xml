@@ -65,8 +65,11 @@
         <MenuItem name="ListSubscribers" cmd="ListSubscribers" display="false" icon="fa-certificate"/>
         <MenuItem name="List Subscriptions" cmd="Subscriptions" display="true" icon="fa fa-calendar-o"/>
         <MenuItem name="Upcoming Renewals" cmd="UpcomingRenewals" display="true" icon="fa fa-calendar-plus-o"/>
+        <MenuItem name="Recent Renewals" cmd="RecentRenewals" display="true" icon="fa fa-calendar-plus-o"/>
         <MenuItem name="Expired Subscriptions" cmd="ExpiredSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
         <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa fa-envelope-o"/>
+        <MenuItem name="Manage User Subscription" cmd="ManageUserSubscription" display="false" icon="fa fa-envelope-o"/>
+        <MenuItem name="Cancel Subscription" cmd="CancelSubscription" display="false" icon="fa fa-envelope-o"/>
      </MenuItem>
     </MenuItem>
     <MenuItem name="Email Marketing" cmd="MailingList" display="true" feature="MailingList" icon="fa-envelope">
@@ -94,6 +97,7 @@
         <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
         <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
         <MenuItem name="Deposit Paid" cmd="OrdersDeposit" display="true" icon="fa-money"/>
+        <MenuItem name="Refunded" cmd="OrdersRefunded" display="true" icon="fa-money"/>
         <MenuItem name="History" cmd="OrdersHistory" display="true" icon="icon-history"/>
       </MenuItem>
       <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" icon="icon-earth"/>
@@ -166,7 +170,7 @@
       <MenuItem name="View System Pages" cmd="ViewSystemPages" display="false"/>
       <MenuItem name="Index Site" cmd="SiteIndex" display="true" feature="Search" icon="fa-tachometer"/>
       <MenuItem name="Manage Lookups" cmd="ManageLookups" display="true" icon="fa-bars"/>
-      <MenuItem name="Import Files" cmd="FileImport" display="true" feature="Import" icon="fa-sign-in fa-rotate-180"/>
+      <MenuItem name="Import Files" cmd="FileImport" display="true" feature="Import" icon="fa-sign-in"/>
     </MenuItem>
   </MenuItem>
 </AdminMenu>

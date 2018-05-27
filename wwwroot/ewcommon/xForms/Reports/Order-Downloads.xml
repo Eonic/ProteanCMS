@@ -15,8 +15,12 @@
 		<bind nodeset="Query">
 			<bind id="cartStage" nodeset="param[@name='nOrderStage']/@value" required="false()" type="string"/>
 			<bind id="cOrderType" nodeset="param[@name='cOrderType']/@value" required="false()" type="string"/>
-			<bind id="dateStart" nodeset="param[@name='dStartDate']/@value" required="false()" type="string"/>
-			<bind id="dateEnd" nodeset="param[@name='dEndDate']/@value" required="false()" type="string"/>
+      <bind nodeset="param[@name='dStartDate']">
+        <bind id="dBegin" nodeset="@value" required="false()" type="string"/>
+      </bind>
+      <bind nodeset="param[@name='dEndDate']">
+        <bind id="dEnd" nodeset="@value" required="false()" type="string"/>
+      </bind>
 			<bind id="lastDownloadId" nodeset="param[@name='lastDownloadID']/@value" required="false()" type="string"/>
 			<bind id="format" nodeset="@output" required="true()" type="string"/>
 		</bind>

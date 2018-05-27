@@ -19,6 +19,8 @@ Imports System
 Public Class API
     Inherits Base
 
+    Public gbDebug As Boolean = False
+
     Public Sub New()
 
         MyBase.New(System.Web.HttpContext.Current)
@@ -46,7 +48,14 @@ Public Class API
             'We need the userId placed into dbhelper.
             'moDbHelper.mnUserId = mnUserId
 
-            
+            If Not (moConfig("Debug") Is Nothing) Then
+                Select Case LCase(moConfig("Debug"))
+                    Case "on" : gbDebug = True
+                    Case "off" : gbDebug = False
+                    Case Else : gbDebug = False
+                End Select
+            End If
+
 
         Catch ex As Exception
 

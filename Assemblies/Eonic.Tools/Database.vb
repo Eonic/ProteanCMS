@@ -24,7 +24,7 @@ Public Class Database
 
     Private bTimeoutException As Boolean = False
 
-    Protected WithEvents oConn As SqlClient.SqlConnection
+    Public WithEvents oConn As SqlClient.SqlConnection
 
     Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) ', ByVal cModuleName As String, ByVal cRoutineName As String, ByVal oException As Exception, ByVal cFurtherInfo As String)
     Public Event Connected(ByVal sender As Object, ByVal e As EventArgs)
@@ -155,6 +155,20 @@ Public Class Database
         Get
             Try
                 oConn.Open()
+                oConn.Close()
+                Return True
+            Catch ex As Exception
+                Return False
+            End Try
+        End Get
+    End Property
+
+    Public ReadOnly Property CredentialsValid() As Boolean
+        Get
+            Try
+                Dim convalid As Boolean
+                oConn.Open()
+                convalid = Me.checkDBObjectExists(DatabaseName, objectTypes.Database)
                 oConn.Close()
                 Return True
             Catch ex As Exception
@@ -1253,6 +1267,7 @@ Public Class Database
         End Function
 #End Region
     End Class
+
 
 
 

@@ -34,6 +34,7 @@
       <bind id="cContentImage" nodeset="img[@class='image']" required="false()" type="xml-replace"/>
       <bind id="cContentLink" nodeset="@externalLink" required="false()" type="string"/>
       <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
+      <bind id="cSVGFallback" nodeset="@svgFallback" required="false()" type="string"/>
       <!--<bind id="cContentName" nodeset="@title" required="false()" type="string"/>-->
     </bind>
     <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
@@ -91,6 +92,9 @@
         </input>
         <input bind="cContentImage" class="short pickImage">
           <label>Image</label>
+        </input>
+        <input bind="cSVGFallback" class="short pickImageFile">
+          <label>SVG FallbackImage</label>
         </input>
       </group>
       <group>

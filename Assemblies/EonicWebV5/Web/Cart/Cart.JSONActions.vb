@@ -33,12 +33,36 @@ Partial Public Class Web
 
             End Sub
 
+            Private Function updateCartforJSON(CartXml As XmlElement) As XmlElement
+                Dim newstring As String = CartXml.InnerXml.Replace("<Item ", "<CartItem ").Replace("</Item>", "</CartItem>")
+                CartXml.InnerXml = newstring
+                Dim cartItems As XmlElement = myWeb.moPageXml.CreateElement("CartItems")
+                Dim ItemCount As Int16 = 0
+
+                For Each oItem As XmlElement In CartXml.SelectNodes("Order/CartItem")
+                    cartItems.AppendChild(oItem)
+                    ItemCount = ItemCount + 1
+                Next
+
+                If ItemCount = 1 Then
+                    Dim oItems As XmlElement = myWeb.moPageXml.CreateElement("CartItem")
+                    oItems.SetAttribute("dummy", "true")
+                    cartItems.AppendChild(oItems)
+                End If
+                CartXml.FirstChild.AppendChild(cartItems)
+                Return CartXml
+            End Function
+
+
             Public Function GetCart(ByRef myApi As Eonic.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim cProcessInfo As String = ""
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
+
+                    updateCartforJSON(CartXml)
+
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                     Return jsonString.replace("""@", """_")
                     'persist cart
@@ -77,10 +101,11 @@ Partial Public Class Web
 
                     'Output the new cart
                     myCart.GetCart(CartXml.FirstChild)
+                    updateCartforJSON(CartXml)
                     'persist cart
                     myCart.close()
 
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None)
                     Return jsonString.Replace("""@", """_")
 
                 Catch ex As Exception
@@ -115,7 +140,7 @@ Partial Public Class Web
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-
+                    updateCartforJSON(CartXml)
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                     Return jsonString.Replace("""@", """_")
 
@@ -159,7 +184,7 @@ Partial Public Class Web
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-
+                    updateCartforJSON(CartXml)
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                     Return jsonString.Replace("""@", """_")
 

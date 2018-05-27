@@ -839,3 +839,62 @@ body{height:100%;}
         padding:0;
     }
 }
+//BACKGROUND CAROUSEL
+.Site .background-carousel.carousel{
+    .item{
+        background-size:cover;
+        height:100%;
+        .carousel-caption{
+            left:0;
+            right:0;
+            bottom:0;
+            padding:0;
+            padding-bottom:30px;
+	        -webkit-text-shadow: none;
+	        -moz-text-shadow: none;
+	        text-shadow: none;
+            .carousel-caption-inner{
+                margin:0 auto;
+                padding-left:(@grid-gutter-width / 2);
+                padding-right:(@grid-gutter-width / 2);
+                .clearfix;
+            }
+        }
+    }
+    .carousel-control{
+        opacity:1;
+	    -webkit-text-shadow: none;
+	    -moz-text-shadow: none;
+	    text-shadow: none;
+    }
+    .carousel-indicators{
+        bottom:0;
+        li{
+            border:0;
+            background:#fff;
+            opacity:0.5;
+            margin:0 3px;
+            width:12px;
+            height:12px;
+            &:hover{opacity:1;}
+            &.active{
+                width:12px;
+                height:12px;
+                border:0;
+                opacity:1;
+                margin:0 3px;
+            }
+        }
+    }
+}
+.Site .fullwidthContainer .background-carousel .item .carousel-caption .carousel-caption-inner{
+     @media (min-width: @screen-sm-min){
+		width: (@container-sm - @grid-gutter-width);
+	}
+	@media (min-width: @screen-md-min) {
+		width: (@container-md - @grid-gutter-width);
+	}
+	@media (min-width: @screen-lg-min) {
+		width: (@container-lg - @grid-gutter-width);
+	}
+}

@@ -24,9 +24,10 @@ Partial Public Class Web
             Dim myCart As Cart
             Dim mbRoundUp As Boolean
             Dim mcGroups As String
-            Dim mcCurrency As String
 
+            Public mcCurrency As String
             Public bHasPromotionalDiscounts As Boolean = False
+
             Private cPromotionalDiscounts As String = ","
             Private cVouchersUsed As String = ","
 
@@ -412,8 +413,12 @@ Partial Public Class Web
                     'add Authenticated User Group 
                     strGroupIds.Append(nAuthenticatedUsersGroupId.ToString)
 
+                    Dim xUserXml As XmlElement = myWeb.moPageXml.SelectSingleNode("Page/User")
+                    If xUserXml Is Nothing Then
+                        xUserXml = myWeb.GetUserXML(myWeb.mnUserId)
+                    End If
                     'get user's groups
-                    xNodeList = myWeb.moPageXml.SelectNodes("Page/User/Group")
+                    xNodeList = xUserXml.SelectNodes("Group")
                     For Each xmlRole In xNodeList
                         strGroupIds.Append(",")
                         strGroupIds.Append(xmlRole.GetAttribute("id"))
@@ -1623,6 +1628,8 @@ NoDiscount:
 
                     Dim oPNode As XmlElement
 
+
+
                     For Each oPNode In oContentElmt.SelectNodes(cxpath)
 
                         If oPNode.GetAttribute("originalPrice").Equals("") Then
@@ -1636,6 +1643,8 @@ NoDiscount:
                                 If Not oPNode.InnerText.Equals("") Then
                                     If IsNumeric(oPNode.InnerText) Then
                                         oPNode.InnerText = Round(CDbl(oPNode.InnerText) - CDbl(oDiscountElmt.GetAttribute("value")), , , mbRoundUp)
+                                        oDiscountElmt.SetAttribute("saving", Round(CDbl(oDiscountElmt.GetAttribute("value")), , , mbRoundUp))
+
                                     End If
                                 End If
                             End If
@@ -1644,10 +1653,12 @@ NoDiscount:
                                 If Not oPNode.InnerText.Equals("") Then
                                     If IsNumeric(oPNode.InnerText) Then
                                         oPNode.InnerText = Round(CDbl(oPNode.InnerText) - ((CDbl(oPNode.InnerText) / 100) * CDbl(oDiscountElmt.GetAttribute("value"))), , , mbRoundUp)
+                                        oDiscountElmt.SetAttribute("saving", Round(((CDbl(oPNode.InnerText) / 100) * CDbl(oDiscountElmt.GetAttribute("value"))), , , mbRoundUp))
                                     End If
                                 End If
                             End If
                         End If
+
                     Next
 
                 Catch ex As Exception

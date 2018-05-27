@@ -1992,7 +1992,7 @@
         <xsl:text>Ya Ordez - Enter your billing details</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Order - Enter your billing details</xsl:text>
+        <xsl:text>Enter your billing details</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2003,7 +2003,7 @@
         <xsl:text>Ya Ordez - Enter the delivery address</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Order - Enter the delivery address</xsl:text>
+        <xsl:text>Enter the delivery address</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2014,7 +2014,7 @@
         <xsl:text>Ya Ordez - Please enter your preferred payment and shipping methods.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Order - Please enter your preferred payment and shipping methods.</xsl:text>
+        <xsl:text>Please enter your preferred payment and shipping methods.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2025,7 +2025,7 @@
         <xsl:text>Ya Ordez - Please enter your payment details.</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Your Order - Please enter your payment details.</xsl:text>
+        <xsl:text>Please enter your payment details.</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2529,10 +2529,10 @@
   <xsl:template name="term3054">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
-        <xsl:text>less</xsl:text>
+        <xsl:text>save</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>less</xsl:text>
+        <xsl:text>save</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -2960,6 +2960,18 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template name="term3093">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Ye Arrh back to Port</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Back to Home Page</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 
   <!-- ################################################################################################ -->
   <!-- EonicWeb Membership Template phrases -->
