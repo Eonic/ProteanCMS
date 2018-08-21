@@ -2,7 +2,7 @@
 .Net / XSLT based Content Management System, with eCommerce and Membership facilies.
 
 ## Project Description
-EonicWeb5 CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
+Protean CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
 
 The CMS contains full eCommerce and user membership functionality.
 
@@ -12,11 +12,11 @@ Developed over 14 years by leading web design company eonic.co.uk it has been us
 Until recently the project has been managed internally at Eonic and has only recently moved to GitHub, hence the lack of history found here.
 
 ## List of Features
-http://www.eonicweb.net/Why-eonicweb5/Feature-List
+http://www.proteancms.com/Why-eonicweb5/Feature-List
 
 
 ## Example Websites
-https://www.eonic.co.uk/Web-Design-Portfolio
+https://www.proteancms.com/Web-Design-Portfolio
 
 ## Developers
 The team welcome new developers and contributors to the platform, we will actively support and encourage those that are contributing to the platform.
@@ -39,7 +39,7 @@ complete the following settings in eonic.web.config
   and go to http://mylocalproject/ewcommon/setup and install the DB.
 
   Any problems email trevor@eonic.co.uk or raise an issue at
-  https://github.com/Eonic/EonicWeb5/issues
+  https://github.com/Eonic/proteancms/issues
 
   Detailed installer guides and videos will come shortly.
 
@@ -47,7 +47,7 @@ complete the following settings in eonic.web.config
 ## Partners
 Commercial hosting, consultancy and support is available for any new requirements please go to the website.
 
-For more information go to http://www.eonicweb.net
+For more information go to http://www.proteancms.com
 
 
 
