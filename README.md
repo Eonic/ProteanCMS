@@ -1,4 +1,4 @@
-# EonicWeb5 CMS
+# Protean CMS (formerly EonicWeb5)
 .Net / XSLT based Content Management System, with eCommerce and Membership facilies.
 
 ## Project Description
