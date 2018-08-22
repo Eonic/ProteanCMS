@@ -7,9 +7,8 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>eonic</xsl:text>
-	      <strong>web</strong>
-	      <xsl:text>5</xsl:text>
+        <xsl:text>Protean</xsl:text>
+	      <strong>CMS</strong>
       </xsl:otherwise>
     </xsl:choose>
 	</xsl:template>
@@ -88,7 +87,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ewcommon/images/admin/skin/eonic5-admin-white.png</xsl:text>
+        <xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
