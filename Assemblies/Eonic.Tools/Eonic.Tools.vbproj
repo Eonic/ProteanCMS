@@ -53,7 +53,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>5.0.160.12</AssemblyVersion>
+    <AssemblyVersion>5.0.160.13</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -366,7 +366,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Release" BuildVersion_DetectChanges="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_DetectChanges="False" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="C:\Users\trevors\Source\Repos\EliteModels_VS_Local\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('C:\Users\trevors\Source\Repos\EliteModels_VS_Local\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />

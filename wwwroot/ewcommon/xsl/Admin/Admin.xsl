@@ -7,9 +7,8 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>eonic</xsl:text>
-	      <strong>web</strong>
-	      <xsl:text>5</xsl:text>
+        <xsl:text>Protean</xsl:text>
+	      <strong>CMS</strong>
       </xsl:otherwise>
     </xsl:choose>
 	</xsl:template>
@@ -32,8 +31,8 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebAdminSystemName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-		<xsl:call-template name="eonicwebProductName"/>
-		<xsl:text> admin system</xsl:text>
+		  <xsl:call-template name="eonicwebProductName"/>
+		  <xsl:text> admin system</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
 	</xsl:template>
@@ -66,7 +65,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.co.uk</xsl:text>
+        <xsl:text>www.eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -77,7 +76,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>support@eonic.co.uk</xsl:text>
+        <xsl:text>support@eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -88,7 +87,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ewcommon/images/admin/skin/eonic5-admin-white.png</xsl:text>
+        <xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -339,7 +338,15 @@
 
 
 	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
-				<xsl:call-template name="eonicwebAdminSystemName"/>
+				
+  <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+        <xsl:call-template name="eonicwebAdminSystemName"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <img src="/ewcommon/images/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
+      </xsl:otherwise>
+    </xsl:choose>
 	</xsl:template>
 
   <xsl:template match="PreviewMenu">
@@ -1474,9 +1481,9 @@
            <div class="well">
             <div class="container">
               <h1>Welcome to <xsl:call-template name="eonicwebProductName"/></h1>
-              <p>This dashboard provides you with information on the latest features.</p>
+              <br/>
               <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
-                <a href="https://www.facebook.com/eonicweb" class="btn btn-primary" target="_new"><i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow EonicWeb on Facebook</a> 
+                <a href="https://www.facebook.com/proteancms" class="btn btn-primary" target="_new"><i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook</a> 
                 <a href="https://www.linkedin.com/groups?gid=1840777" class="btn btn-primary" target="_new"><i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group</a> 
               </xsl:if>
             </div>
@@ -1488,14 +1495,19 @@
                   <h3 class="panel-title">What's New</h3>
                 </div>
                 <div class="panel-body">
-                  <p><strong>Version 5.0.129</strong></p>
-                  <p>Improved treeview and layout on Edit Menu and other admin pages</p>
-                  <p>Improved usability in the Image Library</p>
-                  <p>Improved indexing for sites with searches</p>
-                  <p>Improved import handling for sites with automated imports</p>
-                  <p>General Performance Fixes</p>
-                  <p>De-coupling of website and admin templates to significantly improve page load speed for new and updated sites (This requires manual implmentation and testing on existing sites please call support for a quote)</p>
-                </div>
+                      <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+      </xsl:when>
+      <xsl:otherwise>
+            <p><strong>ProteanCMS,<br/> the new name for EonicWeb5</strong></p>
+            <p>We have renamed to ProteanCMS to better reflect the true versitility and flexiblity of the platform.</p>
+            <p>As ProteanCMS is now fully opensource and available to be used by other agencies, we felt it was important for the platform to have its own name and identity.</p>
+            <a href="https://www.proteancms.com">For more information click here.</a>
+      </xsl:otherwise>
+    </xsl:choose>
+                  
+              </div>
               </div>
             </div>
             <div class="col-md-4">
@@ -6067,7 +6079,15 @@
         <!-- ################################# Line Options Info ################################# -->
         <xsl:for-each select="Item">
           <span class="optionList">
-            <xsl:apply-templates select="option" mode="optionDetail"/>
+            <xsl:choose>
+              <xsl:when test="option">
+                <xsl:apply-templates select="option" mode="optionDetail"/>
+              </xsl:when>
+              <xsl:otherwise><br/>
+                <xsl:value-of select="Name"/>
+              </xsl:otherwise>
+            </xsl:choose>
+            
             <!-- <xsl:if test="@price!=0">
 							  Remmed by Rob
 							  <xsl:value-of select="$currency"/>
@@ -8359,7 +8379,7 @@
   
 
   <!--Subscriptions-->
-  <xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='RecentRenewals']" mode="Admin">
+  <xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
     <div class="row" id="template_Subscriptions">
       <div class="col-md-12">
         <div class="panel panel-default">
@@ -8446,8 +8466,82 @@
       </div>
     </div>
   </xsl:template>
+  
+  <xsl:template match="Page[@layout='EditTemplate']" mode="Admin">
+    <div class="row" id="tpltAdvancedMode">
+      <div class="col-md-12">
+        <div class="panel">
+          <div class="panel-heading">
+            <h4>
+              Edit <xsl:value-of select="@ewCmd2"/><xsl:text> Templates</xsl:text>
+            </h4>
+          </div>
+          <div class="panel-body">
+            <div class="panel-group">
+              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+            </div>
+            <div class="panel-group">
+              <xsl:apply-templates select="/" mode="ListByContentTypeNoColaspe">
+                <xsl:with-param name="contentType" select="@ewCmd2"/>
+              </xsl:apply-templates>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
+    <div class="row" id="template_Subscriptions">
+      <div class="col-md-12">
+        <a href="?ewCmd=EditTemplate&amp;ewCmd2=RenewalAlerts" class="btn btn-default"><i class="fa fa-pencil">&#160;</i>&#160;Edit Templates</a>
+        <br/>
+        <br/>
+        <div class="panel panel-default">
+          <table class="table">
+            <tr>
+              <th>Name</th>
+              <th>Action</th>
+              <th>Period</th>
+              <th>Count</th>
+              <th>Subject</th>
+              <th>
+                <a href="?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
+                  <i class="fa fa-plus">&#160;</i>&#160;Add
+                </a>
+              </th>
+            </tr>
+            <xsl:for-each select="ContentDetail/subscriptionReminders/reminder">
+              <tr>
+                <td>
+                  <xsl:value-of select="@name"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@action"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@period"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@count"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@subject"/>
+                </td>
+                <td>
+                  <a href="?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
+                    <i class="fa fa-pencil">&#160;</i>&#160;Edit
+                  </a>
+                </td>
+              </tr>
+            </xsl:for-each>
+            </table>
+          <br/>
 
-
+          </div>
+        </div>
+      </div>
+  </xsl:template>
 
   <!--LocateSearch-->
   <xsl:template match="Page[@layout='LocateSearch']" mode="Admin">
