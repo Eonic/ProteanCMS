@@ -5100,6 +5100,8 @@ processFlow:
                 nAmount = CDbl("0" & cartElmt.GetAttribute("totalNet")) - CDbl("0" & cartElmt.GetAttribute("shippingCost"))
                 nWeight = CDbl("0" & cartElmt.GetAttribute("weight"))
 
+                Dim nRepeatAmount As Double = CDbl("0" & cartElmt.GetAttribute("repeatPrice"))
+
                 Dim nShippingMethodId As Integer = CDbl("0" & cartElmt.GetAttribute("shippingType"))
 
                 If cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") Is Nothing Then
@@ -5316,7 +5318,7 @@ processFlow:
 
                     bFirstRow = True
                     If Not oPaymentCfg Is Nothing Then
-                        If nAmount = 0 Then
+                        If nAmount = 0 And nRepeatAmount = 0 Then
 
                             oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge"
                             Dim oSelectElmt As XmlElement = oOptXform.addSelect1(oGrpElmt, "cPaymentMethod", False, "Payment Method", "radios multiline", xForm.ApperanceTypes.Full)
@@ -6114,6 +6116,17 @@ processFlow:
             Dim cProcessInfo As String = ""
             Dim itemCount As Long
             Try
+
+                If LCase(moCartConfig("ClearOnAdd")) = "on" Then
+                    Dim cSql As String = "select nCartItemKey from tblCartItem where nCartOrderId = " & mnCartId
+                    oDs = moDBHelper.GetDataSet(cSql, "Item")
+                    If oDs.Tables("Item").Rows.Count > 0 Then
+                        For Each oRow In oDs.Tables("Item").Rows
+                            moDBHelper.DeleteObject(dbHelper.objectTypes.CartItem, oRow("nCartItemKey"))
+                        Next
+                    End If
+                End If
+
                 'If myWeb.moRequest("id") <> "" Then
                 If qty > 0 Then
 

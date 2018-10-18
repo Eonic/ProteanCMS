@@ -157,6 +157,17 @@ Partial Public Class Web
                     Dim ItemCount As Long = 1
 
                     Dim item As Newtonsoft.Json.Linq.JObject
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+
+                    If myCart.mnCartId < 1 Then
+                        myCart.CreateNewCart(CartXml)
+                        If myCart.mcItemOrderType <> "" Then
+                            myCart.mmcOrderType = myCart.mcItemOrderType
+                        Else
+                            myCart.mmcOrderType = ""
+                        End If
+                        myCart.mnProcessId = 1
+                    End If
 
                     For Each item In jObj("Item")
                         If item("contentId") Is Nothing Then
@@ -180,7 +191,6 @@ Partial Public Class Web
                     End If
 
                     'Output the new cart
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()

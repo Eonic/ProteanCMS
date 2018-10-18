@@ -187,6 +187,8 @@ Imports System
                 Dim ocon As New SqlConnection(cConnectionString)
                 MyBase.DatabaseName = ocon.Database
                 MyBase.DatabaseServer = ocon.DataSource
+                ocon.Close()
+                ocon = Nothing
 
                 ' Let's work out where to get the authorisation from - ideally it should be the connection string.
                 If cConnectionString.ToLower.Contains("user id=") And cConnectionString.ToLower.Contains("password=") Then
@@ -392,6 +394,10 @@ Imports System
             SyndicationFailed = 203
             SyndicationCompleted = 204
             ContentSyndicated = 205
+
+            'Subscriptions
+            SubscriptionProcess = 300
+            SubscriptionProcessAttempt = 301
 
             'OpenQuote
             ValidationError = 255
@@ -1095,11 +1101,10 @@ Imports System
 
                 ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                 If Not (nPageId > 1 And (sPath <> "")) Then
-
-                    'first don't cache the page
-                    myWeb.bPageCache = False
                     'page path cannot be found we have an error that we raise later
                     If sFullPath <> "System+Pages/Page+Not+Found" Then
+                        'first don't cache the page
+                        myWeb.bPageCache = False
                         nPageId = myWeb.gnPageNotFoundId
                     Else
                         nPageId = myWeb.RootPageId
@@ -4722,7 +4727,7 @@ restart:
                     End If
 
                 End If
-
+                CloseConnection()
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainDirectoryRelation", ex, cProcessInfo))
                 'Close()
@@ -4973,6 +4978,9 @@ restart:
                         Else
                             root.AppendChild(oElmt)
                         End If
+                        'Sync User with Mail Provider
+
+
                     End While
                     odr.Close()
                     odr = Nothing
@@ -5762,7 +5770,31 @@ restart:
                         'delete failed logon attempts record
                         Dim sSql2 As String = "delete from tblActivityLog where nActivityType = " & Web.dbHelper.ActivityType.LogonInvalidPassword & " and nUserDirId=" & sReturn
                         myWeb.moDbHelper.ExeProcessSql(sSql2)
+
+                        'check mailinglist sync
+
+                        'Keep Mailing List In Sync.
+                        ' If Not cEmail Is Nothing Then
+                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                        Dim sMessagingProvider As String = ""
+                        If Not moMailConfig Is Nothing Then
+                            sMessagingProvider = moMailConfig("MessagingProvider")
+                        End If
+                        If moMessaging Is Nothing Then
+                            moMessaging = New Eonic.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                        End If
+                        If moMessaging IsNot Nothing AndAlso moMessaging.AdminProcess IsNot Nothing Then
+                            Try
+                                moMessaging.AdminProcess.SyncUser(CInt(sReturn))
+                            Catch ex As Exception
+                                cProcessInfo = ex.StackTrace
+                            End Try
+                        End If
+                        ' End If
+
                     End If
+
+
 
                     Return sReturn
                 Else
@@ -6685,7 +6717,7 @@ restart:
                 Else
                     'Get the last time the feed run and check it completed
                     Dim sSQL As String = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" & FeedRef & "%' order by dDateTime DESC "
-                    FeedCheck = Me.ExeProcessSqlScalar(sSQL)
+                    FeedCheck = CStr(Me.ExeProcessSqlScalar(sSQL) & "")
                     If FeedCheck.EndsWith(" Processed") Then
                         Dim sProcessesQty As String = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9)
                         If IsNumeric(sProcessesQty) Then
@@ -9562,8 +9594,8 @@ ReturnMe:
 
                 'Identify the keyValue and build the initial SQL Statement.
                 If whereStmt = "" Then
-                    If Not instanceElmt.SelectSingleNode("descendant-or-self::" & keyField) Is Nothing Then
-                        keyValue = instanceElmt.SelectSingleNode("descendant-or-self::" & keyField).InnerText
+                    If Not instanceElmt.SelectSingleNode("*/" & keyField) Is Nothing Then
+                        keyValue = instanceElmt.SelectSingleNode("*/" & keyField).InnerText
                         If keyValue = "" Then keyValue = "-1"
                     Else
                         keyValue = "-1"
@@ -10507,7 +10539,7 @@ ReturnMe:
 
                     ImportStateObj.oInstance.SelectSingleNode(cTableName & "/" & cTableFRef)
                     modbhelper.ResetConnection(oConnString)
-                    If nId > 0 And ImportStateObj.oInstance.getAttribute("update") = "surgical" Then
+                    If nId > 0 And ImportStateObj.oInstance.getAttribute("update").contains("surgical") Then
                         'Get origional instance
                         Dim origInstance As New XmlDocument
                         origInstance.LoadXml("<instance>" & modbhelper.getObjectInstance(oObjType, nId) & "</instance>")
@@ -10523,10 +10555,10 @@ ReturnMe:
                                 End If
                                 Dim att As XmlAttribute
                                 For Each att In oUpdElmt.Attributes
-                                        nodeToUpdate.SetAttribute(att.Name, att.Value)
-                                    Next
-                                Else
-                                    ErrorMsg = ErrorMsg & updXpath & " not found"
+                                    nodeToUpdate.SetAttribute(att.Name, att.Value)
+                                Next
+                            Else
+                                ErrorMsg = ErrorMsg & updXpath & " not found"
                             End If
 
                         Next
@@ -10539,7 +10571,10 @@ ReturnMe:
 
                         'save the origional instance
                         nId = modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId)
-
+                        'run instance extras on update like relate and locate etc.
+                        If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
+                            modbhelper.processInstanceExtras(nId, origInstance.DocumentElement, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                        End If
                     Else
                         'clean up sugical update as we are doing inserts.
                         Dim oRemoveElmt As XmlElement
@@ -10611,7 +10646,7 @@ ReturnMe:
                 End If
 
                 fRefNode = Nothing
-
+                modbhelper.CloseConnection()
                 modbhelper = Nothing
 
             Catch ex As Exception

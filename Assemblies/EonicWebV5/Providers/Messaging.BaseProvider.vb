@@ -706,6 +706,14 @@ ProcessFlow:
 
                 End Sub
 
+                Public Sub SyncUser(ByRef nUserId As Integer)
+
+                    'This is just a placeholder for overloading
+
+                End Sub
+
+
+
                 Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing)
                     PerfMon.Log("Messaging", "maintainUserInGroup")
                     Try

@@ -528,6 +528,9 @@
                     <xsl:if test="@contentType='Module'">
                       <xsl:attribute name="class">title layout-title</xsl:attribute>
                     </xsl:if>
+                    <xsl:if test="@icon!='' or @uploadIcon!=''">
+                      <xsl:attribute name="class">title module-with-icon</xsl:attribute>
+                    </xsl:if>
                     <xsl:apply-templates select="." mode="moduleLink"/>
                   </h3>
                 </xsl:if>
@@ -538,6 +541,9 @@
                 <h3 class="title">
                   <xsl:if test="@contentType='Module'">
                     <xsl:attribute name="class">title layout-title</xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="@icon!='' or @uploadIcon!=''">
+                    <xsl:attribute name="class">title module-with-icon</xsl:attribute>
                   </xsl:if>
                   <xsl:apply-templates select="." mode="moduleLink"/>
                 </h3>
@@ -1198,8 +1204,13 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='3columns']" mode="displayBrief">
+    <xsl:variable name="responsiveColumns">
+      <xsl:apply-templates select="." mode="responsiveColumns">
+        <xsl:with-param name="defaultCols" select="'4'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-4">
+      <div id="column1-{@id}" class="column1 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1207,11 +1218,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-4</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-4">
+      <div id="column2-{@id}" class="column2 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1219,11 +1231,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-4</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column3-{@id}" class="column3 col-md-4">
+      <div id="column3-{@id}" class="column3 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1231,7 +1244,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column3 col-md-4</xsl:text>
+            <xsl:text>column3 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1255,9 +1269,13 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='2columns5050']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='2columns5050']" mode="displayBrief"><xsl:variable name="responsiveColumns">
+      <xsl:apply-templates select="." mode="responsiveColumns">
+        <xsl:with-param name="defaultCols" select="'6'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-6">
+      <div id="column1-{@id}" class="column1 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1265,11 +1283,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-6</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-6">
+      <div id="column2-{@id}" class="column2 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1277,7 +1296,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-6</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1285,8 +1305,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns3366']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'4'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'8'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-4">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1294,11 +1324,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-4</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-8">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1306,7 +1337,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-8</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1314,8 +1346,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns6633']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'8'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'4'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-8">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1323,11 +1365,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-8</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-4">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1335,7 +1378,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-4</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1343,8 +1387,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns2575']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'3'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'9'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-3">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1352,11 +1406,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-3</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-9">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1364,7 +1419,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-9</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1372,8 +1428,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns7525']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'9'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'3'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-9">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1381,11 +1447,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-9</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-3">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1393,7 +1460,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-3</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1401,8 +1469,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns1683']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'10'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-2">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1410,11 +1488,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-2</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-10">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1422,7 +1501,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-10</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1430,8 +1510,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns8316']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'10'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="unevenColumns">
+        <xsl:with-param name="defaultWidth" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-10">
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1439,11 +1529,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-10</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-2">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1451,7 +1542,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-2</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1459,8 +1551,13 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='4columns']" mode="displayBrief">
+    <xsl:variable name="responsiveColumns">
+      <xsl:apply-templates select="." mode="responsiveColumns">
+        <xsl:with-param name="defaultCols" select="'3'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-3">
+      <div id="column1-{@id}" class="column1 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1468,11 +1565,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-3</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-3">
+      <div id="column2-{@id}" class="column2 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1480,11 +1578,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-3</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column3-{@id}" class="column3 col-md-3">
+      <div id="column3-{@id}" class="column3 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1492,11 +1591,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column3 col-md-3</xsl:text>
+            <xsl:text>column3 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column4-{@id}" class="column4 col-md-3">
+      <div id="column4-{@id}" class="column4 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1504,7 +1604,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column4 col-md-3</xsl:text>
+            <xsl:text>column4 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1512,8 +1613,21 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns4060']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'4'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'6'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row fivecolumns">
-      <div id="column1-{@id}" class="column1 col-md-4">
+      <xsl:if test="@mdCol and @mdCol!=''">
+        <xsl:attribute name="class">row fivecolumns fivecolumns-lg</xsl:attribute>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1521,11 +1635,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-4</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-6">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1533,7 +1648,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-6</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1541,8 +1657,21 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns6040']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'6'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'4'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row fivecolumns">
-      <div id="column1-{@id}" class="column1 col-md-6">
+      <xsl:if test="@mdCol and @mdCol!=''">
+        <xsl:attribute name="class">row fivecolumns fivecolumns-lg</xsl:attribute>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1550,11 +1679,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-6</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-4">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1562,7 +1692,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-4</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1570,8 +1701,21 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns2080']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'8'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row fivecolumns">
-      <div id="column1-{@id}" class="column1 col-md-2">
+      <xsl:if test="@mdCol and @mdCol!=''">
+        <xsl:attribute name="class">row fivecolumns fivecolumns-lg</xsl:attribute>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1579,11 +1723,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-2</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-8">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1591,7 +1736,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-8</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1599,8 +1745,21 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='2Columns8020']" mode="displayBrief">
+    <xsl:variable name="unevenColumns1">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'8'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="unevenColumns2">
+      <xsl:apply-templates select="." mode="uneven5Columns">
+        <xsl:with-param name="defaultWidth" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row fivecolumns">
-      <div id="column1-{@id}" class="column1 col-md-8">
+      <xsl:if test="@mdCol and @mdCol!=''">
+        <xsl:attribute name="class">row fivecolumns fivecolumns-lg</xsl:attribute>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 {$unevenColumns1}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1608,11 +1767,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-8</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$unevenColumns1"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-2">
+      <div id="column2-{@id}" class="column2 {$unevenColumns2}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1620,7 +1780,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-2</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$unevenColumns2"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1628,8 +1789,16 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='5columns']" mode="displayBrief">
+    <xsl:variable name="responsiveColumns">
+      <xsl:apply-templates select="." mode="responsiveColumns">
+        <xsl:with-param name="defaultCols" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row fivecolumns">
-      <div id="column1-{@id}" class="column1 col-md-2">
+      <xsl:if test="@mdCol and @mdCol!='' and @mdCol!='5'">
+        <xsl:attribute name="class">row fivecolumns-lg</xsl:attribute>
+      </xsl:if>
+      <div id="column1-{@id}" class="column1 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1637,11 +1806,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-2</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-2">
+      <div id="column2-{@id}" class="column2 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1649,11 +1819,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-2</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column3-{@id}" class="column3 col-md-2">
+      <div id="column3-{@id}" class="column3 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1661,12 +1832,13 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column3 col-md-2</xsl:text>
+            <xsl:text>column3 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column4-{@id}" class="column4 col-md-2">
-        
+      <div id="column4-{@id}" class="column4 {$responsiveColumns}">
+
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1674,11 +1846,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column4 col-md-2</xsl:text>
+            <xsl:text>column4 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column5-{@id}" class="column5 col-md-2">
+      <div id="column5-{@id}" class="column5 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1686,7 +1859,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column5 col-md-2</xsl:text>
+            <xsl:text>column5 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -1694,8 +1868,13 @@
   </xsl:template>
 
   <xsl:template match="Content[@moduleType='6columns']" mode="displayBrief">
+    <xsl:variable name="responsiveColumns">
+      <xsl:apply-templates select="." mode="responsiveColumns">
+        <xsl:with-param name="defaultCols" select="'2'"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <div class="row">
-      <div id="column1-{@id}" class="column1 col-md-2">
+      <div id="column1-{@id}" class="column1 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1703,11 +1882,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column1 col-md-2</xsl:text>
+            <xsl:text>column1 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column2-{@id}" class="column2 col-md-2">
+      <div id="column2-{@id}" class="column2 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1715,11 +1895,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column2 col-md-2</xsl:text>
+            <xsl:text>column2 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column3-{@id}" class="column3 col-md-2">
+      <div id="column3-{@id}" class="column3 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1727,11 +1908,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column3 col-md-2</xsl:text>
+            <xsl:text>column3 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column4-{@id}" class="column4 col-md-2">
+      <div id="column4-{@id}" class="column4 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1739,11 +1921,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column4 col-md-2</xsl:text>
+            <xsl:text>column4 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column5-{@id}" class="column5 col-md-2">
+      <div id="column5-{@id}" class="column5 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1751,11 +1934,12 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column5 col-md-2</xsl:text>
+            <xsl:text>column5 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
-      <div id="column6-{@id}" class="column6 col-md-2">
+      <div id="column6-{@id}" class="column6 {$responsiveColumns}">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>
           <xsl:with-param name="position">
@@ -1763,7 +1947,8 @@
             <xsl:value-of select="@id"/>
           </xsl:with-param>
           <xsl:with-param name="class">
-            <xsl:text>column6 col-md-2</xsl:text>
+            <xsl:text>column6 </xsl:text>
+            <xsl:value-of select="$responsiveColumns"/>
           </xsl:with-param>
         </xsl:apply-templates>
       </div>
@@ -2166,7 +2351,7 @@
         <xsl:variable name="title">
           <xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getTitleAttr" />
         </xsl:variable>
-        
+
         <a href="{$href}" title="{$title}">
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
@@ -2619,7 +2804,8 @@
           <xsl:attribute name="data-mapheight">
             <xsl:value-of select="@height"/>
           </xsl:attribute>
-        </xsl:if>To see this map you must have Javascript enabled</div>
+        </xsl:if>To see this map you must have Javascript enabled
+      </div>
     </div>
     <xsl:if test="/Page/@adminMode">
       <xsl:apply-templates select="Content[@type='Location']" mode="displayBrief"/>
@@ -2644,7 +2830,7 @@
     <xsl:variable name="mOptionsName" select="concat('mOptions',@id)"/>
     <xsl:variable name="mCentreLoc" select="concat('mCentreLoc',@id)"/>
     <!-- Map Centering Co-ords -->
-    <!--if google map id all ready exits not compleat--> 
+    <!--if google map id all ready exits not compleat-->
     <!--<xsl:text>if ($('#gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>').lengh) {</xsl:text>
       <xsl:text> $('#gmap</xsl:text><xsl:value-of select="@id"/><xsl:text>').show();</xsl:text>-->
     <xsl:choose>
@@ -2738,11 +2924,11 @@
     <xsl:text>$("#</xsl:text>
     <xsl:value-of select="$gMapId"/>
     <xsl:text>"));</xsl:text>
-    
+
     <xsl:apply-templates select="." mode="getGmapLocation">
-        <xsl:with-param name="gMapId" select="$gMapId"/>
+      <xsl:with-param name="gMapId" select="$gMapId"/>
     </xsl:apply-templates>
-    
+
   </xsl:template>
 
   <!-- Gets Geocode from Postal Address  -->
@@ -2753,14 +2939,14 @@
 			We are doing an address look up and resetting the centering.
 		-->
 
-        <xsl:variable name="jsLatLng">
-          <xsl:apply-templates select="Organization/location/GeoCoordinates" mode="getJsLatLng"/>
-        </xsl:variable>
-        <xsl:value-of select="$gMapId"/>.setCenter(<xsl:value-of select="$jsLatLng"/>);
-          <xsl:apply-templates select="." mode="setGMapMarker">
-            <xsl:with-param name="jsPositionValue" select="$jsLatLng"/>
-            <xsl:with-param name="mapId" select="$gMapId"/>
-          </xsl:apply-templates>
+    <xsl:variable name="jsLatLng">
+      <xsl:apply-templates select="Organization/location/GeoCoordinates" mode="getJsLatLng"/>
+    </xsl:variable>
+    <xsl:value-of select="$gMapId"/>.setCenter(<xsl:value-of select="$jsLatLng"/>);
+    <xsl:apply-templates select="." mode="setGMapMarker">
+      <xsl:with-param name="jsPositionValue" select="$jsLatLng"/>
+      <xsl:with-param name="mapId" select="$gMapId"/>
+    </xsl:apply-templates>
   </xsl:template>
 
 
@@ -2780,7 +2966,7 @@
     <xsl:value-of select="longitude"/>
     <xsl:text>)</xsl:text>
   </xsl:template>
-  
+
   <!-- Gets Geocode from Postal Address  -->
   <xsl:template match="Content[Location/@loc='address']" mode="getGmapLocation">
     <xsl:param name="gMapId" />
@@ -2839,7 +3025,7 @@
           </h3>
         </xsl:if>
         <div class="map-description">
-        <xsl:apply-templates select="Description/*" mode="cleanXhtml"/>
+          <xsl:apply-templates select="Description/*" mode="cleanXhtml"/>
         </div>
       </div>
     </xsl:variable>
@@ -2890,8 +3076,8 @@
       });
     </xsl:if>
   </xsl:template>
-  
-   <!--set up bubble for location-->
+
+  <!--set up bubble for location-->
   <xsl:template match="Content[@type='Organisation']" mode="setGMapMarker">
     <xsl:param name="jsPositionValue"/>
     <xsl:param name="mapId"/>
@@ -2953,7 +3139,7 @@
       <xsl:apply-templates select="Name/node()" mode="cleanXhtml-escape-js"/>
     </xsl:variable>
     <xsl:variable name="locStrap">
-        <xsl:apply-templates select="Strap/*" mode="cleanXhtml"/>
+      <xsl:apply-templates select="Strap/*" mode="cleanXhtml"/>
     </xsl:variable>
     <xsl:variable name="locAddress">
       <xsl:apply-templates select="Location/Address" mode="getAddress" />
@@ -3412,6 +3598,32 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="clearfix NewsList">
       <xsl:if test="@carousel='true'">
@@ -3419,7 +3631,29 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -3646,7 +3880,7 @@
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item newsarticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
-        
+
       </xsl:apply-templates>
       <xsl:choose>
         <xsl:when test="Strapline/descendant-or-self::a">
@@ -3658,7 +3892,7 @@
             <div class="lIinner">
               <h3 class="title">
                 <a href="{$parentURL}">
-                <xsl:apply-templates select="." mode="getDisplayName"/>
+                  <xsl:apply-templates select="." mode="getDisplayName"/>
                 </a>
               </h3>
               <xsl:if test="Images/img/@src!=''">
@@ -3720,7 +3954,7 @@
           </a>
         </xsl:otherwise>
       </xsl:choose>
-     
+
     </div>
   </xsl:template>
 
@@ -6381,6 +6615,31 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <!-- Output Module -->
     <div class="GalleryImageList Grid">
       <xsl:if test="@carousel='true'">
@@ -6388,7 +6647,29 @@
           <xsl:text>clearfix GalleryImageList Grid content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -6412,6 +6693,7 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="@crop"/>
+          <xsl:with-param name="lightbox" select="@lightbox"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -6783,11 +7065,11 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="Content[@type='Product']" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# product: http://ogp.me/ns/product#</xsl:text>
   </xsl:template>
-  
+
   <xsl:template match="Content[@type='Product']" mode="opengraphdata">
     <meta property="og:type" content="product" />
     <meta property="product:upc" content="{StockCode/node()}" />
@@ -6938,7 +7220,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </h4>
-           
+
             <div class="list-group">
               <xsl:apply-templates select="/" mode="List_Related_Products">
                 <xsl:with-param name="parProductID" select="@id"/>
@@ -7388,7 +7670,7 @@
         <ul class="cols{@cols}">
           <xsl:if test="@homeLink='true'">
             <li class="first">
-              <xsl:apply-templates select="/Page/Menu/MenuItem" mode="menuLink"/>
+              <xsl:apply-templates select="$parentPage" mode="menuLink"/>
             </li>
           </xsl:if>
           <xsl:apply-templates select="ms:node-set($contentList)/*[not(DisplayName/@exclude='true')]" mode="displayMenuBrief">
@@ -7899,8 +8181,54 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <div class="Links Grid">
       <div class="cols{@cols}">
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="linkList" select="$contentList"/>
@@ -9780,18 +10108,18 @@
     <!-- ###### -->
     <div class="advanced-carousel-container">
       <div class="cover-container">
-      <div class="advanced-carousel">
-        <ul style="display:none">
-          <xsl:choose>
-            <xsl:when test="Content[@type='AdvancedCarouselSlide']">
-              <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </ul>
-      </div>
+        <div class="advanced-carousel">
+          <ul style="display:none">
+            <xsl:choose>
+              <xsl:when test="Content[@type='AdvancedCarouselSlide']">
+                <xsl:apply-templates select="Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="$page/Contents/Content[@type='AdvancedCarouselSlide']" mode="displayBrief"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </ul>
+        </div>
       </div>
     </div>
     <script type="text/javascript">
@@ -10240,7 +10568,7 @@
       </xsl:if>
     </div>
   </xsl:template>
-  
+
   <!-- Library Image Brief -->
   <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
     <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
@@ -10769,22 +11097,22 @@
         <xsl:choose>
           <xsl:when test="Path!=''">
             <!-- When is a pdf -->
-             <a rel="external">
-            <xsl:attribute name="href">
-              <xsl:choose>
-                <xsl:when test="contains(Path,'http://')">
-                  <xsl:value-of select="Path/node()"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
-                  <xsl:value-of select="@id"/>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:attribute>
-            <xsl:attribute name="title">
-            </xsl:attribute>
-               <xsl:apply-templates select="." mode="displayThumbnail"/>
-          </a>
+            <a rel="external">
+              <xsl:attribute name="href">
+                <xsl:choose>
+                  <xsl:when test="contains(Path,'http://')">
+                    <xsl:value-of select="Path/node()"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
+                    <xsl:value-of select="@id"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:attribute name="title">
+              </xsl:attribute>
+              <xsl:apply-templates select="." mode="displayThumbnail"/>
+            </a>
           </xsl:when>
           <!-- When is a image -->
           <xsl:otherwise>
@@ -10792,86 +11120,86 @@
           </xsl:otherwise>
         </xsl:choose>
 
+        <xsl:if test="Rating/node()!=''">
+          <span class="rating-foreground rating">
+            <span>
+              <xsl:attribute name="class">
+                <xsl:text>value-title reviewRate rating</xsl:text>
+                <xsl:value-of select="Rating"/>
+              </xsl:attribute>
+              <xsl:attribute name="title">
+                <xsl:value-of select="Rating"/>
+              </xsl:attribute>
+              <xsl:attribute name="alt">
+                <xsl:call-template name="term2020" />
+                <xsl:text>:&#160;</xsl:text>
+                <xsl:value-of select="Rating"/>
+                <xsl:text>&#160;</xsl:text>
+                <xsl:call-template name="term2021" />
+              </xsl:attribute>
+              <xsl:choose>
+                <xsl:when test="Rating='5'">
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </xsl:when>
+                <xsl:when test="Rating='4'">
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </xsl:when>
+                <xsl:when test="Rating='3'">
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
 
-        <span class="rating-foreground rating">
-          <span>
-            <xsl:attribute name="class">
-              <xsl:text>value-title reviewRate rating</xsl:text>
-              <xsl:value-of select="Rating"/>
-            </xsl:attribute>
-            <xsl:attribute name="title">
-              <xsl:value-of select="Rating"/>
-            </xsl:attribute>
-            <xsl:attribute name="alt">
-              <xsl:call-template name="term2020" />
-              <xsl:text>:&#160;</xsl:text>
-              <xsl:value-of select="Rating"/>
-              <xsl:text>&#160;</xsl:text>
-              <xsl:call-template name="term2021" />
-            </xsl:attribute>
-            <xsl:choose>
-              <xsl:when test="Rating='5'">
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-              </xsl:when>
-              <xsl:when test="Rating='4'">
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-              </xsl:when>
-              <xsl:when test="Rating='3'">
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
+                </xsl:when>
+                <xsl:when test="Rating='2'">
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
 
-              </xsl:when>
-              <xsl:when test="Rating='2'">
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-
-              </xsl:when>
-              <xsl:when test="Rating='1'">
-                <i class="fa fa-star">
-                  <xsl:text> </xsl:text>
-                </i>
-              </xsl:when>
-            </xsl:choose>
+                </xsl:when>
+                <xsl:when test="Rating='1'">
+                  <i class="fa fa-star">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </xsl:when>
+              </xsl:choose>
+            </span>
+            <br/>
           </span>
-          <br/>
-        </span>
-       
+        </xsl:if>
         <xsl:call-template name="term2018" />
         <xsl:text>&#160;</xsl:text>
         <span class="reviewer">
@@ -10891,8 +11219,8 @@
           </span>
         </span>-->
 
-      
-        
+
+
         <span class="summary">
           <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
         </span>
@@ -10948,7 +11276,7 @@
           </xsl:attribute>
         </span>
       </span>
-      
+
       <xsl:apply-templates select="Path/node()" mode="displayThumbnail"/>
       <xsl:call-template name="term2018" />
       <xsl:text>&#160;</xsl:text>
@@ -11597,7 +11925,7 @@
                 </i>
                 <i class="fa fa-youtube fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
-                </i>test
+                </i>
               </span>
             </a>
           </xsl:if>
@@ -11705,7 +12033,7 @@
       </xsl:choose>
     </div>
   </xsl:template>
-   <!-- module -->
+  <!-- module -->
   <xsl:template match="Content | ContactPoint" mode="socialLinks">
     <xsl:param name="myName"/>
     <xsl:param name="iconSet"/>
@@ -11763,7 +12091,7 @@
               </i>
             </a>
           </xsl:if>
-         <xsl:if test="@linkedInURL!=''">
+          <xsl:if test="@linkedInURL!=''">
             <a href="{@linkedInURL}" title="{$myName} on LinkedIn" id="social-id-li">
               <i class="fa fa-2x fa-linkedin">
                 <xsl:text> </xsl:text>
@@ -11919,7 +12247,7 @@
                 </i>
                 <i class="fa fa-youtube fa-stack-1x fa-inverse">
                   <xsl:text> </xsl:text>
-                </i>test
+                </i>
               </span>
             </a>
           </xsl:if>
@@ -12054,7 +12382,7 @@
     </xsl:variable>
     <!-- Output Module -->
     <div class="VideoList">
-      <div class="cols{@cols}">
+      <div class="cols cols{@cols}">
         <!-- If Stepper, display Stepper -->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
@@ -12471,10 +12799,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -12623,10 +12951,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -13314,7 +13642,7 @@
         </ol>
       </xsl:if>
       <div class="carousel-inner" style="height:{@height}px">
-        <xsl:apply-templates select="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+        <xsl:apply-templates select="Content[@type='LibraryImageWithLink' or @type='BackgroundCarouselSlide']" mode="displayBriefSliderGalleryBackground">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
       </div>
@@ -13329,13 +13657,19 @@
     </div>
   </xsl:template>
   <!-- Library Image Brief -->
-  <xsl:template match="Content[@type='LibraryImageWithLink']" mode="displayBriefSliderGalleryBackground">
+  <xsl:template match="Content[@type='LibraryImageWithLink' or @type='BackgroundCarouselSlide']" mode="displayBriefSliderGalleryBackground">
     <div class="item" style="background-image:url({Images/img[@class='detail']/@src})">
       <xsl:if test="position()=1">
         <xsl:attribute name="class">item active</xsl:attribute>
       </xsl:if>
       <xsl:if test="Title/node()!='' or Body/node()!=''">
         <div class="carousel-caption">
+          <xsl:attribute name="class">
+            <xsl:text>carousel-caption container carousel-v-</xsl:text>
+            <xsl:value-of select="@position-vertical"/>
+            <xsl:text> carousel-h-</xsl:text>
+            <xsl:value-of select="@position-horizontal"/>
+          </xsl:attribute>
           <div class="carousel-caption-inner">
             <xsl:if test="Title/node()!=''">
               <h3 class="caption-title">
@@ -13351,7 +13685,5 @@
       </xsl:if>
     </div>
   </xsl:template>
-
-
 
 </xsl:stylesheet>

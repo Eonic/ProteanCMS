@@ -30,6 +30,7 @@ Public Class SoapClient
         Dim cProcessInfo As String = "sendSoapRequest"
 
         Try
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
             'check for fullpath
             If Not InStr(ServiceUrl, "http") = 1 Then
                 If LCase(goRequest.ServerVariables("HTTPS")) = "on" Then
@@ -43,7 +44,7 @@ Public Class SoapClient
 
             soapRequest.Headers.Add("SOAPAction", "http://www.eonic.co.uk/ewcommon/Services/" & actionName)
             soapRequest.ContentType = "text/xml; charset=UTF-8"
-            
+
             ' soapRequest.Method = "POST"
 
             Dim serviceRequest As HttpWebRequest = soapRequest
@@ -66,7 +67,7 @@ Public Class SoapClient
         Dim cProcessInfo As String = "addSoap"
 
         Try
-
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
             Dim encoding As UTF8Encoding = New UTF8Encoding
             Dim bodybytes As Byte() = encoding.GetBytes(soapBody)
             serviceRequest.ContentLength = bodybytes.Length

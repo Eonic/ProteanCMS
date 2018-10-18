@@ -36,7 +36,6 @@ D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.vbproj.CoreCompi
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.dll
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.xml
 D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.pdb
-D:\HostingSpaces\_objSource\Eonic.Tools\obj\Release\Eonic.Tools.vbprojResolveAssemblyReference.cache
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Release\Newtonsoft.Json.dll
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Release\tidy.x64.dll
 D:\HostingSpaces\_objSource\Eonic.Tools\bin\Release\tidy.x86.dll

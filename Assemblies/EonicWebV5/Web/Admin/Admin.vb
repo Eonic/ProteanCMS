@@ -522,12 +522,12 @@ ProcessFlow:
                                 'lets save the page we are editing to the session
                                 myWeb.moSession("pgid") = myWeb.moRequest("pgid")
                                 If Not myWeb.mbSuppressLastPageOverrides Then
-                                    myWeb.moSession("lastPage") = myWeb.mcPagePath & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
+                                    myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
                                 End If
                             End If
                             'we want to return here after editing
                             If Not myWeb.mbSuppressLastPageOverrides Then
-                                myWeb.moSession("lastPage") = myWeb.mcPagePath & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId '
+                                myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId '
                             End If
 
                         End If
@@ -577,7 +577,7 @@ ProcessFlow:
 
                         sAdminLayout = "ByType"
                         EditContext = "ByType." & mcEwCmd2
-                        myWeb.moSession("lastPage") = "?ewCmd=ByType." & mcEwCmd2 & "." & mcEwCmd3
+                        myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=ByType." & mcEwCmd2 & "." & mcEwCmd3
                         Dim ContentType As String = mcEwCmd2
                         Dim Filter As String = mcEwCmd3
                         Dim FilterSQL As String = ""
@@ -1292,6 +1292,15 @@ ProcessFlow:
                         myWeb.moSession("ewCmd") = mcEwCmd
                         myWeb.moSession("ewCmd2") = mcEwCmd2
 
+                    Case "CopyGroupMembers"
+                        sAdminLayout = "AdminXForm"
+                        oPageDetail.AppendChild(moAdXfm.xFrmCopyGroupMembers(myWeb.moRequest("id")))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListGroups"
+                            GoTo ProcessFlow
+                        End If
+
                     Case "EditDirItem"
                         Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                         'oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
@@ -1657,7 +1666,9 @@ ProcessFlow:
                         bLoadStructure = True
                         sAdminLayout = "SiteIndex"
                         oPageDetail.AppendChild(moAdXfm.xFrmStartIndex())
-
+                    Case "EditTemplate"
+                        sAdminLayout = "EditTemplate"
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditTemplate())
 
                         '-- Call all of the process for the newsletter functionaltiy
                     Case "MailingList", "NormalMail", "MailPreviewOn", "AdvancedMail", "AddMailModule", "EditMailContent", "EditMail", "EditMailLayout", "NewMail", "PreviewMail", "SendMail", "SendMailPersonalised", "SendMailunPersonalised", "MailHistory", "MailOptOut", "ProcessMailbox", "DeletePageMail", "SyncMailList", "ListMailLists"
@@ -1686,7 +1697,7 @@ ProcessFlow:
 
                         oMessaging = Nothing
 
-                    Case "ScheduledItems", "AddScheduledItem", "EditScheduledItem", "DeactivateScheduledItem", "ActivateScheduledItem", "ScheduledItemRunNow"
+                    Case "ScheduledItems", "AddScheduledItem", "EditScheduledItem", "DeleteScheduledItem", "DeactivateScheduledItem", "ActivateScheduledItem", "ScheduledItemRunNow"
                         SchedulerProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -1704,9 +1715,9 @@ ProcessFlow:
                         bSystemPagesMenu = True
                         oWeb.mnSystemPagesId = myWeb.moDbHelper.getPageIdFromPath("System+Pages", False, False)
                         oWeb.mbAdminMode = False
-                        If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
+                        If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
-                    Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "RenewalAlerts"
+                    Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -3724,6 +3735,27 @@ Process:
 
                         cewCmd = "ScheduledItems"
                         GoTo Process
+
+                    Case "DeleteScheduledItem"
+                        Dim cSQL As String
+                        Dim dPublishDate As String
+                        Dim dExpireDate As String
+
+                        'Dim cTime As String = IIf(Now.Hour < 10, "0" & Now.Hour, Now.Hour) & ":" & IIf(Now.Minute < 10, "0" & Now.Minute, Now.Minute) & ":" & IIf(Now.Second < 10, "0" & Now.Second, Now.Second)
+
+                        'dPublishDate = sqlDateTime(Now, cTime)
+                        dPublishDate = Eonic.Tools.Database.SqlDate(Now, True)
+                        dExpireDate = "Null"
+                        cSQL = "DELETE tblLog WHERE nActionId = " & myWeb.moRequest("id")
+                        cProcessInfo = "Process: " & cewCmd & " - " & cSQL
+                        dbt.ExeProcessSql(cSQL)
+
+                        cSQL = "DELETE tblActions  WHERE nActionKey = " & myWeb.moRequest("id")
+                        cProcessInfo = "Process: " & cewCmd & " - " & cSQL
+                        dbt.ExeProcessSql(cSQL)
+
+                        cewCmd = "ScheduledItems"
+                        GoTo Process
                 End Select
             Catch ex As Exception
                 returnException(mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug)
@@ -3860,8 +3892,11 @@ SP:
                 Case "ExpiredSubscriptions"
                     oSub.ListExpiredSubscriptions(oPageDetail)
 
-                Case "RenewalAlerts"
+                Case "CancelledSubscriptions"
+                    oSub.ListCancelledSubscriptions(oPageDetail)
 
+                Case "RenewalAlerts"
+                    oSub.ListRenewalAlerts(oPageDetail)
 
             End Select
 

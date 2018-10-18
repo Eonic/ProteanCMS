@@ -6,22 +6,23 @@ NEW BS ADMIN HEADER
 
 // VARIABLES FOR RESKINNING
 
-@admin-header-bg:				#000;
-@admin-header-bg-light:			lighten(@admin-header-bg, 20%);
+@admin-header-bg: #131a1c;
+@admin-header-bg-light:			lighten(@admin-header-bg, 10%);
 @admin-header-color:			#fff;
 @admin-header-color-link:		#5cbaf1;
 @admin-header-color-warning:	#d10404;
 @admin-header-logo:				transparent;
-@admin-header-font:				'Roboto', sans-serif;
+@admin-header-font:				'Open Sans', sans-serif;
 @admin-header-font-color:		#333;
-@admin-bg:						#eee;
+@admin-bg:						#fff;
 @admin-header-border-radius:	0px;
-@admin-gray:					#999;
+@admin-gray:					#777;
 @admin-border:					1px dotted #ccc;
 @admin-danger:					#d9534f;
 @admin-warning:					#f0ad4e;
 @admin-success:					#5cb85c;
 @admin-field-height:            40px;
+@admin-body-font: 'Open Sans', sans-serif;
 @admin-font-size-base:          15px;
 
 // VARIABLES FOR RESKINNING - INVERSE
@@ -34,30 +35,94 @@ NEW BS ADMIN HEADER
 
 
 // END VARIABLES
+.ewAdmin {
+    .admin-breadcrumb {
+        position:absolute;
+        right:0px;
+    }
+}
+#adminLayout {
+    font-size: @admin-font-size-base;
+    letter-spacing: normal;
 
-#adminLayout{
-    font-size:@admin-font-size-base;
-    letter-spacing:normal;
-	a{color:@admin-header-color-link;}
-	a:hover{
-		text-decoration:none;
-		color:lighten(@admin-header-color-link,20%);
-	}
-	.table a{color:darken(@admin-header-color-link,25%)}
-	.table a:hover{
-		text-decoration:none;
-		color:@admin-header-color-link;
-	}
-	.listbox a{color:darken(@admin-header-color-link,30%)}
-    .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus{
+    a {
+        color: @admin-header-color-link;
+    }
+
+    a:hover {
+        text-decoration: none;
+        color: lighten(@admin-header-color-link,20%);
+    }
+
+    .table a {
+        color: darken(@admin-header-color-link,25%)
+    }
+
+    .table a:hover {
+        text-decoration: none;
+        color: @admin-header-color-link;
+    }
+
+    .listbox a {
+        color: darken(@admin-header-color-link,30%)
+    }
+
+    .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+        color: @admin-header-color;
+        background-color: @admin-header-color-link;
+
+        a {
             color: @admin-header-color;
-            background-color: @admin-header-color-link;
-            a{
-                color: @admin-header-color;
-            }
-            a:hover{
-                color:darken(@admin-header-color,25%);
-            }
+        }
+
+        a:hover {
+            color: darken(@admin-header-color,25%);
+        }
+    }
+
+
+
+    .admin-page {
+        padding-left: 30px;
+        padding-right: 30px;
+
+        h1.page-header {
+            margin-left: -30px;
+            margin-right: -30px;
+            padding-left: 30px;
+            padding-right: 30px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            background-color: lighten(@admin-header-bg,70%);
+        }
+
+        .panel-default .panel-heading {
+            border-bottom: 4px solid lighten(@admin-header-bg,30%);
+        }
+
+        .panel-default .panel-body {
+            background-color: lighten(@admin-header-bg,85%);
+        }
+    }
+
+    #tpltEditStructure {
+        margin-left: -30px;
+        margin-right: -30px;
+        margin-top: -20px;
+
+        .list-group-item {
+            border-bottom: 1px solid lighten(@admin-header-bg,75%);
+        }
+
+        .list-group-item:hover {
+            background-color: lighten(@admin-header-bg,85%);
+            -o-transition: .5s;
+            -ms-transition: .5s;
+            -moz-transition: .5s;
+            -webkit-transition: .5s;
+            /* ...and now for the proper property */
+            transition: .5s;
+        }
     }
 }
 
@@ -676,6 +741,7 @@ NEW BS ADMIN HEADER
 .ewAdmin .dropdown-menu li.updown 
 {
 	margin: 9px 5px 4px 20px!important;
+    min-width:133px;
 	.clearfix();
 }
 

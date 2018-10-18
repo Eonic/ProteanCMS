@@ -1838,10 +1838,14 @@ function afterLoad() { // After the content from the user guide is loaded
         return this.pushStack(this.get().reverse(), arguments);
     }; 
 
-function formatXml(xml) {
+function unescapeHTML(escapedHTML) {
+    return escapedHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+}
+
+function formatXml(xmlstr) {
     var formatted = '';
     var reg = /(>)(<)(\/*)/g;
-    xml = xml.replace(reg, '$1\r\n$2$3');
+    xmlstr = xmlstr.replace(reg, '$1\r\n$2$3');
     var pad = 0;
     jQuery.each(xml.split('\r\n'), function (index, node) {
         var indent = 0;
@@ -1867,4 +1871,65 @@ function formatXml(xml) {
     });
 
     return formatted;
+}
+
+var prettifyXml = function (sourceXml) {
+    var xmlDoc = new DOMParser().parseFromString(sourceXml, 'application/xml');
+    var xsltDoc = new DOMParser().parseFromString([
+        // describes how we want to modify the XML - indent everything
+        '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">',
+        '  <xsl:output omit-xml-declaration="yes" indent="yes"/>',
+        '    <xsl:template match="node()|@*">',
+        '      <xsl:copy><xsl:apply-templates select="node()|@*"/></xsl:copy>',
+        '    </xsl:template>',
+        '</xsl:stylesheet>',
+    ].join('\n'), 'application/xml');
+
+    var xsltProcessor = new XSLTProcessor();
+    xsltProcessor.importStylesheet(xsltDoc);
+    var resultDoc = xsltProcessor.transformToDocument(xmlDoc);
+    var resultXml = new XMLSerializer().serializeToString(resultDoc);
+    return resultXml;
+};
+
+function formatXml2(xml) {
+    var out = "";
+    var tab = "    ";
+    var indent = 0;
+    var inClosingTag = false;
+    var dent = function (no) {
+        out += "\n";
+        for (var i = 0; i < no; i++)
+            out += tab;
+    }
+
+
+    for (var i = 0; i < xml.length; i++) {
+        var c = xml.charAt(i);
+        if (c == '<') {
+            // handle </
+            if (xml.charAt(i + 1) == '/') {
+                inClosingTag = true;
+                dent(--indent);
+            }
+            out += c;
+        } else if (c == '>') {
+            out += c;
+            // handle />
+            if (xml.charAt(i - 1) == '/') {
+                out += "\n";
+                //dent(--indent)
+            } else {
+                if (!inClosingTag)
+                    dent(++indent);
+                else {
+                    out += "\n";
+                    inClosingTag = false;
+                }
+            }
+        } else {
+            out += c;
+        }
+    }
+    return out;
 }

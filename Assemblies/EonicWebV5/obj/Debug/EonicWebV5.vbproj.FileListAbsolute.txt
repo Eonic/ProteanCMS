@@ -25,6 +25,12 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\MsieJavaScriptEngine.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\Newtonsoft.Json.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\Owin.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Net.FtpClient.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Reflection.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Runtime.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Algorithms.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Encoding.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Primitives.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.X509Certificates.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Web.Optimization.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\WebGrease.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\DocumentFormat.OpenXml.dll
@@ -54,6 +60,7 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\BundleTransformer.Less.resource
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\BundleTransformer.MicrosoftAjax.resources.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\MsieJavaScriptEngine.resources.dll
+D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbprojAssemblyReference.cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\Eonic.Resources.resources
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbproj.GenerateResource.cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbproj.CoreCompileInputs.cache
@@ -61,4 +68,5 @@ D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbproj.CopyComplete
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.dll
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.xml
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.pdb
-D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.vbprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.xml

@@ -1622,10 +1622,8 @@
         </xsl:otherwise>
       </xsl:choose>
     </input>
-    
     <xsl:if test="contains(@class,'strongPassword')">
-      <br />
-      <a id="passwordPolicy" href="#">Password policy</a>
+        <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
     </xsl:if>
   </xsl:template>
   <!-- -->
@@ -1750,6 +1748,9 @@
         </xsl:choose>
 
       </xsl:attribute>
+      <xsl:if test="contains(@class,'readonly')">
+        <xsl:attribute name="disabled">disabled</xsl:attribute>
+        </xsl:if>
 
       <xsl:if test="@onChange!=''">
         <xsl:attribute name="onChange">

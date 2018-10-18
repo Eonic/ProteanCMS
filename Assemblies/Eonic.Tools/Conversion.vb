@@ -58,6 +58,10 @@ Public Class Conversion
     Private nStatusReason As StatusReason = StatusReason.Undefined
 
     Public writePath As String
+    Public CSVseparator As Char = ","
+    'Public CSVfirstLineTitles As Boolean = True
+    Public CSVfirstLineTitles As String
+    Public CSVLineName As String = "DataRow"
 
 #End Region
 
@@ -307,51 +311,67 @@ Public Class Conversion
 
     Private Sub ConvertCSVToXml()
         Dim firstRow As Boolean = True
-        Dim _separator As Char = ","
+        Dim _separator As Char = CSVseparator
         Dim _fieldnames As String = Nothing
         Dim succeeded As Int64 = 0
         Dim failed As Int64 = 0
         Dim ResponseXml As New XmlDocument
         Dim cProcessInfo As String
         Dim sr As StreamReader
-        Dim writeFilePath As String = Me.writePath & "debug.txt"
-        Dim sw As New StreamWriter(File.Open(writeFilePath, FileMode.OpenOrCreate))
+        ' Dim writeFilePath As String = Me.writePath & "debug.txt"
+        ' Dim sw As New StreamWriter(File.Open(writeFilePath, FileMode.OpenOrCreate))
         Try
 
             If Me.oInput.GetType() Is GetType(StreamReader) Then
                 sr = Me.oInput
             Else
                 sr = New StreamReader(Me.oInput.ToString())
-                writeFilePath = Me.oInput.ToString().Replace(".csv", ".txt")
+                '      writeFilePath = Me.oInput.ToString().Replace(".csv", ".txt")
             End If
 
             ResponseXml.AppendChild(ResponseXml.CreateElement("Feed"))
-            Dim rowTemplate As XmlElement = ResponseXml.CreateElement("DataRow")
+            Dim rowTemplate As XmlElement = ResponseXml.CreateElement(CSVLineName)
             Dim sLine As String
 
-            Do While (succeeded < 10000) And Not (sr.EndOfStream)
+            Dim nSepCount As Int16 = 0
+            Dim afieldsTitles() As String
 
-                'Do While Not (sr.EndOfStream)
+            If Not CSVfirstLineTitles Is Nothing And firstRow Then
+                afieldsTitles = Split(CSVfirstLineTitles, _separator)
+                For ii As Integer = 0 To afieldsTitles.Count - 1
+                    Dim _fName As String = ""
+                    _fName = afieldsTitles(ii).Replace(_separator, "")
+                    rowTemplate.AppendChild(ResponseXml.CreateElement(_fName))
+                Next
+                firstRow = False
+            End If
+
+            ' Do While (succeeded < 10000) And Not (sr.EndOfStream)
+
+            Do While Not (sr.EndOfStream)
 
                 sLine = sr.ReadLine
                 sLine = sLine.Replace(vbCrLf, "")
 
-                If sLine.StartsWith("TES7778") Then
-                    cProcessInfo = "AllStop"
+                'get the number of seps in line 1
+                If nSepCount = 0 Then
+                    nSepCount = sLine.Split(_separator).Length - 1
                 End If
-
-                sw.WriteLine(succeeded & "-####," & sLine)
-                sw.Flush()
+                'keep reading till no of seps are hit.
+                Do While (sLine.Split(_separator).Length - 1) < nSepCount
+                    sLine = sLine + sr.ReadLine
+                    sLine = sLine.Replace(vbCrLf, "")
+                Loop
 
                 If sLine Is Nothing Then
                     Exit Do
                 End If
-
                 Dim fields() As String = SplitWhilePreservingQuotedValues(sLine, _separator).ToArray()
 
                 If firstRow Then
                     For ii As Integer = 0 To fields.Count - 1
                         Dim _fName As String = ""
+
                         _fName = fields(ii)
                         _fName = _fName.Replace("""", "")
                         rowTemplate.AppendChild(ResponseXml.CreateElement(_fName))
@@ -359,24 +379,37 @@ Public Class Conversion
                     firstRow = False
                 Else
                     Try
+                        Dim bHasHtml As Boolean = False
                         Dim rowElmt As XmlElement = rowTemplate.CloneNode(True)
                         For ii As Integer = 0 To fields.Count - 1
                             Dim _fValue = fields(ii)
                             If Not (Trim(_fValue) = "") Then
-                                If _fValue.startswith("<") Then
-                                    rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerXml = Eonic.Tools.Text.tidyXhtmlFrag(_fValue, True, True)
+
+                                If rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]") Is Nothing Then
+
+                                    Dim wtf1 As XmlElement = rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]")
+
                                 Else
-                                    rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerText = _fValue
+                                    If _fValue.startswith("<") Then
+                                        rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerXml = Eonic.Tools.Text.tidyXhtmlFrag(_fValue, True, True)
+                                        bHasHtml = True
+                                    Else
+                                        rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerText = Trim(_fValue).Replace(vbTab, "")
+                                    End If
                                 End If
                             End If
                         Next
+
+                        If bHasHtml = False Then
+                            cProcessInfo = "stop"
+                        End If
 
                         succeeded = succeeded + 1
 
                         rowElmt.SetAttribute("count", succeeded)
 
                         ResponseXml.DocumentElement.AppendChild(rowElmt)
-                        ResponseXml.Save(writeFilePath.Replace(".txt", ".xml"))
+                        ' ResponseXml.Save(writeFilePath.Replace(".txt", ".xml"))
 
                     Catch ex As Exception
                         System.Diagnostics.Debug.WriteLine(ex.ToString())
@@ -398,8 +431,8 @@ Public Class Conversion
             SetStatus(Status.Failed, StatusReason.Undefined)
 
         Finally
-            sw.Close()
-            sw.Dispose()
+            '  sw.Close()
+            '   sw.Dispose()
             sr.Dispose()
             ResponseXml = Nothing
         End Try
@@ -418,10 +451,10 @@ Public Class Conversion
             Dim values(0) As String
             For Each match As Match In csvPreservingQuotedStrings.Matches(value)
                 If values(0) = Nothing Then
-                    values(0) = match.Value.TrimStart(",")
+                    values(0) = match.Value.TrimStart(delimiter)
                 Else
                     Array.Resize(values, values.Length + 1)
-                    values(values.Length - 1) = TrimQuotes(match.Value.TrimStart(",").Replace("""""", """"))
+                    values(values.Length - 1) = TrimQuotes(match.Value.TrimStart(delimiter).Replace("""""", """"))
 
                 End If
             Next

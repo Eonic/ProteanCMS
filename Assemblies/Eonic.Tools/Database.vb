@@ -568,7 +568,7 @@ Public Class Database
         Return nUpdateCount
     End Function
 
-    Public Function ExeProcessSqlfromFile(ByVal filepath As String) As Integer
+    Public Function ExeProcessSqlfromFile(ByVal filepath As String, ByRef Optional errmsg As String = "") As Integer
 
         Dim nUpdateCount As Integer
         Dim vstrSql As String
@@ -591,6 +591,8 @@ Public Class Database
 
         Catch ex As Exception
             RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlfromFile", ex, cProcessInfo))
+            errmsg = ex.Message
+            nUpdateCount = -1
         Finally
             CloseConnection()
         End Try

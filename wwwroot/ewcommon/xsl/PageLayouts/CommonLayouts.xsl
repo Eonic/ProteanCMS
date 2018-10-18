@@ -530,12 +530,14 @@
     <xsl:choose>
 
       <xsl:when test="@box!='false' and @box!=''">
-
         <xsl:apply-templates select="." mode="moduleBox"/>
       </xsl:when>
-
+      
       <xsl:otherwise>
-        <div id="mod_{@id}" class="module nobox pos-{@position}">
+        <xsl:variable name="moduleClass">
+          <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+        </xsl:variable>
+        <div id="mod_{@id}" class="module nobox pos-{@position} {$moduleClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <xsl:attribute name="class">
             <xsl:text>module nobox pos-</xsl:text>
@@ -778,7 +780,10 @@
 
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
-        <div id="mod_{@id}" class="module">
+        <xsl:variable name="moduleClass">
+          <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+        </xsl:variable>
+        <div id="mod_{@id}" class="module {$moduleClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <xsl:if test="$adminMode">
             <div class="linkedPopUp">
@@ -1006,7 +1011,7 @@
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
 
-            <xsl:apply-templates select="." mode="themeModuleExtras"/>
+            <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
           </xsl:attribute>
           <xsl:if test="@title!='' or @icon!='' or @uploadIcon!=''">
             <div class="modal-header">
@@ -1081,8 +1086,10 @@
   <xsl:template match="Content[starts-with(@box,'alert')][ancestor::Page[@cssFramework='bs3']]" mode="moduleBox">
     <xsl:choose>
       <xsl:when test="@linkBox='true'">
-
-        <div id="mod_{@id}" class="module">
+        <xsl:variable name="moduleClass">
+          <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+        </xsl:variable>
+        <div id="mod_{@id}" class="module {$moduleClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <div class="linkedPopUp">
             <xsl:apply-templates select="." mode="inlinePopupOptions">
@@ -1170,6 +1177,7 @@
           pos-<xsl:value-of select="@position"/>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
+          <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
         </xsl:variable>
 
         <div id="mod_{@id}" class="{$class}">
@@ -1246,6 +1254,9 @@
       <xsl:value-of select="@position"/>
       <xsl:apply-templates select="." mode="hideScreens" />
       <xsl:apply-templates select="." mode="marginBelow" />
+
+        <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+
     </xsl:variable>
     <div id="mod_{@id}" class="{$class}">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
@@ -1312,6 +1323,9 @@
       <xsl:value-of select="@position"/>
       <xsl:apply-templates select="." mode="hideScreens" />
       <xsl:apply-templates select="." mode="marginBelow" />
+
+        <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
+
     </xsl:variable>
     <div id="mod_{@id}" class="{$class}">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
@@ -7976,7 +7990,7 @@
         <ul class="cols{@cols}">
           <xsl:if test="@homeLink='true'">
             <li class="first">
-              <xsl:apply-templates select="/Page/Menu/MenuItem" mode="menuLink"/>
+              <xsl:apply-templates select="$parentPage" mode="menuLink"/>
             </li>
           </xsl:if>
           <xsl:apply-templates select="ms:node-set($contentList)/*[not(DisplayName/@exclude='true')]" mode="displayMenuBrief">

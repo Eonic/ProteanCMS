@@ -308,7 +308,7 @@
         <xsl:if test="$ScriptAtBottom!='on' or $adminMode">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
-
+        <xsl:apply-templates select="/Page/Contents/Content[@type='PlainText' and @name='jsonld']" mode="JSONLD"/>
       </head>
 
       <!-- Go build the Body of the HTML doc -->
@@ -521,8 +521,6 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
-
-
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -971,10 +969,16 @@
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
-
-    <xsl:if test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
-      <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="ContentDetail/Content[@metaKeywords!='']">
+        <meta name="keywords" content="{ContentDetail/Content/@metaKeywords}"/>
+      </xsl:when>
+       <xsl:when test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
+         <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
+      </xsl:when>
+    
+    </xsl:choose>
+   
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
       <!--This content is to be found elsewhere on the site and should not be indexed again-->
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
@@ -1031,6 +1035,10 @@
     <!-- important for web indexes -->
     <meta name="generator" content="{/Page/Request/ServerVariables/Item[@name='GENERATOR']/node()}"/>
   </xsl:template>
+
+
+
+
 
   <xsl:template match="Page" mode="opengraphdata">
     <xsl:variable name="pageTitle">
@@ -2181,6 +2189,15 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="Content" mode="JSONLD">
+    <xsl:if test ="node()!=''">
+      <script type="application/ld+json">
+        <xsl:value-of select="node()"/>
+      </script>
+    </xsl:if>
+  </xsl:template>
+
+
   <xsl:template match="Content" mode="MetaLeadForensicsCode">
     <xsl:variable name="lfid">
       <xsl:value-of select="node()"/>
@@ -2466,7 +2483,7 @@
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>http://www.eonic.co.uk</xsl:text>
+          <xsl:text>https://eonic.com</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -2476,76 +2493,7 @@
           <xsl:value-of select="$page/Settings/add[@key='web.websitecreditText']/@value"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:choose>
-            <xsl:when test="$page/Cart">
-              <xsl:choose>
-                <xsl:when test="starts-with($pageId, '1')">
-                  <xsl:text>eCommerce Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '2')">
-                  <xsl:text>eCommerce Websites Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '3')">
-                  <xsl:text>eCommerce Sussex by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '4')">
-                  <xsl:text>eCommerce Developers Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '5')">
-                  <xsl:text>eCommerce Sevenoaks by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '6')">
-                  <xsl:text>eCommerce Maidstone by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '7')">
-                  <xsl:text>eCommerce Software by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '8')">
-                  <xsl:text>eCommerce London by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '9')">
-                  <xsl:text>eCommerce SEO by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '0')">
-                  <xsl:text>eCommerce Kent by</xsl:text>
-                </xsl:when>
-              </xsl:choose>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:choose>
-                <xsl:when test="starts-with($pageId, '1')">
-                  <xsl:text>Web Design Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '2')">
-                  <xsl:text>Websites Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '3')">
-                  <xsl:text>Web Designer Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with(/Page/@id, '4')">
-                  <xsl:text>Web Developers Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with(/Page/@id, '5')">
-                  <xsl:text>Content Management Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '6')">
-                  <xsl:text>Website Designer Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '7')">
-                  <xsl:text>Website Design Kent by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '8')">
-                  <xsl:text>Web Design Sevenoaks by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '9')">
-                  <xsl:text>Web Design Maidstone by</xsl:text>
-                </xsl:when>
-                <xsl:when test="starts-with($pageId, '0')">
-                  <xsl:text>Digital Agency Kent by</xsl:text>
-                </xsl:when>
-              </xsl:choose>
-            </xsl:otherwise>
-          </xsl:choose>
+            <xsl:text>Site by Eonic</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -2560,19 +2508,21 @@
       </xsl:choose>
     </xsl:variable>
     <div id="developerLink">
-      <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
-        <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
-          <xsl:attribute name="class">devText</xsl:attribute>
-        </xsl:if>
-        <xsl:value-of select="$websitecreditText"/>
-      </a>
-      <xsl:if test="$websitecreditLogo!=''">
-        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
+      <xsl:if test="$page/Settings/add[@key='web.websitecreditURL']/@value!='' or $page/@id = $page/Menu/MenuItem/@id">
+        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="external">
           <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
-            <xsl:attribute name="class">devLogo</xsl:attribute>
+            <xsl:attribute name="class">devText</xsl:attribute>
           </xsl:if>
-          <img src="{$websitecreditLogo}" alt="{$websitecreditText}"/>
+          <xsl:value-of select="$websitecreditText"/>
         </a>
+        <xsl:if test="$websitecreditLogo!=''">
+          <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
+            <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
+              <xsl:attribute name="class">devLogo</xsl:attribute>
+            </xsl:if>
+            <img src="{$websitecreditLogo}" alt="{$websitecreditText}"/>
+          </a>
+        </xsl:if>
       </xsl:if>
       <div class="terminus">&#160;</div>
     </div>
@@ -3209,6 +3159,7 @@
     <xsl:variable name="siteURL">
       <xsl:call-template name="getSiteURL"/>
     </xsl:variable>
+    
     <xsl:variable name="url" select="@url"/>
 
     <xsl:choose>
@@ -3474,11 +3425,16 @@
 
   <xsl:template match="Content[@type='Contact']" mode="getSafeURLName">
     <xsl:variable name="name">
-      <xsl:if test="GivenName/node()">
-        <xsl:value-of select="GivenName/node()"/>
-        <xsl:text> </xsl:text>
-      </xsl:if>
-      <xsl:value-of select="@name"/>
+      <xsl:choose>
+      <xsl:when test="GivenName/node()!=''">
+       <xsl:value-of select="translate(GivenName/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+        <xsl:text>-</xsl:text>
+       <xsl:value-of select="translate(Surname/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+      </xsl:when>
+        <xsl:otherwise>
+              <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+      </xsl:otherwise>
+        </xsl:choose>
     </xsl:variable>
     <xsl:value-of select="translate($name,' /\.:','----')"/>
   </xsl:template>
@@ -3520,9 +3476,9 @@
       </xsl:apply-templates>
     </li>
   </xsl:template>
-  
 
-  
+
+
   <xsl:template match="MenuItem" mode="mainmenudropdown">
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
@@ -3968,19 +3924,29 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:choose>
+                      <xsl:when test="contains($link,'#')">
+                        <xsl:attribute name="class">
+                          <xsl:text>btn btn-default btn-sm scroll-to-anchor</xsl:text>
+                        </xsl:attribute>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                      </xsl:when>
                       <xsl:when test="contains($link,'http')">
                         <xsl:attribute name="href">
                           <xsl:value-of select="$link"/>
                         </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
                       </xsl:when>
                       <xsl:otherwise>
                         <xsl:attribute name="href">
                           <xsl:text>http://</xsl:text>
                           <xsl:value-of select="$link"/>
                         </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
                       </xsl:otherwise>
                     </xsl:choose>
-                    <xsl:attribute name="rel">external</xsl:attribute>
+                    
                   </xsl:otherwise>
                 </xsl:choose>
                 <xsl:value-of select="@linkText"/>
@@ -5048,7 +5014,20 @@
     </xsl:element>
   </xsl:template>
 
-
+  <xsl:template match="table" mode="cleanXhtml">
+    <div class="table-responsive">
+      <xsl:element name="{name()}">
+        <!-- process attributes -->
+        <xsl:for-each select="@*">
+          <!-- remove attribute prefix (if any) -->
+          <xsl:attribute name="{name()}">
+            <xsl:value-of select="." />
+          </xsl:attribute>
+        </xsl:for-each>
+        <xsl:apply-templates mode="cleanXhtml"/>
+      </xsl:element>
+    </div>
+  </xsl:template>
 
 
 
@@ -5290,7 +5269,7 @@
     </xsl:element>
 
   </xsl:template>
-  
+
   <!-- Ensure no Self Closing P and Span and i and em tags-->
   <xsl:template match="p | span | i | em" mode="cleanXhtml">
 
@@ -5391,7 +5370,7 @@
       </xsl:choose>
     </xsl:element>
   </xsl:template>
-  
+
   <!-- ## ENCODE XHTML  ##########################################################################   -->
   <!--    Same purpose as cleanXhtml - But incodes the tags - handy for RSS Feeds or placing
           xHTML in attributes for JS operations e.g. jQuery tooltip.
@@ -8375,6 +8354,136 @@
         </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <!--responsive column settings-->
+
+  <xsl:template match="*" mode="responsiveColumns">
+    <xsl:param name="defaultCols"/>
+    <xsl:variable name="smColsEven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">col-sm-6 </xsl:when>
+        <xsl:when test="@smCol='3'">col-sm-4 </xsl:when>
+        <xsl:when test="@smCol='4'">col-sm-3 </xsl:when>
+        <xsl:when test="@smCol='5'">col-sm-2 5-col </xsl:when>
+        <xsl:when test="@smCol='6'">col-sm-2 </xsl:when>
+        <xsl:otherwise>sm-single-col </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsEven">
+      <xsl:if test="@mdCol='1'"> </xsl:if>
+      <xsl:if test="@mdCol='2'">col-md-6 </xsl:if>
+      <xsl:if test="@mdCol='3'">col-md-4 </xsl:if>
+      <xsl:if test="@mdCol='4'">col-md-3 </xsl:if>
+      <xsl:if test="@mdCol='5'">col-md-2 5-col </xsl:if>
+      <xsl:if test="@mdCol='6'">col-md-2 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsEven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsEven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultCols"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultCols"/>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="*" mode="unevenColumns">
+    <xsl:param name="defaultWidth"/>
+    <xsl:variable name="smColsUneven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">
+          <xsl:text>col-sm-</xsl:text>
+          <xsl:value-of select="$defaultWidth"/>
+          <xsl:text> </xsl:text>
+        </xsl:when>
+        <xsl:when test="@smCol='2equal'">col-sm-6 </xsl:when>
+        <xsl:otherwise>sm-single-col </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsUneven">
+      <xsl:if test="@mdCol='2'">
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:if test="@mdCol='2equal'">col-md-6 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsUneven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsUneven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultWidth"/>
+    <xsl:text> </xsl:text>
+  </xsl:template>
+
+  <xsl:template match="*" mode="uneven5Columns">
+    <xsl:param name="defaultWidth"/>
+    <xsl:variable name="smColsUneven">
+      <xsl:choose>
+        <xsl:when test="@smCol='2'">
+          <xsl:text>col-sm-</xsl:text>
+          <xsl:value-of select="$defaultWidth"/>
+          <xsl:text> </xsl:text>
+        </xsl:when>
+        <xsl:when test="@smCol='2equal'">col-sm-equal-2 </xsl:when>
+        <xsl:otherwise>sm-single-col </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsUneven">
+      <xsl:if test="@mdCol='2'">
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:if test="@mdCol='2equal'">col-md-equal-2 </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@xsCol='2'">mobile-2-col </xsl:when>
+      <xsl:otherwise>mobile-1-col </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@smCol and @smCol!=''">
+      <xsl:value-of select="$smColsUneven"/>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@mdCol and @mdCol!=''">
+        <xsl:value-of select="$mdColsUneven"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>col-md-</xsl:text>
+        <xsl:value-of select="$defaultWidth"/>
+        <xsl:text> </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>col-lg-</xsl:text>
+    <xsl:value-of select="$defaultWidth"/>
+    <xsl:text> </xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>

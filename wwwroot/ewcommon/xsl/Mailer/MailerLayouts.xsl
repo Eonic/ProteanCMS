@@ -53,7 +53,7 @@
   <xsl:variable name="HxFont">
     <xsl:apply-templates select="/Page" mode="HxFont" />
   </xsl:variable>
-    <xsl:variable name="HxSize">
+  <xsl:variable name="HxSize">
     <xsl:apply-templates select="/Page" mode="HxSize" />
   </xsl:variable>
   <xsl:variable name="HxStyle">
@@ -65,6 +65,19 @@
   <xsl:variable name="HxBoxColour">
     <xsl:apply-templates select="/Page" mode="HxBoxColour" />
   </xsl:variable>
+
+  <xsl:variable name="btnPadV">7px</xsl:variable>
+  <xsl:variable name="btnPadH">13px</xsl:variable>
+  <xsl:variable name="btnPad">
+    <xsl:value-of select="$btnPadV"/>
+    <xsl:text> </xsl:text>
+    <xsl:value-of select="$btnPadH"/>
+  </xsl:variable>
+  <xsl:variable name="btnColour">#ffffff</xsl:variable>
+  <xsl:variable name="btnBackground">#000000</xsl:variable>
+  <xsl:variable name="boxMargin">20</xsl:variable>
+  <xsl:variable name="lineHeight">120%</xsl:variable>
+
 
   <!-- Syle Default Settings -->
   <xsl:template match="Page" mode="emailWidth">650</xsl:template>
@@ -85,6 +98,7 @@
 
   <xsl:template match="Content" mode="getThWidth">150</xsl:template>
   <xsl:template match="Content" mode="getThHeight">125</xsl:template>
+
 
   <xsl:variable name="mailer_utm_campaign">
     <xsl:call-template name="mailer_utm_campaign"/>
@@ -157,7 +171,7 @@
   <xsl:template match="Page" mode="siteStyle">
     <!-- Placeholder -->
   </xsl:template>
-  
+
   <xsl:template match="Page" mode="emailStyle">
     <!-- Placeholder -->
   </xsl:template>
@@ -408,7 +422,7 @@
           <div>
             <xsl:apply-templates select="." mode="inlinePopupOptions" />
           </div>
-          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;margin-bottom:{$boxMargin}px">
             <tr>
               <td width="100%" style="width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
@@ -426,8 +440,12 @@
                     <tr>
                       <xsl:if test="@title!=''">
                         <td width="100%" style="width:100%;">
-                          <h2 class="title"  style ="margin-bottom: 10px; margin-top: 20px;">
-                            <xsl:apply-templates select="." mode="moduleLink"/>
+                          <h2 class="title"  style ="margin-bottom: 10px; margin-top: 0px;">
+                            <xsl:apply-templates select="." mode="moduleLink">
+                              <xsl:with-param name="headingColour">
+                                <xsl:value-of select="$HxColour"/>
+                              </xsl:with-param>
+                            </xsl:apply-templates>
                           </h2>
                         </td>
                       </xsl:if>
@@ -439,7 +457,7 @@
                     </tr>
                   </xsl:if>
                   <tr>
-                    <td style="width:100%;padding-bottom:{$emailBoxPad}px;" width="100%">
+                    <td style="width:100%;" width="100%">
                       <xsl:if test="@rss and @rss!='false'">
                         <xsl:attribute name="colspan">2</xsl:attribute>
                       </xsl:if>
@@ -448,7 +466,7 @@
                   </tr>
                   <xsl:if test="@linkText!='' and @link!=''">
                     <tr>
-                      <td class="entryFooter" width="100%" style="width:100%;">
+                      <td width="100%" style="width:100%;" align="right">
                         <xsl:if test="@rss and @rss!='false'">
                           <xsl:attribute name="colspan">2</xsl:attribute>
                         </xsl:if>
@@ -538,7 +556,7 @@
           </tr>
           <xsl:if test="@linkText!='' and @link!=''">
             <tr>
-              <td width="100%" style="width:100%;" class="entryFooter">
+              <td width="100%" style="width:100%;">
                 <xsl:if test="@rss and @rss!='false'">
                   <xsl:attribute name="colspan">2</xsl:attribute>
                 </xsl:if>
@@ -719,8 +737,8 @@
     <xsl:if test="ms:node-set($contentList)/*">
       <tr>
         <xsl:for-each select="ms:node-set($contentList)/*[position() &lt;= $cols]">
-          <td width="{$colWidth}%" style="width:{$colWidth}%;vertical-align:top;padding:5px;" valign="top">
-          
+          <td width="{$colWidth}%" style="width:{$colWidth}%;vertical-align:top;padding-bottom:{$emailBoxPad}px" valign="top">
+
             <xsl:apply-templates select="." mode="displayBrief">
               <xsl:with-param name="sortBy" select="$sortBy"/>
             </xsl:apply-templates>
@@ -751,52 +769,68 @@
         <xsl:with-param name="class" select="'listItem'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-
-      <h3 class="title">
-        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
-          <font face="{$HxFont}" size="{$HxSize}" color="{$HxColour}" style="{$HxStyle}">
-            <xsl:value-of select="Headline/node()" />
-          </font>
-        </a>
-      </h3>
-      <xsl:if test="Images/img/@src!=''">
-        <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}" style="border:none; float:right; margin-left:10px;">
-          <xsl:apply-templates select="." mode="displayThumbnail"/>
-        </a>
-      </xsl:if>
-      <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:if test="@publish!=''">
-          <p class="date">
-            <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
-            <xsl:call-template name="DisplayDate">
-              <xsl:with-param name="date" select="@publish"/>
-            </xsl:call-template>
-          </p>
-        </xsl:if>
-        <p>
-          <xsl:call-template name="truncate-string">
-            <xsl:with-param name="text" select="Strapline/node()"/>
-            <xsl:with-param name="length" select="130"/>
-          </xsl:call-template>
-          <xsl:text>&#160;</xsl:text>
-          <br/> <br/>
-          <a style="white-space:nowrap;background:{$HxColour};color:#ffffff;padding:10px;margin-top:15px;">
-            <xsl:attribute name="href">
-              <xsl:apply-templates select="." mode="getHref" />
-              <xsl:text>?</xsl:text>
-              <xsl:call-template name="mailer_utm_campaign"/>
-            </xsl:attribute>
-            <xsl:attribute name="title">
-              <xsl:text>view </xsl:text>
-              <xsl:apply-templates select="." mode="getDisplayName" />
-            </xsl:attribute>
-            <xsl:text>more &gt;</xsl:text>
-          </a>
-        </p>
-      </font>
+      <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
+        <tr>
+          <td>
+            <h3 class="title" style="margin-top:0">
+              <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}">
+                <font face="{$HxFont}" size="{$HxSize}" color="{$HxColour}" style="{$HxStyle}">
+                  <xsl:value-of select="Headline/node()" />
+                </font>
+              </a>
+            </h3>
+            <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+              <xsl:if test="@publish!=''">
+                <p class="date">
+                  <xsl:value-of select="/Page/Contents/Content[@name='articleLabel']"/>
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="@publish"/>
+                  </xsl:call-template>
+                </p>
+              </xsl:if>
+              <xsl:if test="Strapline/node()!=''">
+                <p style="line-height:{$lineHeight}">
+                  <xsl:call-template name="truncate-string">
+                    <xsl:with-param name="text" select="Strapline/node()"/>
+                    <xsl:with-param name="length" select="130"/>
+                  </xsl:call-template>
+                  <xsl:text>&#160;</xsl:text>
+                </p>
+              </xsl:if>
+              <p style="padding-top:{$btnPadV};">
+                <table cellpadding="0" cellspacing="0" >
+                  <tr>
+                    <td style="background:{$btnBackground};padding:{$btnPad};">
+                      <a style="white-space:nowrap;color:{$btnColour};">
+                        <xsl:attribute name="href">
+                          <xsl:apply-templates select="." mode="getHref" />
+                          <xsl:text>?</xsl:text>
+                          <xsl:call-template name="mailer_utm_campaign"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="title">
+                          <xsl:text>view </xsl:text>
+                          <xsl:apply-templates select="." mode="getDisplayName" />
+                        </xsl:attribute>
+                        <xsl:text>Read more</xsl:text>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </p>
+            </font>
+          </td>
+          <xsl:if test="Images/img/@src!=''">
+            <td style="text-align:right;">
+              <a href="{$parentURL}?{$mailer_utm_campaign}" title="Read More - {Headline/node()}" style="border:none; float:right; margin-left:10px;">
+                <xsl:apply-templates select="." mode="displayThumbnail"/>
+              </a>
+            </td>
+          </xsl:if>
+        </tr>
+      </table>
     </div>
   </xsl:template>
-  
+
   <!-- -->
   <!-- Event Brief -->
   <xsl:template match="Content[@type='Event']" mode="displayBrief">
@@ -988,7 +1022,7 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-   
+
     <tr class="listItem hproduct">
 
       <tr>
@@ -1007,18 +1041,18 @@
             </a>
           </h3>
         </td>
-     
+
       </tr>
 
       <!--displayPrice-->
       <tr>
-          <xsl:if test="Images/img/@src!=''">
-      <td align="right" valign="top" style="padding: 10px 20px 10px 40px;">
-        <a href="{$parentURL}?{$mailer_utm_campaign}" class="url">
-          <xsl:apply-templates select="." mode="displayThumbnail"/>
-        </a>
-      </td>
-    </xsl:if>
+        <xsl:if test="Images/img/@src!=''">
+          <td align="right" valign="top" style="padding: 10px 20px 10px 40px;">
+            <a href="{$parentURL}?{$mailer_utm_campaign}" class="url">
+              <xsl:apply-templates select="." mode="displayThumbnail"/>
+            </a>
+          </td>
+        </xsl:if>
         <xsl:if test="Manufacturer/node()!=''">
           <!--<td class="manufacturer" >-->
           <td class="brand" >
@@ -1074,7 +1108,7 @@
   </xsl:template>
   <xsl:template match="Content[@type='Product']" mode="getThWidth">250</xsl:template>
   <xsl:template match="Content[@type='Product']" mode="getThHeight">250</xsl:template>
-  
+
   <!-- Document Brief -->
   <xsl:template match="Content[@type='Document']" mode="displayBrief">
     <xsl:param name="sortBy"/>
@@ -1224,126 +1258,127 @@
             <xsl:value-of select="JobTitle/node()"/>
           </a>
         </h3>
-<table border="0">
-  <tr>
-      <td rowspan="6" width="60%" valign="top">
-      <xsl:if test="Summary/node()!=''">
-        <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
-      </xsl:if>
-      </td>
-    <td rowspan="6" valign="top" width="4%">&#160;</td>
-      <td width="18%">
-        <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:call-template name="term2062" />
-        <xsl:text>: </xsl:text>
-        </font>
-      </td>
-      <td width="18%">
-        <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:call-template name="DisplayDate">
-          <xsl:with-param name="date" select="@publish"/>
-        </xsl:call-template>
-        </font>
-      </td>
-  </tr>
-    <xsl:if test="ContractType/node()!=''">
-      <tr>
-       <td>
-         <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <!--Contract Type-->
-        <xsl:call-template name="term2063" />
-        <xsl:text>: </xsl:text>
-         </font>
-        </td>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:value-of select="ContractType/node()"/>
-          </font>
-        </td>
-       </tr>
-    </xsl:if>
-    <xsl:if test="Ref/node()!=''">
-      <tr>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <!--Ref-->
-        <xsl:call-template name="term2064" />
-        <xsl:text>: </xsl:text>
-          </font>
-        </td>
-        <td><font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:value-of select="Ref/node()"/>
-        </font>
-        </td>
-      </tr>
-    </xsl:if>
-    <xsl:if test="Location/node()!=''">
+        <table border="0">
           <tr>
-       <td>
-         <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <!--Location-->
-        <xsl:call-template name="term2065" />
-        <xsl:text>: </xsl:text>
-         </font>
-       </td>
-       <td>
-         <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:value-of select="Location/node()"/>
-         </font>
-       </td>
-     </tr>
-    </xsl:if>
-    <xsl:if test="Salary/node()!=''">
-      <tr>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <!--Salary-->
-        <xsl:call-template name="term2066" />
-        <xsl:text>: </xsl:text>
-          </font>
-        </td>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-            <xsl:value-of select="Salary/node()"/>
-          </font>
-          </td>
-      </tr>
-    </xsl:if>
-    <xsl:if test="ApplyBy/node()!=''">
-      <tr>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <!--Deadline for applications-->
-        <xsl:call-template name="term2067" />
-        <xsl:text>: </xsl:text>
-          </font>
-        </td>
-        <td>
-          <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <xsl:call-template name="DisplayDate">
-          <xsl:with-param name="date" select="ApplyBy/node()"/>
-        </xsl:call-template>
-          </font>
-        </td>
-      </tr>
-    </xsl:if>
+            <td rowspan="6" width="60%" valign="top">
+              <xsl:if test="Summary/node()!=''">
+                <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
+              </xsl:if>
+            </td>
+            <td rowspan="6" valign="top" width="4%">&#160;</td>
+            <td width="18%">
+              <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                <xsl:call-template name="term2062" />
+                <xsl:text>: </xsl:text>
+              </font>
+            </td>
+            <td width="18%">
+              <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                <xsl:call-template name="DisplayDate">
+                  <xsl:with-param name="date" select="@publish"/>
+                </xsl:call-template>
+              </font>
+            </td>
+          </tr>
+          <xsl:if test="ContractType/node()!=''">
+            <tr>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <!--Contract Type-->
+                  <xsl:call-template name="term2063" />
+                  <xsl:text>: </xsl:text>
+                </font>
+              </td>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <xsl:value-of select="ContractType/node()"/>
+                </font>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:if test="Ref/node()!=''">
+            <tr>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <!--Ref-->
+                  <xsl:call-template name="term2064" />
+                  <xsl:text>: </xsl:text>
+                </font>
+              </td>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <xsl:value-of select="Ref/node()"/>
+                </font>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:if test="Location/node()!=''">
+            <tr>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <!--Location-->
+                  <xsl:call-template name="term2065" />
+                  <xsl:text>: </xsl:text>
+                </font>
+              </td>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <xsl:value-of select="Location/node()"/>
+                </font>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:if test="Salary/node()!=''">
+            <tr>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <!--Salary-->
+                  <xsl:call-template name="term2066" />
+                  <xsl:text>: </xsl:text>
+                </font>
+              </td>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <xsl:value-of select="Salary/node()"/>
+                </font>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:if test="ApplyBy/node()!=''">
+            <tr>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <!--Deadline for applications-->
+                  <xsl:call-template name="term2067" />
+                  <xsl:text>: </xsl:text>
+                </font>
+              </td>
+              <td>
+                <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="ApplyBy/node()"/>
+                  </xsl:call-template>
+                </font>
+              </td>
+            </tr>
+          </xsl:if>
 
-</table>
+        </table>
         <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-        <a style="white-space:nowrap;text-align:right;">
-          <xsl:attribute name="href">
-            <xsl:apply-templates select="." mode="getHref" />
-            <xsl:text>?</xsl:text>
-            <xsl:call-template name="mailer_utm_campaign"/>
-          </xsl:attribute>
-          <xsl:attribute name="title">
-            <xsl:text>view </xsl:text>
-            <xsl:apply-templates select="." mode="getDisplayName" />
-          </xsl:attribute>
-	  <font face="{$bodyFont}" color="{$linkColour}">
-          <xsl:text>more &gt;</xsl:text>
-	  </font>
-        </a>
+          <a style="white-space:nowrap;text-align:right;">
+            <xsl:attribute name="href">
+              <xsl:apply-templates select="." mode="getHref" />
+              <xsl:text>?</xsl:text>
+              <xsl:call-template name="mailer_utm_campaign"/>
+            </xsl:attribute>
+            <xsl:attribute name="title">
+              <xsl:text>view </xsl:text>
+              <xsl:apply-templates select="." mode="getDisplayName" />
+            </xsl:attribute>
+            <font face="{$bodyFont}" color="{$linkColour}">
+              <xsl:text>more &gt;</xsl:text>
+            </font>
+          </a>
         </font>
       </div>
     </div>
@@ -1446,6 +1481,7 @@
   <!-- -->
 
   <xsl:template match="Content[@type='Module']" mode="moduleLink">
+    <xsl:param name="headingColour"/>
     <xsl:choose>
       <xsl:when test="@link!=''">
         <a>
@@ -1485,13 +1521,13 @@
           <xsl:if test="@linkType='external'">
             <xsl:attribute name="rel">external</xsl:attribute>
           </xsl:if>
-          <font face="{$HxFont}" size="4" color="{$HxBoxColour}">
+          <font face="{$HxFont}" size="4" color="{@headingColour}">
             <xsl:apply-templates select="." mode="moduleTitle"/>
           </font>
         </a>
       </xsl:when>
       <xsl:otherwise>
-        <font face="{$HxFont}" size="4" color="{$HxBoxColour}">
+        <font face="{$HxFont}" size="4" color="{@headingColour}">
           <xsl:apply-templates select="." mode="moduleTitle"/>
         </font>
       </xsl:otherwise>
@@ -1502,21 +1538,20 @@
     <xsl:param name="link"/>
     <xsl:param name="linkText"/>
     <xsl:param name="altText"/>
-    <div class="morelink" align="right">
-      <span>
-        <a href="{$link}?{$mailer_utm_campaign}" title="{$altText}">
-          <font face="{$bodyFont}" size="{$bodySize}">
+    <table cellpadding="0" cellspacing="0" >
+      <tr>
+        <td style="white-space:nowrap;background:{$btnBackground};padding:{$btnPad};">
+          <a style="white-space:nowrap; color:{$btnColour}; font-family:	{$bodyFont}; text-decoration:none;">
             <xsl:choose>
               <xsl:when test="$linkText!=''">
                 <xsl:value-of select="$linkText"/>
               </xsl:when>
               <xsl:otherwise>Read more</xsl:otherwise>
             </xsl:choose>
-          </font>
-          <span class="gtIcon">&#160;&gt;</span>
-        </a>
-      </span>
-    </div>
+          </a>
+        </td>
+      </tr>
+    </table>
   </xsl:template>
 
 
@@ -1538,14 +1573,14 @@
   <xsl:template match="h2" mode="cleanXhtml">
     <h2 face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}" style ="margin-bottom: 10px; margin-top: 20px;">
 
-        <!-- process attributes -->
-        <xsl:for-each select="@*">
-          <!-- remove attribute prefix (if any) -->
-          <xsl:attribute name="{name()}">
-            <xsl:value-of select="." />
-          </xsl:attribute>
-        </xsl:for-each>
-        <xsl:apply-templates mode="cleanXhtml"/>
+      <!-- process attributes -->
+      <xsl:for-each select="@*">
+        <!-- remove attribute prefix (if any) -->
+        <xsl:attribute name="{name()}">
+          <xsl:value-of select="." />
+        </xsl:attribute>
+      </xsl:for-each>
+      <xsl:apply-templates mode="cleanXhtml"/>
     </h2>
   </xsl:template>
 
@@ -1555,7 +1590,7 @@
         <xsl:when test="contains(@href,'http://')">
           <xsl:value-of select="@href"/>
         </xsl:when>
-	      <xsl:when test="contains(@href,'https://')">
+        <xsl:when test="contains(@href,'https://')">
           <xsl:value-of select="@href"/>
         </xsl:when>
         <xsl:when test="contains(@href,'mailto:')">
@@ -1667,7 +1702,7 @@
   <xsl:template match="Content | MenuItem" mode="displayThumbnail">
     <xsl:param name="style"/>
     <xsl:param name="align"/>
-    <xsl:param name="hspace"/>    
+    <xsl:param name="hspace"/>
     <xsl:param name="vspace"/>
     <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
     <xsl:if test="Images/img[@src and @src!='']">
@@ -1785,5 +1820,5 @@
     <xsl:text>http://</xsl:text>
     <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node()"/>
   </xsl:template>
-  
+
 </xsl:stylesheet>

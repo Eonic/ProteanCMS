@@ -24,6 +24,7 @@ Public Class FeedHandler
     Public oResultElmt As XmlElement
     Public TotalsElmt As XmlElement
     Public FeedItemNode As String
+    Public FeedXml As XmlDocument
 
     Public oDBH As Web.dbHelper
     Public oTransform As Eonic.XmlHelper.Transform
@@ -178,6 +179,16 @@ Public Class FeedHandler
             settings.NewLineOnAttributes = False
             settings.ConformanceLevel = ConformanceLevel.Document
             settings.CheckCharacters = True
+            Dim debugFolder As String = ""
+
+            If LCase(oConfig("Debug")) = "on" Then
+                Dim ofs As New Eonic.fsHelper
+                ofs.mcRoot = "../"
+                ofs.CreatePath("/importtest")
+                ofs = Nothing
+                Dim newDir As New DirectoryInfo(System.Web.HttpContext.Current.Request.MapPath("/"))
+                debugFolder = newDir.Parent.FullName & "\importtest\"
+            End If
 
             'is the feed XML
             Using reader As XmlReader = XmlReader.Create(cFeedURL)
@@ -192,10 +203,8 @@ Public Class FeedHandler
 
                         Dim oWriter As TextWriter = New StringWriter
                         Dim xWriter As XmlWriter = XmlWriter.Create(oWriter, settings)
-
                         Try
-                            'Dim ro As New ReaderOptions()
-                            'ro.OmitDuplicateNamespaces = True
+
                             Dim xreader As XmlReader = origInstance.CreateReader()
                             xreader.MoveToContent()
                             oTransform.Process(xreader, xWriter)
@@ -233,8 +242,12 @@ Public Class FeedHandler
                             Next
 
                             If LCase(oConfig("Debug")) = "on" Then
-                                filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-")
-                                xDoc.Save(System.Web.HttpContext.Current.Request.MapPath("/") & "/importtest/" & filename & ".xml")
+                                If xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]") Is Nothing Then
+                                    filename = "ImportStreamFile"
+                                Else
+                                    filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-")
+                                End If
+                                xDoc.Save(debugFolder & filename & ".xml")
                             End If
 
                             xDoc = Nothing
@@ -264,35 +277,44 @@ Public Class FeedHandler
     Function GetFeedItems() As XmlDocument
         Dim oFeedXML As String = ""
         Try
-            'Get the feed xml
-            Dim oRequest As HttpWebRequest
-            Dim oResponse As HttpWebResponse = Nothing
-            Dim oReader As StreamReader
+            Dim oResXML As New XmlDocument
+            If FeedXml Is Nothing Then
+                'Get the feed xml
+                Dim oRequest As HttpWebRequest
+                Dim oResponse As HttpWebResponse = Nothing
+                Dim oReader As StreamReader
 
-            'request the page
-            oRequest = DirectCast(System.Net.WebRequest.Create(cFeedURL), HttpWebRequest)
-            ' Force a user agent for rubbish feed providers.
-            oRequest.UserAgent = "Mozilla/5.0 (compatible; eonicweb v5.1)"
-            ' Set a 10 min timeout
-            If oConfig("FeedTimeout") <> "" Then
-                oRequest.Timeout = oConfig("FeedTimeout")
+                'request the page
+                oRequest = DirectCast(System.Net.WebRequest.Create(cFeedURL), HttpWebRequest)
+                ' Force a user agent for rubbish feed providers.
+                oRequest.UserAgent = "Mozilla/5.0 (compatible; eonicweb v5.1)"
+                ' Set a 10 min timeout
+                If oConfig("FeedTimeout") <> "" Then
+                    oRequest.Timeout = oConfig("FeedTimeout")
+                End If
+
+                oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " & cFeedURL)
+
+                oResponse = DirectCast(oRequest.GetResponse(), HttpWebResponse)
+                oReader = New StreamReader(oResponse.GetResponseStream())
+                oFeedXML = oReader.ReadToEnd
+                '  oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "received url: " & cFeedURL)
+                ' The problem with masking namespaces is that you have to deal with any node that calls that namespace.
+                'oFeedXML = Replace(oFeedXML, "xmlns:", "exemelnamespace")
+                'oFeedXML = Replace(oFeedXML, "xmlns", "exemelnamespace")
+
+                'TS commented out for LogicRc Feed
+                'oFeedXML = Regex.Replace(oFeedXML, "&gt;", ">")
+                'oFeedXML = Regex.Replace(oFeedXML, "&lt;", "<")
+
+                'oFeedXML = xmlTools.convertEntitiesToCodes(oFeedXML)
+                oResXML.InnerXml = oFeedXML
+            Else
+                oResXML = FeedXml
             End If
 
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " & cFeedURL)
 
-            oResponse = DirectCast(oRequest.GetResponse(), HttpWebResponse)
-            oReader = New StreamReader(oResponse.GetResponseStream())
-            oFeedXML = oReader.ReadToEnd
-            '  oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "received url: " & cFeedURL)
-            ' The problem with masking namespaces is that you have to deal with any node that calls that namespace.
-            'oFeedXML = Replace(oFeedXML, "xmlns:", "exemelnamespace")
-            'oFeedXML = Replace(oFeedXML, "xmlns", "exemelnamespace")
-            oFeedXML = Regex.Replace(oFeedXML, "&gt;", ">")
-            oFeedXML = Regex.Replace(oFeedXML, "&lt;", "<")
 
-            oFeedXML = xmlTools.convertEntitiesToCodes(oFeedXML)
-
-            Dim oResXML As New XmlDocument
             oResXML.InnerXml = oFeedXML
             If LCase(oConfig("Debug")) = "on" Then
                 File.WriteAllText(goServer.MapPath("/recivedFeedRaw.xml"), oResXML.OuterXml)
@@ -324,7 +346,7 @@ Public Class FeedHandler
             File.WriteAllText(goServer.MapPath("/recivedFeedTransformed.xml"), cFeedItemXML)
 
             Dim oInstanceXML As New XmlDocument
-            oInstanceXML.LoadXml(cFeedItemXML)
+            oInstanceXML.LoadXml(stripNonValidXMLCharacters(cFeedItemXML))
             ' oInstanceXML.InnerXml = cFeedItemXML
 
             ' Populate empty url nodes
@@ -357,6 +379,25 @@ Public Class FeedHandler
         End Try
     End Function
 
+    Public Function stripNonValidXMLCharacters(ByVal textIn As String) As [String]
+        Dim textOut As New System.Text.StringBuilder()
+        ' Used to hold the output.
+        Dim current As Integer
+        ' Used to reference the current character.
+        If textIn Is Nothing OrElse textIn = String.Empty Then
+            Return String.Empty
+        End If
+        ' vacancy test.
+        For i As Integer = 0 To textIn.Length - 1
+            current = AscW(textIn(i))
+
+
+            If (current = &H9 OrElse current = &HA OrElse current = &HD) OrElse ((current >= &H20) AndAlso (current <= &HD7FF)) OrElse ((current >= &HE000) AndAlso (current <= &HFFFD)) OrElse ((current >= &H10000) AndAlso (current <= &H10FFFF)) Then
+                textOut.Append(ChrW(current))
+            End If
+        Next
+        Return textOut.ToString()
+    End Function
 
     Public Sub CompareFeedItems(ByRef oInstanceXML As XmlDocument)
         Try

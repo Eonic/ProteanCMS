@@ -833,7 +833,7 @@ Partial Public Class Web
 
                     MyBase.addSubmit(oFrmElmt, "", "Save Settings")
 
-                    Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                    Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
                     Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
                     Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
                     If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
@@ -902,7 +902,7 @@ Partial Public Class Web
 
                     Else
 
-                        Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
+                        Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
 
                         Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
                         If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
@@ -2136,10 +2136,10 @@ Partial Public Class Web
 
                     'Lets load in the available common templates from XML file
                     Try
-                        oXformDoc.Load(goServer.MapPath("/ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
+                        oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/pageLayouts") & "/LayoutManifest.xml")
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                     Catch ex As Exception
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " & ex.Message)
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/pageLayouts/LayoutManifest.xml could not be found. - " & ex.Message)
                     End Try
 
 
@@ -2166,10 +2166,10 @@ Partial Public Class Web
                     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
                     If oConfig("cart") = "on" Then
                         Try
-                            oXformDoc.Load(goServer.MapPath("/ewcommon/xsl/cart") & "/LayoutManifest.xml")
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/cart") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                         Catch ex As Exception
-                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/ewcommon/xsl/cart/LayoutManifest.xml could not be found. - " & ex.Message)
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/cart/LayoutManifest.xml could not be found. - " & ex.Message)
                         End Try
 
                         For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
@@ -2195,10 +2195,10 @@ Partial Public Class Web
 
                     If oConfig("membership") = "on" Then
                         Try
-                            oXformDoc.Load(goServer.MapPath("/ewcommon/xsl/membership") & "/LayoutManifest.xml")
+                            oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/membership") & "/LayoutManifest.xml")
                             sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                         Catch ex As Exception
-                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/ewcommon/xsl/membership/LayoutManifest.xml could not be found. - " & ex.Message)
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/membership/LayoutManifest.xml could not be found. - " & ex.Message)
                         End Try
 
                         For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
@@ -2304,10 +2304,10 @@ Partial Public Class Web
 
                     'Lets load in the available common templates from XML file
                     Try
-                        oXformDoc.Load(goServer.MapPath("/ewcommon/xsl/mailer") & "/LayoutManifest.xml")
+                        oXformDoc.Load(goServer.MapPath("/" & gcProjectPath & "ewcommon/xsl/mailer") & "/LayoutManifest.xml")
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                     Catch ex As Exception
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/ewcommon/xsl/mailer/LayoutManifest.xml could not be found. - " & ex.Message)
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "/" & gcProjectPath & "ewcommon/xsl/mailer/LayoutManifest.xml could not be found. - " & ex.Message)
                     End Try
 
                     For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/LayoutGroup")
@@ -2387,28 +2387,28 @@ Partial Public Class Web
 
                         oSelElmt = MyBase.addSelect1(oFrmElmt, "cModuleType", True, "", "PickByImage", xForm.ApperanceTypes.Full)
 
-                        EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
+                        EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/PageLayouts", "ModuleTypes/ModuleGroup", "Module", False)
                         If myWeb.moConfig("ClientCommonFolder") <> "" Then
                             EnumberateManifestOptions(oSelElmt, myWeb.moConfig("ClientCommonFolder") & "/xsl", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         EnumberateManifestOptions(oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", True)
                         If myWeb.moConfig("Search") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Search", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Search", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         If myWeb.moConfig("Membership") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Membership", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Membership", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         If myWeb.moConfig("Cart") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Cart", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Cart", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         If myWeb.moConfig("Quote") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Quote", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Quote", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         If myWeb.moConfig("MailingList") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Mailer", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
                         If myWeb.moConfig("Subscriptions") = "on" Then
-                            EnumberateManifestOptions(oSelElmt, "/ewcommon/xsl/Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
+                            EnumberateManifestOptions(oSelElmt, "/" & gcProjectPath & "ewcommon/xsl/Subscriptions", "ModuleTypes/ModuleGroup", "Module", False)
                         End If
 
 
@@ -2447,7 +2447,7 @@ Partial Public Class Web
 
                     Try
                         'if this file exists then add the bespoke templates
-                        oXformDoc.Load(goServer.MapPath(myWeb.moConfig("ProjectPath") & filepath) & "/LayoutManifest.xml")
+                        oXformDoc.Load(goServer.MapPath(filepath) & "/LayoutManifest.xml")
                         sImgPath = oXformDoc.DocumentElement.GetAttribute("imgPath")
                         For Each oChoices In oXformDoc.SelectNodes("/PageLayouts/" & groupName)
                             If oChoices.GetAttribute("targetCssFramework") = "" Or (Not (myWeb.moConfig("cssFramework") Is Nothing) And oChoices.GetAttribute("targetCssFramework").Contains("" & myWeb.moConfig("cssFramework"))) Then
@@ -3116,8 +3116,8 @@ Partial Public Class Web
                                     '###############################-ACTIONS-########################
                                 ElseIf myItem.contains("RelateEdit") Then
                                     nRelId = relateCmdArr(1)
-                                    goSession("mnContentRelationParent") = goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
-                                    goSession("mcRelRedirectString") = goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & IIf(goRequest.QueryString("pgid") = "", "", "&pgid=" & goRequest.QueryString("pgid"))
+                                    goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nRelId
                                     bResult = True
                                     Exit For
                                 ElseIf myItem.contains("RelateRemove") Then
@@ -3127,25 +3127,25 @@ Partial Public Class Web
                                     Exit For
                                 ElseIf myItem.contains("RelateAdd") Then
 
-                                    goSession("mnContentRelationParent") = goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
 
                                     Dim cContentType As String = relateCmdArr(1)
                                     If (relateCmdArr.Length > 3) Then
-                                        goSession("mcRelRedirectString") = goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString
                                     Else
-                                        goSession("mcRelRedirectString") = goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=AddContent&type=" & cContentType & "&name=New+" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString
                                     End If
                                     goSession("mcRelAction") = "Add"
                                     goSession("mcRelParent") = nParId
                                     bResult = True
                                     Exit For
                                 ElseIf myItem.contains("RelateFind") Then
-                                    goSession("mnContentRelationParent") = goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
+                                    goSession("mnContentRelationParent") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=EditContent&id=" & nParId & pgidQueryString
                                     Dim cContentType As String = relateCmdArr(1)
                                     If (relateCmdArr.Length > 3) Then
-                                        goSession("mcRelRedirectString") = goRequest.QueryString("Path") & "?ewCmd=RelateSearch&type=" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=RelateSearch&type=" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & "&relationType=" & relateCmdArr(3) & pgidQueryString
                                     Else
-                                        goSession("mcRelRedirectString") = goRequest.QueryString("Path") & "?ewCmd=RelateSearch&type=" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString
+                                        goSession("mcRelRedirectString") = "/" & myWeb.moConfig("ProjectPath") & goRequest.QueryString("Path") & "?ewCmd=RelateSearch&type=" & cContentType & "&direction=" & relateCmdArr(2) & "&RelType=" & relateCmdArr(2) & pgidQueryString
                                     End If
                                     goSession("mcRelAction") = "Find"
                                     goSession("mcRelParent") = nParId
@@ -3880,173 +3880,120 @@ Partial Public Class Web
             End Function
 
 
-            'Public Overridable Function xFrmEditDirectoryItem(Optional ByVal id As Long = 0, Optional ByVal cDirectorySchemaName As String = "User", Optional ByVal parId As Long = 0, Optional ByVal cXformName As String = "", Optional ByVal FormXML As String = "") As XmlElement
+            Public Overridable Function xFrmCopyGroupMembers(ByVal dirId As Long) As XmlElement
+                Dim oFrmElmt As XmlElement
+                Dim oElmt As XmlElement
+                Dim oElmt2 As XmlElement
+                Dim oElmt3 As XmlElement
+                Dim sSql As String
+                Dim oDr As SqlDataReader
+                Dim cProcessInfo As String = ""
+                Dim sType As String = "Group"
 
-            '    Dim oGrpElmt As XmlElement
-            '    Dim cProcessInfo As String = ""
-            '    Dim cCurrentPassword As String = ""
-            '    Dim cCodeUsed As String = ""
-            '    Dim addNewitemToParId As Boolean = False
-            '    Try
+                Try
+                    'load the directory item to be deleted
+                    moDbHelper.moPageXml = moPageXML
+                    MyBase.NewFrm("CopyGroupMembers")
 
+                    'Lets get the object
+                    oElmt = moPageXML.CreateElement("sType")
+                    oElmt.SetAttribute("id", dirId)
+                    If dirId <> 0 Then
+                        oDr = moDbHelper.getDataReader("SELECT * FROM tblDirectory where nDirKey = " & dirId)
+                        While oDr.Read
+                            oElmt.SetAttribute("name", oDr("cDirName"))
+                            If oDr("cDirXml") <> "" Then
+                                oElmt.InnerXml = oDr("cDirXml")
+                            Else
+                                oElmt.InnerXml = Instance.SelectSingleNode("*").InnerXml
+                            End If
+                        End While
+                        oDr.Close()
+                        oDr = Nothing
 
-            '        If cXformName = "" Then cXformName = cDirectorySchemaName
+                        'get item parents
+                        sSql = "SELECT d.* FROM tblDirectory d " &
+                        "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " &
+                        "where r.nDirChildId = " & dirId
 
-            '        ' ok lets load in an xform from the file location.
-            '        If FormXML = "" Then
-            '            If Not MyBase.load("/xforms/directory/" & cXformName & ".xml", myWeb.maCommonFolders) Then
-            '                ' load a default content xform if no alternative.
+                        oDr = moDbHelper.getDataReader(sSql)
+                        While oDr.Read
+                            oElmt2 = moPageXML.CreateElement(oDr("cDirSchema"))
+                            oElmt2.SetAttribute("id", oDr("nDirKey"))
+                            oElmt2.SetAttribute("name", oDr("cDirName"))
+                            oElmt2.SetAttribute("relType", "child")
+                            MyBase.Instance.AppendChild(oElmt2)
+                        End While
+                        oDr.Close()
+                        oDr = Nothing
 
-            '            End If
-            '        Else
-            '            MyBase.NewFrm(cXformName)
-            '            MyBase.loadtext(FormXML)
+                        'get item Children
+                        sSql = "SELECT d.* FROM tblDirectory d " &
+                        "inner join tblDirectoryRelation r on r.nDirChildId = d.nDirKey " &
+                        "where r.nDirParentId = " & dirId
 
-            '        End If
+                        oDr = moDbHelper.getDataReader(sSql)
+                        While oDr.Read
+                            oElmt3 = moPageXML.CreateElement(oDr("cDirSchema"))
+                            oElmt3.SetAttribute("id", oDr("nDirKey"))
+                            oElmt3.SetAttribute("name", oDr("cDirName"))
+                            oElmt3.SetAttribute("relType", "parent")
+                            MyBase.Instance.AppendChild(oElmt3)
+                        End While
+                        oDr.Close()
+                        oDr = Nothing
 
-            '        If id > 0 Then
-            '            MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Directory, id)
-            '            cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText
-            '        End If
+                    End If
 
-            '        cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText
+                    MyBase.Instance.AppendChild(oElmt)
 
-            '        If cDirectorySchemaName = "User" Then
+                    MyBase.submission("EditInput", "", "post")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "MoveDirMembers", "", "Copy " & sType & " Members")
 
-            '            'lets add the groups to the instance
+                    MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to copy this " & sType & " Members " & Tools.Xml.encodeAllHTML(oElmt.GetAttribute("name")), , "alert-danger")
 
-            '            oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
-            '            MyBase.Instance.InsertAfter(oGrpElmt, MyBase.Instance.LastChild)
-            '            If goConfig("Subscriptions") = "on" Then
-            '                Dim oSub As New Cart.Subscriptions(myWeb)
-            '                oSub.AddSubscriptionToUserXML(MyBase.Instance, id)
-            '            End If
+                    'Lets get all other groups
+                    oElmt3 = MyBase.addSelect1(oFrmElmt, sType & "CopyTo", False, "Copy " & sType & " Members To", "scroll_10", xForm.ApperanceTypes.Minimal)
+                    sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" & sType & "' and d.nDirKey<>" & dirId & " order by cDirName"
+                            MyBase.addOptionsFromSqlDataReader(oElmt3, moDbHelper.getDataReader(sSql), "name", "value")
 
-            '            'now lets check our security, and if we are encrypted lets not show the password on edit.
-            '            If id > 0 Then
-            '                If myWeb.moConfig("MembershipEncryption") = "MD5" Or myWeb.moConfig("MembershipEncryption") = "SHA" Then
-            '                    'Remove password (and confirm password) fields
-            '                    For Each oPwdNode As XmlElement In MyBase.moXformElmt.SelectNodes("/group/descendant-or-self::*[contains(@bind,'cDirPassword')]")
-            '                        oPwdNode.ParentNode.RemoveChild(oPwdNode)
-            '                    Next
-            '                End If
-            '            End If
+                    MyBase.addSubmit(oFrmElmt, "", "Copy " & sType)
 
-            '        End If
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
 
+                            'select all child relations so child objects don't get deleted
+                            sSql = "select nRelKey, nDirChildId from tblDirectoryRelation where nDirParentId = " & dirId
+                            oDr = moDbHelper.getDataReader(sSql)
+                            'Loop through 1 behind so we can trigger sync on last one.
+                            Dim previousId As Long = 0
+                            While oDr.Read
+                                If Not previousId = 0 Then
+                                    moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, False)
+                                End If
+                                previousId = oDr(1)
+                            End While
+                            moDbHelper.maintainDirectoryRelation(moRequest("GroupCopyTo"), previousId, False,, True,,, True)
 
+                            oDr.Close()
+                            oDr = Nothing
 
-            '        If MyBase.isSubmitted Then
-            '            MyBase.updateInstanceFromRequest()
-            '            MyBase.validate()
-            '            'any additonal validation goes here
-            '            Select Case cDirectorySchemaName
-            '                Case "User", "UserMyAccount"
-            '                    'Username exists?
-            '                    If Not moDbHelper.checkUserUnique(MyBase.Instance.SelectSingleNode("*/cDirName").InnerXml, id) Then
-            '                        MyBase.valid = False
-            '                        MyBase.addNote("cDirName", xForm.noteTypes.Alert, "This username already exists please select another")
-            '                    End If
+                        Else
+                            MyBase.addValues()
+                        End If
+                    Else
+                        MyBase.addValues()
+                    End If
 
-            '                    'Email Exists?
-            '                    If Not moDbHelper.checkEmailUnique(MyBase.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml, id) Then
-            '                        MyBase.valid = False
-            '                        If MyBase.Instance.SelectSingleNode("*/cDirName").InnerXml = MyBase.Instance.SelectSingleNode("*/cDirXml/User/Email").InnerXml Then
-            '                            MyBase.addNote("cEmail", xForm.noteTypes.Alert, "This email address already exists, please use password reminder facility.")
-            '                            MyBase.addNote("cDirName", xForm.noteTypes.Alert, "This email address already exists, please use password reminder facility.")
-            '                        Else
-            '                            MyBase.addNote("cEmail", xForm.noteTypes.Alert, "This email address already exists, please use password reminder facility.")
-            '                        End If
+                    Return MyBase.moXformElmt
 
-            '                    End If
-
-            '                        'Passwords match?
-            '                        If Len(goRequest("cDirPassword2")) > 0 Then
-            '                            If goRequest("cDirPassword") <> goRequest("cDirPassword2") Then
-            '                                MyBase.valid = False
-            '                                MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must match ")
-            '                            End If
-            '                        End If
-
-            '                        'Password policy?
-            '                        If Len(MyBase.Instance.SelectSingleNode("*/cDirPassword").InnerXml) < 4 Then
-            '                            MyBase.valid = False
-            '                            MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must be 4 characters long ")
-            '                        End If
-            '                        'Email exists...?
-
-            '                        'Membership codes
-            '                        cCodeUsed = validateMemberCode("*/RegistrationCode", "RegistrationCode")
-
-            '            End Select
-            '            If MyBase.valid Then
-
-            '                Dim cPassword As String = Instance.SelectSingleNode("*/cDirPassword").InnerText
-            '                Dim cClearPassword As String = cPassword
-            '                If myWeb.moConfig("MembershipEncryption") = "Md5salt" Then
-            '                    Dim cSalt As String = Eonic.Tools.Encryption.generateSalt
-            '                    Dim inputPassword As String = String.Concat(cSalt, cPassword) 'Take the users password and add the salt at the front
-            '                    Dim md5Password As String = Eonic.Tools.Encryption.HashString(inputPassword, "MD5", True) 'Md5 the marged string of the password and salt
-            '                    Dim resultPassword As String = String.Concat(md5Password, ":", cSalt) 'Adds the salt to the end of the hashed password
-            '                    cPassword = resultPassword 'Store the resultant password with salt in the database
-            '                Else
-            '                    cPassword = Eonic.Tools.Encryption.HashString(cPassword, myWeb.moConfig("MembershipEncryption"), True) 'plain - MD5 - SHA1
-            '                End If
-            '                If Not cPassword = cCurrentPassword And Not cClearPassword = cCurrentPassword Then
-            '                    Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword
-            '                End If
-
-            '                If id > 0 Then
-
-            '                    moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Directory, MyBase.Instance, id)
-            '                    If Not moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='EditContent' or @bind='EditContent']") Is Nothing Then
-            '                        MyBase.addNote("EditContent", xForm.noteTypes.Alert, "<span class=""msg-1010"">Your details have been updated.</span>", True)
-            '                    Else
-            '                        Dim oSubElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::group[parent::Content][1]")
-            '                        If Not oSubElmt Is Nothing Then
-            '                            MyBase.addNote(oSubElmt, xForm.noteTypes.Alert, "<span class=""msg-1010"">Your details have been updated.</span>", True)
-            '                        End If
-            '                    End If
-            '                Else
-            '                    'add new
-
-            '                    id = moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Directory, MyBase.Instance)
-
-            '                    'update the instance with the id
-            '                    MyBase.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText = id
-            '                    addNewitemToParId = (parId > 0)
-            '                    MyBase.addNote("EditContent", xForm.noteTypes.Alert, "This user has been added.", True)
-
-            '                    ' Save the member code, if applicable
-            '                    useMemberCode(cCodeUsed, id)
-
-            '                    ' If member codes were being applied then reconstruct the Group Instance.
-            '                    If gbMemberCodes And cCodeUsed <> "" Then
-            '                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
-            '                        MyBase.Instance.ReplaceChild(oGrpElmt, MyBase.Instance.LastChild)
-            '                    End If
-
-            '                End If
-
-            '                'lets add the user to any groups
-            '                If cDirectorySchemaName = "User" Then
-            '                    maintainMembershipsFromXForm(id)
-            '                End If
-
-            '                If addNewitemToParId Then
-            '                    moDbHelper.maintainDirectoryRelation(parId, id, False)
-            '                End If
-            '            End If
-            '        End If
-
-            '        MyBase.addValues()
-            '        Return MyBase.moXformElmt
-
-            '    Catch ex As Exception
-            '        returnException(mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug)
-            '        Return Nothing
-            '    End Try
-            'End Function
+                Catch ex As Exception
+                    returnException(mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
 
             Public Overridable Function xFrmEditRole(ByVal id As Long) As XmlElement
 
@@ -4203,161 +4150,6 @@ Partial Public Class Web
                     Return Nothing
                 End Try
             End Function
-
-
-            'Public Overridable Function xFrmActivationCode(ByVal nUserId As Long, Optional ByVal cXformName As String = "ActivationCode", Optional ByVal cFormXml As String = "") As XmlElement
-
-
-            '    Dim cProcessInfo As String = ""
-            '    Dim cCodeUsed As String = ""
-            '    Try
-
-
-            '        ' Load the form
-            '        If gbMemberCodes Then
-
-
-            '            If cFormXml = "" Then
-            '                If Not MyBase.load("/xforms/directory/" & cXformName & ".xml", myWeb.maCommonFolders) Then
-
-
-            '                    ' No form.
-
-            '                End If
-            '            Else
-            '                MyBase.NewFrm(cXformName)
-            '                MyBase.loadtext(cFormXml)
-            '            End If
-
-            '            ' Check if submitted
-            '            If MyBase.isSubmitted Then
-            '                MyBase.updateInstanceFromRequest()
-            '                MyBase.validate()
-
-            '                Dim cCodeNode As String = "RegistrationCode"
-
-            '                ' Check if we're limiting this to a codeset
-            '                Dim zcCodeSet As String = ""
-            '                NodeState(MyBase.Instance, "//CodeSet", , , , , , zcCodeSet)
-
-            '                ' Validate the code
-            '                cCodeUsed = validateMemberCode("//" & cCodeNode, cCodeNode, zcCodeSet)
-
-            '                ' Invalidate if the user id and code are bad
-            '                If MyBase.valid And (Not (nUserId > 0) Or cCodeUsed = "") Then
-
-            '                    MyBase.valid = False
-            '                    MyBase.addNote(cCodeNode, noteTypes.Alert, "There was a problem using this code.  Please try another code, or contact the website team.")
-
-            '                End If
-
-            '                ' Prcess the valid form
-            '                If MyBase.valid Then
-
-            '                    ' Save the member code, if applicable
-            '                    useMemberCode(cCodeUsed, nUserId)
-
-            '                    ' Add an indication that the form succeeded.
-
-            '                    addElement(MyBase.model.SelectSingleNode("instance"), "formState", "success")
-
-            '                    ' Clear out the form
-            '                    'Dim oGroup As XmlElement = Nothing
-            '                    'If NodeState(MyBase.moXformElmt, "group", , , , oGroup) <> XmlNodeState.NotInstantiated Then
-            '                    '    oGroup.InnerXml = "<label>Activation Code successful</label><div>The activation code was applied successfully.</div>"
-            '                    '    oGroup.SetAttribute("class", "activationcodesuccess")
-            '                    'End If
-
-            '                End If
-
-            '            End If
-
-            '            ' Add in values
-            '            MyBase.addValues()
-            '            Return MyBase.moXformElmt
-
-            '        Else
-            '            Return Nothing
-            '        End If
-
-
-
-            '    Catch ex As Exception
-            '        returnException(mcModuleName, "xFrmActivationCode", ex, "", cProcessInfo, gbDebug)
-            '        Return Nothing
-            '    End Try
-            'End Function
-
-
-            ' ''' <summary>
-            ' ''' Validates a member code in an xform.
-            ' ''' </summary>
-            ' ''' <param name="cXPathToCode">The xpath to the code in the instance</param>
-            ' ''' <param name="cBindOrReftoCode">The bind or ref of the node in the form</param>
-            ' ''' <returns>String - returns the code if a code was entered and it is not a valid code</returns>
-            ' ''' <remarks>
-            ' ''' <para>If a code was entered and it's not valid, then the xform will be invalidated.</para>
-            ' ''' <para>Note that if the xpath can't be found or a code has not been entered then the form will not be invalidated.</para>
-            ' ''' <para>This requires MemberCodes to be turned on in web.config</para>
-            ' '''</remarks> 
-            'Private Function validateMemberCode(ByVal cXPathToCode As String, ByVal cBindOrReftoCode As String, Optional ByVal cCodeSet As String = "") As String
-            '    Dim cCode As String = ""
-            '    Dim cReturnCode As String = ""
-            '    Try
-            '        ' Check:
-            '        ' - is member codes on
-            '        ' - have we got an xpath
-            '        ' - has a code been entered?
-            '        If gbMemberCodes _
-            '            AndAlso cXPathToCode <> "" _
-            '            AndAlso NodeState(MyBase.Instance, cXPathToCode, , , , , , cCode) = XmlNodeState.HasContents _
-            '            Then
-
-            '            If myWeb.moDbHelper.CheckCode(cCode, cCodeSet) Then
-            '                cReturnCode = cCode
-            '            Else
-            '                ' Invalidate the form
-            '                MyBase.valid = False
-            '                MyBase.addNote(cBindOrReftoCode, xForm.noteTypes.Alert, "Activation Code Incorrect")
-            '            End If
-
-            '        End If
-
-            '        Return cReturnCode
-
-            '    Catch ex As Exception
-            '        returnException(mcModuleName, "validateMemberCode", ex, "", "", gbDebug)
-            '        Return ""
-            '    End Try
-            'End Function
-
-            ' ''' <summary>
-            ' ''' Registers a user against a member code, and adds the user to the code memberships
-            ' ''' </summary>
-            ' ''' <param name="cCode">The code to use</param>
-            ' ''' <param name="nUserId">The user to register the code against</param>
-            'Private Sub useMemberCode(ByVal cCode As String, ByVal nUserId As Long)
-            '    Try
-
-            '        If gbMemberCodes And cCode <> "" Then
-
-            '            ' Use the code
-            '            myWeb.moDbHelper.UseCode(cCode, nUserId)
-
-            '            ' Get the CSV list of directory items for membership
-            '            Dim cCodeCSVList As String = myWeb.moDbHelper.GetDataValue("SELECT tblCodes.cCodeGroups FROM tblCodes INNER JOIN tblCodes Child ON tblCodes.nCodeKey = Child.nCodeParentId WHERE (Child.cCode = '" & cCode & "')", , , "")
-
-            '            ' Process the List
-            '            For Each cDirId As String In cCodeCSVList.Split(",")
-            '                If IsNumeric(cDirId) Then moDbHelper.maintainDirectoryRelation(cDirId, nUserId, False, , )
-            '            Next
-
-            '        End If
-
-            '    Catch ex As Exception
-            '        returnException(mcModuleName, "useMemberCode", ex, "", "", gbDebug)
-            '    End Try
-            'End Sub
 
 
 
@@ -6914,7 +6706,8 @@ Partial Public Class Web
             Sub MenuSelect(ByRef oSelect As XmlElement)
                 Try
                     Dim oWeb As New Web
-                    Dim oMenuElmt As XmlElement = oWeb.GetStructureXML(myWeb.mnUserId)
+                    oWeb.Open()
+                    Dim oMenuElmt As XmlElement = myWeb.GetStructureXML(myWeb.mnUserId, 0, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
                     Dim oMenuItem As XmlElement
                     For Each oMenuItem In oMenuElmt.SelectNodes("MenuItem")
                         MenuReiterate(oMenuItem, oSelect, 0)
@@ -7132,7 +6925,7 @@ Partial Public Class Web
                     Dim SubId As Long = SubXml.GetAttribute("id")
 
                     Dim dNewStart As Date = DateAdd(DateInterval.Day, 1, CDate(SubXml.GetAttribute("expireDate")))
-                    Dim dNewEnd As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")), dNewStart)
+                    Dim dNewEnd As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")), CDate(SubXml.GetAttribute("expireDate")))
                     Dim RenewalCost As Double = CDbl(SubXml.GetAttribute("value"))
                     SubXml.setAttribute("newStart", xmlDate(dNewStart))
                     SubXml.setAttribute("newExpire", xmlDate(dNewEnd))
@@ -8504,6 +8297,67 @@ Partial Public Class Web
                         End If
                     End If
                     MyBase.addValues()
+                    Return MyBase.moXformElmt
+                Catch ex As Exception
+                    returnException(mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+            Public Function xFrmEditTemplate() As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim xslFilename As String = ""
+                Dim oFrmElmt As XmlElement
+                Try
+                    MyBase.NewFrm("EditTemplate")
+                    Select Case myWeb.moRequest("ewCmd2")
+                        Case "RenewalAlerts"
+                            xslFilename = "/xsl/email/subscriptionReminder.xsl"
+                    End Select
+
+                    MyBase.Instance.InnerXml = "<Template name=""""><TemplateContent/></Template>"
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "SelectTemplate")
+
+                    Dim XslDocument As New XmlDocument
+                    XslDocument.Load(goServer.MapPath(xslFilename))
+                    MyBase.submission("EditTemplate", "", "post", "form_check(this)")
+
+                    Dim xmlnsManager = New System.Xml.XmlNamespaceManager(XslDocument.NameTable)
+                    xmlnsManager.AddNamespace("xsl", "http://www.w3.org/1999/XSL/Transform")
+
+                    Dim SelectElmt As XmlElement = MyBase.addSelect1(oFrmElmt, "Template", True, "Template", ApperanceTypes.Minimal)
+                    Dim oTmpt As XmlElement
+                    Dim i As Int16 = 1
+                    For Each oTmpt In XslDocument.DocumentElement.SelectNodes("xsl:template", xmlnsManager)
+                        addOption(SelectElmt, oTmpt.GetAttribute("mode") & " - " & oTmpt.GetAttribute("match"), i)
+
+                        If CInt(myWeb.moRequest("Template")) = i Then
+
+                            addInput(oFrmElmt, "tplt-mode", True, "Mode")
+                            MyBase.addBind("tplt-mode", "Template/TemplateContent/*/@mode", "true()")
+                            addInput(oFrmElmt, "tplt-match", True, "Match")
+                            MyBase.addBind("tplt-match", "Template/TemplateContent/*/@match", "true()")
+
+                            MyBase.addTextArea(oFrmElmt, "TemplateContent", True, "Template Content", "xsl")
+                            MyBase.addBind("TemplateContent", "Template/TemplateContent", "true()")
+                            Dim oElmt As XmlElement = MyBase.Instance.SelectSingleNode("Template/TemplateContent")
+                            oElmt.InnerXml = oTmpt.OuterXml
+
+                        End If
+                        i = i + 1
+                    Next
+
+                    Dim xmlElmt As XmlElement = MyBase.addSelect1(oFrmElmt, "contentType", True, "contentType", ApperanceTypes.Minimal)
+                    addOption(xmlElmt, "xml", "xml")
+
+                    If CInt(myWeb.moRequest("Template")) > 0 Then
+                        MyBase.addSubmit(oFrmElmt, "EditTemplate", "Save Template", "SaveTemplate")
+                    Else
+                        MyBase.addSubmit(oFrmElmt, "EditTemplate", "Edit Template", "EditTemplate")
+                    End If
+
+                    MyBase.addValues()
+
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)

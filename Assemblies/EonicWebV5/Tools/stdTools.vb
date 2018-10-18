@@ -126,42 +126,58 @@ Public Module stdTools
                             sProcessInfo = "Creating Email"
                             'oElmt.InnerXml = strMessageHtml
                             ' send an email to the site admin and V3error@eonic.co.uk
-                            Dim adFrom As New MailAddress("eonicweb5@eonic.co.uk", "EonicWeb5")
+                            Dim errorEmail As String = "error@proteancms.com"
+                            If oConfig("errorEmail") <> "" Then
+                                errorEmail = oConfig("errorEmail")
+                            End If
+                            Dim adFrom As New MailAddress(errorEmail, "ProteanCMS")
                             Dim adTo As New MailAddress("error@eonic.co.uk", "ErrorLog")
-                            sProcessInfo = "Creating Email - New MailMessage Object"
-                            Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
-                            oMail.IsBodyHtml = True
-                            'oMail.Subject = moRequest.ServerVariables("HTTP_HOST") & " has generated an Error"
-                            oMail.Subject = cSubjectLinePrefix & cHost & " has generated an Error"
-                            sProcessInfo = "Creating Email - Adding Body"
-                            Try
-                                oMail.Body = strErrorHtml
-                            Catch ex2 As Exception
-                                oMail.Body = "Error sending error html:" & ex2.Message
-                            End Try
+                                sProcessInfo = "Creating Email - New MailMessage Object"
+                                Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
+                                oMail.IsBodyHtml = True
+                                'oMail.Subject = moRequest.ServerVariables("HTTP_HOST") & " has generated an Error"
+                                oMail.Subject = cSubjectLinePrefix & cHost & " has generated an Error"
+                                sProcessInfo = "Creating Email - Adding Body"
+                                Try
+                                    oMail.Body = strErrorHtml
+                                Catch ex2 As Exception
+                                    oMail.Body = "Error sending error html:" & ex2.Message
+                                End Try
 
 
-                            'Send the email
-                            Dim oSmtp As New SmtpClient
-                            Try
+                                'Send the email
+                                Dim oSmtp As New SmtpClient
+                                Try
                                 sProcessInfo = "Trying Email 1 -" & oConfig("MailServer")
                                 oSmtp.Host = oConfig("MailServer")
+                                If oConfig("MailServerPort") <> "" Then
+                                    oSmtp.Port = oConfig("MailServerPort")
+                                End If
+                                If oConfig("MailServerUsername") <> "" Then
+                                    oSmtp.Credentials = New System.Net.NetworkCredential(oConfig("MailServerUsername"), oConfig("MailServerPassword"))
+                                End If
+                                If LCase(oConfig("MailServerSSL")) = "on" Then
+                                    oSmtp.EnableSsl = True
+                                End If
+                                If LCase(oConfig("MailServerSSL")) = "off" Then
+                                    oSmtp.EnableSsl = False
+                                End If
                                 oSmtp.Send(oMail)
-                            Catch ex As Exception
-                                Try
-                                    sProcessInfo = "Trying Email 2 -" & oConfig("MailServer")
-                                    oSmtp.Host.Insert(0, oConfig("MailServer"))
-                                    oSmtp.Send(oMail)
-                                Catch exp As Exception
-                                    AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo)
+                                Catch ex As Exception
+                                    Try
+                                        sProcessInfo = "Trying Email 2 -" & oConfig("MailServer")
+                                        oSmtp.Host.Insert(0, oConfig("MailServer"))
+                                        oSmtp.Send(oMail)
+                                    Catch exp As Exception
+                                        AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo)
+                                    End Try
                                 End Try
-                            End Try
-                        End If
-                        '############################
-                        ' Load the content from the Error Page, if it exists.
-                        '############################
+                            End If
+                            '############################
+                            ' Load the content from the Error Page, if it exists.
+                            '############################
 
-                        Try
+                            Try
                             sProcessInfo = "Loading Error Page Settings - ConStr"
                             Dim dbAuth As String
 
@@ -331,7 +347,11 @@ Public Module stdTools
                     If (Not (vstrFurtherInfo.Contains("File Not Found"))) Then
                         sProcessInfo = "Creating Email"
                         ' send an email to the site admin and error@eonic.co.uk
-                        Dim adFrom As New MailAddress("eonicweb5@eonic.co.uk", "EonicWeb5")
+                        Dim errorEmail As String = "error@proteancms.com"
+                        If oConfig("errorEmail") <> "" Then
+                            errorEmail = oConfig("errorEmail")
+                        End If
+                        Dim adFrom As New MailAddress(errorEmail, "ProteanCMS")
                         Dim adTo As New MailAddress("error@eonic.co.uk", "ErrorLog")
                         sProcessInfo = "Creating Email - New MailMessage Object"
                         Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
@@ -349,6 +369,18 @@ Public Module stdTools
                         Try
                             sProcessInfo = "Trying Email 1 -" & oConfig("MailServer")
                             oSmtp.Host = oConfig("MailServer")
+                            If oConfig("MailServerPort") <> "" Then
+                                oSmtp.Port = oConfig("MailServerPort")
+                            End If
+                            If oConfig("MailServerUsername") <> "" Then
+                                oSmtp.Credentials = New System.Net.NetworkCredential(oConfig("MailServerUsername"), oConfig("MailServerPassword"))
+                            End If
+                            If LCase(oConfig("MailServerSSL")) = "on" Then
+                                oSmtp.EnableSsl = True
+                            End If
+                            If LCase(oConfig("MailServerSSL")) = "off" Then
+                                oSmtp.EnableSsl = False
+                            End If
                             oSmtp.Send(oMail)
                         Catch ex As Exception
                             Try
@@ -380,13 +412,13 @@ Public Module stdTools
             Dim oELs() As System.Diagnostics.EventLog = System.Diagnostics.EventLog.GetEventLogs
             Dim i As Integer = 0
             For i = 0 To oELs.Length - 1
-                If oELs(i).Log = "EonicWeb5" Then
+                If oELs(i).Log = "ProteanCMS" Then
                     oEventLog = oELs(i)
                     Exit For
                 End If
             Next
             If oEventLog Is Nothing Then Exit Sub
-            Dim cSource As String = "EonicWeb5 Site"
+            Dim cSource As String = "ProteanCMS Site"
 
             oEventLog.Source = cSource
 

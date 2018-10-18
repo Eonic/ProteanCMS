@@ -67,6 +67,7 @@
         <MenuItem name="Upcoming Renewals" cmd="UpcomingRenewals" display="true" icon="fa fa-calendar-plus-o"/>
         <MenuItem name="Recent Renewals" cmd="RecentRenewals" display="true" icon="fa fa-calendar-plus-o"/>
         <MenuItem name="Expired Subscriptions" cmd="ExpiredSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
+        <MenuItem name="Cancelled Subscriptions" cmd="CancelledSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
         <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa fa-envelope-o"/>
         <MenuItem name="Manage User Subscription" cmd="ManageUserSubscription" display="false" icon="fa fa-envelope-o"/>
         <MenuItem name="Cancel Subscription" cmd="CancelSubscription" display="false" icon="fa fa-envelope-o"/>

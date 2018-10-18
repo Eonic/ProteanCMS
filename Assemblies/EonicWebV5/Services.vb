@@ -62,11 +62,11 @@ Public Class Services
         Try
             Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
             Dim SoapIps As String = moConfig("SoapIps") & ",127.0.0.1,::1,"
-            Dim cIP As String = moRequest.UserHostAddress
+            Dim cIP As String = GetIpAddress(moRequest)
             If SoapIps.Contains(cIP & ",") Then
                 Return True
             Else
-                AddResponse("Invalid Host: " & moRequest.UserHostAddress)
+                AddResponse("Invalid Host: " & cIP)
                 Return False
             End If
         Catch ex As System.Exception
@@ -74,6 +74,31 @@ Public Class Services
             Return False
         End Try
     End Function
+
+    Function GetIpAddress(ByVal request As HttpRequest) As String
+        Try
+            If request.Headers("CF-CONNECTING-IP") IsNot Nothing Then Return request.Headers("CF-CONNECTING-IP")
+            Dim ipAddress As String = request.ServerVariables("HTTP_X_FORWARDED_FOR")
+
+            If Not String.IsNullOrEmpty(ipAddress) Then
+                Dim addresses As String() = ipAddress.Split(",")
+                If addresses.Length <> 0 Then
+                    'strip port
+                    Dim thisIp As String = addresses(0)
+                    If thisIp.Contains(":") Then
+                        thisIp = thisIp.Substring(0, thisIp.IndexOf(":"))
+                    End If
+                    Return thisIp
+                End If
+            Else
+                Return request.UserHostAddress
+            End If
+        Catch ex As System.Exception
+            AddResponse(ex.ToString)
+            Return False
+        End Try
+    End Function
+
 
     Private Sub OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles oFTP.OnError
         AddResponse(e.ToString)

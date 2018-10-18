@@ -91,7 +91,6 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\BundleTransformer.Less.resource
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\BundleTransformer.MicrosoftAjax.resources.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbprojResolveAssemblyReference.cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\Eonic.Resources.resources
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbproj.GenerateResource.Cache
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbproj.CoreCompileInputs.cache
@@ -104,3 +103,12 @@ D:\HostingSpaces\_objSource\EonicWebV5\bin\Eonic.Tools.dll.config
 D:\HostingSpaces\_objSource\EonicWebV5\bin\ephtmltopdf.xml
 D:\HostingSpaces\_objSource\EonicWebV5\bin\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbproj.CopyComplete
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Reflection.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Runtime.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Algorithms.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Encoding.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.Primitives.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\System.Security.Cryptography.X509Certificates.dll
+D:\HostingSpaces\_objSource\EonicWebV5\obj\Release\EonicWebV5.vbprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.dll
+D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.xml

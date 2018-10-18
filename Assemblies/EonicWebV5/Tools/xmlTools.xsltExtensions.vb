@@ -790,7 +790,20 @@ Partial Public Module xmlTools
             Try
                 Dim oFS As New Eonic.fsHelper(myWeb.moCtx)
 
-                oFS.mcStartFolder = goServer.MapPath("/")
+                'Get the file system parent folder of the first level folder incase it is mapped in IIS
+                Dim FirstFolder As String = cVirtualPath.TrimStart("/").Substring(0, cVirtualPath.TrimStart("/").IndexOf("/"))
+                Dim imgPath As String = goServer.MapPath("/" & FirstFolder & "/")
+                Dim newDir As New DirectoryInfo(imgPath)
+                oFS.mcStartFolder = newDir.Parent.FullName
+
+                ''check to see if images path is mapped.
+                'If cVirtualPath.StartsWith("/images/") Then
+                '    Dim imgPath As String = goServer.MapPath("/images/")
+                '    Dim newDir As New DirectoryInfo(imgPath)
+                '    oFS.mcStartFolder = newDir.Parent.FullName
+                'Else
+                '    oFS.mcStartFolder = goServer.MapPath("/")
+                'End If
 
                 Return oFS.SaveFile(imageUrl, cVirtualPath)
 
@@ -1318,7 +1331,7 @@ Partial Public Module xmlTools
                 oXfrms.moPageXML = myWeb.moPageXml
                 Select Case Query1
                     Case "SiteTree"
-                        Dim StructElmt As XmlElement = myWeb.GetStructureXML("Site", myWeb.mnUserId)
+                        Dim StructElmt As XmlElement = myWeb.GetStructureXML(myWeb.mnUserId, 0, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
                         Dim MenuElmt As XmlElement
                         Dim ParElmt As XmlElement
 
@@ -1748,7 +1761,7 @@ Partial Public Module xmlTools
                         Dim Bundles As New Optimization.BundleCollection()
 
                         Dim CtxBase As New System.Web.HttpContextWrapper(myWeb.moCtx)
-                        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/js/")
+                        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js/")
                         Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetFile)
 
                         BundlesCtx.EnableInstrumentation = False
@@ -1775,11 +1788,11 @@ Partial Public Module xmlTools
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetFile).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        fsh.DeleteFile(goServer.MapPath("/js" & scriptFile.TrimStart("~")))
+                        fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
 
-                        scriptFile = "/js" & fsh.SaveFile("script.js", TargetFile, info)
+                        scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & fsh.SaveFile("script.js", TargetFile, info)
 
-                        If scriptFile.StartsWith("/js" & TargetFile.TrimStart("~")) Then
+                        If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "js" & TargetFile.TrimStart("~")) Then
                             'file has been saved successfully.
                             myWeb.moCtx.Application.Set(TargetFile, scriptFile)
                         Else
@@ -1858,12 +1871,13 @@ Partial Public Module xmlTools
 
                             scriptFile = String.Format("{0}/style.css", TargetFile)
                             Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
-                            fsh.DeleteFile(goServer.MapPath("/css" & scriptFile.TrimStart("~")))
+                            fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
+                            scriptFile = fsh.SaveFile("style.css", TargetFile, info)
 
-                            scriptFile = "/css" & fsh.SaveFile("style.css", TargetFile, info)
-
-                            If scriptFile.StartsWith("/css" & TargetFile.TrimStart("~")) Then
+                            If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                 sReturnString += scriptFile
+                            Else
+                                sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             End If
 
 
@@ -1872,11 +1886,11 @@ Partial Public Module xmlTools
                                 scriptFile = String.Format("{0}/style{1}.css", TargetFile, i)
 
                                 info = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.CssSplits(i))
-                                fsh.DeleteFile(goServer.MapPath("/css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
+                                fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
 
-                                scriptFile = "/css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
+                                scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
 
-                                If scriptFile.StartsWith("/css" & TargetFile.TrimStart("~")) Then
+                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                     'file has been saved successfully.
                                     sReturnString += "," & scriptFile
                                 Else
@@ -1884,7 +1898,7 @@ Partial Public Module xmlTools
                                     sReturnError += scriptFile
                                 End If
                             Next
-                            If sReturnString.StartsWith("/css") Then
+                            If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
                                 myWeb.moCtx.Application.Set(TargetFile, sReturnString)
                             Else
                                 sReturnString = sReturnString & sReturnError

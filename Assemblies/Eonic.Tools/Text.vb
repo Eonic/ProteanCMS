@@ -439,33 +439,41 @@ Public Module Text
         '   PerfMon.Log("Web", "tidyXhtmlFrag")
         Dim sProcessInfo As String = "tidyXhtmlFrag"
         Dim sTidyXhtml As String = ""
+        Dim crResult As Integer
+
+
+        If Not removeTags = "" Then
+            shtml = removeTagFromXml(shtml, removeTags)
+        End If
+
+        ' Using 
+        Dim oTdyManaged As TidyManaged.Document = TidyManaged.Document.FromString(shtml)
 
         Try
-
-            If Not removeTags = "" Then
-                shtml = removeTagFromXml(shtml, removeTags)
+            oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes
+            oTdyManaged.MakeClean = True
+            oTdyManaged.DropFontTags = True
+            oTdyManaged.ShowWarnings = True
+            oTdyManaged.OutputXhtml = True
+            If bReturnNumbericEntities Then
+                oTdyManaged.OutputNumericEntities = True
+            End If
+            crResult = oTdyManaged.CleanAndRepair()
+            If crResult = 0 Or crResult = 1 Then
+                sTidyXhtml = oTdyManaged.Save()
+            Else
+                sTidyXhtml = "html import conversion error"
             End If
 
-            Using oTdyManaged As TidyManaged.Document = TidyManaged.Document.FromString(shtml)
-                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes
-                oTdyManaged.MakeClean = True
-                oTdyManaged.DropFontTags = True
-                oTdyManaged.ShowWarnings = True
-                oTdyManaged.OutputXhtml = True
-
-                If bReturnNumbericEntities Then
-                    '    oTdyManaged.NumEntities = True
-                End If
-                oTdyManaged.CleanAndRepair()
-                sTidyXhtml = oTdyManaged.Save()
-                oTdyManaged.Dispose()
-            End Using
+            oTdyManaged.Dispose()
+            oTdyManaged = Nothing
+            'End Using
 
             Return sTidyXhtml
 
         Catch ex As Exception
             ' It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
-            Return ex.Message
+            Return crResult & " - " & ex.Message
             'Return Nothing
         Finally
 

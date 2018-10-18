@@ -719,14 +719,14 @@ Check:
 
                                 Dim nAccount As Integer = nUserId
                                 If nAccount = 0 Then
-                                    MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "The account cannot be found.")
+                                    MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "This reset link has already been used")
                                     MyBase.valid = False
                                 Else
                                     If Not oMembership.ReactivateAccount(nAccount, goRequest("cDirPassword")) Then
                                         MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "There was an problem updating your account")
                                         MyBase.valid = False
                                     Else
-                                        MyBase.addNote(oGrp, xForm.noteTypes.Alert, "Your password has been reset")
+                                        MyBase.addNote(oGrp, xForm.noteTypes.Alert, "Your password has been reset <a href=""/" & myWeb.moConfig("LogonRedirectPath") & """>click here</a> to login")
                                         oPI1.ParentNode.RemoveChild(oPI1)
                                         oPI2.ParentNode.RemoveChild(oPI2)
                                         oSB.ParentNode.RemoveChild(oSB)
@@ -737,7 +737,7 @@ Check:
                                         If myWeb.mnUserId = 0 Then
                                             myWeb.mnUserId = nAccount
                                         End If
-                                        myWeb.msRedirectOnEnd = myWeb.moConfig("LogonRedirectPath")
+                                        ' myWeb.msRedirectOnEnd = myWeb.moConfig("LogonRedirectPath")
                                     End If
                                 End If
                             End If
@@ -987,8 +987,9 @@ Check:
                         End While
 
                         For Each oElmt As XmlElement In MyBase.Instance.SelectNodes(cGroupNodeListXPath)
-                            Dim bIsLast As Boolean = False
-                            If oElmt.NextSibling Is Nothing Then bIsLast = True
+                            'TS isLast forces an update everytime this loops not possible to tell if this will be the last time
+                            Dim bIsLast As Boolean = True
+                            'If oElmt.NextSibling Is Nothing Then bIsLast = True
                             If LCase(oElmt.GetAttribute("isMember")) = "true" Or LCase(oElmt.GetAttribute("isMember")) = "yes" Then
                                 ' if user not in group
                                 If Not userMembershipIds.Contains(CInt(oElmt.GetAttribute("id"))) Then
@@ -1469,11 +1470,12 @@ Check:
                                         End If
                                     End If
 
-                                    myWeb.logonRedirect(cLogonCmd)
+                                    If cLogonCmd <> "" Then
+                                        myWeb.logonRedirect(cLogonCmd)
+                                    End If
 
                                 End If
                             End If
-
 
                         End If
 

@@ -348,8 +348,8 @@ Public Class Messaging
                 Dim serverSenderEmail As String = goConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = goConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
-                    serverSenderEmail = "emailsender@eonichost.co.uk"
-                    serverSenderEmailName = "eonicweb Email Sender"
+                    serverSenderEmail = "emailsender@protean.site"
+                    serverSenderEmailName = "ProteanCMS Email Sender"
                 End If
 
                 Dim mailSender As New MailAddress(serverSenderEmail, serverSenderEmailName)
@@ -561,7 +561,9 @@ Public Class Messaging
                         If LCase(goConfig("MailServerSSL")) = "on" Then
                             oSmtpn.EnableSsl = True
                         End If
-
+                        If LCase(goConfig("MailServerSSL")) = "off" Then
+                            oSmtpn.EnableSsl = False
+                        End If
                         If sendAsync Then
                             ' Set the method that is called back when the send operation ends. 
                             AddHandler oSmtpn.SendCompleted, AddressOf SendCompletedCallback

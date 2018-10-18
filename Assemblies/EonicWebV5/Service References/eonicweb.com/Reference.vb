@@ -567,17 +567,13 @@ Namespace eonicweb.com
         <System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue:=false, Order:=0)>  _
         Public PageFRef As String
         
-        <System.Runtime.Serialization.DataMemberAttribute(Order:=1)>  _
-        Public DetailId As Long
-        
         Public Sub New()
             MyBase.New
         End Sub
         
-        Public Sub New(ByVal PageFRef As String, ByVal DetailId As Long)
+        Public Sub New(ByVal PageFRef As String)
             MyBase.New
             Me.PageFRef = PageFRef
-            Me.DetailId = DetailId
         End Sub
     End Class
     
@@ -742,11 +738,10 @@ Namespace eonicweb.com
             Return MyBase.Channel.GetPageXml(request)
         End Function
         
-        Public Function GetPageXml(ByVal PageFRef As String, ByVal DetailId As Long) As System.Xml.Linq.XElement
+        Public Function GetPageXml(ByVal PageFRef As String) As System.Xml.Linq.XElement
             Dim inValue As eonicweb.com.GetPageXmlRequest = New eonicweb.com.GetPageXmlRequest()
             inValue.Body = New eonicweb.com.GetPageXmlRequestBody()
             inValue.Body.PageFRef = PageFRef
-            inValue.Body.DetailId = DetailId
             Dim retVal As eonicweb.com.GetPageXmlResponse = CType(Me,eonicweb.com.ewAdminProxySoap).GetPageXml(inValue)
             Return retVal.Body.GetPageXmlResult
         End Function

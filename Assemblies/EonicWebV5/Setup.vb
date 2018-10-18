@@ -22,7 +22,7 @@ Public Class Setup
     'This is the version of the new build before the update......
     Public mnCurrentVersion As String = "4.1.0.45"
 
-    'Session EonicWeb Details
+    'Session ProteanCMS Details
     Public mbEwMembership As Boolean
     Public mbEwCart As Boolean
     Public mbEwGiftList As Boolean
@@ -121,7 +121,7 @@ Public Class Setup
             ' myWeb.InitializeVariables()
 
             sProcessInfo = "set session variables"
-            mcModuleName = "EonicWeb.Setup"
+            mcModuleName = "ProteanCMS.Setup"
             ' msException = ""
 
             ' Set the debug mode
@@ -739,6 +739,7 @@ Recheck:
             AddResponse("Current Version: " & cCurrentVersion)
             Dim oCurrentVersion() As String = Split(cCurrentVersion, ".")
             Dim oUpgrdXML As New XmlDocument
+            Dim errormsg As String
 
             If IO.File.Exists(goServer.MapPath(filePath)) Then
 
@@ -787,13 +788,18 @@ Recheck:
                                                             Case "File"
                                                                 Dim nCount As Long
                                                                 AddResponse("Run File '" & oActionElmt.GetAttribute("ObjectName") & "'")
-                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")))
-                                                                If nCount = -1 Then
-                                                                    AddResponse("File execution Completed...")
+                                                                errormsg = ""
+                                                                nCount = myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(oActionElmt.GetAttribute("ObjectName")), errormsg)
+                                                                If errormsg <> "" Then
+                                                                    AddResponse("WARNING: File execution generated an error")
+                                                                    AddResponse(errormsg)
                                                                 Else
-                                                                    AddResponse("(" & nCount & ") Updates..")
+                                                                    If nCount = -1 Then
+                                                                        AddResponse("File execution Completed...")
+                                                                    Else
+                                                                        AddResponse("(" & nCount & ") Updates..")
+                                                                    End If
                                                                 End If
-
                                                             Case Else
                                                                 'dont do anything
                                                         End Select
@@ -2288,7 +2294,7 @@ DoOptions:
 
                 oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "NewDatabase", "", "New Database")
 
-                MyBase.addNote(oFrmElmt, noteTypes.Hint, "Create the eonicweb5 Database Tables")
+                MyBase.addNote(oFrmElmt, noteTypes.Hint, "Create the ProteanCMS Database Tables")
 
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "Database Name")
                 MyBase.addBind("ewDatabaseName", "restore/@name", "true()")

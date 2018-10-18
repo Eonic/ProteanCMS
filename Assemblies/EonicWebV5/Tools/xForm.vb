@@ -934,6 +934,7 @@ Public Class xForm
                 If oElmt.Name = "textarea" And oElmt.GetAttribute("class") = "readonly" Then bIsXml = True
                 If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xhtml") > 0 Then bIsXml = True
                 If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xml") > 0 Then bIsXml = True
+                If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xsledit") > 0 Then bIsXml = True
                 If oElmt.Name = "input" And InStr(oElmt.GetAttribute("class"), "pickImage") > 0 Then bIsXml = True
 
                 'if the ref contains the instance xpath
@@ -1492,6 +1493,7 @@ Public Class xForm
 
                 If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xhtml") > 0 Then bIsXml = True
                 If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xml") > 0 Then bIsXml = True
+                If oElmt.Name = "textarea" And InStr(oElmt.GetAttribute("class"), "xsl") > 0 Then bIsXml = True
 
                 sXpath = oElmt.GetAttribute("ref")
                 If Not sXpath <> "" Then

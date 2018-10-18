@@ -78,6 +78,14 @@ $(document).ready(function () {
         $('#updateQty').click();
 
     });
+
+    $('.scroll-to-anchor').bind('click', function (event) {
+        var $anchor = $(this);
+        $('html, body').stop().animate({
+            scrollTop: ($($anchor.attr('href')).offset().top - 50)
+        }, 1250, 'easeInOutExpo');
+        event.preventDefault();
+    });
 });
 
 /*
@@ -125,16 +133,15 @@ function contentScroller() {
 //CAN WE USE MATCH HEIGHT SCROLLER HERE? WHY IS THIS DIFFERENT ON WINDOWS RESIZE?
     $(".content-scroller .cols").each(function () {
         var slidestoShow = $(this).data("slidestoshow");
+        var xsSlides = $(this).data("xscols");
+        var smSlides = $(this).data("smcols");
+        var mdSlides = $(this).data("mdcols");
         var autoplay = $(this).data("autoplay");
         var autoplaySpeed = $(this).data("autoplayspeed");
         var equalHeight = $(this).data("height");
         var vCssEase = ($(this).data("cssease") === undefined ? "ease" : $(this).data("cssease"));
         var vSpeed = ($(this).data("speed") === undefined ? "300" : $(this).data("speed"));
         var breakpoint = 768;
-        var smToShow = 1;
-        if (slidestoShow > 1) {
-            var smToShow = 2;
-        }
         var dots = $(this).data("dots");
         $(this).on('init', function (event, slick) {
             // alert(equalHeight);
@@ -164,16 +171,30 @@ function contentScroller() {
             cssEase: vCssEase,
             responsive: [
                 {
-                    breakpoint: breakpoint,
+                    breakpoint: 575,
                     settings: {
                         slidesToShow: 1,
                         slidesToScroll: 1
                     }
                 },
                 {
+                    breakpoint: breakpoint,
+                    settings: {
+                        slidesToShow: xsSlides,
+                        slidesToScroll: 1
+                    }
+                },
+                {
                     breakpoint: 991,
                     settings: {
-                        slidesToShow: smToShow,
+                        slidesToShow: smSlides,
+                        slidesToScroll: 1
+                    }
+                },
+                {
+                    breakpoint: 1199,
+                    settings: {
+                        slidesToShow: mdSlides,
                         slidesToScroll: 1
                     }
                 }

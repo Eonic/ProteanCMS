@@ -61,7 +61,7 @@ Public Class Web
     Public moContentDetail As Xml.XmlElement
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
-    Public mnEonicWebError As Long = 0
+    Public mnProteanCMSError As Long = 0
     ' Public msException As String = ""
 
     ' Clone Page Info
@@ -200,7 +200,6 @@ Public Class Web
 
 
             moFSHelper = New fsHelper(moCtx)
-
             InitialiseGlobal()
             If Not moCtx Is Nothing Then
                 PerfMon.Log("Web", "New")
@@ -356,7 +355,7 @@ Public Class Web
                 oElmt.InnerText = sResult
             Catch ex As Exception
                 If moConfig("VersionNumber") = "" Then
-                    oElmt.InnerText = "Pre V4 or no Eonicweb"
+                    oElmt.InnerText = "Pre V4 or no ProteanCMS"
                 Else
                     oElmt.InnerText = moConfig("VersionNumber")
                 End If
@@ -522,7 +521,6 @@ Public Class Web
 
             Else
 
-
                 If Not moSession Is Nothing Then
                     If moSession("adminMode") = "true" Then
                         mbAdminMode = True
@@ -682,28 +680,28 @@ Public Class Web
                                 gnResponseCode = 500
                             End If
 
+                        End If
                     End If
                 End If
-            End If
 
-            If mnArtId < 1 Then
-                If Not moRequest("artid") = "" Then
-                    mnArtId = Me.GetRequestItemAsInteger("artid", 0)
+                If mnArtId < 1 Then
+                    If Not moRequest("artid") = "" Then
+                        mnArtId = Me.GetRequestItemAsInteger("artid", 0)
+                    End If
                 End If
-            End If
 
-            If ibIndexMode Then
-                mbAdminMode = False
-                mnUserId = 1
-            End If
-
-            ' Version Control: Set a permission state for this page.
-            ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
-
-            If Not moSession Is Nothing Then
-                If gbVersionControl Then
-                    mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
+                If ibIndexMode Then
+                    mbAdminMode = False
+                    mnUserId = 1
                 End If
+
+                ' Version Control: Set a permission state for this page.
+                ' If the permissions are great enough, this will allow content other htan just LIVE to be brought in to the page
+
+                If Not moSession Is Nothing Then
+                    If gbVersionControl Then
+                        mnUserPagePermission = moDbHelper.getPagePermissionLevel(mnPageId)
+                    End If
                 End If
             End If
 
@@ -1085,6 +1083,10 @@ Public Class Web
                             sCachePath = sCachePath.Substring(0, sCachePath.IndexOf("?"))
                         End If
                         sCachePath = sCachePath & ".html"
+                        If gcProjectPath <> "" Then
+                            sCachePath = sCachePath.Replace(gcProjectPath, "")
+                        End If
+
 
                         If sCachePath = "/.html" Or sCachePath = ".html" Then
                             sCachePath = "/home.html"
@@ -1094,8 +1096,10 @@ Public Class Web
                         If IsNumeric(moConfig("PageCacheTimeout")) Then
                             nCacheTimeout = moConfig("PageCacheTimeout")
                         End If
-
-                        If moFSHelper.VirtualFileExistsAndRecent(mcPageCacheFolder & sCachePath, nCacheTimeout) Then
+                        Dim oFS As New Eonic.fsHelper(moCtx)
+                        oFS.mcRoot = gcProjectPath
+                        oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath).TrimEnd("\") & mcPageCacheFolder
+                        If oFS.VirtualFileExistsAndRecent(sCachePath, nCacheTimeout) Then
                             sServeFile = mcPageCacheFolder & sCachePath
                         End If
                     End If
@@ -1196,7 +1200,11 @@ Public Class Web
                                     End If
                                 Else
                                     If moResponseType = pageResponseType.Page Then
-                                        moResponse.AddHeader("X-Frame-Options", "DENY")
+                                        If moConfig("xframeoptions") <> "" Then
+                                            moResponse.AddHeader("X-Frame-Options", moConfig("xframeoptions"))
+                                        Else
+                                            moResponse.AddHeader("X-Frame-Options", "DENY")
+                                        End If
                                     End If
                                     If mbSetNoBrowserCache Then
                                         moResponse.Cache.SetNoStore()
@@ -1237,6 +1245,7 @@ Public Class Web
                                     'save the page
                                     If Not oTransform.bError Then
                                         SavePage(sCachePath, textWriter.ToString())
+
                                         sServeFile = mcPageCacheFolder & sCachePath
                                     Else
                                         moResponse.AddHeader("X-EonicError", "An Error has occured")
@@ -1285,11 +1294,11 @@ Public Class Web
 
                     If sServeFile <> "" Then
                         moResponse.AddHeader("X-Frame-Options", "DENY")
-                        Dim filelen As Int16 = goServer.MapPath("/").Length + sServeFile.Length
+                        Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
                         If filelen > 260 Then
-                            moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/") & sServeFile))
+                            moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
                         Else
-                            moResponse.WriteFile(sServeFile)
+                            moResponse.WriteFile(goServer.MapPath("/" & gcProjectPath) & sServeFile)
                         End If
                         Close()
                     End If
@@ -1542,7 +1551,7 @@ Public Class Web
                         End If
                     End If
 
-                    If LCase(moConfig("CheckDetailPath")) = "on" And mnArtId > 0 Then
+                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 Then
                         If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
                             Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                             cContentDetailName = Eonic.Tools.Text.CleanName(cContentDetailName, False, True)
@@ -1553,18 +1562,18 @@ Public Class Web
                             End If
 
                             If RequestedContentName <> cContentDetailName Then
-                                    mnPageId = gnPageNotFoundId
-                                    oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                    mnEonicWebError = 1005
-                                End If
+                                mnPageId = gnPageNotFoundId
+                                oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                mnProteanCMSError = 1005
                             End If
                         End If
+                    End If
 
                     Me.CheckMultiParents(oPageElmt, mnPageId)
                 Else
-                    mnEonicWebError = 1005
+                    mnProteanCMSError = 1005
                 End If
-                If mnEonicWebError > 0 Then
+                If mnProteanCMSError > 0 Then
                     GetErrorXml(oPageElmt)
                 End If
 
@@ -1584,8 +1593,8 @@ Public Class Web
                 End If
             Else
                 'Invalid Licence
-                mnEonicWebError = 1008
-                If mnEonicWebError > 0 Then
+                mnProteanCMSError = 1008
+                If mnProteanCMSError > 0 Then
                     GetErrorXml(oPageElmt)
                 End If
 
@@ -2760,10 +2769,10 @@ Public Class Web
 
             For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@contentFile!=''] | /Page/ContentDetail/descendant-or-self::Content[@contentFile!='']")
 
-                If IO.File.Exists(goServer.MapPath(ocNode.GetAttribute("contentFile"))) Then
+                If IO.File.Exists(goServer.MapPath("/" & gcProjectPath & ocNode.GetAttribute("contentFile"))) Then
                     Dim newXml As New XmlDocument
                     newXml.PreserveWhitespace = True
-                    newXml.Load(goServer.MapPath(ocNode.GetAttribute("contentFile")))
+                    newXml.Load(goServer.MapPath("/" & gcProjectPath & ocNode.GetAttribute("contentFile")))
                     'copy related nodes
                     Dim relElem As XmlElement
                     For Each relElem In ocNode.SelectNodes("Content")
@@ -2778,10 +2787,10 @@ Public Class Web
 
             For Each ocNode In moPageXml.SelectNodes("/Page/*/Content[@appendFile!='']")
 
-                If IO.File.Exists(goServer.MapPath(ocNode.GetAttribute("appendFile"))) Then
+                If IO.File.Exists(goServer.MapPath("/" & gcProjectPath & ocNode.GetAttribute("appendFile"))) Then
                     Dim newXml As New XmlDocument
                     newXml.PreserveWhitespace = True
-                    newXml.Load(goServer.MapPath(ocNode.GetAttribute("appendFile")))
+                    newXml.Load(goServer.MapPath("/" & gcProjectPath & ocNode.GetAttribute("appendFile")))
 
                     ocNode.AppendChild(moPageXml.ImportNode(newXml.DocumentElement, True))
                 End If
@@ -5039,7 +5048,7 @@ Public Class Web
                 End If
 
                 If verNode Is Nothing And Not goLangConfig Is Nothing Then
-                    urlPrefix = mcPageLanguageUrlPrefix & cFilePathModifier
+                    urlPrefix = mcPageLanguageUrlPrefix '& cFilePathModifier
                 End If
 
 
@@ -5555,8 +5564,12 @@ Public Class Web
             If gcBlockContentType <> "" Then
                 sFilterSql = sFilterSql & " and c.cContentSchemaName NOT IN ('" & gcBlockContentType.Replace(",", "','") & "') "
             End If
+            Dim cContentLimit As String = ""
+            If moConfig("ContentLimit") <> "" And IsNumeric(moConfig("ContentLimit")) Then
+                cContentLimit = " TOP " & moConfig("ContentLimit") & " "
+            End If
 
-            sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" &
+            sSql = "select " & cContentLimit & "c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" &
                     " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" &
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
                     " where( CL.nStructId = " & nPageId
@@ -6007,8 +6020,8 @@ Public Class Web
 
             oElmt = moPageXml.CreateElement("Content")
             oElmt.SetAttribute("type", "Error")
-            oElmt.SetAttribute("name", mnEonicWebError)
-            Select Case Me.mnEonicWebError
+            oElmt.SetAttribute("name", mnProteanCMSError)
+            Select Case Me.mnProteanCMSError
                 Case 1005
                     strMessageText = "Page Not Found"
                     strMessageHtml = "<div><h2>Page Not Found</h2>" &
@@ -6035,7 +6048,7 @@ Public Class Web
 
                 Case 1008
                     strMessageText = "Invalid Licence"
-                    strMessageHtml = "<div><h2>Please get a valid EonicWeb Licence</h2>" &
+                    strMessageHtml = "<div><h2>Please get a valid ProteanCMS Licence</h2>" &
                                     "</div>"
                     sErrorModule = "BuildPageXml"
 
@@ -6044,7 +6057,7 @@ Public Class Web
 
             If gbDebug Then
                 Try
-                    Err.Raise(mnEonicWebError, sErrorModule, strMessageText)
+                    Err.Raise(mnProteanCMSError, sErrorModule, strMessageText)
                 Catch ex As Exception
                     oPageElmt.SetAttribute("layout", "Error")
                     oElmt.InnerXml = strMessageHtml
@@ -6828,7 +6841,7 @@ Public Class Web
                                     Else
                                         ' Kept for follow up window, however does this send original mail out?
                                         sProcessInfo = "File Not Found:" & strFilePath
-                                        Err.Raise(1007, , "EonicWeb Error: " & sProcessInfo)
+                                        Err.Raise(1007, , "ProteanCMS Error: " & sProcessInfo)
                                     End If
 
 
@@ -6932,7 +6945,7 @@ Public Class Web
 
             Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
 
-            rendererOpts.Author = "EonicWeb CMS"
+            rendererOpts.Author = "ProteanCMS"
             rendererOpts.EnablePrinting = True
             rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
             ' rendererOpts.Kerning = True
@@ -7036,7 +7049,7 @@ Public Class Web
             moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(oXmlE, True))
 
             Dim oMsg As Eonic.Messaging = New Eonic.Messaging
-            oMsg.emailer(oPageElmt, "/ewcommon/xsl/email/siteAdminError_FileNotFound.xsl", "EonicWeb Error", "error@eonic.co.uk", moConfig("siteAdminEmail"), "File not found", , , , "error@eonic.co.uk")
+            oMsg.emailer(oPageElmt, "/ewcommon/xsl/email/siteAdminError_FileNotFound.xsl", "ProteanCMS Error", "error@eonic.co.uk", moConfig("siteAdminEmail"), "File not found", , , , "error@eonic.co.uk")
 
         Catch ex As Exception
             OnComponentError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "siteAdminErrorNotification", ex, ""))
@@ -7737,7 +7750,8 @@ Public Class Web
             End If
 
             Dim oFS As New Eonic.fsHelper(moCtx)
-            oFS.mcStartFolder = goServer.MapPath("\") & mcPageCacheFolder
+            oFS.mcRoot = gcProjectPath
+            oFS.mcStartFolder = goServer.MapPath("\" & gcProjectPath) & mcPageCacheFolder
 
             cProcessInfo = "Saving:" & mcPageCacheFolder & filepath & "\" & filename
 
@@ -7767,8 +7781,18 @@ Public Class Web
 
             If filepath = "" Then filepath = "/"
             Dim sError As String = oFS.CreatePath(filepath)
+
             If sError = "1" Then
-                Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/") & FullFilePath, cBody, System.Text.Encoding.UTF8)
+
+                Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+
+                '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
+
+                'Else
+                '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                '  Err.Raise(1001, "File not saved", cProcessInfo)
+                '   End If
+
             Else
                 cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If
@@ -7787,7 +7811,7 @@ Public Class Web
         Dim cProcessInfo As String = ""
         Try
 
-            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/"))
+            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
             returnException(mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)

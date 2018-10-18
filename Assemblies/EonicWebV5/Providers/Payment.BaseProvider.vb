@@ -268,13 +268,12 @@ Namespace Providers
 
                             Case "Cheque"
                                 ' to be done
-                                ' Case "PayPalPro"
-
-                             '   ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
+                                ' Case "PayPalPro" (MOVED TO PROVIDER LIB)
+                                ' ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
 
                             Case "PayPalExpress"
-
                                 ccPaymentXform = oEwProv.payPayPalExpress(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)
+
                             Case Else
                                 If InStr(mcPaymentMethod, "Repeat_") > 0 Then
                                     'get repeat id

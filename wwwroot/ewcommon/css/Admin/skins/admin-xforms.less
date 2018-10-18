@@ -28,113 +28,161 @@
 // - FORMS
 .ewAdmin .popover-content,
 .ewAdmin .popover-title,
-.relatedContent-group{
-	color:#333;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	padding: 8px 14px;
-	font-size: 14px;
+.relatedContent-group {
+    color: #333;
+    font-family: @admin-body-font;
+    padding: 8px 14px;
+    font-size: 14px;
 }
-#adminLayout{
-	select.form-control, a.form-control, input.form-control{
-      //  height:@admin-field-height;
-        font-size:@admin-font-size-base;
-	}
-    select#cGroups.form-control{
-        min-height:1200px;
+#adminLayout {
+    .list-group-item {
+        background: transparent;
+        border: 0;
+        padding-left: 0;
     }
-    .btn{font-size:@admin-font-size-base}
-	h1.page-header{
-		margin: 40px 0 20px;
-		border-bottom: 1px solid #cccccc;
-		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-		font-weight: 500;
-		line-height: 1.1;
-		color: #333333;
-	}
-	.alert-success{
-		background:lighten(@admin-success,40%);
-		border-color:lighten(@admin-success,20%);
-		color:@admin-success;
-	}
-	.alert-warning{
-		background:lighten(@admin-warning,40%);
-		border-color:lighten(@admin-warning,20%)
-	}
-	.alert-danger{
-		background:@admin-danger;
-		border-color:@admin-danger;
-		color:#fff;
-	}
-	span.alert-danger{
-		display:block;
-		border-radius:4px;
-		margin-top:5px;
-	}
-	.alert-info{
-		background:lighten(@admin-header-color-link,30%);
-		border-color:lighten(@admin-header-color-link,20%);
-		color:@admin-header-color-link;
-	}
-	form.panel,
-	.modal .panel{
-		border:1px solid @panel-default-border!important;
-		> .panel-heading{
-			background-color:#f5f5f5;
-			color: #333333;
-			border-color:#dddddd;
-			h3,
-			h4{
-				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-				font-weight:400;
-				font-size: 21px;
-				color: #333333;
-			}
-		}
-		> .panel-body{background:#fff;}
-		> .panel-footer{
-			border-color:#dddddd;
-			background-color:#f5f5f5;
-			button{
-				border-radius:4px;
-				color: #ffffff;
-				background-color: #47a447;
-				border-color: #398439;
-				&:hover{background-color:lighten(#47a447, 10%);}
-			}
-		}
-		button,
-		.appearance-full .input-group-btn .btn,
-		.btn{border-radius:4px;background-image:none;}
-		.input-group-btn .btn,
-		.input-group-addon.btn,
-		.input-group-btn .btn-primary{border-radius:0 4px 4px 0; display:table-cell;}
-		.input-group input{border-radius:3px 0 0 3px!important}
-		legend,
-		label,
-		input,
-		.btn,
-		.bfh-selectbox-option,
-		button,
-		.readonlyvalue{font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
-		legend,
-		a .bfh-selectbox-option,
-		.readonlyvalue{color:#333;}
-		
-		input.slider,
-		.select1-wrapper.appearance-full{
-		  display: table;
-		  font-size: 13px;
-		  line-height: 18px;
-		  color: #808080;
-          
-		}
-        .input-group-btn .btn{
-              margin-right:0px;
-              height:@admin-field-height;
-          }
 
-	}
-	
+    select.form-control, a.form-control, input.form-control {
+        //  height:@admin-field-height;
+        font-size: @admin-font-size-base;
+
+    }
+
+    a.form-control, input.form-control, select.form-control{
+    	height:40px;
+    }
+
+    select#cGroups.form-control {
+        min-height: 1200px;
+    }
+
+    .btn {
+        font-size: @admin-font-size-base
+    }
+
+    h1.page-header {
+        margin: 40px 0 20px;
+        border-bottom: 1px solid #cccccc;
+        font-family: @admin-body-font;
+        font-weight: 500;
+        line-height: 1.1;
+        color: #333333;
+    }
+
+    .alert-success {
+        background: lighten(@admin-success,40%);
+        border-color: lighten(@admin-success,20%);
+        color: @admin-success;
+    }
+
+    .alert-warning {
+        background: lighten(@admin-warning,40%);
+        border-color: lighten(@admin-warning,20%)
+    }
+
+    .alert-danger {
+        background: @admin-danger;
+        border-color: @admin-danger;
+        color: #fff;
+    }
+
+    span.alert-danger {
+        display: block;
+        border-radius: 4px;
+        margin-top: 5px;
+    }
+
+    .alert-info {
+        background: lighten(@admin-header-color-link,30%);
+        border-color: lighten(@admin-header-color-link,20%);
+        color: @admin-header-color-link;
+    }
+
+    form.panel,
+    .modal .panel {
+        border: 0px;
+
+        > .panel-heading {
+            background-color: lighten(@admin-header-bg,75%);
+            color: #333333;
+            border-color: lighten(@admin-header-bg,50%);
+            border-bottom: 4px solid lighten(@admin-header-bg,50%);
+
+            h3,
+            h4 {
+                font-family: @admin-body-font;
+                font-weight: 400;
+                font-size: 21px;
+                color: #333333;
+            }
+        }
+
+        > .panel-body {
+            background: #fff;
+        }
+
+        > .panel-footer {
+            border-top: 4px solid lighten(@admin-header-bg,50%);
+            background-color: lighten(@admin-header-bg,70%);
+
+            button {
+                border-radius: 4px;
+                color: #ffffff;
+                background-color: #47a447;
+                border-color: #398439;
+
+                &:hover {
+                    background-color: lighten(#47a447, 10%);
+                }
+            }
+        }
+
+        button,
+        .appearance-full .input-group-btn .btn,
+        .btn {
+            border-radius: 4px;
+            background-image: none;
+        }
+
+        .input-group-btn .btn,
+        .input-group-addon.btn,
+        .input-group-btn .btn-primary {
+            border-radius: 0 4px 4px 0;
+            display: table-cell;
+        }
+
+        .input-group input {
+            border-radius: 3px 0 0 3px !important
+        }
+
+        legend,
+        label,
+        input,
+        .btn,
+        .bfh-selectbox-option,
+        button,
+        .readonlyvalue {
+            font-family: @admin-body-font;
+        }
+
+        legend,
+        a .bfh-selectbox-option,
+        .readonlyvalue {
+            color: #333;
+        }
+
+        input.slider,
+        .select1-wrapper.appearance-full {
+            display: table;
+            font-size: 13px;
+            line-height: 18px;
+            color: #808080;
+        }
+
+        .input-group-btn .btn {
+            margin-right: 0px;
+            height: 42px;
+        }
+    }
 }
 
 .ewAdmin #adminLayout #tpltAdvancedMode{
@@ -213,6 +261,10 @@
         margin-top: 15px;
         margin-bottom: 10px;
         text-transform: uppercase;
+    }
+
+    .alert-wrapper{
+        width:100%;
     }
 
     label {
@@ -393,6 +445,11 @@
         }
     }
 
+    .pickByImage button.imageSelect.selected {
+        padding: 2px;
+        border: 4px solid @brand-primary;
+    }
+
     .previewImage {
         padding-top: 10px;
     }
@@ -455,6 +512,54 @@
         padding-right: 15px;
     }
 
+    .inline-4col .form-group {
+        float: left;
+        display: inline-block;
+        width: 24%;
+        padding-right: 15px;
+
+        select {
+            height: 38px;
+        }
+    }
+
+    .inline .inline-4col {
+        @media(min-width:@screen-lg-min) {
+            width: 49%;
+            padding-bottom: 0;
+            float: left;
+        }
+
+        legend {
+            border-bottom: 0;
+            color: #999;
+            font-size: 15px;
+            margin: 5px 0 0;
+            padding: 0;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+
+            label {
+                text-transform: capitalize;
+                font-size: 13px;
+                color: #333;
+                margin-bottom: 0;
+            }
+
+            .btn-info {
+                height: 28px;
+                padding: 4px 9px;
+            }
+
+            .form-control {
+                height: 28px;
+                padding: 2px;
+            }
+        }
+    }
+
     table {
         width: 100%;
 
@@ -510,7 +615,7 @@
         padding: 3px;
         padding-top: 6px;
         border-bottom: 1px solid #e5e5e5;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-family: @admin-body-font;
 
         .buttons {
             text-align: right;
@@ -595,21 +700,21 @@
      }
 .ewAdmin #MenuTree {
     
-     .list-group-item{padding-left:30px;}
-     .level-2 {padding-left:40px}
-     .level-3 {padding-left:50px}
-     .level-4 {padding-left:60px}
-     .level-5 {padding-left:70px}
-     .level-6 {padding-left:80px}
-     .level-7 {padding-left:90px}
-     .level-8 {padding-left:100px}
-     .level-9 {padding-left:110px}
-     .level-10 {padding-left:120px}
-     .level-11 {padding-left:130px}
-     .level-12 {padding-left:140px}
-     .level-13 {padding-left:150px}
-     .level-14 {padding-left:160px}
-     .level-15 {padding-left:170px}
+     .list-group-item{padding-left:50px;}
+     .level-2 {padding-left:70px}
+     .level-3 {padding-left:80px}
+     .level-4 {padding-left:90px}
+     .level-5 {padding-left:100px}
+     .level-6 {padding-left:110px}
+     .level-7 {padding-left:120px}
+     .level-8 {padding-left:130px}
+     .level-9 {padding-left:140px}
+     .level-10 {padding-left:150px}
+     .level-11 {padding-left:160px}
+     .level-12 {padding-left:170px}
+     .level-13 {padding-left:180px}
+     .level-14 {padding-left:190px}
+     .level-15 {padding-left:200px}
      i.hitarea{
             top:13px;
         position:absolute;
@@ -623,7 +728,7 @@
     div.pageCell
     {
         i{
-            top:13px;
+            top:17px;
             position:absolute;
         }
         .status i{

@@ -18,10 +18,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://www.eonicweb.com/ewAdminProxy.asmx?WSDL" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://www.proteancms.com/ewAdminProxy.asmx?WSDL" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ewAdminProxy.wsdl" MetadataType="Wsdl" ID="977e1d58-fec9-4310-ab77-a632b4220527" SourceId="1" SourceUrl="http://www.eonicweb.com/ewAdminProxy.asmx?WSDL" />
+    <MetadataFile FileName="ewAdminProxy1.wsdl" MetadataType="Wsdl" ID="7385f894-5d86-4c67-bb92-89e4a916fea4" SourceId="1" SourceUrl="https://www.proteancms.com/ewAdminProxy.asmx?WSDL" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

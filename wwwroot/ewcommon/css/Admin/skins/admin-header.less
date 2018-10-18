@@ -671,23 +671,29 @@ body.normalMode{
     }
 }
 // - BREADCRUMBS
-	.admin-breadcrumb{
-		background:transparent!important;
-		font-family:@admin-header-font;
-		color:#a5a7a9;
-		text-align:right;
-		a{
-			color:#a5a7a9;
-			&:hover{
-				color:@admin-header-color-link;
-				text-decoration:none;
-			}
-		}
-		font-size:0.8em;
-		padding-top:8px;
-		padding-bottom:8px;
-		padding-right:20px;
-		margin-bottom:0!important;
-		li:before{color:#a5a7a9!important;}
-	}	
+.admin-breadcrumb {
+    background: transparent !important;
+    font-family: @admin-header-font;
+    color: #a5a7a9;
+    text-align: right;
+    padding:15px 30px !important;
+    a {
+        color: @admin-gray;
+
+        &:hover {
+            color: @admin-header-color-link;
+            text-decoration: none;
+        }
+    }
+
+    font-size: 0.9em;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-right: 20px;
+    margin-bottom: 0 !important;
+
+    li:before {
+        color: #a5a7a9 !important;
+    }
+}	
 

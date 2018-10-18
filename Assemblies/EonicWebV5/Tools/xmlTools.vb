@@ -463,9 +463,7 @@ Public Class XmlHelper
             End Get
             Set(ByVal value As String)
                 Try
-                    msXslFile = value
-
-
+                    msXslFile = value.Replace("/", "\")
                     ClassName = msXslFile.Substring(msXslFile.LastIndexOf("\") + 1)
                     ClassName = className.Replace(".", "_")
                     If mbCompiled Then

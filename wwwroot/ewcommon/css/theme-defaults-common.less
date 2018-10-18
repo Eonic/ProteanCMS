@@ -859,6 +859,25 @@ body{height:100%;}
                 padding-right:(@grid-gutter-width / 2);
                 .clearfix;
             }
+            &.carousel-v-top{
+                top:20px;
+                bottom:auto;
+            }
+            &.carousel-v-center{
+                bottom:0;
+                top:0;
+                .flex-display();
+                .carousel-caption-inner{.align-self(center)}
+            }
+            &.carousel-v-bottom{
+                bottom:0;
+                top:auto;
+            }
+            &.carousel-h-left{
+                text-align:left;
+            }
+            &.carousel-h-center{text-align:center;}
+            &.carousel-h-right{text-align:right;}
         }
     }
     .carousel-control{

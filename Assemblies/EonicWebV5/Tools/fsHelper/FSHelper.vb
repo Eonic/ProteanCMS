@@ -96,9 +96,36 @@ Partial Public Class fsHelper
             If mcRoot.StartsWith("\") Then mcRoot = mcRoot.Substring(1)
             If Not String.IsNullOrEmpty(mcRoot) Then
                 If mcRoot.StartsWith("..") Then
-                    cStartFolder = goServer.MapPath("/") & mcRoot
+                    cStartFolder = goServer.MapPath("/" & goConfig("ProjectPath")) & mcRoot
                 Else
-                    cStartFolder = goServer.MapPath("/" & mcRoot)
+                    cStartFolder = goServer.MapPath("/" & goConfig("ProjectPath") & mcRoot)
+                End If
+            End If
+
+            mcStartFolder = cStartFolder
+
+        Catch ex As Exception
+            returnException(mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug)
+        End Try
+
+    End Sub
+
+    Public Sub initialiseVariables()
+
+        PerfMon.Log("fsHelper", "initialiseVariables")
+        Dim cProcessInfo As String = ""
+        Dim cStartFolder As String = ""
+
+        Try
+
+            mcRoot = Replace(mcRoot, "/", "\")
+            If mcRoot.StartsWith("\") Then mcRoot = mcRoot.Substring(1)
+
+            If Not String.IsNullOrEmpty(mcRoot) Then
+                If mcRoot.StartsWith("..") Then
+                    cStartFolder = goServer.MapPath("/" & goConfig("ProjectPath") & mcRoot)
+                Else
+                    cStartFolder = goServer.MapPath("/" & goConfig("ProjectPath") & mcRoot)
                 End If
             End If
 
@@ -299,14 +326,25 @@ Partial Public Class fsHelper
         Dim i As Integer
 
         Try
+            Dim startDir As String
+            If mcRoot = "../" Then
+                mcRoot = ""
+                startDir = goServer.MapPath("/")
+                Dim newDir As New DirectoryInfo(startDir)
+                startDir = newDir.Parent.FullName
+            Else
+                startDir = goServer.MapPath("/" & mcRoot)
+            End If
 
             'check startfolder exists
-            Dim rootDir As New DirectoryInfo(goServer.MapPath("/") & "\" & mcRoot)
+            Dim rootDir As New DirectoryInfo(startDir)
+
             If Not rootDir.Exists Then
                 Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
                 rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
             End If
 
+            If mcStartFolder = "" Then mcStartFolder = startDir
             Dim workingFolder As String = mcStartFolder
             Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
             startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
@@ -319,7 +357,7 @@ Partial Public Class fsHelper
                 If aFolderNames(i) <> "" Then
                     Dim dir1 As New DirectoryInfo(workingFolder)
                     If dir1.Exists Then
-                        Dim dir2 As New DirectoryInfo(workingFolder & "\" & aFolderNames(i))
+                        Dim dir2 As New DirectoryInfo(workingFolder.TrimEnd("\") & "\" & aFolderNames(i))
                         If Not dir2.Exists Then
                             dir1.CreateSubdirectory(CStr(aFolderNames(i)))
                         End If
@@ -435,7 +473,7 @@ Partial Public Class fsHelper
 
     Public Function VirtualFileExistsAndRecent(ByVal cVirtualPath As String, ByVal hours As Long) As Integer
         Try
-            Dim cVP As String = goServer.MapPath(cVirtualPath)
+            Dim cVP As String = mcStartFolder & cVirtualPath.Replace("/", "\")
             If IO.File.Exists(cVP) And IO.File.GetLastWriteTime(cVP) > DateAdd(DateInterval.Hour, (hours * -1), Now()) Then
                 Return 1
             Else
@@ -553,55 +591,70 @@ Partial Public Class fsHelper
 
     Public Function SaveFile(ByVal httpURL As String, ByVal cFolderPath As String) As String
         PerfMon.Log("fsHelper", "SaveFile")
+        Dim response As System.Net.WebResponse
+        Dim remoteStream As Stream
+        Dim readStream As StreamReader
+        Dim request As System.Net.WebRequest
+        Dim img As System.Drawing.Image
         Try
             httpURL = httpURL.Replace("\", "/")
             Dim filename As String = Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1)
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
 
-
             If IO.File.Exists(mcStartFolder & cFolderPath & "\" & filename) Then
                 Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
             Else
-                Dim response As System.Net.WebResponse
-                Dim remoteStream As Stream
-                Dim readStream As StreamReader
-                Dim request As System.Net.WebRequest = System.Net.WebRequest.Create(httpURL)
+                request = System.Net.WebRequest.Create(httpURL)
                 response = request.GetResponse
-                remoteStream = response.GetResponseStream
-                readStream = New StreamReader(remoteStream)
+                If Not response Is Nothing Then
+                    remoteStream = response.GetResponseStream
+                    Try
+                        img = System.Drawing.Image.FromStream(remoteStream)
+                    Catch ex2 As Exception
+                        Dim test As String = ex2.Message
 
-                Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(remoteStream)
+                    End Try
 
-                response.Close()
-                remoteStream.Close()
-                readStream.Close()
 
-                Me.CreatePath(cFolderPath & "\")
+                    Me.CreatePath(cFolderPath & "\")
 
-                Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\")
-                If dir.Exists Then
-                    Select Case Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1)
-                        Case "gif"
-                            img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Gif)
-                            Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
-                        Case "jpg"
-                            img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Jpeg)
-                            Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
-                        Case "png"
-                            img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Png)
-                            Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
-                        Case Else
-                            Return "filetype not handled:" & filename
-                    End Select
+                    Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\")
+                    If dir.Exists Then
+                        Select Case Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1)
+                            Case "gif"
+                                img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Gif)
+                                Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
+                            Case "jpg"
+                                img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Jpeg)
+                                Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
+                            Case "png"
+                                img.Save(mcStartFolder & cFolderPath & "\" & filename, System.Drawing.Imaging.ImageFormat.Png)
+                                Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
+                            Case Else
+                                Return "filetype not handled:" & filename
+                        End Select
 
+                    Else
+                        Return "this root folder does not exist:" & mcStartFolder
+                    End If
+                    response.Close()
+                    remoteStream.Close()
+                    img.Dispose()
                 Else
-                    Return "this root folder does not exist:" & mcStartFolder
+                    Return "File returned 404"
                 End If
+
             End If
+
 
         Catch ex As Exception
             Return ex.Message
+        Finally
+            response = Nothing
+            remoteStream = Nothing
+            readStream = Nothing
+            img = Nothing
         End Try
     End Function
 

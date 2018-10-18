@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.eonic.co.uk/ewAdminProxy" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.eonic.co.uk/ewAdminProxy" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.eonic.co.uk/ewAdminProxy">
+      <s:element name="GetStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SoapUrl" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStatusResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpgradeDatabase">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SoapUrl" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpgradeDatabaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpgradeDatabaseResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSiteLicence">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HTTPhost" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loggedInUser" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="PageCount" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="ItemCount" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="PlugIns" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSiteLicenceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSiteLicenceResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetThemes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HTTPhost" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetThemesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetThemesResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetThemeZip">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HTTPhost" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ThemeName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetThemeZipResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetThemeZipResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetModules">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HTTPhost" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetModulesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetModulesResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPageXml">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PageFRef" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPageXmlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPageXmlResult">
+              <s:complexType mixed="true">
+                <s:sequence>
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpgradeDatabaseSoapIn">
+    <wsdl:part name="parameters" element="tns:UpgradeDatabase" />
+  </wsdl:message>
+  <wsdl:message name="UpgradeDatabaseSoapOut">
+    <wsdl:part name="parameters" element="tns:UpgradeDatabaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSiteLicenceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSiteLicence" />
+  </wsdl:message>
+  <wsdl:message name="GetSiteLicenceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSiteLicenceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetThemesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetThemes" />
+  </wsdl:message>
+  <wsdl:message name="GetThemesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetThemesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetThemeZipSoapIn">
+    <wsdl:part name="parameters" element="tns:GetThemeZip" />
+  </wsdl:message>
+  <wsdl:message name="GetThemeZipSoapOut">
+    <wsdl:part name="parameters" element="tns:GetThemeZipResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetModulesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetModules" />
+  </wsdl:message>
+  <wsdl:message name="GetModulesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetModulesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPageXmlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPageXml" />
+  </wsdl:message>
+  <wsdl:message name="GetPageXmlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPageXmlResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ewAdminProxySoap">
+    <wsdl:operation name="GetStatus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetStatus</wsdl:documentation>
+      <wsdl:input message="tns:GetStatusSoapIn" />
+      <wsdl:output message="tns:GetStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpgradeDatabase">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">UpgradeDatabase</wsdl:documentation>
+      <wsdl:input message="tns:UpgradeDatabaseSoapIn" />
+      <wsdl:output message="tns:UpgradeDatabaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSiteLicence">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetSiteLicence</wsdl:documentation>
+      <wsdl:input message="tns:GetSiteLicenceSoapIn" />
+      <wsdl:output message="tns:GetSiteLicenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetThemes">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetThemes</wsdl:documentation>
+      <wsdl:input message="tns:GetThemesSoapIn" />
+      <wsdl:output message="tns:GetThemesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetThemeZip">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetThemes</wsdl:documentation>
+      <wsdl:input message="tns:GetThemeZipSoapIn" />
+      <wsdl:output message="tns:GetThemeZipSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetModules">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetModules</wsdl:documentation>
+      <wsdl:input message="tns:GetModulesSoapIn" />
+      <wsdl:output message="tns:GetModulesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPageXml">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">GetPageXml</wsdl:documentation>
+      <wsdl:input message="tns:GetPageXmlSoapIn" />
+      <wsdl:output message="tns:GetPageXmlSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ewAdminProxySoap" type="tns:ewAdminProxySoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetStatus">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpgradeDatabase">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/UpgradeDatabase" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSiteLicence">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetSiteLicence" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetThemes">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetThemes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetThemeZip">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetThemeZip" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetModules">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetModules" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPageXml">
+      <soap:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetPageXml" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ewAdminProxySoap12" type="tns:ewAdminProxySoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetStatus">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpgradeDatabase">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/UpgradeDatabase" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSiteLicence">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetSiteLicence" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetThemes">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetThemes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetThemeZip">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetThemeZip" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetModules">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetModules" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPageXml">
+      <soap12:operation soapAction="http://www.eonic.co.uk/ewAdminProxy/GetPageXml" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ewAdminProxy">
+    <wsdl:port name="ewAdminProxySoap" binding="tns:ewAdminProxySoap">
+      <soap:address location="https://www.proteancms.com/ewAdminProxy.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ewAdminProxySoap12" binding="tns:ewAdminProxySoap12">
+      <soap12:address location="https://www.proteancms.com/ewAdminProxy.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

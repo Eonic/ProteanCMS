@@ -3435,7 +3435,7 @@ Partial Public Class Web
                             Dim cCurrentURL As String = sSubmitPath
                             oSetExpChkDetails.ReturnURL = cCurrentURL & "&ppCmd=return" 'Return to pay selector page 
                             oSetExpChkDetails.CancelURL = cCurrentURL & "&ppCmd=cancel" 'Return to pay selector 
-                            oSetExpChkDetails.CallbackURL = cCurrentURL & "&ppCmd=callback" 'Return to pay selector 
+                            ' oSetExpChkDetails.CallbackURL = cCurrentURL & "&ppCmd=callback" 'Return to pay selector 
 
                             oSetExpChkDetails.ReqConfirmShipping = IIf(CInt(oDictOpt("ReqConfirmShipping")) = 0, "0", "1")
                             oSetExpChkDetails.NoShipping = IIf(CInt(oDictOpt("NoShipping")) = 0, "0", "1")
@@ -3451,9 +3451,10 @@ Partial Public Class Web
                             If oDictOpt("cpp-header-image") <> "" Then
                                 oSetExpChkDetails.cppheaderimage = oDictOpt("cpp-header-image")
                             End If
-                            oSetExpChkDetails.cppheaderbordercolor = Replace(oDictOpt("cpp-header-border-color"), "#", "")
-                            oSetExpChkDetails.cppheaderbackcolor = Replace(oDictOpt("cpp-header-back-color"), "#", "")
-                            oSetExpChkDetails.cpppayflowcolor = Replace(oDictOpt("cpp-payflow-color"), "#", "")
+                            'deprecated TMS 05/09/18
+                            'oSetExpChkDetails.cppheaderbordercolor = Replace(oDictOpt("cpp-header-border-color"), "#", "")
+                            'oSetExpChkDetails.cppheaderbackcolor = Replace(oDictOpt("cpp-header-back-color"), "#", "")
+                            'oSetExpChkDetails.cpppayflowcolor = Replace(oDictOpt("cpp-payflow-color"), "#", "")
                             oSetExpChkDetails.PaymentAction = getPPPaymentActionFromCode(oDictOpt("PaymentAction"))
                             Dim sType As String = "Billing Address"
                             Dim oCartAdd As XmlElement = oOrderElmt.SelectSingleNode("Contact[@type='" & sType & "']")
