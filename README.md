@@ -47,7 +47,11 @@ complete the following settings in eonic.web.config
 ## Partners
 Commercial hosting, consultancy and support is available for any new requirements please go to the website.
 
-For more information go to http://www.proteancms.com
+## Contributors
+
+Key contributors to the ProteanCMS are Web Development Experts based in Kent, Unitied Kingdom https://eonic.com
+
+If you are interested in contributing to the project all developers are welcome.
 
 
 
