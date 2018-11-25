@@ -70,3 +70,6 @@ D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.xml
 D:\HostingSpaces\_objSource\EonicWebV5\obj\Debug\EonicWebV5.pdb
 D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.dll
 D:\HostingSpaces\_objSource\EonicWebV5\bin\PayPal.xml
+D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\obj\Debug\EonicWebV5.dll
+D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\obj\Debug\EonicWebV5.xml
+D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\EonicWebV5\obj\Debug\EonicWebV5.pdb
