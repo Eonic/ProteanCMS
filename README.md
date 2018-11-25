@@ -1,5 +1,5 @@
 # Protean CMS
-.Net / XSLT based Content Management System, with eCommerce and Membership facilies (formerly known as EonicWeb5)
+.Net / XSLT based Content Management System, with eCommerce and Membership facilities (formerly known as EonicWeb5)
 
 ## Project Description
 Protean CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
@@ -12,11 +12,11 @@ Developed over 14 years by leading web design company eonic.co.uk it has been us
 Until recently the project has been managed internally at Eonic and has only recently moved to GitHub, hence the lack of history found here.
 
 ## List of Features
-http://www.proteancms.com/Why-eonicweb5/Feature-List
+https://www.proteancms.com/Why-ProteanCMS/Feature-list
 
 
 ## Example Websites
-https://www.proteancms.com/Web-Design-Portfolio
+https://eonic.com/Our-work
 
 ## Developers
 The team welcome new developers and contributors to the platform, we will actively support and encourage those that are contributing to the platform.
