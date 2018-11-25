@@ -71,6 +71,7 @@
         <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa fa-envelope-o"/>
         <MenuItem name="Manage User Subscription" cmd="ManageUserSubscription" display="false" icon="fa fa-envelope-o"/>
         <MenuItem name="Cancel Subscription" cmd="CancelSubscription" display="false" icon="fa fa-envelope-o"/>
+        <MenuItem name="User Profile" cmd="Profile" display="false" icon="fa fa-user"/>
      </MenuItem>
     </MenuItem>
     <MenuItem name="Email Marketing" cmd="MailingList" display="true" feature="MailingList" icon="fa-envelope">
@@ -137,8 +138,8 @@
     <MenuItem name="Reports" cmd="Reports" display="true" plugin="Report" icon="fa-bar-chart-o">
       <MenuItem name="Reports" cmd="Reports" display="true" icon="fa-bar-chart-o"/>
       <MenuItem name="Web Stats" cmd="WebStats" display="true" icon="fa-globe"/>
-      <MenuItem name="Google Analytics" cmd="GoogleAnalytics" display="true" icon="icon-google"/>
-      <MenuItem name="SEO Reports" cmd="RavenFrameset" display="true" icon="icon-google"/>
+      <MenuItem name="Google Analytics" cmd="GoogleAnalytics" display="true" icon="fab fa-google"/>
+      <MenuItem name="SEO Reports" cmd="RavenFrameset" display="true" icon="fas fa-chart-pie"/>
       <!--MenuItem name="Activity Log" cmd="ActivityLogging" display="true" feature="ActivityLogging" icon="fa-meh-o"/-->
     </MenuItem>
       <MenuItem name="Site Theme" cmd="ThemeSettings" display="true" feature="Themes" icon="icon-brush">

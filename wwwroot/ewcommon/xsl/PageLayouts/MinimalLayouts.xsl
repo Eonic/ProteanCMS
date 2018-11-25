@@ -519,7 +519,7 @@
             </div>
           </xsl:if>
           <xsl:choose>
-            <xsl:when test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
+            <xsl:when test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='Normal'] and $adminMode">
               <div>
                 <xsl:apply-templates select="." mode="inlinePopupOptions" />
                 <xsl:text> </xsl:text>
@@ -2182,7 +2182,7 @@
               </xsl:attribute>
             </xsl:if>
             <xsl:choose>
-              <xsl:when test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
+              <xsl:when test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='Normal'] and $adminMode">
                 <div>
                   <xsl:apply-templates select="." mode="inlinePopupOptions" />
                   <xsl:text> </xsl:text>
@@ -10122,6 +10122,9 @@
         </div>
       </div>
     </div>
+  </xsl:template>
+  
+  <xsl:template match="Content[@type='Module' and @moduleType='AdvancedCarousel']" mode="contentJS">
     <script type="text/javascript">
       <xsl:text>jQuery(document).ready(function() {</xsl:text>
       <xsl:text>revapi = jQuery('#mod_</xsl:text><xsl:value-of select="@id"/><xsl:text> .advanced-carousel').revolution({</xsl:text>
@@ -12799,10 +12802,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>
@@ -12951,10 +12954,10 @@
             <source src="{HTML5/@videoMp4}" type="video/mp4"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoGG!=''">
-            <source src="{HTML5/@videoGG!=''}" type="video/ogg"/>
+            <source src="{HTML5/@videoGG}" type="video/ogg"/>
           </xsl:if>
           <xsl:if test="HTML5/@videoWebm!=''">
-            <source src="{HTML5/@videoWebm!=''}" type="video/webm"/>
+            <source src="{HTML5/@videoWebm}" type="video/webm"/>
           </xsl:if>
         </video>
       </div>

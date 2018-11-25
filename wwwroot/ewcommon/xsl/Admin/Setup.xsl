@@ -14,7 +14,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebLogo']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>/ewcommon/images/admin/skin/eonic5-admin-white.png</xsl:text>
+        <xsl:text>/ewcommon/images/admin/skin/protean-admin-white.png</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -25,12 +25,22 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>eonic</xsl:text>
-	      <strong>web</strong>
-	      <xsl:text>5</xsl:text>
+        <xsl:text>Protean</xsl:text>
+	      <strong>CMS</strong>
       </xsl:otherwise>
     </xsl:choose>
 	</xsl:template>
+
+  <xsl:template name="eonicwebProductNameText">
+    <xsl:choose>
+      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>ProteanCMS</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
   <xsl:template name="eonicwebCMSName">
     <xsl:choose>
@@ -84,7 +94,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.co.uk</xsl:text>
+        <xsl:text>www.proteancms.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -111,7 +121,8 @@
     </xsl:variable>
     <html>
       <head>
-        <title>eonicweb5 Setup and Maintenance Tool</title>
+        <title>
+          <xsl:call-template name="eonicwebProductName"/> Setup and Maintenance Tool</title>
 	      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less" />
         <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.less" />
@@ -204,7 +215,7 @@
 					© Eonic Associates LLP | 2002-2018
 					T: +44 (0)1892 534044 |
 					E: <a href="mailto:support@eonic.co.uk" title="Email Eonic">support@eonic.co.uk</a>
-          W: <a href="http://www.eonicweb.net">www.eonicweb.net</a>
+          W: <a href="http://www.proteancms.com">www.proteancms.com</a>
 				</div>
 			</div>
 		</body>
@@ -305,7 +316,8 @@
         <h2>Welcome to your eonic<strong>web</strong>5 Setup</h2>
         <div class="row">
           <div class="col-md-6">
-            <h4>eonicweb5 requires access to a MS SQL Server Database.</h4>
+            <h4>
+              <xsl:call-template name="eonicwebProductName"/> requires access to a MS SQL Server Database.</h4>
             <p>Before it will run you need to give it the connection details.</p>
             <p>The servername will be hostname of the server hosting SQL Server. </p>
             <p>If the DB Name specified does not exist it will be created as long as the username and password have sufficent access rights to do so.</p>
@@ -327,7 +339,8 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>eonicweb5 Setup and Maintenance</h1>
+          <h1>
+            <xsl:call-template name="eonicwebProductName"/> Setup and Maintenance</h1>
         </div>
         <div class="content">
           Please choose an action.
@@ -340,7 +353,8 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>eonicweb5 Database Setup</h1>
+          <h1>
+            <xsl:call-template name="eonicwebProductName"/> Database Setup</h1>
         </div>
         <div class="content">
           Here you can:
@@ -364,7 +378,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>eonicweb5 Database Maintenance</h1>
+          <h1>Database Maintenance</h1>
         </div>
         <div class="content">
           <h2>Here you can:</h2>
@@ -525,7 +539,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>Update eonicweb5 Database</h1>
+          <h1>Update Database</h1>
         </div>
         <div class="content">
           <xsl:choose>

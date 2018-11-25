@@ -679,7 +679,9 @@
   <xsl:template match="MenuItem" mode="adminLinkMainMenu">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
-        <xsl:text>/?ewCmd=</xsl:text>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
+        <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome']">
           <xsl:text>&amp;pgid=</xsl:text>
@@ -709,6 +711,8 @@
   <xsl:template match="MenuItem" mode="adminLink">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome']">
@@ -736,6 +740,8 @@
   <xsl:template match="MenuItem" mode="adminLink1">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome'] and @cmd!='MailingList'">
@@ -790,6 +796,8 @@
 
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:choose>
           <xsl:when test="@cmd='GoToClone' and /Page/@clone">
             <xsl:text>?ewCmd=Normal&amp;pgid=</xsl:text>
@@ -854,6 +862,8 @@
 
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:choose>
           <xsl:when test="@cmd='GoToClone' and /Page/@clone">
             <xsl:text>?ewCmd=Normal&amp;pgid=</xsl:text>
@@ -1440,9 +1450,11 @@
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddContent'] and $adminMode">
       <xsl:choose>
         <xsl:when test="contains($type,',')">
-          <div class="dropdown pull-right">
+          <div class="dropdown pull-right ewAdmin options addmodule">
             <a href="#" class="btn btn-default btn-xs pull-right" data-toggle="dropdown">
-              <xsl:value-of select="$text"/>
+              <i class="fa fa-plus">&#160;</i>&#160;
+              <xsl:value-of select="$text"/>&#160;
+              <i class="fa fa-caret-down">&#160;</i>
             </a>
             <ul class="dropdown-menu">
               <xsl:call-template name="inlinePopupAddOptions">
@@ -1816,6 +1828,7 @@
   <xsl:template name="inlinePopupAddOption">
     <xsl:param name="type"/>
     <xsl:param name="name"/>
+    <li>
     <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="add adminButton">
       <xsl:choose>
         <xsl:when test="$type='PlainText'">
@@ -1843,6 +1856,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </a>
+      </li>
   </xsl:template>
 
   

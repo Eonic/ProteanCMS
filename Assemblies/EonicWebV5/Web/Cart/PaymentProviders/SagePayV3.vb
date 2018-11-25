@@ -130,6 +130,9 @@ Namespace Providers
                         Dim cIPAddress As String = myWeb.moRequest.ServerVariables("REMOTE_ADDR")
                         Dim sSubmitPath As String = oCart.mcPagePath & returnCmd
 
+                        'confirm TLS 1.2
+                        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+
                         Dim oEwProv As Eonic.Web.Cart.PaymentProviders = New PaymentProviders(myWeb)
                         'Get values form cart
                         oEwProv.mcCurrency = IIf(oCart.mcCurrencyCode = "", oCart.mcCurrency, oCart.mcCurrencyCode)

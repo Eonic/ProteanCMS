@@ -7,8 +7,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>Protean</xsl:text>
-	      <strong>CMS</strong>
+        <xsl:text>ProteanCMS</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
 	</xsl:template>
@@ -250,7 +249,7 @@
     <body id="pg_{@id}" class="ewAdmin">
       <xsl:apply-templates select="AdminMenu"/>
       <div id="adminLayout">
-        <div class="container">
+        <div class="admin-page">
         <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@name!=''">
         <xsl:apply-templates select="." mode="adminPageHeader"/>
         </xsl:if>
@@ -315,7 +314,7 @@
                 <xsl:value-of select="@class"/>
             </xsl:if>
         </xsl:variable>
-        <a href="/?ewCmd=LogOff" class="btn btn-primary">
+        <a href="{$appPath}/?ewCmd=LogOff" class="btn btn-primary">
           <i class="fa fa-reply">
             <xsl:text> </xsl:text>
           </i> Back to Site</a>
@@ -378,7 +377,7 @@
           </span>
           <xsl:text> </xsl:text>
           <xsl:text> </xsl:text>
-          <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success" id="previewBack">
+          <a href="/{$appPath}?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success" id="previewBack">
             <i class="fa fa-share-alt fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Back to Admin
@@ -759,7 +758,7 @@
               </ul>
             </div>
             <div class="modal-footer">
-              <a href="?ewCmd=AdmHome" class="btn btn-default">
+              <a href="/{$appPath}?ewCmd=AdmHome" class="btn btn-default">
                 <i class="fa fa-home">
                   <xsl:text> </xsl:text>
                 </i>Admin Home</a>
@@ -1065,7 +1064,9 @@
   <xsl:template match="MenuItem" mode="adminLinkMainMenu">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
-        <xsl:text>/?ewCmd=</xsl:text>
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
+        <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome']">
           <xsl:text>&amp;pgid=</xsl:text>
@@ -1094,7 +1095,9 @@
   <!-- -->
   <xsl:template match="MenuItem" mode="adminLink">
     <xsl:if test="@display='true'">
-      <xsl:variable name="href">
+      <xsl:variable name="href">        
+        <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome']">
@@ -1122,6 +1125,8 @@
   <xsl:template match="MenuItem" mode="adminLink1">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
+                <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
         <xsl:if test="parent::MenuItem[@cmd!='AdmHome'] and @cmd!='MailingList'">
@@ -1176,6 +1181,8 @@
 
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
+                <xsl:text>/</xsl:text>
+        <xsl:value-of select="$appPath"/>
         <xsl:choose>
           <xsl:when test="@cmd='GoToClone' and /Page/@clone">
             <xsl:text>?ewCmd=Normal&amp;pgid=</xsl:text>
@@ -1390,7 +1397,7 @@
           </a>
         </xsl:when>
         <xsl:otherwise>
-          <a href="?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}">
+          <a href="/{$appPath}?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}">
             <xsl:if test="/Page[@ewCmd='NewPageVersion']">
               <xsl:attribute name="class">active on</xsl:attribute>
             </xsl:if>
@@ -1436,7 +1443,7 @@
       <xsl:variable name="displayName">
         <xsl:apply-templates select="." mode="getDisplayName" />
       </xsl:variable>
-      <a href="?pgid={@id}">
+      <a href="/{$appPath}?pgid={@id}">
         <xsl:apply-templates select="." mode="status_legend"/>
         <span class="pageName">
         <xsl:value-of select="$displayName"/>
@@ -1474,23 +1481,13 @@
       <xsl:call-template name="eonicwebWebsite"/>
     </xsl:variable>
 
-    <div>
-     <br/>
+    <section>
+      
       <div class="row">
         <div class="col-md-9">
-           <div class="well">
-            <div class="container">
-              <h1>Welcome to <xsl:call-template name="eonicwebProductName"/></h1>
-              <br/>
-              <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
-                <a href="https://www.facebook.com/proteancms" class="btn btn-primary" target="_new"><i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook</a> 
-                <a href="https://www.linkedin.com/groups?gid=1840777" class="btn btn-primary" target="_new"><i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group</a> 
-              </xsl:if>
-            </div>
-          </div>
           <div class="row">
             <div class="col-md-4">
-              <div class="panel panel-default">
+              <div class="panel panel-default matchHeight">
                 <div class="panel-heading">
                   <h3 class="panel-title">What's New</h3>
                 </div>
@@ -1511,7 +1508,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="panel panel-default">
+              <div class="panel panel-default matchHeight">
                 <div class="panel-heading">
                   <h3 class="panel-title">Performance Tips</h3>
                 </div>
@@ -1521,11 +1518,19 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="panel panel-default">
+              <div class="panel panel-default matchHeight">
                 <div class="panel-heading">
                   <h3 class="panel-title">Get Help</h3>
                 </div>
                 <div class="panel-body">
+                  <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+                    <a href="https://www.facebook.com/proteancms" class="btn btn-primary" target="_new">
+                      <i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
+                    </a>
+                    <a href="https://www.linkedin.com/groups?gid=1840777" class="btn btn-primary" target="_new">
+                      <i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
+                    </a>
+                  </xsl:if>
                        <h5>
                       <i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
                     </h5>
@@ -1549,11 +1554,10 @@
           </div>
         </div>
         <div class="col-md-3">
-          <div class="panel panel-default">
+          <div class="panel panel-default matchHeight">
             <div class="panel-heading">
               <h3 class="panel-title">Features Enabled</h3>
             </div>
-            <div class="panel-body">
               <ul class="nav nav-stacked featuresEnabled">
                
                 <li>
@@ -1679,7 +1683,7 @@
                   
                     <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
                 <li class="active">
-                  <a href="/?ewCmd=WebSettings" class="btn btn-danger">
+                  <a href="/{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
                     <i class="fa fa-bug">
                       <xsl:text> </xsl:text>
                     </i>
@@ -1690,7 +1694,7 @@
                 </xsl:when>
                   <xsl:otherwise>
                   <li>
-                    <a href="/?rebundle=true" class="btn btn-warning">
+                    <a href="/{$appPath}?rebundle=true" class="btn btn-warning">
                       <i class="fa fa-recycle">
                         <xsl:text> </xsl:text>
                       </i>
@@ -1710,13 +1714,12 @@
                 </li>
                 </xsl:if>
               </ul>
-            </div>
           </div>
 
         </div>
       </div>
       
-    </div>
+    </section>
   </xsl:template>
 
   <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
@@ -1748,7 +1751,7 @@
       <div class="col-md-3">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4 class="panel-title">Navigate to Page</h4>
+            <h4 class="panel-title">Navigate to page</h4>
           </div>
           <ul id="MenuTree" class="list-group treeview">
             <xsl:apply-templates select="Menu/MenuItem" mode="menuitem_am">
@@ -1758,9 +1761,26 @@
         </div>
       </div>
       <div class="col-md-9">
+      <form action="{$appPath}/?ewCmd=BulkContentAction&amp;pgid={$page/@id}" method="post" class="ewXform">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h4 class="panel-title">Content on Current Page</h4>
+            <div class="panel-heading-buttons">
+              <div class="form-group bulk-action">
+                <div class="input-group">
+                  <label class="input-group-addon">Bulk Action</label>
+                  <select class="form-control" name="BulkAction" id="BulkAction">
+                    <option value="Move">Move</option>
+                    <option value="Locate">Locate</option>
+                    <option value="Hide">Hide</option>
+                    <option value="Show">Show</option>
+                  </select>
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary">Go</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <h4 class="panel-title">All content on page - <strong><xsl:apply-templates select="$currentPage" mode="getDisplayName"/></strong></h4>
           </div>
             <div class="panel-group" id="accordion">
               <xsl:for-each select="/Page/ContentDetail/ContentTypes/ContentTypeGroup/ContentType">
@@ -1770,6 +1790,7 @@
               </xsl:for-each>
             </div>
         </div>
+            </form>
       </div>
     </div>
   </xsl:template>
@@ -1780,7 +1801,6 @@
   <!-- -->
   <xsl:template match="/" mode="ListByContentType">
     <xsl:param name="contentType"/>
-   
     <div class="panel panel-default">
       <div class="panel-heading">
         <xsl:if test="$contentType!='Module'">
@@ -1801,98 +1821,111 @@
           <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse{$contentType}">
             <i class="fa fa-chevron-down">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>
-        <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+            </i>
+            <span>
+              <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+          </span>
         </a>
       </h6>
-        
     </div>
       <div id="collapse{$contentType}" class="panel-collapse collapse">
-       
-    <table class="table table-striped">
-      <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
-        <tr>
-          <td colspan="3">
-            <xsl:text>No </xsl:text>
-            <xsl:value-of select="$contentType"/>
-            <xsl:text> on this page</xsl:text>
-          </td>
-        </tr>
-      </xsl:if>
-      <xsl:for-each select="Page/Contents/Content[@type=$contentType]">
-        <tr>
-          <td class="status">
-            <xsl:apply-templates select="." mode="status_legend"/>
-          </td>
-          <td class="name">
-            <xsl:choose>
-              <xsl:when test="$contentType='Module'">
-                <b>
-                  <xsl:value-of select="@title" />
-                  <xsl:if test="@title=''">No Title</xsl:if>
-                </b>
-                &#160;-&#160;<xsl:value-of select="@moduleType" />&#160;-&#160;<xsl:value-of select="@position" />
-              </xsl:when>
-              <xsl:when test="$contentType='FlashMovie' and object/@title!=''">
-                <b>
-                  <xsl:value-of select="object/@title" />
-                </b>
-              </xsl:when>
-              <xsl:when test="@name!=''">
-                <b>
-                  <xsl:value-of select="@name" />
-                </b>
-              </xsl:when>
-              <xsl:when test="@type='Module'">
-                <p>
-                  <xsl:apply-templates select="." mode="getSynopsis" />
-                </p>
-              </xsl:when>
-            </xsl:choose>
-            <br/>
-            <small>
-            <xsl:if test="@publish!=''">
-              <span class="publishedOn">
-                <b>Published: </b>
-                <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date" select="@publish"/>
-                </xsl:call-template>
-              </span>&#160;
-            </xsl:if>
-            <xsl:if test="@expire!=''">
-              &#160;
-              <span class="expiresOn">
-                <xsl:text> / </xsl:text><b>Expires:</b> 
-                <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date" select="@expire"/>
-                </xsl:call-template>
-              </span>&#160;
-            </xsl:if>
-            <xsl:if test="@update!=''">
-              &#160;
-              <span class="update">
-                <b>Last Updated: </b>
-                <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date" select="@update"/>
-                </xsl:call-template>
-              </span>
-            </xsl:if>
-              </small>
-          </td>
-          <td class="optionsButton">
-            <xsl:apply-templates select="." mode="inlineOptionsNoPopup">
-              <xsl:with-param name="class" select="'list'"/>
-            </xsl:apply-templates>
-            <xsl:text> </xsl:text>
-          </td>
-        </tr>
-      </xsl:for-each>
-    </table>
-
+        <table class="table table-striped">
+          <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
+            <tr>
+              <td colspan="3">
+                <xsl:text>No </xsl:text>
+                <xsl:value-of select="$contentType"/>
+                <xsl:text> on this page</xsl:text>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode">
+            <xsl:with-param name="contentType" select="$contentType"/>
+          </xsl:apply-templates>
+        </table>
       </div>
     </div>
   </xsl:template>
 
+
+  <xsl:template match="Content" mode="AdvancedMode">
+    <xsl:param name="contentType"/>
+    <tr>
+      <td class="status">
+        <xsl:apply-templates select="." mode="status_legend"/>
+      </td>
+      <td class="name">
+        <xsl:choose>
+          <xsl:when test="$contentType='Module'">
+            <b>
+              <xsl:value-of select="@title" />
+              <xsl:if test="@title=''">No Title</xsl:if>
+            </b>
+            &#160;-&#160;<xsl:value-of select="@moduleType" />&#160;-&#160;<xsl:value-of select="@position" />
+          </xsl:when>
+          <xsl:when test="$contentType='FlashMovie' and object/@title!=''">
+            <b>
+              <xsl:value-of select="object/@title" />
+            </b>
+          </xsl:when>
+          <xsl:when test="@name!=''">
+            <b>
+              <xsl:value-of select="@name" />
+            </b>
+          </xsl:when>
+          <xsl:when test="@type='Module'">
+            <p>
+              <xsl:apply-templates select="." mode="getSynopsis" />
+            </p>
+          </xsl:when>
+        </xsl:choose>
+        <br/>
+        <small>
+          <xsl:if test="@publish!=''">
+            <span class="publishedOn">
+              <b>Published: </b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@publish"/>
+              </xsl:call-template>
+            </span>&#160;
+          </xsl:if>
+          <xsl:if test="@expire!=''">
+            &#160;
+            <span class="expiresOn">
+              <xsl:text> / </xsl:text>
+              <b>Expires:</b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@expire"/>
+              </xsl:call-template>
+            </span>&#160;
+          </xsl:if>
+          <xsl:if test="@update!=''">
+            &#160;
+            <span class="update">
+              <b>Last Updated: </b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@update"/>
+              </xsl:call-template>
+            </span>
+          </xsl:if>
+        </small>
+      </td>
+      <td class="optionsButton">
+        <xsl:apply-templates select="." mode="inlineOptionsNoPopup">
+          <xsl:with-param name="class" select="'list'"/>
+        </xsl:apply-templates>
+        <xsl:text> </xsl:text>
+      </td>
+      <td>
+        <div class="checkbox checkbox-primary">
+          <input type="checkbox" name="id" value="{@id}" class="styled"/>
+          <label>
+            <xsl:text> </xsl:text>
+          </label>
+        </div>
+      </td>
+    </tr>
+  </xsl:template>
 
   <xsl:template match="Page" mode="inlinePopupAdd">
     <xsl:param name="type"/>
@@ -1925,7 +1958,7 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}">
+                <a href="/{$appPath}?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}">
                   <i class="fa fa-plus">&#160;</i>&#160;<xsl:text>Add New Module</xsl:text>
                 </a>
               </li>
@@ -1942,12 +1975,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}">
+                  <a href="/{$appPath}?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}">
                     <i class="fa fa-plus">&#160;</i>&#160;<xsl:text>Add New</xsl:text>
                   </a>
                 </li>
                 <li>
-                  <a href="?ewCmd=LocateSearch&amp;pgid={/Page/@id}&amp;type={$type}">
+                  <a href="/{$appPath}?ewCmd=LocateSearch&amp;pgid={/Page/@id}&amp;type={$type}">
                     <i class="fa fa-search">&#160;</i>&#160;<xsl:text>Find Existing</xsl:text>
                   </a>
                 </li>
@@ -1965,7 +1998,7 @@
               </a>
               <ul class="dropdown-menu">
                 <li>
-                  <a href="?ewCmd=LocateSearch&amp;pgid={/Page/@id}&amp;type={$type}">
+                  <a href="/{$appPath}?ewCmd=LocateSearch&amp;pgid={/Page/@id}&amp;type={$type}">
                     <i class="fa fa-search">&#160;</i>&#160;<xsl:text>Find Existing</xsl:text>
                   </a>
                 </li>
@@ -2008,7 +2041,7 @@
 
     <xsl:choose>
       <xsl:when test="/Page/@id=@parId">
-        <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+        <a href="/{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
           <i class="fa fa-edit fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
@@ -2016,7 +2049,7 @@
 
       </xsl:when>
       <xsl:otherwise>
-        <a href="?ewCmd=EditContent&amp;pgid={@parId}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+        <a href="/{$appPath}?ewCmd=EditContent&amp;pgid={@parId}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
           <i class="fa fa-edit fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
@@ -2026,25 +2059,25 @@
     </xsl:choose>
 
 
-    <a href="?ewCmd=MoveTop&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item to the top">
+    <a href="/{$appPath}?ewCmd=MoveTop&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item to the top">
       <i class="fa fa-arrow-up fa-white">
         <xsl:text> </xsl:text>
       </i>
     </a>
 
-    <a href="?ewCmd=MoveUp&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item up by one space">
+    <a href="/{$appPath}?ewCmd=MoveUp&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item up by one space">
       <i class="fa fa-chevron-up fa-white">
         <xsl:text> </xsl:text>
       </i>
     </a>
 
-    <a href="?ewCmd=MoveDown&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item down by one space">
+    <a href="/{$appPath}?ewCmd=MoveDown&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item down by one space">
       <i class="fa fa-chevron-down fa-white">
         <xsl:text> </xsl:text>
       </i>
     </a>
 
-    <a href="?ewCmd=MoveBottom&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item to the bottom">
+    <a href="/{$appPath}?ewCmd=MoveBottom&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Move this item to the bottom">
       <i class="fa fa-arrow-down fa-white">
         <xsl:text> </xsl:text>
       </i>
@@ -2058,37 +2091,37 @@
       </button>
       <ul class="dropdown-menu" role="menu">
         <li>
-          <a href="?ewCmd=MoveContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to move this content">
+          <a href="/{$appPath}?ewCmd=MoveContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to move this content">
             <i class="fa fa-mail-forward">&#160;</i>&#160;Move
           </a>
         </li>
         <li>
-          <a href="?ewCmd=CopyContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to copy this content">
+          <a href="/{$appPath}?ewCmd=CopyContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to copy this content">
             <i class="fa fa-copy">&#160;</i>&#160;Copy
           </a>
         </li>
         <li>
-          <a href="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to set which pages to show this content on">
+          <a href="/{$appPath}?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to set which pages to show this content on">
             <i class="fa fa-mail-reply-all fa-flip-horizontal">&#160;</i>&#160;Locations
           </a>
         </li>
         <xsl:if test="@status='1'">
           <li>
-            <a href="?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item">
+            <a href="/{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item">
               <i class="fa fa-times-circle">&#160;</i>&#160;Hide
             </a>
           </li>
         </xsl:if>
         <xsl:if test="@status='0'">
           <li>
-            <a href="?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item">
+            <a href="/{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item">
               <i class="fa fa-check-square-o">&#160;</i>&#160;Show
             </a>
           </li>
         </xsl:if>
         <xsl:if test="@status='0'">
           <li>
-            <a href="?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item">
+            <a href="/{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item">
               <i class="fa fa-trash-o">&#160;</i>&#160;Delete
             </a>
           </li>
@@ -2241,103 +2274,13 @@
 
 
   <xsl:template match="Page[@layout='EditStructure']" mode="Admin">
-    <div id="tpltEditStructure" class="panel panel-default">
-      <div class="panel-heading">
-        <h4>Edit Menu</h4>
-      </div>
+    <div id="tpltEditStructure">
       <ul id="MenuTree" class="list-group">
           <xsl:apply-templates select="Menu/MenuItem" mode="editStructure">
             <xsl:with-param name="level">1</xsl:with-param>
           </xsl:apply-templates>
       </ul>
-      <div class="panel-body">
-    <br/>
-    <div class="alert alert-info">
-        <xsl:call-template name="quickjump"/>
-      <i class="fa fa-info-sign fa-3x pull-left">
-        <xsl:text> </xsl:text>
-      </i>
-      <h4>How to use Edit Menu</h4>
-      <br/>
-        <p>
-          <a class="btn btn-xs btn-primary">
-            <i class="fa fa-edit fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Page Settings</a>
-          <xsl:text> - updates the page settings</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-success">
-            <i class="fa fa-plus fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Add Page</a>
-          <xsl:text> - adds a new page underneath the selected (parent) page.</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-arrow btn-default btn-xs">
-            <i class="fa fa-arrow-up fa-white">
-              <xsl:text> </xsl:text>
-            </i>
-          </a>
-          <a class="btn btn-arrow btn-default btn-xs">
-            <i class="fa fa-chevron-up fa-white">
-              <xsl:text> </xsl:text>
-            </i>
-          </a>
-          <a class="btn btn-arrow btn-default btn-xs">
-            <i class="fa fa-chevron-down fa-white">
-              <xsl:text> </xsl:text>
-            </i>
-          </a>
-          <a class="btn btn-arrow btn-default btn-xs">
-            <i class="fa fa-arrow-down fa-white">
-              <xsl:text> </xsl:text>
-            </i>
-          </a>
-          <xsl:text>- Changes the order of the page within its siblings.</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-default">
-            <i class="fa fa-share fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Move</a>
-          <xsl:text> - moves the page to sit under a new parent page</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-default">
-            <i class="fa fa-copy fa-white">
-              <xsl:text> </xsl:text>
-            </i>
-            <xsl:text> </xsl:text>Copy</a>
-          <xsl:text> - copies the page its contents and it children.</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-success btn-show">
-            <i class="fa fa-check-circle fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Show</a>
-          <xsl:text> - makes the page visble to site users.</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-danger btn-hide">
-            <i class="fa fa-times-circle fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Hide</a>
-          <xsl:text> - makes the page invisble to site users, and allows the page to be deleted.</xsl:text>
-        </p>
-        <p>
-          <a class="btn btn-xs btn-danger btn-del">
-            <i class="fa fa-trash-o fa-white">
-              <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Delete</a>
-          <xsl:text> - Deletes the page and any content that is not shown on other pages.</xsl:text>
-        </p>
-        <div id="siteMenuKey">
-          <xsl:apply-templates select="/" mode="siteMenuKey"/>
-          <xsl:text> </xsl:text>
-        </div>
-      </div>
-      </div>
+    
     </div>
   </xsl:template>
   
@@ -2410,7 +2353,7 @@
             <xsl:choose>
 
               <xsl:when test="@cloneparent and not(@cloneparent=@id)">
-                <a href="?ewCmd=EditPage&amp;pgid={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-primary" title="Click here to edit this page">
+                <a href="/{$appPath}?ewCmd=EditPage&amp;pgid={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-primary" title="Click here to edit this page">
                   <i class="fa fa-edit fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
@@ -2419,15 +2362,15 @@
               <xsl:otherwise>
 
                 <!--div class="options"-->
-                <!-- href="?ewCmd=MoveUp&amp;pgid={@id}" replaced now with onClick-->
+                <!-- href="/{$appPath}?ewCmd=MoveUp&amp;pgid={@id}" replaced now with onClick-->
                 <!--span class="hidden"> | </span-->
-                <a href="?ewCmd=EditPage&amp;pgid={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-primary" title="Click here to edit this page">
+                <a href="/{$appPath}?ewCmd=EditPage&amp;pgid={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-primary" title="Click here to edit this page">
                   <i class="fa fa-cogs fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
                   Page Settings</a>
                 <!--span class="hidden"> | </span-->
-                <a href="?ewCmd=AddPage&amp;parId={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-success" title="Click here to add a new child or sub page beneath this page">
+                <a href="/{$appPath}?ewCmd=AddPage&amp;parId={@id}&amp;returnCmd=EditStructure" class="btn btn-xs btn-success" title="Click here to add a new child or sub page beneath this page">
                   <i class="fa fa-plus fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Add Page</a>
@@ -2459,20 +2402,20 @@
                 </a>
                   
                 <!--span class="hidden"> | </span-->
-                <a href="?ewCmd=MovePage&amp;pgid={@id}" class="btn btn-xs btn-default" title="Click here to move this page">
+                <a href="/{$appPath}?ewCmd=MovePage&amp;pgid={@id}" class="btn btn-xs btn-default" title="Click here to move this page">
                   <i class="fa fa-share fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>
                   Move</a>
                  
                 <!--span class="hidden"> | </span-->
-                <a href="?ewCmd=CopyPage&amp;pgid={@id}" class="btn btn-xs btn-default" title="Click here to copy this page">
+                <a href="/{$appPath}?ewCmd=CopyPage&amp;pgid={@id}" class="btn btn-xs btn-default" title="Click here to copy this page">
                   <i class="fa fa-copy fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Copy</a>
                 <!--span class="hidden"> | </span-->
                 <xsl:if test="@status='1'">
-                  <!--a href="?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
+                  <!--a href="/{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
                   <a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page">
                     <i class="fa fa-times-circle fa-white">
                       <xsl:text> </xsl:text>
@@ -2481,13 +2424,13 @@
                   <!--span class="hidden"> | </span-->
                 </xsl:if>
                 <xsl:if test="@status='0'">
-                  <!--a href="?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
+                  <!--a href="/{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
                   <a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-success btn-show" title="Click here to show this page">
                     <i class="fa fa-check-circle fa-white">
                       <xsl:text> </xsl:text>
                     </i><xsl:text> </xsl:text>Show</a>
                   <!--span class="hidden"> | </span-->
-                  <a href="?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page">
+                  <a href="/{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page">
                     <i class="fa fa-trash-o fa-white">
                       <xsl:text> </xsl:text>
                     </i><xsl:text> </xsl:text>Delete</a>
@@ -2630,7 +2573,7 @@
                     <xsl:text>Moving...</xsl:text>
                   </xsl:when>
                   <xsl:otherwise>
-                    <a href="?ewCmd=MoveHere&amp;pgid={$movingPageId}&amp;parId={@id}" title="Move this item under here" class="btn btn-primary">
+                    <a href="/{$appPath}?ewCmd=MoveHere&amp;pgid={$movingPageId}&amp;parId={@id}" title="Move this item under here" class="btn btn-primary">
                       <i class="fa fa-hand-o-down fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>
@@ -2647,7 +2590,7 @@
                 <xsl:text>Cloned...</xsl:text>
               </xsl:when>
               <xsl:otherwise>
-                <a href="?ewCmd=MoveHere&amp;pgid={/Page/@id}&amp;parId={@id}" title="Move this item under here" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=MoveHere&amp;pgid={/Page/@id}&amp;parId={@id}" title="Move this item under here" class="btn btn-xs btn-primary">
                   <i class="fa fa-hand-o-down fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Move Here</a>
@@ -2721,7 +2664,7 @@
             <xsl:text>Cloned...</xsl:text>
           </xsl:when>
           <xsl:when test="@id!=/Page/@id">
-            <a href="?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/*/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
               <i class="fa fa-share fa-rotate-90 fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Move Here
@@ -2742,7 +2685,7 @@
             </div>
             <div class="optionButtons">
               <xsl:if test="@id!=/Page/@id">
-                <a href="?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=MoveContent&amp;pgid={$oldpgid}&amp;parId={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" title="Move this item under here" class="btn btn-xs btn-primary">
                   <i class="fa fa-share fa-rotate-90 fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Move Here
@@ -2770,16 +2713,24 @@
           <div class="panel-heading">Instructions</div>
           <div class="panel-body">
         
-            <p>A piece of content can be located on any page throughout the sites. However it will not be displayed unless the page layout uses a template that displays that kind of content.</p>
+            <p>Any content can be located on any page throughout the site. However it will not be displayed unless the page contains a module that displays that kind of content.</p>
             <p>
               There are two types of relationship, a primary location, that is the parent page of each piece of content every piece of content should have one of these. You can change this by clicking the <a class="adminButton edit">edit relationship</a> button
             </p>
           </div>
         </div>
       </div>
-        <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" method="post">
-            <input type="hidden" name="id" value="{/Page/@id}"/>
-            <input type="hidden" name="position" value="{/Page/ContentDetail/Content/Location[@primary='true']/@position}"/>
+        <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
+          <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
+          <xsl:variable name="position">
+            <xsl:choose>
+              <xsl:when test="/Page/ContentDetail/Content/Location[@primary='true']/@position!=''">
+                <xsl:value-of select="/Page/ContentDetail/Content/Location[@primary='true']/@position"/>
+              </xsl:when>
+              <xsl:otherwise>column1</xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <input type="hidden" name="position" value="{$position}"/>
           <div class="col-md-9">
             <div class="panel panel-default">
             <div class="panel-heading">
@@ -2835,21 +2786,26 @@
           <xsl:when test="@clone &gt; 0 or @cloneparent &gt; 0"> [Cloned]</xsl:when>
           <xsl:when test="not(@id=/Page/ContentDetail/Content/Location[@primary='true']/@pgid)">
             <span class="options">
-              <input type="checkbox" name="location" value="{@id}">
-                <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
-                  <xsl:attribute name="checked">checked</xsl:attribute>
-                </xsl:if>
-              </input>
+                <span class="checkbox checkbox-primary">
+                  <input type="checkbox" name="location" value="{@id}">
+                    <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
+                      <xsl:attribute name="checked">checked</xsl:attribute>
+                    </xsl:if>
+                  </input>
+                  <label>
+                    <xsl:text> </xsl:text>
+                  </label>
+                </span>
               <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
               
-                <a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default btn-xs">
+                <a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default btn-xs">
                   <i class="fa fa-link">&#160;</i>&#160; Relationship</a>
               </xsl:if>
             </span>
           </xsl:when>
           <xsl:otherwise>
             <span class="text-muted">Primary</span>&#160;
-            <a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default btn-xs">
+            <a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default btn-xs">
               <i class="fa fa-link">&#160;</i>&#160; Relationship</a>
           </xsl:otherwise>
         </xsl:choose>
@@ -2868,13 +2824,18 @@
                       </span>
                     </div>
                     <div class="optionButtons">
-                    <input type="checkbox" name="location" value="{@id}">
-                      <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
-                        <xsl:attribute name="checked">checked</xsl:attribute>
-                      </xsl:if>
-                    </input>
+                      <div class="checkbox checkbox-primary">
+                        <input type="checkbox" name="location" value="{@id}">
+                          <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
+                            <xsl:attribute name="checked">checked</xsl:attribute>
+                          </xsl:if>
+                        </input>
+                        <label>
+                          <xsl:text> </xsl:text>
+                        </label>
+                      </div>
                     <xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
-                      <a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-default btn-xs">
+                      <a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-default btn-xs">
                         <i class="fa fa-link">&#160;</i>&#160; Relationship</a>
                     </xsl:if>
                       </div>
@@ -2890,7 +2851,7 @@
                         </div>
                     <div class="optionButtons">
                     <span class="text-muted">Primary</span>&#160;
-                    <a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-default btn-xs">
+                    <a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-default btn-xs">
                       <i class="fa fa-link">&#160;</i>&#160;
                       Relationship</a>
                       </div>
@@ -2928,13 +2889,13 @@
 								</xsl:if>
 							</input>
 							<xsl:if test="@id=/Page/ContentDetail/Content/Location/@pgid">
-								<a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="adminButton edit">Edit Relationship</a>
+								<a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="adminButton edit">Edit Relationship</a>
 							</xsl:if>
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="options">[Primary]</div>
-						<a href="?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="adminButton edit">Edit Relationship</a>
+						<a href="/{$appPath}?ewCmd=LocateContentDetail&amp;pgid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="adminButton edit">Edit Relationship</a>
 					</xsl:otherwise>
 				</xsl:choose>
 			</span>
@@ -3134,7 +3095,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
         
-          <a href="?ewCmd=AddProductGroups" class="btn btn-success">
+          <a href="/{$appPath}?ewCmd=AddProductGroups" class="btn btn-success">
             <i class="fa fa-plus fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Add New Group</a>
@@ -3157,14 +3118,14 @@
                   <td>
                     <xsl:choose>
                       <xsl:when test="Content">
-                        <a href="?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-xs btn-primary">
+                        <a href="/{$appPath}?ewCmd=ProductGroups" alt="Click here to collapse" class="btn btn-xs btn-primary">
                           <i class="fa fa-minus fa-white">
                             <xsl:text> </xsl:text>
                           </i>
                         </a>
                       </xsl:when>
                       <xsl:otherwise>
-                        <a href="?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-xs btn-primary">
+                        <a href="/{$appPath}?ewCmd=ProductGroups&amp;GrpID={@nCatKey}" alt="Click here to expand" class="btn btn-xs btn-primary">
                           <i class="fa fa-plus fa-white">
                             <xsl:text> </xsl:text>
                           </i></a>
@@ -3178,7 +3139,7 @@
                   </td>
 
                   <td>
-                    <a href="?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-success">
+                    <a href="/{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-success">
                       <i class="fa fa-gift fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Add Products</a>
@@ -3189,11 +3150,11 @@
                     </strong>
                   </td>
                   <td>
-                    <a href="?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
+                    <a href="/{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit</a>
-                    <a href="?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
+                    <a href="/{$appPath}?ewCmd=DeleteProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-danger">
                       <i class="fa fa-trash-o fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Delete</a>
@@ -3212,7 +3173,7 @@
                       </strong>
                     </td>
                     <td>
-                      <a href="?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
+                      <a href="/{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-primary">
                         <i class="fa fa-remove fa-white">
                           <xsl:text> </xsl:text>
                         </i>
@@ -3237,7 +3198,7 @@
     <div class="row" id="tpltDiscounts">
       <div class="col-md-4">
       <ul class="nav nav-stacked featuresEnabled">
-        <li><a href="?ewCmd=ProductGroups" class="btn btn-primary">
+        <li><a href="/{$appPath}?ewCmd=ProductGroups" class="btn btn-primary">
           <i class="fa fa-coffee">
             <xsl:text> </xsl:text>
           </i>
@@ -3246,7 +3207,7 @@
             Create groups of products to apply discounts too.
           </span>
         </a></li>
-        <li><a href="?ewCmd=DiscountRules" class="btn btn-primary">
+        <li><a href="/{$appPath}?ewCmd=DiscountRules" class="btn btn-primary">
           <i class="fa fa-money">
             <xsl:text> </xsl:text>
           </i>
@@ -3295,7 +3256,7 @@
       <div class="col-md-9">
         <div class="panel default-panel">
           <div class="panel-heading">
-        <form action="/?ewCmd=DiscountRules" class="ewXform" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
+        <form action="{$appPath}/?ewCmd=DiscountRules" class="ewXform" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
           Add Rule &#160;
           <select name="newDiscountType" id="newDiscountType" class="required full">
             <option value="">Select type</option>
@@ -3362,11 +3323,11 @@
                 </xsl:choose>
               </td>
               <td>
-                <a href="?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
                   <i class="fa fa-pencil fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Edit</a>
-                <a href="?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-danger">
+                <a href="/{$appPath}?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-danger">
                   <i class="fa fa-trash-o fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Remove</a>
@@ -3390,7 +3351,7 @@
                 <xsl:if test="Dir[@nPermLevel='0']">
                   <xsl:attribute name="rowspan">2</xsl:attribute>
                 </xsl:if>
-                <a href="?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
                   <i class="fa fa-user fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Select User Groups</a>
@@ -3428,7 +3389,7 @@
                 </xsl:for-each>
               </td>
               <td>
-                <a href="?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
                   <i class="fa fa-gift fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Select Product Groups</a>
@@ -3502,6 +3463,11 @@
             <xsl:with-param name="desc">Contact Information</xsl:with-param>
             <xsl:with-param name="name">Contact</xsl:with-param>
             <xsl:with-param name="type">FormattedText</xsl:with-param>
+          </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">JSON-LD</xsl:with-param>
+            <xsl:with-param name="name">jsonld</xsl:with-param>
+            <xsl:with-param name="type">PlainText</xsl:with-param>
           </xsl:call-template>
            <xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">Exit Modal Popup</xsl:with-param>
@@ -3614,6 +3580,11 @@
             <xsl:with-param name="name">ogImage</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+            <xsl:with-param name="desc">Facebook Chat</xsl:with-param>
+            <xsl:with-param name="name">FacebookChat</xsl:with-param>
+            <xsl:with-param name="type">FacebookChat</xsl:with-param>
+          </xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="cookie">
@@ -3710,32 +3681,32 @@
       <td>
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type and @parId!=/Page/@id]">
-            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Edit master on page: {/Page/Menu/descendant-or-self::MenuItem[@id=/Page/Contents/Content[@name=$name and @type = $type]/@parId]/@name}" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Master</a>
-            <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="btn btn-xs btn-primary">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add Here</a>
           </xsl:when>
           <xsl:when test="/Page/Contents/Content[@name=$name and @type = $type] | /Page/Contents/Content[@type = 'Module' and @position = $name]">
-            <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type=$type]/@id}" title="Click here to edit this content" class="btn btn-xs btn-primary">
               <i class="fa fa-edit fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit</a>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='1'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='1']">
-              <a href="?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to hide this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Hide</a>
             </xsl:if>
             <xsl:if test="/Page/Contents/Content[@name=$name and @type = $type and @status='0'] | /Page/Contents/Content[@type = 'Module' and @position = $name and @status='0']">
-              <a href="?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to show this item" class="btn btn-xs btn-success">
+              <a href="/{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to show this item" class="btn btn-xs btn-success">
                 <i class="fa fa-check-circle-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Show</a>
-              <a href="?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={/Page/Contents/Content[@name=$name and @type = $type]/@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
                 <i class="fa fa-remove-circle fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete</a>
@@ -3745,12 +3716,12 @@
           <xsl:otherwise>
             <xsl:choose>
             <xsl:when test="$type='Module'">
-              <a class="btn btn-default btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
+              <a class="btn btn-default btn-xs pull-right" href="/{$appPath}?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$name}">
                 <i class="fa fa-th-large">&#160;</i>&#160;<xsl:text>Add Module</xsl:text>
               </a>
             </xsl:when>
               <xsl:otherwise>
-            <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="btn btn-xs btn-primary">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add</a>
@@ -4034,7 +4005,7 @@
 
     var newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel"><div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div><a data-toggle="popover" data-trigger="hover" data-container=".modal-body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>'
     newItem = newItem + '<div class="description">'
-    newItem = newItem + '<a href="?ewcmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
+    newItem = newItem + '<a href="/{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a>';
       newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span><br/></div>';
       newItem = newItem + '</div></div>';
   </xsl:template>
@@ -4170,11 +4141,11 @@
                        </xsl:when>
                         <xsl:otherwise>
                           <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-                            <a class="btn btn-xs btn-primary" href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
+                            <a class="btn btn-xs btn-primary" href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=moveFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}">
                               <i class="fa fa-arrows fa-white">
                                 <xsl:text> </xsl:text>
                               </i></a>
-                            <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
+                            <a href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                               <i class="fa fa-trash-o fa-white">
                                 <xsl:text> </xsl:text>
                               </i> Delete
@@ -4235,7 +4206,7 @@
           <td>
             <xsl:choose>
               <xsl:when test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
-                <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
+                <a href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-danger">
                   <i class="fa fa-trash-o fa-white">
                     <xsl:text> </xsl:text>
                   </i>
@@ -4261,7 +4232,7 @@
                   </xsl:when>
                   <!--Pick Other (so far images)-->
                   <xsl:otherwise>
-                    <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-default">
+                    <a href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="btn btn-xs btn-default">
                       <i class="fa fa-picture-o fa-white">
                         <xsl:text> </xsl:text>
                       </i>
@@ -4285,7 +4256,7 @@
 
   <xsl:template match="Page[@layout='DocsLib']" mode="newItemScript">
     var newItem = '<tr><td><i class="icon-file-' + /[^.]+$/.exec(file.name) + '"> </i> ' + file.name.replace(/\ /g,'-') + '</td><td>.' + /[^.]+$/.exec(file.name) + '</td>';
-    newItem = newItem + '<td><a href="?ewcmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
+    newItem = newItem + '<td><a href="/{$appPath}?ewCmd=DocsLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"> </i> Delete</a></td></tr>'
   </xsl:template>
 
 
@@ -4296,7 +4267,7 @@
   <xsl:template match="Page[@layout='MediaLib']" mode="newItemScript">
     var newItem = '<div class="item col-md-2 col-sm-4"><div class="panel panel-default"><div class="panel-body"><div class="ItemThumbnail"><img src="' + targetPath + '/' + file.name + '" width="85" height="48 " class="" /></div>'
     newItem = newItem + '<div class="description">' + file.name + '<br /></div>'
-    newItem = newItem + '<a href="?ewcmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
+    newItem = newItem + '<a href="/{$appPath}?ewCmd=ImageLib&amp;ewCmd2=deleteFile&amp;fld=' + deletePath.replace(/\//g,'\\') + '&amp;file=' + file.name + '" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-white"><xsl:text> </xsl:text></i>Delete</a></div></div></div>'
   </xsl:template>
   
   <xsl:template match="folder" mode="MediaFolder">
@@ -4340,7 +4311,7 @@
           <td>
             <xsl:choose>
               <xsl:when test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
-                <a href="?ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="adminButton delete">Delete</a>
+                <a href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;ewCmd2=deleteFile&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" class="adminButton delete">Delete</a>
               </xsl:when>
               <xsl:otherwise>
                 <a onclick="passMediaToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{@root}{translate(parent::folder/@path,'\','/')}/{@name}');" class="adminButton add pickimage" href="#">Pick Media</a>
@@ -4362,7 +4333,7 @@
       <xsl:text> active collapsable</xsl:text>
     </xsl:if>
   </xsl:attribute>
-        <a href="?ewcmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">  
+        <a href="/{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">  
           <i>
             <xsl:attribute name="class">
               <xsl:text>fa fa-lg</xsl:text>
@@ -4424,7 +4395,7 @@
         <xsl:value-of select="@name"/>
           </td>
             <td class="optionButtons">
-            <a href="?ewCmd=EditPagePermissions&amp;pgid={@id}" class="btn btn-primary btn-xs" title="Click here to edit this page">
+            <a href="/{$appPath}?ewCmd=EditPagePermissions&amp;pgid={@id}" class="btn btn-primary btn-xs" title="Click here to edit this page">
               <i class="fa fa-lock">
                 <xsl:text> </xsl:text>
               </i> Edit Permissions</a>
@@ -4561,7 +4532,7 @@
             <xsl:variable name="displayName">
               <xsl:apply-templates select="." mode="getDisplayName" />
             </xsl:variable>
-            <a href="?ewCmd=EditPagePermissions&amp;pgid={@id}">
+            <a href="/{$appPath}?ewCmd=EditPagePermissions&amp;pgid={@id}">
               <span class="status">
               <xsl:apply-templates select="." mode="status_legend"/>
               </span>
@@ -4640,6 +4611,98 @@
   </xsl:template>
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
+
+  <xsl:template match="Page[@layout='Profile']" mode="Admin">
+    <div id="template_ListDirectory" class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+         User Profile
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-8">
+            <xsl:for-each select="/Page/ContentDetail/User/Contacts/Contact">
+              <xsl:apply-templates select="." mode="contactAddressBrief"/>
+              <xsl:if test="position() mod 2=0">
+                <div class="terminus">&#160;</div>
+              </xsl:if>
+            </xsl:for-each>
+          </div>
+        </div>
+
+      </div>
+        <table class="panel-body table table-striped">
+          <tbody>
+            <tr>
+              <th>Order Id</th>
+              <th>Status</th>
+              <th>Customer Name</th>
+              <th>Email</th>
+              <th>Time Placed</th>
+              <th>Value</th>
+              <th>&#160;</th>
+            </tr>
+            <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
+              <xsl:with-param name="startPos"  select="1"/>
+              <xsl:with-param name="itemCount" select="'100'"/>
+            </xsl:apply-templates>
+          </tbody>
+        </table>
+    </div>
+    
+  </xsl:template>
+
+  <xsl:template match="Contact" mode="contactAddressBrief">
+    <div class="col-md-6">
+      <h4>
+        <xsl:value-of select="cContactType"/>
+      </h4>
+      <h3>
+        <xsl:value-of select="cContactName"/>
+      </h3>
+      <p>
+        <xsl:if test="cContactCompany/node()!=''">
+          <xsl:value-of select="cContactCompany"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactAddress/node()!=''">
+          <xsl:value-of select="cContactAddress"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactCity/node()!=''">
+          <xsl:value-of select="cContactCity"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactState/node()!=''">
+          <xsl:value-of select="cContactState"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactZip/node()!=''">
+          <xsl:value-of select="cContactZip"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactCountry/node()!=''">
+          <xsl:value-of select="cContactCountry"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactTel/node()!=''">
+          <xsl:value-of select="cContactTel"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactFax/node()!=''">
+          <xsl:value-of select="cContactFax"/>
+          <br/>
+        </xsl:if>
+        <xsl:if test="cContactEmail/node()!=''">
+          <xsl:value-of select="cContactEmail"/>
+          <br/>
+        </xsl:if>
+      </p>
+    </div>
+  </xsl:template>
+  
   <xsl:template match="Page[@layout='ListDirectory']" mode="Admin">
     <xsl:variable name="itemTotal">
       <xsl:choose>
@@ -4684,7 +4747,7 @@
         </xsl:apply-templates>
         <div class="row">
           <div class="col-md-8">
-            <a href="?ewCmd=EditDirItem&amp;DirType={ContentDetail/directory/@itemType}&amp;parid={/Page/@parId}" class="btn btn-sm btn-success">
+            <a href="/{$appPath}?ewCmd=EditDirItem&amp;DirType={ContentDetail/directory/@itemType}&amp;parid={/Page/@parId}" class="btn btn-sm btn-success">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i>
@@ -4696,7 +4759,7 @@
             <xsl:if test="ContentDetail/directory/@itemType = 'User'">
               <xsl:choose>
                 <xsl:when test="/Page/Request/QueryString/Item[@name='status']">
-                  <a href="?ewCmd=ListUsers&amp;parid={/Page/Request/QueryString/Item[@name='parid']/node()}" class="btn btn-sm btn-primary" >
+                  <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={/Page/Request/QueryString/Item[@name='parid']/node()}" class="btn btn-sm btn-primary" >
                     <i class="fa fa-user fa-white">
                       <xsl:text> </xsl:text>
                     </i>
@@ -4704,7 +4767,7 @@
                   </a>
                 </xsl:when>
                 <xsl:otherwise>
-                  <a href="?ewCmd=ListUsers{$parIdQS}&amp;status=1" class="btn btn-sm btn-primary" >
+                  <a href="/{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=1" class="btn btn-sm btn-primary" >
                     <i class="fa fa-check-circle-o fa-white">
                       <xsl:text> </xsl:text>
                     </i>
@@ -4713,7 +4776,7 @@
                     <xsl:value-of select="count(ContentDetail/directory/user[Status = '1' or Status = '-1'] )"/>
                     <xsl:text> Active Users</xsl:text>
                   </a>
-                  <a href="?ewCmd=ListUsers{$parIdQS}&amp;status=0" class="btn btn-sm btn-primary" >
+                  <a href="/{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=0" class="btn btn-sm btn-primary" >
                     <i class="fa fa-ban fa-white">
                       <xsl:text> </xsl:text>
                     </i>
@@ -4723,7 +4786,7 @@
                     <xsl:text> Inactive Users</xsl:text>
                   </a>
                   <xsl:if test="count(ContentDetail/directory/user[Status = '3']) &gt; 0">
-                    <a href="?ewCmd=ListUsers{$parIdQS}&amp;status=3" class="btn btn-sm btn-info" >
+                    <a href="/{$appPath}?ewCmd=ListUsers{$parIdQS}&amp;status=3" class="btn btn-sm btn-info" >
                       <i class="fa fa-exclaimation-sign fa-white">
                         <xsl:text> </xsl:text>
                       </i>
@@ -4745,7 +4808,7 @@
             </a>
 
             <xsl:if test="ContentDetail/directory/@parType='Group' and ContentDetail/directory/@parId and not(ContentDetail/directory/@itemType='User')">
-              <a href="?ewCmd=MaintainRelations&amp;type={ContentDetail/directory/@itemType}&amp;id={/Page/@parId}&amp;relateAs=children" class="btn btn-sm btn-primary principle">
+              <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type={ContentDetail/directory/@itemType}&amp;id={/Page/@parId}&amp;relateAs=children" class="btn btn-sm btn-primary principle">
                 Edit <xsl:value-of select="ContentDetail/directory/@itemType"/>&#160;members of <xsl:value-of select="ContentDetail/directory/@parType"/>&#160;<xsl:value-of select="ContentDetail/directory/@parName"/>
               </a>
             </xsl:if>
@@ -4924,63 +4987,63 @@
           </xsl:choose>
         </td>
         <td>
-          <a href="?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit</a>
-          <a href="?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-xs btn-success">
+          <a href="/{$appPath}?ewCmd=ResetUserPwd&amp;id={@id}" class="btn btn-xs btn-success">
             <i class="fa fa-repeat fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Reset Pwd</a>
-          <a href="?ewCmd=ImpersonateUser&amp;id={@id}" class="btn btn-xs btn-success">
+          <a href="/{$appPath}?ewCmd=ImpersonateUser&amp;id={@id}" class="btn btn-xs btn-success">
             <i class="fa fa-user-secret fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Impersonate</a>
-          <a href="?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-cog fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Roles</a>
           <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListGroups']">
-            <a href="?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-glass fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Groups</a>
-            <a href="?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-lock fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Permissions</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='ListCompanies']">
-            <a href="?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Company&amp;id={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-building-o fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Companies</a>
 
-            <a href="?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Department&amp;id={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-group fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Dept</a>
           </xsl:if>
           
           <xsl:if test="/Page[@userIntegrations='true']">
-            <a href="?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=UserIntegrations&amp;dirId={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-random fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Integrations</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-            <a href="?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-map-marker fa-white">
                 <xsl:text> </xsl:text>
               </i>
               <xsl:text> </xsl:text>Addresses</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/MenuItem/MenuItem/MenuItem[@cmd='MemberActivity']">
-            <a href="?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=MemberActivity&amp;UserId={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-signal fa-white">
                 <xsl:text> </xsl:text>
               </i>
@@ -4988,14 +5051,14 @@
           </xsl:if>
           <xsl:choose>
             <xsl:when test="Status='0'">
-              <a href="?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>Delete</a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=HideDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i>
@@ -5014,29 +5077,29 @@
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
         <td class="btn-group">
-          <a href="?ewCmd=EditDirItem&amp;DirType=Company&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=EditDirItem&amp;DirType=Company&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit</a>&#160;
-          <a href="?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Users</a>&#160;
-          <a href="?ewCmd=ListDepartments&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListDepartments&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-users fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Depts</a>&#160;
-          <a href="?ewCmd=ListGroups&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListGroups&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-glass fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Groups</a>&#160;
-          <a href="?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">Global Groups</a>&#160;
-          <a href="?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}" class="btn btn-xs btn-primary">Global Groups</a>&#160;
+          <a href="/{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-lock fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Permissions</a>&#160;
           <xsl:if test="Status='0'">
-            <a href="?ewCmd=DeleteDirItem&amp;DirType=Company&amp;id={@id}" class="btn btn-xs btn-danger">
+            <a href="/{$appPath}?ewCmd=DeleteDirItem&amp;DirType=Company&amp;id={@id}" class="btn btn-xs btn-danger">
               <i class="fa fa-trash-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete</a>
@@ -5053,25 +5116,25 @@
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
         <td class="btn-group">
-          <a href="?ewCmd=EditDirItem&amp;DirType=Department&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=EditDirItem&amp;DirType=Department&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit</a>&#160;
-          <a href="?ewCmd=ListUsers&amp;parid={@id}"  class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@id}"  class="btn btn-xs btn-primary">
             <i class="fa fa-users fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Users</a>&#160;
-          <a href="?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}"  class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=MaintainRelations&amp;type=Group&amp;id={@id}"  class="btn btn-xs btn-primary">
             <i class="fa fa-globe fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Global Groups</a>&#160;
-          <a href="?ewCmd=DirPermissions&amp;parid={@id}"  class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=DirPermissions&amp;parid={@id}"  class="btn btn-xs btn-primary">
             <i class="fa fa-lock fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Permissions</a>&#160;
-          <!--a href="?ewCmd=Messages&amp;id={@id}" class="adminButton">Send Message</a-->&#160;
+          <!--a href="/{$appPath}?ewCmd=Messages&amp;id={@id}" class="adminButton">Send Message</a-->&#160;
           <xsl:if test="Status='0'">
-            <a href="?ewCmd=DeleteDirItem&amp;DirType=Department&amp;id={@id}" class="btn btn-xs btn-danger">
+            <a href="/{$appPath}?ewCmd=DeleteDirItem&amp;DirType=Department&amp;id={@id}" class="btn btn-xs btn-danger">
               <i class="fa fa-trash-o fa-white">
                 <xsl:text> </xsl:text>
               </i>Delete</a>
@@ -5088,32 +5151,32 @@
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
         <td>
-          <a href="?ewCmd=EditDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=EditDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit</a>&#160;
-          <a href="?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Members</a>&#160;
-          <a href="?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-lock fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Member Permissions</a>&#160;
           <xsl:choose>
             <xsl:when test="Status='0'">
-              <a href="?ewCmd=DeleteDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=DeleteDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete</a>
-              <a href="?ewCmd=showDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=showDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Show
               </a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="?ewCmd=HideDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=HideDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-ban fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Disable</a>
@@ -5131,27 +5194,27 @@
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
         <td>
-          <a href="?ewCmd=EditRole&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=EditRole&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Edit</a>&#160;
-          <a href="?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Members</a>&#160;
-          <a href="?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
+          <a href="/{$appPath}?ewCmd=DirPermissions&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-lock fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Member Permissions</a>&#160;
           <xsl:choose>
             <xsl:when test="Status='0'">
-              <a href="?ewCmd=DeleteDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=DeleteDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete</a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="?ewCmd=HideDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
+              <a href="/{$appPath}?ewCmd=HideDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
                 <i class="fa fa-trash-o fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Disable</a>
@@ -5269,7 +5332,7 @@
       <div class="col-md-12">
         <div class="row" id="template_ListUsersContacts">
           <div class="headerButtons col-md-12 clearfix">
-            <a href="?ewCmd=AddUserContact&amp;parid={/Page/Request/QueryString/Item[@name='parid']}" class="btn btn-success btn-sm pull-right">
+            <a href="/{$appPath}?ewCmd=AddUserContact&amp;parid={/Page/Request/QueryString/Item[@name='parid']}" class="btn btn-success btn-sm pull-right">
               <i class="fa fa-plus">&#160;</i>&#160;Add New</a>
           </div>
           <xsl:apply-templates select="/Page/ContentDetail/Contacts/Contact" mode="AdminListContact">
@@ -5286,12 +5349,12 @@
     <div class="panel panel-default">
       <div class="panel-heading">
       
-        <a href="?ewCmd=EditUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">
+        <a href="/{$appPath}?ewCmd=EditUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">
           <i class="fa fa-edit">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>
           Edit</a>
-        <a href="?ewCmd=DeleteUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-danger btn-sm pull-right">
+        <a href="/{$appPath}?ewCmd=DeleteUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-danger btn-sm pull-right">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete</a>
@@ -5380,9 +5443,9 @@
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
     <xsl:variable name="title">
       <xsl:choose>
-        <xsl:when test="@ewCmd='Orders'">Orders</xsl:when>
-        <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Orders Awaiting Payment</xsl:when>
-        <xsl:when test="@ewCmd='OrdersShipped'">Orders Shipped</xsl:when>
+        <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
+        <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
+        <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
         <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
         <xsl:when test="@ewCmd='OrdersDeposit'">Deposit Paid</xsl:when>
         <xsl:when test="@ewCmd='OrdersHistory'">Full Order History</xsl:when>
@@ -5394,7 +5457,7 @@
           <xsl:choose>
             <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
               <div class="panel-heading">
-              <div class="pull-right">
+                <div class="pull-right">
                 <xsl:apply-templates select="/" mode="adminStepper">
                   <xsl:with-param name="itemCount" select="'100'"/>
                   <xsl:with-param name="itemTotal" select="$total"/>
@@ -5403,11 +5466,15 @@
                   <xsl:with-param name="itemName" select="$title"/>
                 </xsl:apply-templates>
               </div>
+                <h3 class="panel-title">
+                  <xsl:value-of select="$title"/>
+                </h3>
+              
                 <div class="terminus">
                   <xsl:text> </xsl:text>
                 </div>
             </div>
-              <table class="panel-body table">
+              <table class="panel-body table table-striped">
                 <tbody>
                   <tr>
                     <th>Order Id</th>
@@ -5442,7 +5509,7 @@
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-                  <a href="?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
+                  <a href="/{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
                     <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
                   </a>
                   <br/>
@@ -5503,9 +5570,21 @@
         </xsl:choose>
       </td>
       <td>
-        <a href="?ewcmd=Orders&amp;ewCmd2=Display&amp;id={@id}">
-          <xsl:value-of select="Order/Contact[@type='Billing Address']/GivenName/node()"/>
-        </a>
+        <xsl:choose>
+          <xsl:when test="@userId!=''">
+            <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={@userId}">
+              <span class="btn btn-primary btn-xs">
+              <i class="fa fa-user fa-white">
+                <xsl:text> </xsl:text>
+              </i>
+                </span>
+            &#160;<xsl:value-of select="Order/Contact[@type='Billing Address']/GivenName/node()"/>
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="Order/Contact[@type='Billing Address']/GivenName/node()"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </td>
       <td>
         <a href="mailto:{Order/Contact[@type='Billing Address']/Email/node()}">
@@ -5528,7 +5607,7 @@
         <xsl:value-of select="@currency"/>
       </td>
       <td>
-        <a href="?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
+        <a href="/{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>view order</a>
@@ -5578,7 +5657,7 @@
                     </xsl:choose>
                   </td>
                   <td>
-                    <a href="?ewcmd=Quotes&amp;ewCmd2=Display&amp;id={@id}">
+                    <a href="/{$appPath}?ewCmd=Quotes&amp;ewCmd2=Display&amp;id={@id}">
                       <xsl:value-of select="Quote/Contact[@type='Billing Address']/GivenName/node()"/>
                     </a>
                   </td>
@@ -5595,7 +5674,7 @@
                     </xsl:call-template-->
                   </td>
                   <td>
-                    <a href="?ewcmd=Quotes&amp;ewCmd2=Display&amp;id={@id}" class="view adminButton">view Quote</a>
+                    <a href="/{$appPath}?ewCmd=Quotes&amp;ewCmd2=Display&amp;id={@id}" class="view adminButton">view Quote</a>
                   </td>
                 </tr>
               </xsl:for-each>
@@ -5779,7 +5858,7 @@
       </div>
 
     
-      <table cellspacing="0" id="cartListing" summary="This table contains a list of the items which you have added to the shopping cart. To change the quantity of an item, replace the number under the Qty column and click on Update Cart." class="table">
+      <table cellspacing="0" id="cartListing" summary="This table contains a list of the items which you have added to the shopping cart. To change the quantity of an item, replace the number under the Qty column and click on Update Cart." class="table table-striped">
         <tr>
           <th class="heading">&#160;</th>
           <th class="heading quantity">Qty</th>
@@ -6503,7 +6582,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               
-                  <a href="?ewcmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-success pull-right btn-xs">
+                  <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit" class="btn btn-success pull-right btn-xs">
         <i class="fa fa-plus fa-white">
           <xsl:text> </xsl:text>
         </i><xsl:text> </xsl:text>Add Root Location</a><h3 class="panel-title">List of Locations</h3>
@@ -6540,7 +6619,7 @@
                 Moving...
               </xsl:when>
               <xsl:otherwise>
-                <a href="?ewcmd=ShippingLocations&amp;ewcmd2=movehere&amp;parid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-primary">
+                <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=movehere&amp;parid={@id}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-primary">
                   <i class="fa fa-move-here fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Move Here
@@ -6549,22 +6628,22 @@
             </xsl:choose>
           </xsl:when>
           <xsl:otherwise>
-            <a href="?ewcmd=ShippingLocations&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-pencil fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Location
             </a>
-            <a href="?ewcmd=ShippingLocations&amp;ewcmd2=edit&amp;parid={@id}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=edit&amp;parid={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add Child Location
             </a>
-            <a href="?ewcmd=ShippingLocations&amp;ewcmd2=move&amp;id={@id}" class="btn btn-xs btn-default">
+            <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=move&amp;id={@id}" class="btn btn-xs btn-default">
               <i class="fa fa-share-alt fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Move
             </a>
-            <a href="?ewcmd=ShippingLocations&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
+            <a href="/{$appPath}?ewCmd=ShippingLocations&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
               <i class="fa fa-trash-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete
@@ -6602,7 +6681,7 @@
       <div class="col-md-9" id="column2">
         <div class="panel panel-default" >
         <div class="panel-heading">
-          <a href="?ewcmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
+          <a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
             <i class="fa fa-plus fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Add New Delivery Method
@@ -6610,7 +6689,7 @@
           <h3 class="panel-title">Manage Delivery Methods</h3>
         </div>
 
-        <!--a href="?ewcmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
+        <!--a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
         <table class="table table-striped">
           <xsl:for-each select="ContentDetail/List/ListItem">
             <xsl:sort select="@name" order="ascending" data-type="text"/>
@@ -6642,21 +6721,21 @@
       </xsl:choose>
         </td>
       <td class="options">
-        <a href="?ewcmd=DeliveryMethods&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-success">
+        <a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-success">
           <i class="fa fa-pencil fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit Method</a>
         <xsl:text> </xsl:text>
-        <a href="?ewcmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={@id}" class="btn btn-xs btn-primary">
+        <a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-globe fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Set Locations</a>
-        <xsl:text> </xsl:text><a href="?ewcmd=DeliveryMethods&amp;ewcmd2=permissions&amp;id={@id}" class="btn btn-xs btn-primary">
+        <xsl:text> </xsl:text><a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=permissions&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-user fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Select User Groups</a>
         <xsl:text> </xsl:text>
-        <a href="?ewcmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
+        <a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete Method</a>
@@ -6681,7 +6760,7 @@
       <div class="col-md-9" id="column2">
         <div class="panel panel-default" >
           <div class="panel-heading">
-            <a href="?ewcmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
+            <a href="/{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit" class="btn btn-xs btn-success pull-right">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add New Carrier
@@ -6689,7 +6768,7 @@
             <h3 class="panel-title">Manage Carriers</h3>
           </div>
 
-          <!--a href="?ewcmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
+          <!--a href="/{$appPath}?ewCmd=DeliveryMethods&amp;ewcmd2=editgroup" class="adminButton add">Add New Delivery Group</a-->
           <table class="table table-striped">
               <xsl:for-each select="ContentDetail/Carriers/Carrier">
                 <xsl:sort select="name" order="ascending" data-type="text"/>
@@ -6698,13 +6777,13 @@
                     <xsl:value-of select="name/node()"/>
                   </td>
                   <td class="options">
-                    <a href="?ewcmd=Carriers&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-success">
+                    <a href="/{$appPath}?ewCmd=Carriers&amp;ewcmd2=edit&amp;id={@id}" class="btn btn-xs btn-success">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit Carrier
                     </a>
                     <xsl:text> </xsl:text>
-                    <a href="?ewcmd=Carriers&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
+                    <a href="/{$appPath}?ewCmd=Carriers&amp;ewcmd2=delete&amp;id={@id}" class="btn btn-xs btn-danger">
                       <i class="fa fa-trash-o fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Delete Carrier
@@ -6863,18 +6942,18 @@
                 </td>
                 <td class="clearfix">
                   <xsl:choose>
-                    <xsl:when test="@active='true'"><a href="?ewcmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger pull-right">
+                    <xsl:when test="@active='true'"><a href="/{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=delete&amp;type={node()}" class="btn btn-xs btn-danger pull-right">
                         <i class="fa fa-trash-o fa-white">
                           <xsl:text> </xsl:text>
                         </i><xsl:text> </xsl:text>Delete</a>
-                      <a href="?ewcmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary pull-right">
+                      <a href="/{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=edit&amp;type={node()}" class="btn btn-xs btn-primary pull-right">
                         <i class="fa fa-pencil fa-white">
                           <xsl:text> </xsl:text>
                         </i><xsl:text> </xsl:text>Edit</a>
                       
                     </xsl:when>
                     <xsl:otherwise>
-                      <a href="?ewcmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-default pull-right">
+                      <a href="/{$appPath}?ewCmd=PaymentProviders&amp;ewCmd2=add&amp;type={node()}" class="btn btn-xs btn-default pull-right">
                         <i class="fa fa-plus fa-white">
                           <xsl:text> </xsl:text>
                         </i><xsl:text> </xsl:text>Add</a>
@@ -6912,7 +6991,7 @@
                   <xsl:value-of select="node()"/>
                 </td>
                 <td>
-                  <a href="?ewcmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary pull-right"><i class="fa fa-chevron-circle-right">&#160;
+                  <a href="/{$appPath}?ewCmd=Reports&amp;ewCmd2={@type}" class="btn btn-xs btn-primary pull-right"><i class="fa fa-chevron-circle-right">&#160;
                   </i>&#160;Run Report</a>
                 </td>
               </tr>
@@ -7022,62 +7101,62 @@
 
         <div class="btn-toolbar">
           <div class="btn-group">
-      <a href="?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
         <xsl:text>All </xsl:text>
         <xsl:value-of select="$label"/>
       </a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
       <xsl:text> </xsl:text>
-      <a href="?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
+      <a href="/{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
       <xsl:text> </xsl:text>
       </div>
         </div>
@@ -7109,7 +7188,7 @@
               </i> Back</a>
           </xsl:when>
           <xsl:otherwise>
-            <span class="btn-greyed">
+            <span class="btn btn-primary disabled">
               <i class="fa fa-chevron-left fa-white">
                 <xsl:text> </xsl:text>
               </i> Back
@@ -7150,7 +7229,7 @@
           </a>
           </xsl:when>
           <xsl:otherwise>
-            <span class="btn-greyed">
+            <span class="btn btn-primary disabled">
               Next <i class="fa fa-chevron-right fa-white">
                 <xsl:text> </xsl:text>
               </i></span>
@@ -7201,7 +7280,7 @@
         <div class="panel panel-default">
         <div class="panel-header">
           <h3 class="panel-title">&#160;</h3>
-          <a href="?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-success pull-right">
+          <a href="/{$appPath}?ewCmd=NewMail&amp;parId={$MailRoot}" class="btn btn-sm btn-success pull-right">
             <i class="fa fa-envelope">
               <xsl:text> </xsl:text>
             </i>&#160;Add New Campaign</a>
@@ -7218,16 +7297,16 @@
                 <xsl:value-of select="@name"/>
               </td>
               <td>
-                <a href="?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
                   <i class="fa fa-edit">&#160;</i>&#160;View / Edit</a>
-                <a href="?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
                   <i class="fa fa-copy">&#160;</i>&#160;Copy
                 </a>
-                <a href="?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-default">
+                <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-default">
                   <i class="fa fa-eye">&#160;</i>&#160;Preview</a>
-                <a href="?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-success">
+                <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-success">
                   <i class="fa fa-envelope">&#160;</i>&#160;Send</a>
-                <a href="?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
+                <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
                   <i class="fa fa-trash-o">&#160;</i>&#160;Delete</a>
               </td>
             </tr>
@@ -7237,10 +7316,10 @@
                   &#160;&#160;&#160;<xsl:value-of select="@name"/>
                 </td>
                 <td>test
-                  <a href="?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-success">View / Edit</a>
-                  <a href="?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
-                  <a href="?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
-                  <a href="?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                  <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-success">View / Edit</a>
+                  <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
+                  <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
+                  <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
                 </td>
               </tr>
             </xsl:for-each>
@@ -7473,7 +7552,7 @@
                     <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                     </xsl:when>
                     <xsl:otherwise>
-                      <a href="?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                      <a href="/{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
                         <i class="fa fa-plus">&#160;</i>&#160;
                         Add
                       </a>
@@ -7486,7 +7565,7 @@
                       <h3>Feeds</h3>
                     </div>
                     <div class="col-md-6">
-                      <a href="?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                      <a href="/{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
                         <i class="fa fa-plus">&#160;</i>&#160;
                         Add
                     </a>
@@ -7499,7 +7578,7 @@
                     <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                     </xsl:when>
                     <xsl:otherwise>
-                      <a href="?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                      <a href="/{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
                         <i class="fa fa-plus">&#160;</i>&#160;
                         Add
                       </a>
@@ -7512,7 +7591,7 @@
                     <xsl:when test="/Page/ContentDetail/Content[@cType=$cActionType]">
                     </xsl:when>
                     <xsl:otherwise>
-                      <a href="?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                      <a href="/{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
                         <i class="fa fa-plus">&#160;</i>&#160;
                         Add
                       </a>
@@ -7526,7 +7605,7 @@
                         <h3><xsl:value-of select="$cActionType"/></h3>
                       </div>
                       <div class="col-md-6">
-                        <a href="?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
+                        <a href="/{$appPath}?ewCmd=AddScheduledItem&amp;type={$cActionType}" class="btn btn-success btn-sm pull-right">
                           <i class="fa fa-plus">&#160;</i>&#160;
                           Add
                         </a>
@@ -7548,19 +7627,10 @@
       </div>
     </div>
   </xsl:template>
-
-  <!--Feed Item-->
-  <xsl:template match="Content[@cType='Feed']" mode="ScheduledItem">
+  
+  
+  <xsl:template match="Content" mode="ScheduledItem">
     <tr>
-      <!--Page-->
-      <td>
-        <xsl:variable name="aPageId" select="cActionXML/descendant-or-self::nPageId/node()"/>
-        <xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$aPageId]/@name"/>
-      </td>
-      <!--URL-->
-      <td>
-        <xsl:value-of select="cActionXML/descendant-or-self::cURL/node()"/>
-      </td>
       <!--Last Done-->
       <td>
         <xsl:choose>
@@ -7598,22 +7668,114 @@
         </xsl:choose>
       </td>
       <td>
-        <a href="?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
+        <a href="/{$appPath}?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
+          <i class="fa fa-edit">&#160;</i>&#160;
+          Edit</a>
+        <xsl:choose>
+          <xsl:when test="@Active=1 or @Active=-1">
+            <a href="/{$appPath}?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
+              <i class="fa fa-ban">&#160;</i>&#160;Deactivate</a>
+          </xsl:when>
+          <xsl:otherwise>
+            <a href="/{$appPath}?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
+              <i class="fa fa-check-square">&#160;</i>&#160;Activate</a>
+            <a href="/{$appPath}?ewCmd=DeleteScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-danger btn-xs">
+              <i class="fa fa-trash">&#160;</i>&#160;Delete
+            </a>
+          </xsl:otherwise>
+        </xsl:choose>
+        <a href="/{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-success btn-xs">
+          <i class="fa fa-play">&#160;</i>&#160;Run Now</a>
+      </td>
+    </tr>
+  </xsl:template>
+  
+  
+
+  <!--Feed Item-->
+  <xsl:template match="Content[@cType='Feed']" mode="ScheduledItem">
+    <xsl:variable name="aPageId" select="cActionXML/descendant-or-self::nPageId/node()"/>
+    <tr>
+      <!--Page-->
+      <td colspan="3">
+        <table>
+          <tr>
+              <td colaspan="3">
+        <strong>Items adding to page:&#160;</strong>
+	<xsl:value-of select="/Page/Menu/descendant-or-self::MenuItem[@id=$aPageId]/@name"/>
+       <br/>
+        <strong>Loading from feed at:&#160;</strong>       
+        <a href="{cActionXML/descendant-or-self::cURL/node()}"> <xsl:value-of select="cActionXML/descendant-or-self::cURL/node()"/></a>
+  
+      </td>
+      <!--URL-->
+
+          
+        </tr>
+        </table>
+     </td>
+      </tr>
+      <tr>
+      <!--Last Done-->
+      <td>
+        <xsl:choose>
+          <xsl:when test="@dLastComplete!=''">
+            <xsl:call-template name="DD_MM_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@dLastComplete"/>
+              </xsl:with-param>
+            </xsl:call-template>
+            <xsl:call-template name="HH_MM">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@dLastComplete"/>
+              </xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>-</xsl:otherwise>
+        </xsl:choose>
+      </td>
+      <!--Next Due-->
+      <td>
+        <xsl:choose>
+          <xsl:when test="@dLastComplete!=''">
+            <xsl:call-template name="DD_MM_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@dLastComplete"/>
+              </xsl:with-param>
+            </xsl:call-template>
+            <xsl:call-template name="HH_MM">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@dLastComplete"/>
+              </xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>-</xsl:otherwise>
+        </xsl:choose>
+      </td>
+      <td>
+        <a href="/{$appPath}?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
           <i class="fa fa-edit">&#160;</i>&#160;
           Edit
         </a>
         <xsl:choose>
           <xsl:when test="@Active=1 or @Active=-1">
-            <a href="?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
+            <a href="/{$appPath}?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
               <i class="fa fa-ban">&#160;</i>&#160;Deactivate
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
+            <a href="/{$appPath}?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
               <i class="fa fa-check-square">&#160;</i>&#160;Activate
+            </a>
+            <a href="/{$appPath}?ewCmd=DeleteScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-danger btn-xs">
+              <i class="fa fa-trash">&#160;</i>&#160;Delete
             </a>
           </xsl:otherwise>
         </xsl:choose>
+        <a href="/{$appPath}?ewCmd=viewLog&amp;logIds=98,44&amp;lastest=50" class="btn btn-default btn-xs">
+	<i class="fa fa-list">&#160;</i>&#160;View Log</a>
+	      <a href="/{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-success btn-xs">
+          <i class="fa fa-play">&#160;</i>&#160;Run Now</a>
       </td>
     </tr>
   </xsl:template>
@@ -7641,18 +7803,18 @@
         </xsl:choose>
       </td>
       <td>
-        <a href="?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
+        <a href="/{$appPath}?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
           <i class="fa fa-edit">&#160;</i>&#160;
           Edit
         </a>
         <xsl:choose>
           <xsl:when test="@Active=1 or @Active=-1">
-            <a href="?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
+            <a href="/{$appPath}?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
               <i class="fa fa-ban">&#160;</i>&#160;Deactivate
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
+            <a href="/{$appPath}?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
               <i class="fa fa-check-square">&#160;</i>&#160;Activate
             </a>
           </xsl:otherwise>
@@ -7702,86 +7864,31 @@
         </xsl:choose>
       </td>
       <td>
-        <a href="?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
+        <a href="/{$appPath}?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
           <i class="fa fa-edit">&#160;</i>&#160;
           Edit
         </a>
         <xsl:choose>
           <xsl:when test="@Active=1 or @Active=-1">
-            <a href="?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
+            <a href="/{$appPath}?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
               <i class="fa fa-ban">&#160;</i>&#160;Deactivate
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
+            <a href="/{$appPath}?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
               <i class="fa fa-check-square">&#160;</i>&#160;Activate
             </a>
           </xsl:otherwise>
         </xsl:choose>
-        <a href="?ewCmd=ScheduledItemRunNow&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-success btn-xs">
+        <a href="/{$appPath}?ewCmd=viewLog&amp;logIds=98,44&amp;lastest=50" class="btn btn-default btn-xs">
+	<i class="fa fa-list">&#160;</i>&#160;View Log</a>
+        <a href="/{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-success btn-xs">
           <i class="fa fa-play">&#160;</i>&#160;Run Now
         </a>
       </td>
     </tr>
   </xsl:template>
 
-  <xsl:template match="Content[@cType!='']" mode="ScheduledItem">
-    <tr>
-      <!--Last Done-->
-      <td>
-        <xsl:choose>
-          <xsl:when test="@dLastComplete!=''">
-            <xsl:call-template name="DD_MM_YY">
-              <xsl:with-param name="date">
-                <xsl:value-of select="@dLastComplete"/>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:call-template name="HH_MM">
-              <xsl:with-param name="date">
-                <xsl:value-of select="@dLastComplete"/>
-              </xsl:with-param>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>-</xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <!--Next Due-->
-      <td>
-        <xsl:choose>
-          <xsl:when test="@dLastComplete!=''">
-            <xsl:call-template name="DD_MM_YY">
-              <xsl:with-param name="date">
-                <xsl:value-of select="@dLastComplete"/>
-              </xsl:with-param>
-            </xsl:call-template>
-            <xsl:call-template name="HH_MM">
-              <xsl:with-param name="date">
-                <xsl:value-of select="@dLastComplete"/>
-              </xsl:with-param>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>-</xsl:otherwise>
-        </xsl:choose>
-      </td>
-      <td>
-        <a href="?ewCmd=EditScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-primary btn-xs">
-          <i class="fa fa-edit">&#160;</i>&#160;
-          Edit</a>
-        <xsl:choose>
-          <xsl:when test="@Active=1 or @Active=-1">
-            <a href="?ewCmd=DeactivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-warning btn-xs">
-              <i class="fa fa-ban">&#160;</i>&#160;Deactivate</a>
-          </xsl:when>
-          <xsl:otherwise>
-            <a href="?ewCmd=ActivateScheduledItem&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-default btn-xs">
-              <i class="fa fa-check-square">&#160;</i>&#160;Activate</a>
-          </xsl:otherwise>
-        </xsl:choose>
-        <a href="?ewCmd=ScheduledItemRunNow&amp;type={@cType}&amp;id={@nActionKey}" class="btn btn-success btn-xs">
-          <i class="fa fa-play">&#160;</i>&#160;Run Now</a>
-      </td>
-    </tr>
-  </xsl:template>
 
   <xsl:template match="Page[@layout='EditScheduledItem']" mode="Admin">
     <div class="row" id="template_SystemPages">
@@ -7808,10 +7915,10 @@
           editor.setTheme("ace/theme/tomorrow");
           editor.session.setMode("ace/mode/xml");
         </script>
-        <a href="?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
+        <a href="/{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
           <i class="fa fa-play">&#160;</i>&#160;Run Again
         </a>
-        <a href="?ewCmd=ScheduledItems" class="btn btn-success btn-xs">
+        <a href="/{$appPath}?ewCmd=ScheduledItems" class="btn btn-success btn-xs">
           <i class="fa fa-chevron-left">&#160;</i>&#160;Back to List
         </a>
       </div>
@@ -7878,26 +7985,26 @@
       <td>
         <xsl:choose>
           <xsl:when test="/Page/Menu/MenuItem[@id=/Page/@id]/MenuItem[@name=$pageTitle]">
-            <a href="?ewCmd=ViewSystemPages&amp;pgid={$pageId}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=ViewSystemPages&amp;pgid={$pageId}" class="btn btn-xs btn-primary">
               <i class="fa fa-pencil fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit Page</a>
-            <!--<a href="?ewCmd=ByPage&amp;pgid={$pageId}" class="adminButton">View</a>-->
-            <a href="?ewCmd=EditPage&amp;pgid={$pageId}&amp;BehaviourEditPageCommand=SystemPages" class="btn btn-xs btn-primary">
+            <!--<a href="/{$appPath}?ewCmd=ByPage&amp;pgid={$pageId}" class="adminButton">View</a>-->
+            <a href="/{$appPath}?ewCmd=EditPage&amp;pgid={$pageId}&amp;BehaviourEditPageCommand=SystemPages" class="btn btn-xs btn-primary">
               <i class="fa fa-cog fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Page Settings</a>
-            <a href="?ewCmd=EditPageLayout&amp;pgid={$pageId}" class="btn btn-xs btn-primary">
+            <a href="/{$appPath}?ewCmd=EditPageLayout&amp;pgid={$pageId}" class="btn btn-xs btn-primary">
               <i class="fa fa-file fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Page Layout</a>
-            <a href="?ewCmd=DeletePage&amp;pgid={$pageId}" class="btn btn-xs btn-danger">
+            <a href="/{$appPath}?ewCmd=DeletePage&amp;pgid={$pageId}" class="btn btn-xs btn-danger">
               <i class="fa fa-trash-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete</a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="?ewCmd=AddPage&amp;parId={/Page/@id}&amp;name={translate($pageTitle,' ','+')}&amp;BehaviourAddPageCommand=ViewSystemPages" class="btn btn-xs btn-success">
+            <a href="/{$appPath}?ewCmd=AddPage&amp;parId={/Page/@id}&amp;name={translate($pageTitle,' ','+')}&amp;BehaviourAddPageCommand=ViewSystemPages" class="btn btn-xs btn-success">
               <i class="fa fa-plus fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Add</a>
@@ -7923,7 +8030,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
-                <a href="?ewCmd=AddSubscriptionGroup"  class="btn btn-success pull-right">
+                <a href="/{$appPath}?ewCmd=AddSubscriptionGroup"  class="btn btn-success pull-right">
                   <i class="fa fa-plus">&#160;</i>&#160;
                   Add Subscription Category</a>
            </xsl:if>
@@ -7940,15 +8047,15 @@
               <td colspan="3">
                 <xsl:choose>
                   <xsl:when test="/Page/@ewCmd='MoveSubscription'">
-                    <a href="?ewCmd=MoveSubscription&amp;grp={@nCatKey}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default">
+                    <a href="/{$appPath}?ewCmd=MoveSubscription&amp;grp={@nCatKey}&amp;id={/Page/Request/QueryString/Item[@name='id']}"  class="btn btn-default">
                       <i class="fa fa-move-here fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Move Here</a>
                   </xsl:when>
                   <xsl:otherwise>
-                    <a href="?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm pull-right">
+                    <a href="/{$appPath}?ewCmd=EditSubscriptionGroup&amp;grp={@nCatKey}"  class="btn btn-primary btn-sm pull-right">
                       <i class="fa fa-edit">&#160;</i>&#160;Edit</a>
-                    <a href="?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-success btn-sm pull-right">
+                    <a href="/{$appPath}?ewCmd=AddSubscription&amp;grp={@nCatKey}"  class="btn btn-success btn-sm pull-right">
                       <i class="fa fa-plus">&#160;</i>&#160;Add Subscription</a>
                   </xsl:otherwise>
                 </xsl:choose>
@@ -8003,12 +8110,12 @@
         <th>
           <xsl:choose>
             <xsl:when test="$GroupID>0">
-              <a href="?ewCmd=AddSubscription&amp;grp={$GroupID}"  class="btn btn-success btn-xs">
+              <a href="/{$appPath}?ewCmd=AddSubscription&amp;grp={$GroupID}"  class="btn btn-success btn-xs">
                 <i class="fa fa-plus">&#160;</i>&#160;
                 Add</a>
             </xsl:when>
             <xsl:otherwise>
-              <a href="?ewCmd=AddSubscription"  class="btn btn-success btn-xs">
+              <a href="/{$appPath}?ewCmd=AddSubscription"  class="btn btn-success btn-xs">
                 <i class="fa fa-plus">&#160;</i>&#160;Add</a>
             </xsl:otherwise>
           </xsl:choose>
@@ -8040,13 +8147,13 @@
         <xsl:value-of select="Content/Prices/Price"/> / <xsl:value-of select="Content/PaymentUnit"/>
       </td>
       <td>
-        <a href="?ewCmd=EditSubscription&amp;id={@nContentKey}"  class="btn btn-primary btn-xs">
+        <a href="/{$appPath}?ewCmd=EditSubscription&amp;id={@nContentKey}"  class="btn btn-primary btn-xs">
           <i class="fa fa-edit">&#160;</i>&#160;Edit</a>
-        <a href="?ewCmd=LocateSubscription&amp;id={@nContentKey}" class="btn btn-default btn-xs">
+        <a href="/{$appPath}?ewCmd=LocateSubscription&amp;id={@nContentKey}" class="btn btn-default btn-xs">
           <i class="fa fa-search">&#160;</i>&#160;Locate</a>
-        <a href="?ewCmd=MoveSubscription&amp;id={@nContentKey}" class="btn btn-default btn-xs">
+        <a href="/{$appPath}?ewCmd=MoveSubscription&amp;id={@nContentKey}" class="btn btn-default btn-xs">
           <i class="fa fa-users">&#160;</i>&#160;Change Group</a>
-        <a href="?ewCmd=ListSubscribers&amp;id={@nContentKey}" class="btn btn-default btn-xs">
+        <a href="/{$appPath}?ewCmd=ListSubscribers&amp;id={@nContentKey}" class="btn btn-default btn-xs">
           <i class="fa fa-users">&#160;</i>&#160;List Subscribers
         </a>
       </td>
@@ -8104,10 +8211,10 @@
               </td>
               <td colspan="3">
 
-                <a href="?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                <a href="/{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
                   <i class="fa fa-edit">&#160;</i>&#160;Manage
                 </a>
-                <!--a href="?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
+                <!--a href="/{$appPath}?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
                   <i class="fa fa-edit">&#160;</i>&#160;Cancel
                 </a-->
 
@@ -8222,7 +8329,7 @@
                   </xsl:if>
                   <br/>
                   <br/>
-                  <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                  <a href="/{$appPath}?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
                     <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
                   </a>
                 </div>
@@ -8240,7 +8347,7 @@
 
                   <br/>
                   <br/>
-                  <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                  <a href="/{$appPath}?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
                     <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
                   </a>
                 </div>
@@ -8249,12 +8356,12 @@
             <div class="panel-footer form-actions">
               
                   <xsl:if test="@renewalStatus!='Cancelled'">
-                      <a href="?ewCmd=CancelSubscription&amp;id={@id}" class="btn btn-danger">
+                      <a href="/{$appPath}?ewCmd=CancelSubscription&amp;id={@id}" class="btn btn-danger">
                         <i class="fa fa-times">&#160;</i>&#160;Cancel Immediately
                       </a>
                   </xsl:if>
                   <xsl:if test="@renewalStatus='Rolling'">
-                    <a href="?ewCmd=ExpireSubscription&amp;id={@id}" class="btn btn-warning">
+                    <a href="/{$appPath}?ewCmd=ExpireSubscription&amp;id={@id}" class="btn btn-warning">
                         <i class="fa fa-times">&#160;</i>&#160;Set to Expire on Renewal
                       </a>
                   </xsl:if>
@@ -8281,7 +8388,7 @@
                     Paid By
                     <xsl:value-of select="@providerName"/>
                 
-                    <a class="pull-right btn btn-default" href="/?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@orderId}">Order</a>
+                    <a class="pull-right btn btn-default" href="{$appPath}/?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@orderId}">Order</a>
                   </li>
               
               </xsl:for-each>
@@ -8382,6 +8489,20 @@
   <xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
     <div class="row" id="template_Subscriptions">
       <div class="col-md-12">
+        <xsl:if test="@layout='UpcomingRenewals'">
+          <div class="alert alert-info">
+            <h3>
+                <strong><xsl:value-of select="count(/Page/ContentDetail/Subscribers)"/></strong> Upcoming Renewals :
+                  <strong>
+                  <xsl:call-template name="formatPrice">
+                    <xsl:with-param name="price" select="sum(/Page/ContentDetail/Subscribers/nValueNet/node())"/>
+                    <xsl:with-param name="currency" select="$currencySymbol"/>
+                  </xsl:call-template>
+                  </strong>
+            </h3>
+        </div>
+        </xsl:if>
+        
         <div class="panel panel-default">
            <table class="table">
             <tr>
@@ -8440,7 +8561,7 @@
                 </td>
                 <td colspan="3">
 
-                  <a href="?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                  <a href="/{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
                     <i class="fa fa-edit">&#160;</i>&#160;Manage
                   </a>
 
@@ -8494,7 +8615,7 @@
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
       <div class="col-md-12">
-        <a href="?ewCmd=EditTemplate&amp;ewCmd2=RenewalAlerts" class="btn btn-default"><i class="fa fa-pencil">&#160;</i>&#160;Edit Templates</a>
+        <a href="/{$appPath}?ewCmd=EditTemplate&amp;ewCmd2=RenewalAlerts" class="btn btn-default"><i class="fa fa-pencil">&#160;</i>&#160;Edit Templates</a>
         <br/>
         <br/>
         <div class="panel panel-default">
@@ -8506,7 +8627,7 @@
               <th>Count</th>
               <th>Subject</th>
               <th>
-                <a href="?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
+                <a href="/{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
                   <i class="fa fa-plus">&#160;</i>&#160;Add
                 </a>
               </th>
@@ -8529,7 +8650,7 @@
                   <xsl:value-of select="@subject"/>
                 </td>
                 <td>
-                  <a href="?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
+                  <a href="/{$appPath}?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
                     <i class="fa fa-pencil">&#160;</i>&#160;Edit
                   </a>
                 </td>
@@ -8577,7 +8698,7 @@
         </xsl:when>
         <xsl:otherwise>
           <div class="col-md-12 panel">
-            <a href="?ewCmd=MemberActivity" class="btn btn-primary pull-right"><i class="fa fa-mail-reply">
+            <a href="/{$appPath}?ewCmd=MemberActivity" class="btn btn-primary pull-right"><i class="fa fa-mail-reply">
               <xsl:text> </xsl:text> </i>Back</a>
             <xsl:apply-templates select="ContentDetail/Content[@type='Report']" mode="MemberActivityReport"/>
           </div>
@@ -8714,12 +8835,12 @@
         <td>
           <xsl:choose>
             <xsl:when test="$origName='cDirName'">
-              <a href="?ewCmd=MemberActivity&amp;UserId={../nDirKey/node()}" title="View {node()}'s Individual Activity">
+              <a href="/{$appPath}?ewCmd=MemberActivity&amp;UserId={../nDirKey/node()}" title="View {node()}'s Individual Activity">
                 <xsl:value-of select="node()"/>
               </a>
             </xsl:when>
             <xsl:when test="$origName='cSessionId' or $origName='cSessionID'">
- 				      <a href="?ewCmd=MemberActivity&amp;SessionId={node()}" title="View Activity For Session {node()}" class="btn btn-default btn-xs">
+ 				      <a href="/{$appPath}?ewCmd=MemberActivity&amp;SessionId={node()}" title="View Activity For Session {node()}" class="btn btn-default btn-xs">
                 <i class="fa fa-chevron-down">
                   <xsl:text> </xsl:text>
                 </i>
@@ -8768,11 +8889,11 @@
             <xsl:choose>
             <xsl:when test="ContentDetail/Content[@type='xform']">
               <p class="btn-group headerButtons">
-                  <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="adminButton edit" title="Back to Member Codes">Back to Member Codes</a>               
+                  <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="adminButton edit" title="Back to Member Codes">Back to Member Codes</a>               
               </p>
             </xsl:when>
             <xsl:otherwise>
-              <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-success" title="Add a new code set">
+              <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-success" title="Add a new code set">
                 <i class="fa fa-plus fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Add New Code Set
@@ -8833,7 +8954,7 @@
           <xsl:if test="position()!=1">
             <br/>
           </xsl:if>
-          <a href="?ewCmd=ListUsers&amp;parid={@nDirKey}" title="List Users for '{@cDirName}'">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@nDirKey}" title="List Users for '{@cDirName}'">
             <xsl:value-of select="@cDirName"/>
           </a>
         </xsl:for-each>
@@ -8869,8 +8990,8 @@
       </td>
 
       <td class="btn-group">
-        <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-default" title="Edit this new code set">View/Add Codes</a>
-        <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-default" title="Edit this new code set">Code Memberships</a>
+        <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-default" title="Edit this new code set">View/Add Codes</a>
+        <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-default" title="Edit this new code set">Code Memberships</a>
       </td>
     </tr>
   </xsl:template>
@@ -8919,7 +9040,7 @@
           <xsl:if test="position()!=1">
             <br/>
           </xsl:if>
-          <a href="?ewCmd=ListUsers&amp;parid={@nDirKey}" title="List Users for '{@cDirName}'">
+          <a href="/{$appPath}?ewCmd=ListUsers&amp;parid={@nDirKey}" title="List Users for '{@cDirName}'">
             <xsl:value-of select="@cDirName"/>
           </a>
         </xsl:for-each>
@@ -8954,15 +9075,15 @@
         </xsl:if>
       </td>
       <td class="btn-group">
-          <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-default btn-xs" title="Edit this new code set">
+          <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-default btn-xs" title="Edit this new code set">
             <i class="fa fa-edit">
               <xsl:text> </xsl:text>
             </i>Edit Group</a>
-          <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-default btn-xs" title="Generate Codes">
+          <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-default btn-xs" title="Generate Codes">
             <i class="fa fa-plus">
               <xsl:text> </xsl:text>
             </i>View/Add Codes</a>
-        <a href="?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-default btn-xs" title="Edit this new code set">
+        <a href="/{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-default btn-xs" title="Edit this new code set">
           <i class="fa fa-group">
             <xsl:text> </xsl:text>
           </i>Code Memberships</a>
@@ -9050,7 +9171,7 @@
           <div class="panel-heading">
             <p class="btn-group headerButtons">
               <xsl:if test="ContentDetail/Content[@type='xform']">
-                <a href="?ewCmd=ManageLookups&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to ManageLookups">
+                <a href="/{$appPath}?ewCmd=ManageLookups&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to ManageLookups">
                   <i class="fa fa-caret-left">&#160; </i>&#160;Back to Lookups List</a>
               </xsl:if>
             </p>
@@ -9098,7 +9219,7 @@
         <xsl:value-of select="@Name"/>
       </th>
       <th class="clearfix buttonCell">
-        <a href="?ewCmd=ManageLookups&amp;lookupId=0&amp;Category={@Name}" class="btn btn-success pull-right">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;lookupId=0&amp;Category={@Name}" class="btn btn-success pull-right">
           <i class="fa fa-plus fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Add New Item</a>
@@ -9120,31 +9241,31 @@
         <xsl:value-of select="cLkpValue/node()"/>
       </td>
       <td class="clearfix">
-        <a href="?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=delete&amp;lookupId={@id}" class="btn btn-danger btn-xs pull-right">
           <i class="fa fa-trash-o fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Del
         </a>
-        <a href="?ewCmd=ManageLookups&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-primary btn-xs pull-right">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-primary btn-xs pull-right">
           <i class="fa fa-edit fa-white">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit</a>
-        <a href="?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveTop&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
           <i class="fa fa-arrow-up fa-white">
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="?ewCmd=ManageLookups&amp;ewCmd2=MoveUp&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveUp&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
           <i class="fa fa-chevron-up fa-white">
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="?ewCmd=ManageLookups&amp;ewCmd2=MoveDown&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveDown&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
           <i class="fa fa-chevron-down fa-white">
             <xsl:text> </xsl:text>
           </i>
         </a>
-        <a href="?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+        <a href="/{$appPath}?ewCmd=ManageLookups&amp;ewCmd2=MoveBottom&amp;lookupId={@id}&amp;Category={../@Name}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
           <i class="fa fa-arrow-down fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -9243,13 +9364,13 @@
               <td>
                 <xsl:choose>
                   <xsl:when test="@primaryId='0' or @primaryId = @id">
-                    <a href="?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+                    <a href="/{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit</a>
                   </xsl:when>
                   <xsl:otherwise>
-                    <a href="?ewCmd=RollbackContent&amp;pgid={/Page/@id}&amp;id={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary" title="Click here to rollback to this version">
+                    <a href="/{$appPath}?ewCmd=RollbackContent&amp;pgid={/Page/@id}&amp;id={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary" title="Click here to rollback to this version">
                       <i class="fa fa-go-back fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>
@@ -9343,7 +9464,7 @@
           <dt>Located on:</dt>
           <xsl:for-each select="Locations/Location">
             <dd>
-              <a href="?ewCmd=Normal&amp;pgid={@pageid}" title="View this page">
+              <a href="/{$appPath}?ewCmd=Normal&amp;pgid={@pageid}" title="View this page">
                 <xsl:value-of select="@page"/>
               </a>
             </dd>
@@ -9381,13 +9502,13 @@
     </xsl:variable>
     <td class="btn-group">
       <xsl:if test="@status='0'">
-        <a href="?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to delete this item">
+        <a href="/{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to delete this item">
           <i class="fa fa-remove-circle fa-white">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>Delete</a>
       </xsl:if>
-      <a href="?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
+      <a href="/{$appPath}?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-pencil fa-white">
           <xsl:text> </xsl:text>
         </i>
@@ -9404,10 +9525,10 @@
     <td class="btn-group">
       <xsl:choose>
         <xsl:when test="$page/ContentDetail/Content/GenericReport/Vote/Status/node()='1'">
-          <a href="?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=hide" class="adminButton hide" title="Click here to exclude this vote from the poll">Exclude Vote</a>
+          <a href="/{$appPath}?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=hide" class="adminButton hide" title="Click here to exclude this vote from the poll">Exclude Vote</a>
         </xsl:when>
         <xsl:otherwise>
-          <a href="?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=show" class="adminButton show" title="Click here to reinstate this vote in the poll">Reinstate Vote</a>
+          <a href="/{$appPath}?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=show" class="adminButton show" title="Click here to reinstate this vote in the poll">Reinstate Vote</a>
         </xsl:otherwise>
       </xsl:choose>
     </td>
@@ -9419,8 +9540,8 @@
     <!--<xsl:variable name="pgid" select="/Page/Request/QueryString/Item[@name='pgid']"/>-->
     <xsl:variable name="pgid" select="$page/@id"/>
     <td class="btn-group">
-          <a href="?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=hide" class="adminButton hide" title="Click here to exclude this vote from the poll">Exclude Vote</a>
-          <a href="?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=show" class="adminButton show" title="Click here to reinstate this vote in the poll">Reinstate Vote</a>
+          <a href="/{$appPath}?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=hide" class="adminButton hide" title="Click here to exclude this vote from the poll">Exclude Vote</a>
+          <a href="/{$appPath}?ewCmd=ManagePollVotes&amp;pgid={$pgid}&amp;id={$id}&amp;voteId={@Vote_Id}&amp;ewCmd2=show" class="adminButton show" title="Click here to reinstate this vote in the poll">Reinstate Vote</a>
     </td>
   </xsl:template>
 
@@ -9457,7 +9578,7 @@
                 </xsl:call-template>
               </td>
               <td>
-                <a href="?ewCmd=Normal&amp;pgid={@id}" title="Click here to edit this content">
+                <a href="/{$appPath}?ewCmd=Normal&amp;pgid={@id}" title="Click here to edit this content">
                   <xsl:value-of select="@name"/> - <xsl:value-of select="@description"/>
                 </a>
               </td>
@@ -9484,7 +9605,7 @@
                 <xsl:value-of select="@lang"/>
               </td>
               <td>
-                <a href="?ewCmd=EditPagePermissions&amp;pgid={@id}" title="Click here to edit this content">
+                <a href="/{$appPath}?ewCmd=EditPagePermissions&amp;pgid={@id}" title="Click here to edit this content">
                   <xsl:value-of select="@Groups"/>
                   <xsl:if test="@Groups=''">Open</xsl:if>
                 </a>
@@ -9492,13 +9613,13 @@
               <td>
                 <xsl:if test="@primaryId!=@id">
                   <!--<input type="button" class="arrowbutton up" onclick="moveUp({@id});" title="Click here to move this page up by one space"/>-->
-                  <a href="?ewCmd=PageVersionMoveUp&amp;pgid={@id}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
+                  <a href="/{$appPath}?ewCmd=PageVersionMoveUp&amp;pgid={@id}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page up by one space">
                     <i class="fa fa-chevron-up fa-white">
                       <xsl:text> </xsl:text>
                     </i>
                   </a>
                   <!--span class="hidden"> | </span-->
-                  <a href="?ewCmd=PageVersionMoveDown&amp;pgid={@id}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
+                  <a href="/{$appPath}?ewCmd=PageVersionMoveDown&amp;pgid={@id}" class="btn btn-arrow btn-primary btn-xs" title="Click here to move this page down by one space">
                     <i class="fa fa-chevron-down fa-white">
                       <xsl:text> </xsl:text>
                     </i>
@@ -9506,13 +9627,13 @@
                 </xsl:if>
               </td>
               <td>
-                <!--a href="?ewCmd=Normal&amp;pgid={@id}" class="adminButton edit" title="Click here to edit this content">Edit</a-->
-                <a href="?ewCmd=NewPageVersion&amp;pgid={@id}&amp;vParId={@primaryId}" class="btn btn-xs btn-success" title="Click here to create a copy version of this page">
+                <!--a href="/{$appPath}?ewCmd=Normal&amp;pgid={@id}" class="adminButton edit" title="Click here to edit this content">Edit</a-->
+                <a href="/{$appPath}?ewCmd=NewPageVersion&amp;pgid={@id}&amp;vParId={@primaryId}" class="btn btn-xs btn-success" title="Click here to create a copy version of this page">
                   <i class="fa fa-file fa-white">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>New Version</a>
                 <xsl:if test="@primaryId!=@id">
-                  <a href="?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger" title="Click here to delete this page">
+                  <a href="/{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger" title="Click here to delete this page">
                     <i class="fa fa-remove fa-white">
                       <xsl:text> </xsl:text>
                     </i><xsl:text> </xsl:text>Delete</a>
@@ -9703,10 +9824,10 @@
   <xsl:template match="Page[@layout='CartReportsMain']" mode="Admin">
     <div class="row" id="tpltCartActivity">
       <div class="col-md-3 btn-group-vertical"  id="column1">
-        <a href="?ewCmd=CartDownload" class="btn btn-default">Order Download</a>
-        <a href="?ewCmd=CartReports" class="btn btn-default">Sales By Product</a>
-        <a href="?ewCmd=CartActivityDrilldown" class="btn btn-default">Sales By Page</a>
-        <a href="?ewCmd=CartActivityPeriod" class="btn btn-default">Sales By Period</a>
+        <a href="/{$appPath}?ewCmd=CartDownload" class="btn btn-default">Order Download</a>
+        <a href="/{$appPath}?ewCmd=CartReports" class="btn btn-default">Sales By Product</a>
+        <a href="/{$appPath}?ewCmd=CartActivityDrilldown" class="btn btn-default">Sales By Page</a>
+        <a href="/{$appPath}?ewCmd=CartActivityPeriod" class="btn btn-default">Sales By Period</a>
       </div>
       <div class="col-md-9" id="column2">
         &#160;
@@ -9934,7 +10055,7 @@
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="?ewcmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="/{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -9993,7 +10114,7 @@
       <xsl:variable name="displayName">
         <xsl:apply-templates select="." mode="getDisplayName" />
       </xsl:variable>
-      <a href="?ewCmd=Normal&amp;pgid={@id}" title="{@name}" class="pageName" name="{@id}">
+      <a href="/{$appPath}?ewCmd=Normal&amp;pgid={@id}" title="{@name}" class="pageName" name="{@id}">
         <xsl:value-of select="$displayName"/>
       </a>
       <xsl:text> - </xsl:text>
@@ -10065,7 +10186,7 @@
           </a>
         </td>
         <td align="right">
-          <a href="?ewcmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="/{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>
@@ -10356,7 +10477,30 @@
 			
 	</xsl:template>
 
-
+  <xsl:template match="Page[@adminMode='true' and @layout='GoogleAnalytics']" mode="bodyBuilder">
+    <body id="pg_{@id}" class="ewAdmin">
+      <xsl:apply-templates select="AdminMenu"/>
+      <div class="row" id="tpltCartActivity">
+       <div class="col-md-4">&#160;</div>
+        <div class="col-md-4">
+        <br/>
+        <br/>
+          <a class="btn btn-lg btn-primary" href="https://analytics.google.com/analytics/web/">Open to Google Analytics</a>
+     
+        <br/>
+        <br/>
+        </div>
+             <div class="col-md-4">&#160;</div>
+      </div>
+      <!--iframe class="pluginIframe" src="https://analytics.google.com/analytics/web/" width="100%" height="1000">
+        <p>Your browser does not support iframes.</p>
+      </iframe-->
+      <xsl:apply-templates select="." mode="adminFooter"/>
+      <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
+    </body>
+  </xsl:template>
+  
+    
   <xsl:template match="Page[@adminMode='true' and @layout='RavenFrameset']" mode="bodyBuilder">
     <body id="pg_{@id}" class="ewAdmin">
       <xsl:apply-templates select="AdminMenu"/>
@@ -10400,16 +10544,15 @@
     </xsl:choose>
   </xsl:template>-->
 
-
   <xsl:template match="Page[@adminMode='true' and @layout='MailingList' and @ewCmd2='CMSession']" mode="bodyBuilder">
     <body id="pg_{@id}" class="ewAdmin">
       <xsl:apply-templates select="AdminMenu"/>
-        <iframe class="pluginIframe" src="{ContentDetail/SessionPage/@CMUrl}" width="100%" height="1000">
-          <p>Your browser does not support iframes.</p>
-        </iframe>
+      <iframe class="pluginIframe" src="{ContentDetail/SessionPage/@CMUrl}" width="100%" height="1000">
+        <p>Your browser does not support iframes.</p>
+      </iframe>
       <xsl:apply-templates select="." mode="adminFooter"/>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
-    </body>    
+    </body>
   </xsl:template>
 
 

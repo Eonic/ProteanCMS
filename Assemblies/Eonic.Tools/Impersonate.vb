@@ -1,4 +1,5 @@
 Imports System.Security.Principal
+Imports System.Web.Configuration
 
 Namespace Security
     Public Class Impersonate
@@ -67,7 +68,12 @@ Namespace Security
             Try
 
                 If cInGroup = "AzureWebApp" Then
-                    Return True
+                    Dim goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+                    If strUserName = goConfig("AdminAcct") And strPassword = goConfig("AdminPassword") Then
+                        Return True
+                    Else
+                        Return False
+                    End If
                 Else
                     If RevertToSelf() <> 0 Then
                         If LogonUserA(strUserName, strDomain, strPassword,

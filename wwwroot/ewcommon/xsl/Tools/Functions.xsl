@@ -521,6 +521,7 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
+
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -928,6 +929,7 @@
       </noscript>
       <!-- End Facebook Pixel Code -->
     </xsl:if>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
 
@@ -2189,8 +2191,45 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template match="Content" mode="FacebookChatCode">
+    <xsl:if test="not(/Page/@adminMode)">
+      <!-- Load Facebook SDK for JavaScript -->
+      <div id="fb-root"></div>
+      <script>
+        (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js#xfbml=1&amp;version=v2.12&amp;autoLogAppEvents=1';
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+      <!-- Your customer chat code -->
+      <div class="fb-customerchat"
+        attribution="ProteanCMS"
+        page_id="{@pageid}">
+        <xsl:if test="@theme_color!=''">
+          <xsl:attribute name="theme_color">
+            <xsl:value-of select="@theme_color"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@logged_in_greeting!=''">
+          <xsl:attribute name="logged_in_greeting">
+            <xsl:value-of select="@logged_in_greeting"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@logged_out_greeting!=''">
+          <xsl:attribute name="logged_out_greeting">
+            <xsl:value-of select="@logged_out_greeting"/>
+          </xsl:attribute>
+        </xsl:if>
+      </div>
+
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="Content" mode="JSONLD">
-    <xsl:if test ="node()!=''">
+    <xsl:if test="node()!=''">
       <script type="application/ld+json">
         <xsl:value-of select="node()"/>
       </script>
@@ -4242,14 +4281,14 @@
       <xsl:choose>
         <xsl:when test="@status=0">
           <xsl:attribute name="class">
-            <xsl:text>status fa fa-times-circle fa-lg text-danger inactive</xsl:text>
+            <xsl:text>status fa fa-eye-slash fa-lg inactive</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           <xsl:attribute name="title">This content is hidden</xsl:attribute>
         </xsl:when>
         <xsl:when test="@status=1 or @status='-1'">
           <xsl:attribute name="class">
-            <xsl:text>status fa fa-check fa-lg text-success active</xsl:text>
+            <xsl:text>status fa fa-eye fa-lg active</xsl:text>
             <xsl:if test="MenuItem">Parent</xsl:if>
           </xsl:attribute>
           <xsl:attribute name="title">This content is live</xsl:attribute>
@@ -4590,9 +4629,25 @@
 
   <xsl:template match="User" mode="reportCell">
     <td>
-      <a href="mailto:{Email/node()}">
-        <xsl:value-of select="LastName/node()"/>,&#160;<xsl:value-of select="FirstName/node()"/>
+      <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
+        <span class="btn btn-primary btn-xs">
+          <i class="fa fa-user fa-white">
+            <xsl:text> </xsl:text>
+          </i>
+        </span>
+        &#160;<xsl:choose>
+        <xsl:when test="FirstName and LastName">
+          <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
+        </xsl:when>
+        <xsl:when test="User/FirstName and User/LastName">
+          <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
       </a>
+      
     </td>
   </xsl:template>
 

@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Eonic Common Tools")> 
 <Assembly: AssemblyCompany("Eonic Associates LLP")> 
 <Assembly: AssemblyProduct("Eonic.Tools")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2017")>
+<Assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2018")>
 <Assembly: AssemblyTrademark("Eonic")> 
 
 <Assembly: ComVisible(False)> 
@@ -33,8 +33,8 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("5.0.163.27")>
-<Assembly: AssemblyFileVersion("5.0.163.27")>
+<Assembly: AssemblyVersion("5.0.163.74")>
+<Assembly: AssemblyFileVersion("5.0.163.74")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 

@@ -547,7 +547,7 @@ Public Class Web
                 gnPageErrorId = goApp("PageErrorId")
 
 
-                mcPagePath = moRequest("path")
+                mcPagePath = CStr(moRequest("path") & "")
 
                 If gbCart Or gbQuote Then
                     InitialiseCart()
@@ -1313,6 +1313,9 @@ Public Class Web
             Me.Finalize()
         Finally
             If msRedirectOnEnd <> "" Then
+                If Not msRedirectOnEnd.StartsWith("http") Then
+                    msRedirectOnEnd = msRedirectOnEnd.Replace("//", "/")
+                End If
                 If mbRedirectPerm Then
                     moResponse.RedirectPermanent(msRedirectOnEnd, False)
                 Else
@@ -6371,7 +6374,7 @@ Public Class Web
                 End If
             Else
                 sProcessInfo = "content exists adding content"
-                oRoot = moPageXml.CreateElement("ContentDetail")
+                oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
                 oRoot.AppendChild(moContentDetail)
                 If Not oPageElmt Is Nothing Then
                     oPageElmt.AppendChild(oRoot)
@@ -7807,7 +7810,7 @@ Public Class Web
         End Try
     End Sub
 
-    Private Sub ClearPageCache()
+    Public Sub ClearPageCache()
         Dim cProcessInfo As String = ""
         Try
 

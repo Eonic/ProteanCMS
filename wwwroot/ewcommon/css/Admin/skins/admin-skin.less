@@ -18,6 +18,7 @@ NEW BS ADMIN HEADER
 @admin-header-border-radius:	0px;
 @admin-gray:					#777;
 @admin-border:					1px dotted #ccc;
+@admin-primary:                 #428bca;
 @admin-danger:					#d9534f;
 @admin-warning:					#f0ad4e;
 @admin-success:					#5cb85c;
@@ -26,106 +27,224 @@ NEW BS ADMIN HEADER
 @admin-font-size-base:          15px;
 
 // VARIABLES FOR RESKINNING - INVERSE
-
 /*@admin-header-bg:				#fff;
 @admin-header-bg-light:			darken(@admin-header-bg, 10%);
 @admin-header-color:			#000;
 @admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
-
-
-
 // END VARIABLES
 .ewAdmin {
     .admin-breadcrumb {
-        position:absolute;
-        right:0px;
-    }
-}
-#adminLayout {
-    font-size: @admin-font-size-base;
-    letter-spacing: normal;
-
-    a {
-        color: @admin-header-color-link;
-    }
-
-    a:hover {
-        text-decoration: none;
-        color: lighten(@admin-header-color-link,20%);
-    }
-
-    .table a {
-        color: darken(@admin-header-color-link,25%)
-    }
-
-    .table a:hover {
-        text-decoration: none;
-        color: @admin-header-color-link;
-    }
-
-    .listbox a {
-        color: darken(@admin-header-color-link,30%)
-    }
-
-    .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-        color: @admin-header-color;
-        background-color: @admin-header-color-link;
+        position: absolute;
+        right: 0px;
+        background: transparent !important;
+        font-family: @admin-header-font;
+        color: #a5a7a9;
+        text-align: right;
+        padding: 15px 30px !important;
 
         a {
-            color: @admin-header-color;
+            color: @admin-gray;
+
+            &:hover {
+                color: @admin-header-color-link;
+                text-decoration: none;
+            }
+        }
+
+        font-size: 0.9em;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-right: 20px;
+        margin-bottom: 0 !important;
+
+        li:before {
+            color: #a5a7a9 !important;
+        }
+    }
+
+    #adminLayout {
+        font-size: @admin-font-size-base;
+        letter-spacing: normal;
+        padding-left: 0px;
+        padding-right: 1px;
+
+        a {
+            color: @admin-primary;
         }
 
         a:hover {
-            color: darken(@admin-header-color,25%);
+            text-decoration: none;
+            color: lighten(@admin-primary,20%);
         }
-    }
 
+        .status.active, .status.activeParent {
+            color: @admin-success;
+        }
 
+        .status.inactive {
+            color: @admin-gray;
+        }
 
-    .admin-page {
-        padding-left: 30px;
-        padding-right: 30px;
+        .table a {
+            color: darken(@admin-header-color-link,25%)
+        }
 
-        h1.page-header {
+        .table a:hover {
+            text-decoration: none;
+            color: @admin-header-color-link;
+        }
+
+        .listbox a {
+            color: darken(@admin-header-color-link,30%)
+        }
+
+        .row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            padding-left: 0px;
+            padding-right: 1px;
+        }
+
+        .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+            color: @admin-header-color;
+            background-color: @admin-header-color-link;
+
+            a {
+                color: @admin-header-color;
+            }
+
+            a:hover {
+                color: darken(@admin-header-color,25%);
+            }
+        }
+
+        .admin-page {
+            h1.page-header {
+                padding-left: 15px;
+                padding-right: 15px;
+                padding-top: 15px;
+                padding-bottom: 15px;
+                background-color: lighten(@admin-header-bg,70%);
+                margin-bottom: 1px;
+            }
+
+            .panel-default .panel-heading {
+                border-bottom: 4px solid lighten(@admin-header-bg,30%);
+                padding-bottom: 15px;
+                padding-top: 15px;
+            }
+
+            .panel-default .panel-body {
+                background-color: lighten(@admin-header-bg,85%);
+            }
+        }
+
+        #tpltEditStructure {
             margin-left: -30px;
             margin-right: -30px;
-            padding-left: 30px;
-            padding-right: 30px;
-            padding-top: 15px;
-            padding-bottom: 15px;
-            background-color: lighten(@admin-header-bg,70%);
+
+            .list-group-item {
+                border-bottom: 1px solid lighten(@admin-header-bg,75%);
+            }
+
+            .list-group-item:hover {
+                background-color: lighten(@admin-header-bg,85%);
+                -o-transition: .5s;
+                -ms-transition: .5s;
+                -moz-transition: .5s;
+                -webkit-transition: .5s;
+                /* ...and now for the proper property */
+                transition: .5s;
+            }
         }
 
-        .panel-default .panel-heading {
-            border-bottom: 4px solid lighten(@admin-header-bg,30%);
+
+        #tpltAdvancedMode {
+            .ui-accordion {
+                padding-top: 2px;
+
+                .panel {
+                    margin-top: 0px;
+                }
+
+                .panel-heading {
+                    background-color: #fff;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 10px;
+                    padding-top: 11px;
+                }
+
+                border-right: 1px solid #ddd;
+                border-left: 1px solid #ddd;
+
+                .accordion-toggle span {
+                    padding-left: 5px;
+                }
+
+                td.status {
+                    width: 30px;
+
+                    i {
+                        padding-left: 7px;
+                    }
+                }
+
+                .checkbox {
+                    margin-top: 0px;
+                }
+
+                span.checkbox {
+                    display: inline-block;
+                }
+            }
+
+            .panel-heading .pull-right {
+                position: relative;
+                top: -5px;
+            }
+
+            .optionsButton {
+                text-align: right;
+            }
+
+            .hitarea {
+                display: inline-block;
+            }
+
+            .treeNode {
+                display: inline-block;
+                padding: 8px 0px;
+            }
+
+            .panel-group .panel {
+                overflow: inherit;
+            }
         }
 
-        .panel-default .panel-body {
-            background-color: lighten(@admin-header-bg,85%);
+        .popover {
+            z-index: 1060;
+        }
+
+        .listItem .ewAdmin .btn,
+        .panel .list-group .ewAdmin .btn,
+        .panel .listItem .ewAdmin .btn {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            border-radius: 0px !important;
+
+            i {
+                font-size: 1em;
+            }
+
+            ;
+            text-decoration: none !important;
         }
     }
-
-    #tpltEditStructure {
-        margin-left: -30px;
-        margin-right: -30px;
-        margin-top: -20px;
-
-        .list-group-item {
-            border-bottom: 1px solid lighten(@admin-header-bg,75%);
-        }
-
-        .list-group-item:hover {
-            background-color: lighten(@admin-header-bg,85%);
-            -o-transition: .5s;
-            -ms-transition: .5s;
-            -moz-transition: .5s;
-            -webkit-transition: .5s;
-            /* ...and now for the proper property */
-            transition: .5s;
-        }
-    }
+    //end #adminLayout
 }
-
 .ewAdmin .open,
 #mainTable .ewAdmin,
 #pagefooter .ewAdmin{
@@ -196,69 +315,125 @@ NEW BS ADMIN HEADER
 		}
 	}
 }
-.normalMode{
-	a:hover{text-decoration:none;}
-    .slick-list .ewAdmin .btn-primary{z-index:10;}
+.normalMode {
+    a:hover {
+        text-decoration: none;
+    }
+
+    .slick-list .ewAdmin .btn-primary {
+        z-index: 10;
+    }
+
     .ewAdmin > .btn-default,
     .ewAdmin > .btn-primary,
     .ewAdmin > .dropdown > .btn-primary,
-    .ewAdmin > .dropdown .dropdown-menu a{
-        font-family:@admin-header-font;
-        i{
-            font-size: 13px!important;
-            color:@admin-header-color!important;
-            border:0!important;
-            width:auto!important;
-            height:auto!important;
-            display: inline-block!important;
-            &:before{display:inline!important;}
+    .ewAdmin > .dropdown .dropdown-menu a {
+        font-family: @admin-header-font;
+
+        i {
+            font-size: 13px !important;
+            color: @admin-header-color !important;
+            border: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            display: inline-block !important;
+
+            &:before {
+                display: inline !important;
+            }
         }
     }
-    span.editable{
-        .ewAdmin{
-            display:inline-block;
-            float:right;
+
+    span.editable {
+        .ewAdmin {
+            display: inline-block;
+            float: right;
         }
     }
-    .ewAdmin > .dropdown .dropdown-menu{
-        a{margin:0!important;}
+
+    .ewAdmin > .dropdown .dropdown-menu {
+        a {
+            margin: 0 !important;
+        }
+
         .updown,
-        .divider{clear:both}
+        .divider {
+            clear: both
+        }
     }
-    .ewAdmin > .btn-default i{color:@admin-header-color-link!important;}
+
+    .ewAdmin > .btn-default i {
+        color: @admin-header-color-link !important;
+    }
+
     .ewAdmin > .btn-default,
     .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary{
-        padding: 1px 5px!important;
-        font-weight: 400!important;
-        border-radius:0!important;
-        border:1px solid @admin-header-color-link !important;
+    .ewAdmin > .dropdown > .btn-primary,
+    .ewAdmin > .dropdown > .btn-default {
+        padding: 0px 3px 3px 5px !important;
+        font-weight: 400 !important;
+        border-radius: 3px !important;
+        border: 0px !important;
     }
-    .ewAdmin > .btn-default {
-        background: lighten(@admin-header-color-link, 30%) !important;
+
+    .ewAdmin > .ui-draggable-handle i {
+        top: 2px;
+        position: relative;
+    }
+
+    .ewAdmin > .btn-primary,
+    .ewAdmin > .dropdown > .btn-primary {
+        background: @admin-header-color-link !important;
+        border: 0px !important;
+        color: #fff !important;
+    }
+
+    .ewAdmin > .btn-default,
+    .ewAdmin > .dropdown > .btn-default {
+        background: lighten(@admin-header-color-link, 25%) !important;
         border-color: lighten(@admin-header-color-link, 5%) !important;
+        border: 1px !important;
         color: @admin-header-color-link !important;
 
         &:hover {
             background: lighten(@admin-header-color-link, 32%) !important;
         }
 
-        font-family: @admin-header-font!important;
+        font-family: @admin-header-font !important;
         text-shadow: none;
         border-width: 1px;
         letter-spacing: 0;
-        text-transform: none!important;
-        letter-spacing:normal!important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
 
         i {
             margin: 0;
         }
     }
-    .editable > div.ewAdmin.options{position:relative}
-    
+
+    a.arrowbutton span, a.drag span {
+        display: none;
+    }
+
+    .btn-primary,
+    .btn-info,
+    .btn-default {
+        &:after {
+            content: none !important
+        }
+
+        &:before {
+            content: none !important
+        }
+    }
+
+    .editable > div.ewAdmin.options {
+        position: relative
+    }
 }
 .moduleDrag{.clearfix;}
-.ewAdmin {
+
+.ewAdmin #adminLayout {
     .scroll-pane-arrows {
         overflow-y: scroll;
         //background:#fff;
@@ -269,10 +444,6 @@ NEW BS ADMIN HEADER
 
     #divHelpBox #helpBox {
         background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
-    }
-
-    #tpltAdvancedMode .panel-group .panel {
-        overflow: inherit;
     }
 
     #MenuTree table td {
@@ -295,11 +466,20 @@ NEW BS ADMIN HEADER
     }
 
     .btn, .btn-sm, .btn-xs {
-        border-radius: @admin-header-border-radius !important;
+        border-radius: @admin-header-border-radius;
+        margin-right: 1px;
+    }
+
+    a.arrowbutton span, a.drag span {
+        display: none;
+    }
+
+    .btn-xs {
+        padding: 4px 10px;
     }
 
     .panel-heading, .panel {
-        border-radius: @admin-header-border-radius !important;
+        border-radius: @admin-header-border-radius;
     }
 
     .btn-primary i {
@@ -324,7 +504,7 @@ NEW BS ADMIN HEADER
 
     .btn-primary,
     .btn-info {
-        background: @admin-header-color-link !important;
+        background: @admin-primary !important;
         border-color: darken(@admin-header-color-link, 10%) !important;
         color: @admin-header-color !important;
 
@@ -332,7 +512,7 @@ NEW BS ADMIN HEADER
             background: lighten(@admin-header-color-link, 7%) !important;
         }
 
-        border-width: 1px;
+        border-width: 0px;
 
         &:focus {
             outline: none;
@@ -344,17 +524,17 @@ NEW BS ADMIN HEADER
     }
 
     .btn-default {
-        background: lighten(@admin-header-color-link, 30%) !important;
-        border-color: lighten(@admin-header-color-link, 5%) !important;
-        color: @admin-header-color-link !important;
+        background: lighten(@admin-primary, 40%) !important;
+        border-color: @admin-primary;
+        color: @admin-primary !important;
 
         &:hover {
-            background: lighten(@admin-header-color-link, 32%) !important;
+            background: lighten(@admin-primary, 32%) !important;
         }
 
         font-family: @admin-header-font !important;
         text-shadow: none;
-        border-width: 1px;
+        border-width: 0px;
         letter-spacing: 0;
         text-transform: none;
 
@@ -377,14 +557,12 @@ NEW BS ADMIN HEADER
 
     .btn-success {
         background: @admin-success !important;
-        border-color: darken(@admin-success, 10%) !important;
+        border-width: 0px;
         color: @admin-header-color !important;
 
         &:hover {
             background: lighten(@admin-success, 7%) !important;
         }
-
-        border-width: 1px;
     }
 
     .btn-warning {
@@ -404,25 +582,9 @@ NEW BS ADMIN HEADER
         font-family: @admin-header-font;
     }
 
-    #footer {
-        background-color: @admin-header-bg;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-family: @admin-header-font;
 
-        a {
-            color: @admin-header-color;
-        }
 
-        a:hover {
-            color: @admin-header-color-link;
-        }
-
-        font-size: 12px;
-        border-top: 4px solid fadeout(@admin-bg, 60%);
-    }
-
-    #adminLayout .adminTemplate {
+    .adminTemplate {
         font-weight: 400;
 
         .radiocheckbox label,
@@ -438,10 +600,15 @@ NEW BS ADMIN HEADER
         }
     }
 
-    #adminLayout {
+    
         h1.page-header {
             font-size: 2em;
-            margin-top: 0;
+            margin: 0;
+            border-bottom: 1px solid #cccccc;
+            font-family: @admin-body-font;
+            font-weight: 500;
+            line-height: 1.1;
+            color: #333333;
         }
 
         .panel-heading {
@@ -464,7 +631,6 @@ NEW BS ADMIN HEADER
         .scroll_10 {
             height: 100px;
         }
-    }
 
     table.manage-lookups .buttonCell {
         min-width: 210px;
@@ -472,7 +638,8 @@ NEW BS ADMIN HEADER
 
     dl.tabled {
         border: none;
-        padding: 0; 
+        padding: 0;
+
         dt {
             float: left;
             clear: left;
@@ -480,26 +647,36 @@ NEW BS ADMIN HEADER
             text-align: right;
             font-weight: bold;
         }
+
         dt::after {
             content: ":";
         }
+
         dd {
             margin: 0 0 0 160px;
             padding: 0 0 0.5em 0;
         }
     }
+}
 
-   
+.ewAdmin #footer {
+    background-color: @admin-header-bg;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: @admin-header-font;
+
+    a {
+        color: @admin-header-color;
+    }
+
+    a:hover {
+        color: @admin-header-color-link;
+    }
+
+    font-size: 12px;
+    border-top: 4px solid fadeout(@admin-bg, 60%);
 }
-.Site .listItem .ewAdmin .btn,
-.Site .panel .list-group .ewAdmin .btn,
-.Site .panel .listItem .ewAdmin .btn{
-	padding-left:5px!important;
-	padding-right:5px!important;
-	border-radius:0px!important;
-	i{font-size:1em;};
-    text-decoration:none !important;
-}
+
 #keepalive{
 	display:none;
 }
@@ -618,11 +795,7 @@ NEW BS ADMIN HEADER
 		z-index: 49900;
 	}
 
-.ewAdmin .btn {margin-right: 4px;}
-.ewAdmin a.arrowbutton span, .ewAdmin a.drag span
-{
-    display: none;
-}
+
 
 //CMS LOGIN
 .ewAdmin div.report
@@ -829,24 +1002,4 @@ form#AddModule{
 }
 .pickImageModal{
     font-family:@admin-header-font;
-}
-#tpltAdvancedMode{
-    .panel-heading .pull-right{
-        position:relative;
-        top:-2px;
-    }
-    .optionsButton{
-    text-align:right;
-    }
-    .hitarea{
-        display:inline-block;
-    }
-
-    .treeNode{
-        display:inline-block;
-        padding: 8px 0px;
-    }
-}
-.popover {
-    z-index: 1060;
 }

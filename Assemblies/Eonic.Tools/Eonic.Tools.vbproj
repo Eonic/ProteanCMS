@@ -10,10 +10,10 @@
     <RootNamespace>Eonic.Tools</RootNamespace>
     <AssemblyName>Eonic.Tools</AssemblyName>
     <MyType>Windows</MyType>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>%24/EonicWeb5/Eonic.Tools</SccProjectName>
+    <SccLocalPath>.</SccLocalPath>
+    <SccAuxPath>https://eonicsource.visualstudio.com</SccAuxPath>
+    <SccProvider>{4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}</SccProvider>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Eonic.Tools.snk</AssemblyOriginatorKeyFile>
     <OptionStrict>Off</OptionStrict>
@@ -51,7 +51,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>5.0.163.27</AssemblyVersion>
+    <AssemblyVersion>5.0.163.74</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>

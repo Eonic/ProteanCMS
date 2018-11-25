@@ -669,8 +669,6 @@ Public Class IndexerAsync
                 myWeb.moTransform = moTransform
                 myWeb.moTransform.myWeb = myWeb
 
-
-
                 'here we get a copy of the outputted html
                 'as the admin user would see it
                 'without bieng in admin mode
@@ -758,7 +756,7 @@ Public Class IndexerAsync
                                 myWeb.moDbHelper.moPageXml = myWeb.moPageXml
                                 myWeb.mcEwSiteXsl = cXslPath
                                 myWeb.mnArtId = oElmt.GetAttribute("id")
-
+                                myWeb.moContentDetail = Nothing
                                 cPageHtml = myWeb.ReturnPageHTML(0, True)
                                 'remove any declarations that might affect and Xpath Search
                                 cPageHtml = Replace(cPageHtml, "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">", "")

@@ -591,7 +591,7 @@ Partial Public Class fsHelper
 
     Public Function SaveFile(ByVal httpURL As String, ByVal cFolderPath As String) As String
         PerfMon.Log("fsHelper", "SaveFile")
-        Dim response As System.Net.WebResponse
+        Dim response As System.Net.WebResponse = Nothing
         Dim remoteStream As Stream
         Dim readStream As StreamReader
         Dim request As System.Net.WebRequest
@@ -606,7 +606,15 @@ Partial Public Class fsHelper
                 Return Replace(Replace(cFolderPath, "..\", "/"), "\", "/") & "/" & filename
             Else
                 request = System.Net.WebRequest.Create(httpURL)
-                response = request.GetResponse
+                Try
+                    response = request.GetResponse()
+                Catch ex As System.Net.WebException
+                    Dim errResp As System.Net.HttpWebResponse = ex.Response
+                    If ex.Status = System.Net.WebExceptionStatus.ProtocolError Then
+                        Return errResp.StatusCode.ToString()
+                    End If
+                End Try
+
                 If Not response Is Nothing Then
                     remoteStream = response.GetResponseStream
                     Try
@@ -641,10 +649,7 @@ Partial Public Class fsHelper
                     response.Close()
                     remoteStream.Close()
                     img.Dispose()
-                Else
-                    Return "File returned 404"
                 End If
-
             End If
 
 

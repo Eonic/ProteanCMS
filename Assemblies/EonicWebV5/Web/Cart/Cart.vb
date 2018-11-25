@@ -1336,11 +1336,14 @@ processFlow:
                     Case "ChoosePaymentShippingOption", "Confirm"  ' and confirm terms and conditions
                         mnProcessId = 4
 
-
-
-
-
                         GetCart(oElmt)
+
+                        If mcCartCmd = "ChoosePaymentShippingOption" Then
+                            If Not oContentElmt Is Nothing Then
+                                AddToLists("Quote", oContentElmt)
+                            End If
+                        End If
+
                         Dim oOptionXform As xForm = optionsXform(oElmt)
 
                         If Not oOptionXform.valid Then
@@ -6967,7 +6970,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Sub
 
-        Public Sub ListOrders(Optional ByVal nOrderID As Integer = 0, Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False)
+        Public Sub ListOrders(Optional ByVal nOrderID As Integer = 0, Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
             PerfMon.Log("Cart", "ListOrders")
             If myWeb.mnUserId = 0 Then Exit Sub ' if not logged in, dont bother
             'For listing a users previous orders/quotes
@@ -6981,6 +6984,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
             Dim nRows As Integer = 100
 
             Dim nCurrentRow As Integer = 0
+            Dim moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+
             Try
 
                 ' Set the paging variables, if provided.
@@ -6990,8 +6995,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If nStart < 0 Then nStart = 0
                 If nRows < 1 Then nRows = 100
 
-                ' List the selection criteria
-                If Not myWeb.mbAdminMode Then
+                If Not nUserId = 0 Then
+                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                ElseIf Not myWeb.mbAdminMode Then
                     cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 Else
                     cWhereSQL = " WHERE " & IIf(nOrderID > 0, "  nCartOrderKey = " & nOrderID & " AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
@@ -7042,42 +7048,54 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                         'go through each cart
                         For Each oDR In oDs.Tables(mcOrderType).Rows
+                            ' Only add the relevant rows (page selected)
+                            nCurrentRow += 1
+                            If nCurrentRow > nStart Then
+                                Dim oContent As XmlElement = moPageXml.CreateElement("Content")
+                                oContent.SetAttribute("type", mcOrderType)
+                                oContent.SetAttribute("id", oDR("nCartOrderKey"))
+                                oContent.SetAttribute("statusId", oDR("nCartStatus"))
 
-                                ' Only add the relevant rows (page selected)
-                                nCurrentRow += 1
-                                If nCurrentRow > nStart Then
-
-
-                                    Dim oContent As XmlElement = moPageXml.CreateElement("Content")
-
-                                    oContent.SetAttribute("type", mcOrderType)
-                                    oContent.SetAttribute("id", oDR("nCartOrderKey"))
-                                    oContent.SetAttribute("statusId", oDR("nCartStatus"))
-                                    cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
-                                    Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
-                                    Do While oDRe.Read
+                                'Get Date
+                                cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
+                                Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
+                                Do While oDRe.Read
                                     oContent.SetAttribute("created", xmlDateTime(oDRe.GetValue(0)))
                                 Loop
                                 oDRe.Close()
-                                    If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
-                                        oContent.InnerXml = oDR("cCartXML")
-                                    Else
-                                        Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
-                                        Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
-                                        oContent.InnerXml = oCartListElmt.OuterXml
-                                    End If
-                                    ':TODO this might not be needed if cCartXml is saved at every step.
-                                    'make sure the status is upto date.
-                                    Dim orderNode As XmlElement = oContent.FirstChild
-                                    orderNode.SetAttribute("statusId", oDR("nCartStatus"))
 
-                                    oContent.SetAttribute("type", LCase(mcOrderType))
+                                'Get stored CartXML
+                                If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
+                                    oContent.InnerXml = oDR("cCartXML")
+                                Else
+                                    Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
+                                    Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
+                                    oContent.InnerXml = oCartListElmt.OuterXml
+                                End If
+
+                                Dim orderNode As XmlElement = oContent.FirstChild
+                                'Add values not stored in cartXml
+                                orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                If oDR("cCurrency") Is Nothing Or oDR("cCurrency") = "" Then
                                     oContent.SetAttribute("currency", mcCurrency)
                                     oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
-
-                                    If oDR("nCartUserDirId") <> 0 Then
-                                        oContent.SetAttribute("userId", oDR("nCartUserDirId"))
+                                Else
+                                    oContent.SetAttribute("currency", oDR("cCurrency"))
+                                    Dim thisCurrencyNode As XmlElement = moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" & oDR("cCurrency") & "']")
+                                    If Not thisCurrencyNode Is Nothing Then
+                                        oContent.SetAttribute("currencySymbol", thisCurrencyNode.GetAttribute("symbol"))
+                                    Else
+                                        oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
                                     End If
+                                End If
+                                oContent.SetAttribute("type", LCase(mcOrderType))
+
+                                'oContent.SetAttribute("currency", mcCurrency)
+                                'oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
+
+                                If oDR("nCartUserDirId") <> 0 Then
+                                    oContent.SetAttribute("userId", oDR("nCartUserDirId"))
+                                End If
 
                                 'TS: Removed because it gives a massive overhead when Listing loads of orders.
                                 If bSingleRecord Then
@@ -7114,36 +7132,37 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                                 Dim oTestNode As XmlElement = oContentDetails.SelectSingleNode("Content[@id=" & oContent.GetAttribute("id") & " and @type='" & LCase(mcOrderType) & "']")
                                 If mcOrderType = "Cart" Or mcOrderType = "Order" Then
-                                        'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
+                                    'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
 
-                                        oContentDetails.AppendChild(oContent)
+                                    oContentDetails.AppendChild(oContent)
 
-                                        'End If
-                                    Else
-                                        If oTestNode Is Nothing Then
-                                            If bListAllQuotes Then
-                                                oContentDetails.AppendChild(oContent)
-                                            Else
-                                                '   If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) Then
-                                                oContentDetails.AppendChild(oContent)
-                                                '    End If
-                                            End If
+                                    'End If
+                                Else
+                                    If oTestNode Is Nothing Then
+                                        If bListAllQuotes Then
+                                            oContentDetails.AppendChild(oContent)
+                                        Else
+                                            '   If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) Then
+                                            oContentDetails.AppendChild(oContent)
+                                            '    End If
                                         End If
                                     End If
-
-
-
-                                    'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
-                                    '    oContentDetails.AppendChild(oContent)
-                                    'End If
                                 End If
-                            Next
-                        End If
+
+
+
+                                'If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
+                                '    oContentDetails.AppendChild(oContent)
+                                'End If
+                            End If
+                        Next
                     End If
+                End If
             Catch ex As Exception
                 returnException(mcModuleName, "ListOrders", ex, "", "", gbDebug)
             End Try
         End Sub
+
 
         Public Overridable Sub MakeCurrent(ByVal nOrderID As Integer)
             PerfMon.Log("Cart", "MakeCurrent")

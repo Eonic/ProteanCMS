@@ -55,7 +55,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="SubmitPath">
-    <xsl:text>/?contentType=popup&amp;</xsl:text>
+    <xsl:text>/{$appPath}?contentType=popup&amp;</xsl:text>
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">
@@ -84,7 +84,9 @@
         <xsl:with-param name="string">
           <xsl:text>javascript:&#36;('#modal-</xsl:text>
           <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').load('/?contentType=popup&amp;ewcmd=</xsl:text>
+          <xsl:text>').load('/</xsl:text>
+          <xsl:value-of select="$appPath"/>
+          <xsl:text>?contentType=popup&amp;ewcmd=</xsl:text>
           <xsl:value-of select="$page/@ewCmd"/>
           <xsl:text>&amp;ewCmd2=pickImage&amp;fld=</xsl:text>
           <xsl:value-of select="$fld"/>
@@ -112,7 +114,7 @@
     var newItem = '<div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /><div class="popover-description"><span class="image-description-name">' + file.name + '</span><br/></div></div>';
     newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name + '" class="img-responsive" /></a></div>';
     newItem = newItem + '<div class="description">';
-    newItem = newItem + '<a href="/?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
+    newItem = newItem + '<a href="/{$appPath}?contentType=popup&amp;ewcmd=ImageLib&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file=' + file.name + '" data-toggle="modal" data-target="#modal-{$targetFeild}" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = newItem + '</div><div class="img-description"><span class="image-description-name">' + file.name + '</span></div>';
     newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
 
@@ -145,7 +147,9 @@
         <xsl:with-param name="string">
           <xsl:text>javascript:&#36;('#modal-</xsl:text>
           <xsl:value-of select="$targetFeild"/>
-          <xsl:text>').load('/?contentType=popup&amp;ewcmd=</xsl:text>
+          <xsl:text>').load('/</xsl:text>
+          <xsl:value-of select="$appPath"/>
+          <xsl:text>?contentType=popup&amp;ewcmd=</xsl:text>
           <xsl:value-of select="$page/@ewCmd"/>
           <xsl:text>&amp;ewCmd2=pickImage&amp;fld=</xsl:text>
           <xsl:value-of select="$fld"/>
@@ -197,7 +201,7 @@
               <xsl:text> active </xsl:text>
             </xsl:if>
          </xsl:attribute>
-        <a href="/?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+        <a href="/{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
            <i>
             <xsl:attribute name="class">
               <xsl:text>fa fa-lg</xsl:text>
@@ -461,7 +465,7 @@
                                 </xsl:when>
                                 <xsl:otherwise>
                                   <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
-                                    <a href="/?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
+                                    <a href="/{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
                                       </i>

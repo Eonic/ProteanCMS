@@ -17,7 +17,7 @@ Imports System.Configuration
 Imports System.IO
 Imports System.Collections
 Imports System.Data
-Imports System.Data.sqlClient
+Imports System.Data.SqlClient
 Imports System.Web.Configuration
 Imports System.Text.RegularExpressions
 Imports Eonic.Tools
@@ -332,7 +332,7 @@ ProcessFlow:
                         myWeb.moSession("nUserId") = 0
                         myWeb.moSession.Abandon()
                         myWeb.mnUserId = 0
-                        myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/" & mcPagePath
+                        myWeb.msRedirectOnEnd = gcProjectPath & "/" & mcPagePath
 
                     Case "AdmHome", "Admin"
                         Dim statusElmt As XmlElement = moPageXML.CreateElement("Status")
@@ -465,17 +465,17 @@ ProcessFlow:
                             If Not fileBytes Is Nothing Then
 
                                 Dim strdocPath As String
-                                strdocPath = myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/" & themeName & ".zip")
+                                strdocPath = myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip")
                                 Dim objfilestream As New FileStream(strdocPath, FileMode.Create, FileAccess.ReadWrite)
                                 objfilestream.Write(fileBytes, 0, fileBytes.Length)
                                 objfilestream.Close()
 
                                 'unzip the transfered file
                                 Dim fz As New ICSharpCode.SharpZipLib.Zip.FastZip
-                                fz.ExtractZip(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/" & themeName & ".zip"), myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/"), "")
+                                fz.ExtractZip(myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"), myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/"), "")
 
                                 'delete the transfered file
-                                Dim oFile As New System.IO.FileInfo(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/ewThemes/" & themeName & ".zip"))
+                                Dim oFile As New System.IO.FileInfo(myWeb.goServer.MapPath(gcProjectPath & "/ewThemes/" & themeName & ".zip"))
                                 oFile.Delete()
                                 mcEwCmd = "SelectTheme"
                                 GoTo ProcessFlow
@@ -522,12 +522,12 @@ ProcessFlow:
                                 'lets save the page we are editing to the session
                                 myWeb.moSession("pgid") = myWeb.moRequest("pgid")
                                 If Not myWeb.mbSuppressLastPageOverrides Then
-                                    myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
+                                    myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId 'myWeb.mcOriginalURL
                                 End If
                             End If
                             'we want to return here after editing
                             If Not myWeb.mbSuppressLastPageOverrides Then
-                                myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=Normal&pgid=" & myWeb.mnPageId '
+                                myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=Normal&pgid=" & myWeb.mnPageId '
                             End If
 
                         End If
@@ -538,9 +538,9 @@ ProcessFlow:
 
                         Dim oCommonContentTypes As New XmlDocument
                         If IO.File.Exists(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml")) Then oCommonContentTypes.Load(myWeb.goServer.MapPath("/ewcommon/xsl/pagelayouts/layoutmanifest.xml"))
-                        If IO.File.Exists(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/xsl/layoutmanifest.xml")) Then
+                        If IO.File.Exists(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml")) Then
                             Dim oLocalContentTypes As New XmlDocument
-                            oLocalContentTypes.Load(myWeb.goServer.MapPath(moConfig("ProjectPath") & "/xsl/layoutmanifest.xml"))
+                            oLocalContentTypes.Load(myWeb.goServer.MapPath(gcProjectPath & "/xsl/layoutmanifest.xml"))
                             Dim oLocals As XmlElement = oLocalContentTypes.SelectSingleNode("/PageLayouts/ContentTypes")
                             If Not oLocals Is Nothing Then
                                 Dim oGrp As XmlElement
@@ -577,7 +577,7 @@ ProcessFlow:
 
                         sAdminLayout = "ByType"
                         EditContext = "ByType." & mcEwCmd2
-                        myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=ByType." & mcEwCmd2 & "." & mcEwCmd3
+                        myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "/?ewCmd=ByType." & mcEwCmd2 & "." & mcEwCmd3
                         Dim ContentType As String = mcEwCmd2
                         Dim Filter As String = mcEwCmd3
                         Dim FilterSQL As String = ""
@@ -598,7 +598,7 @@ ProcessFlow:
                                     Dim oXfrm As New xForm(myWeb)
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
-                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " & _
+                                    Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
 "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 )"
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
@@ -746,7 +746,7 @@ ProcessFlow:
                                 ' Check for an optional command to redireect to
                                 If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
 
-                                    myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
+                                    myWeb.msRedirectOnEnd = gcProjectPath & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
 
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
@@ -799,7 +799,7 @@ ProcessFlow:
                             End If
                             myWeb.ClearPageCache()
 
-                            GoTo processflow
+                            GoTo ProcessFlow
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -830,26 +830,7 @@ ProcessFlow:
 
                         sAdminLayout = "AjaxReturnTrue"
 
-                    Case "HideContent"
-                        ' hide content
-                        myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Hidden, myWeb.moRequest("id"))
 
-                        mcEwCmd = myWeb.moSession("ewCmd")
-                        'lest just try this redirecting to last page
-
-                        If myWeb.moSession("lastPage") <> "" Then
-                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
-                            myWeb.moSession("lastPage") = ""
-                        Else
-                            oPageDetail.RemoveAll()
-                            moAdXfm.valid = False
-                            GoTo ProcessFlow
-                        End If
-                        myWeb.ClearPageCache()
-
-                        oPageDetail.RemoveAll()
-                        myWeb.mnArtId = 0
-                        If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "RemoveContentRelation"
                         ' remove content relation from item
@@ -876,10 +857,70 @@ ProcessFlow:
                         oPageDetail.RemoveAll()
                         myWeb.mnArtId = 0
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
+                    Case "BulkContentAction"
+                        Select Case myWeb.moRequest("BulkAction")
+                            Case "Move"
+                                mcEwCmd = "MoveContent"
+                                sAdminLayout = "MoveContent"
+                                GoTo ProcessFlow
+                            Case "Copy"
+                                mcEwCmd = "CopyContent"
+                                sAdminLayout = "CopyContent"
+                                GoTo ProcessFlow
+                            Case "Locate"
+                                mcEwCmd = "LocateContent"
+                                sAdminLayout = "LocateContent"
+                                GoTo ProcessFlow
+                            Case "Hide"
+                                mcEwCmd = "HideContent"
+                                sAdminLayout = "HideContent"
+                                GoTo ProcessFlow
+                            Case "Show"
+                                mcEwCmd = "ShowContent"
+                                sAdminLayout = "ShowContent"
+                                GoTo ProcessFlow
+                        End Select
+                    Case "HideContent"
+                        ' hide content
+
+                        If myWeb.moRequest("id").Contains(",") Then
+                            Dim ids As String() = myWeb.moRequest("id").Split(New Char() {","c})
+                            Dim id As String
+                            For Each id In ids
+                                myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Hidden, id)
+                            Next
+                        Else
+                            myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Hidden, myWeb.moRequest("id"))
+                        End If
+
+                        mcEwCmd = myWeb.moSession("ewCmd")
+                        'lest just try this redirecting to last page
+
+                        If myWeb.moSession("lastPage") <> "" Then
+                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                            myWeb.moSession("lastPage") = ""
+                        Else
+                            oPageDetail.RemoveAll()
+                            moAdXfm.valid = False
+                            GoTo ProcessFlow
+                        End If
+                        myWeb.ClearPageCache()
+
+                        oPageDetail.RemoveAll()
+                        myWeb.mnArtId = 0
+                        If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "ShowContent"
                         ' hide content
-                        myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Live, myWeb.moRequest("id"))
+                        If myWeb.moRequest("id").Contains(",") Then
+                            Dim ids As String() = myWeb.moRequest("id").Split(New Char() {","c})
+                            Dim id As String
+                            For Each id In ids
+                                myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Live, id)
+                            Next
+                        Else
+                            myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Content, dbHelper.Status.Live, myWeb.moRequest("id"))
+                        End If
                         mcEwCmd = myWeb.moSession("ewCmd")
                         'lest just try this redirecting to last page
                         If myWeb.moSession("lastPage") <> "" Then
@@ -924,8 +965,18 @@ ProcessFlow:
                             myWeb.ClearPageCache()
                         End If
                     Case "MoveContent"
+
                         If myWeb.moRequest("parId") <> "" Then
-                            myWeb.moDbHelper.moveContent(CLng(myWeb.moRequest("id")), CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("parId")))
+                            If myWeb.moRequest("id").Contains(",") Then
+                                Dim ids As String() = myWeb.moRequest("id").Split(New Char() {","c})
+                                Dim id As String
+                                For Each id In ids
+                                    myWeb.moDbHelper.moveContent(CLng(id), CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("parId")))
+                                Next
+                            Else
+                                myWeb.moDbHelper.moveContent(CLng(myWeb.moRequest("id")), CLng(myWeb.moRequest("pgid")), CLng(myWeb.moRequest("parId")))
+                            End If
+
                             'lets show the target page content
                             myWeb.mnPageId = CLng(myWeb.moRequest("parId"))
                             sAdminLayout = ""
@@ -939,12 +990,21 @@ ProcessFlow:
                         End If
                         bLoadStructure = True
                         bMailMenu = True
-                        'Xform Stuff
+                                'Xform Stuff
 
                     Case "LocateContent"
                         If myWeb.moRequest("submit") <> "" Then
                             'updateLocations
-                            myWeb.moDbHelper.updateLocations(myWeb.moRequest("id"), myWeb.moRequest("location"), myWeb.moRequest("position"))
+                            If myWeb.moRequest("id").Contains(",") Then
+                                'Set Multiple Locations
+                                Dim ids As String() = myWeb.moRequest("id").Split(New Char() {","c})
+                                Dim id As String
+                                For Each id In ids
+                                    myWeb.moDbHelper.updateLocations(id, myWeb.moRequest("location"), myWeb.moRequest("position"))
+                                Next
+                            Else
+                                myWeb.moDbHelper.updateLocations(myWeb.moRequest("id"), myWeb.moRequest("location"), myWeb.moRequest("position"))
+                            End If
                             sAdminLayout = ""
                             mcEwCmd = myWeb.moSession("ewCmd")
                             'lest just try this redirecting to last page
@@ -958,13 +1018,15 @@ ProcessFlow:
                             If mcEwCmd <> "Normal" Then
                                 GoTo ProcessFlow
                             End If
-
                         Else
                             bLoadStructure = True
                             Dim oContentXml As XmlElement
-                            oContentXml = myWeb.GetContentBriefXml(, myWeb.moRequest("id")).SelectSingleNode("/ContentDetail/Content")
-                            myWeb.moContentDetail = myWeb.moDbHelper.getLocationsByContentId(myWeb.moRequest("id"), oContentXml)
+                            If myWeb.moRequest("id").Contains(",") Then
 
+                            Else
+                                oContentXml = myWeb.GetContentBriefXml(, myWeb.moRequest("id")).SelectSingleNode("/ContentDetail/Content")
+                                myWeb.moContentDetail = myWeb.moDbHelper.getLocationsByContentId(myWeb.moRequest("id"), oContentXml)
+                            End If
                             bMailMenu = True
                             bSystemPagesMenu = True
 
@@ -1036,7 +1098,7 @@ ProcessFlow:
                             mcEwCmd = myWeb.moSession("ewCmd")
                             sAdminLayout = ""
                             oPageDetail.RemoveAll()
-                            Dim cUrl As String = myWeb.moConfig("ProjectPath") & "/?ewCmd=" & mcEwCmd
+                            Dim cUrl As String = gcProjectPath & "/?ewCmd=" & mcEwCmd
                             myWeb.msRedirectOnEnd = cUrl
                             myWeb.ClearPageCache()
                         Else
@@ -1095,7 +1157,7 @@ ProcessFlow:
                                 myWeb.moSession("ewCmd") = mcEwCmd
                                 myWeb.moSession("pgid") = myWeb.mnPageId
 
-                                Dim cUrl As String = myWeb.moConfig("ProjectPath") & "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId
+                                Dim cUrl As String = gcProjectPath & "/?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId
                                 If nCloneId > 0 Then cUrl &= "&context=" & myWeb.mnPageId
                                 myWeb.msRedirectOnEnd = cUrl
 
@@ -1226,6 +1288,13 @@ ProcessFlow:
                         oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("User", CInt("0" & myWeb.moSession("UserParId")), nStatus))
                         sAdminLayout = "ListDirectory" '"ListUsers"
                         myWeb.moSession("ewCmd") = mcEwCmd
+                    Case "Profile"
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
+                        Dim oCart As New Cart(myWeb)
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+                        oCart.moPageXml = moPageXML
+                        oCart.ListOrders(0, False,,,, myWeb.moRequest("id"))
+                        oCart = Nothing
 
                     Case "ListUserContacts"
 
@@ -1351,10 +1420,10 @@ ProcessFlow:
                         If myWeb.moConfig("SecureMembershipAddress") <> "" Then
                             oMem.SecureMembershipProcess("logoffImpersonate")
                             myWeb.mnUserId = myWeb.moRequest("id")
-                            myWeb.msRedirectOnEnd = myWeb.moConfig("SecureMembershipAddress") & moConfig("ProjectPath") & "/"
+                            myWeb.msRedirectOnEnd = myWeb.moConfig("SecureMembershipAddress") & gcProjectPath & "/"
                         Else
                             myWeb.mnUserId = myWeb.moRequest("id")
-                            myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/"
+                            myWeb.msRedirectOnEnd = gcProjectPath & "/"
                         End If
 
                     Case "ResetUserAcct"
@@ -1715,7 +1784,7 @@ ProcessFlow:
                         bSystemPagesMenu = True
                         oWeb.mnSystemPagesId = myWeb.moDbHelper.getPageIdFromPath("System+Pages", False, False)
                         oWeb.mbAdminMode = False
-                        If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & moConfig("ProjectPath") & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
+                        If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
                     Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
@@ -2163,8 +2232,8 @@ ProcessFlow:
                         Dim oImportRootElmt As XmlElement = oImportXml.DocumentElement
 
                         If oImportRootElmt.Name = "DatabaseImport" Then
-                            Dim DBConn As String = "Data Source=" & oImportRootElmt.GetAttribute("databaseServer") & "; " & _
-                    "Initial Catalog=" & oImportRootElmt.GetAttribute("databaseName") & "; " & _
+                            Dim DBConn As String = "Data Source=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                    "Initial Catalog=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
                     "user id=" & oImportRootElmt.GetAttribute("databaseUsername") & "; password=" & oImportRootElmt.GetAttribute("databasePassword")
 
                             Dim newDb As New dbHelper(DBConn, myWeb.mnUserId, myWeb.moCtx)
@@ -2180,7 +2249,7 @@ ProcessFlow:
                                 ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
                                 oImportXml.LoadXml(ImportDS.GetXml())
                             End If
-                        
+
                         End If
                     End If
 
@@ -2622,9 +2691,9 @@ ProcessFlow:
                     Dim oByPage As XmlElement
                     If Tools.Xml.NodeState(oMenuRoot, "//MenuItem[@cmd='ByPage']", , , , oByPage) <> Tools.Xml.XmlNodeState.NotInstantiated Then
                         For Each oMenuElmt In oByPage.SelectNodes("MenuItem[not(@cmd='Normal' or @cmd='Advanced')]")
-                            If Not ( _
+                            If Not (
                                         (oMenuElmt.GetAttribute("cmd") = "EditPage" _
-                                            Or oMenuElmt.GetAttribute("cmd") = "EditPagePermissions" _
+                                            Or oMenuElmt.GetAttribute("cmd") = "EditPagePermissions"
                                         ) And myWeb.mbIsClonePage) _
                                     Then oMenuElmt.SetAttribute("display", "false")
                         Next
@@ -2905,16 +2974,16 @@ ProcessFlow:
                     Dim oCart As New Cart(myWeb)
                     oPageDetail.AppendChild(moAdXfm.xFrmCartActivity)
                     If moAdXfm.valid Then
-                        oPageDetail.AppendChild(oCart.CartReports( _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("bSplit").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText _
+                        oPageDetail.AppendChild(oCart.CartReports(
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("bSplit").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
                     sAdminLayout = "CartActivity"
@@ -2923,15 +2992,15 @@ ProcessFlow:
                     oPageDetail.AppendChild(moAdXfm.xFrmCartActivityDrillDown)
                     If moAdXfm.valid Then
 
-                        oPageDetail.AppendChild(oCart.CartReportsDrilldown( _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cGrouping").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nDay").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText _
+                        oPageDetail.AppendChild(oCart.CartReportsDrilldown(
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cGrouping").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nDay").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
                     sAdminLayout = "CartActivityDrilldown"
@@ -2939,15 +3008,15 @@ ProcessFlow:
                     Dim oCart As New Cart(myWeb)
                     oPageDetail.AppendChild(moAdXfm.xFrmCartActivityPeriod)
                     If moAdXfm.valid Then
-                        oPageDetail.AppendChild(oCart.CartReportsPeriod( _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cGroup").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText _
+                        oPageDetail.AppendChild(oCart.CartReportsPeriod(
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cGroup").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nYear").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nMonth").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nWeek").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus1").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus2").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText
                         ))
                     End If
                     sAdminLayout = "CartActivityPeriod"
@@ -2955,12 +3024,12 @@ ProcessFlow:
                     Dim oCart As New Cart(myWeb)
                     oPageDetail.AppendChild(moAdXfm.xFrmCartOrderDownloads)
                     If moAdXfm.valid Then
-                        oPageDetail.AppendChild(oCart.CartReportsDownload( _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText, _
-                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderStage").InnerText _
+                        oPageDetail.AppendChild(oCart.CartReportsDownload(
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText,
+                        moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderStage").InnerText
                         ))
                     End If
                     sAdminLayout = "CartDownload"
@@ -3339,7 +3408,7 @@ listItems:
                     oDS.Tables("ProductCategory").Columns("cCatSchemaName").ColumnMapping = MappingType.Attribute
                     oDS.Tables("ProductCategory").Columns("cCatForeignRef").ColumnMapping = MappingType.Attribute
                 End If
-                cSql = "SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, tblCartCatProductRelations.nCatProductRelKey AS relid, tblCartCatProductRelations.nCatId AS catid FROM tblContent c INNER JOIN tblCartCatProductRelations ON c.nContentKey = tblCartCatProductRelations.nContentId " & _
+                cSql = "SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, tblCartCatProductRelations.nCatProductRelKey AS relid, tblCartCatProductRelations.nCatId AS catid FROM tblContent c INNER JOIN tblCartCatProductRelations ON c.nContentKey = tblCartCatProductRelations.nContentId " &
                                     "WHERE (tblCartCatProductRelations.nCatId Is not Null)"
                 myWeb.moDbHelper.addTableToDataSet(oDS, cSql, "Content")
 
@@ -4118,5 +4187,5 @@ SP:
 
     End Class
 
-    
+
 End Class

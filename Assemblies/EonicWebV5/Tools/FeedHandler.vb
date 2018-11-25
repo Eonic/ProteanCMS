@@ -158,19 +158,22 @@ Public Class FeedHandler
         Dim completeCount As Long = 0
         Dim startNo As Long = 0
         Dim processInfo As String
-
+        Dim logId As Long = 0
         Try
 
             oTransform.Compiled = True
             oTransform.XslFilePath = cXSLTransformPath
 
             Dim ReturnMessage As String = "Streaming Feed "
-            Dim logId As Long = oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Started")
+            logId = oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Started using " & cXSLTransformPath)
 
-            Dim cDeleteTempTableName As String = cFeedURL.Replace(".xml", "")
+            Dim cDeleteTempTableName As String = "tmp-" & cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "")
             Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
             Dim Tasks As New Eonic.Web.dbImport(oDBH.oConn.ConnectionString, 0)
-            System.Threading.ThreadPool.SetMaxThreads(10, 10)
+            Dim workerThreads As Integer = 0
+            Dim portThreads As Integer = 0
+            System.Threading.ThreadPool.GetMaxThreads(workerThreads, portThreads)
+            System.Threading.ThreadPool.SetMaxThreads(workerThreads / 2, portThreads / 2)
             Dim doneEvents(0) As System.Threading.ManualResetEvent
 
             Dim settings As XmlWriterSettings = New XmlWriterSettings()
@@ -190,7 +193,9 @@ Public Class FeedHandler
                 debugFolder = newDir.Parent.FullName & "\importtest\"
             End If
 
+            oDBH.updateActivity(logId, cDeleteTempTableName & " Streaming Start x Objects")
             'is the feed XML
+
             Using reader As XmlReader = XmlReader.Create(cFeedURL)
                 Dim name As XElement = Nothing
                 Dim item As XElement = Nothing
@@ -267,9 +272,17 @@ Public Class FeedHandler
 
             End Using
 
+            ReturnMessage = cDeleteTempTableName & " " & completeCount & " Items Queued For Import"
+            oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Queued")
+
+            oDBH.myWeb.ClearPageCache()
+
             Return completeCount & " Items Processed"
 
         Catch ex As Exception
+            If logId > 0 Then
+                oDBH.updateActivity(logId, cFeedURL & "Error" & ex.Message)
+            End If
             AddExternalError(ex)
         End Try
     End Function

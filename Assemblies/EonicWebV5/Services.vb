@@ -389,8 +389,10 @@ Public Class Services
         End Try
         Return oRXML
 
-
-        moResponse.Flush()
+        HttpContext.Current.ApplicationInstance.CompleteRequest()
+        'moResponse.Flush()
+        'moResponse.OutputStream.Close()
+        'moResponse.End()
 
     End Function
 

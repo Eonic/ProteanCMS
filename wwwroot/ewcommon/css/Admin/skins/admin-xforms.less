@@ -34,21 +34,24 @@
     padding: 8px 14px;
     font-size: 14px;
 }
-#adminLayout {
+.ewAdmin #adminLayout {
     .list-group-item {
         background: transparent;
         border: 0;
         padding-left: 0;
     }
 
+    span.checkbox {
+        display: inline-block;
+    }
+
     select.form-control, a.form-control, input.form-control {
         //  height:@admin-field-height;
         font-size: @admin-font-size-base;
-
     }
 
-    a.form-control, input.form-control, select.form-control{
-    	height:40px;
+    a.form-control, input.form-control, select.form-control, .input-group-btn .btn {
+        height: @admin-field-height;
     }
 
     select#cGroups.form-control {
@@ -57,15 +60,6 @@
 
     .btn {
         font-size: @admin-font-size-base
-    }
-
-    h1.page-header {
-        margin: 40px 0 20px;
-        border-bottom: 1px solid #cccccc;
-        font-family: @admin-body-font;
-        font-weight: 500;
-        line-height: 1.1;
-        color: #333333;
     }
 
     .alert-success {
@@ -180,156 +174,198 @@
 
         .input-group-btn .btn {
             margin-right: 0px;
-            height: 42px;
         }
     }
-}
 
-.ewAdmin #adminLayout #tpltAdvancedMode{
-	#accordion a i,
-	#accordion a.open i
-	{
-		.rotate(0deg);
-	}
-	#accordion a.accordion-load i.fa-chevron-down,
-	#accordion .panel:first-child a.collapsed i.fa-chevron-down,
-	#accordion a.collapsed i.fa-chevron-down,
-    #accordion a.accordion-load i.fa-angle-down,
-	#accordion .panel:first-child a.collapsed i.fa-angle-down,
-	#accordion a.collapsed i.fa-angle-down{
-		.rotate(-90deg);
-	}
-}
-.ewAdmin #adminLayout .ewXform {
-    .PermissionButton {
-        width: 100%;
-        margin-bottom: 5px;
+    #tpltAdvancedMode {
+        #accordion a i,
+        #accordion a.open i {
+            .rotate(0deg);
+        }
+
+        #accordion a.accordion-load i.fa-chevron-down,
+        #accordion .panel:first-child a.collapsed i.fa-chevron-down,
+        #accordion a.collapsed i.fa-chevron-down,
+        #accordion a.accordion-load i.fa-angle-down,
+        #accordion .panel:first-child a.collapsed i.fa-angle-down,
+        #accordion a.collapsed i.fa-angle-down {
+            .rotate(-90deg);
+        }
+
+        .accordion-toggle i {
+            margin-right: 15px;
+        }
+
+        .panel-heading-buttons {
+            display: inline-block;
+            float: right;
+            width: 250px;
+            top: -10px;
+            position: relative;
+
+            .input-group {
+                text-align: right;
+
+                .input-group-addon {
+                    background: #eee;
+                    border-radius: 5px 0 0 5px;
+                }
+
+                select.form-control {
+                    height: 36px;
+                    float: none;
+                    position: static;
+                }
+
+                .input-group-btn button {
+                    border-radius: 0 5px 5px 0;
+                    height: 36px;
+                }
+            }
+        }
     }
 
-    .checkbox-group input, .select1-group input {
-        margin-right: 5px;
-    }
+    .ewXform {
 
-    #accordion a i.fa-chevron-down,
-    #accordion .panel:first-child a i.fa-chevron-down,
-    #accordion a.open i.fa-chevron-down,
-    .panel-group .panel-heading a i.fa-chevron-down,
-    #accordion a i.fa-angle-down,
-    #accordion .panel:first-child a i.fa-angle-down,
-    #accordion a.open i.fa-angle-down,
-    .panel-group .panel-heading a i.fa-angle-down {
-        .rotate(0deg);
-    }
+        .row {
+            margin-left: -15px;
+            margin-right: -15px;
+        }
 
-    #accordion a.accordion-load i.fa-chevron-down,
-    #accordion .panel:first-child a.collapsed i.fa-chevron-down,
-    #accordion a.collapsed i.fa-chevron-down,
-    .panel-group a.accordion-toggle i.fa-chevron-down,
-    .panel-group a.collapsed i.fa-chevron-down,
-    #accordion a.accordion-load i.fa-angle-down,
-    #accordion .panel:first-child a.collapsed i.fa-angle-down,
-    #accordion a.collapsed i.fa-angle-down,
-    .panel-group a.accordion-toggle i.fa-angle-down,
-    .panel-group a.collapsed i.fa-angle-down {
-        .rotate(-90deg);
-    }
+        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
 
-    .control-wrapper .form-inline {
-        margin-bottom: 6px;
+        .PermissionButton {
+            width: 100%;
+            margin-bottom: 5px;
+        }
 
+        .checkbox-group input, .select1-group input {
+            margin-right: 5px;
+        }
+
+        #accordion a i.fa-chevron-down,
+        #accordion .panel:first-child a i.fa-chevron-down,
+        #accordion a.open i.fa-chevron-down,
+        .panel-group .panel-heading a i.fa-chevron-down,
+        #accordion a i.fa-angle-down,
+        #accordion .panel:first-child a i.fa-angle-down,
+        #accordion a.open i.fa-angle-down,
+        .panel-group .panel-heading a i.fa-angle-down {
+            .rotate(0deg);
+        }
+
+        #accordion a.accordion-load i.fa-chevron-down,
+        #accordion .panel:first-child a.collapsed i.fa-chevron-down,
+        #accordion a.collapsed i.fa-chevron-down,
+        .panel-group a.accordion-toggle i.fa-chevron-down,
+        .panel-group a.collapsed i.fa-chevron-down,
+        #accordion a.accordion-load i.fa-angle-down,
+        #accordion .panel:first-child a.collapsed i.fa-angle-down,
+        #accordion a.collapsed i.fa-angle-down,
+        .panel-group a.accordion-toggle i.fa-angle-down,
+        .panel-group a.collapsed i.fa-angle-down {
+            .rotate(-90deg);
+        }
+
+        .control-wrapper .form-inline {
+            margin-bottom: 6px;
+
+            .radiocheckbox label,
+            label.radio-inline {
+                margin-right: 15px;
+                margin-bottom: 6px;
+                margin-left: 0px !important;
+            }
+        }
+
+        .ItemThumbnail input {
+            outline: none !important;
+            border: 0 !important;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            float: left;
+            padding-right: 10px;
+        }
+
+        legend {
+            font-size: 18px;
+            padding-bottom: 5px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .alert-wrapper {
+            width: 100%;
+        }
+
+        label {
+            font-weight: 400;
+            text-transform: uppercase;
+            color: @admin-gray;
+            //font-size:0.9em;
+            margin-top: 5px;
+        }
+
+        label.list-group-item {
+            margin-top: 0px;
+        }
+
+        .form-control {
+            color: @admin-header-font-color;
+        }
+
+        .input-group label,
+        .form-group .multiline .control-wrapper label,
         .radiocheckbox label,
         label.radio-inline {
-            margin-right: 15px;
-            margin-bottom: 6px;
-            margin-left: 0px !important;
+            text-transform: none;
+            color: @admin-header-font-color;
+            font-size: 1em;
         }
-    }
 
-    .ItemThumbnail input {
-        outline: none !important;
-        border: 0 !important;
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-        float: left;
-        padding-right: 10px;
-    }
+        .form-group {
+            .row.repeated {
+                padding-bottom: 0px;
 
-    legend {
-        font-size: 18px;
-        padding-bottom: 5px;
-        margin-top: 15px;
-        margin-bottom: 10px;
-        text-transform: uppercase;
-    }
+                label {
+                    display: none;
+                }
 
-    .alert-wrapper{
-        width:100%;
-    }
-
-    label {
-        font-weight: 400;
-        text-transform: uppercase;
-        color: @admin-gray;
-        //font-size:0.9em;
-        margin-top: 5px;
-    }
-
-    label.list-group-item {
-        margin-top: 0px;
-    }
-
-    .form-control {
-        color: @admin-header-font-color;
-    }
-
-    .input-group label,
-    .form-group .multiline .control-wrapper label,
-    .radiocheckbox label,
-    label.radio-inline {
-        text-transform: none;
-        color: @admin-header-font-color;
-        font-size: 1em;
-    }
-
-    .form-group {
-        .row.repeated {
-            padding-bottom: 0px;
-
-            label {
-                display: none;
+                .form-group {
+                    margin-bottom: 0px;
+                }
             }
 
-            .form-group {
-                margin-bottom: 0px;
+            .row.rpt-0 {
+                .btn-delete {
+                    margin-top: 22px;
+                }
+
+                label {
+                    display: inline-block;
+                }
             }
         }
 
-        .row.rpt-0 {
-            .btn-delete {
-                margin-top: 22px;
-            }
-
-            label {
-                display: inline-block;
-            }
+        .radio-inline input,
+        .radiocheckbox input {
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
         }
-    }
 
-    .radio-inline input,
-    .radiocheckbox input {
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-    }
-
-    .CodeMirror-wrapping {
-        border: 1px solid #ccc;
-        -webkit-border-radius: 3px;
-        -moz-border-radius: 3px;
-        border-radius: 3px;
-    }
-    /*.bold-label{
+        .CodeMirror-wrapping {
+            border: 1px solid #ccc;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+        /*.bold-label{
 		font-weight:700;
 	}
 	.label-heading{
@@ -337,295 +373,523 @@
 		text-transform:uppercase;
 		width:100%;
 	}*/
-    div.label-border-top {
-        padding-top: 15px;
-        border-top: @admin-border;
-        width: 100%;
-    }
+        div.label-border-top {
+            padding-top: 15px;
+            border-top: @admin-border;
+            width: 100%;
+        }
 
-    .label-border-bottom,
-    .form-border-bottom {
-        border-bottom: @admin-border;
-        padding-bottom: 15px;
-        width: 100%;
-    }
+        .label-border-bottom,
+        .form-border-bottom {
+            border-bottom: @admin-border;
+            padding-bottom: 15px;
+            width: 100%;
+        }
 
-    .no-margin {
-        margin-bottom: 0;
-    }
-    /*.admin-space-below{
+        .no-margin {
+            margin-bottom: 0;
+        }
+        /*.admin-space-below{
 		margin-bottom:15px;
 	}
 	.admin-space-above{
 		margin-top:15px;
 	}*/
-    .col-md-4 {
-        border-right: @admin-border;
-    }
-
-    .choices .col-md-4 {
-        border: none;
-    }
-
-    label.required {
-        color: @brand-danger !important;
-        font-weight: 700;
-    }
-
-    label.readonly {
-        color: @admin-gray;
-    }
-
-    fieldset fieldset fieldset fieldset {
-        padding-bottom: 20px;
-    }
-
-    .checkbox-group + fieldset {
-        margin-left: 22px !important;
-        padding-bottom: 0px !important;
-    }
-
-    .checkbox-group {
-        margin-bottom: 5px;
-    }
-
-    .horizontal .selectAll label {
-        display: block;
-    }
-
-    .boxStyle .bfh-selectbox-toggle, .cssStyle .bfh-selectbox-toggle {
-        height: 85px;
-        background-color: #fff;
-    }
-
-    .boxStyle .bfh-selectbox-option, .cssStyle .bfh-selectbox-option {
-        height: 75px;
-    }
-
-    .cssStyle .bfh-selectbox .bfh-selectbox-toggle .bfh-selectbox-option {
-        height: 85px;
-    }
-
-    .boxStyle .bfh-selectbox-toggle .bfh-selectbox-option, .cssStyle .bfh-selectbox-toggle .bfh-selectbox-option {
-        max-height: 100px;
-    }
-
-    .boxStyle .bfh-selectbox-options li {
-        display: inline-block;
-        width: 320px;
-    }
-
-    .cssStyle .bfh-selectbox-options li {
-        display: inline-block;
-        width: 100%;
-    }
-
-    .cssStyle .bfh-selectbox-options li a {
-        overflow-y: hidden;
-    }
-
-    .pickIcon .bfh-selectbox-options li {
-        display: inline-block;
-        width: 35px;
-        height: 35px;
-    }
-
-    .pickIcon.bfh-selectbox .bfh-selectbox-options ul li > a {
-        padding: 3px 10px;
-        overflow-x: inherit;
-    }
-
-    .pickByImage button.imageSelect {
-        width: 100%;
-        padding: 5px;
-        text-align: left;
-
-        img {
-            padding-right: 10px;
-        }
-    }
-
-    .pickByImage button.imageSelect.selected {
-        padding: 2px;
-        border: 4px solid @brand-primary;
-    }
-
-    .previewImage {
-        padding-top: 10px;
-    }
-
-    .pickImageInput,
-    .pickImageFile .input-wrapper,
-    input.pickImageFile {
-        height: @admin-field-height;
-    }
-
-    #editImage_thumbnail,
-    #editImage_cContentImage,
-    #editImage_cContentFullSizePicture,
-    #editImage_cContentThumbnail,
-    #editImage_cContentDisplay,
-    #editImage_cContentDetail,
-    #editImage_cOrganizationLogo,
-    #editImage_cContentDetailPicture,
-    #editImage_cContentPicture {
-        .input-group-btn a {
-            height: @admin-field-height;
-            border-radius: 4px 0 0 4px;
+        .col-md-4 {
+            border-right: @admin-border;
         }
 
-        .editpick .btn {
-            height: @admin-field-height;
-            border-radius: 0 4px 4px 0;
+        .choices .col-md-4 {
+            border: none;
         }
 
-        .pickImageInput {
-            border-radius: 0 !important;
+        label.required {
+            color: @brand-danger !important;
+            font-weight: 700;
         }
-    }
 
-    #editImageFile_ThemeBackgroundImage {
-        .input-group-btn a {
+        label.readonly {
+            color: @admin-gray;
+        }
+
+        fieldset fieldset fieldset fieldset {
+            padding-bottom: 20px;
+        }
+
+        .checkbox-group + fieldset {
+            margin-left: 22px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .checkbox-group {
+            margin-bottom: 5px;
+        }
+
+        .horizontal .selectAll label {
+            display: block;
+        }
+
+        .boxStyle .bfh-selectbox-toggle, .cssStyle .bfh-selectbox-toggle {
+            height: 85px;
+            background-color: #fff;
+        }
+
+        .boxStyle .bfh-selectbox-option, .cssStyle .bfh-selectbox-option {
+            height: 75px;
+        }
+
+        .cssStyle .bfh-selectbox .bfh-selectbox-toggle .bfh-selectbox-option {
+            height: 85px;
+        }
+
+        .boxStyle .bfh-selectbox-toggle .bfh-selectbox-option, .cssStyle .bfh-selectbox-toggle .bfh-selectbox-option {
+            max-height: 100px;
+        }
+
+        .boxStyle .bfh-selectbox-options li {
+            display: inline-block;
+            width: 320px;
+        }
+
+        .cssStyle .bfh-selectbox-options li {
+            display: inline-block;
+            width: 100%;
+        }
+
+        .cssStyle .bfh-selectbox-options li a {
+            overflow-y: hidden;
+        }
+
+        .pickIcon .bfh-selectbox-options li {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+        }
+
+        .pickIcon.bfh-selectbox .bfh-selectbox-options ul li > a {
+            padding: 3px 10px;
+            overflow-x: inherit;
+        }
+
+        .pickByImage button.imageSelect {
+            width: 100%;
+            padding: 5px;
+            text-align: left;
+
+            img {
+                padding-right: 10px;
+            }
+        }
+
+        .pickByImage button.imageSelect.selected {
+            padding: 2px;
+            border: 4px solid @brand-primary;
+        }
+
+        .previewImage {
+            padding-top: 10px;
+        }
+
+        .pickImageInput,
+        .pickImageFile .input-wrapper,
+        input.pickImageFile {
             height: @admin-field-height;
         }
-    }
 
-    span.input-group-btn {
-        vertical-align: top;
-    }
+        #editImage_thumbnail,
+        #editImage_cContentImage,
+        #editImage_cContentFullSizePicture,
+        #editImage_cContentThumbnail,
+        #editImage_cContentDisplay,
+        #editImage_cContentDetail,
+        #editImage_cOrganizationLogo,
+        #editImage_cContentDetailPicture,
+        #editImage_cContentPicture {
+            .input-group-btn a {
+                height: @admin-field-height;
+                border-radius: 4px 0 0 4px;
+            }
 
-    #editImageFile_uploadIcon {
-        .btn {
-            height: @admin-field-height;
-            border-radius: 0 4px 4px 0;
+            .editpick .btn {
+                height: @admin-field-height;
+                border-radius: 0 4px 4px 0;
+            }
+
+            .pickImageInput {
+                border-radius: 0 !important;
+            }
         }
-    }
 
-    input.colorPicker {
-        height: 36px;
-    }
-
-    .inline .form-group {
-        float: left;
-        display: inline-block;
-        width: 49%;
-        padding-right: 15px;
-    }
-
-    .inline-4col .form-group {
-        float: left;
-        display: inline-block;
-        width: 24%;
-        padding-right: 15px;
-
-        select {
-            height: 38px;
+        #editImageFile_ThemeBackgroundImage {
+            .input-group-btn a {
+                height: @admin-field-height;
+            }
         }
-    }
 
-    .inline .inline-4col {
-        @media(min-width:@screen-lg-min) {
-            width: 49%;
-            padding-bottom: 0;
+        span.input-group-btn {
+            vertical-align: top;
+        }
+
+        #editImageFile_uploadIcon {
+            .btn {
+                height: @admin-field-height;
+                border-radius: 0 4px 4px 0;
+            }
+        }
+
+        input.colorPicker {
+            height: 36px;
+        }
+
+        .inline .form-group {
             float: left;
+            display: inline-block;
+            width: 49%;
+            padding-right: 15px;
         }
 
-        legend {
-            border-bottom: 0;
-            color: #999;
-            font-size: 15px;
-            margin: 5px 0 0;
-            padding: 0;
+        .inline-4col .form-group {
+            float: left;
+            display: inline-block;
+            width: 24%;
+            padding-right: 15px;
+
+            select {
+                height: 38px;
+            }
         }
 
-        .form-group {
-            margin-bottom: 0;
+        .inline .inline-4col {
+            @media(min-width:@screen-lg-min) {
+                width: 49%;
+                padding-bottom: 0;
+                float: left;
+            }
+
+            legend {
+                border-bottom: 0;
+                color: #999;
+                font-size: 15px;
+                margin: 5px 0 0;
+                padding: 0;
+            }
+
+            .form-group {
+                margin-bottom: 0;
+
+                label {
+                    text-transform: capitalize;
+                    font-size: 13px;
+                    color: #333;
+                    margin-bottom: 0;
+                }
+
+                .btn-info {
+                    height: 28px;
+                    padding: 4px 9px;
+                }
+
+                .form-control {
+                    height: 28px;
+                    padding: 2px;
+                }
+            }
+        }
+
+        table {
+            width: 100%;
+
+            .relatedOptionsButton {
+                text-align: right;
+            }
+
+            th {
+                font-weight: normal;
+            }
+        }
+
+        input.slider {
+            width: 40px;
+        }
+
+        .slider .max {
+            display: none;
+        }
+
+        .slider .min {
+            display: none;
+        }
+
+        .slider .step {
+            display: none;
+        }
+
+        .slider .val {
+            display: none;
+        }
+
+        .slider .ref {
+            display: none;
+        }
+
+        div.slider {
+            margin-left: 50px;
+            top: -25px;
+        }
+
+        .DOBcalendar .input-group-btn label.input-group-addon,
+        .calendar .input-group-btn label.input-group-addon {
+            border-right: 1px solid;
+
+            i {
+                font-size: 14px;
+                padding: 3px 0;
+            }
+        }
+
+        div.advancedModeRow, div.rowOver {
+            padding: 3px;
+            padding-top: 6px;
+            border-bottom: 1px solid #e5e5e5;
+            font-family: @admin-body-font;
+
+            .buttons {
+                text-align: right;
+            }
+        }
+
+        div.rowOver {
+            background-color: #e5e5e5;
+        }
+        //
+        // Checkboxes
+        // --------------------------------------------------
+
+        @font-family-icon: 'FontAwesome';
+        @fa-var-check: "\f00c";
+        @check-icon: @fa-var-check;
+
+
+
+        .checkbox {
+            padding-left: 20px;
 
             label {
-                text-transform: capitalize;
-                font-size: 13px;
-                color: #333;
-                margin-bottom: 0;
+                display: inline-block;
+                vertical-align: middle;
+                position: relative;
+                padding-left: 5px;
+
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    position: absolute;
+                    width: 17px;
+                    height: 17px;
+                    left: 0;
+                    margin-left: -20px;
+                    border: 1px solid @input-border;
+                    border-radius: 3px;
+                    background-color: @input-bg;
+                    .transition(~"border 0.15s ease-in-out, color 0.15s ease-in-out");
+                }
+
+                &::after {
+                    display: inline-block;
+                    position: absolute;
+                    width: 16px;
+                    height: 16px;
+                    left: 0;
+                    top: 0;
+                    margin-left: -20px;
+                    padding-left: 3px;
+                    padding-top: 1px;
+                    font-size: 11px;
+                    color: @input-color;
+                    line-height: 1.4;
+                }
             }
 
-            .btn-info {
-                height: 28px;
-                padding: 4px 9px;
+            input[type="checkbox"],
+            input[type="radio"] {
+                opacity: 0;
+                z-index: 1;
+                cursor: pointer;
+
+                &:focus + label::before {
+                    .tab-focus();
+                }
+
+                &:checked + label::after {
+                    font-family: @font-family-icon;
+                    content: @check-icon;
+                }
+
+                &:indeterminate + label::after {
+                    display: block;
+                    content: " ";
+                    width: 10px;
+                    height: 3px;
+                    background-color: #555555;
+                    border-radius: 2px;
+                    margin-left: -16.5px;
+                    margin-top: 7px;
+                }
+
+                &:disabled {
+                    cursor: not-allowed;
+                }
+
+                &:disabled + label {
+                    opacity: 0.65;
+
+                    &::before {
+                        background-color: @input-bg-disabled;
+                        cursor: not-allowed;
+                    }
+                }
             }
 
-            .form-control {
-                height: 28px;
-                padding: 2px;
+            &.checkbox-circle label::before {
+                border-radius: 50%;
+            }
+
+            &.checkbox-inline {
+                margin-top: 0;
+            }
+        }
+
+        .checkbox-variant(checkbox-primary, @brand-primary);
+        .checkbox-variant(checkbox-danger, @brand-danger);
+        .checkbox-variant(checkbox-info, @brand-info);
+        .checkbox-variant(checkbox-warning, @brand-warning);
+        .checkbox-variant(checkbox-success, @brand-success);
+        .checkbox-variant-indeterminate(checkbox-primary, @brand-primary);
+        .checkbox-variant-indeterminate(checkbox-danger, @brand-danger);
+        .checkbox-variant-indeterminate(checkbox-info, @brand-info);
+        .checkbox-variant-indeterminate(checkbox-warning, @brand-warning);
+        .checkbox-variant-indeterminate(checkbox-success, @brand-success);
+        //
+        // Radios
+        // --------------------------------------------------
+        .radio-variant(@parent, @color) {
+            .@{parent} input[type="radio"] {
+                & + label {
+                    &::after {
+                        background-color: @color;
+                    }
+                }
+
+                &:checked + label {
+                    &::before {
+                        border-color: @color;
+                    }
+
+                    &::after {
+                        background-color: @color;
+                    }
+                }
+            }
+        }
+
+        .radio {
+            padding-left: 20px;
+
+            label {
+                display: inline-block;
+                vertical-align: middle;
+                position: relative;
+                padding-left: 5px;
+
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    position: absolute;
+                    width: 17px;
+                    height: 17px;
+                    left: 0;
+                    margin-left: -20px;
+                    border: 1px solid @input-border;
+                    border-radius: 50%;
+                    background-color: @input-bg;
+                    .transition(border 0.15s ease-in-out);
+                }
+
+                &::after {
+                    display: inline-block;
+                    position: absolute;
+                    content: " ";
+                    width: 11px;
+                    height: 11px;
+                    left: 3px;
+                    top: 3px;
+                    margin-left: -20px;
+                    border-radius: 50%;
+                    background-color: @input-color;
+                    .scale(0, 0);
+                    .transition-transform(.1s cubic-bezier(.8,-0.33,.2,1.33));
+                    //curve - http://cubic-bezier.com/#.8,-0.33,.2,1.33
+                }
+            }
+
+            input[type="radio"] {
+                opacity: 0;
+                z-index: 1;
+                cursor: pointer;
+
+                &:focus + label::before {
+                    .tab-focus();
+                }
+
+                &:checked + label::after {
+                    .scale(1, 1);
+                }
+
+                &:disabled {
+                    cursor: not-allowed;
+                }
+
+                &:disabled + label {
+                    opacity: 0.65;
+
+                    &::before {
+                        cursor: not-allowed;
+                    }
+                }
+            }
+
+            &.radio-inline {
+                margin-top: 0;
+            }
+        }
+
+        .radio-variant(radio-primary, @brand-primary);
+        .radio-variant(radio-danger, @brand-danger);
+        .radio-variant(radio-info, @brand-info);
+        .radio-variant(radio-warning, @brand-warning);
+        .radio-variant(radio-success, @brand-success);
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            &.styled:checked + label:after {
+                font-family: @font-family-icon;
+                content: @check-icon;
+            }
+
+            & .styled:checked + label {
+                &::before {
+                    color: #fff;
+                }
+
+                &::after {
+                    color: #fff;
+                }
             }
         }
     }
-
-    table {
-        width: 100%;
-
-        .relatedOptionsButton {
-            text-align: right;
-        }
-
-        th {
-            font-weight: normal;
-        }
-    }
-
-    input.slider {
-        width: 40px;
-    }
-
-    .slider .max {
-        display: none;
-    }
-
-    .slider .min {
-        display: none;
-    }
-
-    .slider .step {
-        display: none;
-    }
-
-    .slider .val {
-        display: none;
-    }
-
-    .slider .ref {
-        display: none;
-    }
-
-    div.slider {
-        margin-left: 50px;
-        top: -25px;
-    }
-
-    .DOBcalendar .input-group-btn label.input-group-addon,
-    .calendar .input-group-btn label.input-group-addon {
-        border-right: 1px solid;
-
-        i {
-            font-size: 14px;
-            padding: 3px 0;
-        }
-    }
-
-    div.advancedModeRow, div.rowOver {
-        padding: 3px;
-        padding-top: 6px;
-        border-bottom: 1px solid #e5e5e5;
-        font-family: @admin-body-font;
-
-        .buttons {
-            text-align: right;
-        }
-    }
-
-    div.rowOver {
-        background-color: #e5e5e5;
-    }
+    // end .ewXform
 }
+// end #adminLayout 
 .mce-edit-area{
 	border-right:1px solid!important;
 }
@@ -644,29 +908,28 @@
 
 
 // Popup
-#popupWindow
-{
+#popupWindow {
     padding: 0px;
     width: 770px;
+
+    form.ewXform {
+        width: 760px;
+    }
+
+    #template_FileSystem {
+        width: 780px;
+    }
+
+    #template_FileSystem #column1 {
+        width: 220px !important;
+    }
+
+    #template_FileSystem #column2 {
+        width: 500px !important;
+    }
 }
 
-#popupWindow form.ewXform
-{
-    width: 760px;
-}
 
-#popupWindow #template_FileSystem
-{
-    width: 780px;
-}
-#popupWindow #template_FileSystem #column1
-{
-    width: 220px !important;
-}
-#popupWindow #template_FileSystem #column2
-{
-    width: 500px !important;
-}
 .ewAdmin form .choices div.selected
 {
     background: #aaa;
@@ -699,54 +962,111 @@
             position:absolute;
      }
 .ewAdmin #MenuTree {
-    
-     .list-group-item{padding-left:50px;}
-     .level-2 {padding-left:70px}
-     .level-3 {padding-left:80px}
-     .level-4 {padding-left:90px}
-     .level-5 {padding-left:100px}
-     .level-6 {padding-left:110px}
-     .level-7 {padding-left:120px}
-     .level-8 {padding-left:130px}
-     .level-9 {padding-left:140px}
-     .level-10 {padding-left:150px}
-     .level-11 {padding-left:160px}
-     .level-12 {padding-left:170px}
-     .level-13 {padding-left:180px}
-     .level-14 {padding-left:190px}
-     .level-15 {padding-left:200px}
-     i.hitarea{
-            top:13px;
-        position:absolute;
-        margin-left:-15px;
-                    cursor: pointer;
-     }
-     i.hitarea.fa-chevron-down{
-         margin-left:-18px;
-     }
 
-    div.pageCell
-    {
-        i{
-            top:17px;
-            position:absolute;
+    .list-group-item {
+        padding-left: 50px;
+    }
+
+    .level-2 {
+        padding-left: 70px
+    }
+
+    .level-3 {
+        padding-left: 80px
+    }
+
+    .level-4 {
+        padding-left: 90px
+    }
+
+    .level-5 {
+        padding-left: 100px
+    }
+
+    .level-6 {
+        padding-left: 110px
+    }
+
+    .level-7 {
+        padding-left: 120px
+    }
+
+    .level-8 {
+        padding-left: 130px
+    }
+
+    .level-9 {
+        padding-left: 140px
+    }
+
+    .level-10 {
+        padding-left: 150px
+    }
+
+    .level-11 {
+        padding-left: 160px
+    }
+
+    .level-12 {
+        padding-left: 170px
+    }
+
+    .level-13 {
+        padding-left: 180px
+    }
+
+    .level-14 {
+        padding-left: 190px
+    }
+
+    .level-15 {
+        padding-left: 200px
+    }
+
+    i.hitarea {
+        top: 13px;
+        position: absolute;
+        margin-left: -15px;
+        cursor: pointer;
+    }
+
+    i.hitarea.fa-chevron-down {
+        margin-left: -18px;
+    }
+
+    div.pageCell {
+        i {
+            top: 17px;
+            position: absolute;
         }
-        .status i{
-            position:inherit;
+
+        .status i {
+            position: inherit;
         }
+
         display: inline-block;
         width: 230px;
-        max-width:100%;
+        max-width: 100%;
         margin: 0px;
-        .pageName{
+
+        .pageName {
             display: inline-block;
-            padding-left:25px;
+            padding-left: 25px;
         }
     }
-        div.optionButtons
-    {
+
+    div.optionButtons {
         display: inline-block;
         margin: 0px;
+
+        .checkbox {
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    }
+
+    .list-group-item {
+        border-bottom: 1px solid lighten(@admin-header-bg,75%);
     }
 }
 .ewAdmin ul.sideNav
@@ -973,239 +1293,299 @@
        }
 
  }
-.ewAdmin a.status
-{
-    display: inline-block;
-    width: 17px;
-    height: 15px;
-    margin: 5px;
-}
-// - file uploader
-.ewAdmin #adminLayout .pageControlButtons{
-    padding-left:0;
-    @media(max-width:@screen-xs-max){.btn{margin-bottom:5px}}
-}
-.ewAdmin #adminLayout .modal-body .pageControlButtons{
-    padding-left:0;
-    @media(max-width:@screen-xs-max){.btn{font-size:12px;}}
-}
-.ewAdmin #fileupload #uploadFiles .drophere 
-{
-    border: 2px dashed #C0CFD8;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    height: 75px;
-    line-height: 1;
-    padding-top:27px;
-    text-align:center;
-    margin-bottom:5px;
-    background:white;
-}
-.ewAdmin #fileupload #uploadFiles 
-{
-    padding-top:5px;
-}
-.ewAdmin #fileupload td
-{
-    height:20px;
-    padding:3px;
-}
-.ewAdmin #fileupload td div.ui-progressbar
-{
-    height:18px;
-    width:100px;
-}
-.ewAdmin #fileupload #uploadFiles input
-{
-    float:left;
-}
-.ewAdmin #fileupload .fileupload-progressbar
-{
-    float:right;
-    width:600px;
-    height:27px;
-}
 
+    .ewAdmin a.status {
+        display: inline-block;
+        width: 17px;
+        height: 15px;
+        margin: 5px;
+    }
+    // - file uploader
+    .ewAdmin #adminLayout .pageControlButtons {
+        padding-left: 0;
 
-
-.ewAdmin .fileinput-button {
-  position: relative;
-  overflow: hidden;
-}
-.ewAdmin .fileinput-button input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 0;
-  opacity: 0;
-  filter: alpha(opacity=0);
-  transform: translate(-300px, 0) scale(4);
-  font-size: 23px;
-  direction: ltr;
-  cursor: pointer;
-}
-.ewAdmin .fileupload-buttonbar .btn,
-.ewAdmin .fileupload-buttonbar .toggle {
-  margin-bottom: 5px;
-}
-.ewAdmin .progress-animated .bar {
-  background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/progressbar.gif) !important;
-  filter: none;
-}
-.ewAdmin .fileupload-loading {
-  float: right;
-  width: 32px;
-  height: 32px;
-  background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/loading.gif) center no-repeat;
-  background-size: contain;
-  display: none;
-}
-.ewAdmin .fileupload-processing .fileupload-loading {
-  display: block;
-}
-
-.ewAdmin .listLookups .listButtons
-{
-    width:130px;
-    text-align:right;
-}
-
-.progress {
-    background-color: #F7F7F7;
-    background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
-    background-repeat: repeat-x;
-    border-radius: 4px 4px 4px 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
-    height: 20px;
-    margin-bottom: 20px;
-    overflow: hidden;
-}
-
-.progress .bar {
-    -moz-box-sizing: border-box;
-    background-color: #0E90D2;
-    background-image: linear-gradient(to bottom, #149BDF, #0480BE);
-    background-repeat: repeat-x;
-    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
-    color: #FFFFFF;
-    float: left;
-    font-size: 12px;
-    height: 100%;
-    text-align: center;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    transition: width 0.6s ease 0s;
-    width: 0;
-}
-
-.progress-striped .bar {
-    background-color: #149BDF;
-    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-    background-size: 40px 40px;
-}
-
-.progress-success.progress-striped .bar, .progress-striped .bar-success {
-    background-color: #62C462;
-    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-}
-.fileinput-button {
-    overflow: hidden;
-    position: relative;
-}
-
-// - edit menu file images
-
-	.ewAdmin #MenuTree div.pageVersions a.vtext
-	{
-		background: url(/ewcommon/images/menutree/page-file-v.gif) top left no-repeat;
-	}
-	.ewAdmin #MenuTree tr.treeNode a.active, .ewAdmin #MenuTree .treeNode a.active
-	{
-		background: url(/ewcommon/images/menutree/page-file.gif) top left no-repeat;
-	}
-	.ewAdmin #MenuTree tr.treeNode a.folder, .ewAdmin #MenuTree .treeNode a.folder
-	{
-		background: url(/ewcommon/images/menutree/page-foldericon.gif) top left no-repeat;
-	}
-	.ewAdmin #MenuTree span.a.children tr.treeNode a.hidden, .ewAdmin #MenuTree tr.a.children tr.treeNode a.hidden
-	{
-		background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif) 0 0 no-repeat !important;
-	}
-	.ewAdmin #MenuTree tr.treeNode a.hidden, .ewAdmin #MenuTree .treeNode a.hidden
-	{
-		background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;
-	}
-
-	.ewAdmin #MenuTree tr.treeNode a.activeParent, .ewAdmin #MenuTree .treeNode a.activeParent
-	{
-		background: url(/ewcommon/images/menutree/page-openfoldericon.gif) 0 0 no-repeat;
-	}
-	.ewAdmin #MenuTreeold tr.treeNode a.active, .ewAdmin #MenuTreeold .treeNode a.active
-	{
-		background: url(/ewcommon/images/menutree/page-foldericon.gif) 0 0 no-repeat;
-	}
-	.ewAdmin #MenuTree tr.treeNode a.hiddenParent, .ewAdmin #MenuTree .treeNode a.hiddenParent
-	{
-		background: url(/ewcommon/images/menutree/page-foldericon-hidden.gif) 0 0 no-repeat !important;
-	}
-
-// - end edit menu file images
-
-
-// BUTTONS
-#adminLayout .ewXform {
-    .btn {
-        background-image: none;
-        text-shadow: none;
-
-        &:focus {
-            outline: none;
+        @media(max-width:@screen-xs-max) {
+            .btn {
+                margin-bottom: 5px
+            }
         }
     }
 
-    .principle {
+    .ewAdmin #adminLayout .modal-body .pageControlButtons {
+        padding-left: 0;
+
+        @media(max-width:@screen-xs-max) {
+            .btn {
+                font-size: 12px;
+            }
+        }
+    }
+
+    .ewAdmin #fileupload #uploadFiles .drophere {
+        border: 2px dashed #C0CFD8;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        height: 75px;
+        line-height: 1;
+        padding-top: 27px;
+        text-align: center;
+        margin-bottom: 5px;
+        background: white;
+    }
+
+    .ewAdmin #fileupload #uploadFiles {
+        padding-top: 5px;
+    }
+
+    .ewAdmin #fileupload td {
+        height: 20px;
+        padding: 3px;
+    }
+
+    .ewAdmin #fileupload td div.ui-progressbar {
+        height: 18px;
+        width: 100px;
+    }
+
+    .ewAdmin #fileupload #uploadFiles input {
+        float: left;
+    }
+
+    .ewAdmin #fileupload .fileupload-progressbar {
         float: right;
-    }
-
-   .getGeocodeButton {
-       Width: 47%;
-       margin: 25px 0px 8px 0px; 
-    
+        width: 600px;
+        height: 27px;
     }
 
 
-    label.input-group-addon {
-        float: none;
-        border-radius: 0px;
+
+    .ewAdmin .fileinput-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ewAdmin .fileinput-button input {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        transform: translate(-300px, 0) scale(4);
+        font-size: 23px;
+        direction: ltr;
+        cursor: pointer;
+    }
+
+    .ewAdmin .fileupload-buttonbar .btn,
+    .ewAdmin .fileupload-buttonbar .toggle {
+        margin-bottom: 5px;
+    }
+
+    .ewAdmin .progress-animated .bar {
+        background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/progressbar.gif) !important;
+        filter: none;
+    }
+
+    .ewAdmin .fileupload-loading {
+        float: right;
+        width: 32px;
+        height: 32px;
+        background: url(/ewcommon/js/jQuery/fileUploader/8.2.1/img/loading.gif) center no-repeat;
+        background-size: contain;
+        display: none;
+    }
+
+    .ewAdmin .fileupload-processing .fileupload-loading {
+        display: block;
+    }
+
+    .ewAdmin .listLookups .listButtons {
+        width: 130px;
+        text-align: right;
+    }
+
+    .progress {
+        background-color: #F7F7F7;
+        background-image: linear-gradient(to bottom, #F5F5F5, #F9F9F9);
+        background-repeat: repeat-x;
+        border-radius: 4px 4px 4px 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
+        height: 20px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .progress .bar {
+        -moz-box-sizing: border-box;
+        background-color: #0E90D2;
+        background-image: linear-gradient(to bottom, #149BDF, #0480BE);
+        background-repeat: repeat-x;
+        box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+        color: #FFFFFF;
+        float: left;
+        font-size: 12px;
+        height: 100%;
+        text-align: center;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        transition: width 0.6s ease 0s;
+        width: 0;
+    }
+
+    .progress-striped .bar {
+        background-color: #149BDF;
+        background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+        background-size: 40px 40px;
+    }
+
+    .progress-success.progress-striped .bar, .progress-striped .bar-success {
+        background-color: #62C462;
+        background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+    }
+
+    .fileinput-button {
+        overflow: hidden;
+        position: relative;
+    }
+    // - edit menu file images
+    .ewAdmin #MenuTree div.pageVersions a.vtext {
+        background: url(/ewcommon/images/menutree/page-file-v.gif) top left no-repeat;
+    }
+
+    .ewAdmin #MenuTree tr.treeNode a.active, .ewAdmin #MenuTree .treeNode a.active {
+        background: url(/ewcommon/images/menutree/page-file.gif) top left no-repeat;
+    }
+
+    .ewAdmin #MenuTree tr.treeNode a.folder, .ewAdmin #MenuTree .treeNode a.folder {
+        background: url(/ewcommon/images/menutree/page-foldericon.gif) top left no-repeat;
+    }
+
+    .ewAdmin #MenuTree span.a.children tr.treeNode a.hidden, .ewAdmin #MenuTree tr.a.children tr.treeNode a.hidden {
+        background: url(/ewcommon/images/menutree/page-openfoldericon-hidden.gif) 0 0 no-repeat !important;
+    }
+
+    .ewAdmin #MenuTree tr.treeNode a.hidden, .ewAdmin #MenuTree .treeNode a.hidden {
+        background: url(/ewcommon/images/menutree/page-file-hidden.gif) 0 0 no-repeat !important;
+    }
+
+    .ewAdmin #MenuTree tr.treeNode a.activeParent, .ewAdmin #MenuTree .treeNode a.activeParent {
+        background: url(/ewcommon/images/menutree/page-openfoldericon.gif) 0 0 no-repeat;
+    }
+
+    .ewAdmin #MenuTreeold tr.treeNode a.active, .ewAdmin #MenuTreeold .treeNode a.active {
+        background: url(/ewcommon/images/menutree/page-foldericon.gif) 0 0 no-repeat;
+    }
+
+    .ewAdmin #MenuTree tr.treeNode a.hiddenParent, .ewAdmin #MenuTree .treeNode a.hiddenParent {
+        background: url(/ewcommon/images/menutree/page-foldericon-hidden.gif) 0 0 no-repeat !important;
+    }
+    // - end edit menu file images
+    // BUTTONS
+    #adminLayout .ewXform {
+        .btn {
+            background-image: none;
+            text-shadow: none;
+
+            &:focus {
+                outline: none;
+            }
+        }
+
+        .principle {
+            float: right;
+        }
+
+        .getGeocodeButton {
+            Width: 47%;
+            margin: 25px 0px 8px 0px;
+        }
+
+
+        label.input-group-addon {
+            float: none;
+            border-radius: 0px;
+        }
+    }
+
+    #adminLayout .relatedContent-group .btn-xs {
+        margin-bottom: 3px;
+    }
+
+    #adminLayout .btn .btnNotes {
+        white-space: normal;
+    }
+
+    #template_AdminXForm {
+        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+            padding: 0 15px;
+        }
+    }
+
+    #template_AdminXForm .row {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+    // LMS
+    .edit-question-wrapper .panel-body > fieldset > fieldset {
+        position: relative;
+        margin-top: 15px;
+
+        > legend {
+            margin-bottom: 10px
+        }
+
+        .screen-options-btn {
+            position: absolute;
+            top: 0;
+            right: 0
+        }
+
+        > .form-group {
+            border-bottom: 1px solid #e5e5e5;
+            padding-top: 15px;
+            padding-bottom: 15px;
+
+            > .recReadLabel > .recRead {
+                float: left;
+                padding-right: 5px;
+            }
+        }
+    }
+
+    #AddModule > .panel-body > .control-wrapper {
+        width: 100%
+    }
+
+
+    .ace-editor {
+        height: 500px !important;
+    }
+
+
+.checkbox-variant(@parent, @color) {
+    .@{parent} input[type="checkbox"]:checked + label,
+    .@{parent} input[type="radio"]:checked + label {
+        &::before {
+            background-color: @color;
+            border-color: @color;
+        }
+
+        &::after {
+            color: #fff;
+        }
     }
 }
-#adminLayout .relatedContent-group .btn-xs{margin-bottom:3px;}
-#adminLayout .btn .btnNotes{white-space: normal;}
-#template_AdminXForm{.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12{padding:0 15px;}}
-#template_AdminXForm .row{margin-left:-15px;margin-right:-15px;}
 
-// LMS
-.edit-question-wrapper .panel-body > fieldset > fieldset{
-	position:relative;
-	margin-top:15px;
-	> legend{margin-bottom:10px}
-	.screen-options-btn{
-		position:absolute;
-		top:0;
-		right:0
-	}
-	> .form-group{
-		border-bottom:1px solid #e5e5e5;
-		padding-top:15px;
-		padding-bottom:15px;
-		> .recReadLabel > .recRead{
-			float:left;
-			padding-right:5px;
-		}
-	}
-}
-#AddModule > .panel-body > .control-wrapper{width:100%}
+.checkbox-variant-indeterminate(@parent, @color) {
+    .@{parent} input[type="checkbox"]:indeterminate + label,
+    .@{parent} input[type="radio"]:indeterminate + label {
+        &::before {
+            background-color: @color;
+            border-color: @color;
+        }
 
-
-.ace-editor{
-    height:500px !important;
+        &::after {
+            background-color: #fff;
+        }
+    }
 }

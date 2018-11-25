@@ -4003,7 +4003,7 @@ restart:
                     If bOveridePrimary Then
                         oRow("bPrimary") = bPrimary
                     End If
-                    If bUpdatePosition And cPosition <> "" Then
+                    If bUpdatePosition And CInt("0" & cPosition) > 0 Then
                         oRow("cPosition") = cPosition
                     End If
                     oRow("bCascade") = bCascade
@@ -6275,7 +6275,7 @@ restart:
 
                 sSql = "Update tblActivityLog set cActivityDetail = '" & cActivityDetail & "', dDateTime = " & sqlDateTime(Now()) & " where nActivityKey = " & activityID
 
-                ExeProcessSql(ssql)
+                ExeProcessSql(sSql)
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "updateActivity", ex, cActivityDetail))
@@ -7227,7 +7227,7 @@ restart:
                 If nID = "" Then nID = 0
                 If nID > 0 Then
 
-                    Return setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, True)
+                    Return setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, False)
                 Else
                     Return 0
                 End If
@@ -10491,11 +10491,17 @@ ReturnMe:
             Dim cProcessInfo As String
             Dim fRef As String = ""
             Dim modbhelper As dbHelper = New dbHelper(oConnString, mnUserId, moCtx)
-
+            Dim logMessage As String
             Try
-
+                If ImportStateObj.totalInstances = 0 Then
+                    logMessage = ImportStateObj.cDeleteTempTableName & " Streaming Objects, " & ImportStateObj.CompleteCount & " Processed"
+                Else
+                    logMessage = ImportStateObj.cDeleteTempTableName & " Importing " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Processed"
+                End If
                 modbhelper.ResetConnection(oConnString)
-                modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.FeedRef & " Importing " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Processed")
+                If ImportStateObj.CompleteCount.ToString().EndsWith("0") Then
+                    modbhelper.updateActivity(ImportStateObj.LogId, logMessage)
+                End If
 
                 'lets get the object type from the table name.
                 cTableName = ImportStateObj.oInstance.FirstChild.Name
@@ -10539,6 +10545,7 @@ ReturnMe:
 
                     ImportStateObj.oInstance.SelectSingleNode(cTableName & "/" & cTableFRef)
                     modbhelper.ResetConnection(oConnString)
+
                     If nId > 0 And ImportStateObj.oInstance.getAttribute("update").contains("surgical") Then
                         'Get origional instance
                         Dim origInstance As New XmlDocument
@@ -10572,12 +10579,19 @@ ReturnMe:
                         'save the origional instance
                         nId = modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId)
                         'run instance extras on update like relate and locate etc.
-                        If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
-                            modbhelper.processInstanceExtras(nId, origInstance.DocumentElement, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                        If ImportStateObj.oInstance.getAttribute("update").contains("locate") Then
+                            Dim bResetLocations As Boolean = ImportStateObj.bResetLocations
+                            If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
+                                bResetLocations = True
+                            Else
+                                bResetLocations = False
+                            End If
+
+                            modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, bResetLocations, ImportStateObj.bOrphan)
                         End If
                     Else
-                        'clean up sugical update as we are doing inserts.
-                        Dim oRemoveElmt As XmlElement
+                            'clean up sugical update as we are doing inserts or straight replacements.
+                            Dim oRemoveElmt As XmlElement
                         For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")
                             oRemoveElmt.RemoveAttribute("updateSurgical")
                             If oRemoveElmt.InnerText.Trim() = "surgicalIgnore" Then
@@ -10605,30 +10619,37 @@ ReturnMe:
                             updateInstance = ImportStateObj.oInstance.firstChild
                         End If
 
-                        If ImportStateObj.oInstance.getAttribute("insert") = "none" Then
-                            ImportStateObj.bSkipExisting = True
+                        Dim bRelocate As Boolean = False
+
+                        If nId > 0 Then
+                            'case for updates
+                            If ImportStateObj.oInstance.getAttribute("update").contains("none") Then
+                                ImportStateObj.bSkipExisting = True
+                            End If
+                            If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
+                                bRelocate = True
+                            End If
+                        Else
+                            bRelocate = True
+                            'case for inserts
+                            If ImportStateObj.oInstance.getAttribute("insert").contains("none") Then
+                                ImportStateObj.bSkipExisting = True
+                            End If
                         End If
 
-                        If Not (ImportStateObj.bSkipExisting And nId <> 0) Then
-
+                        If Not ImportStateObj.bSkipExisting Then
                             nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
-                            modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
-
+                            If bRelocate Then
+                                modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
+                            End If
                             cProcessInfo = nId & " Saved"
                         Else
-                            ErrorMsg = nId & " Not Found"
+                            cProcessInfo = nId & "Not Saved"
                         End If
 
                         updateInstance = Nothing
 
                     End If
-
-                    ' Moved to under setobjectinstance
-                    '                    If nId > 0 Then
-                    '                   modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
-                    '              End If
-
-
 
                     If ImportStateObj.bDeleteNonEntries Then
 
@@ -10641,8 +10662,9 @@ ReturnMe:
 
                 End If
 
+                'update every 10 records
                 If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
-                    modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.FeedRef & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
+                    modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.cDeleteTempTableName & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
                 End If
 
                 fRefNode = Nothing
@@ -10650,7 +10672,7 @@ ReturnMe:
                 modbhelper = Nothing
 
             Catch ex As Exception
-                modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0, 0, ErrorId, "error with fRef=" & fRef & " " & Right(ex.StackTrace, 700), ex.Message)
+                modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0, 0, ErrorId, Right(ex.Message & " - " & ex.StackTrace, 700), fRef)
                 RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""))
             End Try
         End Sub

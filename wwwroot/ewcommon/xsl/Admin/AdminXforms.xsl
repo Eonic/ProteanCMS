@@ -905,6 +905,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <!--xsl:apply-templates select="value/TemplateContent/node()" mode="cleanXhtml"/-->
       <xsl:copy-of select="value/node()"/>
       <xsl:text> </xsl:text>
     </textarea>
@@ -917,8 +918,50 @@
       continuousScanning: 500,
       lineNumbers: true,
       reindentOnLoad: true,
-      textWrapping: true
+      textWrapping: true,
+      matchClosing: true
       });
+    </script>
+  </xsl:template>
+
+  <!-- ACE Control -->
+  <xsl:template match="textarea[contains(@class,'xsl')]" mode="xform_control">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <textarea name="{$ref}" id="{$ref}" class="aceEditor">
+      <xsl:if test="@cols!=''">
+        <xsl:attribute name="cols">
+          <xsl:value-of select="@cols"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="@rows!=''">
+        <xsl:attribute name="rows">
+          <xsl:value-of select="@rows"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:copy-of select="value/node()"/>
+      <xsl:text> </xsl:text>
+    </textarea>
+    <style type="text/css" media="screen">
+      .aceEditor, .ace_editor {
+            width: 100%;
+            height:600px;
+      }
+    </style>
+    <script src="/ewcommon/js/ace/ace.js" type="text/javascript" charset="utf-8">&#160;</script>
+    <script src="/ewcommon/js/xmlbeautify/xmlbeautify.js" type="text/javascript" charset="utf-8">&#160;</script>
+    <script>
+      alert($('#<xsl:value-of select="$ref"/>').text());
+      var xsl2edit = unescapeHTML($('#<xsl:value-of select="$ref"/>').text())
+      xsl2edit = new XmlBeautify().beautify(xsl2edit,{indent: "  ",useSelfClosingElement: true})
+      xsl2edit = xsl2edit.replace(/xsl-/g,"xsl:");
+      $('#<xsl:value-of select="$ref"/>').text(xsl2edit);
+      var editor = ace.edit('<xsl:value-of select="$ref"/>');
+      editor.setTheme("ace/theme/xcode");
+      editor.session.setMode("ace/mode/xml");
+      editor.session.setUseWrapMode(true);
+
     </script>
   </xsl:template>
 
@@ -1864,7 +1907,12 @@
   <xsl:template match="item" mode="xform_imageClick">
     <xsl:param name="ref"/>
     <xsl:variable name="value" select="value/node()"/>
-
+    <xsl:variable name="selectedValue" select="ancestor::select1/value/node()"/>
+    <xsl:variable name="isSelected">
+      <xsl:if test="$value=$selectedValue">
+        <xsl:text>selected</xsl:text>
+      </xsl:if>
+    </xsl:variable>
     <xsl:variable name="ifExists">
       <xsl:call-template name="virtual-file-exists">
         <xsl:with-param name="path" select="translate(img/@src,' ','-')"/>
@@ -1882,7 +1930,7 @@
       </xsl:choose>
     </xsl:variable>
     <div class="col-md-4">
-      <button name="{$ref}" value="{value/node()}" class="imageSelect panel panel-default">
+      <button name="{$ref}" value="{value/node()}" class="imageSelect panel panel-default {$isSelected}">
         <img src="{$imageURL}" class="pull-left"/>
         <h5>
           <xsl:value-of select="label/node()"/>
@@ -2152,12 +2200,7 @@
     <xsl:variable name="val" select="value/node()"/>
     <!--<xsl:variable name="class" select="../@class"/>-->
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-    <label for="{$ref}_{$value}" class="list-group-item">
-      <xsl:if test="not(contains($class,'multiline'))">
-        <xsl:attribute name="class">
-          <xsl:text> radio-inline</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
+    <span class="{$type} {$type}-primary list-group-item">
       <input type="{$type}">
         <xsl:choose>
           <xsl:when test="contains(../@class,'alwayson')">
@@ -2205,10 +2248,18 @@
           </xsl:attribute>
         </xsl:if>
       </input>
+    <label for="{$ref}_{$value}">
+      <xsl:if test="not(contains($class,'multiline'))">
+        <xsl:attribute name="class">
+          <xsl:text> radio-inline</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      
       <xsl:copy-of select="label/node()"/>
       <!-- needed to stop self closing -->
       <xsl:text> </xsl:text>
     </label>
+      </span>
     <xsl:if test="/Page/@ewCmd='EditXForm'">
       <xsl:if test="ancestor::Content/model/instance/results/answers/answer[@ref=$ref]/score[value/node()=$val]">
         <span>
@@ -2243,5 +2294,182 @@
     </div>
   </xsl:template>
 
+  <!-- -->
+  <xsl:template match="item" mode="xform_radiocheck">
+    <xsl:param name="type"/>
+    <xsl:param name="ref"/>
+    <xsl:param name="value" select="value"/>
+    <xsl:param name="selectedValue">
+      <xsl:apply-templates select="ancestor::*[name()='select' or name()='select1']" mode="xform_value"/>
+    </xsl:param>
+    <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
+
+    <span>
+      <xsl:attribute name="class">
+        <xsl:text>checkbox checkbox-primary</xsl:text>
+        <xsl:if test="contains($class,'multiline')">
+          <xsl:text> multiline</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
+
+<input type="{$type}">
+          <xsl:if test="$ref!=''">
+            <xsl:attribute name="name">
+              <xsl:value-of select="$ref"/>
+            </xsl:attribute>
+            <xsl:attribute name="id">
+              <xsl:value-of select="$ref"/>_<xsl:value-of select="$value"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:attribute name="value">
+            <xsl:value-of select="value"/>
+          </xsl:attribute>
+          <xsl:attribute name="title">
+            <xsl:value-of select="@title"/>
+          </xsl:attribute>
+          <xsl:attribute name="onclick">
+            <xsl:value-of select="@onclick"/>
+          </xsl:attribute>
+
+          <!-- Check Radio adminButton is selected -->
+          <xsl:if test="$selectedValue=$value">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+
+          <!-- Check checkbox should be selected -->
+          <xsl:if test="contains($type,'checkbox')">
+            <!-- Run through CSL to see if this should be checked -->
+            <xsl:variable name="valueMatch">
+              <xsl:call-template name="checkValueMatch">
+                <xsl:with-param name="CSLValue" select="$selectedValue"/>
+                <xsl:with-param name="value" select="$value"/>
+                <xsl:with-param name="seperator" select="','"/>
+              </xsl:call-template>
+            </xsl:variable>
+            <xsl:if test="$valueMatch='true'">
+              <xsl:attribute name="checked">checked</xsl:attribute>
+            </xsl:if>
+          </xsl:if>
+          <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-notempty">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-notempty-message">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ancestor::select/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-choice">
+              <xsl:value-of select="ancestor::select/@data-fv-choice"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-min">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-max">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-message">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+            </xsl:attribute>
+            <xsl:if test="ancestor::select/@data-fv-notempty">
+              <xsl:attribute name="data-fv-notempty">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
+              </xsl:attribute>
+              <xsl:attribute name="data-fv-notempty-message">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
+              </xsl:attribute>
+            </xsl:if>
+          </xsl:if>
+        </input>
+      <label for="{$ref}_{$value}">
+        <xsl:attribute name="class">
+          <xsl:text>radio</xsl:text>
+          <xsl:if test="label/@class and label/@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="label/@class"/>
+          </xsl:if>
+          <xsl:if test="ancestor::Content[@type='xform' and @name='PayForm']">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="translate(value/node(),' /','--')"/>
+          </xsl:if>
+        </xsl:attribute>
+        <!-- for payform to have cc classes-->
+        
+        <xsl:apply-templates select="label" mode="xform-label"/>
+        <xsl:text> </xsl:text>
+      </label>
+
+    </span>
+    <!--<xsl:if test="contains($class,'multiline') and position()!=last()">
+					<br/>
+				</xsl:if>-->
+
+  </xsl:template>
+
+  <!-- Radio Input with dependant Case toggle -->
+  <xsl:template match="item[toggle]" mode="xform_radiocheck">
+    <xsl:param name="type"/>
+    <xsl:param name="ref"/>
+    <xsl:param name="dependantClass"/>
+
+    <xsl:variable name="value" select="value"/>
+    <xsl:variable name="class" select="../@class"/>
+    <span>
+      <xsl:attribute name="class">
+        <xsl:text>radio radio-primary</xsl:text>
+        <xsl:if test="contains($class,'multiline')">
+          <xsl:text> multiline</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
+      <input type="{$type}">
+        <xsl:if test="$ref!=''">
+          <xsl:attribute name="name">
+            <xsl:value-of select="$ref"/>
+
+          </xsl:attribute>
+          <xsl:attribute name="id">
+            <xsl:value-of select="$ref"/>_<xsl:value-of select="position()"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:attribute name="value">
+          <xsl:value-of select="value"/>
+        </xsl:attribute>
+
+        <!-- Check Radio adminButton is selected -->
+        <xsl:if test="../value/node()=$value">
+          <xsl:attribute name="checked">checked</xsl:attribute>
+        </xsl:if>
+
+        <!-- Check checkbox should be selected -->
+        <xsl:if test="contains($class,'checkboxes')">
+          <!-- Run through CSL to see if this should be checked -->
+          <xsl:variable name="valueMatch">
+            <xsl:call-template name="checkValueMatch">
+              <xsl:with-param name="CSLValue" select="../value/node()"/>
+              <xsl:with-param name="value" select="$value"/>
+              <xsl:with-param name="seperator" select="','"/>
+            </xsl:call-template>
+          </xsl:variable>
+          <xsl:if test="$valueMatch='true'">
+            <xsl:attribute name="checked">checked</xsl:attribute>
+          </xsl:if>
+        </xsl:if>
+        <xsl:attribute name="onclick">
+          <xsl:text>showDependant('</xsl:text>
+          <xsl:value-of select="translate(toggle/@case,'[]#=/','')"/>
+          <xsl:text>-dependant','</xsl:text>
+          <xsl:value-of select="$dependantClass"/>
+          <xsl:text>');</xsl:text>
+        </xsl:attribute>
+      </input>
+      <label for="{$ref}_{position()}" class="radio {translate(value/node(),'/ ','')}">
+        <xsl:value-of select="label/node()"/>
+      </label>
+    </span>
+    <!--<xsl:if test="contains($class,'multiline') and position()!=last()">
+      <br/>
+    </xsl:if>-->
+
+  </xsl:template>
 
 </xsl:stylesheet>
