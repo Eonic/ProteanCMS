@@ -12,11 +12,11 @@ Developed over 14 years by leading web design company eonic.co.uk it has been us
 Until recently the project has been managed internally at Eonic and has only recently moved to GitHub, hence the lack of history found here.
 
 ## List of Features
-http://www.proteancms.com/Why-eonicweb5/Feature-List
+https://www.proteancms.com/Why-ProteanCMS/Feature-list
 
 
 ## Example Websites
-https://www.proteancms.com/Web-Design-Portfolio
+https://eonic.com/Our-work
 
 ## Developers
 The team welcome new developers and contributors to the platform, we will actively support and encourage those that are contributing to the platform.
