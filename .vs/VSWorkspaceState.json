@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
+    "",
     "\\Assemblies",
     "\\Assemblies\\EonicWebV5",
     "\\wwwroot"
   ],
+  "SelectedNode": "\\ProteanCMS.sln",
   "PreviewInSolutionExplorer": false
 }

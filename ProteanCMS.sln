@@ -7,9 +7,9 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "EonicWebV5", "Assemblies\Eo
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Eonic.Tools", "Assemblies\Eonic.Tools\Eonic.Tools.vbproj", "{80184D17-3466-4657-8AF9-FC237E1EE1FC}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot(2)", "wwwroot\", "{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "wwwroot", "wwwroot\", "{6BBA9F62-876F-4BB2-A4BB-502D696EAD6C}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.2"
 		ProjectReferences = "{80184d17-3466-4657-8af9-fc237e1ee1fc}|Eonic.Tools.dll;{7d93fd23-f739-4f09-a1b0-f5a8d0451533}|EonicWebV5.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_52465"
 		Debug.AspNetCompiler.PhysicalPath = "wwwroot\"

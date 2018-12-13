@@ -458,12 +458,19 @@ Public Module Text
             If bReturnNumbericEntities Then
                 oTdyManaged.OutputNumericEntities = True
             End If
-            crResult = oTdyManaged.CleanAndRepair()
-            If crResult = 0 Or crResult = 1 Then
+            Try
+                oTdyManaged.CleanAndRepair()
                 sTidyXhtml = oTdyManaged.Save()
-            Else
+            Catch ex As Exception
                 sTidyXhtml = "html import conversion error"
-            End If
+            End Try
+
+            'oTdyManaged.CleanAndRepair()
+            'If crResult = 0 Or crResult = 1 Then
+            '    sTidyXhtml = oTdyManaged.Save()
+            'Else
+            '    sTidyXhtml = "html import conversion error"
+            'End If
 
             oTdyManaged.Dispose()
             oTdyManaged = Nothing

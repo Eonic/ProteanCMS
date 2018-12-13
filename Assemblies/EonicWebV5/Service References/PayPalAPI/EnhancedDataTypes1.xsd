@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:ns="urn:ebay:apis:EnhancedDataTypes" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:EnhancedDataTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:ns="urn:ebay:apis:EnhancedDataTypes" xmlns:cc="urn:ebay:apis:CoreComponentTypes" xmlns:ebl="urn:ebay:apis:eBLBaseComponents" xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:EnhancedDataTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="eBLBaseComponents.xsd" namespace="urn:ebay:apis:eBLBaseComponents" />
   <xs:complexType name="EnhancedCheckoutDataType" />
-  <xs:complexType name="EnhancedPaymentDataType" />
-  <xs:complexType name="EnhancedItemDataType" />
+  <xs:complexType name="EnhancedPaymentDataType">
+    <xs:annotation>
+      <xs:documentation>
+				Enhanced data for different transactions.<br xmlns="http://www.w3.org/2001/XMLSchema" /></xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" ref="ebl:AirlineItinerary">
+        <xs:annotation>
+          <xs:documentation>
+						AID for Airlines
+					</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="EnhancedPaymentInfoType" />
+  <xs:complexType name="EnhancedItemDataType" />
   <xs:element name="EnhancedInitiateRecoupRequestDetails" type="ns:EnhancedInitiateRecoupRequestDetailsType" />
   <xs:element name="EnhancedCompleteRecoupRequestDetails" type="ns:EnhancedCompleteRecoupRequestDetailsType" />
   <xs:element name="EnhancedCompleteRecoupResponseDetails" type="ns:EnhancedCompleteRecoupResponseDetailsType" />

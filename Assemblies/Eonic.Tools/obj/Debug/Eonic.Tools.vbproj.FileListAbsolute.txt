@@ -123,3 +123,14 @@ D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.dll
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.xml
 D:\HostingSpaces\GitRepos\EonicWeb5\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.pdb
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.dll.config
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.dll
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.pdb
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\bin\Debug\Eonic.Tools.xml
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.vbproj.CoreCompileInputs.cache
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.vbproj.CopyComplete
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.dll
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.xml
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.pdb
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\bin\Debug\TidyHTML5Managed.xml
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Eonic.Tools\obj\Debug\Eonic.Tools.vbprojAssemblyReference.cache

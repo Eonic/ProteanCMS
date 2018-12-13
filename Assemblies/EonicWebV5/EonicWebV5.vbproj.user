@@ -3,4 +3,7 @@
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup>
+    <ReferencePath>C:\Users\trevors\source\repos\ProteanCMS\Assemblies\EonicWebV5\bin\</ReferencePath>
+  </PropertyGroup>
 </Project>

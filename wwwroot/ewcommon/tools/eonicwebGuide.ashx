@@ -16,7 +16,7 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
 
         oEw.InitializeVariables()
         oEw.moPageXml.CreateXmlDeclaration("1.0", "UTF-8", "yes")
-        Dim xReader As XmlReader = oEwCom.GetPageXml(context.Request("fRef"), 0).CreateReader()
+        Dim xReader As XmlReader = oEwCom.GetPageXml(context.Request("fRef")).CreateReader()
         xReader.MoveToContent()
         oEw.moPageXml.LoadXml(xReader.ReadOuterXml())
         oEw.mcEwSiteXsl = "/ewcommon/xsl/admin/guidePage.xsl"

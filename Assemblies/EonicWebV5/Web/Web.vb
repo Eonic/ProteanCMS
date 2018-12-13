@@ -6694,7 +6694,7 @@ Public Class Web
                             Dim abyBuffer(CInt(oFileStream.Length - 1)) As Byte
                             oFileStream.Read(abyBuffer, 0, abyBuffer.Length)
 
-                            Dim objCrc32 As New ICSharpCode.SharpZipLib.Checksums.Crc32()
+                            Dim objCrc32 As New ICSharpCode.SharpZipLib.Checksum.Crc32()
                             objCrc32.Reset()
                             objCrc32.Update(abyBuffer)
                             oZipEntry.Crc = objCrc32.Value
