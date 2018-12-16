@@ -1,0 +1,126 @@
+﻿//------------------------
+//BUTTONS
+//------------------------
+.btn-icon(@_;@size:inherit;@offset:7px;@indent:5px;){
+    &:after{
+		padding-left:@offset;
+        font-size:@size;
+        margin-right:-@indent;
+        display:inline-block;
+	}
+}
+.btn-icon(angle;@size:inherit;@offset:7px;@indent:5px;){
+    &:after{
+		.angle-right();
+	}
+}
+.btn-icon(chevron;@offset:7px;@size:0.8em;@indent:5px;){
+    &:after{
+		.chevron-right();
+	}
+}
+.btn-clean(@color:@link-color){
+	.pill-clean;
+	.clear-shadow;
+	border:0;
+	background:none;
+	padding:0!important;
+    border-radius:0;
+	font-size:1em;
+    line-height:@line-height-base;
+	.link-color(@color);
+}
+.btn-mixin(@background:@btn-default-bg;@color:#fff;@percentage:@btn-hover-percentage;@radius:@btn-radius-base;@size:@btn-font-size;@padding: 8px 25px;){
+	background:@background;
+	border-color:@background;
+	color:@color;
+    border-radius:@radius;
+    font-size:@size;
+    line-height:@line-height-base;
+    padding:@padding;
+    &:hover,
+    &:focus{
+	    color:@color;
+		background:darken(@background,@percentage);
+		border-color:darken(@background,@percentage);
+    }
+}
+
+//------------------------
+//CONTENT CAROUSEL ARROWS
+//------------------------
+//icon options
+.content-carousel-icon(angle;@offset:3px;@size:32px){
+    button.slick-prev:before{
+        .angle-left;
+        padding-right:@offset;
+        font-size:@size;
+    }
+	button.slick-next:before{
+        .angle-right;
+        padding-left:@offset;
+        font-size:@size;
+	}
+}
+.content-carousel-icon(chevron;@offset:4px;@size:24px){
+    button.slick-prev:before{
+        .chevron-left;
+        padding-right:@offset;
+        font-size:@size;
+    }
+	button.slick-next:before{
+        .chevron-right;
+        padding-left:@offset;
+        font-size:@size;
+	}
+}
+//round/square arrow buttons with background
+.content-carousel-buttons(@background:@btn-default-bg,@color:@btn-default-color,@radius:100px,@hover:darken(@background,@btn-hover-percentage),@width:40px,@height:@width){
+    .slick-prev,
+    .slick-next{
+        width:@width;
+        height:@height;
+        color:@btn-default-color;
+        background:@background;
+        border-radius:@radius;
+        text-align:center;
+        .flex-display;
+        .align-items(center);
+        .justify-content(center);
+    }
+	.slick-prev:before,
+	.slick-next:before{
+        opacity:1;
+        //padding: 8px 8px 8px 4px;
+        padding:0;
+    }
+	//.slick-next:before{padding: 8px 4px 8px 8px;}
+	button:hover.slick-prev,
+	button:hover.slick-next{
+        color:@btn-default-color;
+        background:@hover;
+	}
+    //layout
+    .slick-prev{left:0;}
+    .slick-next{right:0;}
+    @media(min-width:(@screen-sm-min + @width + @grid-gutter-width)) and (max-width:@screen-sm-max){
+        .slick-prev{left:-@width;}
+        .slick-next{right:-@width;}
+    }
+    @media(min-width:(@screen-md-min + @width + @grid-gutter-width)) and (max-width:@screen-md-max){
+        .slick-prev{left:-@width;}
+        .slick-next{right:-@width;}
+    }
+    @media(min-width:(@screen-lg-min + @width + @grid-gutter-width)){
+        .slick-prev{left:-@width;}
+        .slick-next{right:-@width;}
+    }
+}
+//arrow no background
+.content-carousel-clean-buttons{
+    .slick-prev:before,
+	.slick-next:before{color:fade(@text-color,30%);}
+	button:hover.slick-prev:before,
+	button:hover.slick-next:before{color:@text-color;}
+}
+

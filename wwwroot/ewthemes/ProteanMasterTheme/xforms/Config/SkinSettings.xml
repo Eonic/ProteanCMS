@@ -1,0 +1,462 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Content type="xform" name="SkinSettings">
+  <model>
+    <instance>
+      <theme>
+        <add key="CurrentTheme" value="ProteanMasterTheme"/>
+        <add key="variablesPath" value="/css/variables.less"/>
+        <add key="SiteXsl" value="/ewthemes/ProteanMasterTheme/TopNavSideSub.xsl" />
+
+        <add key="ProteanMasterTheme.ThemePreset" value="Default" />
+
+        <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+        <add key="ProteanMasterTheme.MainTitle" value="true" />
+        <add key="ProteanMasterTheme.HomeNav" value="true" />
+        <add key="ProteanMasterTheme.HomeInfo" value="true" />
+        <add key="ProteanMasterTheme.NavFix" value="false" />
+
+        <add key="ProteanMasterTheme.body-bg" value="#fff" />
+        <add key="ProteanMasterTheme.brand-primary" value="#2C3E50" />
+        <add key="ProteanMasterTheme.brand-action" value="#18BC9C" />
+        <add key="ProteanMasterTheme.brand-info" value="#3498DB" />
+        <add key="ProteanMasterTheme.brand-success" value="#18BC9C" />
+        <add key="ProteanMasterTheme.brand-warning" value="#F39C12" />
+        <add key="ProteanMasterTheme.brand-danger" value="#E74C3C" />
+
+        <add key="ProteanMasterTheme.link-color" value="#18BC9C" />
+        <add key="ProteanMasterTheme.text-color" value="#333" />
+        <add key="ProteanMasterTheme.headings-font" value="'Lato', sans-serif" />
+        <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+        <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+        <add key="ProteanMasterTheme.base-font" value="'Lato', sans-serif" />
+        <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+        <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+
+        <add key="ProteanMasterTheme.border-radius-base" value="4px" />
+
+        <add key="ProteanMasterTheme.btn-default-bg" value="#444" />
+        <add key="ProteanMasterTheme.headings-color" value="#333" />
+
+        <add key="ProteanMasterTheme.background-image" value=""/>
+        <add key="ProteanMasterTheme.background-repeat" value="repeat-x"/>
+        <add key="ProteanMasterTheme.background-position" value="left top"/>
+        <add key="ProteanMasterTheme.background-attachment" value="scroll"/>
+        <add key="ProteanMasterTheme.background-attachment" value="scroll"/>
+        <add key="ProteanMasterTheme.contrast-color" value="#000" />
+      </theme>
+    </instance>
+    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+    <bind nodeset="theme">
+      <bind id="Theme" nodeset="add[@key='CurrentTheme']/@value" required="true()" type="string" />
+      <bind id="SiteXsl" nodeset="add[@key='SiteXsl']/@value" required="true()" type="string" />
+      <bind id="ThemePreset" nodeset="add[@key='ProteanMasterTheme.ThemePreset']/@value" required="true()" type="string" />
+
+      <bind id="Breadcrumb" nodeset="add[@key='ProteanMasterTheme.Breadcrumb']/@value" required="true()" type="string" />
+      <bind id="MainTitle" nodeset="add[@key='ProteanMasterTheme.MainTitle']/@value" required="true()" type="string" />
+      <bind id="HomeNav" nodeset="add[@key='ProteanMasterTheme.HomeNav']/@value" required="true()" type="string" />
+      <bind id="HomeInfo" nodeset="add[@key='ProteanMasterTheme.HomeInfo']/@value" required="true()" type="string" />
+      <bind id="NavFix" nodeset="add[@key='ProteanMasterTheme.NavFix']/@value" required="true()" type="string" />
+
+      <bind id="body-bg" nodeset="add[@key='ProteanMasterTheme.body-bg']/@value" required="true()" type="string" />
+      <bind id="brand-primary" nodeset="add[@key='ProteanMasterTheme.brand-primary']/@value" required="true()" type="string" />
+      <bind id="brand-action" nodeset="add[@key='ProteanMasterTheme.brand-action']/@value" required="true()" type="string" />
+      <bind id="brand-info" nodeset="add[@key='ProteanMasterTheme.brand-info']/@value" required="true()" type="string" />
+      <bind id="brand-success" nodeset="add[@key='ProteanMasterTheme.brand-success']/@value" required="true()" type="string" />
+      <bind id="brand-warning" nodeset="add[@key='ProteanMasterTheme.brand-warning']/@value" required="true()" type="string" />
+      <bind id="brand-danger" nodeset="add[@key='ProteanMasterTheme.brand-danger']/@value" required="true()" type="string" />
+
+      <bind id="link-color" nodeset="add[@key='ProteanMasterTheme.link-color']/@value" required="true()" type="string" />
+      <bind id="text-color" nodeset="add[@key='ProteanMasterTheme.text-color']/@value" required="true()" type="string" />
+      <bind id="headings-font" nodeset="add[@key='ProteanMasterTheme.headings-font']/@value" required="false()" type="string" />
+      <bind id="headings-font-family" nodeset="add[@key='ProteanMasterTheme.headings-font-family']/@value" required="true()" type="string" />
+      <bind id="headings-font-import" nodeset="add[@key='ProteanMasterTheme.headings-font-import']/@value" required="true()" type="string" />
+      <bind id="base-font" nodeset="add[@key='ProteanMasterTheme.base-font']/@value" required="false()" type="string" />
+      <bind id="base-font-family" nodeset="add[@key='ProteanMasterTheme.font-family-base']/@value" required="true()" type="string" />
+      <bind id="base-font-import" nodeset="add[@key='ProteanMasterTheme.font-import-base']/@value" required="true()" type="string" />
+      <bind id="border-radius-base" nodeset="add[@key='ProteanMasterTheme.border-radius-base']/@value" required="true()" type="string" />
+
+      <bind id="btn-default-bg" nodeset="add[@key='ProteanMasterTheme.btn-default-bg']/@value" required="true()" type="string" />
+      <bind id="headings-color" nodeset="add[@key='ProteanMasterTheme.headings-color']/@value" required="true()" type="string" />
+
+      <bind id="ThemeBackgroundImage" nodeset="add[@key='ProteanMasterTheme.background-image']/@value" required="false()" type="string" />
+      <bind id="ThemeBackgroundRepeat" nodeset="add[@key='ProteanMasterTheme.background-repeat']/@value" required="true()" type="string" />
+      <bind id="ThemeBackgroundPosition" nodeset="add[@key='ProteanMasterTheme.background-position']/@value" required="true()" type="string" />
+      <bind id="ThemeBackgroundAttachment" nodeset="add[@key='ProteanMasterTheme.background-attachment']/@value" required="false()" type="string" />
+    </bind>
+  </model>
+  <group ref="WebSettings">
+    <label>ProteanMasterTheme Theme Settings</label>
+    <group class="inline">
+      <label>Preset Colour Themes</label>
+      <select1 bind="ThemePreset" class="ewQuery" appearance="minimal" query="themePresets">
+        <label>Load Existing Preset Colour Theme</label>
+        <item>
+          <label></label>
+          <value></value>
+        </item>
+      </select1>
+      <input ref="newPresetName">
+        <help class="inline">this saves the current configuration as a new preset</help>
+        <label>Save As New Preset - Name</label>
+      </input>
+    </group>
+    <group class="inline">
+      <label>Overall Layout</label>
+      <select1 bind="SiteXsl" appearance="minimal">
+        <item>
+          <label>Top Navigation Sub Navigation on the Left</label>
+          <value>/ewthemes/ProteanMasterTheme/TopNavSideSub.xsl</value>
+        </item>
+        <item>
+          <label>Top Navigation Sub Navigation Underneath</label>
+          <value>/ewthemes/ProteanMasterTheme/TopNavTopSub.xsl</value>
+        </item>
+        <item>
+          <label>Top Navigation No Sub Menu</label>
+          <value>/ewthemes/ProteanMasterTheme/TopNavNoSub.xsl</value>
+        </item>
+        <item>
+          <label>Sub Menu 1st Level Top</label>
+          <value>/ewthemes/ProteanMasterTheme/SubNavTopLevel1.xsl</value>
+        </item>
+      </select1>
+    </group>
+    <group class="inline">
+      <label>Background settings</label>
+      <input bind="body-bg" class="colorPicker">
+        <label>Background Colour</label>
+      </input>
+      <input bind="ThemeBackgroundImage" class="pickImageFile">
+        <label>Theme background Image</label>
+        <value></value>
+      </input>
+      <select1 bind="ThemeBackgroundRepeat" appearance="minimal">
+        <label>Theme background image repeat</label>
+        <item>
+          <label>Repeat across the screen</label>
+          <value>repeat-x</value>
+        </item>
+        <item>
+          <label>Repeat down the screen</label>
+          <value>repeat-y</value>
+        </item>
+        <item>
+          <label> Do not repeat, appear once</label>
+          <value>no-repeat</value>
+        </item>
+        <item>
+          <label>Repeat across and down</label>
+          <value>repeat</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="ThemeBackgroundPosition" appearance="minimal">
+        <label>Theme background image position</label>
+        <item>
+          <label>Top Centered</label>
+          <value>center top</value>
+        </item>
+        <item>
+          <label>Bottom Centered</label>
+          <value>center bottom</value>
+        </item>
+        <item>
+          <label>Top Left</label>
+          <value>left top</value>
+        </item>
+        <item>
+          <label>Bottom Left</label>
+          <value>left bottom</value>
+        </item>
+        <item>
+          <label>Top Right</label>
+          <value>right top</value>
+        </item>
+        <item>
+          <label>Bottom Right</label>
+          <value>right bottom</value>
+        </item>
+        <item>
+          <label>Left Centered</label>
+          <value>left center</value>
+        </item>
+        <item>
+          <label>Right Centered</label>
+          <value>right center</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="ThemeBackgroundAttachment" appearance="full">
+        <label>Theme background image attachment</label>
+        <item>
+          <label>Scroll</label>
+          <value>scroll</value>
+        </item>
+        <item>
+          <label>Fixed</label>
+          <value>fixed</value>
+        </item>
+        <value />
+      </select1>
+    </group>
+    <group class="inline">
+      <label>Main Colours</label>
+      <input bind="brand-primary" class="colorPicker">
+        <label>Brand Primary Colour</label>
+      </input>
+      <input bind="brand-action" class="colorPicker">
+        <label>Brand Action Colour</label>
+      </input>
+      <input bind="brand-info" class="colorPicker">
+        <label>Brand Info Colour</label>
+      </input>
+      <input bind="brand-success" class="colorPicker">
+        <label>Brand Success Colour</label>
+      </input>
+      <input bind="brand-warning" class="colorPicker">
+        <label>Brand Warning Colour</label>
+      </input>
+      <input bind="brand-danger" class="colorPicker">
+        <label>Brand Danger Colour</label>
+      </input>
+    </group>
+    <group class="inline">
+      <label>Fonts Settings</label>
+      <input bind="text-color" class="colorPicker">
+
+        <label>Theme text colour</label>
+      </input>
+
+      <input bind="headings-color" class="colorPicker">
+        <label>Headings Colour</label>
+      </input>
+      <select1 bind="base-font" appearance="minimal" class="fontSelect">
+        <label>Body Fonts</label>
+        <item>
+          <label>Lato</label>
+          <value>'Lato', sans-serif|Lato:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Open Sans </label>
+          <value>'Open Sans', sans-serif|Open+Sans:300italic,400italic,700italic,400,700,300</value>
+        </item>
+        <item>
+          <label>Roboto </label>
+          <value>'Roboto', sans-serif|Roboto:300italic,400italic,500italic,700italic,300,400,500,700</value>
+        </item>
+        <item>
+          <label>Source Sans Pro </label>
+          <value>'Source Sans Pro', sans-serif|Source+Sans+Pro:400,300,300italic,400italic,600,600italic,700,700italic</value>
+        </item>
+        <item>
+          <label>Droid Sans</label>
+          <value>'Droid Sans', sans-serif|Driod+Slab:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Roboto Slab</label>
+          <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
+        </item>
+        <item>
+          <label>Cabin</label>
+          <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Lobster</label>
+          <value>'Lobster', cursive|Lobster</value>
+        </item>
+        <item>
+          <label>Arial Black/Gadget</label>
+          <value>Arial Black, Arial Black, Gadget, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Courier New/Newlinespace</label>
+          <value>Courier New, Courier New, Newlinespace|none</value>
+        </item>
+        <item>
+          <label>Georgia</label>
+          <value>Georgia1, Georgia, serif|none</value>
+        </item>
+        <item>
+          <label>Lucida Sans/Lucida Grande</label>
+          <value>Lucida Sans Unicode, Lucida Grande, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Tahoma/Geneva</label>
+          <value>Tahoma, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Times New Roman/Times</label>
+          <value>Times New Roman, Times New Roman, Times, serif|none</value>
+        </item>
+        <item>
+          <label>Verdana/Geneva</label>
+          <value>Verdana, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Add New Google Font</label>
+          <value>'Font Name Here', sans-serif|Font+Name+Here:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="headings-font" appearance="minimal" class="fontSelect">
+        <label>Heading Fonts</label>
+        <item>
+          <label>Lato</label>
+          <value>'Lato', sans-serif|Lato:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Open Sans </label>
+          <value>'Open Sans', sans-serif|Open+Sans:300italic,400italic,700italic,400,700,300</value>
+        </item>
+        <item>
+          <label>Droid Sans</label>
+          <value>'Droid Sans', sans-serif|Driod+Slab:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Roboto Slab</label>
+          <value>'Roboto Slab', sans-serif|Roboto+Slab:400,700,300</value>
+        </item>
+        <item>
+          <label>Cabin</label>
+          <value>'Cabin', sans-serif|Cabin:400,700,400italic,700italic</value>
+        </item>
+        <item>
+          <label>Lobster</label>
+          <value>'Lobster', cursive|Lobster</value>
+        </item>
+        <item>
+          <label>Arial Black/Gadget</label>
+          <value>Arial Black, Arial Black, Gadget, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Courier New/Newlinespace</label>
+          <value>Courier New, Courier New, Newlinespace|none</value>
+        </item>
+        <item>
+          <label>Georgia</label>
+          <value>Georgia1, Georgia, serif|none</value>
+        </item>
+        <item>
+          <label>Lucida Sans/Lucida Grande</label>
+          <value>Lucida Sans Unicode, Lucida Grande, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Tahoma/Geneva</label>
+          <value>Tahoma, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Times New Roman/Times</label>
+          <value>Times New Roman, Times New Roman, Times, serif|none</value>
+        </item>
+        <item>
+          <label>Verdana/Geneva</label>
+          <value>Verdana, Geneva, sans-serif|none</value>
+        </item>
+        <item>
+          <label>Add New Google Font</label>
+          <value>'Font Name Here', sans-serif|Font+Name+Here:300,400,700,300italic,400italic,700italic</value>
+        </item>
+        <value />
+      </select1>
+    </group>
+    <group class="inline">
+      <label>Add Google Fonts</label>
+      <input bind="base-font-family">
+        <label>Text Font Name</label>
+      </input>
+      <input bind="headings-font-family">
+        <label>Heading Font Name</label>
+      </input>
+      <input bind="base-font-import">
+        <label>Text Font Import</label>
+      </input>
+      <input bind="headings-font-import">
+        <label>Heading Font Import</label>
+      </input>
+
+    </group>
+    <group class="inline">
+      <label>Links and buttons</label>
+      <input bind="link-color" class="colorPicker">
+        <label>Link Colour</label>
+      </input>
+      <input bind="btn-default-bg" class="colorPicker">
+        <label>Button Colour</label>
+      </input>
+    </group>
+    <group class="inline">
+      <label>Navigation</label>
+      <select1 bind="HomeNav" appearance="minimal">
+        <label>Show home on Main Nav</label>
+        <item>
+          <label>Yes</label>
+          <value>true</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>false</value>
+        </item>
+      </select1>
+      <select1 bind="HomeInfo" appearance="minimal">
+        <label>Show home on Info Nav</label>
+        <item>
+          <label>Yes</label>
+          <value>true</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>false</value>
+        </item>
+      </select1>
+      <select1 bind="NavFix" appearance="minimal">
+        <label>Fix nav to top of page</label>
+        <item>
+          <label>Yes</label>
+          <value>true</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>false</value>
+        </item>
+      </select1>
+    </group>
+
+    <group class="inline">
+      <label>Other settings</label>
+
+      <select1 bind="Breadcrumb" appearance="minimal">
+        <label>Show Breadcrumb</label>
+        <item>
+          <label>Yes</label>
+          <value>true</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>false</value>
+        </item>
+      </select1>
+      <select1 bind="MainTitle" appearance="minimal">
+        <label>Show MainTitle</label>
+        <item>
+          <label>Yes</label>
+          <value>true</value>
+        </item>
+        <item>
+          <label>No</label>
+          <value>false</value>
+        </item>
+      </select1>
+
+      <input bind="border-radius-base">
+        <label>Border Radius</label>
+      </input>
+
+
+
+    </group>
+    <submit submission="" ref="WebSettings" class="principle">
+      <label>Save Settings</label>
+    </submit>
+  </group>
+</Content>

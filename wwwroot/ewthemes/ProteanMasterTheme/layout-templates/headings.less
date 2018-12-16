@@ -1,0 +1,42 @@
+﻿//------------------------
+//HEADING DECORATIONS 
+//------------------------
+//short underline
+.heading-decoration(@color:@brand-primary,@width:40px,@height:6px,@margin:10px){
+    &:after{
+        content:' ';
+        width:@width;
+        height:@height;
+        background-color:@color;
+        display:block;
+        margin-top:@margin;
+    }
+}
+.heading-decoration-centred(@color:@brand-primary,@width:40px,@height:6px,@margin:10px){
+    .heading-decoration(@color,@width,@height,@margin);
+    &:after{
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+//------------------------
+//HEADING STYLES 
+//------------------------
+.heading-color(@color:@headings-color;@link:@headings-color;@hover:@link-color;){
+    color:@color;
+    a{
+        color:@link;
+        &:hover,
+        &:focus{
+            color:@hover;
+        }
+    }
+}
+.heading-style(@size:25px;@margin:10px;@font-weight:@headings-font-weight;@line-height:1.2;@font-family:@headings-font-family){
+    font-size:(@size / 1.2);
+    @media(min-width:@screen-sm-min){font-size:@size;}
+    font-weight:@font-weight;
+    line-height:@line-height;
+    font-family:@font-family;
+    margin-bottom:@margin;
+}

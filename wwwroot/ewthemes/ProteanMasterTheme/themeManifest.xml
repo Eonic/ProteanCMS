@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Theme name="ProteanMasterTheme" category="business" cssFramework="bs3">
+  <Images>
+    <img src="/ewthemes/ProteanMasterTheme/images/Preview/ProteanMasterTheme.png" class="thumbnail" />
+    <img src="/ewthemes/ProteanMasterTheme/images/Preview/ProteanMasterTheme.png" class="fullsize" />
+  </Images>
+  <Description>
+    Protean Master Theme
+  </Description>
+  <RootXslt src="/ewthemes/ProteanMasterTheme/standard.xsl" />
+  <Licence type="" copyright="" />
+  <Attribution>Eonic Associates LLP.</Attribution>
+  <Price>Free</Price>
+  <!-- Colour Presets -->
+  <Presets>
+    <Preset name="Default">
+      <add key="ProteanMasterTheme.Layout" value="TopNavSideSub" />
+      <add key="ProteanMasterTheme.ThemePreset" value="Candy" />
+      <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+      <add key="ProteanMasterTheme.MainTitle" value="true" />
+      <add key="ProteanMasterTheme.HomeNav" value="true" />
+      <add key="ProteanMasterTheme.HomeInfo" value="false" />
+      <add key="ProteanMasterTheme.body-bg" value="#ffffff" />
+      <add key="ProteanMasterTheme.brand-primary" value="#00a3c8" />
+      <add key="ProteanMasterTheme.brand-action" value="#f7c64c" />
+      <add key="ProteanMasterTheme.brand-info" value="#000000" />
+      <add key="ProteanMasterTheme.brand-success" value="#00c86c" />
+      <add key="ProteanMasterTheme.brand-warning" value="#f35b3b" />
+      <add key="ProteanMasterTheme.brand-danger" value="#f2496f" />
+      <add key="ProteanMasterTheme.link-color" value="#00a3c8" />
+      <add key="ProteanMasterTheme.text-color" value="#6a6a6a" />
+      <add key="ProteanMasterTheme.headings-font" value="" />
+      <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.base-font" value="" />
+      <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.border-radius-base" value="0px" />
+      <add key="ProteanMasterTheme.btn-default-bg" value="#000000" />
+      <add key="ProteanMasterTheme.headings-color" value="#000000" />
+      <add key="ProteanMasterTheme.background-image" value="" />
+      <add key="ProteanMasterTheme.background-repeat" value="repeat-x" />
+      <add key="ProteanMasterTheme.background-position" value="left top" />
+      <add key="ProteanMasterTheme.background-attachment" value="scroll" />
+      <add key="ProteanMasterTheme.contrast-color" value="#000" />
+      <add key="ProteanMasterTheme.header-bg" value="#fff" />
+    </Preset>
+    <Preset name="Candy">
+      <add key="ProteanMasterTheme.Layout" value="TopNavSideSub" />
+      <add key="ProteanMasterTheme.ThemePreset" value="Candy" />
+      <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+      <add key="ProteanMasterTheme.MainTitle" value="true" />
+      <add key="ProteanMasterTheme.HomeNav" value="true" />
+      <add key="ProteanMasterTheme.HomeInfo" value="false" />
+      <add key="ProteanMasterTheme.body-bg" value="#ffffff" />
+      <add key="ProteanMasterTheme.brand-primary" value="#00a3c8" />
+      <add key="ProteanMasterTheme.brand-action" value="#f7c64c" />
+      <add key="ProteanMasterTheme.brand-info" value="#000000" />
+      <add key="ProteanMasterTheme.brand-success" value="#00c86c" />
+      <add key="ProteanMasterTheme.brand-warning" value="#f35b3b" />
+      <add key="ProteanMasterTheme.brand-danger" value="#f2496f" />
+      <add key="ProteanMasterTheme.link-color" value="#00a3c8" />
+      <add key="ProteanMasterTheme.text-color" value="#6a6a6a" />
+      <add key="ProteanMasterTheme.headings-font" value="" />
+      <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.base-font" value="" />
+      <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.border-radius-base" value="0px" />
+      <add key="ProteanMasterTheme.btn-default-bg" value="#000000" />
+      <add key="ProteanMasterTheme.headings-color" value="#000000" />
+      <add key="ProteanMasterTheme.background-image" value="" />
+      <add key="ProteanMasterTheme.background-repeat" value="repeat-x" />
+      <add key="ProteanMasterTheme.background-position" value="left top" />
+      <add key="ProteanMasterTheme.background-attachment" value="scroll" />
+      <add key="ProteanMasterTheme.contrast-color" value="#000" />
+      <add key="ProteanMasterTheme.header-bg" value="#fff" />
+    </Preset>
+    <Preset name="Flat">
+      <add key="ProteanMasterTheme.Layout" value="TopNavSideSub" />
+      <add key="ProteanMasterTheme.ThemePreset" value="Flat" />
+      <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+      <add key="ProteanMasterTheme.MainTitle" value="true" />
+      <add key="ProteanMasterTheme.HomeNav" value="true" />
+      <add key="ProteanMasterTheme.HomeInfo" value="false" />
+      <add key="ProteanMasterTheme.body-bg" value="#ffffff" />
+      <add key="ProteanMasterTheme.brand-primary" value="#2c3e50" />
+      <add key="ProteanMasterTheme.brand-action" value="#e74c3c" />
+      <add key="ProteanMasterTheme.brand-info" value="#3498DB" />
+      <add key="ProteanMasterTheme.brand-success" value="#83bf8c" />
+      <add key="ProteanMasterTheme.brand-warning" value="#e79a3c" />
+      <add key="ProteanMasterTheme.brand-danger" value="#e74c3c" />
+      <add key="ProteanMasterTheme.link-color" value="#3498DB" />
+      <add key="ProteanMasterTheme.text-color" value="#6a6a6a" />
+      <add key="ProteanMasterTheme.headings-font" value="" />
+      <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.base-font" value="" />
+      <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.border-radius-base" value="0px" />
+      <add key="ProteanMasterTheme.btn-default-bg" value="#2c3e50" />
+      <add key="ProteanMasterTheme.headings-color" value="#2c3e50" />
+      <add key="ProteanMasterTheme.background-image" value="" />
+      <add key="ProteanMasterTheme.background-repeat" value="repeat-x" />
+      <add key="ProteanMasterTheme.background-position" value="left top" />
+      <add key="ProteanMasterTheme.background-attachment" value="scroll" />
+      <add key="ProteanMasterTheme.contrast-color" value="#000" />
+      <add key="ProteanMasterTheme.header-bg" value="#fff" />
+    </Preset>
+    <Preset name="Country">
+      <add key="ProteanMasterTheme.Layout" value="TopNavSideSub" />
+      <add key="ProteanMasterTheme.ThemePreset" value="Country" />
+      <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+      <add key="ProteanMasterTheme.MainTitle" value="true" />
+      <add key="ProteanMasterTheme.HomeNav" value="true" />
+      <add key="ProteanMasterTheme.HomeInfo" value="false" />
+      <add key="ProteanMasterTheme.body-bg" value="#ffffff" />
+      <add key="ProteanMasterTheme.brand-primary" value="#cfcac9" />
+      <add key="ProteanMasterTheme.brand-action" value="#768086" />
+      <add key="ProteanMasterTheme.brand-info" value="#888783" />
+      <add key="ProteanMasterTheme.brand-success" value="#98b9ac" />
+      <add key="ProteanMasterTheme.brand-warning" value="#c8ac89" />
+      <add key="ProteanMasterTheme.brand-danger" value="#8e7471" />
+      <add key="ProteanMasterTheme.link-color" value="#c8ac89" />
+      <add key="ProteanMasterTheme.text-color" value="#768086" />
+      <add key="ProteanMasterTheme.headings-font" value="" />
+      <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.base-font" value="" />
+      <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.border-radius-base" value="0px" />
+      <add key="ProteanMasterTheme.btn-default-bg" value="#cfcac9" />
+      <add key="ProteanMasterTheme.headings-color" value="#768086" />
+      <add key="ProteanMasterTheme.background-image" value="" />
+      <add key="ProteanMasterTheme.background-repeat" value="repeat-x" />
+      <add key="ProteanMasterTheme.background-position" value="left top" />
+      <add key="ProteanMasterTheme.background-attachment" value="scroll" />
+      <add key="ProteanMasterTheme.contrast-color" value="#565656" />
+      <add key="ProteanMasterTheme.header-bg" value="#fff" />
+    </Preset>
+
+    <Preset name="Winter">
+      <add key="ProteanMasterTheme.Layout" value="TopNavSideSub" />
+      <add key="ProteanMasterTheme.ThemePreset" value="Winter" />
+      <add key="ProteanMasterTheme.Breadcrumb" value="true" />
+      <add key="ProteanMasterTheme.MainTitle" value="true" />
+      <add key="ProteanMasterTheme.HomeNav" value="true" />
+      <add key="ProteanMasterTheme.HomeInfo" value="false" />
+      <add key="ProteanMasterTheme.body-bg" value="#ffffff" />
+      <add key="ProteanMasterTheme.brand-primary" value="#8f1656" />
+      <add key="ProteanMasterTheme.brand-action" value="#383d43" />
+      <add key="ProteanMasterTheme.brand-info" value="#fa6677" />
+      <add key="ProteanMasterTheme.brand-success" value="#95bf83" />
+      <add key="ProteanMasterTheme.brand-warning" value="#f0864d" />
+      <add key="ProteanMasterTheme.brand-danger" value="#8f1656" />
+      <add key="ProteanMasterTheme.link-color" value="#FA6677" />
+      <add key="ProteanMasterTheme.text-color" value="#383d43" />
+      <add key="ProteanMasterTheme.headings-font" value="" />
+      <add key="ProteanMasterTheme.headings-font-family" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.headings-font-import" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.base-font" value="" />
+      <add key="ProteanMasterTheme.font-family-base" value="'Lato', sans-serif" />
+      <add key="ProteanMasterTheme.font-import-base" value="Lato:300,400,700" />
+      <add key="ProteanMasterTheme.border-radius-base" value="0px" />
+      <add key="ProteanMasterTheme.btn-default-bg" value="#8f1656" />
+      <add key="ProteanMasterTheme.headings-color" value="#8f1656" />
+      <add key="ProteanMasterTheme.background-image" value="" />
+      <add key="ProteanMasterTheme.background-repeat" value="repeat-x" />
+      <add key="ProteanMasterTheme.background-position" value="left top" />
+      <add key="ProteanMasterTheme.background-attachment" value="scroll" />
+      <add key="ProteanMasterTheme.contrast-color" value="#000" />
+      <add key="ProteanMasterTheme.header-bg" value="#383D43" />
+    </Preset>
+  </Presets>
+</Theme>
