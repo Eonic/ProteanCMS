@@ -314,11 +314,11 @@ Public Class Messaging
             End If
 
             'lets get the subjectline form the html title
-            oXml = htmlToXmlDoc(messageHtml)
-            If Not oXml Is Nothing Then
+            Dim oEmailXmlDoc As XmlDocument = htmlToXmlDoc(messageHtml)
+            If Not oEmailXmlDoc Is Nothing Then
                 'override the subject line from the template.
-                If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                    Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
+                If Not oEmailXmlDoc.SelectSingleNode("html/head/title") Is Nothing Then
+                    Dim oElmt2 As XmlElement = oEmailXmlDoc.SelectSingleNode("html/head/title")
                     If oElmt2.InnerText <> "" Then
                         SubjectLine = Trim(oElmt2.InnerText)
                     End If
@@ -607,7 +607,7 @@ Public Class Messaging
                     Try
                         Dim cActivityDetail As String = ""
                         Try
-                            Dim oBodyElmt As XmlElement = oXml.SelectSingleNode("html/body")
+                            Dim oBodyElmt As XmlElement = oEmailXmlDoc.SelectSingleNode("html/body")
                             If oBodyElmt.InnerText <> "" Then
                                 cActivityDetail = oBodyElmt.InnerText
                             Else
@@ -665,8 +665,41 @@ Public Class Messaging
                 If Not sendAsync Then
                     oMailn.Dispose()
                 End If
+
+                'handle opt-in behaviour
+                If Not oXml.SelectSingleNode("descendant-or-self::optIn[node()='true']") Is Nothing Then
+
+                    Dim moMessaging As Eonic.Providers.Messaging.BaseProvider
+                    Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                    Dim sMessagingProvider As String = ""
+                    If Not moMailConfig Is Nothing Then
+                        sMessagingProvider = moMailConfig("MessagingProvider")
+                        Dim myWeb As New Eonic.Web(moCtx)
+                        moMessaging = New Eonic.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                        Try
+
+                            Dim email As String = oXml.SelectSingleNode("descendant-or-self::Email").InnerText
+                            Dim name As String = oXml.SelectSingleNode("descendant-or-self::Name").InnerText
+                            Dim values As New System.Collections.Generic.Dictionary(Of String, String)
+                            Dim oElmt As XmlElement
+                            For Each oElmt In oXml.SelectNodes("/*/*")
+                                If Not (oElmt.Name = "Name" Or oElmt.Name = "Email" Or oElmt.Name = "ListId") Then
+                                    values.Add(oElmt.Name, oElmt.InnerText)
+                                End If
+                            Next
+                            moMessaging.Activities.AddToList(moMailConfig("OptInList"), name, email, values)
+
+                        Catch ex As Exception
+                            cProcessInfo = ex.StackTrace
+                        End Try
+                    End If
+
+                End If
+
                 Return successMessage
+
             End If
+
 
         Catch ex As Exception
             If gbDebug Then
@@ -914,7 +947,7 @@ Public Class Messaging
                     Dim cXmlPath As String = ""
 
                     If cSourceXmlPath Is Nothing Then
-                        cXmlPath = goServer.MapPath("/") & "..\..\imports\" & attachName & ".xml"
+                        cXmlPath = goServer.MapPath("/") & "..\imports\" & attachName & ".xml"
                     Else
                         cXmlPath = goServer.MapPath("/") & cSourceXmlPath & attachName & ".xml"
                     End If

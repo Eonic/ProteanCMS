@@ -66,7 +66,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>5.0.163.81</AssemblyVersion>
+    <AssemblyVersion>5.0.165.4</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -177,9 +177,14 @@
       <HintPath>..\..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JavaScriptEngineSwitcher.ChakraCore, Version=2.4.29.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JavaScriptEngineSwitcher.ChakraCore.2.4.29\lib\net45\JavaScriptEngineSwitcher.ChakraCore.dll</HintPath>
+    </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Core, Version=2.4.10.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JavaScriptEngineSwitcher.Core.2.4.10\lib\net45\JavaScriptEngineSwitcher.Core.dll</HintPath>
-      <Private>True</Private>
+    </Reference>
+    <Reference Include="JavaScriptEngineSwitcher.Msie, Version=2.4.29.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JavaScriptEngineSwitcher.Msie.2.4.29\lib\net45\JavaScriptEngineSwitcher.Msie.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
@@ -308,7 +313,7 @@
     <Compile Include="Providers\Membership.BaseProvider.vb" />
     <Compile Include="Providers\Messaging.BaseProvider.vb" />
     <Compile Include="Providers\Payment.BaseProvider.vb" />
-    <Compile Include="Service References\eonicweb.com\Reference.vb">
+    <Compile Include="Service References\ProteanCMS.com\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -446,7 +451,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="Service References\eonicweb.com\ewAdminProxy1.wsdl" />
+    <None Include="Service References\ProteanCMS.com\ewAdminProxy1.wsdl" />
     <None Include="Service References\PayPalAPI\CoreComponentTypes1.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -690,12 +695,12 @@
     </None>
     <None Include="Service References\PayPalAPI\configuration.svcinfo" />
     <None Include="Service References\PayPalAPI\configuration91.svcinfo" />
-    <None Include="Service References\eonicweb.com\Reference.svcmap">
+    <None Include="Service References\ProteanCMS.com\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.vb</LastGenOutput>
     </None>
-    <None Include="Service References\eonicweb.com\configuration.svcinfo" />
-    <None Include="Service References\eonicweb.com\configuration91.svcinfo" />
+    <None Include="Service References\ProteanCMS.com\configuration.svcinfo" />
+    <None Include="Service References\ProteanCMS.com\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -753,7 +758,7 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\eonicweb.com\" />
+    <WCFMetadataStorage Include="Service References\ProteanCMS.com\" />
     <WCFMetadataStorage Include="Service References\PayPalAPI\" />
     <WCFMetadataStorage Include="Service References\Paypoint\" />
   </ItemGroup>

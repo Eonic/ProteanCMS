@@ -549,6 +549,20 @@ Public Class Web
 
                 mcPagePath = CStr(moRequest("path") & "")
 
+                'ensures we have configured JSEngine for Bundle Transformer
+                If goApp("JSEngineEnabled") Is Nothing Then
+                    Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
+                    engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
+                    engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory())
+                    Dim sJsEngine As String = "ChakraCoreJsEngine"
+                    If moConfig("JSEngine") <> "" Then
+                        sJsEngine = moConfig("JSEngine")
+                    End If
+                    engineSwitcher.DefaultEngineName = sJsEngine
+                    goApp("JSEngineEnabled") = True
+                End If
+
+
                 If gbCart Or gbQuote Then
                     InitialiseCart()
                     'moCart = New Cart(Me)
