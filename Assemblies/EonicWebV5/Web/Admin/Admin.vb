@@ -447,7 +447,7 @@ ProcessFlow:
 
                     Case "InstallTheme"
 
-                        Dim SoapObj As New eonicweb.com.ewAdminProxySoapClient
+                        Dim SoapObj As New proteancms.com.ewAdminProxySoapClient
                         Dim themesPage As System.Xml.Linq.XElement = SoapObj.GetThemes(System.Environment.MachineName, myWeb.moRequest.ServerVariables("SERVER_NAME"))
                         Dim ContextThemesPage As XmlElement = moPageXML.CreateElement("Themes")
                         Dim xreader As XmlReader = themesPage.CreateReader()

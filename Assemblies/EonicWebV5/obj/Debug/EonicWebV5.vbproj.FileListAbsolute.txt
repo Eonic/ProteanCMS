@@ -101,3 +101,5 @@ C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\obj\Debug\EonicWe
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\bin\TidyHTML5Managed.pdb
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\bin\TidyHTML5Managed.xml
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\bin\ru-ru\BundleTransformer.MicrosoftAjax.resources.dll
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\bin\JavaScriptEngineSwitcher.ChakraCore.xml
+C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\EonicWebV5\bin\ru-ru\JavaScriptEngineSwitcher.ChakraCore.resources.dll

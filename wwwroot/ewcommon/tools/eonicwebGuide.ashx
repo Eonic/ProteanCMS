@@ -11,7 +11,7 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Dim oEw As Eonic.Web = New Eonic.Web
-        Dim oEwCom As Eonic.eonicweb.com.ewAdminProxySoapClient = New Eonic.eonicweb.com.ewAdminProxySoapClient
+        Dim oEwCom As Eonic.proteancms.com.ewAdminProxySoapClient = New Eonic.proteancms.com.ewAdminProxySoapClient
         Dim sProcessInfo As String = ""
 
         oEw.InitializeVariables()

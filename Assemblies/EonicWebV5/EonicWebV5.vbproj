@@ -313,17 +313,17 @@
     <Compile Include="Providers\Membership.BaseProvider.vb" />
     <Compile Include="Providers\Messaging.BaseProvider.vb" />
     <Compile Include="Providers\Payment.BaseProvider.vb" />
-    <Compile Include="Service References\ProteanCMS.com\Reference.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Service References\PayPalAPI\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\Paypoint\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\proteancms.com\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -451,7 +451,6 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="Service References\ProteanCMS.com\ewAdminProxy1.wsdl" />
     <None Include="Service References\PayPalAPI\CoreComponentTypes1.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -637,6 +636,7 @@
     </None>
     <None Include="Service References\PayPalAPI\PayPalSvc.wsdl" />
     <None Include="Service References\Paypoint\SECCardService.wsdl" />
+    <None Include="Service References\proteancms.com\ewadminproxy.wsdl" />
     <None Include="Web References\com.pclpls.www\Quotation.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -683,6 +683,12 @@
   <ItemGroup>
     <Content Include="DebugReadme.txt" />
     <Content Include="ReleaseNotes.txt" />
+    <None Include="Service References\proteancms.com\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+    <None Include="Service References\proteancms.com\configuration.svcinfo" />
+    <None Include="Service References\proteancms.com\configuration91.svcinfo" />
     <None Include="Service References\Paypoint\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.vb</LastGenOutput>
@@ -695,12 +701,6 @@
     </None>
     <None Include="Service References\PayPalAPI\configuration.svcinfo" />
     <None Include="Service References\PayPalAPI\configuration91.svcinfo" />
-    <None Include="Service References\ProteanCMS.com\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.vb</LastGenOutput>
-    </None>
-    <None Include="Service References\ProteanCMS.com\configuration.svcinfo" />
-    <None Include="Service References\ProteanCMS.com\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -758,9 +758,9 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ProteanCMS.com\" />
     <WCFMetadataStorage Include="Service References\PayPalAPI\" />
     <WCFMetadataStorage Include="Service References\Paypoint\" />
+    <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eonic.Tools\Eonic.Tools.vbproj">
@@ -777,7 +777,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

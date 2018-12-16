@@ -124,6 +124,17 @@ Public Class Setup
             mcModuleName = "ProteanCMS.Setup"
             ' msException = ""
 
+
+            'ensures we have configured JSEngine for Bundle Transformer
+            If goApp("JSEngineEnabled") Is Nothing Then
+                Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
+                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
+                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory())
+                Dim sJsEngine As String = "ChakraCoreJsEngine"
+                engineSwitcher.DefaultEngineName = sJsEngine
+                goApp("JSEngineEnabled") = True
+            End If
+
             ' Set the debug mode
             If Not (goConfig("Debug") Is Nothing) Then
                 Select Case LCase(goConfig("Debug"))
