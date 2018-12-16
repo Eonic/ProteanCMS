@@ -3,7 +3,7 @@
 
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
-  <xsl:import href="../../../../../ewcommon_v5-1/xsl/admin/page.xsl"/>
+  <xsl:import href="../../ewcommon/xsl/admin/page.xsl"/>
   <xsl:import href="CustomBoxStyles.xsl"/>
 
 </xsl:stylesheet>

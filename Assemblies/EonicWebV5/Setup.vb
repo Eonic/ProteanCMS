@@ -1965,7 +1965,7 @@ DoOptions:
                 siteUrl = Replace(siteUrl, "www.", "")
                 siteUrl = Replace(siteUrl, ".", "_")
                 siteUrl = Replace(siteUrl, "-", "_")
-                Return "ew_" & siteUrl
+                Return "ptn_" & siteUrl
             Catch ex As Exception
                 returnException(mcModuleName, "GuessDBName", ex, "", "", True)
                 Return ""
