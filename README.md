@@ -21,6 +21,9 @@ https://eonic.com/Our-work
 ## Developers
 The team welcome new developers and contributors to the platform, we will actively support and encourage those that are contributing to the platform.
 
+Join our community forum 
+https://gitter.im/ProteanCMS
+
 ## Quick Guide Getting it going locally...
 
 Get a clone or download the files, create a new site locally in IIS and point it to the wwwroot folder in your downloaded files.
