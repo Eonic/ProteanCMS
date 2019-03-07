@@ -6,5 +6,5 @@
     cause the file to be unrecognizable by the program.
 -->
 <GenericObjectDataSource DisplayName="ReverseTransactionResponseType" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>Eonic.PayPalAPI.ReverseTransactionResponseType, EonicWebV5, Version=5.0.85.40, Culture=neutral, PublicKeyToken=0e5e11efc3341916</TypeInfo>
+   <TypeInfo>Protean.PayPalAPI.ReverseTransactionResponseType, EonicWebV5, Version=5.0.85.40, Culture=neutral, PublicKeyToken=0e5e11efc3341916</TypeInfo>
 </GenericObjectDataSource>

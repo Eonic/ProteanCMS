@@ -27,14 +27,14 @@ Partial Public Module xmlTools
 
 #Region "Declarations"
 
-        Private myWeb As Web
+        Private myWeb As Cms
         'For saving object, dont want to keep chewing processing power during a transform
         Public oSaveHash As Hashtable
 
         ''for anything controlling web
-        'Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        'Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        'Protected Overridable Sub OnComponentError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) ' Handles Me.OnError
+        'Protected Overridable Sub OnComponentError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) ' Handles Me.OnError
         '    'deals with the error ' ALWAYS IN DEBUG MODE HERE !!!
         '    returnException(e.ModuleName, e.ProcedureName, e.Exception, myWeb.mcEwSiteXsl, e.AddtionalInformation, True)
         '    'close connection pooling
@@ -52,7 +52,7 @@ Partial Public Module xmlTools
 #End Region
 
 #Region "Initialisation/Private"
-        Public Sub New(ByRef aWeb As Web)
+        Public Sub New(ByRef aWeb As Cms)
             myWeb = aWeb
         End Sub
 
@@ -91,7 +91,7 @@ Partial Public Module xmlTools
 
         Function GetContentInstance(ByVal cXformName As String, ByVal cModuleType As String) As XmlElement
 
-            Dim oXfrm As New Eonic.xForm
+            Dim oXfrm As New Protean.xForm
 
             If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
 
@@ -293,7 +293,7 @@ Partial Public Module xmlTools
             Try
                 Select Case dateString
                     Case "now()", "Now()", "now", "Now"
-                        dateString = CStr(Eonic.Tools.Xml.XmlDate(Now(), True))
+                        dateString = CStr(Protean.Tools.Xml.XmlDate(Now(), True))
                 End Select
                 Return dateString
             Catch ex As Exception
@@ -315,7 +315,7 @@ Partial Public Module xmlTools
                     End Select
 
                 End If
-                Return Eonic.Tools.Xml.XmlDate(dateString, False)
+                Return Protean.Tools.Xml.XmlDate(dateString, False)
 
             Catch ex As Exception
                 Return dateString
@@ -504,7 +504,7 @@ Partial Public Module xmlTools
         Public Function CleanHTML(ByVal cHTMLString As String) As String
             Try
                 Dim cTheString As String = Replace(Replace(cHTMLString, "&gt;", ">"), "&lt;", "<")
-                cTheString = Eonic.Tools.Xml.convertEntitiesToCodes(cTheString)
+                cTheString = Protean.Tools.Xml.convertEntitiesToCodes(cTheString)
                 cTheString = tidyXhtmlFrag(cTheString, True)
                 Return cTheString
             Catch ex As Exception
@@ -523,7 +523,7 @@ Partial Public Module xmlTools
                 Return cHtml
             Else
                 cHtml = oHtmlNode.Current.InnerXml
-                cHtml = Eonic.Tools.Xml.convertEntitiesToCodes(cHtml)
+                cHtml = Protean.Tools.Xml.convertEntitiesToCodes(cHtml)
                 cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
                 cHtml = "<div>" & cHtml & "</div>"
 
@@ -567,7 +567,7 @@ Partial Public Module xmlTools
                 oContextNode.MoveNext()
 
                 cHtml = oContextNode.Current.InnerXml
-                cHtml = Eonic.Tools.Xml.convertEntitiesToCodes(cHtml)
+                cHtml = Protean.Tools.Xml.convertEntitiesToCodes(cHtml)
                 cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
                 cHtml = "<div>" & cHtml & "</div>"
 
@@ -609,7 +609,7 @@ Partial Public Module xmlTools
                 Dim oConfig As System.Collections.Specialized.NameValueCollection = GetObject("EonicConfig_" & SectionName)
 
                 If oConfig Is Nothing Then
-                    oConfig = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/" & SectionName)
+                    oConfig = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("protean/" & SectionName)
                     If Not oConfig Is Nothing Then
                         SaveObject("EonicConfig_" & SectionName, oConfig)
                     End If
@@ -723,7 +723,7 @@ Partial Public Module xmlTools
 
             Dim ids() As String
 
-            ids = myWeb.moDbHelper.getObjectsByRef(Web.dbHelper.objectTypes.Directory, fRef)
+            ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.Directory, fRef)
 
             If IsNumeric(ids(0)) Then
                 Return CStr(ids(0))
@@ -788,7 +788,7 @@ Partial Public Module xmlTools
         Public Function SaveImage(ByVal imageUrl As String, ByVal cVirtualPath As String) As String
 
             Try
-                Dim oFS As New Eonic.fsHelper(myWeb.moCtx)
+                Dim oFS As New Protean.fsHelper(myWeb.moCtx)
 
                 'Get the file system parent folder of the first level folder incase it is mapped in IIS
                 Dim FirstFolder As String = cVirtualPath.TrimStart("/").Substring(0, cVirtualPath.TrimStart("/").IndexOf("/"))
@@ -815,10 +815,10 @@ Partial Public Module xmlTools
             'RJP 7 Nov 2012. Amended HashString to add use of config setting.
             Try
                 'Encrypt password.
-                sPassword = Eonic.Tools.Encryption.HashString(sPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
+                sPassword = Protean.Tools.Encryption.HashString(sPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
                 'RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
-                'sPassword = Eonic.Tools.Xml.EncodeForXml(sPassword)
-                'sPassword = Eonic.Tools.Xml.convertEntitiesToCodes(sPassword)
+                'sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
+                'sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                 Return sPassword
 
             Catch ex As Exception
@@ -902,8 +902,8 @@ Partial Public Module xmlTools
         '    strSql.Append("AND (opt.nShipOptWeightMin <= 0 OR opt.nShipOptWeightMin <= " & nWeight.ToString & ") ")
         '    strSql.Append("AND (opt.cCurrency IS NULL OR opt.cCurrency = '' OR opt.cCurrency = '') ")
         '    strSql.Append("AND (tblAudit.nStatus > 0) ")
-        '    strSql.Append("AND (tblAudit.dPublishDate = 0 OR tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & Eonic.Tools.Database.SqlDate(Now) & ") ")
-        '    strSql.Append("AND (tblAudit.dExpireDate = 0 OR tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & Eonic.Tools.Database.SqlDate(Now) & ") ")
+        '    strSql.Append("AND (tblAudit.dPublishDate = 0 OR tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & ") ")
+        '    strSql.Append("AND (tblAudit.dExpireDate = 0 OR tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & ") ")
 
 
         '    Dim oDs As DataSet = myWeb.moDbHelper.GetDataSet(strSql.ToString, "Method", "ShippingMethods", )
@@ -1051,7 +1051,7 @@ Partial Public Module xmlTools
                                     Dim cCheckServerPath As String = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1)
                                     cCheckServerPath = goServer.MapPath(cCheckServerPath)
                                     'load the orignal image and resize
-                                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                                     oImage.KeepXYRelation = True
                                     oImage.NoStretch = noStretch
                                     oImage.IsCrop = isCrop
@@ -1164,7 +1164,7 @@ Partial Public Module xmlTools
                                     Dim cCheckServerPath As String = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1)
                                     cCheckServerPath = goServer.MapPath(cCheckServerPath)
                                     'load the orignal image and resize
-                                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                                     oImage.KeepXYRelation = True
                                     oImage.NoStretch = noStretch
                                     oImage.IsCrop = isCrop
@@ -1225,7 +1225,7 @@ Partial Public Module xmlTools
                     sSql = "where cContentName='" & cContentName & "'"
                 End If
 
-                targetElmt.InnerXml = myWeb.moDbHelper.getObjectInstance(Web.dbHelper.objectTypes.Content, , "where cContentName='" & cContentName & "'")
+                targetElmt.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, , "where cContentName='" & cContentName & "'")
 
                 queryResult = oDocInstance.DocumentElement.SelectSingleNode(cXpath)
                 If Not queryResult Is Nothing Then
@@ -1258,7 +1258,7 @@ Partial Public Module xmlTools
             Dim returnNode As XmlNode
             Try
 
-                oDocInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(Web.dbHelper.objectTypes.Content, , "where cContentForiegnRef='" & fRef & "'"))
+                oDocInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, , "where cContentForiegnRef='" & fRef & "'"))
                 returnNode = oDocInstance.DocumentElement
                 Return returnNode
 
@@ -1284,7 +1284,7 @@ Partial Public Module xmlTools
 
             Try
                 If CLng("0" & nContentId) > 0 Then
-                    Return CStr(myWeb.moDbHelper.DeleteObject(Web.dbHelper.objectTypes.Content, nContentId))
+                    Return CStr(myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId))
                 Else
                     Return Nothing
                 End If
@@ -1327,7 +1327,7 @@ Partial Public Module xmlTools
                 Dim QueryArr() As String = Split(Query, ".")
                 Query1 = QueryArr(0)
                 If UBound(QueryArr) > 0 Then Query2 = QueryArr(1)
-                Dim oXfrms As New Eonic.Web.xForm
+                Dim oXfrms As New Protean.Cms.xForm
                 oXfrms.moPageXML = myWeb.moPageXml
                 Select Case Query1
                     Case "SiteTree"
@@ -1371,7 +1371,7 @@ Partial Public Module xmlTools
                         subqueryBuilder.Append("FROM dbo.tblDirectory users").Append(" ")
 
                         ' Check whether we're filtering users by a parent id
-                        If Eonic.Tools.Number.IsReallyNumeric(Query2) AndAlso Convert.ToInt32(Query2) > 0 Then
+                        If Protean.Tools.Number.IsReallyNumeric(Query2) AndAlso Convert.ToInt32(Query2) > 0 Then
                             subqueryBuilder.Append(String.Format("INNER JOIN dbo.fxn_getMembers({0},1,'User',0,0,GETDATE(),0) members", Query2)).Append(" ")
                             subqueryBuilder.Append("ON users.nDirKey = members.nDirId").Append(" ")
                         End If
@@ -1395,7 +1395,7 @@ Partial Public Module xmlTools
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
                     Case "CartStatus"
-                        For Each process As Eonic.Web.Cart.cartProcess In [Enum].GetValues(GetType(Eonic.Web.Cart.cartProcess))
+                        For Each process As Protean.Cms.Cart.cartProcess In [Enum].GetValues(GetType(Protean.Cms.Cart.cartProcess))
                             oXfrms.addOption(SelectElmt, process.ToString, process.ToString("D"))
                         Next
 
@@ -1412,15 +1412,15 @@ Partial Public Module xmlTools
                         End If
 
                     Case "Countries"
-                        Dim oCart As New Eonic.Web.Cart(myWeb)
+                        Dim oCart As New Protean.Cms.Cart(myWeb)
                         oCart.populateCountriesDropDown(oXfrms, SelectElmt, "")
 
                     Case "CountriesId"
-                        Dim oCart As New Eonic.Web.Cart(myWeb)
+                        Dim oCart As New Protean.Cms.Cart(myWeb)
                         oCart.populateCountriesDropDown(oXfrms, SelectElmt, "", True)
                     Case "Currency"
                         Dim moPaymentCfg As XmlNode
-                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                         Dim oCurrencyElmt As XmlElement
                         For Each oCurrencyElmt In moPaymentCfg.SelectNodes("currencies/Currency")
                             'going to need to do something about languages
@@ -1434,7 +1434,7 @@ Partial Public Module xmlTools
                         Dim classPath As String = ""
                         Dim methodName As String = ""
 
-                        Dim moPrvConfig As Eonic.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("eonic/messagingProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                         Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                         calledType = assemblyInstance.GetType(classPath, True)
 
@@ -1449,7 +1449,7 @@ Partial Public Module xmlTools
                     Case "FolderList"
 
                         Dim library As fsHelper.LibraryType = Nothing
-                        If Tools.EnumUtility.TryParse(GetType(Eonic.fsHelper.LibraryType), Query2, False, library) Then
+                        If Tools.EnumUtility.TryParse(GetType(Protean.fsHelper.LibraryType), Query2, False, library) Then
 
                             Dim path As String = fsHelper.GetFileLibraryPath(library)
                             If Not String.IsNullOrEmpty(path) Then
@@ -1459,7 +1459,7 @@ Partial Public Module xmlTools
 
 
                                 If rootfolder.Exists Then
-                                    Dim folderList As Generic.List(Of String) = Eonic.fsHelper.EnumerateFolders(rootfolder)
+                                    Dim folderList As Generic.List(Of String) = Protean.fsHelper.EnumerateFolders(rootfolder)
                                     Dim tidypath As String = ""
                                     For Each folderPath As String In folderList
                                         tidypath = folderPath.Replace(prefixFolderPath, "").Replace("\", "/")
@@ -1515,7 +1515,7 @@ Partial Public Module xmlTools
                         End If
 
                     Case "themePresets"
-                        Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/theme")
+                        Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
                         Dim currenttheme As String = moThemeConfig("CurrentTheme")
 
                         If IO.File.Exists(goServer.MapPath("/ewthemes/" & currenttheme & "/themeManifest.xml")) Then
@@ -1566,7 +1566,7 @@ Partial Public Module xmlTools
 
             Try
 
-                Dim moPrvConfig As Eonic.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("eonic/messagingProviders")
+                Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
                 'Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                 '
                 Dim ourProvider As Object
@@ -1612,7 +1612,7 @@ Partial Public Module xmlTools
             Try
                 Dim existingPageId As Long = myWeb.mnPageId
 
-                Dim newWeb As New Eonic.Web(myWeb.moCtx)
+                Dim newWeb As New Protean.Cms(myWeb.moCtx)
                 newWeb.InitializeVariables()
                 newWeb.Open()
                 'newWeb.ibIndexMode = True
@@ -1629,7 +1629,7 @@ Partial Public Module xmlTools
                     oReturnXml.AppendChild(oReturnElmt)
                     Dim oNode As XmlNode
                     For Each oNode In oNodelist
-                        Eonic.Tools.Xml.AddExistingNode(oReturnElmt, oNode)
+                        Protean.Tools.Xml.AddExistingNode(oReturnElmt, oNode)
                         'oReturnElmt.AppendChild(oNode.CloneNode(True))
                     Next
                     Return oReturnXml
@@ -1660,7 +1660,7 @@ Partial Public Module xmlTools
 
                 ' myWeb.GetContentDetailXml(Nothing, ArtId, True, False)
 
-                Eonic.Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentDetailXml(Nothing, ArtId, True, False))
+                Protean.Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentDetailXml(Nothing, ArtId, True, False))
 
                 Return oReturnXml
 
@@ -1683,7 +1683,7 @@ Partial Public Module xmlTools
 
                 ' myWeb.GetContentDetailXml(Nothing, ArtId, True, False)
 
-                Eonic.Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentBriefXml(Nothing, ArtId))
+                Protean.Tools.Xml.AddExistingNode(oReturnElmt, myWeb.GetContentBriefXml(Nothing, ArtId))
 
                 Return oReturnXml
 
@@ -1783,7 +1783,7 @@ Partial Public Module xmlTools
 
                         scriptFile = TargetFile & "/script.js"
 
-                        Dim fsh As New Eonic.fsHelper(myWeb.moCtx)
+                        Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                         fsh.initialiseVariables(fsHelper.LibraryType.Scripts)
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetFile).GenerateBundleResponse(BundlesCtx)
@@ -1853,7 +1853,7 @@ Partial Public Module xmlTools
                         sReturnString = myWeb.moCtx.Application.Get(TargetFile)
                     Else
 
-                        Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                        Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                         If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
 
                             Dim appPath As String = myWeb.moRequest.ApplicationPath
@@ -1866,7 +1866,7 @@ Partial Public Module xmlTools
                             oCssWebClient.SendCssHttpHandlerRequest()
 
                             Dim scriptFile As String = ""
-                            Dim fsh As New Eonic.fsHelper(myWeb.moCtx)
+                            Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                             fsh.initialiseVariables(fsHelper.LibraryType.Style)
 
                             scriptFile = String.Format("{0}/style.css", TargetFile)
@@ -1919,7 +1919,7 @@ Partial Public Module xmlTools
                 sReturnString = Nothing
 
             Catch ex As Exception
-                'OnComponentError(myWeb, New Eonic.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
+                'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
                 'Return ex.StackTrace.Replace(vbCr & vbLf, String.Empty).Replace(vbLf, String.Empty).Replace(vbCr, String.Empty) & ex.Message
 

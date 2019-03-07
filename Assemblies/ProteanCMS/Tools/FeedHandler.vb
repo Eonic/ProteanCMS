@@ -8,7 +8,7 @@ Imports System.Data.sqlClient
 Imports VB = Microsoft.VisualBasic
 Imports System.Net
 Imports System.Text.RegularExpressions
-Imports Eonic.Tools
+Imports Protean.Tools
 Imports System.Xml.Linq
 Imports System
 
@@ -26,11 +26,11 @@ Public Class FeedHandler
     Public FeedItemNode As String
     Public FeedXml As XmlDocument
 
-    Public oDBH As Web.dbHelper
-    Public oTransform As Eonic.XmlHelper.Transform
-    Public oAdmXFrm As New Web.Admin.AdminXforms()
+    Public oDBH As Cms.dbHelper
+    Public oTransform As Protean.XmlHelper.Transform
+    Public oAdmXFrm As New Cms.Admin.AdminXforms()
 
-    Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
     Private _countertypes As String() = {"add", "update", "delete", "archive", "total", "notupdated"}
     Private _counters As CounterCollection
@@ -47,10 +47,10 @@ Public Class FeedHandler
     Public Sub New(ByVal cURL As String, ByVal cXSLPath As String, ByVal nPageId As Long, ByVal nSaveMode As Integer, Optional ByRef oResultRecorderElmt As XmlElement = Nothing, Optional ByVal cItemNodeName As String = "")
         PerfMon.Log("FeedHandler", "New")
         Try
-            oDBH = New Web.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
+            oDBH = New Cms.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
             "Initial Catalog=" & oConfig("DatabaseName") & "; " &
             oConfig("DatabaseAuth"), 1)
-            oDBH.myWeb = New Eonic.Web(System.Web.HttpContext.Current)
+            oDBH.myWeb = New Protean.Cms(System.Web.HttpContext.Current)
             oDBH.myWeb.InitializeVariables()
             'oDBH.myWeb.Open()
             oAdmXFrm.goConfig = oConfig
@@ -68,7 +68,7 @@ Public Class FeedHandler
             _updateExistingItems = True
             _counters = New CounterCollection()
             InitialiseCounters()
-            oTransform = New Eonic.XmlHelper.Transform(oDBH.myWeb, cXSLTransformPath, False)
+            oTransform = New Protean.XmlHelper.Transform(oDBH.myWeb, cXSLTransformPath, False)
         Catch ex As Exception
             AddExternalError(ex)
         End Try
@@ -165,11 +165,11 @@ Public Class FeedHandler
             oTransform.XslFilePath = cXSLTransformPath
 
             Dim ReturnMessage As String = "Streaming Feed "
-            logId = oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Started using " & cXSLTransformPath)
+            logId = oDBH.logActivity(Protean.Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Started using " & cXSLTransformPath)
 
             Dim cDeleteTempTableName As String = "tmp-" & cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "")
             Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
-            Dim Tasks As New Eonic.Web.dbImport(oDBH.oConn.ConnectionString, 0)
+            Dim Tasks As New Protean.Cms.dbImport(oDBH.oConn.ConnectionString, 0)
             Dim workerThreads As Integer = 0
             Dim portThreads As Integer = 0
             System.Threading.ThreadPool.GetMaxThreads(workerThreads, portThreads)
@@ -185,7 +185,7 @@ Public Class FeedHandler
             Dim debugFolder As String = ""
 
             If LCase(oConfig("Debug")) = "on" Then
-                Dim ofs As New Eonic.fsHelper
+                Dim ofs As New Protean.fsHelper
                 ofs.mcRoot = "../"
                 ofs.CreatePath("/importtest")
                 ofs = Nothing
@@ -217,13 +217,13 @@ Public Class FeedHandler
                             sDoc = oWriter.ToString()
                             sDoc = Regex.Replace(sDoc, "&gt;", ">")
                             sDoc = Regex.Replace(sDoc, "&lt;", "<")
-                            sDoc = Eonic.Tools.Xml.convertEntitiesToCodesFast(sDoc)
+                            sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc)
                             Dim filename As String
                             Dim xDoc As New XmlDocument
                             xDoc.LoadXml(sDoc)
                             Dim oInstance As XmlElement
                             For Each oInstance In xDoc.DocumentElement.SelectNodes("descendant-or-self::instance")
-                                Dim stateObj As New Eonic.Web.dbImport.ImportStateObj()
+                                Dim stateObj As New Protean.Cms.dbImport.ImportStateObj()
                                 stateObj.oInstance = oInstance
                                 stateObj.LogId = logId
                                 stateObj.FeedRef = cFeedURL
@@ -273,7 +273,7 @@ Public Class FeedHandler
             End Using
 
             ReturnMessage = cDeleteTempTableName & " " & completeCount & " Items Queued For Import"
-            oDBH.logActivity(Eonic.Web.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Queued")
+            oDBH.logActivity(Protean.Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage & " Queued")
 
             oDBH.myWeb.ClearPageCache()
 
@@ -306,12 +306,12 @@ Public Class FeedHandler
                     oRequest.Timeout = oConfig("FeedTimeout")
                 End If
 
-                oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " & cFeedURL)
+                oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " & cFeedURL)
 
                 oResponse = DirectCast(oRequest.GetResponse(), HttpWebResponse)
                 oReader = New StreamReader(oResponse.GetResponseStream())
                 oFeedXML = oReader.ReadToEnd
-                '  oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "received url: " & cFeedURL)
+                '  oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "received url: " & cFeedURL)
                 ' The problem with masking namespaces is that you have to deal with any node that calls that namespace.
                 'oFeedXML = Replace(oFeedXML, "xmlns:", "exemelnamespace")
                 'oFeedXML = Replace(oFeedXML, "xmlns", "exemelnamespace")
@@ -336,13 +336,13 @@ Public Class FeedHandler
             Dim cFeedItemXML As String
             Dim oTW As IO.TextWriter = New StringWriter()
             Dim oTR As IO.TextReader
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start transform url: " & cFeedURL)
+            oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start transform url: " & cFeedURL)
             oTransform.XSLFile = cXSLTransformPath
             oTransform.Compiled = False
             oTransform.Process(oResXML, oTW)
             oTR = New StringReader(oTW.ToString())
             cFeedItemXML = oTR.ReadToEnd
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End transform url: " & cFeedURL)
+            oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End transform url: " & cFeedURL)
 
 
             ' Strip out the xmlns
@@ -366,7 +366,7 @@ Public Class FeedHandler
             For Each oUrlNode As XmlElement In oInstanceXML.SelectNodes("//url[.='']")
                 oUrlNode.InnerText = cFeedURL
             Next
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start Tidy")
+            oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start Tidy")
             ' If the Body has been cast as CData then the html will not have been converted
             Dim sContent As String
             For Each oBodyItem As XmlElement In oInstanceXML.SelectNodes("//*[(local-name()='Body' and not(@htmlTransform='off')) or @htmlTransform='on']")
@@ -376,16 +376,16 @@ Public Class FeedHandler
                         oBodyItem.InnerXml = sContent
                         oBodyItem.SetAttribute("htmlTransform", "innertext-innerxml")
                     Catch
-                        oBodyItem.InnerXml = Eonic.tidyXhtmlFrag(sContent)
+                        oBodyItem.InnerXml = Protean.tidyXhtmlFrag(sContent)
                         oBodyItem.SetAttribute("htmlTransform", "tidyXhtml")
                     End Try
                 End If
             Next
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End Tidy")
+            oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "End Tidy")
             Return oInstanceXML
 
         Catch ex As Exception
-            oDBH.logActivity(Web.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "error getting url: " & ex.Message & ex.StackTrace)
+            oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "error getting url: " & ex.Message & ex.StackTrace)
             AddExternalError(ex)
             If oFeedXML <> "" Then AddExternalMessage(oFeedXML)
             Return Nothing
@@ -414,7 +414,7 @@ Public Class FeedHandler
 
     Public Sub CompareFeedItems(ByRef oInstanceXML As XmlDocument)
         Try
-            ' Dim oAdmXFrm As New Eonic.Web.Admin.AdminXforms
+            ' Dim oAdmXFrm As New Protean.Cms.Admin.AdminXforms
             ' oAdmXFrm.open(New XmlDocument)
             Dim cContentType As String = oInstanceXML.DocumentElement.SelectSingleNode("instance[1]/tblContent/cContentSchemaName").InnerText
 
@@ -499,7 +499,7 @@ Public Class FeedHandler
                                 Case SaveMode.Delete
                                     Me.AddExternalMessage("Deleteing Item", oDR("cContentForiegnRef").ToString)
                                     _counters("delete").Add()
-                                    oDBH.DeleteObject(Web.dbHelper.objectTypes.Content, oDR("nContentKey"))
+                                    oDBH.DeleteObject(Cms.dbHelper.objectTypes.Content, oDR("nContentKey"))
                                 Case SaveMode.Archive
                                     Me.AddExternalMessage("Archiving Item", oDR("cContentForiegnRef").ToString)
                                     _counters("archive").Add()
@@ -516,7 +516,7 @@ Public Class FeedHandler
 
     Sub ArchiveFeed(ByVal nFeedId As Integer)
         Try
-            Dim cSQL As String = "UPDATE a SET a.dExpireDate =" & Eonic.Tools.Database.SqlDate(Now, True) & ", a.nStatus=0"
+            Dim cSQL As String = "UPDATE a SET a.dExpireDate =" & Protean.Tools.Database.SqlDate(Now, True) & ", a.nStatus=0"
             cSQL &= " from tblAudit as a"
             cSQL &= " INNER JOIN tblContent as c ON a.nAuditKey = c.nAuditId"
             cSQL &= " WHERE c.nContentKey = " & nFeedId & ""

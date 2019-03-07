@@ -1,5 +1,5 @@
 ﻿'***********************************************************************
-' $Library:     eonic.providers.messaging.base
+' $Library:     Protean.Providers.messaging.base
 ' $Revision:    3.1  
 ' $Date:        2010-03-02
 ' $Author:      Trevor Spink (trevor@eonic.co.uk)
@@ -21,9 +21,9 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -37,7 +37,7 @@ Namespace Providers
             Private _AdminXforms As Object
             Private _AdminProcess As Object
             Private _Activities As Object
-            Private Const mcModuleName As String = "Eonic.Providers.Messaging"
+            Private Const mcModuleName As String = "Protean.Providers.Messaging"
 
 
             Public Property AdminXforms() As Object
@@ -67,15 +67,15 @@ Namespace Providers
                 End Get
             End Property
 
-            Public Sub New(ByRef myWeb As Eonic.Web, ByVal ProviderName As String)
+            Public Sub New(ByRef myWeb As Protean.Cms, ByVal ProviderName As String)
                 Try
                     Dim calledType As Type
                     If ProviderName = "" Then
-                        ProviderName = "Eonic.Providers.Messaging.EonicProvider"
+                        ProviderName = "Protean.Providers.Messaging.EonicProvider"
                         calledType = System.Type.GetType(ProviderName, True)
                     Else
-                        Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("eonic/messagingProviders")
-                        Dim moPrvConfig As Eonic.ProviderSectionHandler = castObject
+                        Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
                         Dim ourProvider As Object = moPrvConfig.Providers(ProviderName)
                         Dim assemblyInstance As [Assembly]
                         '= [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
@@ -91,23 +91,23 @@ Namespace Providers
                         End If
 
                         If ourProvider.parameters("rootClass") = "" Then
-                            calledType = assemblyInstance.GetType("Eonic.Providers.Messaging." & ProviderName, True)
+                            calledType = assemblyInstance.GetType("Protean.Providers.Messaging." & ProviderName, True)
                         Else
                             'calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
                             calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging." & ProviderName, True)
                         End If
-                        End If
+                    End If
 
-                        Dim o As Object = Activator.CreateInstance(calledType)
+                    Dim o As Object = Activator.CreateInstance(calledType)
 
-                        Dim args(4) As Object
-                        args(0) = _AdminXforms
-                        args(1) = _AdminProcess
-                        args(2) = _Activities
-                        args(3) = Me
-                        args(4) = myWeb
+                    Dim args(4) As Object
+                    args(0) = _AdminXforms
+                    args(1) = _AdminProcess
+                    args(2) = _Activities
+                    args(3) = Me
+                    args(4) = myWeb
 
-                        calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
+                    calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
                     returnException(mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
@@ -122,7 +122,7 @@ Namespace Providers
                 'do nothing
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
                 MemProvider.AdminXforms = New AdminXForms(myWeb)
                 MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -133,10 +133,10 @@ Namespace Providers
             End Sub
 
             Public Class AdminXForms
-                Inherits Web.Admin.AdminXforms
+                Inherits Cms.Admin.AdminXforms
                 Private Const mcModuleName As String = "Providers.Messaging.Generic.AdminXForms"
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
@@ -184,16 +184,16 @@ Namespace Providers
                                 MyBase.valid = False
                             End If
                             If MyBase.valid Then
-                                Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                                Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                 Dim cEmail As String = MyBase.Instance.SelectSingleNode("cEmail").InnerText
                                 'first we will only deal with unpersonalised
-                                Dim oMessager As New Eonic.Messaging
+                                Dim oMessager As New Protean.Messaging
                                 'get the subject
                                 Dim oMessaging As New Activities
 
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
-                                Dim ofs As New Eonic.fsHelper(myWeb.moCtx)
+                                Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
                                 If oMessaging.SendSingleMail_Queued(nPageId, cMailingXsl, cEmail, moMailConfig("SenderEmail"), moMailConfig("SenderName"), cSubject) Then
@@ -279,9 +279,9 @@ Namespace Providers
                                 MyBase.valid = False
                             End If
                             If MyBase.valid Then
-                                Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                                Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                 'get the individual elements
-                                Dim oMessaging As New Eonic.Messaging
+                                Dim oMessaging As New Protean.Messaging
                                 'First we need to get the groups we are sending to
                                 Dim oGroupElmt As XmlElement = MyBase.Instance.SelectSingleNode("cGroups")
                                 Dim oFromEmailElmt As XmlElement = MyBase.Instance.SelectSingleNode("cDefaultEmail")
@@ -290,7 +290,7 @@ Namespace Providers
                                 'get the email addresses for these groups
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
-                                Dim ofs As New Eonic.fsHelper(myWeb.moCtx)
+                                Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
                                 Dim bResult As Boolean = oMessaging.SendMailToList_Queued(nPageId, cMailingXsl, oGroupElmt.InnerText, oFromEmailElmt.InnerText, oFromNameElmt.InnerText, oSubjectElmt.InnerText)
@@ -370,9 +370,9 @@ Namespace Providers
             End Class
 
             Public Class AdminProcess
-                Inherits Web.Admin
+                Inherits Cms.Admin
 
-                Dim _oAdXfm As Eonic.Providers.Messaging.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Messaging.EonicProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)
@@ -383,16 +383,16 @@ Namespace Providers
                     End Get
                 End Property
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
-                Public Function MailingListProcess(ByRef oPageDetail As XmlElement, ByRef oWeb As Web, Optional ByRef sAdminLayout As String = "", Optional ByRef cCmd As String = "", Optional ByRef bLoadStructure As Boolean = False, Optional ByRef sEditContext As String = "", Optional bClearEditContext As Boolean = False) As String
+                Public Function MailingListProcess(ByRef oPageDetail As XmlElement, ByRef oWeb As Cms, Optional ByRef sAdminLayout As String = "", Optional ByRef cCmd As String = "", Optional ByRef bLoadStructure As Boolean = False, Optional ByRef sEditContext As String = "", Optional bClearEditContext As Boolean = False) As String
                     Dim cRetVal As String = ""
                     Dim cSQL As String = ""
 
                     Try
-                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                         If moMailConfig Is Nothing Then Return ""
 
                         Dim nMailMenuRoot As Long = moMailConfig("RootPageId")
@@ -407,7 +407,7 @@ Namespace Providers
 
                         Dim cMailingXsl As String = moMailConfig("MailingXsl")
                         If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
-                        Dim ofs As New Eonic.fsHelper(myWeb.moCtx)
+                        Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                         cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
                         'If cCmd = "IsMailingList" Then
@@ -441,7 +441,7 @@ ProcessFlow:
                                 If nNewsletterRoot = 0 Then
                                     Dim defaultPageXml As String = "<DisplayName title="""" linkType=""internal"" exclude=""false"" noindex=""false""/><Images><img class=""icon"" /><img class=""thumbnail"" /><img class=""detail"" /></Images><Description/>"
                                     nNewsletterRoot = myWeb.moDbHelper.insertStructure(0, "", "Newsletters", defaultPageXml, "NewsletterRoot")
-                                    Eonic.Config.UpdateConfigValue(myWeb, "eonic/mailinglist", "RootPageId", CStr(nNewsletterRoot))
+                                    Protean.Config.UpdateConfigValue(myWeb, "protean/mailinglist", "RootPageId", CStr(nNewsletterRoot))
 
                                 End If
 
@@ -582,30 +582,30 @@ ProcessFlow:
                                         myWeb.moDbHelper.insertContentRelation(myWeb.moRequest("contentParId"), nContentId)
                                     End If
                                     If myWeb.moRequest("EditXForm") <> "" Then
-                                            '    bAdminMode = True
-                                            sAdminLayout = "AdminXForm"
-                                            mcEwCmd = "EditXForm"
-                                            oPageDetail = oWeb.GetContentDetailXml(, myWeb.moRequest("id"))
-                                        Else
-                                            myWeb.mnArtId = 0
-                                            oPageDetail.RemoveAll()
-
-                                            ' Check for an optional command to redireect to
-                                            If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
-
-                                                myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
-
-                                            ElseIf myWeb.moSession("lastPage") <> "" Then
-                                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
-                                                myWeb.moSession("lastPage") = ""
-                                            Else
-                                                oPageDetail.RemoveAll()
-                                                moAdXfm.valid = False
-                                                GoTo ProcessFlow
-                                            End If
-                                        End If
-                                    Else
+                                        '    bAdminMode = True
                                         sAdminLayout = "AdminXForm"
+                                        mcEwCmd = "EditXForm"
+                                        oPageDetail = oWeb.GetContentDetailXml(, myWeb.moRequest("id"))
+                                    Else
+                                        myWeb.mnArtId = 0
+                                        oPageDetail.RemoveAll()
+
+                                        ' Check for an optional command to redireect to
+                                        If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
+
+                                            myWeb.msRedirectOnEnd = moConfig("ProjectPath") & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
+
+                                        ElseIf myWeb.moSession("lastPage") <> "" Then
+                                            myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                            myWeb.moSession("lastPage") = ""
+                                        Else
+                                            oPageDetail.RemoveAll()
+                                            moAdXfm.valid = False
+                                            GoTo ProcessFlow
+                                        End If
+                                    End If
+                                Else
+                                    sAdminLayout = "AdminXForm"
                                 End If
                             Case "PreviewMail"
 
@@ -623,7 +623,7 @@ ProcessFlow:
                                 '    Dim oMessager As New Messaging
                                 '    'get the subject
                                 '    Dim cSubject As String = ""
-                                '    Dim oMessaging As New Eonic.Messaging
+                                '    Dim oMessaging As New Protean.Messaging
                                 '    If oMessaging.SendSingleMail_Queued(myWeb.mnPageId, moMailConfig("MailingXsl"), cEmail, moMailConfig("SenderEmail"), moMailConfig("SenderName"), cSubject) Then
                                 '        'add mssage and return to form so they can sen another
 
@@ -648,7 +648,7 @@ ProcessFlow:
                                 'If moAdXfm.valid Then
 
                                 '    'get the individual elements
-                                '    Dim oMessaging As New Eonic.Messaging
+                                '    Dim oMessaging As New Protean.Messaging
                                 '    'First we need to get the groups we are sending to
                                 '    Dim oGroupElmt As XmlElement = moAdXfm.instance.SelectSingleNode("cGroups")
                                 '    Dim oFromEmailElmt As XmlElement = moAdXfm.instance.SelectSingleNode("cDefaultEmail")
@@ -727,7 +727,7 @@ ProcessFlow:
             End Class
 
             Public Class Activities
-                Inherits Eonic.Messaging
+                Inherits Protean.Messaging
 
                 Overloads Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
                     PerfMon.Log("Messaging", "SendMailToList_Queued")
@@ -735,11 +735,11 @@ ProcessFlow:
                     Dim cProcessInfo As String = ""
 
                     Try
-                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                         Dim oAddressDic As UserEmailDictionary = GetGroupEmails(cGroups)
                         'max number of bcc
 
-                        Dim oWeb As New Web
+                        Dim oWeb As New Cms
                         oWeb.InitializeVariables()
                         oWeb.Open()
                         oWeb.mnPageId = nPageId
@@ -757,7 +757,7 @@ ProcessFlow:
 
                         cFromEmail = cFromEmail.Trim()
 
-                        If Eonic.Tools.Text.IsEmail(cFromEmail) Then
+                        If Protean.Tools.Text.IsEmail(cFromEmail) Then
                             For Each cRepientMail In oAddressDic.Keys
                                 'create the message
                                 If oEmail Is Nothing Then
@@ -770,7 +770,7 @@ ProcessFlow:
                                 End If
                                 'if we are not at the bcc limit then we add the addres
                                 If i2 < CInt(moMailConfig("BCCLimit")) Then
-                                    If Eonic.Tools.Text.IsEmail(cRepientMail.Trim()) Then
+                                    If Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
                                         cProcessInfo = "Sending to: " & cRepientMail.Trim()
                                         oEmail.Bcc.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
                                         i2 += 1

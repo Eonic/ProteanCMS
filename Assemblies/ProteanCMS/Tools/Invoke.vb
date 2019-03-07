@@ -15,7 +15,7 @@ Public Class Invoke
     ''' <param name="callerObject">If passing an error handler, then the object calling the method must be passed </param>
     ''' <param name="callerErrorMethodName">The name of the calling object's error handling method</param>
     ''' <param name="calledObjectErrorEventName">The name of the called object's error event</param>
-    ''' <remarks>Use Eonic.Web.TypeExtensions methods to generate a type</remarks>
+    ''' <remarks>Use Protean.Cms.TypeExtensions methods to generate a type</remarks>
     Public Shared Sub InvokeObjectMethod( _
             ByVal calledObjectType As System.Type, _
             ByVal calledObjectMethod As String, _
@@ -84,7 +84,7 @@ Public Class Invoke
     Optional ByVal calledObjectConstructorArgs() As Object = Nothing, _
     Optional ByVal calledObjectMethodArgs() As Object = Nothing _
 )
-        Dim typeAndMethod As New Eonic.Web.TypeExtensions.TypeMethodParser(calledObjectAndMethod)
+        Dim typeAndMethod As New Protean.Tools.TypeExtensions.TypeMethodParser(calledObjectAndMethod)
         InvokeObjectMethod(System.Type.GetType(typeAndMethod.TypeName), typeAndMethod.MethodName, calledObjectConstructorArgs, calledObjectMethodArgs, Nothing, "", "")
     End Sub
 
@@ -107,7 +107,7 @@ Public Class Invoke
         ByVal calledObjectErrorEventName As String _
     )
 
-        Dim typeAndMethod As New Eonic.Web.TypeExtensions.TypeMethodParser(calledObjectAndMethod)
+        Dim typeAndMethod As New Protean.Tools.TypeExtensions.TypeMethodParser(calledObjectAndMethod)
         InvokeObjectMethod(System.Type.GetType(typeAndMethod.TypeName), typeAndMethod.MethodName, calledObjectConstructorArgs, calledObjectMethodArgs, callerObject, callerErrorMethodName, calledObjectErrorEventName)
     End Sub
 

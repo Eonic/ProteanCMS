@@ -1,10 +1,15 @@
 
 ===============================================================================
-	RELEASE NOTES FOR EonicWeb 5.0
+	RELEASE NOTES FOR ProtaenCMS 6.0
 	
 	Please use this to register what changes have been made and where versions
 	are currently
 	
+to restore NuGet packages open Package Manager Console and run...
+
+Update-Package -reinstall
+
+
 ===============================================================================
 	IN DEVELOPMENT 
 ===============================================================================
@@ -74,7 +79,7 @@ Hugely improved installer which updates machine config files
 [TS] Added the ability to specifiy VAT rate on line (REQUIRES TESTING !!!)
 [TS] CompileMode to complie transform to DLL
 [TS] Add deny permissions to shipping methods (DB upgrade required)
-[TS] Added module for Eonic.Web+Membership+Modules.UserContact (requires testing / xsl)
+[TS] Added module for Protean.Cms+Membership+Modules.UserContact (requires testing / xsl)
 [GCF] dbhelper - added clause to finishQuestionnaire to stop multiple entries to tblQuestionaireResultDetail
 [GCF] Cart - UpdateExistingUserAddress - fixed bug that will always added dupe addresses 
 [TS] Fixed error where prices with sale price of 0 overides the users price, intorduced by other work in this release VAT Rate on online.
@@ -174,7 +179,7 @@ Hugely improved installer which updates machine config files
 
 DEPENDENCIES:
 - * Requires DB Upgrade
-- Eonic.Tools 1.0.0.66
+- Protean.Tools 1.0.0.66
 
 
 4.1.1.97 - Wellards
@@ -183,7 +188,7 @@ DEPENDENCIES:
 [AG] New function Web.GetConfigItemAsInteger - updated some items that read in configs as integers (see the root page id stuff)
 [TS] DBHelper.GetReport - formatting update on datetime parameters
 
-DEPENDENCIES: Eonic.Tools 1.0.0.65
+DEPENDENCIES: Protean.Tools 1.0.0.65
 
 
 4.1.1.95 - 10/03/2011
@@ -201,20 +206,20 @@ DEPENDENCIES: Eonic.Tools 1.0.0.65
 [AG] Web.Open - added the check for reconnecting from a cookie for the single user per session lock.
 [AG] Cart.apply - if user is logged on have added the userxml to the xml that the emailreceipts reads.
 [TS] Messaging Provider xFormPreviewNewsletter, adjusted to send a subject.
-[AG] New Shared functions (in Configuration.vb) Eonic.Config.Value and Eonic.Config.ConfigSection
-[AG] Eonic.Web.Config - Shared function to return the config section collection for eonic/web
-[AG] Eonic.Web.COnfigValue - Shared function to get a config value from eonic/web
+[AG] New Shared functions (in Configuration.vb) Protean.Config.Value and Protean.Config.ConfigSection
+[AG] Protean.Cms.Config - Shared function to return the config section collection for eonic/web
+[AG] Protean.Cms.COnfigValue - Shared function to get a config value from eonic/web
 [AG] FSHelper.initialiseVariables - moved the library path decision to a shared function FSHelper.GetFileLibraryPath
 [AG] FSHelper.GetFileLibraryPath - shared function to return library paths
 [AG] FSHelper.EnumerateFolders - shared and public functions to return a List of paths for folders under a given folder.
 [AG] xmlTools.GetSelectOptions - updated with a new query FolderList.<libraryType>
-[AG] stdTools.SimpleRegexFind - deprecated and moved to Eonic.Tools (under Text.SimpleregexFind)  - this functions refers to the stdTools one.
-[AG] New class file (Object.vb) and class TypeExtensions - inherits from its Eonic.Tools equivalent
+[AG] stdTools.SimpleRegexFind - deprecated and moved to Protean.Tools (under Text.SimpleregexFind)  - this functions refers to the stdTools one.
+[AG] New class file (Object.vb) and class TypeExtensions - inherits from its Protean.Tools equivalent
 														 - adds an all encompassing method of GetType
 														 - also adds an Eonic Provider aware version
 [AG] Invoke.InvokeMethod - changed most of the calling settings around this to make it more type aware.
 [AG] AdminXforms.xfrmEditContent - added functionality for calling a method to call once the content has been saved.
-[AG] stdTools.GetMIMEType - Deprecated - moved to Eonic.Tools.FileHelper
+[AG] stdTools.GetMIMEType - Deprecated - moved to Protean.Tools.FileHelper
 [AG] FSHelper.GetFileListByTypeFromRelativePath - new public function
 [AG] FSHelper.GetFileListByTypeFromPhysicalPath - new shared function
 [AG] FSHelper.ConvertPhysicalFilePathToVirtualPath - new shared function
@@ -223,7 +228,7 @@ DEPENDENCIES: Eonic.Tools 1.0.0.65
 [AG] FSHelper - loads more methods
 [AG] FSHelper files have been moved into /Tools/FSHelper
 [AG] New classes FSHelper.WebFile and FSHelper.WebFileExtendedProperties
-[AG] New Class Eonic.Web.Synchronisation for Eonic.Web related sync methods
+[AG] New Class Protean.Cms.Synchronisation for Protean.Cms related sync methods
 [AG] dbHelper.importObjects - Added the ability to supress locations (i.e. for orphans) and relate by ID, not just FREF
 [AG] Web - New public instantiated variable moFSHelper
 [TS] Cart.pickContactXform Hopeful fix of longstanding duplicate delivery address error.
@@ -233,7 +238,7 @@ DEPENDENCIES: Eonic.Tools 1.0.0.65
 
 Dependencies :
 
-***Eonic.Tools 1.0.0.63***
+***Protean.Tools 1.0.0.63***
 
 (4-5 only)
 [WH]	Please release all EwCommonv4-5 - See release notes; 
@@ -312,7 +317,7 @@ FULL EWCOMMON RELEASE
 
 4.1.1.77 - buggy
 [TS] Fixed content not coming into modules where contentTypes listed for loading into briefs.
-[TS] Moved the Payment Providers selection handing out into new class called Eonic.Providers.Payment.EonicProvider
+[TS] Moved the Payment Providers selection handing out into new class called Protean.Providers.Payment.EonicProvider
 [TS] Implemented new mechanisium for creating payment providers as separate DLL's
 [TS] Moved SavePayment, CartPaymentMethod and to DBHelper from PaymentProviders with re-direct functions in place.
 [TS] DBHelper, created new function for UpdateSellerNotes.
@@ -329,7 +334,7 @@ FULL EWCOMMON RELEASE
 [AG] dbhelper.addBulkRelatedContent - fix for cRelationType column
 
 DEPENDENCY:
-Eonic.Tools 1.0.0.56
+Protean.Tools 1.0.0.56
 
 4.1.1.72
 [AG] adminXforms.xFrmEditSubscription - fixed an error with trying to set up default blank groups
@@ -337,7 +342,7 @@ Eonic.Tools 1.0.0.56
 [AG] xform.evaluateByType - changed the number check to be truly numeric (i.e. account for negatives and not pick up tabs and stuff)
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.54
+Protean.Tools 1.0.0.54
 
 4.1.1.71 - 29/11/2010
 [AG] xForm - added a private variable _stopHackyLocalPathCheck which prevents a local file additional check that in itself negates the common folder checks - I don't think the additional check is necessary as it's just trying to mollycoddle bad config settings.
@@ -378,7 +383,7 @@ Adminv4-5.xsl
 [TS] Mailing List provider - fix to AddMail workflow
 [TS] Find/Search content workflow fixes to redirect to cater for mailing list
 [TS] Related content 1Way / 2 Way fixes
-[AG] Eonic.Providers.Messaging.EonicProvider.Admin.MailingListProcess - fix to the related content add content redirection
+[AG] Protean.Providers.Messaging.EonicProvider.Admin.MailingListProcess - fix to the related content add content redirection
 [TS] Web.GetAjaxXml small change to specify user non-logged on edits should use. moConfig("NonAuthUserID")
 [AG] xForm.UpdateInstanceFromRequest - Trimmed the request where required
 [AG] xForm.UpdateInstanceFromRequestOnly - Trimmed the request where required
@@ -409,7 +414,7 @@ adminmenu.xml
 4.1.1.57 - 28/09/2010
 [TS] Modification to GetAdminMenu to pull extra items in local adminMenu file 
 into that specified in web.config
-[TS] Added ReverseItterator Class to Eonic.Tools/Conversions
+[TS] Added ReverseItterator Class to Protean.Tools/Conversions
 [TS] Mod to xFrmWebConfig to it to edit any eonic config section
 [TS] Moved MessagingProvider name to config eonic.mailinglist
 [TS] Changed all references to Skins to Themes
@@ -438,7 +443,7 @@ into that specified in web.config
 
 [TS] INTRODUCED LOCKED DOWN VERSION TO ONLY ALLOW LOCAL DEV (::1) or on hostname *.eonicweb.dev
 	 
-	 NOTE: in eonic.web please update property moLicenceMode to Live when doing a build to live.
+	 NOTE: in Protean.Cms please update property moLicenceMode to Live when doing a build to live.
 
 [AG] AdminXforms.xFrmEditContent - Added switchable Integrations poster when content is updated (full process incomplete)
 [AG] New Class with Shared method: Invoke and InvokeObjectMethod (TODO: update EW calls to use this)
@@ -466,7 +471,7 @@ into that specified in web.config
 
 
 DEPENDENCIES:
-*** Eonic.Tools 1.0.0.53
+*** Protean.Tools 1.0.0.53
 *** Eonic.Cs3rdParty 1.0.1.8
 
 ewcommon4-5 : xsl/xforms/xforms4-5.xsl
@@ -527,7 +532,7 @@ Add ICSharpCode.SharpZipLib to GAC v0.86
 [TS] Small change to cart ContactXform to not have the ------ spacer selected as default
 
 DEPENDENCIES 
-	Eonic.Tools 1.0.0.49
+	Protean.Tools 1.0.0.49
 	Lucene.Net 2.9.2.2
 
 4.1.1.50
@@ -554,7 +559,7 @@ DEPENDENCIES
 
 
 Dependencies:
-Eonic.Tools 4.1.1.47
+Protean.Tools 4.1.1.47
 V4
 /ewcommon/xsl/admin/ewAdminV4_0.xsl
 /ewcommon/xsl/tools/ewcommonFunctions.xsl
@@ -579,7 +584,7 @@ ewcommon/xsl/tools/functions4-5.xsl
 [TS] Web.GetContentStructure Skip Cache Mode Functionality if Session = Nothing i.e. being called from SOAP
 		This means that the indexer should now work from a scheduled soap call.
 [AG] Web.ValidatedOutputXml - new property, can be used to check the request for XML against a block list in the config file.
-[AG] Web.IsCurrentIPAddressInList - new function to see if the current IP address is in a specified list of IPs. Uses Eonic.Tools.Text.IsIPAddressInList
+[AG] Web.IsCurrentIPAddressInList - new function to see if the current IP address is in a specified list of IPs. Uses Protean.Tools.Text.IsIPAddressInList
 [AG] Web.GetFeedXML(string,boolean) - deprecated, see below.
 [AG] Web.GetFeedXML(string,boolean,integer,boolean,string,string) - expanded functionality for feeds including page ids, mime Types, xsl folder locations
 [AG] Web.BuildFeedXML(string,boolean) - deprecated, see below.
@@ -603,7 +608,7 @@ ewcommon/xsl/tools/functions4-5.xsl
 
 [TS] Indexer.DoIndex added more error handling to catch transform errors on page indexes
 [TS] Indexer.DoIndex limited indexing of ContentDetail to default to only "NewsArticle,Event,Product,Contact,Document,Job"
-[TS] Indexer.DoIndex config.eonic.web <add key="SiteSearchIndexDetailTypes" value=""/> overides above settings.
+[TS] Indexer.DoIndex config.Protean.Cms <add key="SiteSearchIndexDetailTypes" value=""/> overides above settings.
 [TS] Indexer.New default values for index folders no need to set in config.
 [TS] Indexer.New Index Read and Write Folders created if they don't exist.
 [TS] Indexer. Added Save Page to save indexed version of the pages for dev review.
@@ -613,7 +618,7 @@ ewcommon/xsl/tools/functions4-5.xsl
 
 Dependencies:
 -------------
-Reliant on Eonic.Tools 1.0.0.45
+Reliant on Protean.Tools 1.0.0.45
 
 ewcommonV4_5/xsl/tools/Functions4-5.xsl
 ewcommonV4/xsl/tools/ewCommonFunctions.xsl
@@ -624,7 +629,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  [NB] cart.CartReportsDownload - Added & handling into the replace function to remove &amp;'s
  [NB] Amended Discount.getAvailableDiscounts to pull in available NonAuth Discounts if the user id is 0 (TS this didn't work, so re-wrote it!!)
  [TS] Amended Discount.getAvailableDiscounts to pull in available NonAuth Discounts if the user id is 0 or Auth User Discounts if users is logged on.
- [TS] Added Eonic.Web.Calendar.Module.Add, and made adjustments to how the old calender is loaded to better reuse code.
+ [TS] Added Protean.Cms.Calendar.Module.Add, and made adjustments to how the old calender is loaded to better reuse code.
  !!! Please test calendar functions in Brokerage and Elsewhere.
  [TS] Cart.Apply changed the process flow on Update to go to Currency which in turn calls AddBehaviour
  [TS] Fix to Indexer to fix not indexing pages with no Content details.
@@ -637,7 +642,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  [TS] Fixed issue with deleting folders
  [AG] PaymentProviders.payProTx - updated the URLs to the SagePay standards, as the proTx versions will be discontinued.
  [TS] Upgraded adminXforms.xfrmAddModule to scan search,cart,quote,membership,subscriptions folders for PageLayout.xml
- [TS] Added Eonic.Web.Search.Modules method GetResults.
+ [TS] Added Protean.Cms.Search.Modules method GetResults.
  [AG] Web.mcBehaviourEditPageCommand - Added this value to allow bespoke behaviour for forcing the page flow on editting a page.
  [AG] Admin.adminprocess - Updated the EditPage process to handle bespoke flow better, although much of this was put in place to address a larger issue that was probably addresses last Oct 09.
  [AG] Web.Membership.Alerts.AlertItem - Changed the Private variables to be Protected Friend so as to pass to overriding/derivative classes.
@@ -646,7 +651,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  [AG] AdminXforms.xFrmEditCourse - Migrated the commented out xFrmEditCourse call to Wellards
  
  Dependencies:
- Nath helpfully didn't mention that this release requires Eonic.Tools 1.0.0.43! - now 44
+ Nath helpfully didn't mention that this release requires Protean.Tools 1.0.0.43! - now 44
  
  
  Dependencies from EW 4.1.1.41 - 12 May 2010
@@ -672,8 +677,8 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  [TS] LocateContent xform changed to handle position on the related node.
  [TS] ContentUpgrade Fixes to allow better error handling when XSLT upgrade errors
  [TS] XsltExtensions - Added 3 new functions ContentQuery, DeleteContent, UpdatePositions
- [AG] Admin.GetXformEditor - Updated for Eonic.Xform
- [AG] AdminXforms.XformEditor.New - Updated for Eonic.Xform
+ [AG] Admin.GetXformEditor - Updated for Protean.xForm
+ [AG] AdminXforms.XformEditor.New - Updated for Protean.xForm
  [TS] Added OrderDownload facility to the eCommerce Reports page.
  [AG] AdminXforms.xfrmEditPage - changed the bit that brings in an existing instance to use SetObjectInstance from Combine_Nodes
  [AG] Moved Admin.GetXformEditor to Web.GetXformEditor
@@ -686,7 +691,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  [AG] Calendar.apply - Changed the loading in of dates for next and previous months to not be quite so unbelieveably crap and flimsy
  
 
- REQUIRES Eonic.Tools 1.0.0.40
+ REQUIRES Protean.Tools 1.0.0.40
  
  Non-dependency:
  /ewcommon/App_Code/services.vb (added a self-contained function)
@@ -785,7 +790,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
 [TS] Web.ContentActions - Add the ability of Content/@contentFile to load in content from a file
 [TS] Web.ContentActions - Add Content/@contentFile='xform' now process xforms
 [TS] Tools.Xml.FirstElement to return the first element ingoring whitespace
-[TS] xForms now users Eonic.Tools.Xml.getNsMgrRecursive to add a NS prefix of ews2: for any namespace below the root level, 
+[TS] xForms now users Protean.Tools.Xml.getNsMgrRecursive to add a NS prefix of ews2: for any namespace below the root level, 
 		this allows namspaces to referenced in bindpaths by ews2:nodename
 [NB] getAvailableDiscounts.Discount.vb - 
         Retrieves Product Types from Web.Config
@@ -807,7 +812,7 @@ ewcommonV4/xsl/tools/ewCommonFunctions.xsl
  THIS VERSION DEPENDS ON:
 -------------------------------------
 cs3rdParty 1.0.1.6 - New PayPal References
-Eonic.Tools 1.0.0.38 - Xml.convertEntitiesToCode
+Protean.Tools 1.0.0.38 - Xml.convertEntitiesToCode
 
 -------------------------------------
  THIS VERSION DELIVERS FEATURES FOR:
@@ -918,7 +923,7 @@ REQUIRES DB UPGRADE !! 4.1.1.31
 [AG] Messaging.emailer - fixed issues with CC and BCC for one person being put into the To field instead.
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.35
+Protean.Tools 1.0.0.35
 
 IS DEPENDED ON BY:
 /ewcommon/App_Code/services.vb
@@ -976,7 +981,7 @@ IS DEPENDED ON BY:
 [AG] Web.GetAjaxXML - forced a permission in order to pick up contentdetail post form submission.
 [AG] Web.GetContentDetailXml - added an attribute of status to content nodes
 [AG] Web.GetContentBriefXml - added an attribute of status to content nodes
-[AG] Updated all calls to Eonic.Tools.Security.Impersonate.ImpersonateValidUser to include the AdminGroup
+[AG] Updated all calls to Protean.Tools.Security.Impersonate.ImpersonateValidUser to include the AdminGroup
 
 
 DEPENDENCIES:
@@ -1077,7 +1082,7 @@ Update Aftermarket and Vitalflow to change any activity with a type of 3 to be 8
  [TS] Web - Added Google Campaign Codes to be stored in session and output in XML to allow for content switching on inbound campaign links
  [TS] Payment Providers - List builds from the forms available in ewcommon\xforms\paymentProviders directory
  [TS] Payment Providers - Admin now deletes providers
- [TS] Payment Providers - eonic.config copies to ..\secure on update if directory exists.
+ [TS] Payment Providers - Protean.Config copies to ..\secure on update if directory exists.
  [TS] Payment Providers - added form for ePDQ
  [TS] Payment Providers - Added Premium Credit
  [TS] DBHelper - Introduced Versioning when moConfig("VersionControl") = On 
@@ -1092,7 +1097,7 @@ Update Aftermarket and Vitalflow to change any activity with a type of 3 to be 8
  [AG] dbHelper.legacyRedirection - forwards requests to a more SEO friendly URL
  [AG] dbHelper.getPageIdFromPath - accomodates hyphens in URLs instead of spaces.
  [AG] Web.GetStructureXML - buildUrl now accomodates hyphens if requested.
- [TS] Web.Cart.optionsXfrm / getCart - Pulled out calculateTotals to get called from optionsXfrm to update totals consistently.
+ [TS] Cms.Cart.optionsXfrm / getCart - Pulled out calculateTotals to get called from optionsXfrm to update totals consistently.
  [AG] Subscriptions.SubcriptionReminders - updated so that rolling subs do not get sent out at each reminder period, just the last one.
  [TS] Setup - Fixed logon xform, and added more process reporting for DB Builds
  
@@ -1105,7 +1110,7 @@ Update Aftermarket and Vitalflow to change any activity with a type of 3 to be 8
  
  DB Upgrade required to enable Version Control.
 
- Eonic.Tools 1.0.0.33
+ Protean.Tools 1.0.0.33
  Eonic.cs3rdParty 1.0.1.5
 
 
@@ -1124,7 +1129,7 @@ Update Aftermarket and Vitalflow to change any activity with a type of 3 to be 8
 [NB] DbHelper.getObjectByRef - ADded a private function overloading the public one that allows a more streamlined way of optimising it for bulk calls.
 
 Dependencies
-Eonic.Tools 1.0.0.32
+Protean.Tools 1.0.0.32
 EwCommon/App_Code Services.vb
 
 4.1.1.14 - Built for Wellards, not ready for general release.
@@ -1151,7 +1156,7 @@ EwCommon/App_Code Services.vb
 [NB] Messaging.emailerWithXmlAttachment - added, Currently sends an Emails (via emailer), with an added attachment of the mailform in .xml format (can be transformed by passed in XSL)
 
 Dependencies:
-Eonic.Tools 1.0.0.31 (Database.checkDBObjectExists)
+Protean.Tools 1.0.0.31 (Database.checkDBObjectExists)
 
 /ewcommon/xsl/admin/setup.xsl
 /ewcommon/xforms/content/contentgrabber.xml
@@ -1207,7 +1212,7 @@ Co-deliverables:
 /Tools/keepalive.ashx
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.30 (Image.ResizeMax, Image.Save)  
+Protean.Tools 1.0.0.30 (Image.ResizeMax, Image.Save)  
 
 4.1.1.9 - 20/02/2009
 
@@ -1229,7 +1234,7 @@ Eonic.Tools 1.0.0.30 (Image.ResizeMax, Image.Save)
 
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.29 (Image.ResizeMax, Image.NoStretch)  
+Protean.Tools 1.0.0.29 (Image.ResizeMax, Image.NoStretch)  
 YOU MUST RUN /ewcommon/sqlUpdate/toV4/4.1.1.9/ContentStructureUpdate.sql with this update!
 
 * Upload /xforms/content/products.xml xform in common
@@ -1261,7 +1266,7 @@ Web.config updates:
 Under cart, new key TaxRateExclusionGroupId specifies a group that doesn't have tax rates applied
 
 DPENDENCIES:
-Eonic.Tools 1.0.0.28   (Database.GetDataset)
+Protean.Tools 1.0.0.28   (Database.GetDataset)
 /js/UserEditable.js
 /xsl/xforms/xformsV4_0.xsl
 /tools/ajaxAdmin.ashx
@@ -1307,7 +1312,7 @@ Eonic Tools 1.0.0.27
 [NB] AdminXForms.vb - xFrmEditContent/isSubmittedOther - Changed variable init to cope better with updated <Repeat> xform functions (Was losing scope)
 !!!! ^ above fix works for this, but might need to be repeated elsewhere if the <Repeat> change is kept
 [NB] DBHelper.vb - addRelatedContent/addDatasetToContent/insertContentRelation/RekatedContentSearch/saveContentRelations - Can now handle the additional cRelationType field in tblContentRelations. Checks made to bypass this for older DB's
-[AG] Deprecated ImgVerify.getRandomPassword - use Eonic.Tools.Text.RandomPassword instead
+[AG] Deprecated ImgVerify.getRandomPassword - use Protean.Tools.Text.RandomPassword instead
 [AG] Updated Admin.MemberCodesProcess
 [AG] AdminXforms.xFrmSendNewsLetter - Corrected the addNote bit for invalid e-mail addresses
 [TS] added Override prices config setting to cart to enable the price to be added from the page form variable, for openquote.
@@ -1355,7 +1360,7 @@ Eonic Tools 1.0.0.27
 
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.26
+Protean.Tools 1.0.0.26
 /ewcommon/xforms/directory/codes.xml
 /ewcommon/sqlUpdate - DatabaseUpgrade.xml and 4.1.1.2 folder
 /ewcommon/js/jquery/ajaxtreeview/jquery.ajaxtreeview.js
@@ -1372,7 +1377,7 @@ Eonic.Tools 1.0.0.26
 
 
 DEPENDENCIES:
-Eonic.Tools 1.0.0.24
+Protean.Tools 1.0.0.24
 /ewcommon/xforms/directory/codes.xml
 /ewcommon/xforms/directory/codesgroups.xml
 
@@ -1382,7 +1387,7 @@ Eonic.Tools 1.0.0.24
 [AG] DbHelper.GetUserIDFromEmail - Retrieves an active user id from an e-mail
 
 Dependencies:
-Eonic.Tools 1.0.0.23
+Protean.Tools 1.0.0.23
 
 4.1.0.99 - 29/10/2008
 [TS] Added ProjectPath to xFrmEditDirectoryItem when loading xform
@@ -1396,8 +1401,8 @@ Optional requirements:
 Database upgrade files (4.1.0.99)
 
 4.1.0.98 – 27/10/2008
-[AG] xForm.evaluateByType - updated the email check to point to Eonic.Tools.Text.IsEmail
-[AG] Deprecated stdTools.is_valid_email - please use Eonic.Tools.Text.IsEmail instead
+[AG] xForm.evaluateByType - updated the email check to point to Protean.Tools.Text.IsEmail
+[AG] Deprecated stdTools.is_valid_email - please use Protean.Tools.Text.IsEmail instead
 [TS] Added Abiltiy to do multiple uploads, using 3rd party flash uploader.
 [SM] Calendar - Added facility to retrieve the Company Published Events by Year Group
 [AG] Membership.Alerts - Added / corrected the error handling.
@@ -1422,7 +1427,7 @@ xsl/Tools/EwCommonFunctions.xsl
 xsl/Admin/ajaxadmin.xsl
 
 ***DEPENDENCIES***
-Eonic.Tools 1.0.0.22
+Protean.Tools 1.0.0.22
 
 4.1.0.97 – 27/10/2008
 [AG] Admin - new Private mnAdminTopLevel - set to AdminRootPageId (or in its absence RootPageId)
@@ -1446,8 +1451,8 @@ Eonic.Tools 1.0.0.22
 [AG] dbHelper.DeleteObject - Made overridable
 [SM] Added new Calendar class to view and set relative contents for the particular dates
 [SM] Added new facility in Web.vb - GetContentFromStoredProcedure - Pull the contents to page for XML Calendar
-[AG] Updated all references to Impersonate to point to Eonic.Tools.Security.Impersonate (affected: Setup,FSHelper,Indexer,Adminxforms,dbhelper,web)
-[AG] CLASS REMOVAL: FsHelper.Impersonate (Use Eonic.Tools.Security.Impersonate instead)
+[AG] Updated all references to Impersonate to point to Protean.Tools.Security.Impersonate (affected: Setup,FSHelper,Indexer,Adminxforms,dbhelper,web)
+[AG] CLASS REMOVAL: FsHelper.Impersonate (Use Protean.Tools.Security.Impersonate instead)
 [TS] Added Activity log for file downloads.
 [TS] Added Google Tracking Code passthrough faciltiy to Cart Redirect.
 [AG] Web.GetStructureXML[Long,Long] - Extended the optional params to include a root id, that if not specified will default to the Top Level id.   Was going to use the overloaded  Web.GetStructureXML[String,Long,Long, Boolean], but this actually tries to interfere with the page xml, which to my mind is wrong.
@@ -1455,7 +1460,7 @@ Eonic.Tools 1.0.0.22
 [AG] dbHelper.getUserXMLById - Optimised the sql that retrieves groups memberships.
  
 ***DEPENDENCIES***
-Eonic.Tools 1.0.0.21
+Protean.Tools 1.0.0.21
 
 4.1.0.94 - 24/09/2008
 [AG] Feedhandler.CompareFeedItems - makes adjustments if a guid is not available.
@@ -1509,7 +1514,7 @@ Requires AdminV4.xsl
 4.1.0.82-84 22/08/2008
 [TS] Small fix to getSiteStructure to sort out release error
 
-4.1.0.81 - ***Requires latest build of Eonic.Tools***
+4.1.0.81 - ***Requires latest build of Protean.Tools***
 [TS] Addition of Page Permission Level to User XML
 [TS] Addition of owner id to contentbrief
 [TS] Fixes for Encrypted logon to still allow domain logon
@@ -1522,7 +1527,7 @@ Requires AdminV4.xsl
 4.1.0.80
 [BR] Added Code generation facilities for member registration
 [BR] Added connection pooling to dbtools
-[BR] Changed dbHelper to inherit from Eonic.Tools.Database
+[BR] Changed dbHelper to inherit from Protean.Tools.Database
 
 **IMPORTANT**
 Requires AdminV4.xsl and XformsV4.xsl
@@ -1552,9 +1557,9 @@ Requires SQLUpdate folder
 [AG] stdTools.sqlDateTime - Overloaded to make it work with a date object.
 [AG] Updated the existing stdTools.sqlDate/Time funcs to be a bit easier to read.
 [BR] Added functionality to external synchronisation to allow multiple content locations from one reference
-[BR] Changed All refenreces from stdTools.SQLDate/Time to point to Eonic.Tools.Database.SqlDate
-[BR] Changed All refenreces from Eonic.Tools.convertentitiestocode to point to Eonic.Tools.Xml.convertentitiestocode
-[BR] Changed All refenreces from stdTools.XmlDate/Time to point to Eonic.Tools.Xml.XmlDate
+[BR] Changed All refenreces from stdTools.SQLDate/Time to point to Protean.Tools.Database.SqlDate
+[BR] Changed All refenreces from Protean.Tools.convertentitiestocode to point to Protean.Tools.Xml.convertentitiestocode
+[BR] Changed All refenreces from stdTools.XmlDate/Time to point to Protean.Tools.Xml.XmlDate
 
 4.1.0.72
 [AG] Added functionality for remember me. Config key is RememberMeMode - Options are KeepCookieAfterLogoff and ClearCookieAfterLogoff
@@ -1570,7 +1575,7 @@ Requires SQLUpdate folder
 [BR] Fixed error on user search
 
 4.1.0.70
-[AG] Requires Eonic.Tools 1.0.0.11+
+[AG] Requires Protean.Tools 1.0.0.11+
 [AG] Messaging.emailer - Have added a facility to send all emails to a single address instead of the intended addresses.  Useful for testing when live data is in the system.  
 					   - Add an EmailOverride key to web.config.
 					   - Checking that all e-mails being added are valid e-mail addresses
@@ -1703,7 +1708,7 @@ Requires SQLUpdate folder
 
 
 4.1.0.43
-[TS] Removed Encryption and changed to rely on encryption in Eonic.Tools
+[TS] Removed Encryption and changed to rely on encryption in Protean.Tools
 [TS] Changed Assembly name from eonicwebV4_0 to EonicWeb4
 [TS] Various FxCop fixes
 [TS] Idisposable on Web
@@ -1742,7 +1747,7 @@ Requires SQLUpdate folder
 
 
 4.1.0.37 - 04/03/2008 11:00
-!!--IMPORTANT--!! EONIC.TOOLS LIBRARY MUST BE UPLOADED !!--!!
+!!--IMPORTANT--!! Protean.Tools LIBRARY MUST BE UPLOADED !!--!!
 
 [AG] Updated Cart.PaymentProviders.paySecureTrading
 [AG] Added optional parameter oNullReturnValue to dbTools.GetDataValue
@@ -1753,7 +1758,7 @@ Requires SQLUpdate folder
 [AG] Updated Cart.PaymentProviders.paySecPay to use xmlTools.xmlToHashTable
 [AG] Updated Cart.PaymentProviders.creditCardXform to optionally load an instance in
 [AG] Updated Cart.apply to allow for the SecureTrading callback.
-[BJR] Added Eonic.Tools Library
+[BJR] Added Protean.Tools Library
 [BJR] Added ExternalSynchronisation.vb
 [BJR] Changed Web.GetPageHTML and stdTools.returnException Transform class/Method
 

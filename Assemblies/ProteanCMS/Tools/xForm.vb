@@ -40,7 +40,7 @@ Public Class xForm
 
     Public BindsToSkip As New System.Collections.Specialized.StringCollection
 
-    Private Const mcModuleName As String = "Eonic.Web.xForm"
+    Private Const mcModuleName As String = "Protean.Cms.xForm"
     Private bTriggered As Boolean = False
     Private bDeleted As Boolean = False
 
@@ -374,7 +374,7 @@ Public Class xForm
                 'XformInclude Features....
                 Dim oInc As XmlElement
 
-                Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/theme")
+                Dim moThemeConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/theme")
                 Dim currentTheme As String = ""
                 If Not moThemeConfig Is Nothing Then
                     currentTheme = moThemeConfig("CurrentTheme")
@@ -592,7 +592,7 @@ Public Class xForm
             ' validates an html form submission against a bind requirements
             ' updates xform or loads result.
             'get our bind node
-            Dim nsMgr As XmlNamespaceManager = Eonic.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
+            Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
             'lets get all the binds but check that they don't occur in the instance
             For Each oBindNode In model.SelectNodes("descendant-or-self::bind[not(ancestor::instance)]")
@@ -921,7 +921,7 @@ Public Class xForm
             'scan each form item
 
             'add the soap namespace to the nametable of the xmlDocument to allow xpath to query the namespace
-            Dim nsMgr As XmlNamespaceManager = Eonic.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
+            Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
             oNodes = moXformElmt.SelectNodes("descendant::*[(@ref or @bind) and not(ancestor::model or ancestor::trigger or self::group or self::repeat)]")
 
@@ -1014,7 +1014,7 @@ Public Class xForm
                                                         ElseIf submittedValue = "" Then
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
                                                         Else
-                                                            oElmtTemp.InnerXml = (Eonic.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                         End If
                                                         oElmtTemp = Nothing
@@ -1030,7 +1030,7 @@ Public Class xForm
                                                         ElseIf submittedValue = "" Then
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
                                                         Else
-                                                            oElmtTemp.InnerXml = (Eonic.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
                                                         End If
                                                         oElmtTemp = Nothing
@@ -1064,7 +1064,7 @@ Public Class xForm
                                                         'Do nothing, this is left to another part of the program to use
                                                         'all we will do is pput the name of the file in
 
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Eonic.Tools.Xml.convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files(sRequest).FileName) & "").Trim
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files(sRequest).FileName) & "").Trim
 
                                                     Case "fileUpload"
                                                         Dim cSavePath As String = oBindElmt.GetAttribute("saveTo")
@@ -1154,7 +1154,7 @@ Public Class xForm
                                                         'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                         If bIsXml Then
                                                             If submittedValue <> "" Then
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Eonic.Tools.Xml.convertEntitiesToCodes(submittedValue & "").Trim
+                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(submittedValue & "").Trim
                                                             Else
                                                                 oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = ""
                                                             End If
@@ -1373,7 +1373,7 @@ Public Class xForm
                     cProcessInfo = oFs.SaveFile(postedFile, filePath)
 
                     'now lets load the origonal into our image helper
-                    Dim oIh As Eonic.Tools.Image = New Eonic.Tools.Image(fsHelper.URLToPath(goServer.MapPath("\images") & filePath & "\" & fileName))
+                    Dim oIh As Protean.Tools.Image = New Protean.Tools.Image(fsHelper.URLToPath(goServer.MapPath("\images") & filePath & "\" & fileName))
                     'now we have loaded it into our image object we can delete it
                     oFs.DeleteFile(filePath, fileName)
 
@@ -1477,7 +1477,7 @@ Public Class xForm
 
             If oInstance.SelectSingleNode("*[1]") Is Nothing Then Exit Sub
 
-            Dim nsMgr As XmlNamespaceManager = Eonic.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
+            Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
             For Each oNode In oNodes
                 bIsXml = False
@@ -1938,12 +1938,12 @@ Public Class xForm
                 oIptElmt.SetAttribute("class", sClass)
             End If
             If IsDate(oStart) Then
-                oIptElmt.SetAttribute("start", Eonic.Tools.Xml.XmlDate(oStart))
+                oIptElmt.SetAttribute("start", Protean.Tools.Xml.XmlDate(oStart))
             Else
                 oIptElmt.SetAttribute("start", CStr(oStart))
             End If
             If IsDate(oEnd) Then
-                oIptElmt.SetAttribute("end", Eonic.Tools.Xml.XmlDate(oEnd))
+                oIptElmt.SetAttribute("end", Protean.Tools.Xml.XmlDate(oEnd))
             Else
                 oIptElmt.SetAttribute("end", CStr(oEnd))
             End If
@@ -2681,8 +2681,10 @@ Public Class xForm
                     If Not bindNode Is Nothing Then
 
                         cXpathOptions = Me.getBindXpath(bindNode)
+                        Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
+                        cXpathOptions = addNsToXpath(cXpathOptions, nsMgr)
 
-                        Dim nodeToDelete As XmlElement = oInstance.SelectSingleNode(cXpathOptions & "[position()=" & nNodeIndex + 1 & "]")
+                        Dim nodeToDelete As XmlElement = oInstance.SelectSingleNode(cXpathOptions & "[position()=" & nNodeIndex + 1 & "]", nsMgr)
                         If Not nodeToDelete Is Nothing Then
                             nodeToDelete.SetAttribute("deletefromXformInstance", "true")
                             bDeletionDone = True

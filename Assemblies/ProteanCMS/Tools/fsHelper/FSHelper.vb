@@ -1,5 +1,5 @@
 '***********************************************************************
-' $Library:     eonic.fshelper
+' $Library:     Protean.fsHelper
 ' $Revision:    4.0  
 ' $Date:        2006-09-22
 ' $Author:      Trevor Spink (trevor@eonic.co.uk) et al.
@@ -20,7 +20,7 @@ Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Security.Principal
 Imports System.Web.Configuration
-Imports Eonic.Tools.DelegateWrappers
+Imports Protean.Tools.DelegateWrappers
 Imports System
 
 Partial Public Class fsHelper
@@ -30,8 +30,8 @@ Partial Public Class fsHelper
     ' Note from AG: Where possible - please create Shared methods and props on this, 
     ' as some calling methods may not be able to provide the System.Web.HttpContext.Current object for goServer
 
-    Shared mcModuleName As String = "Eonic.fsHelper"
-    Private goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Shared mcModuleName As String = "Protean.fsHelper"
+    Private goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
     Private goServer As System.Web.HttpServerUtility
 
     Public moPageXML As XmlDocument
@@ -148,7 +148,7 @@ Partial Public Class fsHelper
         Try
             oConfigXml.Load(goServer.MapPath(goConfig("ProjectPath") & "/Web.config"))
             'this now has a namespace to handle!!!
-            oConfigNode = oConfigXml.SelectSingleNode("/configuration/eonic/" & cPath)
+            oConfigNode = oConfigXml.SelectSingleNode("/configuration/protean/" & cPath)
 
             Return oConfigNode
 
@@ -208,7 +208,7 @@ Partial Public Class fsHelper
         Try
 
             oConfigXml.Load(goServer.MapPath(goConfig("ProjectPath") & "/web.config"))
-            oConfigNode = oConfigXml.SelectSingleNode("configuration/eonic/" & oInstance.Name)
+            oConfigNode = oConfigXml.SelectSingleNode("configuration/protean/" & oInstance.Name)
             oConfigNode.InnerXml = oInstance.InnerXml
             oConfigXml.Save(goServer.MapPath(goConfig("ProjectPath") & "/web.config"))
             Return oInstance
@@ -427,7 +427,7 @@ Partial Public Class fsHelper
         'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
         Try
 
-            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
                 Dim dir As New DirectoryInfo(mcStartFolder & cFolderPath & "\" & cFolderName)
@@ -501,7 +501,7 @@ Partial Public Class fsHelper
     Public Function DeleteFile(ByVal cFolderPath As String, ByVal cFileName As String) As String
         PerfMon.Log("fsHelper", "DeleteFile")
         Try
-            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
                 Dim cFullFileName As String = mcStartFolder & cFolderPath & "\" & cFileName
                 If IO.File.Exists(cFullFileName) Then
@@ -524,7 +524,7 @@ Partial Public Class fsHelper
     Public Function DeleteFile(ByVal cFullFilePath As String) As String
         PerfMon.Log("fsHelper", "DeleteFile")
         Try
-            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
                 If IO.File.Exists(cFullFilePath) Then
                     Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFilePath)
@@ -709,7 +709,7 @@ Partial Public Class fsHelper
     Public Function GetFileStream(ByVal FilePath As String) As FileStream
         PerfMon.Log("GetFileStream", "SaveFile")
         Try
-            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
                 Dim oFileStream As FileStream = New FileStream(FilePath, FileMode.Open, FileAccess.Read)
                 Return oFileStream
@@ -786,7 +786,7 @@ Partial Public Class fsHelper
             Next
 
             For Each ofile In thisDir.GetFiles
-                Dim oImgTool As New Eonic.Tools.Image("")
+                Dim oImgTool As New Protean.Tools.Image("")
                 nSavings = nSavings + oImgTool.CompressImage(ofile, lossless)
                 nFileCount = nFileCount + 1
             Next
@@ -988,19 +988,19 @@ Partial Public Class fsHelper
         Dim path As String = ""
         Try
 
-            Dim config As Specialized.NameValueCollection = Eonic.Web.Config()
+            Dim config As Specialized.NameValueCollection = Protean.Cms.Config()
 
             Select Case library
                 Case LibraryType.Image
-                    path = Tools.Text.Coalesce(Eonic.Web.ConfigValue("ImageRootPath"), "/images")
+                    path = Tools.Text.Coalesce(Protean.Cms.ConfigValue("ImageRootPath"), "/images")
                 Case LibraryType.Documents
-                    path = Tools.Text.Coalesce(Eonic.Web.ConfigValue("DocRootPath"), "/docs")
+                    path = Tools.Text.Coalesce(Protean.Cms.ConfigValue("DocRootPath"), "/docs")
                 Case LibraryType.Media
-                    path = Tools.Text.Coalesce(Eonic.Web.ConfigValue("MediaRootPath"), "/media")
+                    path = Tools.Text.Coalesce(Protean.Cms.ConfigValue("MediaRootPath"), "/media")
                 Case LibraryType.Scripts
-                    path = Tools.Text.Coalesce(Eonic.Web.ConfigValue("ScriptsRootPath"), "/js")
+                    path = Tools.Text.Coalesce(Protean.Cms.ConfigValue("ScriptsRootPath"), "/js")
                 Case LibraryType.Style
-                    path = Tools.Text.Coalesce(Eonic.Web.ConfigValue("StyleRootPath"), "/css")
+                    path = Tools.Text.Coalesce(Protean.Cms.ConfigValue("StyleRootPath"), "/css")
             End Select
 
             path = Replace(path, "\", "/")
@@ -1064,7 +1064,7 @@ Partial Public Class fsHelper
             relativeFolderPath = relativeFolderPath.Trim("/\".ToCharArray)
             Dim rootFolderPath As String = ""
             If Not String.IsNullOrEmpty(relativeFolderPath) Then
-                rootFolderPath = Eonic.Tools.Text.SimpleRegexFind(relativeFolderPath, "^([^/]+?)(/.*)?$", 1)
+                rootFolderPath = Protean.Tools.Text.SimpleRegexFind(relativeFolderPath, "^([^/]+?)(/.*)?$", 1)
             End If
             Dim rootFolder As New DirectoryInfo(goServer.MapPath("/" & rootFolderPath))
             Dim folderToInspect As New DirectoryInfo(goServer.MapPath("/" & relativeFolderPath))
@@ -1101,12 +1101,12 @@ Partial Public Class fsHelper
 
 
     ''' <summary>
-    ''' Determines whether a given file (FileInfo) is a valid file for the Eonic.FSHelper.LibraryType.
+    ''' Determines whether a given file (FileInfo) is a valid file for the Protean.fsHelper.LibraryType.
     ''' The filter includes inspecting the file extension, the file attributes (system and hidden are ignored)
     ''' and whether the filename begins ~, which is an EonicWeb generated image so can be ignored.
     ''' </summary>
     ''' <param name="fileToInspect">The file to apply the filter against</param>
-    ''' <param name="libraryTypeFilter">The Eonic.FSHelper.LibraryType to filter against.</param>
+    ''' <param name="libraryTypeFilter">The Protean.fsHelper.LibraryType to filter against.</param>
     ''' <returns>True if the file is a valid file for the given library type, False otherwise.</returns>
     ''' <remarks></remarks>
     Shared Function FileInfoTypeFilter(ByVal fileToInspect As FileInfo, ByVal libraryTypeFilter As LibraryType) As Boolean

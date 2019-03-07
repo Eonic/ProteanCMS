@@ -37,10 +37,10 @@ Public Class Setup
     Public goSession As System.Web.SessionState.HttpSessionState
     Public goServer As System.Web.HttpServerUtility
 
-    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
-    Public myWeb As Web
-    Public WithEvents moDbHelper As Eonic.Web.dbHelper
+    Public myWeb As Cms
+    Public WithEvents moDbHelper As Protean.Cms.dbHelper
 
     Public gnTopLevel As Integer
     Public gnPageId As Integer = 0
@@ -48,7 +48,7 @@ Public Class Setup
     Public mnUserId As Integer = 0
     Public mcEwCmd As String
 
-    Public mcModuleName As String = "Eonic.Setup"
+    Public mcModuleName As String = "Protean.Setup"
     Public gbDebug As Boolean = False
 
     Dim cStep As String = ""
@@ -56,7 +56,7 @@ Public Class Setup
     Dim oContentElmt As XmlElement
     Public cPostFlushActions As String = ""
 
-    Dim oTransform As New Eonic.XmlHelper.Transform()
+    Dim oTransform As New Protean.XmlHelper.Transform()
     Dim msRedirectOnEnd As String = ""
     Dim mbSchemaExists As Boolean = False
     Dim ConnValid As Boolean = False
@@ -65,14 +65,14 @@ Public Class Setup
 #Region "ErrorHandling"
 
     'for anything controlling web
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError
         'RaiseEvent OnError(sender, e)
         Err.Raise(513, e.ProcedureName, e.AddtionalInformation & " - " & e.Exception.Message, , )
     End Sub
 
-    Protected Overridable Sub OnComponentError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError
+    Protected Overridable Sub OnComponentError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError
         'deals with the error
         returnException(e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug)
         'close connection pooling
@@ -117,23 +117,12 @@ Public Class Setup
             goSession = moCtx.Session
             goServer = moCtx.Server
 
-            myWeb = New Web(moCtx)
+            myWeb = New Cms(moCtx)
             ' myWeb.InitializeVariables()
 
             sProcessInfo = "set session variables"
             mcModuleName = "ProteanCMS.Setup"
             ' msException = ""
-
-
-            'ensures we have configured JSEngine for Bundle Transformer
-            If goApp("JSEngineEnabled") Is Nothing Then
-                Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
-                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
-                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory())
-                Dim sJsEngine As String = "ChakraCoreJsEngine"
-                engineSwitcher.DefaultEngineName = sJsEngine
-                goApp("JSEngineEnabled") = True
-            End If
 
             ' Set the debug mode
             If Not (goConfig("Debug") Is Nothing) Then
@@ -155,7 +144,7 @@ Public Class Setup
 
             'lets open our DB Helper if database is defined
             If Not goConfig("DatabaseName") = Nothing Then
-                myWeb.moDbHelper = New Web.dbHelper(goConfig("DatabaseServer"), goConfig("DatabaseName"), mnUserId, moCtx)
+                myWeb.moDbHelper = New Cms.dbHelper(goConfig("DatabaseServer"), goConfig("DatabaseName"), mnUserId, moCtx)
                 myWeb.moDbHelper.myWeb = myWeb
                 myWeb.moDbHelper.moPageXml = moPageXml
                 myWeb.moDbHelper.DatabaseUser = goConfig("DatabaseUsername")
@@ -249,6 +238,20 @@ Public Class Setup
         Dim sProcessInfo As String = ""
         Try
 
+            If goApp("JSEngineEnabled") Is Nothing Then
+                Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
+                msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
+                Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
+                '  engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
+                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
+                Dim sJsEngine As String = "MsieJsEngine"
+                If goConfig("JSEngine") <> "" Then
+                    sJsEngine = goConfig("JSEngine")
+                End If
+                engineSwitcher.DefaultEngineName = sJsEngine
+                goApp("JSEngineEnabled") = sJsEngine
+            End If
+
             msException = ""
             GetSetupXml()
 
@@ -307,7 +310,7 @@ Public Class Setup
             Dim styleFile As String = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
             msException = ""
 
-            Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, styleFile, False)
+            Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
             oTransform.mbDebug = gbDebug
             oTransform.ProcessTimed(moPageXml, icPageWriter)
             oTransform = Nothing
@@ -346,12 +349,12 @@ Public Class Setup
             Case "NewDB"
                 buildDatabase(True)
             Case "RestoreZip"
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
-                Dim oDB As New Eonic.Tools.Database
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                Dim oDB As New Protean.Tools.Database
 
                 oDB.DatabaseServer = goConfig("DatabaseServer")
-                oDB.DatabaseUser = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                oDB.DatabasePassword = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                 oDB.FTPUser = goConfig("DatabaseFtpUsername")
                 oDB.FtpPassword = goConfig("DatabaseFtpPassword")
                 oDB.RestoreDatabase(goConfig("DatabaseName"), goRequest.Form("ewDatabaseFilename"))
@@ -461,7 +464,7 @@ Recheck:
 
             Else
                 If mnUserId = 0 Then
-                    'Dim oAdXfm As Web.Admin.AdminXforms = New Web.Admin.AdminXforms(myWeb)
+                    'Dim oAdXfm As Cms.Admin.AdminXforms = New Cms.Admin.AdminXforms(myWeb)
                     'oAdXfm.open(moPageXml)
 
                     Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
@@ -724,7 +727,7 @@ Recheck:
                         AddResponse("No Common Upgrades Found")
                     End If
                 Else
-                        AddResponse("Not Running: " & filePath)
+                    AddResponse("Not Running: " & filePath)
                 End If
             Next
             If oFS.VirtualFileExists("/sqlupdate/DatabaseUpgrade.xml") Then
@@ -968,8 +971,8 @@ Recheck:
         Try
 
             Dim AdminPassword As String = goConfig("DatabasePassword")
-            If AdminPassword = "" Then AdminPassword = "buster"
-            Dim UserEmail As String = "support@eonic.co.uk"
+            If AdminPassword = "" Then AdminPassword = "proteanpass"
+            Dim UserEmail As String = "support@proteancms.com"
             myWeb.Open()
 
             mnUserId = myWeb.moDbHelper.insertDirectory("AdminV4", "User", "Admin", AdminPassword, "<User><FirstName>Website</FirstName><MiddleName/><LastName>Administrator</LastName><Position/><Email>" & UserEmail & "</Email><Notes/></User>")
@@ -1039,7 +1042,7 @@ Recheck:
             ' oDs.Dispose()
             oDs = Nothing
 
-            'Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate()
+            'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate()
             'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
             '    IO.File.SetAttributes(goServer.MapPath(goConfig("ProjectPath") & "/Web.config"), IO.FileAttributes.Normal)
             '    Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
@@ -1178,8 +1181,8 @@ Recheck:
                     strXML = "<Group><Name>" & oDirElmt.GetAttribute("cDirDN") & "</Name></Group>"
                 Else
                     strSchema = "User" 'User schema
-                    strXML = "<User><FirstName>" & oDirElmt.GetAttribute("cFirstName") & "</FirstName><LastName>" & _
-                    oDirElmt.GetAttribute("cLastName") & "</LastName><Position/><Email>" & oDirElmt.GetAttribute("cDirEmail") & _
+                    strXML = "<User><FirstName>" & oDirElmt.GetAttribute("cFirstName") & "</FirstName><LastName>" &
+                    oDirElmt.GetAttribute("cLastName") & "</LastName><Position/><Email>" & oDirElmt.GetAttribute("cDirEmail") &
                     "</Email><Notes/></User>"
                 End If
                 'other details
@@ -1192,8 +1195,8 @@ Recheck:
                     AddResponse("Migrating Contact " & oConElmt.GetAttribute("nContactKey") & "")
                     'Firstly the Cart Order
                     cSQLP2 = ""
-                    cSQLP1 = "INSERT INTO tblCartContact (nContactDirId, nContactCartId, cContactType, cContactName, " & _
-                            "cContactCompany, cContactAddress, cContactCity, cContactState, cContactZip, cContactCountry, " & _
+                    cSQLP1 = "INSERT INTO tblCartContact (nContactDirId, nContactCartId, cContactType, cContactName, " &
+                            "cContactCompany, cContactAddress, cContactCity, cContactState, cContactZip, cContactCountry, " &
                             "cContactTel, cContactFax, cContactEmail, cContactXml, nAuditId) VALUES ("
 
                     cSQLP2 &= nDirId & ","
@@ -1335,12 +1338,12 @@ Recheck:
                         Case 3
                             nContStatus = 0
                     End Select
-                    sContentBrief = upgradeContentSchemas( _
-                    Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), _
+                    sContentBrief = upgradeContentSchemas(
+                    Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""),
                     oContElmt.GetAttribute("cContentXML"), "brief")
 
-                    sContentDetail = upgradeContentSchemas( _
-                    Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), _
+                    sContentDetail = upgradeContentSchemas(
+                    Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""),
                     oContElmt.GetAttribute("cContentXML"), "detail")
 
                     nContentId = myWeb.moDbHelper.insertContent(
@@ -1366,7 +1369,7 @@ Recheck:
                 If bUsesDirectory Then ' Permissions
                     For Each oPermElmt In oMenuElmt.SelectNodes("Permissions")
                         Dim nUser As Long = 0
-                        nUser = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"))
+                        nUser = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Directory, oPermElmt.GetAttribute("nPermDirId"))
                         myWeb.moDbHelper.maintainPermission(nParID, nUser, oPermElmt.GetAttribute("nPermLevel"))
                     Next
                 End If
@@ -1388,8 +1391,8 @@ Recheck:
             AddResponse("Migrating Locations:")
             For Each oLocElmt In oDataXML.SelectNodes("descendant-or-self::Location")
                 'nParID, nContentId
-                nParID = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"))
-                nContentId = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"))
+                nParID = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, oLocElmt.GetAttribute("nStructureID"))
+                nContentId = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oLocElmt.GetAttribute("nContentID"))
                 myWeb.moDbHelper.setContentLocation(nParID, nContentId, False)
             Next
 
@@ -1405,7 +1408,7 @@ Recheck:
     End Function
 
     Public Function Migrate_Shipping() As Boolean
-        Dim dbh As Web.dbHelper = myWeb.moDbHelper
+        Dim dbh As Cms.dbHelper = myWeb.moDbHelper
         Dim oDS As DataSet
         Dim oDXML As New XmlDocument
         Dim oLocElmt As XmlElement
@@ -1449,8 +1452,8 @@ Recheck:
                 If Not oLocElmt.ParentNode.SelectSingleNode("@NewID") Is Nothing Then
                     nParID = oLocElmt.ParentNode.SelectSingleNode("@NewID").InnerText
                 End If
-                cSQL = "INSERT INTO tblCartShippingLocations (nLocationType, nLocationParId, cLocationForeignRef, cLocationNameFull, " & _
-                "cLocationNameShort, cLocationISOnum, cLocationISOa2, cLocationISOa3, cLocationCode, nLocationTaxRate, " & _
+                cSQL = "INSERT INTO tblCartShippingLocations (nLocationType, nLocationParId, cLocationForeignRef, cLocationNameFull, " &
+                "cLocationNameShort, cLocationISOnum, cLocationISOa2, cLocationISOa3, cLocationCode, nLocationTaxRate, " &
                 "nAuditId) VALUES ("
                 If oLocElmt.GetAttribute("nLocationType") = "" Then cSQL &= "Null," Else cSQL &= oLocElmt.GetAttribute("nLocationType") & ","
                 If oLocElmt.GetAttribute("nLocationParId") = "" Then cSQL &= "Null," Else cSQL &= oLocElmt.GetAttribute("nLocationParId") & ","
@@ -1471,9 +1474,9 @@ Recheck:
 
             For Each oMetElmt In oDXML.SelectNodes("descendant-or-self::Options")
                 AddResponse("Migrating Option " & oMetElmt.GetAttribute("cShipOptName") & "")
-                cSQL = "INSERT INTO tblCartShippingMethods (nShipOptCat, cShipOptForeignRef, cShipOptName, cShipOptCarrier, cShipOptTime, " & _
-                "cShipOptTandC, nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, " & _
-                "nShipOptWeightMax, nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, " & _
+                cSQL = "INSERT INTO tblCartShippingMethods (nShipOptCat, cShipOptForeignRef, cShipOptName, cShipOptCarrier, cShipOptTime, " &
+                "cShipOptTandC, nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, " &
+                "nShipOptWeightMax, nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, " &
                 "nShipOptTaxRate, nAuditId) VALUES ("
 
                 cSQL &= "Null," 'no cat
@@ -1502,8 +1505,8 @@ Recheck:
             For Each oRelElmt In oDXML.SelectNodes("descendant-or-self::Relations")
                 Dim nOpt As Integer
                 Dim nLoc As Integer
-                If Not oRelElmt.GetAttribute("nShpOptId") = "" Then nOpt = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"))
-                If Not oRelElmt.GetAttribute("nShpLocId") = "" Then nLoc = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"))
+                If Not oRelElmt.GetAttribute("nShpOptId") = "" Then nOpt = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingMethod, oRelElmt.GetAttribute("nShpOptId"))
+                If Not oRelElmt.GetAttribute("nShpLocId") = "" Then nLoc = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingLocation, oRelElmt.GetAttribute("nShpLocId"))
                 'only add it if there is something to add on both ends of the relation
                 If Not (nOpt = 0 Or nLoc = 0) Then
                     cSQL = "INSERT INTO tblCartShippingRelations (nShpOptID, nShpLocId, nAuditId) VALUES("
@@ -1523,7 +1526,7 @@ Recheck:
     End Function
 
     Public Function Migrate_Cart() As Boolean
-        Dim dbh As Web.dbHelper = myWeb.moDbHelper
+        Dim dbh As Cms.dbHelper = myWeb.moDbHelper
         Dim oDS As DataSet
         Dim oDXML As New XmlDocument
         Dim oOrdElmt As XmlElement
@@ -1566,9 +1569,9 @@ Recheck:
                 AddResponse("Migrating Order " & oOrdElmt.GetAttribute("nCartOrderKey") & "(" & nOrdCount & ")")
                 'Firstly the Cart Order
                 cSQLP2 = ""
-                cSQLP1 = "INSERT INTO tblCartOrder " & _
-                "(cCartForiegnRef, nCartStatus, cCartSchemaName, cCartSessionId, nCartUserDirId, " & _
-                "nPayMthdId, cPaymentRef, cCartXml, nShippingMethodId, cShippingDesc, nShippingCost, " & _
+                cSQLP1 = "INSERT INTO tblCartOrder " &
+                "(cCartForiegnRef, nCartStatus, cCartSchemaName, cCartSessionId, nCartUserDirId, " &
+                "nPayMthdId, cPaymentRef, cCartXml, nShippingMethodId, cShippingDesc, nShippingCost, " &
                 "cClientNotes, cSellerNotes, nTaxRate, nGiftListId, nAuditId) VALUES( "
 
                 If oOrdElmt.GetAttribute("nCartOrderKey") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= oOrdElmt.GetAttribute("nCartOrderKey") & ","
@@ -1589,7 +1592,7 @@ Recheck:
                 If oOrdElmt.GetAttribute("nPaymentRef") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oOrdElmt.GetAttribute("nPaymentRef") & "',"
                 cSQLP2 &= "Null," 'Cart XML
 
-                If oOrdElmt.GetAttribute("nShippingId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.CartShippingMethod, oOrdElmt.GetAttribute("nShippingId")) & ","
+                If oOrdElmt.GetAttribute("nShippingId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartShippingMethod, oOrdElmt.GetAttribute("nShippingId")) & ","
                 If oOrdElmt.GetAttribute("cShippingDesc") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oOrdElmt.GetAttribute("cShippingDesc") & "',"
                 If oOrdElmt.GetAttribute("nShippingCost") = "" Then cSQLP2 &= "0," Else cSQLP2 &= oOrdElmt.GetAttribute("nShippingCost") & ","
                 If oOrdElmt.GetAttribute("cClientNotes") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'<Notes><Notes>" & oOrdElmt.GetAttribute("cClientNotes") & "</Notes></Notes>',"
@@ -1603,12 +1606,12 @@ Recheck:
                 For Each oItElmt In oOrdElmt.SelectNodes("Items")
                     AddResponse("Migrating Item " & oItElmt.GetAttribute("nCartItemKey") & "")
                     cSQLP2 = ""
-                    cSQLP1 = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentID, cItemRef, " & _
-                    "cItemURL, cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, " & _
+                    cSQLP1 = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentID, cItemRef, " &
+                    "cItemURL, cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, " &
                     "nDiscountValue,nTaxRate, nQuantity, nWeight, nAuditId) VALUES ("
 
                     cSQLP2 &= nParID & "," 'OrderID
-                    If oItElmt.GetAttribute("nItemId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) & ","
+                    If oItElmt.GetAttribute("nItemId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) & ","
                     cSQLP2 &= "Null," 'product parentID for options
                     If oItElmt.GetAttribute("cItemRef") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oItElmt.GetAttribute("cItemRef") & "',"
                     If oItElmt.GetAttribute("cItemURL") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oItElmt.GetAttribute("cItemURL") & "',"
@@ -1633,12 +1636,12 @@ DoOptions:
                     If nOptNo < 3 Then 'since its only options 1 and 2 we dont want to try 3
                         If Not oItElmt.GetAttribute("cItemOption" & nOptNo) = "" Then
                             cSQLP2 = ""
-                            cSQLP1 = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentID, cItemRef, " & _
-                            "cItemURL, cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, " & _
+                            cSQLP1 = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentID, cItemRef, " &
+                            "cItemURL, cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, " &
                             "nDiscountValue, nTaxRate, nQuantity, nWeight, nAuditId) VALUES ("
 
                             cSQLP2 &= nParID & "," 'OrderID
-                            If oItElmt.GetAttribute("nItemId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) & ","
+                            If oItElmt.GetAttribute("nItemId") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, oItElmt.GetAttribute("nItemId")) & ","
                             cSQLP2 &= nParID2 & "," 'product parentID for options
                             cSQLP2 &= "'" & oItElmt.GetAttribute("cItemOption" & nOptNo) & "'," 'New ref as option
                             If oItElmt.GetAttribute("cItemURL") = "" Then cSQLP2 &= "Null," Else cSQLP2 &= "'" & oItElmt.GetAttribute("cItemURL") & "',"
@@ -1665,8 +1668,8 @@ DoOptions:
                     AddResponse("Migrating Contact " & oConElmt.GetAttribute("nContactKey") & "")
                     'Firstly the Cart Order
                     cSQLP2 = ""
-                    cSQLP1 = "INSERT INTO tblCartContact (nContactDirId, nContactCartId, cContactType, cContactName, " & _
-                            "cContactCompany, cContactAddress, cContactCity, cContactState, cContactZip, cContactCountry, " & _
+                    cSQLP1 = "INSERT INTO tblCartContact (nContactDirId, nContactCartId, cContactType, cContactName, " &
+                            "cContactCompany, cContactAddress, cContactCity, cContactState, cContactZip, cContactCountry, " &
                             "cContactTel, cContactFax, cContactEmail, cContactXml, nAuditId) VALUES ("
 
                     cSQLP2 &= "0,"
@@ -1701,10 +1704,10 @@ DoOptions:
         Dim sResult As String
         Dim oXmlDr As New XmlDocument
         Dim cProcessInfo As String = "error converting type:" & cContentSchema & " data:" & cContentXml
-        Dim oTransform2 As New Eonic.XmlHelper.Transform()
+        Dim oTransform2 As New Protean.XmlHelper.Transform()
         Try
             'fix for any nasty entities
-            cContentXml = Eonic.Tools.Xml.convertEntitiesToCodes(cContentXml)
+            cContentXml = Protean.Tools.Xml.convertEntitiesToCodes(cContentXml)
 
             oXmlDr.LoadXml(cContentXml)
             'add Eonic Bespoke Functions
@@ -1758,7 +1761,7 @@ DoOptions:
 
     Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False) As String
 
-        Eonic.Tools.CleanName(cName, bLeaveAmp, False)
+        Protean.Tools.CleanName(cName, bLeaveAmp, False)
 
     End Function
 
@@ -1927,12 +1930,12 @@ DoOptions:
     End Sub
 #End Region
 
-    Friend Function CommitToLog(ByVal nEventType As Eonic.Web.dbHelper.ActivityType, ByVal nUserId As Integer, ByVal cSessionId As String, ByVal dDateTime As Date, Optional ByVal nPrimaryId As Integer = 0, Optional ByVal nSecondaryId As Integer = 0, Optional ByVal cDetail As String = "") As Integer
+    Friend Function CommitToLog(ByVal nEventType As Protean.Cms.dbHelper.ActivityType, ByVal nUserId As Integer, ByVal cSessionId As String, ByVal dDateTime As Date, Optional ByVal nPrimaryId As Integer = 0, Optional ByVal nSecondaryId As Integer = 0, Optional ByVal cDetail As String = "") As Integer
         Dim cSQL As String = "INSERT INTO tblActivityLog (nUserDirId, nStructId, nArtId, dDateTime, nActivityType, cActivityDetail, cSessionId) VALUES ("
         cSQL &= nUserId & ","
         cSQL &= nPrimaryId & ","
         cSQL &= nSecondaryId & ","
-        cSQL &= Eonic.Tools.Database.SqlDate(dDateTime, True) & ","
+        cSQL &= Protean.Tools.Database.SqlDate(dDateTime, True) & ","
         cSQL &= nEventType & ","
         cSQL &= "'" & cDetail & "',"
         cSQL &= "'" & cSessionId & "')"
@@ -1950,11 +1953,11 @@ DoOptions:
     Public Class SetupXforms
         Inherits xForm
         Private Const mcModuleName As String = "Setup.SetupXForms"
-        Private mySetup As Eonic.Setup
+        Private mySetup As Protean.Setup
 
-        Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
-        Public Sub New(ByRef asetup As Eonic.Setup)
+        Public Sub New(ByRef asetup As Protean.Setup)
             PerfMon.Log("Discount", "New")
             Try
                 mySetup = asetup
@@ -1976,7 +1979,7 @@ DoOptions:
                 siteUrl = Replace(siteUrl, "www.", "")
                 siteUrl = Replace(siteUrl, ".", "_")
                 siteUrl = Replace(siteUrl, "-", "_")
-                Return "ptn_" & siteUrl
+                Return "ew_" & siteUrl
             Catch ex As Exception
                 returnException(mcModuleName, "GuessDBName", ex, "", "", True)
                 Return ""
@@ -2020,27 +2023,27 @@ DoOptions:
                 'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
                 'Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
 
-                '  Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                '  Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 '  If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
                 'MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
                 Dim oDefaultCfgXml As New XmlDocument
 
-                If oFsh.VirtualFileExists("/eonic.web.config") Then
-                    oDefaultCfgXml.Load(goServer.MapPath("/eonic.web.config"))
+                If oFsh.VirtualFileExists("/Protean.Cms.config") Then
+                    oDefaultCfgXml.Load(goServer.MapPath("/Protean.Cms.config"))
                 Else
-                    oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config.xml"))
+                    oDefaultCfgXml.Load(goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"))
                 End If
 
 
                 MyBase.Instance.InnerXml = oDefaultCfgXml.SelectSingleNode("web").OuterXml
 
-                    'code here to replace any missing nodes
-                    'all of the required config settings
+                'code here to replace any missing nodes
+                'all of the required config settings
 
-                    If MyBase.isSubmitted Then
-                        MyBase.updateInstanceFromRequest()
-                        MyBase.validate()
+                If MyBase.isSubmitted Then
+                    MyBase.updateInstanceFromRequest()
+                    MyBase.validate()
                     If MyBase.valid Then
 
                         'lets insure all the essential files are in place
@@ -2055,7 +2058,7 @@ DoOptions:
                         Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
 
                         'Now lets create the database
-                        Dim oDbt As New Eonic.Web.dbHelper(Nothing)
+                        Dim oDbt As New Protean.Cms.dbHelper(Nothing)
                         Dim sDbName As String = Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText
                         Dim cDbServer As String = Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText
                         Dim cDbUsername As String = Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText
@@ -2079,7 +2082,7 @@ DoOptions:
 
                         If MyBase.valid Then
                             If Not oCfg Is Nothing Then
-                                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("eonic/web")
+                                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                                 Dim oRwSect As System.Configuration.IgnoreSection = oCfg.GetSection("system.webServer")
                                 If Not oCgfSect Is Nothing Then
                                     oCgfSect.SectionInformation.RestartOnExternalChanges = False
@@ -2088,13 +2091,13 @@ DoOptions:
                                     oCfg.Save()
                                 Else
                                     'update config based on form submission
-                                    oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                                    oDefaultCfgXml.SelectSingleNode("/configuration/protean").InnerXml = MyBase.Instance.InnerXml
                                     'save as web.config in the root
-                                    oDefaultCfgXml.Save(goServer.MapPath("eonic.web.config"))
+                                    oDefaultCfgXml.Save(goServer.MapPath("Protean.Cms.config"))
                                 End If
                             Else
                                 'update config based on form submission
-                                oDefaultCfgXml.SelectSingleNode("/configuration/eonic").InnerXml = MyBase.Instance.InnerXml
+                                oDefaultCfgXml.SelectSingleNode("/configuration/protean").InnerXml = MyBase.Instance.InnerXml
                                 'save as web.config in the root
                                 oDefaultCfgXml.Save(goServer.MapPath("web.config"))
                             End If
@@ -2162,7 +2165,7 @@ DoOptions:
 
                 MyBase.addSubmit(oFrmElmt, "", "Backup Database")
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
                     MyBase.Instance.InnerXml = "<backup name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """/>"
@@ -2172,11 +2175,11 @@ DoOptions:
                         MyBase.validate()
                         If MyBase.valid Then
 
-                            Dim oDB As New Eonic.Tools.Database
+                            Dim oDB As New Protean.Tools.Database
 
                             oDB.DatabaseServer = goConfig("DatabaseServer")
-                            oDB.DatabaseUser = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                            oDB.DatabasePassword = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                            oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                            oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                             oDB.ConnectTimeout = 60
                             'oDB.ConnectionPooling = True
                             oDB.BackupDatabase(DatabaseName, DatabaseFilepath)
@@ -2231,7 +2234,7 @@ DoOptions:
 
                 MyBase.addSubmit(oFrmElmt, "", "Restore Database")
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
                     MyBase.Instance.InnerXml = "<restore name=""" & DatabaseName & """ filename=""" & DatabaseFilename & """ filepath=""" & DatabaseFilepath & """ upload=""""/>"
@@ -2260,11 +2263,11 @@ DoOptions:
                                 DatabaseFilename = DatabaseFilepath & "\" & fUpld.FileName
                             End If
 
-                            Dim oDB As New Eonic.Tools.Database
+                            Dim oDB As New Protean.Tools.Database
 
                             oDB.DatabaseServer = goConfig("DatabaseServer")
-                            oDB.DatabaseUser = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-                            oDB.DatabasePassword = Eonic.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                            oDB.DatabaseUser = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+                            oDB.DatabasePassword = Protean.Tools.Text.SimpleRegexFind(goConfig("DatabaseAuth"), "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
                             oDB.FTPUser = goConfig("DatabaseFtpUsername")
                             oDB.FtpPassword = goConfig("DatabaseFtpPassword")
                             oDB.RestoreDatabase(DatabaseName, DatabaseFilename)
@@ -2310,7 +2313,7 @@ DoOptions:
                 MyBase.addInput(oFrmElmt, "ewDatabaseName", True, "Database Name")
                 MyBase.addBind("ewDatabaseName", "restore/@name", "true()")
 
-                Dim sel1 As XmlElement = MyBase.addSelect1(oFrmElmt, "ewDatabaseFilename", True, "Install Empty DB or one containing sample data which would be better for initial evaluation of the platform", "", Eonic.xForm.ApperanceTypes.Full)
+                Dim sel1 As XmlElement = MyBase.addSelect1(oFrmElmt, "ewDatabaseFilename", True, "Install Empty DB or one containing sample data which would be better for initial evaluation of the platform", "", Protean.xForm.ApperanceTypes.Full)
                 MyBase.addOption(sel1, "Empty Database", "NewV4")
                 MyBase.addOptionsFilesFromDirectory(sel1, DatabaseFilepath, "zip")
                 MyBase.addBind("ewDatabaseFilename", "restore/@filename", "false()")
@@ -2356,7 +2359,7 @@ Public Class FileStructureSetup
     Public oSetup As Setup
     Public oEwVersion As String = "5.0"
     Public IISVersion As Double = 7
-    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
     Public imageRootPath As String = "/images"
     Public docRootPath As String = "/docs"
     Public docMediaPath As String = "/media"
@@ -2367,7 +2370,7 @@ Public Class FileStructureSetup
 
         Try
 
-            'Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), True, goConfig("AdminGroup")) Then
 
             If IISVersion < 7 Then
@@ -2399,29 +2402,29 @@ Public Class FileStructureSetup
             IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/web_config.xml"), goServer.MapPath(goConfig("ProjectPath") & "/web.config"))
             ' End If
 
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.web.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_web_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.web.config"))
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/Protean.Cms.config")) Then
+                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_config.xml"),
+                 goServer.MapPath(goConfig("ProjectPath") & "/Protean.Cms.config"))
             End If
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.theme.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_theme_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.theme.config"))
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.theme.config")) Then
+                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_theme_config.xml"),
+                 goServer.MapPath(goConfig("ProjectPath") & "/protean.theme.config"))
             End If
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.cart.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_cart_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.cart.config"))
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.cart.config")) Then
+                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_cart_config.xml"),
+                 goServer.MapPath(goConfig("ProjectPath") & "/protean.cart.config"))
             End If
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.payment.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_payment_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.payment.config"))
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config")) Then
+                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_payment_config.xml"),
+                 goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config"))
             End If
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.payment.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_payment_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.payment.config"))
-            End If
-            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/eonic.mailinglist.config")) Then
-                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/eonic_mailinglist_config.xml"), _
-                 goServer.MapPath(goConfig("ProjectPath") & "/eonic.mailinglist.config"))
+            'If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config")) Then
+            'IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_payment_config.xml"),
+            'goServer.MapPath(goConfig("ProjectPath") & "/protean.payment.config"))
+            'End If
+            If Not IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "/protean.mailinglist.config")) Then
+                IO.File.Copy(goServer.MapPath("/ewcommon/setup/rootfiles/protean_mailinglist_config.xml"),
+                 goServer.MapPath(goConfig("ProjectPath") & "/protean.mailinglist.config"))
             End If
 
             'lets create media, images and docs directories
@@ -2471,7 +2474,7 @@ Public Class ContentMigration
 
     'class for migrating one content schema to another
     Public oSetup As Setup
-    Public myWeb As Eonic.Web
+    Public myWeb As Protean.Cms
 
 
     Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
@@ -2481,16 +2484,16 @@ Public Class ContentMigration
     Public goResponse As System.Web.HttpResponse = moCtx.Response
     Public goSession As System.Web.SessionState.HttpSessionState = moCtx.Session
     Public goServer As System.Web.HttpServerUtility = moCtx.Server
-    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
-    Dim oTransform As New Eonic.XmlHelper.Transform()
+    Dim oTransform As New Protean.XmlHelper.Transform()
 
     Private cUpdateType As String = ""
     Private cUpdateSchema As String = ""
     Private cUpdateTableName As String = ""
     Private cUpdateKeyColumnName As String = ""
     Private cUpdateSchemaColumnName As String = ""
-    Private nUpdateTableType As Web.dbHelper.objectTypes
+    Private nUpdateTableType As Cms.dbHelper.objectTypes
 
     Private rCharCheck As Regex = New Regex("[\u0000-\u0008\u000B\u000C\u000E-\u001F]")
 
@@ -2528,7 +2531,7 @@ Public Class ContentMigration
             ' General Settings
             If value = "Content" Or value = "Directory" Or value = "ContentStructure" Then
                 cUpdateType = value
-                nUpdateTableType = System.Enum.Parse(GetType(Web.dbHelper.objectTypes), value)
+                nUpdateTableType = System.Enum.Parse(GetType(Cms.dbHelper.objectTypes), value)
                 cUpdateTableName = myWeb.moDbHelper.getTable(nUpdateTableType)
                 cUpdateKeyColumnName = myWeb.moDbHelper.getKey(nUpdateTableType)
 
@@ -2642,7 +2645,7 @@ Public Class ContentMigration
             ' Create a log for tracking
             bAllowLog = myWeb.moDbHelper.checkDBObjectExists("tblActivityLog", Tools.Database.objectTypes.Table)
             If bForReal And bAllowLog Then
-                nLogId = oSetup.CommitToLog(Web.dbHelper.ActivityType.SetupDataUpgrade, oSetup.mnUserId, goSession.SessionID, Now(), , , nProgress & "/" & nRowCount)
+                nLogId = oSetup.CommitToLog(Cms.dbHelper.ActivityType.SetupDataUpgrade, oSetup.mnUserId, goSession.SessionID, Now(), , , nProgress & "/" & nRowCount)
             End If
 
             oSetup.AddResponse("Total Record to Process: " & nRowCount)
@@ -2739,12 +2742,12 @@ Public Class ContentMigration
         Dim cResponse As String
         Dim cProcessInfo As String = "error converting type:" & cContentSchema & " data:" & cContentXml
         Dim oXML As New XmlDocument
-        Dim oTransform2 As New Eonic.XmlHelper.Transform(myWeb, "", False)
+        Dim oTransform2 As New Protean.XmlHelper.Transform(myWeb, "", False)
         Try
             'RJP 7 Nov 2012. Modified call EncodeForXML.
             'TS not here this is allready valid XML - this need to be in encrypt
-            'cContentXml = Eonic.Tools.Xml.EncodeForXml(cContentXml)
-            'cContentXml = Eonic.Tools.Xml.convertEntitiesToCodes(cContentXml)
+            'cContentXml = Protean.Tools.Xml.EncodeForXml(cContentXml)
+            'cContentXml = Protean.Tools.Xml.convertEntitiesToCodes(cContentXml)
 
             oXmlDr.LoadXml(cContentXml.Trim)
 
@@ -2762,7 +2765,7 @@ Public Class ContentMigration
             oXmlDr = Nothing
 
             If oTransform2.transformException Is Nothing Then
-                cResponse = Eonic.Tools.Xml.convertEntitiesToCodes(sResult)
+                cResponse = Protean.Tools.Xml.convertEntitiesToCodes(sResult)
 
                 If bCharCheck Then
                     If rCharCheck.Matches(cResponse).Count > 0 Then
@@ -2775,9 +2778,9 @@ Public Class ContentMigration
                 End If
             Else
                 If oTransform2.transformException.InnerException Is Nothing Then
-                    oXML.InnerXml = "<Error>" & Eonic.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.Message) & "</Error>"
+                    oXML.InnerXml = "<Error>" & Protean.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.Message) & "</Error>"
                 Else
-                    oXML.InnerXml = "<Error>" & Eonic.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.Message) & " " & Eonic.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.InnerException.Message) & "</Error>"
+                    oXML.InnerXml = "<Error>" & Protean.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.Message) & " " & Protean.Tools.Xml.convertEntitiesToCodes(oTransform2.transformException.InnerException.Message) & "</Error>"
                 End If
                 oSetup.AddResponseError(oTransform2.transformException)
             End If
@@ -2977,7 +2980,7 @@ Public Class ContentImport
                 oXForm.load(cXFormPath)
                 oXForm.LoadInstance(oElmt)
                 Dim nNewContentId As Integer = 0
-                nNewContentId = myWeb.moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Content, oXForm.Instance)
+                nNewContentId = myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, oXForm.Instance)
                 myWeb.moDbHelper.setContentLocation(nContentID, nNewContentId, True, False)
                 oSetup.AddResponse("Imported Content, New ID: " & nNewContentId)
             Next

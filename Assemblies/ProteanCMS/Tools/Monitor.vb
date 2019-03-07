@@ -1,5 +1,5 @@
 Imports System.web.Configuration
-Imports Eonic.Web
+Imports Protean.Cms
 Imports System.Data
 Imports System.Xml
 Imports System
@@ -8,21 +8,21 @@ Public Class Monitor
 
 #Region "Declarations"
 
-    Dim myWeb As Eonic.Web
+    Dim myWeb As Protean.Cms
     Dim mcModuleName As String = "Eonic.Monitor"
 
 #End Region
 #Region "New Error Handling"
-    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         RaiseEvent OnError(sender, e)
     End Sub
 #End Region
 
 #Region "  Initialise"
 
-    Public Sub New(ByRef aWeb As Eonic.Web)
+    Public Sub New(ByRef aWeb As Protean.Cms)
         myWeb = aWeb
     End Sub
 
@@ -39,8 +39,8 @@ Public Class Monitor
         Dim cResponse As String = "Not Sent"
         Try
 
-            Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/scheduler")
-            Dim oMsg As New Eonic.Messaging
+            Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/scheduler")
+            Dim oMsg As New Protean.Messaging
 
             If Not oSchedulerConfig Is Nothing Then
                 cMonitorEmail = oSchedulerConfig("SchedulerMonitorEmail")
@@ -52,7 +52,7 @@ Public Class Monitor
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "EmailMonitorScheduler", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "EmailMonitorScheduler", ex, cProcessInfo))
         End Try
 
         Return cResponse
@@ -68,7 +68,7 @@ Public Class Monitor
         Dim oDS As DataSet
         Dim oMXML As New XmlDataDocument
         Dim oElmt As XmlElement = oMXML.CreateElement("NoData")
-        Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/scheduler")
+        Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/scheduler")
 
         Try
 
@@ -87,7 +87,7 @@ Public Class Monitor
 
                 oDBh.ResetConnection(cConStr)
 
-                oDS = oDBh.GetDataSet("EXEC spGetSchedulerSummary @date=" & Eonic.Tools.Database.SqlDate(Now().AddDays(-1), True), "Scan", "Monitor")
+                oDS = oDBh.GetDataSet("EXEC spGetSchedulerSummary @date=" & Protean.Tools.Database.SqlDate(Now().AddDays(-1), True), "Scan", "Monitor")
                 oDBh.ReturnNullsEmpty(oDS)
                 oMXML = New XmlDataDocument(oDS)
                 If Not (oMXML Is Nothing) AndAlso Not (oMXML.DocumentElement Is Nothing) Then
@@ -97,7 +97,7 @@ Public Class Monitor
 
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetMonitorSchedulerXml", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetMonitorSchedulerXml", ex, cProcessInfo))
         Finally
             oDBh.CloseConnection()
             oDBh = Nothing

@@ -9,7 +9,7 @@ Imports System
 ''' <summary>
 ''' Generic web configuration section retrieval handler.
 ''' Methods are all shared.
-''' The idea is that Eonic.Config can be called by individual Eonic classes that offer shared config retrieval.
+''' The idea is that Protean.Config can be called by individual Eonic classes that offer shared config retrieval.
 ''' Config doens't have to be part of instantiated classes, meaning that it can be used without the other usual dependencies
 ''' that might not be there - e.g. HttpContext.Current
 ''' </summary>
@@ -41,7 +41,7 @@ Public Class Config
         Return WebConfigurationManager.GetWebApplicationSection(section)
     End Function
 
-    Shared Function UpdateConfigValue(ByRef myWeb As Eonic.Web, ByVal configPath As String, ByVal name As String, ByVal value As String) As Boolean
+    Shared Function UpdateConfigValue(ByRef myWeb As Protean.Cms, ByVal configPath As String, ByVal name As String, ByVal value As String) As Boolean
 
         Try
 
@@ -49,7 +49,7 @@ Public Class Config
             'update config values
             Dim oCfg As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/")
             Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(configPath)
-            Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
             If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), , myWeb.moConfig("AdminGroup")) Then
                 Dim oConfigDoc As New XmlDocument
                 oConfigDoc.LoadXml(oCgfSect.SectionInformation.GetRawXml)

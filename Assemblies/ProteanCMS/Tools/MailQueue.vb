@@ -13,21 +13,21 @@ Public Class MailQueue
 
     Public Sub New()
         MyBase.New()
-        moConfig = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        moConfig = WebConfigurationManager.GetWebApplicationSection("protean/web")
         PerfMon.Log("MailQueue", "New")
         mcModuleName = "MailQueue"
     End Sub
 
-    Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/scheduler")
-    Dim oDBT_Local As Eonic.Web.dbHelper
-    Dim oDBT_Remote As Eonic.Web.dbHelper
+    Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/scheduler")
+    Dim oDBT_Local As Protean.Cms.dbHelper
+    Dim oDBT_Remote As Protean.Cms.dbHelper
 
 
 
     Public Function Add(ByVal nPageId As Integer, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String, Optional ByVal cBody As String = "", Optional ByVal cGroups_CSV As String = "", Optional ByVal nUserId As Integer = 0, Optional ByVal bSkipQue As Boolean = False) As Integer
         PerfMon.Log("MailQueue", "Add")
         Try
-            oDBT_Local = New Web.dbHelper("Data Source=" & moConfig("DatabaseServer") & "; " & _
+            oDBT_Local = New Cms.dbHelper("Data Source=" & moConfig("DatabaseServer") & "; " & _
             "Initial Catalog=" & moConfig("DatabaseName") & "; " & _
             moConfig("DatabaseAuth"), 1)
 
@@ -44,7 +44,7 @@ Public Class MailQueue
                 Return 0
             End If
 
-            oDBT_Remote = New Web.dbHelper(cConStr, 1)
+            oDBT_Remote = New Cms.dbHelper(cConStr, 1)
 
             Dim cSQL As String = ""
             If Not cGroups_CSV = "" And nUserId = 0 Then
@@ -136,8 +136,8 @@ Public Class MailQueue
     Public Function GetEmailPage(ByVal nPageId As Integer, ByVal nUserId As Integer) As String
         PerfMon.Log("MailQueue", "GetEmaiPage")
         Try
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
-            Dim oWeb As New Eonic.Web
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+            Dim oWeb As New Protean.Cms
 
             oWeb.InitializeVariables()
             oWeb.Open()

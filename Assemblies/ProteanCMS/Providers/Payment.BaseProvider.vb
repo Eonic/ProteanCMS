@@ -1,5 +1,5 @@
 ﻿'***********************************************************************
-' $Library:     eonic.providers.messaging.base
+' $Library:     Protean.Providers.messaging.base
 ' $Revision:    3.1  
 ' $Date:        2010-03-02
 ' $Author:      Trevor Spink (trevor@eonic.co.uk)
@@ -22,10 +22,10 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
-Imports Eonic.Web.Cart
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
+Imports Protean.Cms.Cart
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -35,7 +35,7 @@ Namespace Providers
     Namespace Payment
 
         Public Class BaseProvider
-            Private Const mcModuleName As String = "Eonic.Providers.Payment.BaseProvider"
+            Private Const mcModuleName As String = "Protean.Providers.Payment.BaseProvider"
 
             Private _AdminXforms As Object
             Private _AdminProcess As Object
@@ -70,12 +70,12 @@ Namespace Providers
                 End Get
             End Property
 
-            Public Sub New(ByRef myWeb As Eonic.Web, ByVal ProviderName As String)
+            Public Sub New(ByRef myWeb As Protean.Cms, ByVal ProviderName As String)
                 Try
                     Dim calledType As Type
                     Dim oProviderCfg As XmlElement
 
-                    moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
+                    moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                     oProviderCfg = moPaymentCfg.SelectSingleNode("provider[@name='" & ProviderName & "']")
 
                     Dim ProviderClass As String = ""
@@ -88,15 +88,15 @@ Namespace Providers
                     End If
 
                     If ProviderClass = "" Then
-                        ProviderClass = "Eonic.Providers.Payment.EonicProvider"
+                        ProviderClass = "Protean.Providers.Payment.EonicProvider"
                         calledType = System.Type.GetType(ProviderClass, True)
                     Else
-                        Dim moPrvConfig As Eonic.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("eonic/paymentProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders")
                         If Not moPrvConfig.Providers(ProviderClass) Is Nothing Then
                             Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderClass).Type)
-                            calledType = assemblyInstance.GetType("Eonic.Providers.Payment." & ProviderClass, True)
+                            calledType = assemblyInstance.GetType("Protean.Providers.Payment." & ProviderClass, True)
                         Else
-                            calledType = System.Type.GetType("Eonic.Providers.Payment." & ProviderClass, True)
+                            calledType = System.Type.GetType("Protean.Providers.Payment." & ProviderClass, True)
                         End If
 
                     End If
@@ -126,7 +126,7 @@ Namespace Providers
                 'do nothing
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
                 MemProvider.AdminXforms = New AdminXForms(myWeb)
                 MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -136,19 +136,19 @@ Namespace Providers
             End Sub
 
             Public Class AdminXForms
-                Inherits Web.Admin.AdminXforms
+                Inherits Cms.Admin.AdminXforms
                 Private Const mcModuleName As String = "Providers.Providers.Eonic.AdminXForms"
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
             End Class
 
             Public Class AdminProcess
-                Inherits Web.Admin
+                Inherits Cms.Admin
 
-                Dim _oAdXfm As Eonic.Providers.Payment.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Payment.EonicProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)
@@ -159,7 +159,7 @@ Namespace Providers
                     End Get
                 End Property
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
             End Class
@@ -168,9 +168,9 @@ Namespace Providers
             Public Class Activities
                 Private Const mcModuleName As String = "Providers.Payment.Eonic.Activities"
 
-                Public myWeb As Eonic.Web
+                Public myWeb As Protean.Cms
 
-                Public Function GetPaymentForm(ByRef myWeb As Eonic.Web, ByRef oCart As Eonic.Web.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
+                Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Protean.Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
 
                     Dim cBillingAddress As String
                     Dim moCartConfig As System.Collections.Specialized.NameValueCollection = oCart.moCartConfig
@@ -328,7 +328,7 @@ Namespace Providers
 
                 End Function
 
-                Public Function CheckStatus(ByRef oWeb As Eonic.Web, ByRef nPaymentProviderRef As String) As String
+                Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
                     Try
 

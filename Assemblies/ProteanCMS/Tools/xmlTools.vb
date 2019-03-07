@@ -96,7 +96,7 @@ Partial Public Module xmlTools
     End Function
 
     Function convertEntitiesToCodes(ByVal sString As String) As String
-        Return Eonic.Tools.Xml.convertEntitiesToCodes(sString)
+        Return Protean.Tools.Xml.convertEntitiesToCodes(sString)
 
     End Function
 
@@ -108,7 +108,7 @@ Partial Public Module xmlTools
 
         Try
 
-            Return Eonic.Tools.Text.tidyXhtmlFrag(shtml, bReturnNumbericEntities, bEncloseText, removeTags)
+            Return Protean.Tools.Text.tidyXhtmlFrag(shtml, bReturnNumbericEntities, bEncloseText, removeTags)
 
         Catch ex As Exception
             ' It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
@@ -223,13 +223,13 @@ Partial Public Module xmlTools
 
     Public Function getNsMgr(ByRef oNode As XmlNode, ByRef oXml As XmlDocument) As XmlNamespaceManager
 
-        Return Eonic.Tools.Xml.getNsMgr(oNode, oXml)
+        Return Protean.Tools.Xml.getNsMgr(oNode, oXml)
 
     End Function
 
     Public Function addNsToXpath(ByVal cXpath As String, ByRef nsMgr As XmlNamespaceManager) As String
 
-        Return Eonic.Tools.Xml.addNsToXpath(cXpath, nsMgr)
+        Return Protean.Tools.Xml.addNsToXpath(cXpath, nsMgr)
 
     End Function
 
@@ -280,7 +280,7 @@ Partial Public Module xmlTools
     Public Function getXpathFromQueryXml(ByVal oInstance As XmlElement, Optional ByVal sXsltPath As String = "") As String
 
 
-        Dim oTransform As New Eonic.XmlHelper.Transform()
+        Dim oTransform As New Protean.XmlHelper.Transform()
 
         Dim sWriter As IO.TextWriter = New IO.StringWriter
 
@@ -438,7 +438,7 @@ Public Class XmlHelper
 
     Class Transform
 
-        Public myWeb As Web
+        Public myWeb As Cms
         Private msXslFile As String = ""
         Private msXslLastFile As String = ""
         Private mbCompiled As Boolean = False
@@ -465,7 +465,7 @@ Public Class XmlHelper
                 Try
                     msXslFile = value.Replace("/", "\")
                     ClassName = msXslFile.Substring(msXslFile.LastIndexOf("\") + 1)
-                    ClassName = className.Replace(".", "_")
+                    ClassName = ClassName.Replace(".", "_")
                     If mbCompiled Then
 
 
@@ -503,7 +503,7 @@ Public Class XmlHelper
                             End If
                         End If
 
-                        CalledType = assemblyInstance.GetType(className, True)
+                        CalledType = assemblyInstance.GetType(ClassName, True)
 
                         oCStyle = New Xsl.XslCompiledTransform(mbDebug)
                         Dim resolver As New XmlUrlResolver()
@@ -523,7 +523,7 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
                     transformException = ex
-                    returnException("Eonic.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
+                    returnException("Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True
                 End Try
             End Set
@@ -547,7 +547,7 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
                     transformException = ex
-                    returnException("Eonic.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value)
+                    returnException("Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value)
                     bError = True
                 End Try
             End Set
@@ -601,12 +601,12 @@ Public Class XmlHelper
                 xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
                 bError = True
             End Try
         End Sub
 
-        Public Sub New(ByRef aWeb As Web, ByVal sXslFile As String, ByVal bCompiled As Boolean, Optional ByVal nTimeoutSec As Long = 15000, Optional recompile As Boolean = False)
+        Public Sub New(ByRef aWeb As Cms, ByVal sXslFile As String, ByVal bCompiled As Boolean, Optional ByVal nTimeoutSec As Long = 15000, Optional recompile As Boolean = False)
             Dim sProcessInfo As String = ""
             Try
                 myWeb = aWeb
@@ -645,7 +645,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
                 bError = True
             End Try
         End Sub
@@ -662,7 +662,7 @@ Public Class XmlHelper
                 oCStyle = Nothing
                 xsltArgs = Nothing
             Catch ex As Exception
-                returnException("Eonic.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug)
 
             End Try
         End Sub
@@ -689,7 +689,7 @@ Public Class XmlHelper
                 End If
                 d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                returnException("Eonic.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oResponse.Write(msException)
                 bError = True
             End Try
@@ -712,7 +712,7 @@ Public Class XmlHelper
                 End If
                 d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                returnException("Eonic.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
+                returnException("Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
                 oWriter.Write(msException)
                 bError = True
             End Try
@@ -740,7 +740,7 @@ Public Class XmlHelper
                 oXml.InnerXml = oWriter.ToString
                 Return oXml
             Catch ex As Exception
-                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oWriter.Write(msException)
                 bError = True
                 Return Nothing
@@ -761,7 +761,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 ' oResponse.Write(msException)
                 bError = True
             End Try
@@ -836,7 +836,7 @@ Public Class XmlHelper
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oResponse.Write(msException)
                 bError = True
             End Try
@@ -859,11 +859,11 @@ Public Class XmlHelper
                 current = textIn(i)
                 currenti = AscW(current)
 
-                If (currenti = CInt("&H9") OrElse _
-                    currenti = CInt("&HA") OrElse _
-                    currenti = CInt("&HD")) OrElse _
-                ((currenti >= CInt("&H20")) AndAlso (currenti <= CInt("&HD7FF"))) OrElse _
-                ((currenti >= CInt("&HE000")) AndAlso (currenti <= CInt("&HFFFD"))) OrElse _
+                If (currenti = CInt("&H9") OrElse
+                    currenti = CInt("&HA") OrElse
+                    currenti = CInt("&HD")) OrElse
+                ((currenti >= CInt("&H20")) AndAlso (currenti <= CInt("&HD7FF"))) OrElse
+                ((currenti >= CInt("&HE000")) AndAlso (currenti <= CInt("&HFFFD"))) OrElse
                 ((currenti >= CInt("&H10000")) AndAlso (currenti <= CInt("&H10FFFF"))) _
                 Then
                     textOut.Append(current)
@@ -905,7 +905,7 @@ Public Class XmlHelper
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Eonic.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 oWriter.Write(msException)
                 bError = True
             End Try
@@ -988,19 +988,19 @@ Public Class XmlHelper
             Catch ex As Exception
                 bError = True
                 currentError = ex
-                returnException("Eonic.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug)
                 oWriter.Write(msException)
                 Return Nothing
             End Try
         End Function
 
-        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)> _
+        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
         Public Shared Function LoadLibrary(<[In](), MarshalAs(UnmanagedType.LPStr)> ByVal lpFileName As String) As IntPtr
         End Function
-        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)> _
+        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
         Public Shared Function GetModuleHandle(ByVal lpModuleName As String) As IntPtr
         End Function
-        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)> _
+        <DllImport("kernel32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
         Public Shared Function FreeLibrary(<[In]()> ByVal hModule As IntPtr) As Boolean
         End Function
 
@@ -1009,7 +1009,7 @@ Public Class XmlHelper
             Dim sProcessInfo As String = "ClearXSLTassemblyCache"
             Try
 
-                Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                 If oImp.ImpersonateValidUser(myWeb.moConfig("AdminAcct"), myWeb.moConfig("AdminDomain"), myWeb.moConfig("AdminPassword"), True, myWeb.moConfig("AdminGroup")) Then
 
                     Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
@@ -1022,7 +1022,7 @@ Public Class XmlHelper
                             Dim fso As New fsHelper()
                             fso.DeleteFile(fi.FullName)
                         Catch ex2 As Exception
-                            returnException("Eonic.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
+                            returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         End Try
                     Next
 
@@ -1031,13 +1031,13 @@ Public Class XmlHelper
 
 
                 'reset config to on
-                Eonic.Config.UpdateConfigValue(myWeb, "eonic/web", "CompliedTransform", "on")
+                Protean.Config.UpdateConfigValue(myWeb, "protean/web", "CompliedTransform", "on")
 
                 'di.Delete(True)
 
             Catch ex As Exception
                 bError = True
-                returnException("Eonic.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function
@@ -1087,7 +1087,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 bError = True
-                returnException("Eonic.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException("Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function

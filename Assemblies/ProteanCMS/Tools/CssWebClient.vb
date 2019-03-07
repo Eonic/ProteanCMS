@@ -59,7 +59,7 @@ Public Class CssWebClient
     Public Sub SendCssHttpHandlerRequest()
         Dim httpHandlerRequest As WebRequest
         Dim cProcessInfo As String = "sendHttpHandlerRequest"
-        Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
         Try
             For Each Serviceurl As String In ServiceUrlsList

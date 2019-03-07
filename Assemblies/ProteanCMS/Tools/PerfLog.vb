@@ -41,7 +41,7 @@ Public Class PerfLog
     Public moSession As System.Web.SessionState.HttpSessionState = moCtx.Session
     Public moServer As System.Web.HttpServerUtility = moCtx.Server
 
-    Public moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Public moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
 
 

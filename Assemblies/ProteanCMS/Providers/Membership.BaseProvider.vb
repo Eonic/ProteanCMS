@@ -1,5 +1,5 @@
 ﻿'***********************************************************************
-' $Library:     eonic.providers.membership.base
+' $Library:     Protean.Providers.membership.base
 ' $Revision:    3.1  
 ' $Date:        2012-07-21
 ' $Author:      Trevor Spink (trevor@eonic.co.uk)
@@ -23,10 +23,10 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
-Imports Eonic.Web.Cart
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
+Imports Protean.Cms.Cart
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -38,7 +38,7 @@ Namespace Providers
         Public Class BaseProvider
 
 
-            Private Const mcModuleName As String = "Eonic.Providers.Membership.BaseProvider"
+            Private Const mcModuleName As String = "Protean.Providers.Membership.BaseProvider"
 
             Private _AdminXforms As Object
             Private _AdminProcess As Object
@@ -46,8 +46,8 @@ Namespace Providers
 
             Protected moPaymentCfg As XmlNode
 
-            Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
             Public Property AdminXforms() As Object
                 Set(ByVal value As Object)
@@ -81,11 +81,11 @@ Namespace Providers
 
                     Dim calledType As Type
                     If ProviderName = "" Then
-                        ProviderName = "Eonic.Providers.Membership.EonicProvider"
+                        ProviderName = "Protean.Providers.Membership.EonicProvider"
                         calledType = System.Type.GetType(ProviderName, True)
                     Else
-                        Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("eonic/membershipProviders")
-                        Dim moPrvConfig As Eonic.ProviderSectionHandler = castObject
+                        Dim castObject As Object = WebConfigurationManager.GetWebApplicationSection("protean/membershipProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = castObject
                         Dim ourProvider As Object = moPrvConfig.Providers(ProviderName)
                         Dim assemblyInstance As [Assembly]
                         If ourProvider.parameters("path") <> "" Then
@@ -94,7 +94,7 @@ Namespace Providers
                             assemblyInstance = [Assembly].Load(ourProvider.Type)
                         End If
                         If ourProvider.parameters("rootClass") = "" Then
-                            calledType = assemblyInstance.GetType("Eonic.Providers.Membership." & ProviderName, True)
+                            calledType = assemblyInstance.GetType("Protean.Providers.Membership." & ProviderName, True)
                         Else
                             'calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
                             calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Membership." & ProviderName, True)
@@ -126,7 +126,7 @@ Namespace Providers
                 'do nothing
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
                 MemProvider.AdminXforms = New AdminXForms(myWeb)
                 '  MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -135,7 +135,7 @@ Namespace Providers
 
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Base)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Base)
 
                 ' MemProvider.AdminXforms = New AdminXForms(myWeb)
                 '  MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -145,11 +145,11 @@ Namespace Providers
             End Sub
 
             Public Class AdminXForms
-                Inherits Web.Admin.AdminXforms
+                Inherits Cms.Admin.AdminXforms
                 Private Const mcModuleName As String = "Providers.Membership.Eonic.AdminXForms"
                 Public maintainMembershipsOnAdd As Boolean = True
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
@@ -249,8 +249,8 @@ Check:
 
                                     End If
 
-                                        ' Set the remember me cookie
-                                        If bRememberMe Then
+                                    ' Set the remember me cookie
+                                    If bRememberMe Then
                                         If goRequest("cRemember") = "true" Then
                                             Dim oCookie As System.Web.HttpCookie
                                             If Not (myWeb.moRequest.Cookies("RememberMeUserName") Is Nothing) Then goResponse.Cookies.Remove("RememberMeUserName")
@@ -379,7 +379,7 @@ Check:
                         'Find a user account with the right activation code.
 
                         'Change the account status and delete the activation code.
-                        Dim oMembership As New Eonic.Web.Membership(myWeb)
+                        Dim oMembership As New Protean.Cms.Membership(myWeb)
                         'AddHandler oMembership.OnError, AddressOf OnComponentError
 
                         oMembership.ActivateAccount(moRequest("key"))
@@ -546,7 +546,7 @@ Check:
                         Dim oPI2 As XmlElement
                         Dim oSB As XmlElement
                         Dim oGrp As XmlElement
-                        moPolicy = WebConfigurationManager.GetWebApplicationSection("eonic/PasswordPolicy")
+                        moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
                         If Not moPolicy Is Nothing Then
                             passwordClass = "required strongPassword"
@@ -604,7 +604,7 @@ Check:
                             End If
 
                             If MyBase.valid Then
-                                Dim oMembership As New Eonic.Web.Membership(myWeb)
+                                Dim oMembership As New Protean.Cms.Membership(myWeb)
 
                                 If Not oMembership.ReactivateAccount(nAccount, goRequest("cDirPassword")) Then
                                     MyBase.addNote("cDirPassword2", xForm.noteTypes.Alert, "There was a problem changing the password")
@@ -631,7 +631,7 @@ Check:
 
                 Public Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
                     Try
-                        Dim oMembership As New Eonic.Web.Membership(myWeb)
+                        Dim oMembership As New Protean.Cms.Membership(myWeb)
                         Dim nUserId As Integer = oMembership.DecryptResetLink(goRequest("id"), AccountHash)
 
                         Return xFrmConfirmPassword(nUserId)
@@ -652,7 +652,7 @@ Check:
                         Dim oSB As XmlElement
                         Dim oGrp As XmlElement
 
-                        moPolicy = WebConfigurationManager.GetWebApplicationSection("eonic/PasswordPolicy")
+                        moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
                         If Not moPolicy Is Nothing Then
                             passwordClass = "required strongPassword"
@@ -705,7 +705,7 @@ Check:
                                 MyBase.addNote("cDirPassword", xForm.noteTypes.Alert, "Passwords must be 4 characters long ")
                             End If
 
-                            Dim oMembership As New Eonic.Web.Membership(myWeb)
+                            Dim oMembership As New Protean.Cms.Membership(myWeb)
 
                             If Not moPolicy Is Nothing Then
                                 'Password History?
@@ -731,7 +731,7 @@ Check:
                                         oPI2.ParentNode.RemoveChild(oPI2)
                                         oSB.ParentNode.RemoveChild(oSB)
                                         'delete failed logon attempts record
-                                        Dim sSql As String = "delete from tblActivityLog where nActivityType = " & Web.dbHelper.ActivityType.LogonInvalidPassword & " and nUserDirId=" & nAccount
+                                        Dim sSql As String = "delete from tblActivityLog where nActivityType = " & Cms.dbHelper.ActivityType.LogonInvalidPassword & " and nUserDirId=" & nAccount
                                         myWeb.moDbHelper.ExeProcessSql(sSql)
 
                                         If myWeb.mnUserId = 0 Then
@@ -763,7 +763,7 @@ Check:
 
                     Try
 
-                        moPolicy = WebConfigurationManager.GetWebApplicationSection("eonic/PasswordPolicy")
+                        moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
                         If cXformName = "" Then cXformName = cDirectorySchemaName
 
@@ -799,7 +799,7 @@ Check:
 
                             'now lets check our security, and if we are encrypted lets not show the password on edit.
                             If id > 0 Then
-                                'RJP 7 Nov 2012. Added LCase as a precaution against people entering string in Eonic.Web.Config lowercase, i.e. md5.
+                                'RJP 7 Nov 2012. Added LCase as a precaution against people entering string in Protean.Cms.Config lowercase, i.e. md5.
                                 If Not myWeb.moConfig("MembershipEncryption") Is Nothing Then
                                     If LCase(myWeb.moConfig("MembershipEncryption")).StartsWith("md5") Or LCase(myWeb.moConfig("MembershipEncryption")).StartsWith("sha") Then
                                         'Remove password (and confirm password) fields
@@ -884,13 +884,13 @@ Check:
                                 Dim cClearPassword As String = cPassword
                                 'RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
                                 If LCase(myWeb.moConfig("MembershipEncryption")) = "md5salt" Then
-                                    Dim cSalt As String = Eonic.Tools.Encryption.generateSalt
+                                    Dim cSalt As String = Protean.Tools.Encryption.generateSalt
                                     Dim inputPassword As String = String.Concat(cSalt, cPassword) 'Take the users password and add the salt at the front
-                                    Dim md5Password As String = Eonic.Tools.Encryption.HashString(inputPassword, "md5", True) 'Md5 the marged string of the password and salt
+                                    Dim md5Password As String = Protean.Tools.Encryption.HashString(inputPassword, "md5", True) 'Md5 the marged string of the password and salt
                                     Dim resultPassword As String = String.Concat(md5Password, ":", cSalt) 'Adds the salt to the end of the hashed password
                                     cPassword = resultPassword 'Store the resultant password with salt in the database
                                 Else
-                                    cPassword = Eonic.Tools.Encryption.HashString(cPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
+                                    cPassword = Protean.Tools.Encryption.HashString(cPassword, LCase(myWeb.moConfig("MembershipEncryption")), True) 'plain - md5 - sha1
                                 End If
                                 If Not cPassword = cCurrentPassword And Not cClearPassword = cCurrentPassword Then
                                     Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword
@@ -898,7 +898,7 @@ Check:
 
                                 If id > 0 Then
 
-                                    moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Directory, MyBase.Instance, id)
+                                    moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Directory, MyBase.Instance, id)
                                     If Not moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='EditContent' or @bind='EditContent']") Is Nothing Then
                                         MyBase.addNote("EditContent", xForm.noteTypes.Alert, "<span class=""msg-1010"">Your details have been updated.</span>", True)
                                     Else
@@ -909,7 +909,7 @@ Check:
                                     End If
                                 Else
                                     'add new
-                                    id = moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.Directory, MyBase.Instance)
+                                    id = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Directory, MyBase.Instance)
 
                                     'update the instance with the id
                                     MyBase.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText = id
@@ -919,22 +919,22 @@ Check:
                                     'add addresses
                                     If Not MyBase.Instance.SelectSingleNode("tblCartContact") Is Nothing Then
                                         MyBase.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
-                                        moDbHelper.setObjectInstance(Web.dbHelper.objectTypes.CartContact, MyBase.Instance)
+                                        moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, MyBase.Instance)
                                     End If
 
                                     ' Save the member code, if applicable
                                     useMemberCode(cCodeUsed, id)
 
-                                        ' If member codes were being applied then reconstruct the Group Instance.
-                                        If gbMemberCodes And cCodeUsed <> "" Then
-                                            oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
-                                            MyBase.Instance.ReplaceChild(oGrpElmt, MyBase.Instance.LastChild)
-                                        End If
-
+                                    ' If member codes were being applied then reconstruct the Group Instance.
+                                    If gbMemberCodes And cCodeUsed <> "" Then
+                                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
+                                        MyBase.Instance.ReplaceChild(oGrpElmt, MyBase.Instance.LastChild)
                                     End If
 
-                                    'lets add the user to any groups
-                                    If cDirectorySchemaName = "User" And maintainMembershipsOnAdd Then
+                                End If
+
+                                'lets add the user to any groups
+                                If cDirectorySchemaName = "User" And maintainMembershipsOnAdd Then
                                     maintainMembershipsFromXForm(id)
 
                                     'we want to ad the user to a specified group from a pick list of groups.
@@ -1170,13 +1170,13 @@ Check:
             End Class
 
             Public Class AdminProcess
-                Inherits Web.Admin
+                Inherits Cms.Admin
 
-                Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-                Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+                Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+                Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
 
-                Dim _oAdXfm As Eonic.Providers.Payment.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Payment.EonicProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)
@@ -1187,7 +1187,7 @@ Check:
                     End Get
                 End Property
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
@@ -1198,7 +1198,7 @@ Check:
                         'do nothing this is a placeholder
 
                     Catch ex As Exception
-                        RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainUserInGroup", ex, ""))
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainUserInGroup", ex, ""))
                     End Try
                 End Sub
 
@@ -1211,11 +1211,11 @@ Check:
 #Region "ErrorHandling"
 
                 'for anything controlling web
-                Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+                Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-                Protected Overridable Sub OnComponentError(ByRef myWeb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) 'Handles moDBHelper.OnErrorwithweb, oSync.OnError, moCalendar.OnError
+                Protected Overridable Sub OnComponentError(ByRef myWeb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) 'Handles moDBHelper.OnErrorwithweb, oSync.OnError, moCalendar.OnError
                     'deals with the error
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
 
                     returnException(e.ModuleName, e.ProcedureName, e.Exception, myWeb.mcEwSiteXsl, e.AddtionalInformation, gbDebug)
                     'close connection pooling
@@ -1232,7 +1232,7 @@ Check:
 
 #End Region
 
-                Public Overridable Function GetUserSessionId(ByRef myWeb As Eonic.Base) As Long
+                Public Overridable Function GetUserSessionId(ByRef myWeb As Protean.Base) As Long
 
                     Dim sProcessInfo As String = ""
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
@@ -1248,13 +1248,13 @@ Check:
                         Return myWeb.mnUserId
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserSessionId", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserSessionId", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function
 
 
-                Public Overridable Function GetUserId(ByRef myWeb As Eonic.Base) As String
+                Public Overridable Function GetUserId(ByRef myWeb As Protean.Base) As String
                     PerfMon.Log("Web", "getUserId")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -1264,7 +1264,7 @@ Check:
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moResponse As System.Web.HttpResponse = myWeb.moResponse
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
                     Dim sDomain As String = myWeb.moRequest.ServerVariables("HTTP_HOST")
 
                     Try
@@ -1340,12 +1340,12 @@ Check:
                         Return mnUserId
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserId", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserId", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function
 
-                Public Overridable Sub SetUserId(ByRef myWeb As Eonic.Web)
+                Public Overridable Sub SetUserId(ByRef myWeb As Protean.Cms)
                     PerfMon.Log("Web", "getUserId")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -1368,28 +1368,28 @@ Check:
                             moSession("nUserId") = mnUserId
                         End If
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SetUserId", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetUserId", ex, sProcessInfo))
                     End Try
                 End Sub
 
-                Public Overridable Function GetUserXML(ByRef myWeb As Eonic.Web, Optional ByVal nUserId As Long = 0) As XmlElement
+                Public Overridable Function GetUserXML(ByRef myWeb As Protean.Cms, Optional ByVal nUserId As Long = 0) As XmlElement
                     PerfMon.Log("Web", "GetUserXML")
                     Dim sProcessInfo As String = ""
                     Dim mnUserId As Integer = myWeb.mnUserId
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
                     Try
                         If nUserId = 0 Then nUserId = mnUserId
 
                         Return moDbHelper.GetUserXML(nUserId)
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserXml", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserXml", ex, sProcessInfo))
                         Return Nothing
                     End Try
 
                 End Function
 
-                Public Overridable Function MembershipProcess(ByRef myWeb As Eonic.Web) As String
+                Public Overridable Function MembershipProcess(ByRef myWeb As Protean.Cms) As String
                     PerfMon.Log("Web", "MembershipProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -1398,7 +1398,7 @@ Check:
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
 
                     Try
 
@@ -1420,7 +1420,7 @@ Check:
                             Else
                                 myWeb.msRedirectOnEnd = myWeb.mcOriginalURL
                             End If
-                            Dim oMembership As New Eonic.Web.Membership(myWeb)
+                            Dim oMembership As New Protean.Cms.Membership(myWeb)
                             oMembership.ProviderActions(myWeb, "logoffAction")
                             'BaseUrl
                             sReturnValue = "LogOff"
@@ -1481,7 +1481,7 @@ Check:
 
                         If Not myWeb.moConfig("SecureMembershipAddress") = "" Then
 
-                            Dim oMembership As New Eonic.Web.Membership(myWeb)
+                            Dim oMembership As New Protean.Cms.Membership(myWeb)
                             AddHandler oMembership.OnErrorWithWeb, AddressOf OnComponentError
                             oMembership.SecureMembershipProcess(sReturnValue)
 
@@ -1559,7 +1559,7 @@ Check:
 
                         ElseIf moRequest("ewCmd") = "ActivateAccount" Then
 
-                            Dim oMembership As New Eonic.Web.Membership(myWeb)
+                            Dim oMembership As New Protean.Cms.Membership(myWeb)
                             AddHandler oMembership.OnErrorWithWeb, AddressOf OnComponentError
 
                             Dim oXfmElmt As XmlElement
@@ -1611,12 +1611,12 @@ Check:
 
                     Catch ex As Exception
                         'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function
 
-                Public Overridable Function MembershipV4LayoutProcess(ByRef myWeb As Eonic.Web, adXfm As Object) As String
+                Public Overridable Function MembershipV4LayoutProcess(ByRef myWeb As Protean.Cms, adXfm As Object) As String
                     PerfMon.Log("Web", "MembershipProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -1625,7 +1625,7 @@ Check:
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
                     Dim clearUserId As Boolean = False
 
                     Try
@@ -1677,7 +1677,7 @@ Check:
                                                 'first we set the user account to be pending
                                                 myWeb.moDbHelper.setObjectStatus(dbHelper.objectTypes.Directory, dbHelper.Status.Pending, mnUserId)
 
-                                                Dim oMembership As New Eonic.Web.Membership(myWeb)
+                                                Dim oMembership As New Protean.Cms.Membership(myWeb)
                                                 AddHandler oMembership.OnErrorWithWeb, AddressOf OnComponentError
                                                 oMembership.AccountActivateLink(mnUserId)
                                                 clearUserId = True
@@ -1733,7 +1733,7 @@ Check:
                                             Dim recipientEmail As String = ""
                                             If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
                                             Dim SubjectLine As String = "Your Registration Details"
-                                            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+                                            Dim oMsg As Protean.Messaging = New Protean.Messaging
                                             'send an email to the new registrant
                                             If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                             'send an email to the webadmin
@@ -1805,7 +1805,7 @@ Check:
                                             ' Clear the cache.
                                             Dim cSql As String = "DELETE dbo.tblXmlCache " _
                                                     & " WHERE cCacheSessionID = '" & moSession.SessionID & "' " _
-                                                    & "         AND nCacheDirId = " & Eonic.SqlFmt(mnUserId)
+                                                    & "         AND nCacheDirId = " & Protean.SqlFmt(mnUserId)
                                             myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql)
 
                                             ' Check if the redirect is another page or just redirect to the current url
@@ -1849,7 +1849,7 @@ Check:
                         End Select
                     Catch ex As Exception
                         'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipV4LayoutProcess", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipV4LayoutProcess", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function
@@ -1865,13 +1865,13 @@ Check:
 
 
 
-                Public Sub LogSingleUserSession(ByRef myWeb As Eonic.Web)
+                Public Sub LogSingleUserSession(ByRef myWeb As Protean.Cms)
 
                     Dim mnUserId As Integer = myWeb.mnUserId
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
                     Dim moResponse As System.Web.HttpResponse = myWeb.moResponse
 
                     Try
@@ -1891,11 +1891,11 @@ Check:
                         End If
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "LogSingleUserSession", ex, ""))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LogSingleUserSession", ex, ""))
                     End Try
                 End Sub
 
-                Public Overridable Function AlternativeAuthentication(ByRef myWeb As Eonic.Web) As Boolean
+                Public Overridable Function AlternativeAuthentication(ByRef myWeb As Protean.Cms) As Boolean
 
                     PerfMon.Log("Web", "AlternativeAuthentication")
 
@@ -1911,7 +1911,7 @@ Check:
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
 
 
                     Try
@@ -1926,7 +1926,7 @@ Check:
                             If cIPList = "" OrElse Tools.Text.IsIPAddressInList(moRequest.UserHostAddress, cIPList) Then
 
                                 cProcessInfo = "Decrypting token"
-                                Dim oEnc As New Eonic.Tools.Encryption.RC4()
+                                Dim oEnc As New Protean.Tools.Encryption.RC4()
 
                                 cToken = moRequest("token")
                                 cKey = moConfig("AlternativeAuthenticationKey")
@@ -1966,13 +1966,13 @@ Check:
                         Return bCheck
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AlternativeAuthentication", ex, cProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AlternativeAuthentication", ex, cProcessInfo))
                         Return False
                     End Try
 
                 End Function
 
-                Public Overridable Sub LogOffProcess(ByRef myWeb As Eonic.Web)
+                Public Overridable Sub LogOffProcess(ByRef myWeb As Protean.Cms)
                     PerfMon.Log("Web", "LogOffProcess")
                     Dim cProcessInfo As String = ""
 
@@ -1980,7 +1980,7 @@ Check:
                     Dim moSession As System.Web.SessionState.HttpSessionState = myWeb.moSession
                     Dim moRequest As System.Web.HttpRequest = myWeb.moRequest
                     Dim moConfig As System.Collections.Specialized.NameValueCollection = myWeb.moConfig
-                    Dim moDbHelper As Eonic.Web.dbHelper = myWeb.moDbHelper
+                    Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
                     Dim moResponse As System.Web.HttpResponse = myWeb.moResponse
 
                     Try
@@ -2023,12 +2023,12 @@ Check:
                         End If
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "LogOffProcess", ex, cProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LogOffProcess", ex, cProcessInfo))
                     End Try
 
                 End Sub
 
-                Public Overridable Function UserEditProcess(ByRef myWeb As Eonic.Web) As String
+                Public Overridable Function UserEditProcess(ByRef myWeb As Protean.Cms) As String
                     PerfMon.Log("Web", "UserEditProcess")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -2038,12 +2038,12 @@ Check:
                         Return Nothing
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "UserEditProcess", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UserEditProcess", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function
 
-                Public Overridable Function ResetUserAcct(ByRef myWeb As Eonic.Web, ByVal nUserId As Integer) As String
+                Public Overridable Function ResetUserAcct(ByRef myWeb As Protean.Cms, ByVal nUserId As Integer) As String
                     PerfMon.Log("Web", "ResetUserAcct")
                     Dim sProcessInfo As String = ""
                     Dim sReturnValue As String = Nothing
@@ -2063,7 +2063,7 @@ Check:
                             userEmail = oUserXml.SelectSingleNode("Email").InnerText
                             'End If
 
-                            Dim oMembership As New Eonic.Web.Membership(myWeb)
+                            Dim oMembership As New Protean.Cms.Membership(myWeb)
                             Dim oEmailDoc As New XmlDocument
                             oEmailDoc.AppendChild(oEmailDoc.CreateElement("AccountReset"))
                             oEmailDoc.DocumentElement.AppendChild(oEmailDoc.ImportNode(oUserXml, True))
@@ -2073,7 +2073,7 @@ Check:
                             oEmailDoc.DocumentElement.SetAttribute("lang", myWeb.mcPageLanguage)
                             oEmailDoc.DocumentElement.SetAttribute("translang", myWeb.mcPreferredLanguage)
 
-                            Dim oMessage As New Eonic.Messaging
+                            Dim oMessage As New Protean.Messaging
 
                             Dim fs As fsHelper = New fsHelper()
                             Dim path As String = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders)
@@ -2087,7 +2087,7 @@ Check:
                         Return sReturnValue
 
                     Catch ex As Exception
-                        OnComponentError(myWeb, Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetUserAcct", ex, sProcessInfo))
+                        OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetUserAcct", ex, sProcessInfo))
                         Return Nothing
                     End Try
                 End Function

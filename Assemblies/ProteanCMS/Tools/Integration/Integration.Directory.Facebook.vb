@@ -2,7 +2,7 @@
 Option Explicit On
 
 Imports System.Collections.Specialized
-Imports Eonic.Tools.Http.Utils
+Imports Protean.Tools.Http.Utils
 Imports System
 Imports System.Collections.Generic
 Imports System.Linq
@@ -36,15 +36,15 @@ Namespace Integration.Directory
 
         Private Const _postLengthLimit As Integer = 140
 
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        Public Sub New(ByRef aWeb As Eonic.Web, ByVal fbId As String, fbKey As String)
+        Public Sub New(ByRef aWeb As Protean.Cms, ByVal fbId As String, fbKey As String)
             MyBase.New(aWeb)
             facebookId = fbId
             facebookKey = fbKey
             _providerName = "facebook"
         End Sub
-        Public Sub New(ByRef aWeb As Eonic.Web, ByRef directoryId As Long)
+        Public Sub New(ByRef aWeb As Protean.Cms, ByRef directoryId As Long)
             MyBase.New(aWeb, directoryId)
         End Sub
 
@@ -134,7 +134,7 @@ Namespace Integration.Directory
                 ' Return the current Facebook user
                 Return currentUser
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
             End Try
         End Function
 

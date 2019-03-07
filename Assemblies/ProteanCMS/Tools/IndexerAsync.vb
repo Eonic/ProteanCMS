@@ -22,20 +22,20 @@ Imports Lucene.Net.Search
 Imports Lucene.Net.QueryParsers
 'regular expressions
 Imports System.Text.RegularExpressions
-Imports Eonic.Tools.FileHelper
+Imports Protean.Tools.FileHelper
 Imports System
 Imports System.Linq
 
 Public Class IndexerAsync
 
-    Shadows mcModuleName As String = "Eonic.IndexerAsync"
+    Shadows mcModuleName As String = "Protean.IndexerAsync"
 
     Dim mcIndexReadFolder As String = "" ' the folder where the index is stored (from config)
     Dim mcIndexWriteFolder As String = "" ' the folder where the index is stored (from config)
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate 'impersonate for access
+    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -49,9 +49,9 @@ Public Class IndexerAsync
     Public cExError As String
     Dim moConfig As System.Collections.Specialized.NameValueCollection
 
-    Dim myWeb As Web
+    Dim myWeb As Cms
 
-    Public Sub New(ByRef aWeb As Eonic.Web)
+    Public Sub New(ByRef aWeb As Protean.Cms)
         PerfMon.Log("Indexer", "New")
         mcModuleName = "Eonic.Search.Indexer"
         Dim cProcessInfo As String = ""
@@ -177,7 +177,7 @@ Public Class IndexerAsync
             dStartTime = Now
 
             Dim dLastRun As DateTime
-            Dim oFs As New Eonic.fsHelper()
+            Dim oFs As New Protean.fsHelper()
 
             If File.Exists(mcIndexWriteFolder & "/indexInfo.xml") Then
                 Dim oLastIndexInfo As New XmlDocument
@@ -225,7 +225,7 @@ Public Class IndexerAsync
 
                 Dim styleFile As String = CType(goServer.MapPath(cPageXsl), String)
                 PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
-                Dim oTransform As New Eonic.XmlHelper.Transform()
+                Dim oTransform As New Protean.XmlHelper.Transform()
                 oTransform.XslFilePath = styleFile
                 oTransform.Compiled = False
                 oTransform.xsltArgs = New Xsl.XsltArgumentList
@@ -293,7 +293,7 @@ Public Class IndexerAsync
 
                 'send email update as to index success or failure
                 cProcessInfo = "Sending Email Report"
-                Dim msg As New Eonic.Messaging
+                Dim msg As New Protean.Messaging
                 Dim serverSenderEmail As String = moConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = moConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
@@ -346,7 +346,7 @@ Public Class IndexerAsync
         PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Eonic.Tools.Security.Impersonate 'for access
+            oImp = New Protean.Tools.Security.Impersonate 'for access
             If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                 EmptyFolder(mcIndexWriteFolder)
                 If gbDebug Then
@@ -614,7 +614,7 @@ Public Class IndexerAsync
         Public nPagesRemaining As Long = 0
         Public doneEvent As System.Threading.ManualResetEvent
         Public nRootId As Long
-        Public moTransform As Eonic.XmlHelper.Transform
+        Public moTransform As Protean.XmlHelper.Transform
         Public moCtx As System.Web.HttpContext
 
         Dim nIndexed As Integer = 0 'count of the indexed items
@@ -623,9 +623,9 @@ Public Class IndexerAsync
         Private mcModuleName As String = "IndexPageAsync"
 
 #Region "Error Handling"
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             RaiseEvent OnError(sender, e)
         End Sub
 #End Region
@@ -635,7 +635,7 @@ Public Class IndexerAsync
             Public pagename As String
         End Class
 
-        Public Sub New(oCtx As System.Web.HttpContext, oTransform As Eonic.XmlHelper.Transform, objIndexWriter As IndexWriter, pageXSL As String)
+        Public Sub New(oCtx As System.Web.HttpContext, oTransform As Protean.XmlHelper.Transform, objIndexWriter As IndexWriter, pageXSL As String)
 
             Try
                 moCtx = oCtx
@@ -643,7 +643,7 @@ Public Class IndexerAsync
                 oIndexWriter = objIndexWriter
                 cXslPath = pageXSL
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             End Try
         End Sub
 
@@ -657,7 +657,7 @@ Public Class IndexerAsync
 
             Dim cProcessInfo As String
             Dim cPageExtract As String = ""
-            Dim myWeb As New Eonic.Web(moCtx)
+            Dim myWeb As New Protean.Cms(moCtx)
 
             Try
                 myWeb.InitializeVariables()
@@ -1170,7 +1170,7 @@ Public Class IndexerAsync
                         End If
                     End If
 
-                    Dim oFS As New Eonic.fsHelper(moCtx)
+                    Dim oFS As New Protean.fsHelper(moCtx)
                     oFS.mcStartFolder = mcIndexCopyFolder
 
                     cProcessInfo = "Saving:" & mcIndexCopyFolder & filepath & "\" & filename & Ext

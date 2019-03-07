@@ -3179,108 +3179,6 @@ EonicWebV5
 <member name="T:Eonic.PayPalAPI.EnhancedPaymentDataType">
 <remarks/>
 </member>
-<member name="P:Eonic.PayPalAPI.EnhancedPaymentDataType.AirlineItinerary">
-<remarks/>
-</member>
-<member name="T:Eonic.PayPalAPI.AirlineItineraryType">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.PassengerName">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.IssueDate">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TravelAgencyName">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TravelAgencyCode">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TicketNumber">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.IssuingCarrierCode">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.CustomerCode">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalFare">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalTaxes">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalFee">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.RestrictedTicket">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.ClearingSequence">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.ClearingCount">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.AirlineItineraryType.FlightDetails">
-<remarks/>
-</member>
-<member name="T:Eonic.PayPalAPI.FlightDetailsType">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.ConjuctionTicket">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.ExchangeTicket">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.CouponNumber">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.ServiceClass">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.TravelDate">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.CarrierCode">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.StopOverPermitted">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.DepartureAirport">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.ArrivalAirport">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.FlightNumber">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.DepartureTime">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.ArrivalTime">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.FareBasisCode">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.Fare">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.Taxes">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.Fee">
-<remarks/>
-</member>
-<member name="P:Eonic.PayPalAPI.FlightDetailsType.EndorsementOrRestrictions">
-<remarks/>
-</member>
 <member name="T:Eonic.PayPalAPI.PaymentActionCodeType">
 <remarks/>
 </member>
@@ -5616,6 +5514,105 @@ EonicWebV5
 <remarks/>
 </member>
 <member name="P:Eonic.PayPalAPI.DoDirectPaymentRequestDetailsType.SoftDescriptorCity">
+<remarks/>
+</member>
+<member name="T:Eonic.PayPalAPI.FlightDetailsType">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.ConjuctionTicket">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.ExchangeTicket">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.CouponNumber">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.ServiceClass">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.TravelDate">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.CarrierCode">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.StopOverPermitted">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.DepartureAirport">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.ArrivalAirport">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.FlightNumber">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.DepartureTime">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.ArrivalTime">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.FareBasisCode">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.Fare">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.Taxes">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.Fee">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.FlightDetailsType.EndorsementOrRestrictions">
+<remarks/>
+</member>
+<member name="T:Eonic.PayPalAPI.AirlineItineraryType">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.PassengerName">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.IssueDate">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TravelAgencyName">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TravelAgencyCode">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TicketNumber">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.IssuingCarrierCode">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.CustomerCode">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalFare">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalTaxes">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.TotalFee">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.RestrictedTicket">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.ClearingSequence">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.ClearingCount">
+<remarks/>
+</member>
+<member name="P:Eonic.PayPalAPI.AirlineItineraryType.FlightDetails">
 <remarks/>
 </member>
 <member name="T:Eonic.PayPalAPI.EnhancedDataType">

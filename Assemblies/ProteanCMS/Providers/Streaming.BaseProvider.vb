@@ -1,5 +1,5 @@
 ﻿'***********************************************************************
-' $Library:     eonic.providers.messaging.base
+' $Library:     Protean.Providers.messaging.base
 ' $Revision:    3.1  
 ' $Date:        2010-03-02
 ' $Author:      Trevor Spink (trevor@eonic.co.uk)
@@ -22,10 +22,10 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
-Imports Eonic.Web.Cart
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
+Imports Protean.Cms.Cart
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -37,7 +37,7 @@ Namespace Providers
     Namespace Streaming
 
         Public Class BaseProvider
-            Private Const mcModuleName As String = "Eonic.Providers.Streaming.BaseProvider"
+            Private Const mcModuleName As String = "Protean.Providers.Streaming.BaseProvider"
 
             Private _AdminXforms As Object
             Private _AdminProcess As Object
@@ -72,12 +72,12 @@ Namespace Providers
                 End Get
             End Property
 
-            Public Sub New(ByRef myWeb As Eonic.Web, ByVal ProviderName As String)
+            Public Sub New(ByRef myWeb As Protean.Cms, ByVal ProviderName As String)
                 Try
                     Dim calledType As Type
                     Dim oProviderCfg As XmlElement
 
-                    moStreamingCfg = WebConfigurationManager.GetWebApplicationSection("eonic/streaming")
+                    moStreamingCfg = WebConfigurationManager.GetWebApplicationSection("protean/streaming")
                     oProviderCfg = moStreamingCfg.SelectSingleNode("provider[@name='" & ProviderName & "']")
 
                     Dim ProviderClass As String = ""
@@ -90,15 +90,15 @@ Namespace Providers
                     End If
 
                     If ProviderClass = "" Then
-                        ProviderClass = "Eonic.Providers.Streaming.EonicProvider"
+                        ProviderClass = "Protean.Providers.Streaming.EonicProvider"
                         calledType = System.Type.GetType(ProviderClass, True)
                     Else
-                        Dim moPrvConfig As Eonic.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("eonic/paymentProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders")
                         If Not moPrvConfig.Providers(ProviderClass) Is Nothing Then
                             Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderClass).Type)
-                            calledType = assemblyInstance.GetType("Eonic.Providers.Payment." & ProviderClass, True)
+                            calledType = assemblyInstance.GetType("Protean.Providers.Payment." & ProviderClass, True)
                         Else
-                            calledType = System.Type.GetType("Eonic.Providers.Payment." & ProviderClass, True)
+                            calledType = System.Type.GetType("Protean.Providers.Payment." & ProviderClass, True)
                         End If
 
                     End If
@@ -128,7 +128,7 @@ Namespace Providers
                 'do nothing
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
                 MemProvider.AdminXforms = New AdminXForms(myWeb)
                 MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -138,19 +138,19 @@ Namespace Providers
             End Sub
 
             Public Class AdminXForms
-                Inherits Web.Admin.AdminXforms
-                Private Const mcModuleName As String = "Eonic.Providers.Streaming.AdminXForms"
+                Inherits Cms.Admin.AdminXforms
+                Private Const mcModuleName As String = "Protean.Providers.Streaming.AdminXForms"
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
 
             End Class
 
             Public Class AdminProcess
-                Inherits Web.Admin
+                Inherits Cms.Admin
 
-                Dim _oAdXfm As Eonic.Providers.Streaming.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Streaming.EonicProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)
@@ -161,14 +161,14 @@ Namespace Providers
                     End Get
                 End Property
 
-                Sub New(ByRef aWeb As Web)
+                Sub New(ByRef aWeb As Cms)
                     MyBase.New(aWeb)
                 End Sub
             End Class
 
 
             Public Class Activities
-                Private Const mcModuleName As String = "Eonic.Providers.Streaming.Activities"
+                Private Const mcModuleName As String = "Protean.Providers.Streaming.Activities"
 
 
 
@@ -176,10 +176,10 @@ Namespace Providers
 
             Public Class Modules
 
-                Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+                Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
                 Private Const mcModuleName As String = "Eonic.CampaignMonitorTools.Modules"
 
-                Dim moStreamingConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/streaming")
+                Dim moStreamingConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/streaming")
 
 
                 Public Sub New()
@@ -188,12 +188,12 @@ Namespace Providers
 
                 End Sub
 
-                Public Sub GetSteamURL(ByRef myWeb As Eonic.Web, ByRef oContentNode As XmlElement)
+                Public Sub GetSteamURL(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
                     Try
 
                     Catch ex As Exception
-                        RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetSteamURL", ex, ""))
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetSteamURL", ex, ""))
                     End Try
                 End Sub
             End Class

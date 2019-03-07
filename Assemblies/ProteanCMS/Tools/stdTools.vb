@@ -15,7 +15,7 @@ Imports System
 Public Module stdTools
 
     Public mbException As Boolean
-    '  Public oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    '  Public oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
     Public goServer As System.Web.HttpServerUtility = System.Web.HttpContext.Current.Server
     Public goApp As System.Web.HttpApplicationState = System.Web.HttpContext.Current.Application
@@ -70,7 +70,7 @@ Public Module stdTools
         Dim sWriter As IO.StringWriter = New IO.StringWriter
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
-        Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
@@ -126,13 +126,13 @@ Public Module stdTools
                             sProcessInfo = "Creating Email"
                             'oElmt.InnerXml = strMessageHtml
                             ' send an email to the site admin and V3error@eonic.co.uk
-                            Dim errorEmail As String = "error@proteancms.com"
+                            Dim errorEmail As String = "error@protean.site"
                             If oConfig("errorEmail") <> "" Then
                                 errorEmail = oConfig("errorEmail")
                             End If
                             Dim adFrom As New MailAddress(errorEmail, "ProteanCMS")
-                            Dim adTo As New MailAddress("error@eonic.co.uk", "ErrorLog")
-                                sProcessInfo = "Creating Email - New MailMessage Object"
+                            Dim adTo As New MailAddress("error@protean.site", "ErrorLog")
+                            sProcessInfo = "Creating Email - New MailMessage Object"
                                 Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
                                 oMail.IsBodyHtml = True
                                 'oMail.Subject = moRequest.ServerVariables("HTTP_HOST") & " has generated an Error"
@@ -300,7 +300,7 @@ Public Module stdTools
         Dim sWriter As IO.StringWriter = New IO.StringWriter
         Dim sReturnHtml As String = ""
         Dim cHost As String = ""
-        Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
@@ -347,12 +347,12 @@ Public Module stdTools
                     If (Not (vstrFurtherInfo.Contains("File Not Found"))) Then
                         sProcessInfo = "Creating Email"
                         ' send an email to the site admin and error@eonic.co.uk
-                        Dim errorEmail As String = "error@proteancms.com"
+                        Dim errorEmail As String = "error@protean.site"
                         If oConfig("errorEmail") <> "" Then
                             errorEmail = oConfig("errorEmail")
                         End If
                         Dim adFrom As New MailAddress(errorEmail, "ProteanCMS")
-                        Dim adTo As New MailAddress("error@eonic.co.uk", "ErrorLog")
+                        Dim adTo As New MailAddress("error@protean.site", "ErrorLog")
                         sProcessInfo = "Creating Email - New MailMessage Object"
                         Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
                         oMail.IsBodyHtml = True
@@ -473,7 +473,7 @@ Public Module stdTools
             System.Web.HttpContext.Current.Server.MapPath("")
         End If
 
-        cReport = "<div style=""font: normal .75em/1.5 Verdana, Tahoma, sans-serif;""><h2>eonic<strong>web</strong>5 has returned the following Error</h2>" & _
+        cReport = "<div style=""font: normal .75em/1.5 Verdana, Tahoma, sans-serif;"">ProteanCMS has returned the following Error</h2>" &
                   "<table cellpadding=""1"" cellspacing=""0"" border=""0"">"
 
         ' Report Information
@@ -492,7 +492,6 @@ Public Module stdTools
             cAssembly = cAssembly & an.Name & " (" & an.Version.ToString & "); "
         Next
         addExceptionLine(cReport, "Referenced Assemblies", cAssembly)
-
 
         ' Exception Details
         addExceptionHeader(cReport, "Exception Details")
@@ -555,7 +554,7 @@ Public Module stdTools
         End If
 
         cReport = cReport & "</table></div>"
-        exceptionReport = Eonic.Tools.Xml.convertEntitiesToCodes(cReport)
+        exceptionReport = Protean.Tools.Xml.convertEntitiesToCodes(cReport)
 
         Select Case oException.GetType.ToString
 
@@ -656,15 +655,15 @@ Public Module stdTools
 
     'Left here for external applications to use
     Public Function sqlDate(ByVal dDate As Object) As String
-        Return Eonic.Tools.Database.SqlDate(dDate, False)
+        Return Protean.Tools.Database.SqlDate(dDate, False)
     End Function
 
     Public Function sqlDateTime(ByVal dDateTime As Object) As String
-        Return Eonic.Tools.Database.SqlDate(dDateTime, True)
+        Return Protean.Tools.Database.SqlDate(dDateTime, True)
     End Function
 
     Public Function sqlDateTime(ByVal dDate As Object, ByVal stime As Object) As String
-        Return Eonic.Tools.Database.SqlDate(Format(dDate, "dd MMMM yyyy") & " " & stime, True)
+        Return Protean.Tools.Database.SqlDate(Format(dDate, "dd MMMM yyyy") & " " & stime, True)
     End Function
 
 
@@ -713,11 +712,11 @@ Public Module stdTools
     'End Function
 
     Public Function xmlDate(ByVal dDate As Object) As String
-        Return Eonic.Tools.Xml.XmlDate(dDate)
+        Return Protean.Tools.Xml.XmlDate(dDate)
     End Function
 
     Public Function xmlDateTime(ByVal dDate As Object) As String
-        Return Eonic.Tools.Xml.XmlDate(dDate, True)
+        Return Protean.Tools.Xml.XmlDate(dDate, True)
     End Function
 #End Region
 
@@ -1089,7 +1088,7 @@ Public Module stdTools
 
         Dim moPolicy As xmlElement
 
-        moPolicy = WebConfigurationManager.GetWebApplicationSection("eonic/PasswordPolicy")
+        moPolicy = WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy")
 
         pwdRegEx = "(?=^.{" & moPolicy.FirstChild.SelectSingleNode("minLength").InnerText & _
             "," & moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText & "}$)" & _
@@ -1156,19 +1155,19 @@ Public Module stdTools
 
 #Region "Deprecated"
 
-    <Obsolete("This method is deprecated, please use Eonic.Tools.Text.IsEmail instead")> _
+    <Obsolete("This method is deprecated, please use Protean.Tools.Text.IsEmail instead")> _
     Public Function is_valid_email(ByRef str_Renamed As String) As Boolean
         Return Tools.Text.IsEmail(str_Renamed)
     End Function
 
-    <Obsolete("This method is deprecated, use Eonic.Tools.Text.SimpleRegexFind instead")> _
+    <Obsolete("This method is deprecated, use Protean.Tools.Text.SimpleRegexFind instead")> _
     Public Function SimpleRegexFind(ByVal cSearchString As String, ByVal cRegexPattern As String, Optional ByVal nReturnGroup As Integer = 0, Optional ByVal oRegexOptions As RegexOptions = RegexOptions.None) As String
-        Return Eonic.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions)
+        Return Protean.Tools.Text.SimpleRegexFind(cSearchString, cRegexPattern, nReturnGroup, oRegexOptions)
     End Function
 
-    <Obsolete("This method is deprecated, use Eonic.Tools.FileHelper.GetMIMEType instead")> _
+    <Obsolete("This method is deprecated, use Protean.Tools.FileHelper.GetMIMEType instead")> _
     Function GetMIMEType(ByVal Extension As String) As String
-        Return Eonic.Tools.FileHelper.GetMIMEType(Extension)
+        Return Protean.Tools.FileHelper.GetMIMEType(Extension)
     End Function
 
 

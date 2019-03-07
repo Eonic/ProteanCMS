@@ -360,10 +360,10 @@
   </wsdl:binding>
   <wsdl:service name="ewAdminProxy">
     <wsdl:port name="ewAdminProxySoap" binding="tns:ewAdminProxySoap">
-      <soap:address location="https://www.proteancms.com/ewadminproxy.asmx" />
+      <soap:address location="https://www.proteancms.com/ewAdminProxy.asmx" />
     </wsdl:port>
     <wsdl:port name="ewAdminProxySoap12" binding="tns:ewAdminProxySoap12">
-      <soap12:address location="https://www.proteancms.com/ewadminproxy.asmx" />
+      <soap12:address location="https://www.proteancms.com/ewAdminProxy.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

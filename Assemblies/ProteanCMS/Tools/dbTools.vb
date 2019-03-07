@@ -126,7 +126,7 @@
 '    Public Function createDB(ByVal DatabaseName As String) As Boolean
 '        Dim cProcessInfo As String = "createDB"
 '        Try
-'            Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+'            Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 '            Dim myConn As SqlConnection = New SqlConnection("Data Source=" & oConfig("DatabaseServer") & "; Initial Catalog=master;" & oConfig("DatabaseAuth"))
 '            Dim sSql As String
 '            moConn = myConn
@@ -417,7 +417,7 @@
 '                        End If
 '                    Case "DateTime"
 '                        If IsDate(value) And Not IsDBNull(value) Then
-'                            Return Eonic.Tools.Xml.XmlDate(value)
+'                            Return Protean.Tools.Xml.XmlDate(value)
 '                        Else
 '                            Return ""
 '                        End If

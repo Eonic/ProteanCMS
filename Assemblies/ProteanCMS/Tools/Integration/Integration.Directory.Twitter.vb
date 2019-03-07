@@ -2,7 +2,7 @@
 Option Explicit On
 
 Imports System.Collections.Specialized
-Imports Eonic.Tools.Http.Utils
+Imports Protean.Tools.Http.Utils
 Imports System
 
 
@@ -22,13 +22,13 @@ Namespace Integration.Directory
 
         Private Const _postLengthLimit As Integer = 140
 
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
 
-        Public Sub New(ByRef aWeb As Eonic.Web)
+        Public Sub New(ByRef aWeb As Protean.Cms)
             MyBase.New(aWeb)
         End Sub
-        Public Sub New(ByRef aWeb As Eonic.Web, ByRef directoryId As Long)
+        Public Sub New(ByRef aWeb As Protean.Cms, ByRef directoryId As Long)
             MyBase.New(aWeb, directoryId)
         End Sub
 
@@ -45,7 +45,7 @@ Namespace Integration.Directory
 
                     Dim callback As Uri = BuildURIFromRequest(myWeb.moRequest, callbackParameters)
 
-                    Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
+                    Dim twitterAPI As New Protean.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
                     Dim authenticationLink As String = twitterAPI.GetAuthenticationLink(twitterConsumerKey, twitterConsumerSecret, callback.ToString())
 
                     myWeb.AddResponse("Twitter.AuthenticationLink", authenticationLink, , ResponseType.Redirect)
@@ -59,7 +59,7 @@ Namespace Integration.Directory
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "GetRequestToken", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "GetRequestToken", ex, ""))
                 Return ""
             End Try
 
@@ -72,7 +72,7 @@ Namespace Integration.Directory
                 Dim verifier As String = myWeb.moRequest("oauth_verifier")
                 AccessTokens(token, verifier)
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "AccessTokens()", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "AccessTokens()", ex, ""))
             End Try
         End Sub
         Public Sub AccessTokens(ByVal token As String, ByVal verifier As String)
@@ -80,7 +80,7 @@ Namespace Integration.Directory
             Try
 
                 If IsAuthorisedUser Then
-                    Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
+                    Dim twitterAPI As New Protean.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
 
                     If String.IsNullOrEmpty(token) Or String.IsNullOrEmpty(verifier) Then
                         ' token or Verifier are not populated
@@ -94,7 +94,7 @@ Namespace Integration.Directory
 
                         ' Get the user name
                         Try
-                            Dim user As Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser
+                            Dim user As Protean.Tools.Integration.Twitter.TwitterVB2.TwitterUser
                             twitterAPI.AuthenticateWith(twitterConsumerKey, twitterConsumerSecret, twitterAPI.OAuth_Token, twitterAPI.OAuth_TokenSecret)
                             user = twitterAPI.AccountInformation()
                             _credentials.AddSetting("Name", user.Name)
@@ -117,7 +117,7 @@ Namespace Integration.Directory
 
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "AccessTokens(String,String)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "AccessTokens(String,String)", ex, ""))
             End Try
 
         End Sub
@@ -130,7 +130,7 @@ Namespace Integration.Directory
                 Update(status)
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Update(String)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Update(String)", ex, ""))
             End Try
 
         End Sub
@@ -156,7 +156,7 @@ Namespace Integration.Directory
                         myWeb.AddResponse("Twitter.Update.NullStatus", "The status is blank", , ResponseType.Alert)
 
                     Else
-                        Dim twitterAPI As New Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
+                        Dim twitterAPI As New Protean.Tools.Integration.Twitter.TwitterVB2.TwitterAPI()
                         twitterAPI.AuthenticateWith(twitterConsumerKey, twitterConsumerSecret, token, secret)
                         twitterAPI.Update(status)
                     End If
@@ -165,7 +165,7 @@ Namespace Integration.Directory
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Update(String)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Update(String)", ex, ""))
                 myWeb.AddResponse("Twitter.Update.Failed", "The update failed - see error log for more detail", , ResponseType.Alert)
             End Try
         End Sub
@@ -196,12 +196,12 @@ Namespace Integration.Directory
 
                     Me.Update(content & shortenedURL)
 
-                    myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.IntegrationTwitterPost, Me.DirectoryId, 0, contentId, shortenedURL)
+                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.IntegrationTwitterPost, Me.DirectoryId, 0, contentId, shortenedURL)
 
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Post()", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Post()", ex, ""))
             End Try
         End Sub
 

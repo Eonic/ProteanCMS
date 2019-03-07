@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="V/USEQiSQ42duFHEfnaqZaHyclI=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="dUxE828supAgCM7136i0cNeGl/E=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="ewAdminProxySoap2">
       <properties>
@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="ewAdminProxySoap1" contract="proteancms.com.ewAdminProxySoap" bindingType="basicHttpBinding" address="https://www.proteancms.com/ewadminproxy.asmx" bindingConfiguration="ewAdminProxySoap2">
+    <endpoint name="ewAdminProxySoap1" contract="proteancms.com.ewAdminProxySoap" bindingType="basicHttpBinding" address="https://www.proteancms.com/ewAdminProxy.asmx" bindingConfiguration="ewAdminProxySoap2">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://www.proteancms.com/ewadminproxy.asmx</serializedValue>
+          <serializedValue>https://www.proteancms.com/ewAdminProxy.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

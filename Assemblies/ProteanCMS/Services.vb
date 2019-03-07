@@ -22,12 +22,12 @@ Public Class Services
     Public moResponse As System.Web.HttpResponse = moCtx.Response
     Public moSession As System.Web.SessionState.HttpSessionState = moCtx.Session
     Public moServer As System.Web.HttpServerUtility = moCtx.Server
-    Dim WithEvents oFTP As Eonic.Tools.FTPClient
+    Dim WithEvents oFTP As Protean.Tools.FTPClient
     Dim oRXML As XmlDocument
     Dim bResult As Boolean = True
     Dim oResponseElmt As XmlElement
     Private mcModuleName As String = "Eonic.services"
-    Private myWeb As Eonic.Web
+    Private myWeb As Protean.Cms
 #End Region
 #Region "Non Web Methods"
 
@@ -60,7 +60,7 @@ Public Class Services
 
     Function CheckUserIP() As Boolean
         Try
-            Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+            Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Dim SoapIps As String = moConfig("SoapIps") & ",127.0.0.1,::1,"
             Dim cIP As String = GetIpAddress(moRequest)
             If SoapIps.Contains(cIP & ",") Then
@@ -100,7 +100,7 @@ Public Class Services
     End Function
 
 
-    Private Sub OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles oFTP.OnError
+    Private Sub OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles oFTP.OnError
         AddResponse(e.ToString)
 
         ' Try to generate an Eonic Error
@@ -111,7 +111,7 @@ Public Class Services
 #End Region
 #Region "Web Methods"
 
-    <WebMethod(Description:="Sends Email From Website xForm")> _
+    <WebMethod(Description:="Sends Email From Website xForm")>
     Public Function emailer(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String) As Object
 
         Dim sMessage As String
@@ -119,26 +119,26 @@ Public Class Services
         Dim cProcessInfo As String = "emailer"
         Try
 
-            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
 
             sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
 
             Return sMessage
 
         Catch ex As System.Exception
-            Return ex.Message & " - " & ex.GetBaseException.Message
+            Return ex.Message & " - " & ex.GetBaseException.Message & " - " & ex.StackTrace
         End Try
 
     End Function
 
-    <WebMethod(Description:="Sends Email From Website xForm")> _
+    <WebMethod(Description:="Sends Email From Website xForm")>
     Public Function emailerXMLAttach(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal attachmentFromXSLPath As String, ByVal attachmentFromXSLType As String, ByVal attachmentName As String) As Object
 
         Dim sMessage As String
 
         Dim cProcessInfo As String = "emailerXMLAttach"
         Try
-            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
 
             sMessage = oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, , , , ccRecipient, bccRecipient, cSeperator)
 
@@ -151,7 +151,7 @@ Public Class Services
 
     End Function
 
-    <WebMethod(Description:="Sends Email To Multiple Recipients")> _
+    <WebMethod(Description:="Sends Email To Multiple Recipients")>
     Public Function multiEmailer(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientIds As String, ByRef SubjectLine As String) As Object
 
         Dim sMessage As String
@@ -159,7 +159,7 @@ Public Class Services
         Dim cProcessInfo As String = "multiEmailer"
         Try
 
-            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
 
             sMessage = oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine)
 
@@ -179,7 +179,7 @@ Public Class Services
     '        Dim cProcessInfo As String = "emailer"
     '        Try
 
-    '            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+    '            Dim oMsg As Protean.Messaging = New Protean.Messaging
     '            Dim contentStream As System.IO.Stream = Nothing
     '            Dim encoding As System.Text.Encoding = System.Text.Encoding.UTF8
     '            Dim writer As New System.IO.StreamWriter(contentStream, encoding)
@@ -198,7 +198,7 @@ Public Class Services
 
     '    End Function
 
-    <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")> _
+    <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
     Public Function emailerWithAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean) As Object
 
         Dim sMessage As String
@@ -207,7 +207,7 @@ Public Class Services
         Try
 
 
-            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
             oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
             sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
             oMsg.deleteAttachment(cAttachmentFilePath)
@@ -222,7 +222,7 @@ Public Class Services
     End Function
 
 
-    <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")> _
+    <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
     Public Function emailerWithFTPAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean, ByVal FTPServer As String, ByVal FTPUsername As String, ByVal FTPPassword As String, ByVal FTPFolder As String) As Object
 
         Dim sMessage As String
@@ -231,7 +231,7 @@ Public Class Services
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
 
-            Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
             'oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
 
             'oMsg.deleteAttachment(cAttachmentFilePath)
@@ -259,7 +259,7 @@ Public Class Services
                 ftp.UploadFile(UploadClient, cAttachmentFilePath, FTPFolder & "/" & FileName, False)
 
                 If bDeleteAfterSend Then
-                    Dim fsh As Eonic.fsHelper = New fsHelper
+                    Dim fsh As Protean.fsHelper = New fsHelper
                     fsh.DeleteFile(cAttachmentFilePath)
                 End If
 
@@ -277,7 +277,7 @@ Public Class Services
 
     End Function
 
-    <WebMethod()> _
+    <WebMethod()>
     Public Function LuceneIndex() As XmlDocument
         Try
             CreateResponse()
@@ -288,10 +288,10 @@ Public Class Services
                 'myThread.Start(HttpContext.Current)
                 Dim sResult As String = LuceneIndexAsync(HttpContext.Current)
 
-                Eonic.Tools.Xml.addElement(oResponseElmt, "Message", sResult)
+                Protean.Tools.Xml.addElement(oResponseElmt, "Message", sResult)
                 bResult = True
 
-                'Dim oIndexer As New Eonic.Indexer(New Eonic.Web)
+                'Dim oIndexer As New Protean.Indexer(New Protean.Cms)
                 'oIndexer.DoIndex(0, bResult)
                 'Dim cSubResponse As String = oIndexer.cExError
                 'If cSubResponse = "" Then
@@ -318,11 +318,11 @@ Public Class Services
     Public Shared Function LuceneIndexAsync(ByVal oCtx As HttpContext) As String
         Dim bResult As Boolean
         Dim sResult As String = ""
-        Dim myWeb As New Eonic.Web(oCtx)
+        Dim myWeb As New Protean.Cms(oCtx)
         myWeb.Open()
         Try
 
-            Dim oIndexer As New Eonic.IndexerAsync(myWeb)
+            Dim oIndexer As New Protean.IndexerAsync(myWeb)
 
             sResult = oIndexer.DoIndex(0, bResult)
 
@@ -338,12 +338,12 @@ Public Class Services
             '  sResult = sResult & " Documents: " & oIndexer.nDocumentsIndexed
             '  sResult = sResult & " Contents: " & oIndexer.nContentsIndexed
 
-            myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.Search, 0, 0, 0, sResult)
+            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Search, 0, 0, 0, sResult)
             Return sResult
 
         Catch ex As System.Exception
             bResult = False
-            myWeb.moDbHelper.logActivity(Web.dbHelper.ActivityType.Search, 0, 0, 0, ex.ToString)
+            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Search, 0, 0, 0, ex.ToString)
         Finally
 
             myWeb.Close()
@@ -351,12 +351,12 @@ Public Class Services
         End Try
     End Function
 
-    <WebMethod()> _
+    <WebMethod()>
     Public Function DatabaseUpgrade() As XmlDocument
         Try
             CreateResponse()
             If CheckUserIP() Then
-                Dim oSetup As New Eonic.Setup
+                Dim oSetup As New Protean.Setup
                 bResult = oSetup.UpdateDatabase()
                 Dim cSubResponse As String = oSetup.oResponse.OuterXml
                 AddResponse(cSubResponse)
@@ -376,7 +376,7 @@ Public Class Services
             CreateResponse()
             If CheckUserIP() Then
                 Dim oResElmt As XmlElement = oResponseElmt.OwnerDocument.CreateElement("Response")
-                Dim oFeeder As New Eonic.FeedHandler(cURL, cXSLPath, nPageId, nSaveMode, oResElmt, cItemNodeName)
+                Dim oFeeder As New Protean.FeedHandler(cURL, cXSLPath, nPageId, nSaveMode, oResElmt, cItemNodeName)
                 bResult = oFeeder.ProcessFeeds()
                 Dim cSubResponse As String = oResElmt.InnerXml
                 AddResponse(cSubResponse)
@@ -398,14 +398,14 @@ Public Class Services
 
     <WebMethod()>
     Public Function SubscriptionProcess() As XmlDocument
-        Dim myWeb As New Eonic.Web(HttpContext.Current)
+        Dim myWeb As New Protean.Cms(HttpContext.Current)
         myWeb.gbCart = False
         myWeb.Open()
         Try
             CreateResponse()
             If CheckUserIP() Then
                 Dim oResElmt As XmlElement = oResponseElmt.OwnerDocument.CreateElement("Response")
-                Dim oSubscriptions As New Eonic.Web.Cart.Subscriptions(myWeb)
+                Dim oSubscriptions As New Protean.Cms.Cart.Subscriptions(myWeb)
                 oResElmt.InnerXml = oSubscriptions.SubcriptionReminders().OuterXml
                 If bResult Then AddResponse("Reminders Complete")
                 'bResult = oSubscriptions.CheckExpiringSubscriptions()
@@ -421,7 +421,7 @@ Public Class Services
         End Try
         Return oRXML
     End Function
-    <WebMethod()> _
+    <WebMethod()>
     Public Function FTPUploadPage(ByVal SourceURL As String, ByVal FTPServer As String, ByVal FTPUserName As String, ByVal FTPPassword As String, ByVal FTPFilePath As String, ByVal FTPFileName As String) As XmlDocument
         Try
             CreateResponse()
@@ -441,7 +441,7 @@ Public Class Services
                 oWebRequest = Nothing
                 oWebResponse = Nothing
 
-                oFTP = New Eonic.Tools.FTPClient(FTPServer, FTPUserName, FTPPassword)
+                oFTP = New Protean.Tools.FTPClient(FTPServer, FTPUserName, FTPPassword)
 
                 bResult = oFTP.UploadText(cPageSourceText, FTPFilePath, FTPFileName)
             End If
@@ -454,14 +454,14 @@ Public Class Services
         Return oRXML
     End Function
 
-    <WebMethod(Description:="ScheduleMonitorXml")> _
+    <WebMethod(Description:="ScheduleMonitorXml")>
     Public Function UserAlerts() As XmlDocument
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
-                Dim oAlerts As New Eonic.Web.Membership.Alerts(myWeb)
+                Dim oAlerts As New Protean.Cms.Membership.Alerts(myWeb)
                 AddHandler oAlerts.OnError, AddressOf OnError
 
                 oResponseElmt.AppendChild(oResponseElmt.OwnerDocument.ImportNode(oAlerts.CurrentAlerts(bResult), True))
@@ -477,17 +477,17 @@ Public Class Services
     End Function
 
 
-    <WebMethod(Description:="ScheduleMonitorXml")> _
+    <WebMethod(Description:="ScheduleMonitorXml")>
     Public Function ScheduleMonitorXml() As XmlDocument
-        Dim oDb As New Eonic.Tools.Database
+        Dim oDb As New Protean.Tools.Database
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
 
             CreateResponse()
             If CheckUserIP() Then
 
-                Dim oMonitor As New Eonic.Monitor(myWeb)
+                Dim oMonitor As New Protean.Monitor(myWeb)
                 AddHandler oMonitor.OnError, AddressOf OnError
                 oResponseElmt.AppendChild(oResponseElmt.OwnerDocument.ImportNode(oMonitor.GetMonitorSchedulerXml(), True))
                 bResult = True
@@ -503,18 +503,18 @@ Public Class Services
         Return oRXML
     End Function
 
-    <WebMethod()> _
+    <WebMethod()>
     Public Function ScheduleMonitor() As XmlDocument
-        Dim oDb As New Eonic.Tools.Database
+        Dim oDb As New Protean.Tools.Database
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
 
-                Dim oMonitor As New Eonic.Monitor(myWeb)
+                Dim oMonitor As New Protean.Monitor(myWeb)
                 AddHandler oMonitor.OnError, AddressOf OnError
-                Eonic.Tools.Xml.addElement(oResponseElmt, "Message", oMonitor.EmailMonitorScheduler())
+                Protean.Tools.Xml.addElement(oResponseElmt, "Message", oMonitor.EmailMonitorScheduler())
                 bResult = True
 
             End If
@@ -529,24 +529,24 @@ Public Class Services
     End Function
 
 
-    <WebMethod(Description:="GetPendingContent")> _
+    <WebMethod(Description:="GetPendingContent")>
     Public Function GetPendingContent() As XmlDocument
-        Dim oDb As New Eonic.Tools.Database
-        Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/versioncontrol")
+        Dim oDb As New Protean.Tools.Database
+        Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol")
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
 
-                If Eonic.Web.gbVersionControl Then
+                If Protean.Cms.gbVersionControl Then
 
                     Dim oResponse As XmlElement = myWeb.moDbHelper.getPendingContent(True)
                     If oResponse Is Nothing Then
                         AddResponse("There is no content currently awaiting approval")
                     Else
                         ' Email the response
-                        Dim oMsg As Eonic.Messaging = New Eonic.Messaging
+                        Dim oMsg As Protean.Messaging = New Protean.Messaging
 
                         Dim cEmail As String = oVConfig("notificationEmail")
                         Dim cXSLPath As String = IIf(String.IsNullOrEmpty("" & oVConfig("notificationXsl")), "/ewcommon/xsl/Email/pendingcontentNotification.xsl", oVConfig("notificationXsl"))
@@ -578,14 +578,14 @@ Public Class Services
         Return oRXML
     End Function
 
-    <WebMethod(Description:="Syndicate content from the website to distributors")> _
+    <WebMethod(Description:="Syndicate content from the website to distributors")>
     Public Function Syndicate(ByVal distributors As String, ByVal contentTypes As String, ByVal page As Integer, ByVal iterate As Boolean) As XmlDocument
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
-                Dim oSyndication As New Eonic.Syndication(myWeb, distributors, contentTypes, page, iterate)
+                Dim oSyndication As New Protean.Syndication(myWeb, distributors, contentTypes, page, iterate)
                 AddHandler oSyndication.OnError, AddressOf OnError
 
                 oSyndication.Syndicate()
@@ -616,14 +616,14 @@ Public Class Services
 
     End Function
 
-    <WebMethod(Description:="Syndicate content from the website to distributors with distributor specific settings")> _
+    <WebMethod(Description:="Syndicate content from the website to distributors with distributor specific settings")>
     Public Function SyndicateExtended(ByVal distributors As String, ByVal contentTypes As String, ByVal page As Integer, ByVal iterate As Boolean, ByVal extendedSettings As XmlElement) As XmlDocument
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
             If CheckUserIP() Then
-                Dim oSyndication As New Eonic.Syndication(myWeb, distributors, contentTypes, page, iterate, extendedSettings)
+                Dim oSyndication As New Protean.Syndication(myWeb, distributors, contentTypes, page, iterate, extendedSettings)
                 AddHandler oSyndication.OnError, AddressOf OnError
 
                 oSyndication.Syndicate()
@@ -652,15 +652,15 @@ Public Class Services
         Return oRXML
     End Function
 
-    <WebMethod(Description:="GetStatus")> _
+    <WebMethod(Description:="GetStatus")>
     Public Function GetStatus() As XmlDocument
-        Dim oDb As New Eonic.Tools.Database
-        Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("eonic/versioncontrol")
+        Dim oDb As New Protean.Tools.Database
+        Dim oVConfig As System.Collections.Specialized.NameValueCollection = System.Web.Configuration.WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol")
         Try
-            myWeb = New Eonic.Web
+            myWeb = New Protean.Cms
             myWeb.Open()
             CreateResponse()
-            Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+            Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Dim sSql As String
             Dim oElmt As XmlElement = oRXML.CreateElement("Debug")
             oElmt.InnerText = moConfig("debug")
@@ -728,7 +728,7 @@ Public Class Services
 
             'oElmt.InnerText = myWeb.Generator().FullName()
 
-            oElmt.InnerText = Eonic.Web.gcGenerator.ToString()
+            oElmt.InnerText = Protean.Cms.gcGenerator.ToString()
 
             'Dim CodeGenerator As Assembly = Me.Generator()
             'gcGenerator = CodeGenerator.FullName()

@@ -24,9 +24,9 @@ Imports System
 Imports System.Net
 Imports System.Xml
 Imports System.IO
-Imports Eonic.Tools
-Imports Eonic.Tools.Database
-Imports Eonic.Tools.Xml
+Imports Protean.Tools
+Imports Protean.Tools.Database
+Imports Protean.Tools.Xml
 
 ''' <summary>
 '''    Eonic.Syndication retrieves site content and syndicates it to distributors
@@ -37,7 +37,7 @@ Public Class Syndication
 #Region "Declarations"
 
     ' Eonic objects
-    Private _myWeb As Eonic.Web
+    Private _myWeb As Protean.Cms
     Private _moduleName As String = "Eonic.Syndication"
 
     ' Core collections
@@ -77,9 +77,9 @@ Public Class Syndication
 
 #Region "Events"
 
-    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         RaiseEvent OnError(sender, e)
     End Sub
 
@@ -88,7 +88,7 @@ Public Class Syndication
 #Region "Constructor"
 
     Public Sub New( _
-        ByRef aWeb As Eonic.Web, _
+        ByRef aWeb As Protean.Cms, _
         ByVal distributorTypes As String, _
         ByVal contentTypes As String, _
         ByVal pageId As Long, _
@@ -102,14 +102,14 @@ Public Class Syndication
             Me.SourcePage = pageId
             Me.Iterate = iterate
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,String,String,Long,Boolean)", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,String,String,Long,Boolean)", ex, ""))
         End Try
 
 
     End Sub
 
     Public Sub New( _
-        ByRef aWeb As Eonic.Web, _
+        ByRef aWeb As Protean.Cms, _
         ByVal distributorTypes As String, _
         ByVal contentTypes As String, _
         ByVal pageId As Long, _
@@ -124,7 +124,7 @@ Public Class Syndication
             Me.Iterate = iterate
             Me.ExtendedConfig = extendedConfig
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,String,String,Long,Boolean,XmlElement)", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,String,String,Long,Boolean,XmlElement)", ex, ""))
         End Try
     End Sub
 
@@ -137,7 +137,7 @@ Public Class Syndication
             Try
                 Return _myWeb.moPageXml.DocumentElement.SelectSingleNode("Contents")
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "ContentsNode(Get)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "ContentsNode(Get)", ex, ""))
                 Return Nothing
             End Try
         End Get
@@ -147,7 +147,7 @@ Public Class Syndication
                     _myWeb.moPageXml.DocumentElement.SelectSingleNode("Contents").InnerXml = value.InnerXml
                 End If
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "ContentsNode(Set)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "ContentsNode(Set)", ex, ""))
             End Try
         End Set
     End Property
@@ -354,7 +354,7 @@ Public Class Syndication
 
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "AddContentMetadata", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "AddContentMetadata", ex, ""))
         End Try
     End Sub
 
@@ -405,7 +405,7 @@ Public Class Syndication
             _distributors = CType(tempDistributors.ToArray(GetType(Distributor)), Distributor())
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "CreateDistributors", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "CreateDistributors", ex, ""))
         End Try
     End Sub
 
@@ -435,7 +435,7 @@ Public Class Syndication
     ''' <param name="activityType">The activity type to log</param>
     ''' <param name="logDetail">Optional. Additional detail to log</param>
     ''' <remarks></remarks>
-    Public Sub Log(ByVal activityType As Eonic.Web.dbHelper.ActivityType, Optional ByVal logDetail As String = "")
+    Public Sub Log(ByVal activityType As Protean.Cms.dbHelper.ActivityType, Optional ByVal logDetail As String = "")
         Dim sqlQuery As String = ""
 
         Try
@@ -456,7 +456,7 @@ Public Class Syndication
                 sqlQuery &= Me.SourcePage & ","
                 sqlQuery &= "0,"
                 sqlQuery &= "0,"
-                sqlQuery &= Eonic.Tools.Database.SqlDate(Now, True) & ","
+                sqlQuery &= Protean.Tools.Database.SqlDate(Now, True) & ","
                 sqlQuery &= activityType & ","
                 sqlQuery &= "'" & SqlFmt(Left(logDetail, 800)) & "',"
                 sqlQuery &= "'')"
@@ -465,7 +465,7 @@ Public Class Syndication
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Log", ex, sqlQuery))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Log", ex, sqlQuery))
         End Try
     End Sub
 
@@ -486,8 +486,8 @@ Public Class Syndication
                     sqlQuery &= "0,"
                     sqlQuery &= content.GetAttribute("id") & ","
                     sqlQuery &= Me._activityLog & ","
-                    sqlQuery &= Eonic.Tools.Database.SqlDate(Now, True) & ","
-                    sqlQuery &= Web.dbHelper.ActivityType.ContentSyndicated & ","
+                    sqlQuery &= Protean.Tools.Database.SqlDate(Now, True) & ","
+                    sqlQuery &= Cms.dbHelper.ActivityType.ContentSyndicated & ","
                     sqlQuery &= "'',"
                     sqlQuery &= "'')"
 
@@ -495,7 +495,7 @@ Public Class Syndication
                 Next
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "LogContent", ex, sqlQuery))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "LogContent", ex, sqlQuery))
         End Try
     End Sub
 
@@ -531,7 +531,7 @@ Public Class Syndication
 
             ' Only get content since the last time run.
             If Me.HasBeenRunBefore() Then
-                sqlCriteria &= " AND a.dUpdateDate >= " & Eonic.Tools.Database.SqlDate(Me._lastRun, True) & " "
+                sqlCriteria &= " AND a.dUpdateDate >= " & Protean.Tools.Database.SqlDate(Me._lastRun, True) & " "
             End If
 
             ' Go get the content
@@ -554,7 +554,7 @@ Public Class Syndication
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Populatecontent", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Populatecontent", ex, ""))
         End Try
     End Sub
 
@@ -575,7 +575,7 @@ Public Class Syndication
                 Next
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "RemoveDuplicateContent", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "RemoveDuplicateContent", ex, ""))
         End Try
     End Sub
 
@@ -591,7 +591,7 @@ Public Class Syndication
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "ResetContentsNode", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "ResetContentsNode", ex, ""))
         End Try
     End Sub
 
@@ -643,7 +643,7 @@ Public Class Syndication
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Populate", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Populate", ex, ""))
         End Try
     End Sub
 
@@ -655,7 +655,7 @@ Public Class Syndication
         Try
 
             '  Kick off the logging.
-            Log(Web.dbHelper.ActivityType.SyndicationStarted, _distributorTypesList)
+            Log(Cms.dbHelper.ActivityType.SyndicationStarted, _distributorTypesList)
 
             ' Get the content
             Populate()
@@ -663,7 +663,7 @@ Public Class Syndication
             ' Syndicate the content
             If IsContentsNodePopulated() Then
                 ' Log: begun
-                Log(Web.dbHelper.ActivityType.SyndicationInProgress)
+                Log(Cms.dbHelper.ActivityType.SyndicationInProgress)
 
                 ' Run through each distributor
                 For Each distributorInstance As Distributor In _distributors
@@ -685,13 +685,13 @@ Public Class Syndication
                 ' At the end indicate partial or full completion or total failure
                 ' Add the diagnostics to the log
                 If _hasFailures And _totalCompleted > 0 Then
-                    Log(Web.dbHelper.ActivityType.SyndicationPartialSuccess, _diagnostics)
+                    Log(Cms.dbHelper.ActivityType.SyndicationPartialSuccess, _diagnostics)
                     _diagnostics = "Partial Completion (Failure detail):" & Microsoft.VisualBasic.vbCrLf & _diagnostics
                 ElseIf _hasFailures Then
-                    Log(Web.dbHelper.ActivityType.SyndicationFailed, _diagnostics)
+                    Log(Cms.dbHelper.ActivityType.SyndicationFailed, _diagnostics)
                     _diagnostics = "Syndication Failed (Detail):" & Microsoft.VisualBasic.vbCrLf & _diagnostics
                 Else
-                    Log(Web.dbHelper.ActivityType.SyndicationCompleted, _diagnostics)
+                    Log(Cms.dbHelper.ActivityType.SyndicationCompleted, _diagnostics)
                     Me._isCompleted = True
 
                 End If
@@ -701,7 +701,7 @@ Public Class Syndication
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Syndicate", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Syndicate", ex, ""))
         End Try
     End Sub
 
@@ -735,7 +735,7 @@ Public Class Syndication
 
 #Region "Declarations"
 
-        Private _myWeb As Eonic.Web
+        Private _myWeb As Protean.Cms
         Private _moduleName As String = "Eonic.Syndication.Distributor"
 
         ' Core variables
@@ -755,21 +755,21 @@ Public Class Syndication
 #End Region
 
 #Region "Events"
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             _diagnostics &= Microsoft.VisualBasic.vbCrLf & "Error:" & e.ToString()
             RaiseEvent OnError(sender, e)
         End Sub
 #End Region
 
 #Region "Constructor"
-        Public Sub New(ByRef aWeb As Eonic.Web)
+        Public Sub New(ByRef aWeb As Protean.Cms)
             Try
                 _myWeb = aWeb
                 _moduleName &= "." & Me.Name()
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
             End Try
 
         End Sub
@@ -909,7 +909,7 @@ Public Class Syndication
                     ' If it doesn't exist then we can't proceed.
                     If Me.TransformExists Then
 
-                        Dim xslTransform As New Eonic.XmlHelper.Transform()
+                        Dim xslTransform As New Protean.XmlHelper.Transform()
                         Dim output As IO.TextWriter = New IO.StringWriter
 
                         xslTransform.XSLFile = _myWeb.goServer.MapPath(xslPath)
@@ -931,7 +931,7 @@ Public Class Syndication
 
             Catch ex As Exception
                 TransformCompleted = False
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Transform", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Transform", ex, ""))
             End Try
         End Sub
 
@@ -951,7 +951,7 @@ Public Class Syndication
                 Else
                 End If
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Syndicate", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Syndicate", ex, ""))
             End Try
 
 
@@ -971,7 +971,7 @@ Public Class Syndication
                     End If
                 End If
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "LoadConfig", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "LoadConfig", ex, ""))
             End Try
 
         End Sub
@@ -993,13 +993,13 @@ Public Class Syndication
             Protected _contentType As String = "text/xml"
             Protected _methodName As String = "weblogUpdates.ping"
 
-            Public Sub New(ByRef aWeb As Eonic.Web)
+            Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
                 Try
                     Me._usesExtendedConfig = True
                     Me._usesXslTransform = True
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
                 End Try
             End Sub
 
@@ -1014,7 +1014,7 @@ Public Class Syndication
                     ContentsNode.OwnerDocument.DocumentElement.SetAttribute("xmlRpcMethodName", _methodName)
                     MyBase.Transform()
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Transform", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Transform", ex, ""))
                 End Try
 
             End Sub
@@ -1030,7 +1030,7 @@ Public Class Syndication
                         And Not (String.IsNullOrEmpty(_contentType)) _
                     Then
                         ' Define the request
-                        Dim syndicateRequest As New Eonic.Tools.Http.WebRequest(_contentType, "POST", "EonicWeb")
+                        Dim syndicateRequest As New Protean.Tools.Http.WebRequest(_contentType, "POST", "EonicWeb")
 
                         ' Send the request and get the response
                         _diagnostics = syndicateRequest.Send(_endpoint, Me.TransformedData)
@@ -1042,7 +1042,7 @@ Public Class Syndication
                         End If
                     End If
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "RunSyndicate", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "RunSyndicate", ex, ""))
                 End Try
 
             End Sub
@@ -1051,7 +1051,7 @@ Public Class Syndication
         Public Class Weblogs
             Inherits GenericXmlRpc
 
-            Public Sub New(ByRef aWeb As Eonic.Web)
+            Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
                 Try
                     _usesXslTransform = True
@@ -1059,7 +1059,7 @@ Public Class Syndication
                     _endpoint = "http://rpc.weblogs.com/RPC2"
                     _methodName = "weblogUpdates.extendedPing"
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
                 End Try
             End Sub
 
@@ -1068,14 +1068,14 @@ Public Class Syndication
         Public Class Technorati
             Inherits GenericXmlRpc
 
-            Public Sub New(ByRef aWeb As Eonic.Web)
+            Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
                 Try
                     _usesXslTransform = True
                     _usesExtendedConfig = False
                     _endpoint = "http://rpc.technorati.com/rpc/ping"
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
                 End Try
             End Sub
 
@@ -1084,7 +1084,7 @@ Public Class Syndication
         Public Class PingOMatic
             Inherits GenericXmlRpc
 
-            Public Sub New(ByRef aWeb As Eonic.Web)
+            Public Sub New(ByRef aWeb As Protean.Cms)
                 MyBase.New(aWeb)
                 Try
                     _usesXslTransform = True
@@ -1092,7 +1092,7 @@ Public Class Syndication
                     _endpoint = "http://rpc.pingomatic.com/"
                     _methodName = "weblogUpdates.extendedPing"
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
                 End Try
             End Sub
 
@@ -1116,9 +1116,9 @@ Public Class Syndication
             Private _isLoaded As Boolean = False
 
 #Region "Events"
-            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
                 RaiseEvent OnError(sender, e)
             End Sub
 #End Region
@@ -1163,7 +1163,7 @@ Public Class Syndication
                         Return ""
                     End If
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New", ex, ""))
                     Return ""
                 End Try
             End Function

@@ -95,9 +95,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.Eonic.My.MySettings
+        Friend ReadOnly Property Settings() As Global.Protean.My.MySettings
             Get
-                Return Global.Eonic.My.MySettings.Default
+                Return Global.Protean.My.MySettings.Default
             End Get
         End Property
     End Module

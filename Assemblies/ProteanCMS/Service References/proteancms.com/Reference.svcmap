@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d14b87fd-1209-47af-9885-c25f5552ee85" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="9f2b756e-db59-4920-bf1e-dc0ba5743938" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://www.proteancms.com/ewadminproxy.asmx?WSDL" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://www.proteancms.com/ewAdminProxy.asmx?WSDL" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ewadminproxy.wsdl" MetadataType="Wsdl" ID="4aa3e934-16b8-4ef0-a37a-69cc2d9bab6d" SourceId="1" SourceUrl="https://www.proteancms.com/ewadminproxy.asmx?WSDL" />
+    <MetadataFile FileName="ewAdminProxy.wsdl" MetadataType="Wsdl" ID="ddf85cfd-bdfa-4013-aae5-01ff6a71c0b1" SourceId="1" SourceUrl="https://www.proteancms.com/ewAdminProxy.asmx?WSDL" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -28,9 +28,9 @@ Public Class Messaging
     Public goResponse As System.Web.HttpResponse = moCtx.Response
     Public goSession As System.Web.SessionState.HttpSessionState = moCtx.Session
     Public goServer As System.Web.HttpServerUtility = moCtx.Server
-    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+    Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
-    Public mcModuleName As String = "Eonic.Messaging"
+    Public mcModuleName As String = "Protean.Messaging"
     Public sendAsync As Boolean = False
 
     Private msAttachmentPath As String = ""
@@ -93,7 +93,7 @@ Public Class Messaging
                 'NB : 01-09-2009 Commented, See deleteAttachment
                 ' As here only causes "File in Use" exceptions in the fsHelper
                 'If deleteAfterAttach Then
-                '    Dim fsh As Eonic.fsHelper = New fsHelper
+                '    Dim fsh As Protean.fsHelper = New fsHelper
                 '    fsh.DeleteFile(goServer.MapPath("") & fileLocation)
                 'End If
 
@@ -142,11 +142,11 @@ Public Class Messaging
                 End If
             End If
 
-            Dim dbConn As String = "Data Source=" & goConfig("DatabaseServer") & "; " & _
-                                "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
+            Dim dbConn As String = "Data Source=" & goConfig("DatabaseServer") & "; " &
+                                "Initial Catalog=" & goConfig("DatabaseName") & "; " &
                                 dbAuth
 
-            Dim moDbhelper As New Eonic.Web.dbHelper(dbConn, 1)
+            Dim moDbhelper As New Protean.Cms.dbHelper(dbConn, 1)
             moDbhelper.moPageXml = RootElmt.OwnerDocument
 
             If Not (String.IsNullOrEmpty(ids)) Then
@@ -199,7 +199,7 @@ Public Class Messaging
                     Attachments.Clear()
                 End If
 
-                Dim fsh As Eonic.fsHelper = New fsHelper
+                Dim fsh As Protean.fsHelper = New fsHelper
                 fsh.DeleteFile(goServer.MapPath("/") & fileLocation)
 
             End If
@@ -224,7 +224,7 @@ Public Class Messaging
                                 Optional ByVal ccRecipient As String = "",
                                 Optional ByVal bccRecipient As String = "",
                                 Optional ByVal cSeperator As String = "",
-                                Optional ByRef odbHelper As Eonic.Web.dbHelper = Nothing,
+                                Optional ByRef odbHelper As Protean.Cms.dbHelper = Nothing,
                                 Optional ByVal cPickupHost As String = "",
                                 Optional ByVal cPickupLocation As String = ""
                             ) As Object
@@ -238,7 +238,7 @@ Public Class Messaging
         Dim sWriter As IO.TextWriter = New IO.StringWriter
         Dim oXml As XmlDocument = New XmlDocument
         Dim cProcessInfo As String = "Emailer"
-        Dim oTransform As New Eonic.XmlHelper.Transform()
+        Dim oTransform As New Protean.XmlHelper.Transform()
 
         ' User counts
         Dim nTotalAddressesAttempted As Integer = 0
@@ -259,7 +259,7 @@ Public Class Messaging
             oXml.DocumentElement.SetAttribute("subjectLine", SubjectLine)
 
             oXml.DocumentElement.SetAttribute("sessionReferrer", goRequest.Headers("SessionReferer"))
-
+            oXml.DocumentElement.SetAttribute("websiteURL", goRequest.ServerVariables("HTTP_HOST"))
 
             Dim oAttIdsElmt As XmlElement = oXml.DocumentElement.SelectSingleNode("AttachmentIds")
             If Not oAttIdsElmt Is Nothing Then
@@ -481,7 +481,7 @@ Public Class Messaging
                 If mbEncrypt = True Then
                     ' encrypt the email using GNU
 
-                    Dim oGnuPg As Eonic.Tools.GnuPG.GnuPGWrapper = New Tools.GnuPG.GnuPGWrapper
+                    Dim oGnuPg As Protean.Tools.GnuPG.GnuPGWrapper = New Tools.GnuPG.GnuPGWrapper
 
                     oGnuPg.homedirectory = msGnuDirectory
                     oGnuPg.originator = msGnuOriginator
@@ -556,10 +556,13 @@ Public Class Messaging
                             oSmtpn.Port = goConfig("MailServerPort")
                         End If
                         If goConfig("MailServerUsername") <> "" Then
-                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"))
+                            oSmtpn.UseDefaultCredentials = False
+                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"), goConfig("MailServerUsernameDomain"))
                         End If
                         If LCase(goConfig("MailServerSSL")) = "on" Then
+                            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
                             oSmtpn.EnableSsl = True
+                            oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network
                         End If
                         If LCase(goConfig("MailServerSSL")) = "off" Then
                             oSmtpn.EnableSsl = False
@@ -597,7 +600,7 @@ Public Class Messaging
                                 returnException(mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug)
                                 Return "ex2: " & ex2.ToString
                             Else
-                                Return failureMessage & " - Error: " & ex2.Message & " - " & cProcessInfo
+                                Return failureMessage & " - Error1: " & ex2.Message & " - " & cProcessInfo & " - " & ex.StackTrace
                             End If
                         End Try
                     End Try
@@ -629,7 +632,7 @@ Public Class Messaging
                             Else
                                 cCon &= goConfig("DatabaseAuth") & "; "
                             End If
-                            odbHelper = New Eonic.Web.dbHelper(cCon, mnUserId)
+                            odbHelper = New Protean.Cms.dbHelper(cCon, mnUserId)
                         End If
 
                         Dim SessionId As String = Nothing
@@ -645,10 +648,10 @@ Public Class Messaging
                                 activitySchema = oBodyXML.GetAttribute("id")
                             End If
                             Dim logId As Long = odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString, oBodyXML.OuterXml)
-                            odbHelper.CommitLogToDB(Web.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, logId, 0, activitySchema)
+                            odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, logId, 0, activitySchema)
                         Else
                             odbHelper.emailActivity(mnUserId, cActivityDetail, oMailn.To.ToString, oMailn.From.ToString)
-                            odbHelper.CommitLogToDB(Web.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, 0, 0, "")
+                            odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, Now, 0, 0, "")
                         End If
 
                     Catch ex As Exception
@@ -669,13 +672,13 @@ Public Class Messaging
                 'handle opt-in behaviour
                 If Not oXml.SelectSingleNode("descendant-or-self::optIn[node()='true']") Is Nothing Then
 
-                    Dim moMessaging As Eonic.Providers.Messaging.BaseProvider
-                    Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+                    Dim moMessaging As Protean.Providers.Messaging.BaseProvider
+                    Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                     Dim sMessagingProvider As String = ""
                     If Not moMailConfig Is Nothing Then
                         sMessagingProvider = moMailConfig("MessagingProvider")
-                        Dim myWeb As New Eonic.Web(moCtx)
-                        moMessaging = New Eonic.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                        Dim myWeb As New Protean.Cms(moCtx)
+                        moMessaging = New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
                         Try
 
                             Dim email As String = oXml.SelectSingleNode("descendant-or-self::Email").InnerText
@@ -700,13 +703,12 @@ Public Class Messaging
 
             End If
 
-
         Catch ex As Exception
             If gbDebug Then
                 returnException(mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
                 Return ex.ToString
             Else
-                Return failureMessage & " - Error: " & ex.Message & " - " & cProcessInfo
+                Return failureMessage & " - Error2: " & ex.Message & " - " & cProcessInfo & " - " & ex.StackTrace
             End If
         End Try
 
@@ -744,7 +746,7 @@ Public Class Messaging
     '                        Optional ByVal ccRecipient As String = "", _
     '                        Optional ByVal bccRecipient As String = "", _
     '                        Optional ByVal cSeperator As String = "", _
-    '                        Optional ByRef odbHelper As Eonic.Web.dbHelper = Nothing, _
+    '                        Optional ByRef odbHelper As Protean.Cms.dbHelper = Nothing, _
     '                        Optional ByVal cPickupHost As String = "", _
     '                        Optional ByVal cPickupLocation As String = "" _
     '                    ) As Object
@@ -773,17 +775,17 @@ Public Class Messaging
 
     'End Function
 
-    Public Function emailerMultiUsers( _
-                            ByVal oBodyXML As XmlElement, _
-                            ByVal xsltPath As String, _
-                            ByVal fromName As String, _
-                            ByVal fromEmail As String, _
-                            ByVal recipientIds As String, _
-                            ByVal SubjectLine As String, _
-                            Optional ByVal successMessage As String = "Message Sent", _
-                            Optional ByVal failureMessage As String = "Message Failed", _
-                            Optional ByVal cPickupHost As String = "", _
-                            Optional ByVal cPickupLocation As String = "" _
+    Public Function emailerMultiUsers(
+                            ByVal oBodyXML As XmlElement,
+                            ByVal xsltPath As String,
+                            ByVal fromName As String,
+                            ByVal fromEmail As String,
+                            ByVal recipientIds As String,
+                            ByVal SubjectLine As String,
+                            Optional ByVal successMessage As String = "Message Sent",
+                            Optional ByVal failureMessage As String = "Message Failed",
+                            Optional ByVal cPickupHost As String = "",
+                            Optional ByVal cPickupLocation As String = ""
                             ) As Object
 
         PerfMon.Log("Messaging", "emailerMultiUsers")
@@ -820,7 +822,7 @@ Public Class Messaging
                     cProcessInfo = "IDs Detected, Initialising DBHelper"
 
                     ' Get a Database Helper
-                    Dim odbHelper As Eonic.Web.dbHelper = Nothing
+                    Dim odbHelper As Protean.Cms.dbHelper = Nothing
                     Dim mnUserId As Integer = 0
 
                     If Not goSession Is Nothing Then mnUserId = goSession("mnUserId")
@@ -831,7 +833,7 @@ Public Class Messaging
                         Else
                             cCon &= goConfig("DatabaseAuth") & "; "
                         End If
-                        odbHelper = New Eonic.Web.dbHelper(cCon, mnUserId)
+                        odbHelper = New Protean.Cms.dbHelper(cCon, mnUserId)
                         cProcessInfo = "DBHelper Started"
                     End If
 
@@ -866,7 +868,7 @@ Public Class Messaging
 
                         If cRecipientEmail <> "" Then
                             cProcessInfo = "Sending Email for #" + iCounter.ToString
-                            cEmailResult = emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine, _
+                            cEmailResult = emailer(oBodyXML, xsltPath, fromName, fromEmail, cRecipientEmail, SubjectLine,
                             , , cRecipientName, , , , , cPickupHost, cPickupLocation).ToString
                         Else
                             cEmailResult = failureMessage & ": E-mail address provided is invalid"
@@ -900,25 +902,25 @@ Public Class Messaging
         Return cResult
 
     End Function
-    Public Function emailerWithXmlAttachment( _
-                                    ByVal oBodyXML As XmlElement, _
-                                    ByVal xsltPath As String, _
-                                    ByVal fromName As String, _
-                                    ByVal fromEmail As String, _
-                                    ByVal recipientEmail As String, _
-                                    ByVal SubjectLine As String, _
-                                    ByVal XSLPath As String, _
-                                    ByVal XSLType As String, _
-                                    ByVal emailAttachName As String, _
-                                    Optional ByVal successMessage As String = "Message Sent", _
-                                    Optional ByVal failureMessage As String = "Message Failed", _
-                                    Optional ByVal recipientName As String = "", _
-                                    Optional ByVal ccRecipient As String = "", _
-                                    Optional ByVal bccRecipient As String = "", _
-                                    Optional ByVal cSeperator As String = "", _
-                                    Optional ByRef odbHelper As Eonic.Web.dbHelper = Nothing, _
-                                    Optional ByVal cPickupHost As String = "", _
-                                    Optional ByVal cPickupLocation As String = "" _
+    Public Function emailerWithXmlAttachment(
+                                    ByVal oBodyXML As XmlElement,
+                                    ByVal xsltPath As String,
+                                    ByVal fromName As String,
+                                    ByVal fromEmail As String,
+                                    ByVal recipientEmail As String,
+                                    ByVal SubjectLine As String,
+                                    ByVal XSLPath As String,
+                                    ByVal XSLType As String,
+                                    ByVal emailAttachName As String,
+                                    Optional ByVal successMessage As String = "Message Sent",
+                                    Optional ByVal failureMessage As String = "Message Failed",
+                                    Optional ByVal recipientName As String = "",
+                                    Optional ByVal ccRecipient As String = "",
+                                    Optional ByVal bccRecipient As String = "",
+                                    Optional ByVal cSeperator As String = "",
+                                    Optional ByRef odbHelper As Protean.Cms.dbHelper = Nothing,
+                                    Optional ByVal cPickupHost As String = "",
+                                    Optional ByVal cPickupLocation As String = ""
                                 ) As Object
 
         PerfMon.Log("Messaging", "emailerWithXmlAttachment")
@@ -962,7 +964,7 @@ Public Class Messaging
                         If XSLPath <> "" Then
                             Dim sWriter As IO.TextWriter = New IO.StringWriter
                             Dim sMessage As String
-                            Dim oTransform As New Eonic.XmlHelper.Transform()
+                            Dim oTransform As New Protean.XmlHelper.Transform()
 
                             cProcessInfo = xsltPath
 
@@ -998,26 +1000,26 @@ Public Class Messaging
                         End If
                         Attachments.Add(oAtt)
                         PerfMon.Log("Messaging", "emailerWithXmlAttachment - Delete Xml File")
-                        Dim fsh As Eonic.fsHelper = New fsHelper
+                        Dim fsh As Protean.fsHelper = New fsHelper
                         fsh.DeleteFile(cXmlPath)
                     End If
 
                     PerfMon.Log("Messaging", "emailerWithXmlAttachment - Call Emailer")
-                    cResults = emailer( _
-                                    oBodyXML, _
-                                    xsltPath, _
-                                    fromName, _
-                                    fromEmail, _
-                                    recipientEmail, _
-                                    SubjectLine, _
-                                    successMessage, _
-                                    failureMessage, _
-                                    recipientName, _
-                                    ccRecipient, _
-                                    bccRecipient, _
-                                    cSeperator, _
-                                    odbHelper, _
-                                    cPickupHost, _
+                    cResults = emailer(
+                                    oBodyXML,
+                                    xsltPath,
+                                    fromName,
+                                    fromEmail,
+                                    recipientEmail,
+                                    SubjectLine,
+                                    successMessage,
+                                    failureMessage,
+                                    recipientName,
+                                    ccRecipient,
+                                    bccRecipient,
+                                    cSeperator,
+                                    odbHelper,
+                                    cPickupHost,
                                     cPickupLocation).ToString
                 End If
             Else
@@ -1058,7 +1060,7 @@ Public Class Messaging
                     'cPostString = System.Web.HttpUtility.UrlEncode(cPostString)
                 End If
 
-                Dim httpRequest As New Eonic.Tools.Http.WebRequest("application/x-www-form-urlencoded")
+                Dim httpRequest As New Protean.Tools.Http.WebRequest("application/x-www-form-urlencoded")
                 httpRequest.IncludeResponse = False
                 cResponse = httpRequest.Send(cPostTo, cPostString)
             Else
@@ -1100,12 +1102,12 @@ Public Class Messaging
         Dim cProcessInfo As String = ""
 
         Try
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
             Dim oAddressDic As UserEmailDictionary = GetGroupEmails(cGroups)
             'max number of bcc
 
 
-            Dim oWeb As New Web
+            Dim oWeb As New Cms
             oWeb.InitializeVariables()
             oWeb.Open()
             oWeb.mnPageId = nPageId
@@ -1123,7 +1125,7 @@ Public Class Messaging
 
             cFromEmail = cFromEmail.Trim()
 
-            If Eonic.Tools.Text.IsEmail(cFromEmail) Then
+            If Protean.Tools.Text.IsEmail(cFromEmail) Then
                 For Each cRepientMail In oAddressDic.Keys
                     'create the message
                     If oEmail Is Nothing Then
@@ -1136,7 +1138,7 @@ Public Class Messaging
                     End If
                     'if we are not at the bcc limit then we add the addres
                     If i2 < CInt(moMailConfig("BCCLimit")) Then
-                        If Eonic.Tools.Text.IsEmail(cRepientMail.Trim()) Then
+                        If Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
                             cProcessInfo = "Sending to: " & cRepientMail.Trim()
                             oEmail.Bcc.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
                             i2 += 1
@@ -1172,10 +1174,10 @@ Public Class Messaging
     Function SendSingleMail_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
         PerfMon.Log("Messaging", "SendSingleMail_Queued")
         Try
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
 
-            Dim oWeb As New Web
+            Dim oWeb As New Cms
             oWeb.InitializeVariables()
             oWeb.Open()
             oWeb.mnPageId = nPageId
@@ -1185,7 +1187,7 @@ Public Class Messaging
             'get body
             oWeb.mnMailMenuId = moMailConfig("RootPageId")
 
-            If Eonic.Tools.Text.IsEmail(cFromEmail.Trim()) And Eonic.Tools.Text.IsEmail(cRepientMail.Trim()) Then
+            If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
                 Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
 
                 'Lets get the title and override the one provided
@@ -1235,7 +1237,7 @@ Public Class Messaging
         Try
             'dictionary object
             Dim oDic As New UserEmailDictionary
-            Dim oDBH As New Web.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " & _
+            Dim oDBH As New Cms.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " & _
             "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
             goConfig("DatabaseAuth"), 1)
             Dim cSQL As String = "SELECT nDirKey, cDirXml" & _

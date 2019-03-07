@@ -18,8 +18,8 @@ Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Security.Principal
 Imports System.Web.Configuration
-Imports Eonic.Tools.DelegateWrappers
-Imports Eonic.Tools
+Imports Protean.Tools.DelegateWrappers
+Imports Protean.Tools
 Imports System
 
 
@@ -108,7 +108,7 @@ Public Class FileDoc
 #Region "Typed Document Handlers"
     Private Function DocWord() As String
         PerfMon.Log("FileDoc", "DocWord")
-        Dim oIF As Eonic.Tools.IFilter.DefaultParser
+        Dim oIF As Protean.Tools.IFilter.DefaultParser
         Try
             oIF = New IFilter.DefaultParser
             Dim cReturn As String = IFilter.DefaultParser.Extract(cPath)

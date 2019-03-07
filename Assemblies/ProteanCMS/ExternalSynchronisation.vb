@@ -3,26 +3,26 @@ Imports System.Web.Configuration
 Imports System
 
 Public Class ExternalSynchronisation
-    Inherits Eonic.Tools.SoapClient
+    Inherits Protean.Tools.SoapClient
 
 #Region "Declarations"
 
 
     Private moPageDetail As XmlElement
-    Private moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
-    Private moSyncConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/synchronisation")
+    Private moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+    Private moSyncConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/synchronisation")
     Private Const mcModuleName As String = "Web.ExternalSynchronisation"
-    Private myWeb As Eonic.Web
-    Private WithEvents moDBT As Eonic.Tools.Database
-    Private WithEvents moTransform As Eonic.Tools.Xslt.Transform
-    Private WithEvents moDBH As Eonic.Web.dbHelper
+    Private myWeb As Protean.Cms
+    Private WithEvents moDBT As Protean.Tools.Database
+    Private WithEvents moTransform As Protean.Tools.Xslt.Transform
+    Private WithEvents moDBH As Protean.Cms.dbHelper
     Private WithEvents moXSLTFunctions As Xslt
-    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
     Public cLastError As String = ""
 
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles moDBT.OnError, MyBase.OnError, moTransform.OnError
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles moDBT.OnError, MyBase.OnError, moTransform.OnError
         RaiseEvent OnError(sender, e)
         LogError(e.ModuleName, e.ProcedureName, e.Exception, e.AddtionalInformation)
         AddExceptionToEventLog(e.Exception, e.ProcedureName)
@@ -34,14 +34,14 @@ Public Class ExternalSynchronisation
 #End Region
 
 #Region "Initialisation"
-    Public Sub New(ByRef aWeb As Eonic.Web, Optional ByRef oPageDetail As XmlElement = Nothing)
+    Public Sub New(ByRef aWeb As Protean.Cms, Optional ByRef oPageDetail As XmlElement = Nothing)
         myWeb = aWeb
         moPageDetail = oPageDetail
         InitialiseVariables()
     End Sub
 
     Public Sub New(Optional ByRef oPageDetail As XmlElement = Nothing)
-        myWeb = New Eonic.Web
+        myWeb = New Protean.Cms
         moPageDetail = oPageDetail
         InitialiseVariables()
     End Sub
@@ -56,7 +56,7 @@ Public Class ExternalSynchronisation
         MyBase.Url = moSyncConfig("URL")
         MyBase.Namespace = moSyncConfig("Namespace")
 
-        moDBT = New Eonic.Tools.Database
+        moDBT = New Protean.Tools.Database
 
         moDBT.DatabaseServer = moConfig("DatabaseServer")
         moDBT.DatabaseName = moConfig("DatabaseName")
@@ -70,21 +70,21 @@ Public Class ExternalSynchronisation
             cDBAuth = GetDBAuth()
 
             ' Let's find the username and password
-            cUsername = Eonic.Tools.Text.SimpleRegexFind(cDBAuth, "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
-            cPassword = Eonic.Tools.Text.SimpleRegexFind(cDBAuth, "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+            cUsername = Protean.Tools.Text.SimpleRegexFind(cDBAuth, "user id=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
+            cPassword = Protean.Tools.Text.SimpleRegexFind(cDBAuth, "password=([^;]*)", 1, Text.RegularExpressions.RegexOptions.IgnoreCase)
             moDBT.DatabaseUser = cUsername
             moDBT.DatabasePassword = cPassword
         End If
 
-        moTransform = New Eonic.Tools.Xslt.Transform
+        moTransform = New Protean.Tools.Xslt.Transform
         moXSLTFunctions = New Xslt(myWeb)
         moTransform.XslTExtensionObject = moXSLTFunctions
         moTransform.XslTExtensionURN = "ew"
 
         If myWeb Is Nothing Then
-            moDBH = New Eonic.Web.dbHelper(moDBT.DatabaseConnectionString, 1)
+            moDBH = New Protean.Cms.dbHelper(moDBT.DatabaseConnectionString, 1)
         Else
-            moDBH = New Eonic.Web.dbHelper(myWeb)
+            moDBH = New Protean.Cms.dbHelper(myWeb)
         End If
 
     End Sub
@@ -104,7 +104,7 @@ Public Class ExternalSynchronisation
             End If
             Return dbAuth
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDBAuth", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDBAuth", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -127,7 +127,7 @@ Public Class ExternalSynchronisation
             'Get a List of items
             Dim oListXML As New XmlDocument 'List of Items
             cInfo = "Getting 1st Soap"
-            oListXML.LoadXml(Eonic.Tools.Xml.convertEntitiesToCodes(MyBase.SendRequest(oSoapBody)))
+            oListXML.LoadXml(Protean.Tools.Xml.convertEntitiesToCodes(MyBase.SendRequest(oSoapBody)))
             If MyBase.ErrorReturned Or Not oListXML.SelectSingleNode("descendant-or-self::Errors") Is Nothing Then Return ExternalError(oListXML.OuterXml)
 
             Dim oStkList As XmlElement = oListXML.SelectSingleNode("GetStockListResponse/GetStockListResult/*")
@@ -154,7 +154,7 @@ Public Class ExternalSynchronisation
                 For Each oRDBesElmt In oDBResults.DocumentElement
                     Dim bNew As Boolean = True 'counter
 
-                    Dim oTableNameEnum As Eonic.Web.dbHelper.TableNames = System.Enum.Parse(GetType(Eonic.Web.dbHelper.TableNames), oRDBesElmt.Name)
+                    Dim oTableNameEnum As Protean.Cms.dbHelper.TableNames = System.Enum.Parse(GetType(Protean.Cms.dbHelper.TableNames), oRDBesElmt.Name)
                     Dim cKeyField As String = moDBH.TableKey(oTableNameEnum)
                     Dim cSQL As String = "SELECT " & cKeyField & " FROM " & oRDBesElmt.Name
                     Dim cWhere As String = ""
@@ -167,21 +167,21 @@ Public Class ExternalSynchronisation
                         'If IsNumeric(oWhereElmts.InnerText) Then
                         '    cWhere &= oWhereElmts.InnerText & ")"
                         'ElseIf IsDate(oWhereElmts.InnerText) Then
-                        'cWhere &= Eonic.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
+                        'cWhere &= Protean.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
                         'Else
-                        'cWhere &= "'" & Eonic.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
+                        'cWhere &= "'" & Protean.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
                         'End If
 
                         'replaced with this which decided datatype based on fieldname
                         Select Case Left(oWhereElmts.Name, 1)
                             Case "c"
-                                cWhere &= "'" & Eonic.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
+                                cWhere &= "'" & Protean.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
                             Case "n"
                                 cWhere &= oWhereElmts.InnerText & ")"
                             Case "d"
-                                cWhere &= Eonic.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
+                                cWhere &= Protean.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
                             Case Else
-                                cWhere &= "'" & Eonic.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
+                                cWhere &= "'" & Protean.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
                         End Select
 
 
@@ -198,14 +198,14 @@ Public Class ExternalSynchronisation
                     Dim oInstance As XmlElement = oInstanceXML.CreateElement("OriginalInstance")
                     If nId = 0 Then
                         Select Case oTableNameEnum
-                            Case Web.dbHelper.TableNames.tblContent 'content item
+                            Case Cms.dbHelper.TableNames.tblContent 'content item
                                 'we need to know what type of item it is
                                 Dim cSchemaName As String = ""
                                 If Not oRDBesElmt.SelectSingleNode("cContentSchemaName") Is Nothing Then
                                     cSchemaName = oRDBesElmt.SelectSingleNode("cContentSchemaName").InnerText
                                 End If
                                 If Not cSchemaName = "" Then
-                                    Dim oXForm As New Eonic.xForm
+                                    Dim oXForm As New Protean.xForm
                                     If Not oXForm.load("/xforms/content/" & cSchemaName & ".xml", myWeb.maCommonFolders) Then
                                         'cant load it
                                         GoTo SkipIt
@@ -313,7 +313,7 @@ EndIt:
             ReportLowErrors(oFinalResultsXML)
             Return oFinalResultsXML.OuterXml
         Catch ex As Exception
-            RaiseEvent OnError(mcModuleName, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportContentItems", ex, cInfo))
+            RaiseEvent OnError(mcModuleName, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportContentItems", ex, cInfo))
             'cResult = " An Error occured " & cInfo & ": " & ex.ToString & "<br/>" & cLastError
             'oFinalResultsXML.DocumentElement.InnerText = cResult
             Throw New ArgumentException("Exception")
@@ -339,7 +339,7 @@ EndIt:
     '            For Each oInstance In oInstancesXml.DocumentElement
     '                Dim bNew As Boolean = True 'counter
 
-    '                Dim oTableNameEnum As Eonic.Web.dbHelper.TableNames = System.Enum.Parse(GetType(Eonic.Web.dbHelper.TableNames), oRDBesElmt.Name)
+    '                Dim oTableNameEnum As Protean.Cms.dbHelper.TableNames = System.Enum.Parse(GetType(Protean.Cms.dbHelper.TableNames), oRDBesElmt.Name)
     '                Dim cKeyField As String = moDBH.TableKey(oTableNameEnum)
     '                Dim cSQL As String = "SELECT " & cKeyField & " FROM " & oRDBesElmt.Name
     '                Dim cWhere As String = ""
@@ -350,9 +350,9 @@ EndIt:
     '                    If IsNumeric(oWhereElmts.InnerText) Then
     '                        cWhere &= oWhereElmts.InnerText & ")"
     '                    ElseIf IsDate(oWhereElmts.InnerText) Then
-    '                        cWhere &= Eonic.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
+    '                        cWhere &= Protean.Tools.Database.SqlDate(oWhereElmts.InnerText) & ")"
     '                    Else
-    '                        cWhere &= "'" & Eonic.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
+    '                        cWhere &= "'" & Protean.Tools.Database.SqlFmt(oWhereElmts.InnerText) & "')"
     '                    End If
     '                Next
     '                If Not cWhere = "" Then cWhere = " WHERE " & cWhere
@@ -367,14 +367,14 @@ EndIt:
     '                Dim oInstance As XmlElement = oInstanceXML.CreateElement("OriginalInstance")
     '                If nId = 0 Then
     '                    Select Case oTableNameEnum
-    '                        Case Web.dbHelper.TableNames.tblContent 'content item
+    '                        Case Cms.dbHelper.TableNames.tblContent 'content item
     '                            'we need to know what type of item it is
     '                            Dim cSchemaName As String = ""
     '                            If Not oRDBesElmt.SelectSingleNode("cContentSchemaName") Is Nothing Then
     '                                cSchemaName = oRDBesElmt.SelectSingleNode("cContentSchemaName").InnerText
     '                            End If
     '                            If Not cSchemaName = "" Then
-    '                                Dim oXForm As New Eonic.xForm
+    '                                Dim oXForm As New Protean.xForm
     '                                If Not oXForm.load("/xforms/content/" & cSchemaName & ".xml") Then
     '                                    If Not oXForm.load("/ewcommon/xforms/content/" & cSchemaName & ".xml") Then
     '                                        'cant load it
@@ -469,7 +469,7 @@ EndIt:
 
 
     '        Catch ex As Exception
-    '            RaiseEvent OnError(mcModuleName, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportContentItems", ex, cInfo))
+    '            RaiseEvent OnError(mcModuleName, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportContentItems", ex, cInfo))
     '            cResult = " An Error occured " & cInfo & ": " & ex.ToString & "<br/>" & cLastError
     '        End Try
     '        ReportLowErrors(oFinalResultsXML)
@@ -533,7 +533,7 @@ EndIt:
             Dim cReturn As String = Replace(moTransform.Process(), "xmlns:", "exemelnamespace")
             Return cReturn
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ExportItems", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ExportItems", ex, cProcessInfo))
             Return ""
         End Try
     End Function
@@ -545,7 +545,7 @@ EndIt:
         Dim cContentType As String
         Dim cDeleteMode As String
         Dim oSoapBody As New XmlDocument
-        Dim oDbt As New Eonic.Web.dbHelper(myWeb)
+        Dim oDbt As New Protean.Cms.dbHelper(myWeb)
 
         Try
             'lets get the content type
@@ -553,7 +553,7 @@ EndIt:
             cContentType = oSoapBody.SelectSingleNode("descendant-or-self::cContentType").InnerText
             cDeleteMode = oSoapBody.SelectSingleNode("descendant-or-self::cDeleteMode").InnerText
 
-            Dim sSql As String = "select nContentKey, cContentForiegnRef from tblContent where cContentSchemaName = " & Eonic.Tools.Database.SqlString(cContentType)
+            Dim sSql As String = "select nContentKey, cContentForiegnRef from tblContent where cContentSchemaName = " & Protean.Tools.Database.SqlString(cContentType)
 
             Dim oDs As DataSet = oDbt.GetDataSet(sSql, "tblContent")
             Dim oRow As DataRow
@@ -581,12 +581,12 @@ EndIt:
                                 oRequest.SelectSingleNode("/ews:CheckDeleted/ews:StockItems/ews:ItemList", nsmgr).AppendChild(oElmt)
                             Else
                                 ' Deleting objects with no FRef
-                                oDbt.DeleteObject(Web.dbHelper.objectTypes.Content, oRow("nContentKey"))
-                                'oDbt.setObjectStatus(Web.dbHelper.objectTypes.Content, Web.dbHelper.Status.Hidden, oRow("nContentKey"))
+                                oDbt.DeleteObject(Cms.dbHelper.objectTypes.Content, oRow("nContentKey"))
+                                'oDbt.setObjectStatus(Cms.dbHelper.objectTypes.Content, Cms.dbHelper.Status.Hidden, oRow("nContentKey"))
                                 nCountNoRef = nCountNoRef + 1
                             End If
                         Case "Delete All"
-                            oDbt.DeleteObject(Web.dbHelper.objectTypes.Content, oRow("nContentKey"))
+                            oDbt.DeleteObject(Cms.dbHelper.objectTypes.Content, oRow("nContentKey"))
                             nCount = nCount + 1
                     End Select
                 Next
@@ -598,15 +598,15 @@ EndIt:
                     Dim nsmgr2 As XmlNamespaceManager = New XmlNamespaceManager(oRecord.NameTable)
                     nsmgr2.AddNamespace("ews", "http://www.eonic.co.uk/ewcommon/Services")
                     For Each oElmt In oRecord.SelectNodes("descendant-or-self::Delete", nsmgr2)
-                        Dim nContentId As Long = oDbt.getObjectByRef(Web.dbHelper.objectTypes.Content, oElmt.InnerText)
-                        oDbt.DeleteObject(Web.dbHelper.objectTypes.Content, nContentId)
-                        'oDbt.setObjectStatus(Web.dbHelper.objectTypes.Content, Web.dbHelper.Status.Hidden, nContentId)
+                        Dim nContentId As Long = oDbt.getObjectByRef(Cms.dbHelper.objectTypes.Content, oElmt.InnerText)
+                        oDbt.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId)
+                        'oDbt.setObjectStatus(Cms.dbHelper.objectTypes.Content, Cms.dbHelper.Status.Hidden, nContentId)
                         nCount = nCount + 1
                     Next
                     For Each oElmt In oRecord.SelectNodes("descendant-or-self::Hide", nsmgr2)
-                        Dim nContentId As Long = oDbt.getObjectByRef(Web.dbHelper.objectTypes.Content, oElmt.InnerText)
-                        'oDbt.DeleteObject(Web.dbHelper.objectTypes.Content, nContentId)
-                        oDbt.setObjectStatus(Web.dbHelper.objectTypes.Content, Web.dbHelper.Status.Hidden, nContentId)
+                        Dim nContentId As Long = oDbt.getObjectByRef(Cms.dbHelper.objectTypes.Content, oElmt.InnerText)
+                        'oDbt.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId)
+                        oDbt.setObjectStatus(Cms.dbHelper.objectTypes.Content, Cms.dbHelper.Status.Hidden, nContentId)
                         nCountHidden = nCountHidden + 1
                     Next
                     oRecord = Nothing
@@ -621,7 +621,7 @@ EndIt:
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteItems", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteItems", ex, ""))
             Return ""
         End Try
     End Function
@@ -641,7 +641,7 @@ EndIt:
             Select Case cEwCmd2
                 Case "", Nothing
                     For i = 0 To oSyncItems.Length - 1
-                        Eonic.Tools.Xml.addElement(moPageDetail, "SyncAction", oSyncItems(i))
+                        Protean.Tools.Xml.addElement(moPageDetail, "SyncAction", oSyncItems(i))
                     Next
                 Case Else
                     For i = 0 To oSyncItems.Length - 1
@@ -690,7 +690,7 @@ EndIt:
             End Select
             Return "Synchronisation"
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AdminProcess", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AdminProcess", ex, ""))
             Return ""
         End Try
     End Function
@@ -728,7 +728,7 @@ EndIt:
             cReturn = Replace(cReturn, "&amp;amp;", "&amp;")
             Return cReturn
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ExportItems", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ExportItems", ex, ""))
             Return ex.ToString
         End Try
     End Function
@@ -739,9 +739,9 @@ EndIt:
             cInfo = "Check Path"
             If moSyncConfig("ErrorLog") = "" Then Exit Sub
             cInfo = "Build File Name"
-            Dim cFileName As String = Eonic.Tools.Text.IntegerToString(Now.Year, 2)
-            cFileName &= Eonic.Tools.Text.IntegerToString(Now.Month, 2)
-            cFileName &= Eonic.Tools.Text.IntegerToString(Now.Day, 2)
+            Dim cFileName As String = Protean.Tools.Text.IntegerToString(Now.Year, 2)
+            cFileName &= Protean.Tools.Text.IntegerToString(Now.Month, 2)
+            cFileName &= Protean.Tools.Text.IntegerToString(Now.Day, 2)
             cFileName &= ".xml"
             cFileName = moSyncConfig("ErrorLog") & cFileName
 
@@ -770,7 +770,7 @@ EndIt:
             oErrorXML.Save(cFileName)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "LogError", ex, cInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LogError", ex, cInfo))
         End Try
     End Sub
 
@@ -802,20 +802,20 @@ EndIt:
 #Region "Sub Classes"
 
     Private Class Xslt
-        Inherits Eonic.Tools.Xslt.XsltFunctions
+        Inherits Protean.Tools.Xslt.XsltFunctions
 
 #Region "Declarations"
 
-        Private myWeb As Web
+        Private myWeb As Cms
         Public Event OnError(ByVal cModuleName As String, ByVal cRoutineName As String, ByVal oException As Exception, ByVal cFurtherInfo As String)
         Private Const mcModuleName As String = "Web.ExternalSynchronisation.Xslt"
-        Private moSyncConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/synchronisation")
-        Private moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+        Private moSyncConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/synchronisation")
+        Private moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
         Public Event XSLTError(ByVal cInformation As String)
 #End Region
 
 #Region "Initialisation/Private"
-        Public Sub New(ByVal aWeb As Web)
+        Public Sub New(ByVal aWeb As Cms)
             myWeb = aWeb
         End Sub
 #End Region
@@ -844,7 +844,7 @@ EndIt:
             End If
 
             cHTML = Replace(cHTML, Chr(13), "<br/>")
-            cHTML = Eonic.Tools.Xml.convertEntitiesToCodes(cHTML)
+            cHTML = Protean.Tools.Xml.convertEntitiesToCodes(cHTML)
             cHTML = Replace(Replace(cHTML, "&gt;", ">"), "&lt;", "<")
             cHTML = "<p>" & cHTML & "</p>"
             Try
@@ -875,7 +875,7 @@ EndIt:
         Public Function SQLDateTime(ByVal sDate As String) As String
             Try
                 If IsDate(sDate) Then
-                    Return Eonic.Tools.Database.SqlDate(CDate(sDate))
+                    Return Protean.Tools.Database.SqlDate(CDate(sDate))
                 Else
                     Return "'" & sDate & "'"
                 End If
@@ -900,7 +900,7 @@ EndIt:
         Public Function ImageWidth(ByVal cVirtualPath As String) As String
             Try
                 If VirtualFileExists(cVirtualPath) > 0 Then
-                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                     Dim nVar As Integer = oImage.Width
                     oImage.Close()
                     Return nVar
@@ -915,7 +915,7 @@ EndIt:
         Public Function ImageHeight(ByVal cVirtualPath As String) As String
             Try
                 If VirtualFileExists(cVirtualPath) > 0 Then
-                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                     Dim nVar As Integer = oImage.Height
                     oImage.Close()
                     Return nVar
@@ -932,7 +932,7 @@ EndIt:
             Dim newFilepath As String = ""
             Try
                 If VirtualFileExists(cVirtualPath) > 0 Then
-                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                     'calculate the new filename
                     newFilepath = Replace(cVirtualPath, ".jpg", sSuffix & ".jpg")
                     If Not (VirtualFileExists(newFilepath) > 0) Then
@@ -957,7 +957,7 @@ EndIt:
             Dim newFilepath As String = ""
             Try
                 If VirtualFileExists(cVirtualPath) > 0 Then
-                    Dim oImage As New Eonic.Tools.Image(goServer.MapPath(cVirtualPath))
+                    Dim oImage As New Protean.Tools.Image(goServer.MapPath(cVirtualPath))
                     'calculate the new filename
                     newFilepath = Replace(cVirtualPath, ".jpg", sSuffix & ".jpg")
                     If Not (VirtualFileExists(newFilepath) > 0) Then
@@ -1036,8 +1036,8 @@ EndIt:
 
         Public Function setContentLocationByRef(ByVal cStructName As String, ByVal nContentId As Integer, ByVal bPrimary As Integer, ByVal bCascade As Integer) As Integer
             Try
-                Dim nID As String = "" 'myWeb.moDbHelper.getKeyByNameAndSchema(Web.dbHelper.objectTypes.ContentStructure, "", cStructName)
-                nID = myWeb.moDbHelper.getObjectByRef(Web.dbHelper.objectTypes.ContentStructure, cStructName)
+                Dim nID As String = "" 'myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
+                nID = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructName)
                 If nID = "" Then nID = 0
                 If nID > 0 Then
 
@@ -1053,9 +1053,9 @@ EndIt:
 
         Public Function setContentLocationsByRef(ByVal cStructName As String, ByVal nContentId As Integer, ByVal bPrimary As Integer, ByVal bCascade As Integer) As String
             Try
-                Dim nIDs() As String = Nothing 'myWeb.moDbHelper.getKeyByNameAndSchema(Web.dbHelper.objectTypes.ContentStructure, "", cStructName)
+                Dim nIDs() As String = Nothing 'myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
                 Dim i As Integer
-                nIDs = myWeb.moDbHelper.getObjectsByRef(Web.dbHelper.objectTypes.ContentStructure, cStructName)
+                nIDs = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructName)
 
                 If Not nIDs Is Nothing Then
                     For i = 0 To nIDs.Length - 1
@@ -1081,7 +1081,7 @@ EndIt:
             End Try
         End Function
 
-        Public Function SetRef(ByVal objecttype As Eonic.Web.dbHelper.objectTypes, ByVal id As Integer, ByVal value As String) As String
+        Public Function SetRef(ByVal objecttype As Protean.Cms.dbHelper.objectTypes, ByVal id As Integer, ByVal value As String) As String
             Try
                 Dim cTableName As String = myWeb.moDbHelper.getTable(objecttype)
                 Dim cRefField As String = myWeb.moDbHelper.getFRef(objecttype)
@@ -1117,7 +1117,7 @@ EndIt:
                 cSQL &= " WHERE (NOT (tblContentStructure.cStructForiegnRef IN (" & cValidStructNames & "))) AND nContentId = " & nContentId
                 Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
                 Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Web.dbHelper.objectTypes.ContentLocation, oDR(0))
+                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDR(0))
                     i += 1
                 Loop
                 oDR.Close()
@@ -1137,7 +1137,7 @@ EndIt:
                 cSQL &= " WHERE (tblContentStructure.cStructForiegnRef IN (" & cRemoveRefs & ")) AND nContentId = " & nContentId
                 Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
                 Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Web.dbHelper.objectTypes.ContentLocation, oDR(0))
+                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentLocation, oDR(0))
                     i += 1
                 Loop
                 oDR.Close()
@@ -1163,17 +1163,17 @@ EndIt:
                 cValidContentNames = Replace(cValidContentNames, "'',", "")
                 cValidContentNames = Replace(cValidContentNames, ",''", "")
                 If cValidContentNames = "" Then Return 0
-                Dim cSQL As String = "SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" & _
-                " FROM tblContent Childs INNER JOIN" & _
-                " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentChildId INNER JOIN" & _
-                " tblContent Parents ON Rel.nContentParentId = Parents.nContentKey WHERE" & _
-                " (((Rel.nContentParentId = " & nContentId & ") AND (NOT (Childs.cContentForiegnRef IN (" & cValidContentNames & ")))) OR" & _
-                " ((Rel.nContentChildId  = " & nContentId & ") AND (NOT (Childs.cContentForiegnRef IN (" & cValidContentNames & "))))) AND " & _
+                Dim cSQL As String = "SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" &
+                " FROM tblContent Childs INNER JOIN" &
+                " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentChildId INNER JOIN" &
+                " tblContent Parents ON Rel.nContentParentId = Parents.nContentKey WHERE" &
+                " (((Rel.nContentParentId = " & nContentId & ") AND (NOT (Childs.cContentForiegnRef IN (" & cValidContentNames & ")))) OR" &
+                " ((Rel.nContentChildId  = " & nContentId & ") AND (NOT (Childs.cContentForiegnRef IN (" & cValidContentNames & "))))) AND " &
                 " (Childs.cContentSchemaName = '" & cContentTypeToRemove & "' AND  Parents.cContentSchemaName = '" & cContentTypeToRemove & "')"
 
                 Dim oDR As SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(cSQL)
                 Do While oDR.Read
-                    myWeb.moDbHelper.DeleteObject(Web.dbHelper.objectTypes.ContentRelation, oDR(0))
+                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDR(0))
                     i += 1
                 Loop
                 oDR.Close()
@@ -1192,11 +1192,11 @@ EndIt:
             Try
 
                 'Select all valid existing content relationships for the contentId returning Foriegn Keys.
-                cSQL = "SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" & _
-                " FROM tblContent Childs INNER JOIN" & _
-                " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentChildId " & _
-                " WHERE" & _
-                " Rel.nContentParentId = " & ContentId & " " & _
+                cSQL = "SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" &
+                " FROM tblContent Childs INNER JOIN" &
+                " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentChildId " &
+                " WHERE" &
+                " Rel.nContentParentId = " & ContentId & " " &
                 " AND Childs.cContentSchemaName = '" & RelatedContentType & "'"
                 If RelationType = "" Then
                     cSQL += " AND Rel.cRelationType is null"
@@ -1206,11 +1206,11 @@ EndIt:
 
                 If TwoWayRelations Then
                     cSQL = cSQL & " UNION "
-                    cSQL = cSQL & " SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" & _
-                    " FROM tblContent Childs INNER JOIN" & _
-                    " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentParentId " & _
-                    " WHERE" & _
-                    " Rel.nContentChildId = " & ContentId & " " & _
+                    cSQL = cSQL & " SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" &
+                    " FROM tblContent Childs INNER JOIN" &
+                    " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentParentId " &
+                    " WHERE" &
+                    " Rel.nContentChildId = " & ContentId & " " &
                     " AND Childs.cContentSchemaName = '" & RelatedContentType & "'"
                     If RelationType = "" Then
                         cSQL += " AND Rel.cRelationType is null"
@@ -1233,7 +1233,7 @@ EndIt:
                         End If
                     Next
                     If DelFlag Then
-                        myWeb.moDbHelper.DeleteObject(Web.dbHelper.objectTypes.ContentRelation, oDR(0))
+                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentRelation, oDR(0))
                     End If
                 Loop
 

@@ -2,29 +2,29 @@
 Imports System.Collections.Generic
 Imports System.Xml
 Imports System.Data.SqlClient
-Imports Eonic.Tools
+Imports Protean.Tools
 Imports System
 
-Partial Public Class Web
+Partial Public Class Cms
 
 
     ''' <summary>
-    ''' Class for sync methods that are specific to Eonic.Web
+    ''' Class for sync methods that are specific to Protean.Cms
     ''' e.g. syncing fle lists as content to modules
     ''' </summary>
     ''' <remarks></remarks>
     Public Class Synchronisation
 
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-        Private Const mcModuleName As String = "Eonic.Web.Synchronisation"
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Private Const mcModuleName As String = "Protean.Cms.Synchronisation"
 
-        Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             RaiseEvent OnError(sender, e)
         End Sub
 
-        Private _myWeb As Eonic.Web
+        Private _myWeb As Protean.Cms
 
-        Public Sub New(ByRef aWeb As Eonic.Web)
+        Public Sub New(ByRef aWeb As Protean.Cms)
             _myWeb = aWeb
         End Sub
 
@@ -181,7 +181,7 @@ Partial Public Class Web
 
                     If Not String.IsNullOrEmpty(xslPath) Then
 
-                        Dim transformer As New Eonic.XmlHelper.Transform(_myWeb, _myWeb.goServer.MapPath(xslPath), False)
+                        Dim transformer As New Protean.XmlHelper.Transform(_myWeb, _myWeb.goServer.MapPath(xslPath), False)
                         PerfMon.Log("Admin", "FileSyncTransform-startxsl")
                         transformer.mbDebug = gbDebug
                         transformer.ProcessDocument(importXmlDocument)
@@ -218,12 +218,12 @@ Partial Public Class Web
                 'If contentIDsToDelete.Count > 0 Then _myWeb.moDbHelper.BulkContentDelete(contentIDsToDelete)
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, System.Reflection.MethodBase.GetCurrentMethod().Name, ex, cProcessInfo))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, System.Reflection.MethodBase.GetCurrentMethod().Name, ex, cProcessInfo))
             End Try
 
         End Sub
 
-        Public Function convertVirtualPathToWebFile(ByVal myWeb As Eonic.Web, ByVal virtualPath As String) As fsHelper.WebFile
+        Public Function convertVirtualPathToWebFile(ByVal myWeb As Protean.Cms, ByVal virtualPath As String) As fsHelper.WebFile
 
             Return New fsHelper.WebFile(myWeb.goServer.MapPath(virtualPath), virtualPath, True)
 
@@ -234,10 +234,10 @@ Partial Public Class Web
 
         Public Class Modules
 
-            Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Private Const mcModuleName As String = "Eonic.Web.Synchronisation.Modules"
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Private Const mcModuleName As String = "Protean.Cms.Synchronisation.Modules"
 
-            Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
                 RaiseEvent OnError(sender, e)
             End Sub
 
@@ -245,13 +245,13 @@ Partial Public Class Web
 
             End Sub
 
-            Public Sub SyncModuleContentFromFolder(ByRef myWeb As Eonic.Web, ByVal contentNode As XmlElement, ByVal contentId As Integer, ByVal editAction As dbHelper.ActivityType)
+            Public Sub SyncModuleContentFromFolder(ByRef myWeb As Protean.Cms, ByVal contentNode As XmlElement, ByVal contentId As Integer, ByVal editAction As Cms.dbHelper.ActivityType)
 
                 Try
                     Dim mySync As New Synchronisation(myWeb)
                     mySync.SyncModuleContentFromFolder(contentId)
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, System.Reflection.MethodBase.GetCurrentMethod().Name, ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, System.Reflection.MethodBase.GetCurrentMethod().Name, ex, ""))
                 End Try
 
             End Sub

@@ -16,17 +16,17 @@ Public Class ImgVerify
 
     ''' <summary>
     ''' Returns a random password 
-    ''' DEPRECATED: use Eonic.Tools.Text.RandomPassword instead
+    ''' DEPRECATED: use Protean.Tools.Text.RandomPassword instead
     ''' </summary>
     ''' <param name="size">The length of the password required</param>
     ''' <param name="lowerCase">Convert the password to lowercase</param>
     ''' <returns>String - a randomly generated password</returns>
-    ''' <remarks>DEPRECATED: use Eonic.Tools.Text.RandomPassword instead</remarks>
+    ''' <remarks>DEPRECATED: use Protean.Tools.Text.RandomPassword instead</remarks>
     Public Shared Function getRandomPassword(ByVal size As Integer, ByVal lowerCase As Boolean) As String
 
         Dim options As Tools.TextOptions = Tools.TextOptions.UseAlpha Or Tools.TextOptions.UseNumeric
         If lowerCase Then options = options Or Tools.TextOptions.LowerCase
-        Return Eonic.Tools.Text.RandomPassword(size, , options)
+        Return Protean.Tools.Text.RandomPassword(size, , options)
 
     End Function
 
@@ -52,7 +52,7 @@ Public Class ImgVerify
         'goSession("imgVerification") = sTextToImg
         'Return bmpImage
 
-        Dim ci As Eonic.Tools.Image.CaptchaImage = New Eonic.Tools.Image.CaptchaImage
+        Dim ci As Protean.Tools.Image.CaptchaImage = New Protean.Tools.Image.CaptchaImage
 
         Dim b As Bitmap = ci.RenderImage
 
@@ -66,7 +66,7 @@ End Class
 
 
 Public Class ImageHelper
-    Inherits Eonic.Tools.Image
+    Inherits Protean.Tools.Image
 
     Public Sub New(ByVal Location As String)
         MyBase.New(Location)

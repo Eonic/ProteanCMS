@@ -20,12 +20,12 @@ Imports Lucene.Net.Search
 Imports Lucene.Net.QueryParsers
 'regular expressions
 Imports System.Text.RegularExpressions
-Imports Eonic.Tools.FileHelper
+Imports Protean.Tools.FileHelper
 Imports System
 
 Public Class Indexer
 
-    Shadows mcModuleName As String = "Eonic.Indexer"
+    Shadows mcModuleName As String = "Protean.Indexer"
 
 
     Dim mcIndexReadFolder As String = "" ' the folder where the index is stored (from config)
@@ -33,7 +33,7 @@ Public Class Indexer
     Dim mcIndexCopyFolder As String = ""
     Dim oIndexWriter As IndexWriter 'Lucene class
 
-    Dim oImp As Eonic.Tools.Security.Impersonate = New Eonic.Tools.Security.Impersonate 'impersonate for access
+    Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate 'impersonate for access
     Dim bNewIndex As Boolean = False 'if we need a new index or just add to one
     Dim bIsError As Boolean = False
     Dim dStartTime As Date
@@ -47,9 +47,9 @@ Public Class Indexer
     Public cExError As String
     Dim moConfig As System.Collections.Specialized.NameValueCollection
 
-    Dim myWeb As Web
+    Dim myWeb As Cms
 
-    Public Sub New(ByRef aWeb As Eonic.Web)
+    Public Sub New(ByRef aWeb As Protean.Cms)
         PerfMon.Log("Indexer", "New")
         mcModuleName = "Eonic.Search.Indexer"
         Dim cProcessInfo As String = ""
@@ -185,7 +185,7 @@ Public Class Indexer
 
             'make a new web but going to have to overide some stuff
             'and double override to be sure
-            Dim xWeb As New Eonic.Web
+            Dim xWeb As New Protean.Cms
 
             xWeb.InitializeVariables()
             xWeb.Open()
@@ -461,7 +461,7 @@ Public Class Indexer
             Try
                 'send email update as to index success or failure
                 cProcessInfo = "Sending Email Report"
-                Dim msg As New Eonic.Messaging
+                Dim msg As New Protean.Messaging
                 Dim serverSenderEmail As String = moConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = moConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
@@ -488,7 +488,7 @@ Public Class Indexer
         PerfMon.Log("Indexer", "StartIndex")
         Dim cProcessInfo As String = ""
         Try
-            oImp = New Eonic.Tools.Security.Impersonate 'for access
+            oImp = New Protean.Tools.Security.Impersonate 'for access
             If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
                 EmptyFolder(mcIndexWriteFolder)
                 If gbDebug Then
@@ -828,7 +828,7 @@ Public Class Indexer
                     End If
                 End If
 
-                Dim oFS As New Eonic.fsHelper()
+                Dim oFS As New Protean.fsHelper()
                 oFS.mcStartFolder = mcIndexCopyFolder
 
                 cProcessInfo = "Saving:" & mcIndexCopyFolder & filepath & "\" & filename & Ext

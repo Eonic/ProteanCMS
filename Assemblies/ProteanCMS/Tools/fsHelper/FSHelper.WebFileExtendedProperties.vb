@@ -1,5 +1,5 @@
 '***********************************************************************
-' $Library:     eonic.fshelper.WebFileExtendedProperties
+' $Library:     Protean.fsHelper.WebFileExtendedProperties
 ' $Revision:    4.0  
 ' $Date:        2011-03-01
 ' $Author:      Ali Granger
@@ -20,7 +20,7 @@ Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Security.Principal
 Imports System.Web.Configuration
-Imports Eonic.Tools.DelegateWrappers
+Imports Protean.Tools.DelegateWrappers
 Imports System.Windows.Media.Imaging
 Imports System
 

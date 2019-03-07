@@ -3,7 +3,7 @@ Option Explicit On
 
 Imports System.Xml
 Imports System.Reflection
-Imports Eonic.Web.dbHelper
+Imports Protean.Cms.dbHelper
 Imports System
 
 Namespace Integration.Directory
@@ -22,8 +22,8 @@ Namespace Integration.Directory
         Implements IPostable
 
         ' Core class variables
-        Protected _moduleName As String = "Eonic.Integration.Directory"
-        Protected myWeb As Eonic.Web
+        Protected _moduleName As String = "Protean.Integration.Directory"
+        Protected myWeb As Protean.Cms
         Private _diagnostics As String = ""
         Protected _providerName As String
 
@@ -38,34 +38,34 @@ Namespace Integration.Directory
 
         Protected _credentials As UserCredentials
 
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             _diagnostics &= Microsoft.VisualBasic.vbCrLf & "Error:" & e.ToString()
             RaiseEvent OnError(sender, e)
         End Sub
 
-        Public Sub New(ByRef aWeb As Eonic.Web)
+        Public Sub New(ByRef aWeb As Protean.Cms)
             Try
-                If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
+                If aWeb Is Nothing Then Throw New ArgumentNullException("Protean.Cms is not initialised")
                 myWeb = aWeb
                 _directoryId = myWeb.mnUserId
                 _moduleName &= "." & Me.Name()
                 If IsAuthorisedUser Then LoadCredentials()
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web)", ex, ""))
             End Try
         End Sub
 
-        Public Sub New(ByRef aWeb As Eonic.Web, ByRef directoryId As Long)
+        Public Sub New(ByRef aWeb As Protean.Cms, ByRef directoryId As Long)
             Try
-                If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
+                If aWeb Is Nothing Then Throw New ArgumentNullException("Protean.Cms is not initialised")
                 myWeb = aWeb
                 _directoryId = directoryId
                 _moduleName &= "." & Me.Name()
                 If IsAuthorisedUser Then LoadCredentials()
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,Long)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web,Long)", ex, ""))
             End Try
         End Sub
 
@@ -96,7 +96,7 @@ Namespace Integration.Directory
         End Property
 
         ''' <summary>
-        ''' Checks if the Eonic.Web object has the right context to make integration calls.
+        ''' Checks if the Protean.Cms object has the right context to make integration calls.
         ''' At the moment it should the logged in user, or someone logged in as an admin
         ''' </summary>
         ''' <value></value>
@@ -160,7 +160,7 @@ Namespace Integration.Directory
 
         Function GetUserSchemaXml() As XmlElement
 
-            Dim oXform As New Eonic.xForm
+            Dim oXform As New Protean.xForm
             oXform.load("/xforms/directory/User.xml", myWeb.maCommonFolders)
             Return oXform.Instance.SelectSingleNode("tblDirectory/cDirXml")
 
@@ -245,7 +245,7 @@ Namespace Integration.Directory
         End Sub
 
         Public Overridable Sub Post(ByVal content As String, Optional ByVal trackbackUri As Uri = Nothing, Optional ByVal contentId As Long = 0) Implements IPostable.Post
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Post", New NotSupportedException("Post method is not available for this provider:" & Me.Name), ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Post", New NotSupportedException("Post method is not available for this provider:" & Me.Name), ""))
         End Sub
 
     End Class
@@ -257,26 +257,26 @@ Namespace Integration.Directory
     Public Class Helper
 
         ' Core class variables
-        Protected _moduleName As String = "Eonic.Integration.Directory.Helper"
-        Protected myWeb As Eonic.Web
+        Protected _moduleName As String = "Protean.Integration.Directory.Helper"
+        Protected myWeb As Protean.Cms
         Private _diagnostics As String = ""
 
         Private _integrationsEnabled As Boolean = False
 
-        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-        Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             _diagnostics &= Microsoft.VisualBasic.vbCrLf & "Error:" & e.ToString()
             RaiseEvent OnError(sender, e)
         End Sub
 
-        Public Sub New(ByRef aWeb As Eonic.Web)
+        Public Sub New(ByRef aWeb As Protean.Cms)
             Try
-                If aWeb Is Nothing Then Throw New ArgumentNullException("Eonic.Web is not initialised")
+                If aWeb Is Nothing Then Throw New ArgumentNullException("Protean.Cms is not initialised")
                 myWeb = aWeb
                 _integrationsEnabled = myWeb.moConfig("UserIntegrations") = "on"
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "New(Web)", ex, ""))
             End Try
         End Sub
 
@@ -379,7 +379,7 @@ Namespace Integration.Directory
                                         pageElement.AppendChild(postableContentDocument.ImportNode(siteStructureForBeginners, True))
                                         contentsElement = postableContentDocument.CreateElement("Contents")
                                         pageElement.AppendChild(contentsElement)
-                                        If Not String.IsNullOrEmpty(Eonic.Web.gcEwBaseUrl) Then pageElement.SetAttribute("baseUrl", Eonic.Web.gcEwBaseUrl)
+                                        If Not String.IsNullOrEmpty(Protean.Cms.gcEwBaseUrl) Then pageElement.SetAttribute("baseUrl", Protean.Cms.gcEwBaseUrl)
                                         myWeb.GetRequestVariablesXml(pageElement)
 
                                         contentsElement.AppendChild(postableContentDocument.ImportNode(content, True))
@@ -405,7 +405,7 @@ Namespace Integration.Directory
                                         ' The format is as follows:
                                         ' <post provider="provider" url="url to content">content to post</post>
                                         Dim textWriter As New System.IO.StringWriter
-                                        Dim oTransform As New Eonic.XmlHelper.Transform(myWeb, styleFile, False)
+                                        Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
                                         oTransform.mbDebug = gbDebug
                                         oTransform.ProcessTimed(postableContentDocument, textWriter)
                                         oTransform.Close()
@@ -417,7 +417,7 @@ Namespace Integration.Directory
 
                                         ' iterate through the providers
                                         ' only post those with content.
-                                        Dim integrationBase As String = "Eonic.Integration.Directory."
+                                        Dim integrationBase As String = "Protean.Integration.Directory."
 
                                         For Each post As XmlElement In response.SelectNodes("/posts/post")
 
@@ -460,7 +460,7 @@ Namespace Integration.Directory
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "PostContent", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "PostContent", ex, ""))
             End Try
         End Sub
 
@@ -469,7 +469,7 @@ Namespace Integration.Directory
         ''' </summary>
         ''' <param name="form"></param>
         ''' <remarks></remarks>
-        Public Sub PostContentCheckboxes(ByRef form As Eonic.Web.Admin.AdminXforms, ByVal contentSchema As String, ByVal isContentBeingUpdated As Boolean)
+        Public Sub PostContentCheckboxes(ByRef form As Protean.Cms.Admin.AdminXforms, ByVal contentSchema As String, ByVal isContentBeingUpdated As Boolean)
 
             Dim message As String = ""
 
@@ -516,7 +516,7 @@ Namespace Integration.Directory
                         If Array.IndexOf(Me.ContentCheckboxContentTypes.Trim.ToLower.Split(","), contentSchema.ToLower) > 0 _
                             OrElse (String.IsNullOrEmpty(Me.ContentCheckboxContentTypes.Trim) And userXml.SelectNodes("//Credentials[Permissions/Permission[@contentType='" & contentSchema & "']]").Count > 0) Then
 
-                            Dim providersSelect As XmlElement = form.addSelect(group, "postToIntegrations", False, "", "checkboxes", Eonic.xForm.ApperanceTypes.Full)
+                            Dim providersSelect As XmlElement = form.addSelect(group, "postToIntegrations", False, "", "checkboxes", Protean.xForm.ApperanceTypes.Full)
                             addElement(providersSelect, "value", postingProviders)
                             For Each provider As XmlElement In userXml.SelectNodes("//Credentials")
 
@@ -546,7 +546,7 @@ Namespace Integration.Directory
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "PostContentCheckboxes", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "PostContentCheckboxes", ex, ""))
             End Try
         End Sub
     End Class
