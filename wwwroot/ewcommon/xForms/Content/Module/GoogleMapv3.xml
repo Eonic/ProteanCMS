@@ -60,6 +60,7 @@
     <bind nodeset="tblContent">
       <bind id="cModuleTitle" nodeset="cContentName" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">
+        <bind id="cGoogleAPIKey" nodeset="@apiKey" required="false()" type="string"/>
         <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
         <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
         <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
@@ -117,6 +118,9 @@
         <label>Module Details</label>
         <input bind="cModuleTitle" class="long">
           <label>Title or name</label>
+        </input>
+        <input bind="cGoogleAPIKey" class="long">
+          <label>APIKey</label>
         </input>
       </group>
       <group class="inline">

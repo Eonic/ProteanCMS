@@ -21,7 +21,7 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
 
         'Customise the output
         ' Default is Excel
-        Dim ofs As New Eonic.fsHelper
+        Dim ofs As New Protean.fsHelper
         Select Case mode.ToLower
             Case "txt"
                 contentType = "text/plain"
@@ -32,7 +32,8 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
                 End If
                 fileExtension = "txt"
             Case "csv"
-                contentType = "text/csv"
+                'contentType = "text/csv"
+                contentType = "text/plain"
                 If reportXsl <> "" Then
                     siteXSL = ofs.checkCommonFilePath("/xsl/reports/" & reportXsl & ".xsl")
                 Else
@@ -59,7 +60,10 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
         End Select
 
         ' Initialise EonicWeb
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
+        '  oEw.mbAdminMode = True
+        '  oEw.Open()
+
         oEw.InitializeVariables()
         oEw.mcEwSiteXsl = siteXSL
 
@@ -70,7 +74,7 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
         Else
             ' Set the response headers
             oEw.mcContentType = contentType
-            oEw.mcContentDisposition = "attachment;filename=" & filename & "." & fileExtension
+            '   oEw.mcContentDisposition = "attachment;filename=" & filename & "." & fileExtension
 
         End If
 

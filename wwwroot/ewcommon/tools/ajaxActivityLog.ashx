@@ -6,7 +6,7 @@ Imports System.Web
 Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
         oEw.Open()
         If context.Request("xml") <> "" Then
@@ -14,14 +14,14 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
         End If
         oEw.mbAdminMode = True
 
-        Dim type As Eonic.Web.dbHelper.ActivityType
+        Dim type As Protean.Cms.dbHelper.ActivityType
         Select Case LCase(oEw.moRequest("type"))
             Case "email"
-                type = Eonic.Web.dbHelper.ActivityType.Custom1
+                type = Protean.Cms.dbHelper.ActivityType.Custom1
             Case "website"
-                type = Eonic.Web.dbHelper.ActivityType.Custom2
+                type = Protean.Cms.dbHelper.ActivityType.Custom2
             Case Else
-                type = Eonic.Web.dbHelper.ActivityType.PageViewed
+                type = Protean.Cms.dbHelper.ActivityType.PageViewed
         End Select
 
         oEw.moDbHelper.logActivity(type, oEw.mnUserId, oEw.mnPageId, oEw.mnArtId, 0, oEw.moRequest("destination") & " " & oEw.moRequest.ServerVariables("REMOTE_ADDR") & " " & oEw.moRequest.ServerVariables("HTTP_USER_AGENT"))

@@ -553,7 +553,8 @@
       <xsl:when test="@cssFramework='bs3'">
         <xsl:text>~/ewcommon/js/jquery/revolution/js/jquery.themepunch.tools.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/revolution/js/jquery.themepunch.revolution.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jQuery/parallax/jquery.stellar.min.js,</xsl:text>
+        <!--<xsl:text>~/ewcommon/js/jQuery/parallax/jquery.stellar.min.js,</xsl:text>-->
+        <xsl:text>~/ewcommon/js/jQuery/parallax/universal-parallax.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -593,7 +594,6 @@
         <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
-
         <xsl:if test="@layout='Modules_Masonary'">
           <script type="text/javascript" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" >/* */</script>
         </xsl:if>
@@ -3214,7 +3214,7 @@
             <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="@url"/>
             <xsl:value-of select="/Page/@pageExt"/>
-            <xsl:if test="/Page/@adminMode and /Page/@pageExt!=''">
+            <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
               <xsl:text>?pgid=</xsl:text>
               <xsl:value-of select="@id"/>
             </xsl:if>
@@ -3457,6 +3457,7 @@
       <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
     </xsl:variable>
     <xsl:value-of select="translate($strippedName,' ','-')"/>
+    <xsl:value-of select="translate($strippedName,'+','-')"/>
   </xsl:template>
 
 
@@ -3554,7 +3555,7 @@
     </li>
   </xsl:template>
 
-  <xsl:template match="MenuItem[count(MenuItem)&gt;0 and DisplayName/@exclude!='true']" mode="mainmenudropdown">
+  <xsl:template match="MenuItem[count(MenuItem[not(DisplayName/@exclude='true')])&gt;0 and DisplayName/@exclude!='true']" mode="mainmenudropdown">
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
@@ -5906,11 +5907,26 @@
             </xsl:attribute>
             <!-- Width -->
             <xsl:attribute name="width">
-              <xsl:value-of select="substring-before($imageSize,'x')" />
+              <xsl:choose>
+                <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                  <xsl:value-of select="$max-width"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="substring-before($imageSize,'x')" />
+                </xsl:otherwise>
+              </xsl:choose>
+
             </xsl:attribute>
             <!-- Height -->
             <xsl:attribute name="height">
-              <xsl:value-of select="substring-after($imageSize,'x')" />
+              <xsl:choose>
+                <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                  <xsl:value-of select="$max-height"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="substring-after($imageSize,'x')" />
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:attribute>
             <!-- Alt -->
             <xsl:attribute name="alt">
@@ -6030,11 +6046,27 @@
           </xsl:attribute>
           <!-- Width -->
           <xsl:attribute name="width">
-            <xsl:value-of select="substring-before($imageSize,'x')" />
+            <xsl:choose>
+              <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                <xsl:value-of select="$max-width"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="substring-before($imageSize,'x')" />
+              </xsl:otherwise>
+            </xsl:choose>
+            
           </xsl:attribute>
           <!-- Height -->
           <xsl:attribute name="height">
-            <xsl:value-of select="substring-after($imageSize,'x')" />
+            <xsl:choose>
+              <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                <xsl:value-of select="$max-height"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="substring-after($imageSize,'x')" />
+              </xsl:otherwise>
+            </xsl:choose>
+            
           </xsl:attribute>
           <!-- Alt -->
           <xsl:attribute name="alt">
@@ -8358,6 +8390,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+    <!-- THIS IS OVERRIDDEN IN ADMIN MODE BY TEMPLATE IN ADMINWYSIWYG-->
     <xsl:choose>
       <xsl:when test="$position='header' or $position='footer' or ($position='column1' and @layout='Modules_1_column')">
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
@@ -8370,15 +8403,15 @@
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
             </xsl:attribute>
-            <xsl:if test="@data-stellar-background-ratio!='0'">
+            <!--<xsl:if test="@data-stellar-background-ratio!='0'">
               <xsl:attribute name="data-stellar-background-ratio">
-                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
+                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> test2
               </xsl:attribute>
-            </xsl:if>
+            </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
-              <xsl:attribute name="style">
-                background-image: url('<xsl:value-of select="@backgroundImage"/>');
-              </xsl:attribute>
+                <xsl:attribute name="style">
+                  background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                </xsl:attribute>
             </xsl:if>
             <xsl:choose>
               <xsl:when test="@fullWidth='true'">
@@ -8398,10 +8431,23 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
+    
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
-            <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
-          </xsl:when>
+            <xsl:choose>
+              <xsl:when test="@backgroundImage!=''">
+                  <div>
+                    <xsl:attribute name="style">
+                      background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    </xsl:attribute>
+                     <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
+                  </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
+              </xsl:otherwise>
+            </xsl:choose>
+                     </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
             <xsl:text>&#160;</xsl:text>

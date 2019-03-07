@@ -390,9 +390,9 @@ $(document).ready(function () {
     $('.update-content-value-dd').each(function () {
 
         $(this).find('li a').click(function () {
-            var thisButton = $(this)
-            var thisLabel = thisButton.closest('.dropdown').find('.updatedValue')
-            var thisToggle= thisButton.closest('.dropdown').find('.dropdown-toggle')
+            var thisButton = $(this);
+            var thisLabel = thisButton.closest('.dropdown').find('.updatedValue');
+            var thisToggle = thisButton.closest('.dropdown').find('.dropdown-toggle');
             $.ajax({
                 type: 'post',
                 url: $(this).attr('href'),
@@ -408,6 +408,33 @@ $(document).ready(function () {
 
     $('#files .item-image .panel').prepareLibImages();
 
+    //select all checkboxes
+    $(".select-all").change(function () {  //"select all" change 
+        $(".checkbox input").prop('checked', $(this).prop("checked")); //change all ".checkbox" checked status
+    });
+
+    //".checkbox" change 
+    $('.checkbox input').change(function () {
+        //uncheck "select all", if one of the listed checkbox item is unchecked
+        if (false === $(this).prop("checked")) { //if this item is unchecked
+            $(".select-all").prop('checked', false); //change "select all" checked status to false
+        }
+        //check "select all" if all checkbox items are checked
+        if ($('.checkbox input:checked').length === $('.checkbox input').length) {
+            $(".select-all").prop('checked', true);
+        }
+    });
+
+    $('#BulkContentAction').on('submit', function (e) {
+        e.preventDefault();
+        var ids = $('input[type=checkbox][name=id]:checked').map(
+            function () { return this.value; }).get().join();
+        var bulkAction = $('select[name=BulkAction]').val();
+        var pgid = $('input[name=pgid]').val();
+        window.location = '?ewCmd=BulkContentAction&BulkAction=' + bulkAction + "&pgid=" + pgid + '&id=' + ids;
+
+    });
+
 });
 
 function setEditImage() {
@@ -417,7 +444,7 @@ function setEditImage() {
         imgtag = encodeURIComponent(imgtag);
         var targetField = $(this).parents('.input-group').children('textarea').attr('id');
         var cName = "";
-        var linkUrl = '/?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&ewCmd2=editImage&imgHtml=' + imgtag + '&targetField=' + targetField 
+        var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&ewCmd2=editImage&imgHtml=' + imgtag + '&targetField=' + targetField 
        // alert(linkUrl);
         // $(this).attr("href", linkUrl); 
         $('#modal-' + targetField).load(linkUrl, function (e) { $('#modal-' + targetField).modal('show'); });
@@ -616,7 +643,7 @@ function passImgToForm(targetForm, targetField) {
        // previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + targetField + '()" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"> </i> Edit image</a><br/><a href="#" onclick="xfrmClearImage(\'EditContent\',\'' + targetField + '\',\'' + cName + '\');return false" title="Clear Image" class="btn btn-sm btn-danger"><i class="icon-remove-circle icon-white"> </i> Clear image</a>';
         $(editDiv).find('.editpick').html('<a title="edit an image from the image library" class="btn btn-primary editImage"><i class="fa fa-edit fa-white"> </i> Edit</a>');
         $(editDiv).find('a.editImage').click(function () {
-            $(this).attr("href", '/?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + targetForm + '&amp;ewCmd2=editImage&amp;imgHtml=' + imgtag + '&amp;targetField=' + targetField + '&amp;targetClass=' + cName);
+            $(this).attr("href", '?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + targetForm + '&amp;ewCmd2=editImage&amp;imgHtml=' + imgtag + '&amp;targetField=' + targetField + '&amp;targetClass=' + cName);
             return true;
         });
         //add preview Image
@@ -659,26 +686,26 @@ function xfrmClearImage(formRef, fieldRef, className) {
     previewDiv.remove();
     editDiv.find('a.btn-danger').remove();
     editDiv.find('a.editImage').remove();
-    editDiv.find('span.editpick').html('<a data-toggle="modal" href="/?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&amp;targetClass=' + className + '" title="pick an image from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>');
+    editDiv.find('span.editpick').html('<a data-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '&amp;targetClass=' + className + '" title="pick an image from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>');
     //	alert(previewDiv.innerHTML);
 }
 
 function xfrmClearDocument(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="/?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
+    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=DocsLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearMedia(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editDoc_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="/?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-music fa-white"> </i> Pick</a>')
+    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=MediaLib&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-music fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearImgFile(formRef, fieldRef) {
     document.forms[formRef].elements[fieldRef].value = '';
     buttonDiv = $('#editImageFile_' + fieldRef + '  .input-group-btn');
-    buttonDiv.html('<a data-toggle="modal" href="/?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
+    buttonDiv.html('<a data-toggle="modal" href="?contentType=popup&ewCmd=ImageLib&amp;ewCmd2=PathOnly&amp;targetForm=' + formRef + '&amp;targetField=' + fieldRef + '" title="pick an document from the image library" data-target="#modal-' + fieldRef + '" class="btn btn-primary"><i class="fa fa-picture-o fa-white"> </i> Pick</a>')
 }
 
 function xfrmClearCalendar(formRef, fieldRef) {
@@ -1297,7 +1324,7 @@ Original preload function has been kept but is unused.
 to avoid looping MenuItems - WH 2010-07-30 
 */
 function getAdminAjaxTreeViewPath() {
-    var treeviewPath = '/?contentType=ajaxadmin'
+    var treeviewPath = '?contentType=ajaxadmin'
     if ($("#tpltMovePage").exists()) {
         var movingPageId = getParameterByName('pgid');
         treeviewPath = treeviewPath + '&movingPageId=' + movingPageId;

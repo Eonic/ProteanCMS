@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" contentType="Module" moduleType="3columns" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10"/>
+          <Content position="" contentType="Module" moduleType="3columns" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10" mdCol="3" smCol="2" xsCol="2"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -35,6 +35,9 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
+      <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
     </bind>
     <ewInclude filePath="/ewcommon/xforms/content/module/1column.xml" xPath="descendant-or-self::bind[@id='columnPresentationBinds']"/>
       <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -62,6 +65,71 @@
         <input bind="cModuleTitle" class="long">
           <label>Title or Name</label>
         </input>
+      </group>
+
+      <group class="inline-4col">
+        <label>Layout options for smaller screens</label>
+        <select1 bind="lgCol" class="readonly">
+          <label>Desktop</label>
+          <value>3</value>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
+          <help class="inline">
+            <p>The number of columns on larger screens (≥1200px) is determind by the module selected, and therefore cannot be changed</p>
+          </help>
+        </select1>
+        <select1 bind="mdCol">
+          <label>Laptop</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
+          <help class="inline">
+            <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+          </help>
+        </select1>
+        <select1 bind="smCol">
+          <label>Tablet</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
+          <item>
+            <label>3</label>
+            <value>3</value>
+          </item>
+          <help class="inline">
+            <p>Small devices (≥768px), typically small tablets</p>
+          </help>
+        </select1>
+        <select1 bind="xsCol">
+          <label>Lrg Mobile</label>
+          <item>
+            <label>1</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>2</label>
+            <value>2</value>
+          </item>
+          <help class="inline">
+            <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+          </help>
+        </select1>
       </group>
       <group>
         <label>Module Links</label>

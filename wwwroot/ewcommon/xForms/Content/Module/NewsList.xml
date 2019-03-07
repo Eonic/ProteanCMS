@@ -8,7 +8,7 @@
         <nVersion/>
         <cContentForiegnRef/>
         <cContentName/>
-        <cContentSchemaName>Module</cContentSchemaName> 
+        <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
           <Content moduleType="NewsList" contentType="NewsArticle" box="" title="" link="" linkType="internal" linkText="More news" sortBy="publish" order="descending" cols="1" carousel="false" stepBy="" stepCount="0" display="all" rss="false" position="" commentPlatform="none" fbCommentsWidth="500" listGroup="true" autoplay="true" autoPlaySpeed="2000"/>
         </cContentXmlBrief>
@@ -57,10 +57,11 @@
       <bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
       <bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
       <bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
-      <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/> 
+      <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
     <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
@@ -225,33 +226,7 @@
       </group>
       <group class="inline">
         <label>Display Settings</label>
-        <select1 bind="nColumns" appearance="full" class="form-group">
-          <label>Number of columns</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>2</label>
-            <value>2</value>
-          </item>
-          <item>
-            <label>3</label>
-            <value>3</value>
-          </item>
-          <item>
-            <label>4</label>
-            <value>4</value>
-          </item>
-          <item>
-            <label>5</label>
-            <value>5</value>
-          </item>
-          <item>
-            <label>6</label>
-            <value>6</value>
-          </item>
-        </select1>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='columns']"/>
         <select1 bind="nStepCount" appearance="full" class="form-group">
           <label>Articles per page</label>
           <item>
@@ -367,48 +342,48 @@
         <switch class="disable">
           <case id="Carousel_true" >
             <group class="inline">
-            <select1 bind="autoplay"  appearance="full" class="form-group ">
-              <label>Auto play</label>
-              <item>
-                <label>Yes</label>
-                <value>true</value>
-              </item>
-              <item>
-                <label>No</label>
-                <value>false</value>
-              </item>
-            </select1>
-            <input bind="autoPlaySpeed" class="form-group ">
-              <label>autoplay Speed (milliseconds) </label>
-            </input>
+              <select1 bind="autoplay"  appearance="full" class="form-group ">
+                <label>Auto play</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+              <input bind="autoPlaySpeed" class="form-group ">
+                <label>autoplay Speed (milliseconds) </label>
+              </input>
 
               <select1 bind="carouselBullets" appearance="full"  class="form-group">
-                  <label>Show navigation bullets for carousel</label>
-                  <item>
-                      <label>Yes</label>
-                      <value>true</value>
-                  </item>
-                  <item>
-                      <label>No</label>
-                      <value>false</value>
-                  </item>
+                <label>Show navigation bullets for carousel</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
               </select1>
               <select1 bind="carouselHeight" appearance="full"  class="form-group">
-                  <label>Match height of carousel items</label>
-                  <item>
-                      <label>Yes</label>
-                      <value>true</value>
-                  </item>
-                  <item>
-                      <label>No</label>
-                      <value>false</value>
-                  </item>
+                <label>Match height of carousel items</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
               </select1>
-              </group>
+            </group>
           </case>
           <case id="Carousel_false"/>
         </switch>
-      
+
       </group>
       <group>
         <label>Content Syndication</label>

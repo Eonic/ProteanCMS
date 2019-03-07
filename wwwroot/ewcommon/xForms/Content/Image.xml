@@ -12,6 +12,7 @@
         <cContentXmlBrief>
           <Content internalLink="" externalLink="" position="">
             <img class="image"/>
+            <inline></inline>
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
@@ -36,6 +37,8 @@
       <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
       <bind id="cSVGFallback" nodeset="@svgFallback" required="false()" type="string"/>
       <!--<bind id="cContentName" nodeset="@title" required="false()" type="string"/>-->
+
+      <bind id="cSVGInline" nodeset="inline" required="false()" type="string"/>
     </bind>
     <bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
     <bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
@@ -96,6 +99,8 @@
         <input bind="cSVGFallback" class="short pickImageFile">
           <label>SVG FallbackImage</label>
         </input>
+        <textarea bind="cSVGInline" class="xml" rows="15" cols="70">
+        </textarea>
       </group>
       <group>
         <label>Link (optional)</label>

@@ -142,11 +142,7 @@
       <MenuItem name="SEO Reports" cmd="RavenFrameset" display="true" icon="fas fa-chart-pie"/>
       <!--MenuItem name="Activity Log" cmd="ActivityLogging" display="true" feature="ActivityLogging" icon="fa-meh-o"/-->
     </MenuItem>
-      <MenuItem name="Site Theme" cmd="ThemeSettings" display="true" feature="Themes" icon="icon-brush">
-        <MenuItem name="Current Theme Settings" cmd="ThemeSettings" display="true" icon="fa-gears"/>
-        <MenuItem name="Change Site Theme" cmd="SelectTheme" display="true" icon="icon-brush"/>
-        <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
-      </MenuItem>
+
     <MenuItem name="Settings" cmd="SettingsDash" display="true" icon="fa-cogs">
       <MenuItem name="Settings" cmd="WebSettings" display="true" icon="fa-cogs">
         <MenuItem name="Site Settings" cmd="WebSettings" display="true" icon="fa-cogs"/>
@@ -173,6 +169,11 @@
       <MenuItem name="Index Site" cmd="SiteIndex" display="true" feature="Search" icon="fa-tachometer"/>
       <MenuItem name="Manage Lookups" cmd="ManageLookups" display="true" icon="fa-bars"/>
       <MenuItem name="Import Files" cmd="FileImport" display="true" feature="Import" icon="fa-sign-in"/>
+      <MenuItem name="Site Theme" cmd="ThemeSettings" display="true" feature="Themes" icon="icon-brush">
+        <MenuItem name="Current Theme Settings" cmd="ThemeSettings" display="true" icon="fa-gears"/>
+        <MenuItem name="Change Site Theme" cmd="SelectTheme" display="true" icon="icon-brush"/>
+        <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
+      </MenuItem>
     </MenuItem>
   </MenuItem>
 </AdminMenu>

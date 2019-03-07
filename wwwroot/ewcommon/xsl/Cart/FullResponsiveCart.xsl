@@ -144,6 +144,23 @@
     <xsl:apply-templates select="." mode="orderItems"/>
   </xsl:template>
 
+    <!--#-->
+  <!--############################## Quote Procees - Currency ################################-->
+  <!--#-->
+  <xsl:template match="Order[@cmd='Currency']" mode="orderProcessTitle">
+    <h2>
+      <!--Currency Selection-->
+      <xsl:call-template name="term3016" />
+    </h2>
+  </xsl:template>
+
+  <xsl:template match="Order[@cmd='Currency']" mode="orderProcess">
+    <xsl:apply-templates select="." mode="orderProcessTitle"/>
+    <div id="cartCurrencyBox">
+      <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='Currency']" mode="xform"/>
+    </div>
+  </xsl:template>
+  
   <!--#-->
   <!--##############################Order Addresses ################################-->
   <!--#-->
@@ -423,11 +440,11 @@
   <!--#-->
   <!--############################## Order Procees - Billing ################################-->
   <!--#-->
-  <xsl:template match="Order[@cmd='Billing']" mode="orderProcessTitle">
+  <xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcessTitle">
 
   </xsl:template>
 
-  <xsl:template match="Order[@cmd='Billing']" mode="orderProcess">
+  <xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderProcessTitle"/>
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div id="template_1_Column" class="template template_1_Column">
@@ -829,6 +846,7 @@
   <xsl:template match="Order[(@cmd='EnterPaymentDetails' or @cmd='SubmitPaymentDetails') and /Page/Contents/Content[@type='xform' and (@name='Secure3D' or @name='Secure3DReturn')]]" mode="orderProcessTitle">
 
   </xsl:template>
+  
   <xsl:template match="Order[@cmd='EnterPaymentDetails' or @cmd='SubmitPaymentDetails']" mode="orderProcess">
     <xsl:apply-templates select="." mode="orderErrorReports"/>
     <div class="panel panel-default ccForm">
@@ -838,7 +856,7 @@
         </h2>
       </div>
       <div class="panel-body">
-        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PayForm' or @name='Secure3D' or @name='Secure3DReturn')]" mode="xform"/>
+        <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (contains(@name,'PayForm') or @name='Secure3D' or @name='Secure3DReturn')]" mode="xform"/>
       </div>
     </div>
     <!--form method="post" id="cart" class="ewXform">
@@ -1595,12 +1613,12 @@
         <xsl:text>&#160;</xsl:text>
       </label>
       <input type="text" name="qty_{@id}" id="qty_{$id}" value="1" size="3" class="qtybox form-control"/>
-      <button class="btn btn-action" type="button" value="-" onClick="incrementQuantity('qty_{$id}','-')">
+      <button class="btn btn-action qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{$id}','-')">
         <i class="fa fa-minus">
           <xsl:text> </xsl:text>
         </i>
       </button>
-      <button class="btn btn-action" type="button" value="+" onClick="incrementQuantity('qty_{$id}','+')">
+      <button class="btn btn-action qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{$id}','+')">
         <i class="fa fa-plus">
           <xsl:text> </xsl:text>
         </i>

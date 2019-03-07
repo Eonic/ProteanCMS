@@ -10,7 +10,7 @@ Public Class ProductDetail : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
         Dim oPageXml As XmlDocument
         Dim nPageId As Long
         Dim cProductURL As String
@@ -22,7 +22,7 @@ Public Class ProductDetail : Implements IHttpHandler, IRequiresSessionState
             oEw.InitializeVariables()
             oEw.Open()
 
-            Dim odb As Eonic.Web.dbHelper = oEw.moDbHelper
+            Dim odb As Protean.Cms.dbHelper = oEw.moDbHelper
             'getTheContentId
             Dim nContentId As String = odb.getContentByRef(context.Request("fref"))
 

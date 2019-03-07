@@ -23,7 +23,6 @@ $(document).ready(function () {
         navAddMoreToFit();
     });
 
-    
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $('.content-scroller .cols').resize();
@@ -94,14 +93,10 @@ $(document).ready(function () {
 |--------------------------------------------------------------------------
 */
 $(window).load(function () {
-
-
- 
     $('.matchHeight-body .grid-item').matchHeight();
     $('.matchHeight-body .listItem').matchHeight();
     PageContentActions();
     matchHeightResponsive();
-
 });
 
 $(window).resize(function () {
@@ -122,9 +117,18 @@ $(window).resize(function () {
 
 function PageContentActions() {
 
-    if (typeof $.stellar == 'function') {
-        $.stellar();
+    if (typeof universalParallax == 'function') {
+        var parallaxspeed = $('.parallax-wrapper').last().data("parallax-speed");
+        if (parallaxspeed == '') {
+            parallaxspeed = 1;
+        }
+        new universalParallax().init({
+            speed: parallaxspeed
+        });
     }
+
+ 
+    
     contentScroller();
 
 };

@@ -11,27 +11,27 @@ Public Class CartCallback : Implements IHttpHandler
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         Dim sSql As String
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
 
         Dim moPaymentCfg As Object = WebConfigurationManager.GetWebApplicationSection("eonic/payment")
 
         Dim SellerNotes As String = ""
 
         oEw.InitializeVariables()
-oEw.Open()
+        oEw.Open()
 
         Try
 
-            Dim Cart As Eonic.Web.Cart = New Eonic.Web.Cart(oEw)
+            Dim Cart As Protean.Cms.Cart = New Protean.Cms.Cart(oEw)
             Select Case context.Request("provider")
                 Case Is = "NetBanx"
                     Dim oNetBanxCfg = moPaymentCfg.SelectSingleNode("provider[@name='NetBanx']")
-                    Dim oDictOpt = Eonic.xmlTools.xmlToHashTable(oNetBanxCfg, "value")
+                    Dim oDictOpt = Protean.xmlTools.xmlToHashTable(oNetBanxCfg, "value")
 
                     Dim nCartId As String = context.Request("nbx_merchant_reference")
                     Dim cKey As String = oDictOpt("secretkey")
                     Dim cHash As String = context.Request("nbx_payment_amount") & context.Request("nbx_currency_code") & context.Request("nbx_merchant_reference") & context.Request("nbx_netbanx_reference") & cKey
-                    If Eonic.Tools.Encryption.HashString(cHash, Eonic.Tools.Encryption.Hash.Provider.Sha1, True) = context.Request("nbx_checksum") Then
+                    If Protean.Tools.Encryption.HashString(cHash, Protean.Tools.Encryption.Hash.Provider.Sha1, True) = context.Request("nbx_checksum") Then
 
 
                         Select Case context.Request("nbx_status")
@@ -56,13 +56,13 @@ oEw.Open()
                         End Select
                         'update the auditId             
                     Else
-                        SellerNotes = "hash[" & cHash & "][" & Eonic.Tools.Encryption.HashString(cHash, Eonic.Tools.Encryption.Hash.Provider.Sha1, True) & "]=[" & context.Request("nbx_checksum") & "]" & vbLf & Today & " " & TimeOfDay & ": changed to: (Checksum Failed) " & vbLf
+                        SellerNotes = "hash[" & cHash & "][" & Protean.Tools.Encryption.HashString(cHash, Protean.Tools.Encryption.Hash.Provider.Sha1, True) & "]=[" & context.Request("nbx_checksum") & "]" & vbLf & Today & " " & TimeOfDay & ": changed to: (Checksum Failed) " & vbLf
                         context.Response.Write("CHECKSUMFAIL:0")
                     End If
 
-                    oEw.moDbHelper.logActivity(Eonic.Web.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
+                    oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Eonic.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
 
                 Case Is = "WorldPay"
@@ -88,12 +88,12 @@ oEw.Open()
 
                         Case "Y"
                             'successful transaction we have and ID !!!
-                            If Cart.mnProcessId <> Eonic.Web.Cart.cartProcess.Complete Then
+                            If Cart.mnProcessId <> Protean.Cms.Cart.cartProcess.Complete Then
 
                                 SellerNotes = context.Request("transId") & vbLf & Today & " " & TimeOfDay & ": changed to: (Payment Received) " & vbLf
                                 Cart.mcCartCmd = "ShowCallBackInvoice"
                                 Cart.mnCartId = CInt(context.Request("cartId"))
-                                Cart.mnProcessId = Eonic.Web.Cart.cartProcess.Complete
+                                Cart.mnProcessId = Protean.Cms.Cart.cartProcess.Complete
                                 Cart.mbQuitOnShowInvoice = False
                                 Cart.apply()
 
@@ -105,7 +105,7 @@ oEw.Open()
                                 'responseStr = "cartId:" & context.Request("reference") & "|" & SellerNotes
                                 context.Response.Write(responseStr)
                             Else
-                                oEw.moDbHelper.logActivity(Eonic.Web.dbHelper.ActivityType.Alert, 0, 0, 0, "CARTID NOT : 6 but " & Cart.mnProcessId)
+                                oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CARTID NOT : 6 but " & Cart.mnProcessId)
                             End If
 
                         Case Else
@@ -123,20 +123,20 @@ oEw.Open()
 
                     End Select
 
-                    oEw.moDbHelper.logActivity(Eonic.Web.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
+                    oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK : " & SellerNotes)
 
-                    sSql = "update tblCartOrder set cSellerNotes = '" & Eonic.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
+                    sSql = "update tblCartOrder set cSellerNotes = '" & Protean.SqlFmt(SellerNotes) & "' where nCartOrderKey = " & nCartId
                     oEw.moDbHelper.ExeProcessSql(sSql)
                     'context.Response.Write(sSql)
 
                 Case Else
-                    oEw.moDbHelper.logActivity(Eonic.Web.dbHelper.ActivityType.Alert, 0, 0, 0, "FAILED CALLBACK : " & context.Request.ServerVariables("HTTP_URL"))
+                    oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "FAILED CALLBACK : " & context.Request.ServerVariables("HTTP_URL"))
             End Select
 
             oEw = Nothing
 
         Catch ex As Exception
-            oEw.moDbHelper.logActivity(Eonic.Web.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK ERROR : " & ex.Message & ex.StackTrace)
+            oEw.moDbHelper.logActivity(Protean.Cms.dbHelper.ActivityType.Alert, 0, 0, 0, "CALLBACK ERROR : " & ex.Message & ex.StackTrace)
             context.Response.Write("CALLBACK ERROR : " & ex.Message & ex.StackTrace)
         End Try
 

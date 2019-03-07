@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="BackgroundCarousel" contentType="LibraryImageWithLink" interval="5000" height="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
+          <Content moduleType="BackgroundCarousel" contentType="BackgroundCarouselSlide" interval="5000" height="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

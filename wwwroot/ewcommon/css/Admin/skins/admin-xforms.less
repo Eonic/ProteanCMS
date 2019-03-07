@@ -54,6 +54,26 @@
         height: @admin-field-height;
     }
 
+    select.form-control[size="2"] {
+        height: @admin-field-height * 2;
+    }
+
+    select.form-control[size="3"] {
+        height: @admin-field-height * 3;
+    }
+
+    select.form-control[size="4"] {
+        height: @admin-field-height * 4;
+    }
+
+    select.scroll_10 {
+        height: @admin-field-height * 5;
+    }
+
+    select.scroll_30 {
+        height: @admin-field-height * 10;
+    }
+
     select#cGroups.form-control {
         min-height: 1200px;
     }
@@ -89,6 +109,14 @@
         background: lighten(@admin-header-color-link,30%);
         border-color: lighten(@admin-header-color-link,20%);
         color: @admin-header-color-link;
+    }
+
+    .help-group .alert-info {
+        i {
+            display: inline;
+            float: none !important;
+            vertical-align: middle;
+        }
     }
 
     form.panel,
@@ -228,13 +256,20 @@
     .ewXform {
 
         .row {
-            margin-left: -15px;
-            margin-right: -15px;
+            margin-left: -@admin-gutter-width;
+            margin-right: -@admin-gutter-width;
         }
 
         .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: @admin-gutter-width;
+            padding-right: @admin-gutter-width;
+
+            > .panel-default {
+                .panel-heading {
+                    padding-left: @admin-gutter-width;
+                    padding-right: @admin-gutter-width;
+                }
+            }
         }
 
         .PermissionButton {
@@ -243,7 +278,7 @@
         }
 
         .checkbox-group input, .select1-group input {
-            margin-right: 5px;
+            //margin-right: 5px;
         }
 
         #accordion a i.fa-chevron-down,
@@ -268,6 +303,18 @@
         .panel-group a.accordion-toggle i.fa-angle-down,
         .panel-group a.collapsed i.fa-angle-down {
             .rotate(-90deg);
+        }
+
+        .form-inline .radio {
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 0;
+            vertical-align: middle;
+
+            input {
+                position: relative;
+                margin-left: 0;
+            }
         }
 
         .control-wrapper .form-inline {
@@ -446,9 +493,20 @@
             max-height: 100px;
         }
 
+        .boxStyle .bfh-selectbox-options {
+            width: 100%;
+            z-index: 10;
+
+            li a:hover {
+                //border-left:4px solid lighten(@admin-header-bg,50%);
+                background: #fff;
+                opacity: 0.7;
+            }
+        }
+
         .boxStyle .bfh-selectbox-options li {
             display: inline-block;
-            width: 320px;
+            width: 100%;
         }
 
         .cssStyle .bfh-selectbox-options li {
@@ -639,8 +697,7 @@
 
         .DOBcalendar .input-group-btn label.input-group-addon,
         .calendar .input-group-btn label.input-group-addon {
-            border-right: 1px solid;
-
+            // border-right: 1px solid;
             i {
                 font-size: 14px;
                 padding: 3px 0;
@@ -793,7 +850,8 @@
         }
 
         .radio {
-            padding-left: 20px;
+            //padding-left: 3px;
+            padding-right: 10px;
 
             label {
                 display: inline-block;
@@ -836,6 +894,7 @@
                 opacity: 0;
                 z-index: 1;
                 cursor: pointer;
+                width: 20px;
 
                 &:focus + label::before {
                     .tab-focus();
@@ -1522,8 +1581,8 @@
     }
 
     #template_AdminXForm .row {
-        margin-left: -15px;
-        margin-right: -15px;
+        margin-left: -@admin-gutter-width;
+        margin-right: -@admin-gutter-width;
     }
     // LMS
     .edit-question-wrapper .panel-body > fieldset > fieldset {

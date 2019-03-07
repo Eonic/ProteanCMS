@@ -6,11 +6,11 @@ Imports System.Web.SessionState
 Imports System.Drawing
 
 Public Class ewImgVerificaiton : Implements IHttpHandler, IRequiresSessionState
-    
+
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        
-        Dim oEw As eonic.imgverify = New eonic.imgverify
-              
+
+        Dim oEw As Protean.ImgVerify = New Protean.ImgVerify
+
         '-- write the image to the HTTP output stream as an array of bytes
         Dim b As Bitmap
         b = oEw.generateImage
@@ -19,9 +19,9 @@ Public Class ewImgVerificaiton : Implements IHttpHandler, IRequiresSessionState
         context.Response.ContentType = "image/jpeg"
         context.Response.StatusCode = 200
         context.ApplicationInstance.CompleteRequest()
-        
+
     End Sub
- 
+
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
             Return False

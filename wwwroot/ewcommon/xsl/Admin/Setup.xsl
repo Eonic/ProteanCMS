@@ -112,7 +112,7 @@
 
   
     <xsl:variable name="CMSName">
-      <xsl:call-template name="eonicwebProductNameText"/>
+      <xsl:call-template name="eonicwebProductName"/>
     </xsl:variable>
     
   <xsl:template match="Page">
@@ -122,7 +122,7 @@
     <html>
       <head>
         <title>
-          <xsl:call-template name="eonicwebProductNameText"/> Setup and Maintenance Tool</title>
+          <xsl:call-template name="eonicwebProductName"/> Setup and Maintenance Tool</title>
 	      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" type="text/css" href="/ewcommon/css/base-bs.less" />
         <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.less" />
@@ -313,8 +313,7 @@
       <div class="adminTemplate" id="template_AdminXForm">
         <br/>
         <br/>
-        <h2>
-          Welcome to your Protean<strong>CMS</strong> Setup</h2>
+        <h2>Welcome to your <xsl:call-template name="eonicwebProductName"/> Setup</h2>
         <div class="row">
           <div class="col-md-6">
             <h4>

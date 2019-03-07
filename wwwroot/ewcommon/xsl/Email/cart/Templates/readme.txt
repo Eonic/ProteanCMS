@@ -1,0 +1,1 @@
+﻿These need to be copied to your local project and work with the updated email stationery in 2018

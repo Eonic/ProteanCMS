@@ -47,6 +47,11 @@
         <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
       </bind>
     </bind>
+    <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnBind">
+      <bind id="mdCol" nodeset="@mdCol" required="false()" type="string"/>
+      <bind id="smCol" nodeset="@smCol" required="false()" type="string"/>
+      <bind id="xsCol" nodeset="@xsCol" required="false()" type="string"/>
+    </bind>
   </model>
   <group ref="EditContent" class="2col">
     <label>Edit Formatted Text Module</label>
@@ -116,7 +121,7 @@
           </select1>
         </group>
         <group id="publish">
-        <label>Publish Settings</label>
+          <label>Publish Settings</label>
           <input bind="cPosition" class="readonly">
             <label>Page Position</label>
           </input>
@@ -185,6 +190,113 @@
               <value>lg</value>
             </item>
           </select>
+        </group>
+        <group id="columns" class="inline-4col">
+          <label>Number of columns</label>
+          <select1 bind="nColumns">
+            <label>Desktop</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Large devices (≥1200px), typically desktop computers</p>
+            </help>
+          </select1>
+          <select1 bind="mdCol">
+            <label>Laptop</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Medium devices (≥992px), typically laptops, large tablets and small desktop monitors</p>
+            </help>
+          </select1>
+          <select1 bind="smCol">
+            <label>Tablet</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <item>
+              <label>3</label>
+              <value>3</value>
+            </item>
+            <item>
+              <label>4</label>
+              <value>4</value>
+            </item>
+            <item>
+              <label>5</label>
+              <value>5</value>
+            </item>
+            <item>
+              <label>6</label>
+              <value>6</value>
+            </item>
+            <help class="inline">
+              <p>Small devices (≥768px), typically small tablets</p>
+            </help>
+          </select1>
+          <select1 bind="xsCol">
+            <label>Lrg Mobile</label>
+            <item>
+              <label>1</label>
+              <value>1</value>
+            </item>
+            <item>
+              <label>2</label>
+              <value>2</value>
+            </item>
+            <help class="inline">
+              <p>Extra small devices (≥576px), typically small tablets. Due to the size of these devices, typically they will not have enough room for more than 2 columns</p>
+            </help>
+          </select1>
         </group>
       </group>
     </group>

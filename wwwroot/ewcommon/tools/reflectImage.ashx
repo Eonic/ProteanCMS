@@ -10,26 +10,26 @@ Imports System.Text
 Imports System.IO
 
 Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
-    
+
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-    
-        Dim oEwImg As Eonic.Tools.Image = New Eonic.Tools.Image(context.Server.MapPath(context.Request("img")))
+
+        Dim oEwImg As Protean.Tools.Image = New Protean.Tools.Image(context.Server.MapPath(context.Request("img")))
         Dim oColour As System.Drawing.Color
-        
+
         Dim red As Integer = 255
         Dim green As Integer = 255
         Dim blue As Integer = 255
-        
+
         ' Determine the base colour
         oColour = Color.FromArgb(getColourFromRequest(context.Request, "red"), getColourFromRequest(context.Request, "green"), getColourFromRequest(context.Request, "blue"))
-        
+
         oEwImg.Reflect(oColour, 75)
         context.Response.ContentType = "image/jpeg"
         'oEwImg.Image.Save(context.Response.OutputStream, System.Drawing.Imaging.ImageFormat.jpg)
-                
+
         Dim eps As New EncoderParameters(1)
         eps.Param(0) = New EncoderParameter(Imaging.Encoder.Quality, 80)
-        
+
         Dim cEncoder As String = "image/jpeg"
         If oEwImg.Image Is Nothing Then
             context.Response.StatusCode = 404
@@ -43,11 +43,11 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
             context.Response.StatusCode = 200
             context.ApplicationInstance.CompleteRequest()
         End If
-      
+
         oEwImg.Close()
-        
+
     End Sub
- 
+
     Private Function getColourFromRequest(ByRef request As HttpRequest, ByVal colourChannel As String, Optional ByVal defaultValue As Integer = 255) As Integer
         Dim colourRequest As String = request(colourChannel)
         If colourRequest IsNot Nothing AndAlso IsNumeric(colourRequest) AndAlso CInt(colourRequest) >= 0 AndAlso CInt(colourRequest) <= 255 Then
@@ -56,7 +56,7 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
             Return defaultValue
         End If
     End Function
-    
+
     Public Function GetEncoderInfo(ByVal mimeType As String) As ImageCodecInfo
         'gets jpg encoder info
         Try
@@ -72,7 +72,7 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
             Return Nothing
         End Try
     End Function
-    
+
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
             Return False

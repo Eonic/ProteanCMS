@@ -568,7 +568,8 @@
         </span>
       </xsl:if>
     </div>
-    <xsl:apply-templates select="alert" mode="inlineAlert"/>
+  
+    
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
     </xsl:if>
@@ -580,9 +581,7 @@
   <!-- -->
   <xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload " mode="xform_legend">
     <xsl:if test="alert">
-      <span class="alert">
-        <xsl:apply-templates select="alert/node()" mode="cleanXhtml"/>
-      </span>
+      <xsl:apply-templates select="alert" mode="inlineAlert"/>
     </xsl:if>
     <xsl:if test="hint[@class!='inline']">
       <span class="hint">
@@ -2769,17 +2768,7 @@
       </span>
     </xsl:if>
     <xsl:if test="alert">
-      <span class="alert alert-danger">
-        <xsl:choose>
-          <xsl:when test="alert/span[contains(@class,'msg-')]">
-            <!-- Send to system translations templates -->
-            <xsl:apply-templates select="alert/span" mode="term"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="alert/node()" mode="cleanXhtml"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </span>
+      <xsl:apply-templates select="alert" mode="inlineAlert"/>
     </xsl:if>
   </xsl:template>
 

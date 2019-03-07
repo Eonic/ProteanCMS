@@ -708,6 +708,28 @@ body{height:100%;}
   margin-top:-58px;
 }
 
+@font-face {
+    font-family: 'eonic-logo1';
+    src: url("/ewcommon/fonts/eonic-logo1.eot");
+    src: url("/ewcommon/fonts/eonic-logo1.eot?#iefix") format("embedded-opentype"),
+         url("/ewcommon/fonts/eonic-logo1.woff") format("woff"),
+        url("/ewcommon/fonts/eonic-logo1.woff2") format("woff2"),
+         url("/ewcommon/fonts/eonic-logo1.ttf") format("truetype"),
+         url("/ewcommon/fonts/eonic-logo1.svg#eonic-logo1") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+.icon-Eonic-Logo-AllWhite-no-padding:before {
+    content: '\0045';
+    display: inline-block;
+    font-family: 'eonic-logo1';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
 .fa-inverse{
     color:@brand-primary;
 }
@@ -916,4 +938,35 @@ body{height:100%;}
 	@media (min-width: @screen-lg-min) {
 		width: (@container-lg - @grid-gutter-width);
 	}
+}
+//PARALLAX
+.Site{
+    .parallax-wrapper{
+        position:relative;
+    }
+    .parallax__container {
+	    clip: rect(0, auto, auto, 0);
+	    height: 100%;
+	    left: 0;
+	    overflow: hidden;
+	    position: absolute;
+	    top: 0;
+	    width: 100%;
+	    //z-index: -100;
+    }
+
+    .parallax {
+	    position: fixed;
+	    top: 0;
+	    -webkit-transform: translate3d(0, 0, 0);
+	    transform: translate3d(0, 0, 0);
+	    -webkit-transform-style: preserve-3d;
+	    transform-style: preserve-3d;
+	    width: 100%;
+
+	    /* BG behaviour */
+	    background-position: center;
+	    background-repeat: no-repeat;
+	    background-size: cover;
+    }
 }

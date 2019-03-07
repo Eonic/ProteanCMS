@@ -7,7 +7,7 @@
         ===================================================================================================
   -->
     
-  <xsl:variable name="siteURL" select="concat('http://',/Page/Request/ServerVariables/Item[@name='SERVER_NAME'])"/>
+  <xsl:variable name="siteURL" select="concat('https://',/Page/Request/ServerVariables/Item[@name='SERVER_NAME'])"/>
   
   <xsl:variable name="siteName">
     <xsl:call-template name="getSettings">
@@ -300,8 +300,18 @@
 
   <!-- product url -->
   <xsl:template match="Content" mode="get-google-url">
-    <xsl:value-of select="$siteURL"/>
-    <xsl:apply-templates select="." mode="getHref" />
+    <xsl:variable name="pageURL">
+      <xsl:apply-templates select="." mode="getHref" />
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="starts-with($pageURL,'http')">
+        <xsl:value-of select="$pageURL"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$siteURL"/>
+        <xsl:value-of select="$pageURL"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>?utm_source=google-product-search&amp;utm_medium=productFeed</xsl:text>
   </xsl:template>
 

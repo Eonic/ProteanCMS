@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Eonic.Web+Content+Modules.NewsByDate"  moduleType="NewsListDateMenu" contentType="NewsArticle" box="" title="" position="" actionOnDetail="true"/>
+          <Content action="Protean.Cms+Content+Modules.NewsByDate"  moduleType="NewsListDateMenu" contentType="NewsArticle" box="" title="" position="" actionOnDetail="true"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <cBlockedSchemaType>NewsArticle</cBlockedSchemaType>

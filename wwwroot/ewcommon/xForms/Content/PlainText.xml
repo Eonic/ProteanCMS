@@ -83,11 +83,11 @@
 			  <textarea bind="cContentBody" rows="10" cols="100" class="col-md-12">
 			  </textarea>
       </group>
-    
-			<submit submission="EditContent" ref="ewSubmit" class="principle">
-				<label>Save Text</label>
-			</submit>
    </group>
-		
 	</group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Text</label>
+    </submit>
+  </group>
 </Content>

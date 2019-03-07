@@ -2886,7 +2886,8 @@
   <xsl:template match="Page" mode="googleMapJS">
     <!-- Initialise any Google Maps -->
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
+      <xsl:variable name="apiKey" select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
       <script type="text/javascript">
         <xsl:text>function initialiseGMaps(){</xsl:text>
         <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>

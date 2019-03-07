@@ -1,0 +1,821 @@
+﻿<Page id="15" cacheMode="0" layout="AdminXForm" pageExt="" lang="en-gb" translang="en-gb" expireDate="2010-12-31" updateDate="2010-04-09" title="EonicWeb: " adminMode="true" ewCmd="AddContent" xmlns="">
+  <Request>
+    <ServerVariables>
+      <Item name="APPL_MD_PATH">/LM/W3SVC/93/ROOT/ewcommon</Item>
+      <Item name="APPL_PHYSICAL_PATH">D:\web\ewcommon_v5\</Item>
+      <Item name="CONTENT_LENGTH">0</Item>
+      <Item name="GATEWAY_INTERFACE">CGI/1.1</Item>
+      <Item name="HTTPS">off</Item>
+      <Item name="INSTANCE_ID">93</Item>
+      <Item name="INSTANCE_META_PATH">/LM/W3SVC/93</Item>
+      <Item name="LOCAL_ADDR">10.15.6.8</Item>
+      <Item name="PATH_INFO">/ewcommon/default.ashx</Item>
+      <Item name="PATH_TRANSLATED">D:\web\ewcommon_v5\default.ashx</Item>
+      <Item name="QUERY_STRING">path=/Products&amp;ewCmd=AddContent&amp;type=SKU&amp;name=New+SKU&amp;RelType=2way&amp;relationType=</Item>
+      <Item name="REMOTE_ADDR">10.15.6.38</Item>
+      <Item name="REMOTE_HOST">10.15.6.38</Item>
+      <Item name="REMOTE_PORT">52392</Item>
+      <Item name="REQUEST_METHOD">GET</Item>
+      <Item name="SCRIPT_NAME">/ewcommon/default.ashx</Item>
+      <Item name="SERVER_NAME">v45demo.ds01.eonic.co.uk</Item>
+      <Item name="SERVER_PORT">80</Item>
+      <Item name="SERVER_PORT_SECURE">0</Item>
+      <Item name="SERVER_PROTOCOL">HTTP/1.1</Item>
+      <Item name="SERVER_SOFTWARE">Microsoft-IIS/7.0</Item>
+      <Item name="URL">/ewcommon/default.ashx</Item>
+      <Item name="HTTP_CONNECTION">Keep-Alive</Item>
+      <Item name="HTTP_CONTENT_LENGTH">0</Item>
+      <Item name="HTTP_ACCEPT">*/*</Item>
+      <Item name="HTTP_ACCEPT_ENCODING">gzip, deflate</Item>
+      <Item name="HTTP_ACCEPT_LANGUAGE">en-gb</Item>
+      <Item name="HTTP_COOKIE">__utma=93020041.927471846.1268862071.1270047739.1270731963.5; __utmz=93020041.1268862071.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); style=null; ASP.NET_SessionId=joh0y245z4az4cq0jxskiee0</Item>
+      <Item name="HTTP_HOST">v45demo.ds01.eonic.co.uk</Item>
+      <Item name="HTTP_REFERER">http://v45demo.ds01.eonic.co.uk/Products?ewCmd=EditContent&amp;pgid=15&amp;id=315</Item>
+      <Item name="HTTP_USER_AGENT">Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 1.1.4322; .NET CLR 3.0.30729; .NET CLR 3.5.30729; OfficeLiveConnector.1.4; OfficeLivePatch.1.3)</Item>
+      <Item name="HTTP_UA_CPU">x86</Item>
+      <Item name="HTTP_X_ORIGINAL_URL">/Products?ewCmd=AddContent&amp;type=SKU&amp;name=New+SKU&amp;RelType=2way&amp;relationType=</Item>
+      <Item name="Date">2010-04-09</Item>
+      <Item name="GENERATOR">EonicWebV4_0, Version=4.1.1.41, Culture=neutral, PublicKeyToken=0e5e11efc3341916</Item>
+      <Item name="CODEBASE">file:///C:/Windows/assembly/GAC_MSIL/EonicWebV4_0/4.1.1.41__0e5e11efc3341916/EonicWebV4_0.dll</Item>
+      <Item name="REFERENCED_ASSEMBLIES">mscorlib (2.0.0.0); Microsoft.VisualBasic (8.0.0.0); Eonic.Tools (1.0.0.42); System.Xml (2.0.0.0); System (2.0.0.0); System.Web (2.0.0.0); System.Data (2.0.0.0); System.Drawing (2.0.0.0); Lucene.Net (1.9.1.4); paypal_base (5.6.60.0); System.DirectoryServices (2.0.0.0); System.Configuration (2.0.0.0); Eonic.Cs3rdParty (1.0.1.7); TidyNet (1.0.0.0); Interop.XFMS_COMLib (1.0.0.0); </Item>
+      <Item name="PREVIOUS_PAGE">/Products?ewCmd=AddContent&amp;type=SKU&amp;name=New+SKU&amp;RelType=2way&amp;relationType=</Item>
+    </ServerVariables>
+    <QueryString>
+      <Item name="path">/Products</Item>
+      <Item name="ewCmd">AddContent</Item>
+      <Item name="type">SKU</Item>
+      <Item name="name">New SKU</Item>
+      <Item name="RelType">2way</Item>
+      <Item name="relationType">
+      </Item>
+    </QueryString>
+    <Form />
+  </Request>
+  <Menu id="Site">
+    <MenuItem id="1" name="Home" url="/?pgid=1" status="1" access="ADMIN" clone="0">
+      <layout>Modules_3_columns</layout>
+      <MenuItem id="6" name="News" url="/News?pgid=6" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>Modules_2_columns_66_33</layout>
+        <MenuItem id="63" name="Quotes" url="/News/Quotes?pgid=63" status="1" access="ADMIN">
+          <DisplayName>Quotes</DisplayName>
+          <Images>
+            <img src="" width="" height="" class="thumbnail" alt="">
+            </img>
+          </Images>
+          <Description />
+          <layout>1_Column</layout>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem id="7" name="Events" url="/Events?pgid=7" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Modules_2_columns_66_33</layout>
+      </MenuItem>
+      <MenuItem id="15" name="Products" url="/Products?pgid=15" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description>
+          <p>
+            <strong>hjh  jb bjhb</strong>
+          </p>
+        </Description>
+        <layout>Modules_2_columns_33_66</layout>
+      </MenuItem>
+      <MenuItem id="10" name="Documents" url="/Documents?pgid=10" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Modules_1_column</layout>
+      </MenuItem>
+      <MenuItem id="18" name="Testimonials" url="/Testimonials?pgid=18" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Modules_3_columns</layout>
+      </MenuItem>
+      <MenuItem id="20" name="Image Gallery" url="/Image-Gallery?pgid=20" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Modules_1_column</layout>
+      </MenuItem>
+      <MenuItem id="17" name="Vacancies" url="/Vacancies?pgid=17" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Modules_1_column</layout>
+      </MenuItem>
+      <MenuItem id="49" name="Contact Us" url="/Contact-Us?pgid=49" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>Modules_1_column</layout>
+      </MenuItem>
+      <MenuItem id="50" name="Contacts" url="/Contacts?pgid=50" status="1" access="ADMIN">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>1_Column</layout>
+      </MenuItem>
+      <MenuItem id="19" name="Information" url="/Information?pgid=19" status="1" access="ADMIN">
+        <DisplayName>
+        </DisplayName>
+        <Description />
+        <layout>Information_2</layout>
+        <MenuItem id="60" name="Pooh" url="/Information/Pooh?pgid=60" status="1" access="ADMIN">
+          <DisplayName>Pooh</DisplayName>
+          <Images>
+            <img src="" width="" height="" class="thumbnail" alt="">
+            </img>
+          </Images>
+          <Description />
+          <layout>1_Column</layout>
+        </MenuItem>
+        <MenuItem id="59" name="Tigger" url="/Information/Tigger?pgid=59" status="1" access="ADMIN">
+          <DisplayName>Tigger</DisplayName>
+          <Images>
+            <img src="" width="" height="" class="thumbnail" alt="">
+            </img>
+          </Images>
+          <Description />
+          <layout>1_Column</layout>
+        </MenuItem>
+        <MenuItem id="61" name="Piglet" url="/Information/Piglet?pgid=61" status="1" access="ADMIN">
+          <DisplayName>Piglet</DisplayName>
+          <Images>
+            <img src="" width="" height="" class="thumbnail" alt="">
+            </img>
+          </Images>
+          <Description />
+          <layout>1_Column</layout>
+        </MenuItem>
+        <MenuItem id="9" name="Links" url="/Information/Links?pgid=9" status="1" access="ADMIN" clone="0">
+          <DisplayName>
+          </DisplayName>
+          <Description />
+          <layout>Modules_1_column</layout>
+        </MenuItem>
+        <MenuItem id="8" name="Meet the Team" url="/Information/Meet-the-Team?pgid=8" status="1" access="ADMIN" clone="0">
+          <DisplayName>
+          </DisplayName>
+          <Images>
+            <img src="" width="" height="" class="thumbnail" alt="">
+            </img>
+          </Images>
+          <Description />
+          <layout>Modules_1_column</layout>
+        </MenuItem>
+      </MenuItem>
+      <MenuItem id="52" name="Videos" url="/Videos?pgid=52" status="1" access="ADMIN">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description>
+          <p>View the weirdest and wildest videos online!!</p>
+        </Description>
+        <layout>1_Column</layout>
+      </MenuItem>
+      <MenuItem id="53" name="Poll" url="/Poll?pgid=53" status="1" access="ADMIN" clone="0">
+        <DisplayName>Poll</DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>Modules_1_column</layout>
+      </MenuItem>
+      <MenuItem id="57" name="Feeds" url="/Feeds?pgid=57" status="1" access="ADMIN">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>1_Column</layout>
+      </MenuItem>
+      <MenuItem id="58" name="xform" url="/xform?pgid=58" status="1" access="ADMIN">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>1_Column</layout>
+      </MenuItem>
+      <MenuItem id="62" name="Test page" url="/Test-page?pgid=62" status="0" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>Modules_3_columns</layout>
+      </MenuItem>
+      <MenuItem id="64" name="Membership" url="/Membership?pgid=64" status="1" access="ADMIN" clone="0">
+        <DisplayName>
+        </DisplayName>
+        <Images>
+          <img src="" width="" height="" class="thumbnail" alt="">
+          </img>
+        </Images>
+        <Description />
+        <layout>Modules_2_columns</layout>
+      </MenuItem>
+    </MenuItem>
+  </Menu>
+  <Contents>
+    <Content id="108" parId="1" ref="" name="mainHeaderStrapline" type="FormattedText" status="1" publish="2009-07-30T00:00:00+01:00" update="2009-12-15T09:34:37+00:00" owner="1">
+      <h1>
+        <i>
+          Call us for assistance on 01892 534044<br />
+        </i>
+      </h1>
+    </Content>
+    <Content id="14" parId="1" ref="" name="makeLabel" type="PlainText" status="1" publish="2007-08-13T00:00:00+01:00" update="2007-08-13T15:33:20+01:00" owner="1">Manufacturer</Content>
+    <Content id="88" parId="1" ref="" name="PageTitle" type="PlainText" status="1" publish="2009-07-07T00:00:00+01:00" update="2009-07-07T17:04:41+01:00" owner="1">EonicWeb4 Demonstration Website</Content>
+    <Content id="19" parId="7" ref="" name="Event 3" type="Event" status="1" publish="2007-08-13T00:00:00+01:00" expire="2010-12-31T00:00:00+00:00" update="2009-12-15T17:28:09+00:00" owner="1" position="">
+      <Headline>Event 3</Headline>
+      <StartDate>2011-01-01</StartDate>
+      <Strap>
+        <strong>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sollicitudin ante ut purus.<br />
+        </strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sollicitudin ante ut purus.
+      </Strap>
+      <Times>9am-5pm</Times>
+      <Venue>Eonic Offices</Venue>
+      <Images>
+        <img src="/images/BarCharts_ThPic.jpg" width="150" height="100" alt="Bar Chart Thumbnail" class="thumbnail" />
+      </Images>
+    </Content>
+    <Content id="80" parId="15" ref="" name="column1" type="FormattedText" status="1" publish="2007-08-21T00:00:00+01:00" update="2007-08-21T16:54:53+01:00" owner="1">
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean vitae velit. Donec viverra turpis vehicula pede tempus congue. Cras in lorem eget augue malesuada adipiscing. Maecenas ultrices, justo id hendrerit porta, purus ante consequat mi, ut euismod wisi lectus vitae lorem. </p>
+      <p>Donec in massa et nibh bibendum pretium. Quisque aliquam dictum lectus. Suspendisse potenti. In sed arcu. Phasellus accumsan, diam vitae suscipit dapibus, quam dui adipiscing nunc, at pulvinar mi libero id sem. Praesent enim dui, ornare eu, condimentum id, molestie a, est. Ut consectetuer turpis at metus. Quisque elit tellus, fringilla ornare, gravida vel, sodales a, urna. Aenean rhoncus. </p>
+      <p>Nunc semper, lorem quis ullamcorper tempor, leo augue bibendum ligula, sit amet lacinia turpis magna vel tellus. Etiam enim. Ut semper est a nisl. Integer nonummy dolor at mauris. Vestibulum cursus massa non ligula. Aliquam eu tellus. </p>
+    </Content>
+    <Content id="148" parId="15" ref="" name="content_Mod147" type="FormattedText" status="1" publish="2009-12-15T00:00:00+00:00" update="2009-12-15T12:20:07+00:00" owner="1">
+      <h1>Offer Products Online</h1>
+      <p>
+        <strong>
+          Select between a large range of pre-defined product templates, or create your own using modules. With the additional functionality of <a href="http://www.eonic.co.uk/Our-Software/EonicWeb-Cart" target="_blank">eoniccart</a>, users can then proceed to purchase items online.
+        </strong>
+      </p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sollicitudin ante ut purus. Duis id tortor vitae purus hendrerit convallis. Nunc volutpat porttitor dolor. Etiam lacinia laoreet quam. Fusce ullamcorper velit. Nunc convallis porttitor tellus. Aliquam lorem. In dui diam, pretium at, vestibulum at, dapibus ut, urna. Donec ultricies orci ac diam. Fusce sed libero quis turpis convallis volutpat. </p>
+      <p>Donec accumsan, orci ut rhoncus auctor, odio tellus accumsan felis, a egestas est odio ac orci. Vestibulum purus augue, viverra at, blandit vel, congue quis, diam. Duis ac felis. Sed dictum tortor sit amet nisi. Sed id magna ut sapien luctus congue. Aliquam rutrum feugiat leo. Pellentesque felis massa, vulputate id, feugiat a, blandit id, quam. Cras metus. Ut a risus nec massa consectetur fermentum. Donec lacinia, justo eu gravida pretium, nisi dui venenatis risus, sed porttitor nulla ipsum sit amet orci. Mauris quis nisi sed sem faucibus bibendum. </p>
+    </Content>
+    <Content id="146" parId="15" ref="" name="col3" type="Module" status="1" publish="2009-12-15T00:00:00+00:00" update="2010-03-03T15:18:47+00:00" owner="1" moduleType="ProductList" box="" icon="" title="" link="" linkText="" height="" sortBy="Date" order="ascending" contentType="" cols="1" stepCount="0" display="all" position="column3">col3List_Products</Content>
+    <Content id="147" parId="15" ref="" name="col1" type="Module" status="1" publish="2009-12-15T00:00:00+00:00" update="2010-03-03T15:18:47+00:00" owner="1" moduleType="FormattedText" box="" icon="" title="" link="" linkText="" height="" sortBy="Date" order="ascending" contentType="" cols="1" stepCount="0" display="all" position="column1">
+      <h1>Offer Products Online</h1>
+      <p>
+        <strong>
+          Select between a large range of pre-defined product templates, or create your own using modules. With the additional functionality of <a href="http://www.eonic.co.uk/Our-Software/EonicWeb-Cart" target="_blank">eoniccart</a>, users can then proceed to purchase items online.
+        </strong>
+      </p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sollicitudin ante ut purus. Duis id tortor vitae purus hendrerit convallis. Nunc volutpat porttitor dolor. Etiam lacinia laoreet quam. Fusce ullamcorper velit. Nunc convallis porttitor tellus. Aliquam lorem. In dui diam, pretium at, vestibulum at, dapibus ut, urna. Donec ultricies orci ac diam. Fusce sed libero quis turpis convallis volutpat. </p>
+      <p>Donec accumsan, orci ut rhoncus auctor, odio tellus accumsan felis, a egestas est odio ac orci. Vestibulum purus augue, viverra at, blandit vel, congue quis, diam. Duis ac felis. Sed dictum tortor sit amet nisi. Sed id magna ut sapien luctus congue. Aliquam rutrum feugiat leo. Pellentesque felis massa, vulputate id, feugiat a, blandit id, quam. Cras metus. Ut a risus nec massa consectetur fermentum. Donec lacinia, justo eu gravida pretium, nisi dui venenatis risus, sed porttitor nulla ipsum sit amet orci. Mauris quis nisi sed sem faucibus bibendum. </p>
+    </Content>
+    <Content id="201" parId="15" ref="" name="Wills Favorite Products" type="Module" status="1" publish="2010-02-25T00:00:00+00:00" update="2010-04-08T15:10:01+01:00" owner="1" position="column2" moduleType="ProductList" contentType="Product" box="Default Box" title="Wills Favorite Products" link="" linkText="Gifts for all the family" height="" sortBy="Position" order="" cols="2" stepCount="0" display="all" linkType="internal">
+    </Content>
+    <Content id="10" parId="15" ref="" name="productsListTitle" type="PlainText" status="1" publish="2007-08-13T00:00:00+01:00" update="2007-08-13T15:10:22+01:00" owner="1">New Products</Content>
+    <Content id="300" parId="15" ref="" name="Porsche Carrera GT" type="Product" status="1" publish="2010-03-30T00:00:00+01:00" update="2010-04-07T10:52:31+01:00" owner="1" SkuOptions="options">
+      <Name>Porsche Carrera GT</Name>
+      <StockCode>P0005</StockCode>
+      <Manufacturer>Porsche gmbh</Manufacturer>
+      <Options>
+        <OptGroup type="Options1" selectType="DropDown" name="Color">
+          <option name="Red" />
+          <option name="Blue" />
+          <option name="Green" />
+          <option name="Yellow" />
+        </OptGroup>
+        <OptGroup type="Options2" selectType="DropDown" name="Speed">
+          <option name="Fast" />
+          <option name="Faster" />
+          <option name="Even Faster" />
+          <option name="Bloody Hell!" />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" type="sale" validGroup="all">40000</Price>
+        <Price currency="GBP" type="rrp" validGroup="all">50000</Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="" width="" height="" class="thumbnail" alt="">
+        </img>
+        <img src="" width="" height="" class="display" alt="">
+        </img>
+        <img src="/images/content/Porsche_Carrera_GT.jpg" width="1024" height="768" class="detail" alt="Porsche Carrera GT">
+        </img>
+      </Images>
+      <ShortDescription>
+        <p>Lorem ipsum an legendos constituam has. Aeque efficiendi repudiandae ei est. Ut vim ludus adipiscing moderatius, at saperet facilisis duo, ludus nullam adolescens ei quo. No agam nulla alterum pro, pri in possim scripserit.</p>
+      </ShortDescription>
+    </Content>
+    <Content id="315" parId="15" ref="" name="TEST" type="Product" status="1" publish="2010-04-09T00:00:00+01:00" update="2010-04-09T11:14:36+01:00" owner="1" SkuOptions="skus">
+      <Name>TEST</Name>
+      <StockCode>
+      </StockCode>
+      <Manufacturer>
+      </Manufacturer>
+      <Options>
+        <OptGroup type="Options1" selectType="" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+        <OptGroup type="Options2" selectType="" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" type="sale" validGroup="all">
+        </Price>
+        <Price currency="GBP" type="rrp" validGroup="all">
+        </Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="" width="" height="" class="thumbnail" alt="">
+        </img>
+        <img src="" width="" height="" class="display" alt="">
+        </img>
+        <img src="" width="" height="" class="detail" alt="">
+        </img>
+      </Images>
+      <ShortDescription />
+    </Content>
+    <Content id="12" parId="15" ref="" name="Eonicweb Cart" type="Product" status="1" publish="2007-08-13T00:00:00+01:00" update="2009-12-15T11:25:32+00:00" owner="1">
+      <Name>Eonicweb Cart</Name>
+      <StockCode>102</StockCode>
+      <Manufacturer>Eonic</Manufacturer>
+      <Options>
+        <OptGroup type="Options1" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+        <OptGroup type="Options2" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" validGroup="all">
+        </Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="/images/right_web_developer.gif" width="40" height="40" class="thumbnail" alt="">
+        </img>
+      </Images>
+    </Content>
+    <Content id="13" parId="15" ref="" name="Eonicweb Membership" type="Product" status="1" publish="2007-08-13T00:00:00+01:00" update="2009-12-15T11:34:53+00:00" owner="1">
+      <Name>Eonicweb Membership</Name>
+      <StockCode>103</StockCode>
+      <Manufacturer>Eonic</Manufacturer>
+      <Options>
+        <OptGroup type="Options1" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+        <OptGroup type="Options2" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" validGroup="all">
+        </Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="/images/60secs_Icon.gif" width="40" height="40" class="thumbnail" alt="">
+        </img>
+      </Images>
+    </Content>
+    <Content id="11" parId="15" ref="" name="Eonicweb CMS" type="Product" status="1" publish="2007-08-13T00:00:00+01:00" update="2009-12-15T11:23:14+00:00" owner="1">
+      <Name>Eonicweb CMS</Name>
+      <StockCode>101</StockCode>
+      <Manufacturer>Eonic</Manufacturer>
+      <Options>
+        <OptGroup type="Options1" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+        <OptGroup type="Options2" selectType="DropDown" name="">
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+          <option name="" />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" validGroup="all">10.00</Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="/images/Marketing_Workshops_Icon.gif" width="40" height="40" class="thumbnail" alt="">
+        </img>
+      </Images>
+    </Content>
+    <Content id="202" parId="15" ref="" name="Willys warmers" type="Product" status="1" publish="2010-02-25T00:00:00+00:00" update="2010-02-25T18:22:21+00:00" owner="1">
+      <Name>Willy's warmers</Name>
+      <StockCode>147852</StockCode>
+      <Manufacturer>Willy</Manufacturer>
+      <Options>
+        <OptGroup type="Size" selectType="DropDown">
+          <option />
+          <option />
+          <option />
+        </OptGroup>
+        <OptGroup type="Other" selectType="DropDown">
+          <option />
+          <option />
+          <option />
+        </OptGroup>
+      </Options>
+      <Prices>
+        <Price currency="GBP" type="sale" validGroup="all">120.00</Price>
+        <Price currency="GBP" type="rrp" validGroup="all">130.00</Price>
+      </Prices>
+      <Stock />
+      <Images>
+        <img src="" width="" height="" class="thumbnail" alt="">
+        </img>
+        <img src="" width="" height="" class="display" alt="">
+        </img>
+        <img src="" width="" height="" class="detail" alt="">
+        </img>
+      </Images>
+      <ShortDescription>
+        <p>asdasdasdasdasd</p>
+      </ShortDescription>
+    </Content>
+  </Contents>
+  <User id="1" name="Admin" pagePermission="Open">
+    <FirstName>Demo</FirstName>
+    <MiddleName />
+    <LastName>User</LastName>
+    <Position />
+    <Email>demo@eonic.co.uk</Email>
+    <Notes />
+    <Role id="2" name="Administrator" isMember="yes" />
+    <Role id="3" name="Default User" isMember="yes" />
+    <Contacts />
+  </User>
+  <Cart type="order" currency="GBP" currencySymbol="€" currencyRef="" Process="0">
+    <Order status="Empty" itemCount="0" vatRate="0" total="0.00" errorMsg="0" cmd="" sessionId="joh0y245z4az4cq0jxskiee0" siteUrl="http://v45demo.ds01.eonic.co.uk" cartUrl="http://v45demo.ds01.eonic.co.uk" />
+  </Cart>
+  <ContentDetail>
+    <Content type="xform" name="EditContent">
+      <model>
+        <instance>
+          <tblContent>
+            <nContentKey />
+            <nContentPrimaryId />
+            <nVersion />
+            <cContentForiegnRef />
+            <cContentName>New SKU</cContentName>
+            <cContentSchemaName>SKU</cContentSchemaName>
+            <cContentXmlBrief>
+              <Content>
+                <Name />
+                <StockCode />
+                <Prices>
+                  <Price currency="GBP" validGroup="all" type="rrp" />
+                  <Price currency="GBP" validGroup="all" type="sale" />
+                </Prices>
+                <Images>
+                  <img class="thumbnail" />
+                  <img class="detail" />
+                </Images>
+                <colour />
+                <OfferDate />
+                <productSize />
+                <ShippingWeight />
+                <Stock />
+                <MinStock />
+                <Availability />
+              </Content>
+            </cContentXmlBrief>
+            <cContentXmlDetail>
+              <Content>
+                <Name />
+                <StockCode />
+                <Prices>
+                  <Price currency="GBP" validGroup="all" type="rrp" />
+                  <Price currency="GBP" validGroup="all" type="sale" />
+                </Prices>
+                <Images>
+                  <img class="detail" />
+                </Images>
+                <colour />
+                <OfferDate />
+                <productSize />
+                <ShippingWeight />
+                <Stock />
+                <MinStock />
+                <Availability />
+              </Content>
+            </cContentXmlDetail>
+            <nAuditId />
+            <nAuditKey />
+            <dPublishDate>2010-04-09</dPublishDate>
+            <dExpireDate />
+            <dInsertDate />
+            <nInsertDirId />
+            <dUpdateDate />
+            <nUpdateDirId />
+            <nStatus>1</nStatus>
+            <cDescription />
+            <bCascade />
+          </tblContent>
+          <ContentRelations />
+        </instance>
+        <submission id="EditContent" action="" method="post" event="return form_check(this)" />
+        <bind nodeset="tblContent">
+          <bind id="cContentForiegnRef" nodeset="cContentForiegnRef" required="false()" type="string" />
+          <bind id="cContentName" nodeset="cContentName" required="true()" type="string" />
+          <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string" />
+          <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string" />
+          <bind id="nStatus" nodeset="nStatus" required="true()" type="string" />
+          <bind id="cDescription" nodeset="cDescription" required="false()" type="string" />
+          <bind nodeset="cContentXmlBrief/Content">
+            <bind id="cContentName" nodeset="Name" required="true()" type="string" />
+            <bind id="cContentSKU" nodeset="StockCode" required="true()" type="string" />
+            <bind id="cContentProductSize" nodeset="productSize" required="false()" type="string" />
+            <bind id="cContentColour" nodeset="colour" required="false()" type="string" />
+            <bind nodeset="Prices">
+              <bind id="cContentPriceRRP" nodeset="Price[@type='rrp']" required="true()" type="string" />
+              <bind id="cContentPriceSale" nodeset="Price[@type='sale']" required="false()" type="string" />
+            </bind>
+            <bind nodeset="Images">
+              <bind id="cContentThumbnail" nodeset="img[@class='thumbnail']" required="false()" type="xml-replace" />
+              <bind id="cContentDetail" nodeset="img[@class='detail']" required="false()" type="xml-replace" />
+            </bind>
+            <bind id="dSaleDate" nodeset="OfferDate" required="false()" type="string" />
+            <bind id="cContentAvailability" nodeset="Stock" required="true()" type="string" />
+            <bind id="cMinStock" nodeset="MinStock" required="false()" type="string" />
+            <bind id="cAvailability" nodeset="Availability" required="false()" type="string" />
+          </bind>
+          <bind nodeset="cContentXmlDetail/Content">
+            <bind id="cContentName" nodeset="Name" required="true()" type="string" />
+            <bind id="cContentSKU" nodeset="StockCode" required="true()" type="string" />
+            <bind id="cContentProductSize" nodeset="productSize" required="false()" type="string" />
+            <bind id="cContentColour" nodeset="colour" required="false()" type="string" />
+            <bind nodeset="Prices">
+              <bind id="cContentPriceRRP" nodeset="Price[@type='rrp']" required="true()" type="string" />
+              <bind id="cContentPriceSale" nodeset="Price[@type='sale']" required="false()" type="string" />
+            </bind>
+            <bind nodeset="Images">
+              <bind id="cContentDetail" nodeset="img[@class='detail']" required="false()" type="xml-replace" />
+            </bind>
+            <bind id="dSaleDate" nodeset="OfferDate" required="false()" type="string" />
+            <bind id="cContentAvailability" nodeset="Stock" required="true()" type="string" />
+            <bind id="cMinStock" nodeset="MinStock" required="false()" type="string" />
+            <bind id="cAvailability" nodeset="Availability" required="false()" type="string" />
+          </bind>
+        </bind>
+      </model>
+      <group ref="EditContent" class="2col">
+        <label>Edit SKU (Stock Keeping Unit)</label>
+        <group class="ContentColumn1">
+          <group ref="Settings" class="leftSettings">
+            <input bind="nContentKey" class="hidden">
+              <label>ContentId</label>
+            </input>
+            <label>Settings</label>
+            <!--<input bind="cContentForiegnRef" class="short">
+					<label>Foriegn Reference</label>
+				</input>-->
+            <input bind="dPublishDate" class="calendar short">
+              <label>Publish Date</label>
+              <value>2010-04-09</value>
+            </input>
+            <input bind="dExpireDate" class="calendar short">
+              <label>Expire Date</label>
+              <value>
+              </value>
+            </input>
+            <select1 bind="nStatus" appearance="full" class="required vshort">
+              <label>Status</label>
+              <choices />
+              <item>
+                <label>Live</label>
+                <value>1</value>
+              </item>
+              <item>
+                <label>Hidden</label>
+                <value>0</value>
+              </item>
+              <value>1</value>
+            </select1>
+            <!--<input bind="cDescription" class="short">
+					<label>Change Notes</label>
+				</input>-->
+          </group>
+          <group class="Content">
+            <label>Images</label>
+            <input bind="cContentDetail" class="short pickImage">
+              <label>Main SKU Image</label>
+              <help class="inline">
+                <p>The main image is automatically resized for other smaller images such as thumbnails.</p>
+                <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
+              </help>
+              <value>
+                <img class="detail" />
+              </value>
+            </input>
+            <input bind="cContentThumbnail" class="short pickImage">
+              <label>Alternative Thumbnail</label>
+              <value>
+                <img class="thumbnail" />
+              </value>
+            </input>
+          </group>
+        </group>
+        <group class="ContentColumn2">
+          <group ref="Content" class="Content required">
+            <label>SKU details</label>
+            <input bind="cContentName" class="long required">
+              <label>Full Descriptive SKU name</label>
+              <help class="inline">
+                <p>Should be unique to the SKU e.g.</p>
+                <p>
+                  'Slogan' T-shirt <b>Red XL</b>
+                </p>
+              </help>
+              <value>
+              </value>
+            </input>
+            <input bind="cContentSKU" class="short required">
+              <label>SKU code</label>
+              <help class="inline">Unique stock code, matching your back-office system if you have one.</help>
+              <value>
+              </value>
+            </input>
+            <input bind="cContentAvailability" class="short">
+              <label>Stock level</label>
+              <help class="inline">If stock control is enabled, this value will reduce as a quantity is successfully sold.</help>
+              <value>
+              </value>
+            </input>
+            <input bind="cMinStock" class="short">
+              <label>Minimum stock level</label>
+              <help class="inline">If stock control is enabled, and this has a value, the SKU will fall 'off-sale' when the minimum level is reached until stock level is increased.</help>
+              <value>
+              </value>
+            </input>
+          </group>
+          <group ref="Content" class="Content required">
+            <label>RRP Price *</label>
+            <input bind="cContentPriceRRP" class="short required">
+              <value>
+              </value>
+            </input>
+          </group>
+          <group ref="Content" class="Content">
+            <label>Sale Price</label>
+            <input bind="cContentPriceSale" class="short">
+              <value>
+              </value>
+            </input>
+            <input bind="dSaleDate" class="calendar short">
+              <label>Sale Date</label>
+              <value>
+              </value>
+            </input>
+          </group>
+        </group>
+      </group>
+      <group ref="submit" class="contentSubmit">
+        <submit submission="" ref="ewSubmit" class="principle">
+          <label>Save Information</label>
+        </submit>
+      </group>
+    </Content>
+  </ContentDetail>
+  <AdminMenu>
+    <MenuItem name="Admin Home" cmd="AdmHome" display="true">
+      <MenuItem name="Content" cmd="Content" display="true">
+        <MenuItem name="By Page" cmd="ByPage" display="true">
+          <MenuItem name="Normal Mode" cmd="Normal" pgid="15" display="true">
+            <MenuItem name="Edit Content" cmd="EditContent" pgid="15" display="false" />
+            <MenuItem name="Add Module" cmd="AddModule" pgid="15" display="false" />
+            <MenuItem name="Add Content" cmd="AddContent" pgid="15" display="false" />
+            <MenuItem name="Move Content" cmd="MoveContent" pgid="15" display="false" />
+            <MenuItem name="Locate Content" cmd="LocateContent" pgid="15" display="false" />
+            <MenuItem name="Relate Search" cmd="RelateSearch" pgid="15" display="false" />
+            <MenuItem name="Locate Search" cmd="LocateSearch" pgid="15" display="false" />
+            <MenuItem name="Content Versions" cmd="ContentVersions" pgid="15" display="false" />
+            <MenuItem name="Rollback Content" cmd="RollbackContent" pgid="15" display="false" />
+          </MenuItem>
+          <MenuItem name="Advanced Mode" cmd="Advanced" pgid="15" display="true" />
+          <MenuItem name="Page Settings" cmd="EditPage" pgid="15" display="true" />
+          <MenuItem name="Page Layout" cmd="EditPageLayout" pgid="15" display="true" />
+          <MenuItem name="Permissions" cmd="EditPagePermissions" pgid="15" display="true" />
+          <MenuItem name="Rights" cmd="EditPageRights" pgid="15" display="true" />
+          <MenuItem name="Preview" cmd="PreviewOn" pgid="15" display="true" />
+        </MenuItem>
+        <MenuItem name="Edit Menu" cmd="EditStructure" display="true">
+          <MenuItem name="Move Page" cmd="MovePage" pgid="15" display="false" />
+          <MenuItem name="Add Page" cmd="AddPage" pgid="15" display="false" />
+        </MenuItem>
+        <MenuItem name="Resource Library" cmd="ImageLib" display="true" />
+        <MenuItem name="Web Settings" cmd="WebSettings" display="true">
+          <MenuItem name="Scheduled Items" cmd="ScheduledItems" display="true" />
+          <MenuItem name="System Pages" cmd="SystemPages" display="true" />
+          <MenuItem name="System Pages" cmd="ViewSystemPages" display="false" />
+        </MenuItem>
+      </MenuItem>
+      <MenuItem name="Membership" cmd="ListGroups" display="true" />
+      <MenuItem name="Ecommerce" cmd="Ecommerce" display="true">
+        <MenuItem name="Orders" cmd="Orders" display="true" />
+        <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" />
+        <MenuItem name="Delivery Methods" cmd="DeliveryMethods" display="true" />
+        <MenuItem name="Discounts" cmd="Discounts" display="true" />
+        <MenuItem name="Settings" cmd="CartSettings" display="true" />
+        <MenuItem name="Reports" cmd="CartReportsMain" display="true">
+          <MenuItem name="Order Download" cmd="CartDownload" display="true" />
+          <MenuItem name="Sales by Product" cmd="CartReports" display="true" />
+          <MenuItem name="Sales by Page" cmd="CartActivityDrilldown" display="true" />
+          <MenuItem name="Sales by Period" cmd="CartActivityPeriod" display="true" />
+        </MenuItem>
+      </MenuItem>
+      <MenuItem name="Reports" cmd="Reports" display="true" />
+    </MenuItem>
+  </AdminMenu>
+</Page>

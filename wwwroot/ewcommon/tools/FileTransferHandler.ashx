@@ -230,8 +230,8 @@ Public Class FileTransferHandler : Implements IHttpHandler
                 file.SaveAs(StorageRoot & fileNameFixed)
 
                 If LCase(StorageRoot & fileNameFixed).EndsWith(".jpg") Or LCase(StorageRoot & fileNameFixed).EndsWith(".jpeg") Or LCase(StorageRoot & fileNameFixed).EndsWith(".png") Then
-                    Dim eImg As New Eonic.Tools.Image(StorageRoot & fileNameFixed)
-                    Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+                    Dim eImg As New Protean.Tools.Image(StorageRoot & fileNameFixed)
+                    Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), SiteRoot & moWebCfg("WatermarkImage"))
                 End If
                 Dim fullName As String = Path.GetFileName(file.FileName)

@@ -8,9 +8,9 @@ Public Class keepalive : Implements IHttpHandler, IRequiresSessionState
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
         ' Load Eonic Web
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
-        If Eonic.Web.gbSingleLoginSessionPerUser Then
+        If oEw.gbSingleLoginSessionPerUser Then
             oEw.Open()
             oEw.LogSingleUserSession()
             oEw.Close()

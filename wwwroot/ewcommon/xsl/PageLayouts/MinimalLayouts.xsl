@@ -479,7 +479,6 @@
             <xsl:apply-templates select="." mode="marginBelow" />
             <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
             <xsl:value-of select="$thisClass"/>
-
           </xsl:attribute>
           <xsl:if test="@contentType='Module'">
             <xsl:attribute name="class">
@@ -517,6 +516,66 @@
             <div class="panel-image">
               <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
             </div>
+          </xsl:if>
+          <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
+            <!--<xsl:if test="@data-stellar-background-ratio!='0'">
+              <xsl:attribute name="data-stellar-background-ratio">
+                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/> test
+              </xsl:attribute>
+            </xsl:if>-->
+            <xsl:if test="@backgroundImage!=''">
+              <!--<xsl:attribute name="style">
+                background-image: url('<xsl:value-of select="@backgroundImage"/>');
+              </xsl:attribute>-->
+
+              <xsl:choose>
+                <xsl:when test="@data-stellar-background-ratio!='0'">
+                  <xsl:choose>
+                    <xsl:when test="@data-stellar-background-ratio!='10'">
+                      <section style="height:100%" class="parallax-wrapper">
+                        <xsl:if test="@data-stellar-background-ratio!='10'">
+                          <xsl:attribute name="data-parallax-speed">
+                            <xsl:if test="@data-stellar-background-ratio&lt;='5'">
+                              <xsl:text>1.3</xsl:text>
+                            </xsl:if>
+                            <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
+                              <xsl:text>1.6</xsl:text>
+                            </xsl:if>
+                            <xsl:if test="@data-stellar-background-ratio&gt;='10' and @data-stellar-background-ratio&lt;'15'">
+                              <xsl:text>2</xsl:text>
+                            </xsl:if>
+                            <xsl:if test="@data-stellar-background-ratio&gt;='15' and @data-stellar-background-ratio&lt;'20'">
+                              <xsl:text>3</xsl:text>
+                            </xsl:if>
+                            <xsl:if test="@data-stellar-background-ratio&gt;='20' and @data-stellar-background-ratio&lt;'25'">
+                              <xsl:text>4</xsl:text>
+                            </xsl:if>
+                            <xsl:if test="@data-stellar-background-ratio&gt;='25'">
+                              <xsl:text>5</xsl:text>
+                            </xsl:if>
+                          </xsl:attribute>
+                        </xsl:if>
+                        <div class="parallax">
+                          <xsl:attribute name="style">
+                            background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                          </xsl:attribute>
+                        </div>
+                      </section>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:attribute name="style">
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                      </xsl:attribute>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="style">
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:if>
           </xsl:if>
           <xsl:choose>
             <xsl:when test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='Normal'] and $adminMode">
@@ -2355,9 +2414,8 @@
         <a href="{$href}" title="{$title}">
           <xsl:choose>
             <xsl:when test="img[contains(@src,'.svg')]">
-              <svg id="svg-{@position}" width="{$maxWidth}" height="{$maxHeight}" viewbox="0 0 {$maxWidth} {$maxHeight}" xmlns="http://www.w3.org/2000/svg"
-     xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{$maxWidth}" height="{$maxHeight}" class="img-responsive">
+              <svg id="svg-{@position}" width="{img/@width}" height="{img/@height}" viewbox="0 0 {img/@width} {img/@height}" xmlns="http://www.w3.org/2000/svg" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <image id="svg-img-{@position}" xlink:href="{img/@src}" src="{@svgFallback}" width="{img/@width}" height="{img/@height}" class="img-responsive">
                   <xsl:text> </xsl:text>
                 </image>
               </svg>
@@ -2815,7 +2873,8 @@
   <xsl:template match="Page" mode="googleMapJS">
     <!-- Initialise any Google Maps -->
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
+      <xsl:variable name="apiKey" select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
       <script type="text/javascript">
         <xsl:text>function initialiseGMaps(){</xsl:text>
         <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>
@@ -6755,22 +6814,24 @@
           </xsl:apply-templates>
           <xsl:choose>
             <xsl:when test="$lightbox='false'">
-              <div class="thumbnail">
-                <xsl:apply-templates select="." mode="displayThumbnail">
-                  <xsl:with-param name="crop" select="$cropSetting" />
-                  <xsl:with-param name="class" select="'img-responsive'" />
-                  <xsl:with-param name="style" select="'overflow:hidden;'" />
-                  <xsl:with-param name="width" select="$lg-max-width"/>
-                  <xsl:with-param name="height" select="$lg-max-height"/>
-                </xsl:apply-templates>
-                <xsl:if test="Title/node()!='' or Body/node()!=''">
-                  <div class="caption">
-                    <h4>
-                      <xsl:value-of select="Title/node()"/>
-                    </h4>
-                    <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
-                  </div>
-                </xsl:if>
+              <div class="thumbnail-wrapper">
+                <div class="thumbnail">
+                  <xsl:apply-templates select="." mode="displayThumbnail">
+                    <xsl:with-param name="crop" select="$cropSetting" />
+                    <xsl:with-param name="class" select="'img-responsive'" />
+                    <xsl:with-param name="style" select="'overflow:hidden;'" />
+                    <xsl:with-param name="width" select="$lg-max-width"/>
+                    <xsl:with-param name="height" select="$lg-max-height"/>
+                  </xsl:apply-templates>
+                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                    <div class="caption">
+                      <h4>
+                        <xsl:value-of select="Title/node()"/>
+                      </h4>
+                      <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
+                    </div>
+                  </xsl:if>
+                </div>
               </div>
             </xsl:when>
             <xsl:otherwise>
@@ -6866,13 +6927,58 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <div class="clearfix ProductList">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
           <xsl:text>clearfix ProductList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -7562,7 +7668,7 @@
       </xsl:choose>
     </xsl:variable>
     <div class="SubPages">
-      <div class="cols{@cols}">
+      <div class="cols cols{@cols}">
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="contentList" select="$contentList"/>
@@ -7730,8 +7836,56 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <div class="SubPages SubPageGrid Grid">
       <div class="cols{@cols}">
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="contentList" select="$contentList"/>
@@ -7755,7 +7909,7 @@
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <xsl:if test="@name!='Information' and not(DisplayName/@exclude='true')">
+    <xsl:if test="@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')">
       <div class="grid-item">
         <xsl:apply-templates select="." mode="inlinePopupOptions">
           <xsl:with-param name="class" select="'grid-item hproduct'"/>
@@ -7822,7 +7976,7 @@
       <xsl:if test="@allAsZip='on'">
         <div class="listItem list-group-item">
           <div class="lIinner">
-            <a class="docLink zipicon" href="/ewcommon/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
+            <a class="docLink zipicon" href="{$appPath}/ewcommon/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
               <xsl:call-template name="term2074" />
             </a>
           </div>
@@ -7877,7 +8031,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
+                  <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
               </xsl:choose>
@@ -7902,7 +8056,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
+                  <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
               </xsl:choose>
@@ -8312,6 +8466,31 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <!-- Output Module -->
     <div class="clearfix TestimonialList">
       <xsl:if test="@carousel='true'">
@@ -8319,7 +8498,29 @@
           <xsl:text>clearfix TestimonialList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" height="{@carouselHeight}">
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" height="{@carouselHeight}">
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -11107,6 +11308,7 @@
                     <xsl:value-of select="Path/node()"/>
                   </xsl:when>
                   <xsl:otherwise>
+                    <xsl:value-of select="$appPath"/>
                     <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
                     <xsl:value-of select="@id"/>
                   </xsl:otherwise>
@@ -13119,9 +13321,58 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="TagsList">
+      
       <div class="cols{@cols}">
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <!-- If Stepper, display Stepper -->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">

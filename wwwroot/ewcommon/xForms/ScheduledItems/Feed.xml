@@ -13,6 +13,7 @@
             <cXSLPath/>
             <nPageId>1</nPageId>
             <nSaveMode>0</nSaveMode>
+            <cItemNodeName></cItemNodeName>
           </Feed>
         </cActionXML>
         <dPublishDate/>
@@ -31,6 +32,7 @@
     <bind id="nWebsite" nodeset="tblActions/nWebsite" required="false()" type="number"/>
     <bind id="nPageId" nodeset="tblActions/cActionXML/Feed/nPageId" required="true()" type="number"/>
     <bind id="cURL" nodeset="tblActions/cActionXML/Feed/cURL" required="true()" type="string"/>
+    <bind id="cItemNodeName" nodeset="tblActions/cActionXML/Feed/cItemNodeName" required="true()" type="string"/>
     <bind id="cXSLPath" nodeset="tblActions/cActionXML/Feed/cXSLPath" required="true()" type="string"/>
     <bind id="nSaveMode" nodeset="tblActions/cActionXML/Feed/nSaveMode" required="true()" type="number"/>
     <bind id="dPublishDate" nodeset="tblActions/dPublishDate" required="false()" type="date"/>
@@ -78,6 +80,10 @@
       </select1>
       <input bind="cURL" class="required short">
         <label>URL</label>
+        <value/>
+      </input>
+      <input bind="cItemNodeName" class="required short">
+        <label>Item Node Name</label>
         <value/>
       </input>
       <select1 bind="cXSLPath" appearance="minimal" class="required short">

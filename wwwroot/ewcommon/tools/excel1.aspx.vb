@@ -1,5 +1,5 @@
 ﻿
-Partial Class tools_excel1
+Partial Class tools_Ti
     Inherits System.Web.UI.Page
 
 End Class

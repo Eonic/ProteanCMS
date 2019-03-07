@@ -168,19 +168,19 @@ THIS FILE CONTAINS GENERIC OVERRIDES TO BOOTSTRAP
         float:left;
     }
     .fivecolumns{
-        .col-sm-2 {
+        > .col-sm-2 {
 			width: 20%!important;
 			*width: 20%!important;
 		}
-		.col-sm-4 {
+		> .col-sm-4 {
 			width: 40%!important;
 			*width: 40%!important;
 		}
-		.col-sm-6 {
+		> .col-sm-6 {
 			width: 60%!important;
 			*width: 60%!important;
 		}
-		.col-sm-8 {
+		> .col-sm-8 {
 			width: 80%!important;
 			*width: 80%!important;
 		}
@@ -188,19 +188,19 @@ THIS FILE CONTAINS GENERIC OVERRIDES TO BOOTSTRAP
 }
 @media (min-width: 992px){
 	.fivecolumns{ 
-		.col-md-2 {
+		> .col-md-2 {
 			width: 20%!important;
 			*width: 20%!important;
 		}
-		.col-md-4 {
+		> .col-md-4 {
 			width: 40%!important;
 			*width: 40%!important;
 		}
-		.col-md-6 {
+		> .col-md-6 {
 			width: 60%!important;
 			*width: 60%!important;
 		}
-		.col-md-8 {
+		> .col-md-8 {
 			width: 80%!important;
 			*width: 80%!important;
 		}
@@ -218,19 +218,19 @@ THIS FILE CONTAINS GENERIC OVERRIDES TO BOOTSTRAP
 }
 @media (min-width:@screen-lg-min){
 	.fivecolumns-lg{ 
-		.col-lg-2 {
+		> .col-lg-2 {
 			width: 20%!important;
 			*width: 20%!important;
 		}
-		.col-lg-4 {
+		> .col-lg-4 {
 			width: 40%!important;
 			*width: 40%!important;
 		}
-		.col-lg-6 {
+		> .col-lg-6 {
 			width: 60%!important;
 			*width: 60%!important;
 		}
-		.col-lg-8 {
+		> .col-lg-8 {
 			width: 80%!important;
 			*width: 80%!important;
 		}
@@ -404,56 +404,57 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 		}
 	}
 }
-
-.cols1 .grid-item{
-	.make-sm-column(12);
-	@media (max-width: @screen-xs-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
-}
-.cols2 .grid-item{
-	.make-sm-column(6);
-	@media (max-width: @screen-xs-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
-}
-.cols3 .grid-item{
-	.make-sm-column(4);
+div:not(.content-scroller) {
+    .cols1 .grid-item{
+	    .make-sm-column(12);
+	    @media (max-width: @screen-xs-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
+    .cols2 .grid-item{
+	    .make-sm-column(6);
+	    @media (max-width: @screen-xs-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
+    .cols3 .grid-item{
+	    .make-sm-column(4);
 	
-	@media (max-width: @screen-xs-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
-}
-.cols4 .grid-item{
-	.make-sm-column(3);
+	    @media (max-width: @screen-xs-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
+    .cols4 .grid-item{
+	    .make-sm-column(3);
 	
-	@media (max-width: @screen-xs-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
-}
-.cols5 .grid-item{
-	@media (min-width: @screen-sm-min){
-		width: 20%;
-		float:left;		
-		padding-left:(@grid-gutter-width / 2);
-		padding-right:(@grid-gutter-width / 2);
-	}
-	@media (max-width: @screen-sm-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
-}
-.cols6 .grid-item{
-	.make-sm-column(2);
+	    @media (max-width: @screen-xs-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
+    .cols5 .grid-item{
+	    @media (min-width: @screen-sm-min){
+		    width: 20%;
+		    float:left;		
+		    padding-left:(@grid-gutter-width / 2);
+		    padding-right:(@grid-gutter-width / 2);
+	    }
+	    @media (max-width: @screen-sm-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
+    .cols6 .grid-item{
+	    .make-sm-column(2);
 	
-	@media (max-width: @screen-xs-max){
-		height:auto!important;
-		.thumbnail{height:auto!important;}
-	}
+	    @media (max-width: @screen-xs-max){
+		    height:auto!important;
+		    .thumbnail{height:auto!important;}
+	    }
+    }
 }
 //LARGE MOBILE CONTENT COLS
 .mobile-2-col-content{
@@ -840,7 +841,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
             }
 			label.MC, label.MasterCard,  label.Master-Card
 			{
-				background: transparent url(/ewcommon/images/icons/cc/mastercard.png) no-repeat 0px center;
+				background: transparent url(/ewcommon/images/icons/cc/mastercard.png) no-repeat 15px center;
 				padding-left:63px;
 				padding-top:10px;
 				overflow: hidden;
@@ -849,7 +850,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.VISA, label.Visa
 			{
-				background: transparent url(/ewcommon/images/icons/cc/visa.png) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/visa.png) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -858,7 +859,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.UKE, label.Uke
 			{
-				background: transparent url(/ewcommon/images/icons/cc/electron.gif) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/electron.gif) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -867,7 +868,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.DELTA, label.Delta
 			{
-				background: transparent url(/ewcommon/images/icons/cc/visadebit.png) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/visadebit.png) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -876,7 +877,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.SOLO, label.Solo
 			{
-				background: transparent url(/ewcommon/images/icons/cc/solo.png) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/solo.png) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -885,7 +886,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.SWITCH, label.MAESTRO, label.Switch, label.Switch-Maestro
 			{
-				background: transparent url(/ewcommon/images/icons/cc/maestro.png) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/maestro.png) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -894,7 +895,7 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
 			}
 			label.AMEX, label.American-Express
 			{
-				background: transparent url(/ewcommon/images/icons/cc/amex.png) no-repeat 0px  center;
+				background: transparent url(/ewcommon/images/icons/cc/amex.png) no-repeat 15px  center;
 				padding-left:60px;
 				padding-top:10px;
 				overflow: hidden;
@@ -904,85 +905,136 @@ div:not(.content-scroller):not(.content-cols-responsive) when (@sm-2-col = true)
             
 
 		}
-.responsive-cart{
-    margin-bottom:10px;
+.responsive-cart {
+    margin-bottom: 10px;
     .clearfix;
-        clear: both;
+    clear: both;
+
     .cart-headings,
-    .cart-row{
+    .cart-row {
         .clearfix;
-        > div{@media(min-width:@screen-sm-min){float:left;}}
-    }
-    .totals-row,
-    .cart-item{
-        border-top:1px solid @gray-lighter;
-        padding:5px 0;
-    }
-    .totals-row{
-       text-align:right;
-        > div{
-            display:inline;
-        }
-        .amount{
-            display:inline-block;
-            width:110px;
-            margin-left:30px;
-        }
-        .subTotal{
-            border-top:1px solid @gray-lighter;
-            margin-top:5px;
-        }
-    }
-    .shipping{float:right;}
-    .cart-headings{@media(max-width:@screen-xs-max){display:none}}
-    //.cart-headings .quantity{padding-left: 53px;}
-    .cart-headings,
-    .cart-item{
-        .btn-danger{float:none;}
-        .quantity{float:left;}
-        > div{
-            padding:5px;
-        }
-        @media(min-width:@screen-sm-min){
-            .flex-display;
-            .align-items(center);
-            > div{
-                padding:5px;
-                &.description{.flex-grow(4)}
-            }
-            button.update{
-                float:none;
-                margin-top:5px;
-                display:block;
+
+        > div {
+            @media(min-width:@screen-sm-min) {
+                float: left;
             }
         }
-        @media(max-width:@screen-xs-max){
-            .delete,
-            .quantity .quantity-input button.update{
-            //    margin-top:10px;
-                margin:0 0 0 20px;
-                float:left;
-            }
-            .quantity-input{float:left;}
-            .quantity-input input{float:left;}
-            .linePrice{
-                float:right;
-                text-align:right;
-                width:auto!important;
-            }
-            .quantity{width:auto}
-        }
-    }
-    .cart-thumbnail{
-        width:60px;
-        float:left;
-        img{margin-bottom:0;}
-    }
-    .quantity{width:150px}
-    .cart-item .quantity .quantity-input button.update{
-        float:none;
     }
 
+    .cart-item {
+        border-top: 1px solid @gray-lighter;
+        padding: 5px 0;
+    }
+
+    .totals-row {
+        text-align: right;
+        border-bottom: 2px solid @gray;
+
+        > div {
+            display: inline;
+        }
+
+        .amount {
+            display: inline-block;
+            width: 110px;
+            margin-left: 30px;
+        }
+
+        .subTotal {
+            border-top: 1px solid @gray-lighter;
+            margin-top: 5px;
+        }
+    }
+
+    .shipping {
+        border-top: 1px solid @gray-lighter;
+        text-align: right;
+        padding-top: 10px;
+    }
+
+    .cart-headings {
+        @media(max-width:@screen-xs-max) {
+            display: none
+        }
+    }
+    //.cart-headings .quantity{padding-left: 53px;}
+    .cart-headings,
+    .cart-item {
+        .btn-danger {
+            float: none;
+        }
+
+        .quantity {
+            float: left;
+        }
+
+        > div {
+            padding: 5px;
+        }
+
+        @media(min-width:@screen-sm-min) {
+            .flex-display;
+            .align-items(center);
+
+            > div {
+                padding: 5px;
+
+                &.description {
+                    .flex-grow(4)
+                }
+            }
+
+            button.update {
+                float: none;
+                margin-top: 5px;
+                display: block;
+            }
+        }
+
+        @media(max-width:@screen-xs-max) {
+            .delete,
+            .quantity .quantity-input button.update {
+                //    margin-top:10px;
+                margin: 0 0 0 20px;
+                float: left;
+            }
+
+            .quantity-input {
+                float: left;
+            }
+
+            .quantity-input input {
+                float: left;
+            }
+
+            .linePrice {
+                float: right;
+                text-align: right;
+                width: auto !important;
+            }
+
+            .quantity {
+                width: auto
+            }
+        }
+    }
+
+    .cart-thumbnail {
+        width: 60px;
+        float: left;
+
+        img {
+            margin-bottom: 0;
+        }
+    }
+
+    .quantity {
+        width: 150px
+    }
+
+    .cart-item .quantity .quantity-input button.update {
+        float: none;
+    }
 }
 .rrpPrice
 {

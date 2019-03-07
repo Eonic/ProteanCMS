@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Eonic.Web+Membership+Modules.UserContact" moduleType="MembershipUserContacts" box="" title="" cols="2" link="" linkType="internal" linkText=""/>
+          <Content action="Protean.Cms+Membership+Modules.UserContact" moduleType="MembershipUserContacts" box="" title="" cols="2" link="" linkType="internal" linkText=""/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

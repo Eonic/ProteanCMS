@@ -6,17 +6,17 @@ Imports System.Collections.Generic
 Imports Eonic.fsHelper
 
 Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
-    
+
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        Dim oEw As Eonic.Web = New Eonic.Web
+        Dim oEw As Protean.Cms = New Protean.Cms
         oEw.InitializeVariables()
-        
+
         'Dim fs As New Eonic.fsHelper()
         'Dim l As New System.Collections.Generic.List(Of String)
         'l = fs.GetFileListByTypeFromRelativePath("/foo", Eonic.fsHelper.LibraryType.Image, True)
         'context.Response.Write(String.Join(",", l.ToArray()))
-        
-        Dim s As New Eonic.Web.Synchronisation(oEw)
+
+        Dim s As New Protean.Cms.Synchronisation(oEw)
         s.SyncModuleContentFromFolder(61)
         'Dim vp As String = "/images/image1.jpg"
         'Dim wf As New Eonic.fsHelper.WebFile(context.Server.MapPath(vp), vp, True)
@@ -41,15 +41,15 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
 
         'Dim stx As Xml.XmlElement = Eonic.Tools.Xml.SerializeToXml(Of List(Of WebFile))(wfList)
 
-        
-        
+
+
         ' context.Response.Write(st)
-      
-        
-        
+
+
+
         oEw = Nothing
     End Sub
- 
+
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
             Return False

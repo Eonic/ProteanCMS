@@ -62,9 +62,15 @@
           </tr>
         </xsl:for-each>
       </table>
-            <small>
-              Session Referrer: <xsl:value-of select="@sessionReferrer"/>
-            </small>
+            <table cellpadding="10" cellspacing="0" >
+              <tr>
+                <td>
+                  <font face="verdana" size="1">
+                    email sent from:<xsl:value-of select="@sessionReferrer"/>
+                  </font>
+                </td>
+              </tr>
+            </table>
      </font>
   </xsl:template>
 

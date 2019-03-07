@@ -16,7 +16,7 @@
         <add key="SecureMembershipAddress" value="" />
         <add key="SecureMembershipDomain" value="" />
         <add key="MemberCodes" value="" />
-         <add key="SecureDownloads" value="off" />
+        <add key="SecureDownloads" value="off" />
 	   </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />

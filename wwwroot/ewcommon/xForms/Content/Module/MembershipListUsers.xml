@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="MembershipListUsers" action="Eonic.Web+Membership+Modules.GetUsersByGroup" contentType="User" parentSchemaType="Group" parentIds="" parentStatus="99" parentParId="0" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="LastName" order="ascending" cols="1" stepBy="" stepCount="0" display="related" position=""   />
+          <Content moduleType="MembershipListUsers" action="Protean.Cms+Membership+Modules.GetUsersByGroup" contentType="User" parentSchemaType="Group" parentIds="" parentStatus="99" parentParId="0" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="LastName" order="ascending" cols="1" stepBy="" stepCount="0" display="related" position=""   />
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

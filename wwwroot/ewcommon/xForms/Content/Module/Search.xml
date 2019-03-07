@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Eonic.Web+Search+Modules.GetResults" moduleType="Search" searchMode="" contentType="SearchResult" box="" title="" sortBy="Position" order="" cols="1" display="related" stepCount="0" position=""/>
+          <Content action="Protean.Cms+Search+Modules.GetResults" moduleType="Search" searchMode="" contentType="SearchResult" box="" title="" sortBy="Position" order="" cols="1" display="related" stepCount="0" position=""/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

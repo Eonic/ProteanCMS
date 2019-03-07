@@ -93,7 +93,7 @@
           </case>
         </switch>
         <select bind="cHomeLink" appearance="full">
-          <label>Include Home Page Link at Start of Menu?</label>
+          <label>Include Link to Parent Page at Start of Menu?</label>
           <item>
             <label></label>
             <value>true</value>

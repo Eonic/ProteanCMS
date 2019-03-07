@@ -4,11 +4,11 @@ Imports System
 Imports System.Web
 
 Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
-    
+
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        Dim oEw As Eonic.Web = New Eonic.Web
-        
-        
+        Dim oEw As Protean.Cms = New Protean.Cms
+
+
         Dim cVirtualPath As String = context.Request("path")
         Dim maxHeight As Long = CLng(0 & context.Request("maxHeight"))
         Dim maxWidth As Long = CLng(0 & context.Request("maxWidth"))
@@ -19,8 +19,8 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Dim isCrop As Boolean = True
         Dim newFilepath As String = ""
 
-        Dim oXsltExt As Eonic.xsltExtensions = New Eonic.xsltExtensions
-        
+        Dim oXsltExt As Protean.xsltExtensions = New Protean.xsltExtensions
+
         Try
             If sPrefix = "" Then
                 sPrefix = "/" & maxWidth & "x" & maxHeight & "/"
@@ -28,16 +28,16 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
             Dim src As String = oXsltExt.ResizeImage(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop)
             Dim width As String = oXsltExt.ImageWidth(src)
             Dim height As String = oXsltExt.ImageHeight(src)
-            
+
             context.Response.Write("<img src=""" & src & """ width=""" & width & """ height=""" & height & """/>")
 
         Catch ex As Exception
             context.Response.Write(ex.InnerException)
         End Try
 
-        
+
     End Sub
- 
+
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
             Return False

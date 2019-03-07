@@ -113,8 +113,8 @@
       <bind id="cRecipientEmail" nodeset="ews2:recipientEmail" required="false()" type="emails"/>
       <bind id="cCcRecipientEmail" nodeset="ews2:ccRecipient" required="false()" type="emails"/>
       <bind id="cBccRecipientEmail" nodeset="ews2:bccRecipient" required="false()" type="emails"/>
-      <!--bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
-      <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/-->
+      <bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
+      <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/>
       <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
       <!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
       <bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
@@ -173,15 +173,15 @@
           <input bind="cRecipientEmail" class="required">
             <label>Recipient email</label>
           </input>
-          <!--input bind="cSenderEmail">
+          <input bind="cSenderEmail">
             <label>Default sender email</label>
-          </input-->
+          </input>
           <input bind="cCcRecipientEmail">
             <label>CC Recipient email</label>
           </input>
-          <!--input bind="cSenderName">
+          <input bind="cSenderName">
             <label>Default sender name</label>
-          </input-->
+          </input>
           <input bind="cBccRecipientEmail">
             <label>BCC Recipient email</label>
           </input>
@@ -189,6 +189,7 @@
         <input bind="cSubject" class="long">
           <label>Email subject line</label>
         </input>
+       
         <input bind="cSubmissionId" class="long">
           <label>Submission ID</label>
           <hint>Ensure this matches the submission attribute on the sumbit button</hint>

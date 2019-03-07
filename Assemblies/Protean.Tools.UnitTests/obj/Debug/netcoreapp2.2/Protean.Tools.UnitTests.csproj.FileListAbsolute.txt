@@ -1,0 +1,17 @@
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.csprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.AssemblyInfoInputs.cache
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.AssemblyInfo.cs
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.UnitTests.deps.json
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.UnitTests.runtimeconfig.json
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.UnitTests.runtimeconfig.dev.json
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.UnitTests.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.UnitTests.pdb
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.Csharp.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\bin\Debug\netcoreapp2.2\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.csproj.CopyComplete
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.dll
+D:\HostingSpaces\_objSource\Protean.Tools.UnitTests\obj\Debug\netcoreapp2.2\Protean.Tools.UnitTests.pdb

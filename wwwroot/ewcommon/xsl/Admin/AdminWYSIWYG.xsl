@@ -91,9 +91,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-
-  <xsl:variable name="appPath" select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
-  <!-- Used across this xsl to generate Admin menus and Breadcrumbs-->
+ <!-- Used across this xsl to generate Admin menus and Breadcrumbs-->
   <xsl:variable name="subMenuCommand">
     <xsl:choose>
       <xsl:when test="/Page/@ewCmd!=''">
@@ -331,7 +329,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a id="logoff" href="{$appPath}/?ewCmd=LogOff" title="Click here to log off from your active session" >
+              <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">
                   <xsl:text> </xsl:text>
                 </i>
@@ -424,7 +422,7 @@
           </ul>-->
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a id="logoff" href="{$appPath}/?ewCmd=LogOff" title="Click here to log off from your active session" >
+              <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">
                   <xsl:text> </xsl:text>
                 </i>
@@ -679,7 +677,6 @@
   <xsl:template match="MenuItem" mode="adminLinkMainMenu">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
-        <xsl:text>/</xsl:text>
         <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
@@ -711,7 +708,6 @@
   <xsl:template match="MenuItem" mode="adminLink">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
-        <xsl:text>/</xsl:text>
         <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
@@ -740,7 +736,6 @@
   <xsl:template match="MenuItem" mode="adminLink1">
     <xsl:if test="@display='true'">
       <xsl:variable name="href">
-        <xsl:text>/</xsl:text>
         <xsl:value-of select="$appPath"/>
         <xsl:text>?ewCmd=</xsl:text>
         <xsl:value-of select="@cmd"/>
@@ -796,7 +791,6 @@
 
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
-        <xsl:text>/</xsl:text>
         <xsl:value-of select="$appPath"/>
         <xsl:choose>
           <xsl:when test="@cmd='GoToClone' and /Page/@clone">
@@ -862,7 +856,6 @@
 
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
-        <xsl:text>/</xsl:text>
         <xsl:value-of select="$appPath"/>
         <xsl:choose>
           <xsl:when test="@cmd='GoToClone' and /Page/@clone">
@@ -1283,16 +1276,63 @@
               <xsl:if test="@marginBelow='false'">
                 <xsl:text> margin-bottom-0 </xsl:text>
               </xsl:if>
+              <xsl:if test="@data-stellar-background-ratio!='10'">
+                <xsl:text> parallax-wrapper </xsl:text>
+              </xsl:if>
             </xsl:attribute>
-            <xsl:if test="@data-stellar-background-ratio!='0'">
-              <xsl:attribute name="data-stellar-background-ratio">
-                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
+            <xsl:if test="@data-stellar-background-ratio!='10'">
+              <xsl:attribute name="data-parallax-speed">
+                <xsl:if test="@data-stellar-background-ratio&lt;='5'">
+                  <xsl:text>1.3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
+                  <xsl:text>1.6</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='10' and @data-stellar-background-ratio&lt;'15'">
+                  <xsl:text>2</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='15' and @data-stellar-background-ratio&lt;'20'">
+                  <xsl:text>3</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='20' and @data-stellar-background-ratio&lt;'25'">
+                  <xsl:text>4</xsl:text>
+                </xsl:if>
+                <xsl:if test="@data-stellar-background-ratio&gt;='25'">
+                  <xsl:text>5</xsl:text>
+                </xsl:if>
               </xsl:attribute>
             </xsl:if>
+            <xsl:if test="@data-stellar-background-ratio!='0'">
+              <!--<xsl:attribute name="data-stellar-background-ratio">
+                <xsl:value-of select="(@data-stellar-background-ratio div 10)"/>
+              </xsl:attribute>-->
+
+              
+            </xsl:if>
             <xsl:if test="@backgroundImage!=''">
-              <xsl:attribute name="style">
-                background-image: url('<xsl:value-of select="@backgroundImage"/>');
-              </xsl:attribute>
+              <xsl:choose>
+                <xsl:when test="@data-stellar-background-ratio!='0'">
+                  <xsl:choose>
+                    <xsl:when test="@data-stellar-background-ratio!='10'">
+                        <div class="parallax">
+                          <xsl:attribute name="style">
+                            background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                          </xsl:attribute>
+                        </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:attribute name="style">
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                      </xsl:attribute>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="style">
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
             </xsl:if>
             <xsl:choose>
               <xsl:when test="@fullWidth='true'">
@@ -1302,7 +1342,7 @@
                 </div>
               </xsl:when>
               <xsl:otherwise>
-                <div class="{$class}">
+                <div class="{$class} content">
                   <xsl:apply-templates select="." mode="displayModule"/>
                   <xsl:text> </xsl:text>
                 </div>
