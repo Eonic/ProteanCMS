@@ -5825,11 +5825,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\HostingSpaces\\_objSource\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
+      "projectUniqueName": "C:\\Users\\trevors\\Source\\Repos\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
       "projectName": "Protean.Tools.UnitTests",
-      "projectPath": "D:\\HostingSpaces\\_objSource\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
+      "projectPath": "C:\\Users\\trevors\\Source\\Repos\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
       "packagesPath": "C:\\Users\\trevors\\.nuget\\packages\\",
-      "outputPath": "D:\\HostingSpaces\\_objSource\\Protean.Tools.UnitTests\\obj\\",
+      "outputPath": "C:\\Users\\trevors\\Source\\Repos\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -5848,8 +5848,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "D:\\HostingSpaces\\_objSource\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
-              "projectPath": "D:\\HostingSpaces\\_objSource\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj"
+            "C:\\Users\\trevors\\Source\\Repos\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
+              "projectPath": "C:\\Users\\trevors\\Source\\Repos\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj"
             }
           }
         }
