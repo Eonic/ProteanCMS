@@ -3,8 +3,11 @@
 
   <!-- ######################################## IMPORT ALL COMMON XSL's ########################################### -->
 
-  <xsl:import href="../../ewcommon/xsl/MinimalImports.xsl"/>
-  <xsl:import href="../../xsl/InstalledModules.xsl"/>
+  <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/CommonImports.xsl"/>
+  <xsl:import href="../../../../../ewcommon_v5-1/xsl/cart/FullResponsiveCart.xsl"/>-->
+  <xsl:import href="../../../../../ewcommon_v5-1/xsl/MinimalImports.xsl"/>
+  <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
+  <xsl:import href="D:\HostingSpaces\EonicSites\v5demo\wwwroot\xsl\InstalledModules.xsl"/>
   <xsl:import href="CustomBoxStyles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
 
@@ -14,7 +17,7 @@
   <xsl:variable name="theme">ProteanMasterTheme</xsl:variable>
   <xsl:variable name="font-import-base">Lato:300,400,700</xsl:variable>
   <xsl:variable name="headings-font-import">Lato:300,400,700</xsl:variable>
-  <xsl:variable name="HomeInfo">true</xsl:variable>
+  <xsl:variable name="HomeInfo">false</xsl:variable>
   <xsl:variable name="HomeNav">true</xsl:variable>
   <xsl:variable name="NavFix">false</xsl:variable>
   <xsl:variable name="nav-dropdown">hover</xsl:variable>
@@ -263,25 +266,24 @@
 
 
   <xsl:template match="/" mode="loginTop">
-    <xsl:param name="apply-login-action" />
-    <div id="loginTop" class="login-slide">
 
-      <div id="signin">
-        <a class="loginText login-btn">
-          <xsl:if test="/Page/User[@id!='']">
-            <xsl:attribute name="class">
-              <xsl:text>loginText login-btn logged-in-btn</xsl:text>
-            </xsl:attribute>
-          </xsl:if>
-          Login
-        </a>
-      </div>
+    <div id="signin">
+      <a class="loginText login-btn" data-toggle="modal" data-target="#LoginModal">
+        <xsl:if test="/Page/User[@id!='']">
+          <xsl:attribute name="class">
+            <xsl:text>loginText login-btn logged-in-btn</xsl:text>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="/Page/User">My Account</xsl:when>
+          <xsl:otherwise>Login</xsl:otherwise>
+        </xsl:choose>
+      </a>
     </div>
   </xsl:template>
 
   <xsl:template match="/" mode="loginTopxs">
-    <xsl:param name="apply-login-action" />
-    <div id="loginBriefxs" class="login-slide">
+    <div id="loginBriefxs" data-toggle="modal" data-target="#LoginModal">
       <div id="signinxs">
         <a class="loginText login-small">
           <i class="fa fa-user fa-2x">
@@ -337,39 +339,10 @@
     </xsl:choose>
   </xsl:template>
   <!-- -->
-  <xsl:template match="Content[@type='xform' and @name='UserLogon']" mode="loginBrief">
-    <form method="post" action="" id="UserLogon" name="UserLogon" onsubmit="form_check(this)" class="ewXform" xmlns="http://www.w3.org/1999/xhtml">
-      <xsl:if test="alert">
-        <!--<xsl:apply-templates select="alert" mode="xform"/>-->
-        <div class="alert alert-warning pull-left">
-          <i class="fa fa-exclamation-triangle">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>
-          <xsl:value-of select="descendant-or-self::alert"/>
-        </div>
-      </xsl:if>
-      <div class="username">
-        <label for="cUserName">Email: </label>
-        <input type="text" name="cUserName" id="cUserName" class="textbox required" value="" placeholder="username" onfocus="if (this.value=='Please enter Email') {this.value=''}"/>
-      </div>
-      <div class="password">
-        <label for="cPassword">Password: </label>
-        <input type="password" name="cPassword" id="cPassword" placeholder="password" class="textbox password required"/>
-      </div>
-      <div class="submit">
-        <button type="ewSubmit" name="ewSubmit" value="Login" class="loginButton button btn btn-default principle">Login</button>
-      </div>
-    </form>
-
-  </xsl:template>
+  
+  
 
 
-  <!-- ############################################# PLACEHOLDERS ############################################### -->
-  <!--<xsl:template match="input[ancestor::Content[@type='Module']] |  textarea[ancestor::Content[@type='Module']] | select1[ancestor::Content[@type='Module']] | upload[ancestor::Content[@type='Module']]" mode="getInlineHint">
-    <xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-    <xsl:value-of select="$label_low"/>
-  </xsl:template>-->
   <!-- ############################################# BESPOKE ############################################### -->
 
 </xsl:stylesheet>

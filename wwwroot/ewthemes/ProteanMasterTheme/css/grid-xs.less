@@ -3,7 +3,8 @@
         padding-left:(@xs-grid-gutter-width / 2);
 	    padding-right:(@xs-grid-gutter-width / 2);
     }
-    .container{
+    .container,
+    #cartFull{
         padding-left:(@xs-grid-gutter-width / 2);
 	    padding-right:(@xs-grid-gutter-width / 2);
     }
@@ -30,6 +31,8 @@
     .Site .Grid{
 	    padding-left:(@xs-grid-gutter-width / 2);
 	    padding-right:(@xs-grid-gutter-width / 2);
+        margin-left:-(@xs-grid-gutter-width / 2);
+	    margin-right:-(@xs-grid-gutter-width / 2);
         .eventdate{
             padding-right:@xs-grid-gutter-width;
         }
@@ -223,20 +226,9 @@
         }
     }
     .Site{
-        .detail-container{
+        .detail-container > .detail{
 		    margin-bottom:@xs-box-margin;
 	    }
-        .detail-container when(@xs-grid-gutter-width > 30){
-            @media (min-width: @screen-sm-min){
-	            width: (@container-sm - (@xs-grid-gutter-width - 30));
-            }
-            @media (min-width: @screen-md-min) {
-	            width: (@container-md - (@xs-grid-gutter-width - 30));
-            }
-            @media (min-width: @screen-lg-min) {
-	            width: (@container-lg - (@xs-grid-gutter-width - 30));
-            }
-        }
 
 //content scroller
 	    .content-scroller .list-group-item .lIinner{

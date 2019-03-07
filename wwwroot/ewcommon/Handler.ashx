@@ -10,7 +10,7 @@ Public Class Handler : Implements IHttpHandler
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         context.Response.ContentType = "text/plain"
 
-        Dim jsa As New Eonic.Web.Cart.JSONActions
+        Dim jsa As New Protean.Cms.Cart.JSONActions
         context.Response.Write(jsa.GetType().ToString())
 
         ' Dim calledType As Type

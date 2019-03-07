@@ -4,8 +4,8 @@
 
 //PALLETTE
 // -------------------------
-@brand-primary: #9b9b9b;
-@brand-action: #575757;
+@brand-primary: @link-color;
+@brand-action: @brand-warning;
 @brand-info: #000000;
 @brand-success: #5ec85e;
 @brand-warning: #f39c12;
@@ -19,7 +19,7 @@
 @headings-color: #333333;
 
 @contrast-color: #000;
-@contrast-threshold:    50%;
+//@contrast-threshold:    50%;
 @font-size-base:        14px;
 @line-height-base:      1.428571429;
 @headings-font-weight:  700;
@@ -27,7 +27,7 @@
 
 //LINKS
 // -------------------------
-@link-color: #188bbc;
+@link-color: #1BA5D8;
 @link-hover-percentage: 10%;
 @link-visited-color:	@link-hover-color;
 
@@ -41,7 +41,7 @@
 @btn-hover-percentage:  @link-hover-percentage;
 @btn-align:			    none;
 @btn-align-footer:		right;
-@btn-clean:	            true;
+@btn-clean:	            false;
 @btn-clean-footer:	    false;
 
 //BORDERS
@@ -54,6 +54,7 @@
 // -------------------------
 @header-icon:               @info-link-color;
 @header-bg:                 #fff;
+@header-item-spacing:       20px;
 
 //NAVIGATION
 // -------------------------
@@ -111,7 +112,7 @@
 
 //BACKGROUND
 // -------------------------
-@background-image: /t22.gif;
+@background-image: none;
 @background-repeat: repeat-x;
 @background-position: left top;
 @background-attachment: scroll;

@@ -6,24 +6,24 @@ Imports System.Web.SessionState
 
 
 Public Class ewDefault : Implements IHttpHandler, IRequiresSessionState
-    Dim WithEvents oEw As Eonic.Web
+    Dim WithEvents oPcms As Protean.Cms
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        
-        oEw = New Eonic.Web
-                
+
+        oPcms = New Protean.Cms
+
         If context.Request("xml") <> "" Then
-            oEw.mbOutputXml = True
+            oPcms.mbOutputXml = True
         End If
 
-        oEw.InitializeVariables()
+        oPcms.InitializeVariables()
 
         context.Response.ContentType = "text/html"
-        oEw.GetPageHTML()
+        oPcms.GetPageHTML()
 
-        oEw = Nothing
+        oPcms = Nothing
 
-  End Sub
- 
+    End Sub
+
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
         Get
             Return True

@@ -20,7 +20,7 @@
             float:none;
             .navbar-brand{
                 height:auto;
-                //@media(max-width:@screen-xs-max){max-width:180px;}
+                //@media(max-width:@screen-xs-max){max-width:150px;}
                // @media(max-width:@screen-sm-max){max-width:130px;}
                // @media(max-width:@screen-md-max){max-width:170px;}
             }
@@ -35,15 +35,13 @@
                 }
             }
             .module{margin-bottom:0;}
-            .header-tier1{
-                .header-tier1-inner{
-                    float:right;
-                    .flex-display;
-                    .align-items(center);
-                }
-            }
             .header-tier2{
                 @media(min-width:@grid-float-breakpoint){float:right;}
+            }
+            .header-tier1,
+            .header-tier2{
+                margin-left:-(@header-item-spacing/2);
+                margin-right:-(@header-item-spacing/2);
             }
         }
         //@media(max-width:@grid-float-breakpoint-max){border-bottom:4px solid @navbar-default-bg}
@@ -269,7 +267,7 @@
 			    font-size:@info-link-size;
             }
             .navbar-color-clean(@info-link-color,@info-link-hover,@info-link-active);
-            .navbar-spacing-clean(5px,15px);
+            .navbar-spacing(5px,15px);
         }
     }
 
@@ -283,70 +281,31 @@
         .icon-center;
         i{.icon-circles(@background:@header-icon;@width:35px;@height:35px;@size:1em;)}
     }
-    #loginTop .login-btn{
-        .btn-mixin(@brand-action);
-        border-radius:0 0 @btn-radius-base @btn-radius-base;
-        padding:5px 10px;
+    .login-btn{
+        //.btn-mixin(@brand-action);
         display:block;
-        margin-left:15px;
+        font-weight:700;
+        margin-left:(@header-item-spacing/2);
+        margin-right:(@header-item-spacing/2);
+        &:before{
+            font-family:'Font Awesome 5 Free';
+            content:'\f007';
+            padding-right:5px;
+        }
     }
     .xs-login{
         float:left;
         margin-right:10px;
     }
+    #LoginModal .module{margin-bottom:0;}
 
-//LOGIN BAR
-    #login-form-bar{.login-bar(@brand-info);}
-    .login-bar(@background:@brand-info;@radius:0;@width:80px;@height:30px;@padding:10px;){
-        background:@background;
-        padding-top:@padding;
-        color:contrast(@background,@contrast-color,#fff,@contrast-threshold);
-        label{
-            color:contrast(@background);
-            margin-right:10px;
-        }
-        input{
-            .clear-shadow();
-            border-radius:@radius;
-            border:0;
-        }
-        div.username,
-        div.password{
-            float:left;
-            margin-right:20px;
-            padding-bottom:@padding;
-            input{height:@height;}
-            label{width:@width;}
-        }
-        div.submit{
-            float:right;
-            padding-bottom:@padding;
-            button{
-                height:@height;
-                padding: 4px 12px;
-            }
-        }
-    }
-    #logged-in-bar{
-        background:@gray-lighter;
-        .userName{
-            padding:5px 0;
-            float:right;
-        }
-        .btn{
-            .btn-clean;
-            .link-color;
-            padding:5px 0 5px 5px!important;
-            float:right;
-            &:after{display:none;}
-        }
-    }
 //------------------------------------------------
 //CART BRIEF
 //------------------------------------------------
     .cart-circle(@background:@header-icon;@padding:10px;@radius:50px;@percentage:@btn-hover-percentage;){
         padding-top:0;
-        @media(min-width:@grid-float-breakpoint){margin-right:20px;}
+        margin-left:(@header-item-spacing/2);
+        margin-right:(@header-item-spacing/2);
         .cartinfo > a{
             .flex-display;
             color:@text-color;
@@ -358,16 +317,16 @@
         .cart-icon{
             position:relative;
             display:inline-block;
-            margin-right:10px;
             float:left;
             i{
                 background:@background;
-                color:contrast(@background,@contrast-color,#fff,@contrast-threshold);
+                color:contrast(@background,@contrast-color,#fff);
                 padding:@padding;
                 border-radius:@radius;
             }
         }
         .cart-text{
+            display:none;
             line-height:1.1;
             #itemTotal{font-size:1.25em;}
             .text-link-cart{color:@link-color;}
@@ -375,7 +334,7 @@
         #itemCount{
             background: @brand-info;
             border-radius: @radius;
-            color:contrast(@brand-info,#fff,@contrast-color,@contrast-threshold);
+            color:contrast(@brand-info,#fff,@contrast-color);
             font-weight: 700;
             width: 17px;
             font-size: 10px;
@@ -438,7 +397,8 @@
 //STRAPLINE
     .strapline{
         float:left;
-        margin-left:10px;
+        margin-left:(@header-item-spacing/2);
+        margin-right:(@header-item-spacing/2);
         @media(max-width:@grid-float-breakpoint-max){display:none;}
         h1,h2,h3,h4,h5,h6{margin:0;}
         a{.link-color(@info-link-color);}
@@ -446,7 +406,8 @@
 
 //SOCIAL LINKS 
     .socialLinksHeader{
-        margin:5px 0 0 10px;
+        margin-left:(@header-item-spacing/2);
+        margin-right:(@header-item-spacing/2);
         @media(max-width:@grid-float-breakpoint-max){
             margin:10px 0 0 0;
             padding-left:@navbar-padding-horizontal-xs;
@@ -582,6 +543,13 @@
             color:@text-color;
             a{color:@text-color;}
 	    }
+    }
+    .detail-breadcrumb{
+        margin-top:0;
+        margin-bottom:5px;
+    }
+    .detail-breadcrumb-wrapper{
+        margin-bottom:-@box-margin;
     }
 
 //------------------------------------------------

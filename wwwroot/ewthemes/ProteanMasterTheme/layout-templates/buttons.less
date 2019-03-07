@@ -19,6 +19,7 @@
 		.chevron-right();
 	}
 }
+//link style button
 .btn-clean(@color:@link-color){
 	.pill-clean;
 	.clear-shadow;
@@ -30,6 +31,7 @@
     line-height:@line-height-base;
 	.link-color(@color);
 }
+//solid button
 .btn-mixin(@background:@btn-default-bg;@color:#fff;@percentage:@btn-hover-percentage;@radius:@btn-radius-base;@size:@btn-font-size;@padding: 8px 25px;){
 	background:@background;
 	border-color:@background;
@@ -45,12 +47,28 @@
 		border-color:darken(@background,@percentage);
     }
 }
-
+//border button
+.btn-border(@color:@btn-default-bg;@border-width:2px;@percentage:@btn-hover-percentage;@radius:@btn-radius-base;@size:@btn-font-size;@padding: 8px 25px;){
+    .clear-shadow;
+	background:transparent;
+	border:@border-width solid @color;
+	color:@color;
+    border-radius:@radius;
+    font-size:@size;
+    line-height:@line-height-base;
+    padding:@padding;
+    &:hover,
+    &:focus{
+        background:transparent;
+		color:darken(@color,@percentage);
+		border-color:darken(@color,@percentage);
+    }
+}
 //------------------------
 //CONTENT CAROUSEL ARROWS
 //------------------------
 //icon options
-.content-carousel-icon(angle;@offset:3px;@size:32px){
+.content-carousel-icon(angle;@offset:3px;@size:20px){
     button.slick-prev:before{
         .angle-left;
         padding-right:@offset;
@@ -93,6 +111,7 @@
         opacity:1;
         //padding: 8px 8px 8px 4px;
         padding:0;
+        color:@btn-default-color;
     }
 	//.slick-next:before{padding: 8px 4px 8px 8px;}
 	button:hover.slick-prev,

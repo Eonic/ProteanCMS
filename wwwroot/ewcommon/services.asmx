@@ -1,1 +1,1 @@
-<%@ WebService Class="Eonic.Services,EonicWebV5" %>
+<%@ WebService Class="Protean.Services,ProteanCMS" %>

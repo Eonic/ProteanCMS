@@ -2,7 +2,7 @@
 //HEADING DECORATIONS 
 //------------------------
 //short underline
-.heading-decoration(@color:@brand-primary,@width:40px,@height:6px,@margin:10px){
+.heading-decoration(@color:@brand-primary,@width:40px,@height:2px,@margin:18px){
     &:after{
         content:' ';
         width:@width;
@@ -12,7 +12,7 @@
         margin-top:@margin;
     }
 }
-.heading-decoration-centred(@color:@brand-primary,@width:40px,@height:6px,@margin:10px){
+.heading-decoration-centred(@color:@brand-primary,@width:40px,@height:2px,@margin:18px){
     .heading-decoration(@color,@width,@height,@margin);
     &:after{
         margin-left:auto;

@@ -50,6 +50,10 @@
         .panel-footer{
             padding-top:0;
             padding-bottom:0;
+            &.center-block-footer{
+                text-align:center;
+                .btn{float:none}
+            }
         }
     }
     .panelImage{
@@ -152,7 +156,8 @@
     a .panel-default{color:@text-color;}
 	.panel-default{
 		background:#fff;
-		border-color:@tint-border;
+		border:2px solid @tint-border;
+        color:@text-color;
 		.panel-heading{
 			border-color:@tint-border;
 			background:#fff;
@@ -195,7 +200,7 @@
 			a:hover{color:@hover;}
 		}
 		//a.btn{.btn-mixin(@color);}
-		a.btn-default{
+		.btn-default{
 			background:@contrast;
 			border-color:@contrast;
 			color:@color;
@@ -205,7 +210,7 @@
 				color:@color;
 			}
 		}
-		a.btn-default when(@btn-clean = true){
+		.btn-default when(@btn-clean = true){
 			.btn-clean;
 			color:@contrast;
 			&:hover{color:@hover;}

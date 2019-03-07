@@ -18,16 +18,7 @@
         $('#mainTable').css('margin-bottom', -footer_height);
         $('#mainTable').css('padding-bottom', footer_height);
     });
-
-    $('.login-slide-bar').hide();
-    $('.logged-in').show();
-    $('.logged-in-btn').hide();
-    $('.login-slide a').toggle(function () {
-        $('.login-slide-bar').slideDown();
-    },
-    function () {
-        $('.login-slide-bar').slideUp();
-    });
+    
 
     
 });

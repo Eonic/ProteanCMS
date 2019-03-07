@@ -29,6 +29,8 @@ body{background:@background-repeat @background-position @background-attachment @
     }
     h3{.h3-style}
     h4{.h4-style}
+    h4.modal-title{margin-bottom:0;}
+    .nobox.module > h3.title{margin-bottom:20px;}
 //main title
     #mainTitle{
 		h1{.h1-style}
@@ -103,6 +105,16 @@ body{background:@background-repeat @background-position @background-attachment @
 	.xlsicon{background:url(/ewcommon/images/icons/xlsx.png) no-repeat;}
 	.docicon{background:url(/ewcommon/images/icons/icon_word.png) no-repeat;}
 	.zipicon{background:url(/ewcommon/images/icons/zip_icon.png) no-repeat;}
+
+//Social Icons
+    .iconset-icons-circle{
+        margin-left:-5px;
+        margin-right:-5px;
+        .fa-stack{
+            margin-left:5px;
+            margin-right:5px;
+        }
+    }
 }
 //------------------------------------------------
 //LINKS
@@ -127,6 +139,7 @@ body{background:@background-repeat @background-position @background-attachment @
 		text-decoration:none;
 		cursor:pointer;
 	}
+    .fa-inverse{color:#fff;}
 }
 //------------------------------------------------
 //BUTTONS
@@ -141,6 +154,7 @@ body{background:@background-repeat @background-position @background-attachment @
         white-space:normal;
         &:focus{outline:none;}
 	}
+    .principle .fa-check{display:none;}
 	.button{
 		.btn;
 		.btn-default;
@@ -148,6 +162,7 @@ body{background:@background-repeat @background-position @background-attachment @
     button.btn-default,
     a.btn-default{
         .btn-mixin(@background:@btn-default-bg);
+        //.btn-border(@color:@btn-default-bg);
         .btn-icon(angle);
     }
     .listItem .btn{float:@btn-align;}
@@ -170,7 +185,7 @@ body{background:@background-repeat @background-position @background-attachment @
 		margin-bottom:@line-height-computed;
 		.btn-primary{.pull-right();}
 	}
-
+    .center-nobox-footer > .morelink{padding-top:(@box-margin/2)}
 }
 //------------------------------------------------
 //BACKGROUNDS
@@ -179,9 +194,20 @@ body{background:@background-repeat @background-position @background-attachment @
     .background-coloring(@background:@light-tint;@color:contrast(@background,@text-color,#fff);@link:@link-color;@hover:darken(@link-color,@link-hover-percentage)){
         background:@background;
         color:contrast(@background,@text-color,#fff);
+        .nobox a:not(.btn){
+            color:@link;
+            &:hover,
+            &:focus{color:@hover}
+        }
         h1,h2,h3,h4,h5,h6,h2.title,h3.title{color:contrast(@background,@text-color,#fff);}
         h3.title,
-        h4.media-heading{
+        h4.media-heading,
+        .module-FormattedText.nobox.module-centred > h3.title:not(.module-with-icon),
+        .module-FormattedText.nobox.module-centred > .editable > h3.title:not(.module-with-icon),
+        :not(.module-centred).module-FormattedText.nobox > h3.title,
+        :not(.module-centred).module-FormattedText.nobox > .editable > h3.title,
+        .module-FormattedText.nobox.module-centred > h3.title.module-with-icon,
+        .module-FormattedText.nobox.module-centred > .editable > h3.title.module-with-icon{
             .heading-color(@color:@color;@link:@color);
         }
     }
@@ -203,6 +229,11 @@ body{background:@background-repeat @background-position @background-attachment @
         .background-coloring(#000,#fff);
         .background-spacing;
     }
+    section.primaryBG{
+        .background-coloring(@brand-primary,#fff);
+        .background-spacing;
+        .content-carousel-buttons(@background:lighten(@brand-primary,10%));
+    }
     section.whiteBG{
         background:#fff;
         .background-spacing;
@@ -212,12 +243,19 @@ body{background:@background-repeat @background-position @background-attachment @
         a.btn{float:none;}
     }
     #header-banner{
-        background:@brand-action;
+        background:#ccc;
         color:#fff;
         padding-top:@box-margin;
+        background-size:cover;
+        background-position:center center;
         @media(max-width:@xs-grid-max){padding-top:@xs-box-margin;}
         h1{color:#fff;}
         .header-banner-inner{min-height:200px;}
+    }
+    section.darkBG,
+    section.primaryBG{
+        .NewsList,
+        .ProductList{.list-box-content;}
     }
 }
 
@@ -260,6 +298,92 @@ body{background:@background-repeat @background-position @background-attachment @
         .glyphicon-chevron-right:before{
             .angle-right;
             font-size: 40px;
+        }
+        //fade
+        .carousel-inner {
+            z-index:2;
+            .item {
+                transition-property: opacity;
+                //color overlay
+                &:after{
+                    content:' ';
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    bottom:0;
+                    right:0;
+                    background:fade(#000,30%)
+
+                }
+            }
+            .item,
+            .active.left,
+            .active.right {
+                opacity: 0;
+            }
+            .active,
+            .next.left,
+            .prev.right {
+                opacity: 1;
+            }
+            .next,
+            .prev,
+            .active.left,
+            .active.right {
+                left: 0;
+                transform: translate3d(0, 0, 0);
+            }
+            //center
+            .carousel-caption{
+                top:0;
+                margin:0;
+                width:100%;
+                .flex-display;
+                .align-items(center);
+            }
+            .carousel-caption-inner{
+                font-size:1.2em;
+                max-width:80%;
+                h3{margin:0 0 20px;}
+                .morelink{margin-top:20px;}
+
+            }
+            //caption background
+            /*.carousel-caption-inner{
+			    padding-bottom:10px;
+                color:#fff;
+                background: fade(#000,50%);
+                width: auto!important;
+                padding: 30px 40px;
+                margin:0 auto;
+            }*/
+            //fade
+            .carousel-caption {
+                animation-delay: 0.2s;
+                .animated;
+                .fadeInUp;
+                h3{
+                    animation-delay: 0.5s;
+                    .animated;
+                    .fadeInUp;
+                }
+                .carousel-caption-inner {
+                    animation-delay: 0.7s;
+                    .animated;
+                    .fadeInUp;
+                }
+                p {
+                    animation-delay: 1.0s;
+                    .animated;
+                    .fadeInUp;
+                    &:nth-child(3){animation-delay: 1.7s;}
+                }
+                .btn {
+                    animation-delay: 1.3s;
+                    .animated;
+                    .fadeInUp;
+                }
+            }
         }
 	}
 
@@ -317,8 +441,10 @@ body{background:@background-repeat @background-position @background-attachment @
 		background:transparent;
         border:none;
         .lIinner{
+            .list-btn-align;
             .entryFooter{margin-top:10px;}
         }
+        .author h6{margin-top:0;}
     }
     img.thumbnail,
 	.thumbnail{
@@ -326,6 +452,14 @@ body{background:@background-repeat @background-position @background-attachment @
 		padding:0;
 		border:0;
 	}
+
+//TESTIMONIALS
+    .TestimonialList{
+        .listItem{
+            .quote-clean;
+            .quote-bubble();
+        }
+    }
     
 //LIST ITEM GRID
 	.nobox .list-group-item:last-child{margin-bottom:0;}
@@ -396,6 +530,26 @@ body{background:@background-repeat @background-position @background-attachment @
 	.cols3 .pager,
 	.cols4 .pager,
 	.cols5 .pager{border-bottom:@border-width @border-style @tint-border;}
+}
+.normalMode .Site{
+    .GalleryImageList.content-scroller .grid-item{
+        min-height:240px;
+    }
+}
+.Site{
+    .GalleryImageList.content-scroller{
+        .grid-item{
+            outline:none;
+            padding:0 (@grid-gutter-width/2)!important;
+            .thumbnail-wrapper,
+            > a{
+                .flex-display;
+                .align-items(center);
+                height:100%;
+                width:100%;
+            }
+        }
+    }
 //------------------------------------------------
 //DETAIL PAGES
 //------------------------------------------------
@@ -455,26 +609,19 @@ body{background:@background-repeat @background-position @background-attachment @
 }
 
 .dev-link{
-	margin-top:-3px;
-	height:32px;
-	width:300px;
-	position:relative;
-    img{
-		margin-top:-8px;
-		display:inline;
-	}
+	line-height:28px;
+    overflow:hidden;
     a{font-size:0.9em;}
     a.devLogo{display:none!important;}
     a.devText{
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		line-height:38px;
 		&:after{
 			content:'e';
-			font-family:logo-font-3;
+			font-family:eonic-logo1;
 			font-size: 64px;
-			padding-left:5px;
+			padding-left:10px;
+            vertical-align:middle;
+            padding-top: 3px;
+            display: inline-block;
 		}
 	}
 }
@@ -532,9 +679,10 @@ body .cc-cookies{
         color:@color;
         height:100%;
         position:relative;
-        .entryFooter{
+        h1,h2,h3,h4,h5,h6{color:@color}
+        .entryFooter .morelink{
             position:absolute;
-            bottom:@padding-vertical;
+            bottom:(@padding-vertical/2);
             left:@padding-horizontal;
             right:@padding-horizontal;
             text-align:@btn-align;
@@ -543,6 +691,18 @@ body .cc-cookies{
         h4.media-heading{
             .heading-color(@color:@heading;@link:@heading);
         }
+    }
+}
+.list-btn-align(@btn-height:30px;@padding:20px;){
+    height:100%;
+    position:relative;
+    padding-bottom:(@btn-height + @padding);
+    .entryFooter .morelink{
+        position:absolute;
+        bottom:0;
+        left:0;
+        right:0;
+        text-align:@btn-align;
     }
 }
 .grid-spacing(@space:(@grid-gutter-width*2);@vertical-space:@space){
@@ -583,4 +743,57 @@ body .cc-cookies{
         }
     }
 }
-section.darkBG .NewsList{.list-box-content}
+.quote-bubble(@background:@brand-primary,@color:#fff,@radius:@border-radius-base,@size:1.3em,@paddingv:@box-padding-vertical,@paddingh:@box-padding-horizontal,@triangle:35px){
+    margin-bottom:(@triangle + 10px)!important;
+    .lIinner{
+        padding:@paddingv @paddingh;
+        background:@background;
+        color:@color;
+        border-radius:@radius;
+        position:relative;
+        &:after{
+            content:' ';
+            width:@triangle;
+            height:@triangle;
+            position:absolute;
+            bottom:-@triangle;
+            left:@paddingh;
+            border-left:@triangle solid @background;
+            border-bottom:@triangle solid transparent;
+        }
+        a{
+            color:@color;
+            &:hover,
+            &:focus{
+                color:fade(@color,70%);
+            }
+        }
+        blockquote{
+            font-size:@size;
+            footer{
+                color:@color;
+                padding-top:15px;
+                font-weight:700;
+                font-size:0.7em;
+                line-height:1;
+                cite{
+                    color:@color;
+                    font-size:1.2em;
+                }
+            }
+        }
+        .entryFooter .morelink{
+            position:static;
+             a{
+                .btn-clean;
+                color:@color;
+                &:hover,
+                &:focus{
+                    color:fade(@color,70%);
+                }
+            }
+        }
+    }
+
+}
+//section.darkBG .NewsList{.list-box-content}
