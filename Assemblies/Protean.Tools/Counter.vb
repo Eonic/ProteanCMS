@@ -1,5 +1,5 @@
 ﻿' ================================================================================================
-'   Eonic.Tools.Counter & Eonic.Tools.CounterCollection
+'   Protean.Tools.Counter & Protean.Tools.CounterCollection
 '   Desc:       A simple counter class as well as a CounterCollection
 '   Author:     Ali Granger
 '   Updated:    03-Feb-10
@@ -34,9 +34,9 @@ Public Class Counter
 
     Public Event OnChange(ByVal sender As Counter, ByVal e As EventArgs)
 
-    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         RaiseEvent OnError(sender, e)
     End Sub
 
@@ -252,8 +252,8 @@ Public Class CounterCollection
 
 
     Protected Overrides Sub OnValidate(ByVal value As [Object])
-        If Not value.GetType() Is Type.GetType("Eonic.Tools.Counter") Then
-            Throw New ArgumentException("value must be of type Eonic.Tools.Counter.", "value")
+        If Not value.GetType() Is Type.GetType("Protean.Tools.Counter") Then
+            Throw New ArgumentException("value must be of type Protean.Tools.Counter.", "value")
         End If
     End Sub 'OnValidate 
 

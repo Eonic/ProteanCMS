@@ -218,7 +218,7 @@ Public Module Text
     ''' <param name="oRandomObject">Optional - a precreated Random object (useful if repeatedly running through passwords) </param>
     ''' <returns>String - The randomly generated password.</returns>
     ''' <remarks></remarks>
-    Public Function RandomPassword(ByVal size As Integer, Optional ByVal charSet As String = "", Optional ByVal options As Text.TextOptions = TextOptions.LowerCase Or TextOptions.UseAlpha Or TextOptions.UseNumeric, Optional ByVal oRandomObject As Eonic.Tools.Number.Random = Nothing) As String
+    Public Function RandomPassword(ByVal size As Integer, Optional ByVal charSet As String = "", Optional ByVal options As Text.TextOptions = TextOptions.LowerCase Or TextOptions.UseAlpha Or TextOptions.UseNumeric, Optional ByVal oRandomObject As Protean.Tools.Number.Random = Nothing) As String
 
         Dim s As New StringBuilder()
         Dim r As Tools.Number.Random
@@ -445,9 +445,14 @@ Public Module Text
         If Not removeTags = "" Then
             shtml = removeTagFromXml(shtml, removeTags)
         End If
-
+        Dim oTdyManaged As TidyManaged.Document
         ' Using 
-        Dim oTdyManaged As TidyManaged.Document = TidyManaged.Document.FromString(shtml)
+        Try
+            oTdyManaged = TidyManaged.Document.FromString(shtml)
+        Catch ex As Exception
+            sTidyXhtml = Nothing
+        End Try
+
 
         Try
             oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes
@@ -458,19 +463,12 @@ Public Module Text
             If bReturnNumbericEntities Then
                 oTdyManaged.OutputNumericEntities = True
             End If
+            oTdyManaged.CleanAndRepair()
             Try
-                oTdyManaged.CleanAndRepair()
                 sTidyXhtml = oTdyManaged.Save()
             Catch ex As Exception
                 sTidyXhtml = "html import conversion error"
             End Try
-
-            'oTdyManaged.CleanAndRepair()
-            'If crResult = 0 Or crResult = 1 Then
-            '    sTidyXhtml = oTdyManaged.Save()
-            'Else
-            '    sTidyXhtml = "html import conversion error"
-            'End If
 
             oTdyManaged.Dispose()
             oTdyManaged = Nothing
@@ -500,5 +498,4 @@ Public Module Text
     End Function
 
 End Module
-
 

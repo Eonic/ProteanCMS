@@ -19,7 +19,7 @@ Namespace Http
 
 #Region "Declarations"
 
-        Private _moduleName As String = "Eonic.Tools.WebRequest"
+        Private _moduleName As String = "Protean.Tools.WebRequest"
 
         Private _contentType As String = "text/html"
         Private _contentLength As Long = 0
@@ -34,7 +34,7 @@ Namespace Http
 
 #Region "Events"
 
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
 #End Region
 
@@ -145,7 +145,7 @@ Namespace Http
                     Return ""
                 End If
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Send(String)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Send(String)", ex, ""))
                 Return ""
             End Try
 
@@ -209,7 +209,7 @@ Namespace Http
                 Return responseOutput
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(_moduleName, "Send(Uri)", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "Send(Uri)", ex, ""))
                 Return ""
             End Try
         End Function

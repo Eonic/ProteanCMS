@@ -8,16 +8,16 @@ Imports System.Web.Configuration
 
 Public Module Encryption
 
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Public Function HashString(ByVal OriginalString As String, ByVal Provider As Eonic.Tools.Encryption.Hash.Provider, ByVal RemoveLineBreaks As Boolean) As String
+    Public Function HashString(ByVal OriginalString As String, ByVal Provider As Protean.Tools.Encryption.Hash.Provider, ByVal RemoveLineBreaks As Boolean) As String
 
         Dim cResult As String
 
         Try
             If OriginalString = "" Then Return ""
-            Dim oHash As New Eonic.Tools.Encryption.Hash(Provider)
-            Dim oEnc = New Eonic.Tools.Encryption.EncData(OriginalString)
+            Dim oHash As New Protean.Tools.Encryption.Hash(Provider)
+            Dim oEnc = New Protean.Tools.Encryption.EncData(OriginalString)
             oEnc = oHash.Calculate(oEnc)
             oHash.Dispose()
             'TS changed this to Hex from text
@@ -42,7 +42,7 @@ Public Module Encryption
 
             Return cResult
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
             Return OriginalString
         End Try
     End Function
@@ -64,15 +64,15 @@ Public Module Encryption
 
                 Case Else
 
-                    Dim nProvider As Eonic.Tools.Encryption.Hash.Provider = Hash.Provider.Md5
+                    Dim nProvider As Protean.Tools.Encryption.Hash.Provider = Hash.Provider.Md5
 
                     Try
-                        nProvider = System.Enum.Parse(GetType(Eonic.Tools.Encryption.Hash.Provider), Provider, True)
+                        nProvider = System.Enum.Parse(GetType(Protean.Tools.Encryption.Hash.Provider), Provider, True)
                     Catch ex As Exception
                         cResult = OriginalString
                     End Try
 
-                    cResult = Eonic.Tools.Encryption.HashString(OriginalString, nProvider, RemoveLineBreaks)
+                    cResult = Protean.Tools.Encryption.HashString(OriginalString, nProvider, RemoveLineBreaks)
 
             End Select
 
@@ -81,7 +81,7 @@ Public Module Encryption
 
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
             Return OriginalString
 
         End Try
@@ -91,15 +91,15 @@ Public Module Encryption
 
         'Try
         '    If Provider = "" Then Return OriginalString
-        '    Dim nProvider As Eonic.Tools.Encryption.Hash.Provider = Hash.Provider.Md5
+        '    Dim nProvider As Protean.Tools.Encryption.Hash.Provider = Hash.Provider.Md5
         '    Try
-        '        nProvider = System.Enum.Parse(GetType(Eonic.Tools.Encryption.Hash.Provider), Provider, True)
+        '        nProvider = System.Enum.Parse(GetType(Protean.Tools.Encryption.Hash.Provider), Provider, True)
         '    Catch ex As Exception
         '        Return OriginalString
         '    End Try
-        '    Return Eonic.Tools.Encryption.HashString(OriginalString, nProvider, RemoveLineBreaks)
+        '    Return Protean.Tools.Encryption.HashString(OriginalString, nProvider, RemoveLineBreaks)
         'Catch ex As Exception
-        '    RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
+        '    RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Encryption", "HashString", ex, ""))
         '    Return OriginalString
         'End Try
     End Function
@@ -137,7 +137,7 @@ Public Module Encryption
 
         Catch ex As Exception
 
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Encryption", "MD5Hash", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Encryption", "MD5Hash", ex, ""))
             Return cPassword
 
         End Try
@@ -161,7 +161,7 @@ Public Module Encryption
             Return LCase(strResult.ToString)
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Encryption", "generateSalt", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Encryption", "generateSalt", ex, ""))
             Return cDefaultSalt
         End Try
 

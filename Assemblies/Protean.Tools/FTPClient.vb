@@ -14,8 +14,8 @@ Public Class FTPClient
     Private cHost As String
     Private cUserName As String
     Private cPassword As String
-    Private Const mcModuleName As String = "Eonic.Tools.FTPClient"
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.FTPClient"
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
 #End Region
 
@@ -50,7 +50,7 @@ Public Class FTPClient
             cPassword = HostPassword
             Connect()
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 
@@ -58,7 +58,7 @@ Public Class FTPClient
         Try
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Connect", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Connect", ex, ""))
         End Try
     End Sub
 
@@ -66,7 +66,7 @@ Public Class FTPClient
         Try
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Disconnect", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Disconnect", ex, ""))
         End Try
     End Sub
 
@@ -94,7 +94,7 @@ Public Class FTPClient
             response.Close()
             Return True
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Download", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Download", ex, ""))
             Return False
         End Try
     End Function
@@ -116,7 +116,7 @@ Public Class FTPClient
             requestStream.Close()
             Return True
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Upload", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Upload", ex, ""))
             Return False
         End Try
     End Function
@@ -134,7 +134,7 @@ Public Class FTPClient
             writer.Write(fileContents, 0, fileContents.Length)
             Return True
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Upload", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Upload", ex, ""))
             Return False
         End Try
     End Function

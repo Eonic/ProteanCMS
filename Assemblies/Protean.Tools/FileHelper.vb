@@ -3,7 +3,7 @@ Imports System.Text
 Imports System.IO
 
 '' ---------------------------------------------------------
-'' Class       :   Eonic.Tools.FileHelper
+'' Class       :   Protean.Tools.FileHelper
 '' Author      :   Ali Granger
 '' Website     :   www.eonic.co.uk
 '' Description :   File classes and functions.

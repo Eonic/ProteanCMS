@@ -46,7 +46,7 @@ Namespace Integration.Twitter.TwitterVB2
     ''' <remarks></remarks>
     ''' <exclude/>
     Public Class TwitterOAuth
-        Inherits Eonic.Tools.Integration.Authentication.OAuth
+        Inherits Protean.Tools.Integration.Authentication.OAuth
 
         Public Const REQUEST_TOKEN As String = "https://api.twitter.com/oauth/request_token"
         Public Const AUTHORIZE As String = "https://api.twitter.com/oauth/authorize"
@@ -196,7 +196,7 @@ Namespace Integration.Twitter.TwitterVB2
             Dim TimeStamp As String = GenerateTimeStamp()
             Dim Sig As String = GenerateSignature(RequestUri, Me.ConsumerKey, Me.ConsumerSecret, Me.Token, Me.TokenSecret, RequestMethod.ToString, TimeStamp, Nonce, OutURL, QueryString, CallbackUrl, Verifier)
             QueryString &= "&oauth_signature=" + OAuthUrlEncode(Sig)
-            If RequestMethod = Eonic.Tools.Integration.Authentication.OAuth.Method.POST Then
+            If RequestMethod = Protean.Tools.Integration.Authentication.OAuth.Method.POST Then
                 PostData = QueryString
                 QueryString = String.Empty
             End If

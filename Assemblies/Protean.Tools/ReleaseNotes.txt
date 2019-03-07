@@ -1,6 +1,6 @@
 
 ===============================================================================
-	RELEASE NOTES FOR Eonic.Tools.5.0
+	RELEASE NOTES FOR Protean.Tools.5.0
 	
 	Please use this to register what changes have been made and where versions
 	are currently.
@@ -57,7 +57,7 @@ Moved in iFilter & GNUPG from old 3rd Party.
 [AG] Number.IsReallyNumeric - proper string based number check
 
 1.0.0.53
-[TS] Added ReverseItterator Class to Eonic.Tools/Conversions
+[TS] Added ReverseItterator Class to Protean.Tools/Conversions
 [AG] Xml.SetInnerXmlThenInnerText - new function that standardises our 'lazy' approach to setting the inner xml.
 [AG] Text.TruncateString - new function
 [AG] Updated Http.WebRequest.Send to work with GET requests
@@ -65,8 +65,8 @@ Moved in iFilter & GNUPG from old 3rd Party.
 [AG] Database.checkDBObjectExists - new overload of this function that doesn't care about object type being specified.
 
 1.0.0.51
-[AG] Moved Webrequest into the Namespace Eonic.Tools.Http
-[AG] New class Eonic.Tools.Http.Utils - intended for shared utilities, not instantiated class
+[AG] Moved Webrequest into the Namespace Protean.Tools.Http
+[AG] New class Protean.Tools.Http.Utils - intended for shared utilities, not instantiated class
 [AG] Number.IsStringNumeric - new function
 [AG] Number.CheckAndReturnStringAsNumber - new function
 [AG] New module FileHelper
@@ -100,7 +100,7 @@ Moved in iFilter & GNUPG from old 3rd Party.
 [TS] Added XML.firstElement
 [TS] Added Xml.getNsMgrRecursive
 [TS] Updated XML.addNsToXpath
-[TS] Added Jeff Attwords CAPTCHA module to eonic.tools.image.imageCaptcha (Thanks Jeff)
+[TS] Added Jeff Attwords CAPTCHA module to Protean.Tools.image.imageCaptcha (Thanks Jeff)
 
  ewcommon: /tools/imgVerification.ashx
 
@@ -162,7 +162,7 @@ Had to be produced for Wellards as there were versioning issues that could not b
 [AG] Encryption.RC4 - New cryptographic provider (not native to .NET)
 
 1.0.0.21 - 06/10/2008
-[SM] Added new class Eonic.Tools.Calendar
+[SM] Added new class Protean.Tools.Calendar
 [AG] Impersonate.ImpersonateValidUser - Fixed 'admin' overriding group validation 
 
 1.0.0.20 - 18/09/2008
@@ -184,15 +184,15 @@ Had to be produced for Wellards as there were versioning issues that could not b
 [BR] Added option for connection pooling
 
 1.0.0.14
-[AG] Applied fix to (space before T) and tidied up Eonic.Tools.XML.XmlDate
+[AG] Applied fix to (space before T) and tidied up Protean.Tools.XML.XmlDate
 [AG] Added an optional param to Xml.Tools.NodeState - bCheckTrimmedInnerText.
 
 1.0.0.13
-[AG] Applied fix to Eonic.Tools.Database.SqlDate
+[AG] Applied fix to Protean.Tools.Database.SqlDate
 
 1.0.0.12
 [BR] Greek Entitities added to xml.convertentitiestocode
-[BR] Updated Eonic.Tools.Database.SqlDate to reflect AG's changes
+[BR] Updated Protean.Tools.Database.SqlDate to reflect AG's changes
 
 1.0.0.11
 [AG] Updated  Text.IsEmail to be super efficient (one-liner).

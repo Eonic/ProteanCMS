@@ -26,11 +26,11 @@ Public Class Database
 
     Public WithEvents oConn As SqlClient.SqlConnection
 
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) ', ByVal cModuleName As String, ByVal cRoutineName As String, ByVal oException As Exception, ByVal cFurtherInfo As String)
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) ', ByVal cModuleName As String, ByVal cRoutineName As String, ByVal oException As Exception, ByVal cFurtherInfo As String)
     Public Event Connected(ByVal sender As Object, ByVal e As EventArgs)
     Public Event Disconnected(ByVal sender As Object, ByVal e As EventArgs)
     Public Event ConnectionStringChanged(ByVal sender As Object, ByVal e As EventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Database"
+    Private Const mcModuleName As String = "Protean.Tools.Database"
 
     Public Enum objectTypes
         Table
@@ -247,7 +247,7 @@ Public Class Database
             oConn = New SqlClient.SqlConnection(DatabaseConnectionString)
             RaiseEvent ConnectionStringChanged(Me, EventArgs.Empty)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetConnection", ex, "Setting Connection Info", Nothing))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetConnection", ex, "Setting Connection Info", Nothing))
         End Try
     End Sub
 
@@ -276,7 +276,7 @@ Public Class Database
             bReturn = True
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, cProcessInfo))
             Return Nothing
         Finally
             CloseConnection()
@@ -405,7 +405,7 @@ Public Class Database
          
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "BackupDatabase", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "BackupDatabase", ex, cProcessInfo))
             Return Nothing
         Finally
             CloseConnection()
@@ -494,7 +494,7 @@ Public Class Database
 
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "createDB", ex, cProcessInfo))
             Return Nothing
         Finally
             CloseConnection()
@@ -561,7 +561,7 @@ Public Class Database
             oCmd = Nothing
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSql", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSql", ex, cProcessInfo))
         Finally
             CloseConnection()
         End Try
@@ -590,7 +590,7 @@ Public Class Database
             oCmd = Nothing
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlfromFile", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlfromFile", ex, cProcessInfo))
             errmsg = ex.Message
             nUpdateCount = -1
         Finally
@@ -642,7 +642,7 @@ Public Class Database
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlScalar", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSqlScalar", ex, cProcessInfo))
             cRes = Nothing
 
         Finally
@@ -680,7 +680,7 @@ Public Class Database
             Return oReader
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataReader", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataReader", ex, cProcessInfo))
             ErrorMsg = ex.Message
             Return Nothing
         End Try
@@ -733,11 +733,11 @@ Public Class Database
                 Me.TimeOutException = True
                 oDs = Nothing
             Else
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
                 oDs = Nothing
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
             oDs = Nothing
         Finally
             CloseConnection()
@@ -778,7 +778,7 @@ Public Class Database
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
             oScalarValue = nullreturnvalue
         Finally
             CloseConnection()
@@ -830,7 +830,7 @@ Public Class Database
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
             cXmlValue = nullreturnvalue
         Finally
             CloseConnection()
@@ -859,7 +859,7 @@ Public Class Database
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
             oXmlValue = nullreturnvalue
         Finally
             CloseConnection()
@@ -898,7 +898,7 @@ Public Class Database
             reader = Nothing
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo))
 
         Finally
             cmd.Dispose()
@@ -925,7 +925,7 @@ Public Class Database
             getHashTable = oHash
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo))
             Return Nothing
         End Try
 
@@ -954,7 +954,7 @@ Public Class Database
             oConn.Close()
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getIdInsertSql", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getIdInsertSql", ex, cProcessInfo))
             nInsertId = Nothing
         Finally
             CloseConnection()
@@ -1109,7 +1109,7 @@ Public Class Database
                 If oConn.State <> ConnectionState.Closed Then oConn.Close()
             End If
         Catch ex As Exception
-            '   RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CloseConnection", ex, "Setting Connection Info", Nothing))
+            '   RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CloseConnection", ex, "Setting Connection Info", Nothing))
             '   Dont raise event in case of looping
         End Try
     End Sub
@@ -1119,7 +1119,7 @@ Public Class Database
             SqlConnection.ClearPool(oConn)
         Catch ex As Exception
 
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CloseConnectionPool", ex, "Setting Connection Info", Nothing))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CloseConnectionPool", ex, "Setting Connection Info", Nothing))
             'Dont raise event in case of looping
 
         End Try
@@ -1134,7 +1134,7 @@ Public Class Database
             oDdpt.Fill(ds, tablename)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "addTableToDataSet", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addTableToDataSet", ex, cProcessInfo))
         Finally
             CloseConnection()
         End Try
@@ -1166,7 +1166,7 @@ Public Class Database
                 Next
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "setDataSet", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setDataSet", ex, cProcessInfo))
 
         Finally
             CloseConnection()
@@ -1202,7 +1202,7 @@ Public Class Database
                 Next
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "returnNullsEmpty", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "returnNullsEmpty", ex, cProcessInfo))
 
         Finally
             CloseConnection()
@@ -1220,7 +1220,7 @@ Public Class Database
             Next
             Return returnColumns
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetColumnArray", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetColumnArray", ex, cProcessInfo))
             Return Nothing
         End Try
     End Function
@@ -1232,8 +1232,8 @@ Public Class Database
 #Region "Declarations"
         Private oDA As SqlClient.SqlDataAdapter
         Private oCN As SqlClient.SqlConnection
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-        Private Const mcModuleName As String = "Eonic.Tools.Database"
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Private Const mcModuleName As String = "Protean.Tools.Database"
 #End Region
 
 #Region "Public Procedures"
@@ -1241,7 +1241,7 @@ Public Class Database
             Try
                 oCN = New SqlClient.SqlConnection(connection)
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             End Try
         End Sub
         Public Function Fill(ByVal sql As String, ByVal sourcetablename As String, ByVal destinationtablename As String) As Integer
@@ -1255,7 +1255,7 @@ Public Class Database
                 oDA.UpdateCommand = oCB.GetUpdateCommand(True)
                 Return nResult
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Fill", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Fill", ex, ""))
                 Return 0
             End Try
         End Function
@@ -1263,7 +1263,7 @@ Public Class Database
             Try
                 Return oDA.Update(Me, "tablename")
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Update", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Update", ex, ""))
                 Return 0
             End Try
         End Function

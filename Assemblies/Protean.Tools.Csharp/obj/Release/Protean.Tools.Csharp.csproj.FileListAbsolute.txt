@@ -1,0 +1,10 @@
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.dll
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.pdb
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.xml
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CopyComplete
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.dll
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.pdb

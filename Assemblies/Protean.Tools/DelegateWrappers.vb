@@ -1,4 +1,4 @@
-﻿' Namespace Eonic.Tools.DelegateWrappers
+﻿' Namespace Protean.Tools.DelegateWrappers
 
 ' Collection of classes for delegate wrappers - predicates, actions and converters etc.
 ' At the moment only predicates are implemented

@@ -5,8 +5,8 @@ Public Class Csv
 #Region "Declarations"
     Dim oTable As DataTable
     '    Dim oError As Exception = Nothing
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Csv"
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.Csv"
 #End Region
 #Region "Properties"
     Public ReadOnly Property Table() As DataTable
@@ -24,7 +24,7 @@ Public Class Csv
                 oXml.InnerXml = oDS.GetXml
                 Return oXml
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Xml", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Xml", ex, ""))
                 Return Nothing
             End Try
         End Get
@@ -38,7 +38,7 @@ Public Class Csv
             oTable.TableName = Tablename
             Convert(Filebody, Delimiter, qualifier, columnNames)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 #End Region
@@ -56,7 +56,7 @@ Public Class Csv
                 End If
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Convert", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Convert", ex, ""))
         End Try
     End Sub
 
@@ -65,7 +65,7 @@ Public Class Csv
         Try
             Return Split(fileBody, vbCrLf)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRows", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRows", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -93,7 +93,7 @@ Public Class Csv
             Next
             Return cCols
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetColumns", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetColumns", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -106,7 +106,7 @@ Public Class Csv
                 oTable.Columns.Add(New DataColumn(cols(i)))
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SetColNames", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetColNames", ex, ""))
         End Try
     End Sub
 
@@ -121,7 +121,7 @@ Public Class Csv
             Next
             oTable.Rows.Add(Cols)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "AddRow", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddRow", ex, ""))
         End Try
     End Sub
 

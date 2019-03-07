@@ -3,7 +3,7 @@ Imports System.Web.Configuration
 
 Namespace Security
     Public Class Impersonate
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
         Private Const LOGON32_PROVIDER_DEFAULT As Integer = 0
         Private Const LOGON32_LOGON_INTERACTIVE As Integer = 2
@@ -68,7 +68,7 @@ Namespace Security
             Try
 
                 If cInGroup = "AzureWebApp" Then
-                    Dim goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/web")
+                    Dim goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
                     If strUserName = goConfig("AdminAcct") And strPassword = goConfig("AdminPassword") Then
                         Return True
                     Else
@@ -115,7 +115,7 @@ Namespace Security
 
             Catch ex As Exception
 
-                RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs("Impersonate", "ImpersonateValidUser", ex, ""))
+                RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs("Impersonate", "ImpersonateValidUser", ex, ""))
                 Return False
             End Try
         End Function

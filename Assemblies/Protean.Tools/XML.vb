@@ -11,8 +11,8 @@ Public Class Xml
 
 #Region "Declarations"
 
-    Public Shared Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Xml"
+    Public Shared Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.Xml"
 
     Public Enum XmlDataType
 
@@ -78,7 +78,7 @@ Public Class Xml
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_Sub1", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_Sub1", ex, ""))
         End Try
     End Sub
 
@@ -102,7 +102,7 @@ Public Class Xml
             oRefPart.AppendChild(oMasterInstance.OwnerDocument.ImportNode(oExisting, True))
             CombineInstance_MarkSubElmts(oExisting)
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_Sub2", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_Sub2", ex, ""))
         End Try
     End Sub
 
@@ -116,7 +116,7 @@ Public Class Xml
                 End If
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_GetXPath", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_GetXPath", ex, ""))
         End Try
     End Sub
 
@@ -132,7 +132,7 @@ Public Class Xml
                 CombineInstance_MarkSubElmts(oChild, bRemove)
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_MarkSubElmts", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineInstance_MarkSubElmts", ex, ""))
         End Try
     End Sub
 
@@ -166,7 +166,7 @@ Public Class Xml
             sString = Replace(sString, ">", "&gt;")
             Return sString & ""
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmlToForm", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmlToForm", ex, ""))
             Return ""
         End Try
     End Function
@@ -185,7 +185,7 @@ Public Class Xml
 
             Return oXmlDoc
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "htmlToXmlDoc", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "htmlToXmlDoc", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -212,7 +212,7 @@ Public Class Xml
 
             Return nsMgr
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgr", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgr", ex, ""))
             Return Nothing
         End Try
 
@@ -238,7 +238,7 @@ Public Class Xml
 
             Return nsMgr
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgrWithURI", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgrWithURI", ex, ""))
             Return Nothing
         End Try
 
@@ -270,7 +270,7 @@ Public Class Xml
 
             Return nsMgr
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgr", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getNsMgr", ex, ""))
             Return Nothing
         End Try
 
@@ -308,7 +308,7 @@ Public Class Xml
 
             Return cXpath
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "addNsToXpath", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addNsToXpath", ex, ""))
             Return ""
         End Try
 
@@ -334,7 +334,7 @@ Public Class Xml
             If bPrepend Then oParent.PrependChild(oNewNode) Else oParent.AppendChild(oNewNode)
             Return oNewNode
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "addElement", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addElement", ex, ""))
             Return Nothing
         End Try
 
@@ -353,7 +353,7 @@ Public Class Xml
             Next
             Return oReturnNode
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "firstElement", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "firstElement", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -371,7 +371,7 @@ Public Class Xml
             oNode.ParentNode.ReplaceChild(oNewNode, oNode)
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "renameNode", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "renameNode", ex, ""))
         End Try
     End Sub
 
@@ -383,7 +383,7 @@ Public Class Xml
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "removeChildByName", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "removeChildByName", ex, ""))
         End Try
     End Sub
 
@@ -407,7 +407,7 @@ Public Class Xml
 
             Return oElem
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "addNewTextNode", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addNewTextNode", ex, ""))
             Return Nothing
         End Try
 
@@ -445,7 +445,7 @@ Public Class Xml
 
     '        Return cValue
     '    Catch ex As Exception
-    '        RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getNodeValueByType", ex, ""))
+    '        RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getNodeValueByType", ex, ""))
     '        Return Nothing
     '    End Try
 
@@ -534,7 +534,7 @@ Public Class Xml
             Return oReturnElement
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "loadElement", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "loadElement", ex, ""))
             Return Nothing
         End Try
 
@@ -608,7 +608,7 @@ Public Class Xml
             Return oReturnState
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "NodeState", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "NodeState", ex, ""))
             Return Nothing
         End Try
 
@@ -926,7 +926,7 @@ Public Class Xml
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToCodes", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToCodes", ex, ""))
             Return ""
         End Try
     End Function
@@ -960,7 +960,7 @@ Public Class Xml
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToCodes", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToCodes", ex, ""))
             Return ""
         End Try
     End Function
@@ -976,7 +976,7 @@ Public Class Xml
             Return IIf(sString Is Nothing, "", sString)
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToString", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "convertEntitiesToString", ex, ""))
             Return ""
         End Try
     End Function
@@ -994,7 +994,7 @@ Public Class Xml
             End If
             Return cReturn
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmlDate", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmlDate", ex, ""))
             Return ""
         End Try
 
@@ -1080,7 +1080,7 @@ Public Class Xml
 
             Return oMasterStructureNode
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineNodes", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CombineNodes", ex, ""))
             Return oMasterStructureNode
         End Try
     End Function
@@ -1096,7 +1096,7 @@ Public Class Xml
             Return returnNode
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetOrCreateSingleChildElement", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetOrCreateSingleChildElement", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -1120,7 +1120,7 @@ Public Class Xml
 
             Catch ex As Exception
 
-                RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""))
+                RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""))
 
             End Try
         End If
@@ -1139,7 +1139,7 @@ Public Class Xml
             Return myDict
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionary", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionary", ex, ""))
         End Try
     End Function
 
@@ -1159,7 +1159,7 @@ Public Class Xml
                 Next
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""))
         End Try
     End Sub
 
@@ -1217,7 +1217,7 @@ Public Class Xml
             Return serializedObjectDocument.DocumentElement
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Read", ex, cProcessInfo))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Read", ex, cProcessInfo))
             Return Nothing
         End Try
 
@@ -1280,8 +1280,8 @@ Public Class Xml
         Inherits System.IO.StreamReader
 
 
-        Public Shared Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-        Private Const mcModuleName As String = "Eonic.Tools.Xml.XmlSanitizingStream"
+        Public Shared Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Private Const mcModuleName As String = "Protean.Tools.Xml.XmlSanitizingStream"
 
 
         ' Pass 'true' to automatically detect encoding using BOMs.
@@ -1366,7 +1366,7 @@ Public Class Xml
         '        Loop While num < count
         '        Return num
         '    Catch ex As Exception
-        '        RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Read", ex, cProcessInfo))
+        '        RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Read", ex, cProcessInfo))
         '        Return Nothing
         '    End Try
         'End Function
@@ -1453,7 +1453,7 @@ Namespace Xslt
             Try
                 Select Case dateString
                     Case "now()", "Now()", "now", "Now"
-                        dateString = CStr(Eonic.Tools.Xml.XmlDate(Now(), True))
+                        dateString = CStr(Protean.Tools.Xml.XmlDate(Now(), True))
                 End Select
                 Return dateString
             Catch ex As Exception
@@ -1547,18 +1547,18 @@ Namespace Xslt
         Private XsltArgs As Xsl.XsltArgumentList 'Argurment List
         'Error Handling
         'General Error
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         'Private TimeOutError
-        Private Event OnTimeoutError_Private(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Private Event OnTimeoutError_Private(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         'Public TimeOutError
-        Public Event OnTimeoutError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Event OnTimeoutError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
         Private oXslReader As XmlReader 'to read the Xsl
         Private oXslReaderSettings As XmlReaderSettings
 
-        Private Const mcModuleName As String = "Eonic.Tools.Xml.XslTransform"
+        Private Const mcModuleName As String = "Protean.Tools.Xml.XslTransform"
 
-        Private Sub EonicPrivateError_Handle(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs) Handles Me.OnTimeoutError_Private
+        Private Sub EonicPrivateError_Handle(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnTimeoutError_Private
             Try
                 'make sure we close the reader properly
                 oXslReader.Close()
@@ -1683,12 +1683,12 @@ Namespace Xslt
                         Dim oSettings As New Hashtable
                         oSettings.Add("TimeoutSeconds", Me.TimeoutSeconds)
                         oSettings.Add("Compiled", Me.Compiled)
-                        RaiseEvent OnTimeoutError_Private(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", New Exception("XsltTransformTimeout"), "", , oSettings))
+                        RaiseEvent OnTimeoutError_Private(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", New Exception("XsltTransformTimeout"), "", , oSettings))
                     End If
                 End If
                 If Not d Is Nothing Then d.EndInvoke(cResult, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCompiledTimed", ex, ""))
             End Try
         End Sub
 
@@ -1728,7 +1728,7 @@ Namespace Xslt
                 'Return results
                 cResult = osWriter.ToString
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformCompiled", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformCompiled", ex, ""))
                 cResult = ""
             End Try
         End Sub
@@ -1750,12 +1750,12 @@ Namespace Xslt
                         Dim oSettings As New Hashtable
                         oSettings.Add("TimeoutSeconds", Me.TimeoutSeconds)
                         oSettings.Add("Compiled", Me.Compiled)
-                        RaiseEvent OnTimeoutError_Private(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", New Exception("XsltTransformTimeout"), "", , oSettings))
+                        RaiseEvent OnTimeoutError_Private(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", New Exception("XsltTransformTimeout"), "", , oSettings))
                     End If
                 End If
                 If Not d Is Nothing Then d.EndInvoke(cResult, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessClassicTimed", ex, ""))
             End Try
         End Sub
 
@@ -1796,7 +1796,7 @@ Namespace Xslt
                 'Return results
                 cResult = osWriter.ToString
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformClassic", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformClassic", ex, ""))
                 cResult = ""
             End Try
         End Sub
@@ -1819,7 +1819,7 @@ Namespace Xslt
                 End If
                 Return cResult
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Transform", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Transform", ex, ""))
                 Return ""
             Finally
                 If bClearXml Then oXml = Nothing
@@ -1837,7 +1837,7 @@ Namespace Xslt
                 oXslReaderSettings = New XmlReaderSettings
                 oXslReaderSettings.ProhibitDtd = False
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             End Try
         End Sub
     End Class

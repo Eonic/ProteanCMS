@@ -5,7 +5,7 @@ Imports System.Web.HttpUtility
 Imports System.Collections.Specialized
 
 '' ---------------------------------------------------------
-'' Class       :   Eonic.Tools.Http.WebRequest
+'' Class       :   Protean.Tools.Http.WebRequest
 '' Author      :   Ali Granger
 '' Website     :   www.eonic.co.uk
 '' Description :   HTTP and Web related classes and functions.
@@ -24,7 +24,7 @@ Namespace Http
     End Enum
 
     ''' <summary>
-    ''' Eonic.Tools.Http.Utils
+    ''' Protean.Tools.Http.Utils
     ''' Collection of shared Http/Web utils
     ''' </summary>
     ''' <remarks></remarks>

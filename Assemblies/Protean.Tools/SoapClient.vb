@@ -13,8 +13,8 @@ Public Class SoapClient
     Private cServiceNamespace As String '"http://www.eonic.co.uk/ewcommon/Services/"
     Private cActionName As String
     Private bRemoveReturnEnvelope As Boolean = False
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.SoapClient"
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.SoapClient"
     Private bErrorReturned As Boolean = False
     Public moSession As System.Web.SessionState.HttpSessionState
     Public Headers As New Dictionary(Of String, String)
@@ -114,7 +114,7 @@ Public Class SoapClient
             ProduceReturn(ReturnSoapResponse(serviceRequest))
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendSoapRequest", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendSoapRequest", ex, cProcessInfo))
         End Try
     End Sub
 
@@ -132,7 +132,7 @@ Public Class SoapClient
             bodyStream.Close()
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "addSoap", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addSoap", ex, cProcessInfo))
         End Try
 
     End Sub
@@ -160,7 +160,7 @@ Public Class SoapClient
 
         Catch ex As Exception
 
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ReturnSoapRequest", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReturnSoapRequest", ex, cProcessInfo))
 
         End Try
 
@@ -186,7 +186,7 @@ Public Class SoapClient
                 End Select
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorHeaders", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorHeaders", ex, ""))
         End Try
     End Sub
 
@@ -212,7 +212,7 @@ Public Class SoapClient
                 End Select
             Next
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorHeaders", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorHeaders", ex, ""))
         End Try
     End Sub
 
@@ -238,7 +238,7 @@ Public Class SoapClient
             Return oXml
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "getSoapEnvelope", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getSoapEnvelope", ex, cProcessInfo))
             Return Nothing
         End Try
     End Function
@@ -261,7 +261,7 @@ Public Class SoapClient
                 oResults.LoadXml(cReturn)
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
         End Try
     End Sub
 
@@ -276,7 +276,7 @@ Public Class SoapClient
             Me.SendSoapRequest(oSoapBody)
             Return Me.oResults.OuterXml
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
             Return ""
         End Try
     End Function
@@ -288,7 +288,7 @@ Public Class SoapClient
             Me.SendSoapRequest(oSoapBody)
             Return Me.oResults.OuterXml
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendRequest", ex, ""))
             Return ""
         End Try
     End Function

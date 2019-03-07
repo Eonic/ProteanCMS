@@ -1,0 +1,5 @@
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
+D:\HostingSpaces\_objSource\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb

@@ -15,8 +15,8 @@ Public Class Image
     Private oImg As System.Drawing.Bitmap 'the base image
     Private oSourceImg As System.Drawing.Bitmap 'the base image
     Private oGraphics As Graphics
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Image"
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.Image"
     Private bCrop As Boolean = False 'Crop the image?
     Private bNoStretch As Boolean = False 'Don't Expand, only Shrink
 
@@ -41,7 +41,7 @@ Public Class Image
             cLocation = Location 'set the location
             ReLoad() 'load the image
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 
@@ -62,7 +62,7 @@ Public Class Image
             End If
             Me.Finalize()
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""))
         End Try
     End Sub
 
@@ -76,7 +76,7 @@ Public Class Image
                 'oImg = System.Drawing.Image.FromFile(cLocation)
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ReLoad", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReLoad", ex, ""))
         End Try
     End Sub
 
@@ -91,7 +91,7 @@ Public Class Image
             CompressImage(imgFile, True)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 
@@ -111,7 +111,7 @@ Public Class Image
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SetMaxSize", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetMaxSize", ex, ""))
         End Try
     End Sub
 
@@ -120,7 +120,7 @@ Public Class Image
         Try
             IO.File.Delete(cLocation)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteOriginal", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteOriginal", ex, ""))
         End Try
     End Sub
 
@@ -131,7 +131,7 @@ Public Class Image
         Try
             AddReflection(_BackgroundColor, _Reflectivity)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Reflect", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Reflect", ex, ""))
         End Try
     End Sub
 
@@ -147,7 +147,7 @@ Public Class Image
             'saves with compression and formatting
             Return SaveJPGWithCompressionSetting(oImg, cPath, nCompression, serverPath)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""))
             Return False
         End Try
     End Function
@@ -243,7 +243,7 @@ Public Class Image
 
             oImg = ImageResize(oImg, nNewHeight, nNewWidth)
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Resize", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Resize", ex, ""))
         End Try
     End Sub
 
@@ -370,7 +370,7 @@ Public Class Image
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ResizeMax", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResizeMax", ex, ""))
         End Try
     End Sub
 
@@ -396,7 +396,7 @@ Public Class Image
             '-------
             Return oImage
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", ex, ""))
             Return oImage
         End Try
 
@@ -413,7 +413,7 @@ Public Class Image
             Next
             Return Nothing
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetEncoderInfo", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetEncoderInfo", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -479,7 +479,7 @@ Public Class Image
             cProcessInfo = cProcessInfo
             Return True
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveJPGWithCompressionSetting", ex, cProcessInfo))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SaveJPGWithCompressionSetting", ex, cProcessInfo))
             Return False
         Finally
             theImg.Dispose()
@@ -499,8 +499,8 @@ Public Class Image
                 If lossless Then
                     optimizer.LosslessCompress(imgfileInfo)
                 Else
-                    optimizer.OptimalCompression = True
-                    optimizer.Compress(imgfileInfo)
+                        '  optimizer.LosslessCompress = True
+                        optimizer.Compress(imgfileInfo)
                 End If
                 imgfileInfo.Refresh()
                 difference = difference - imgfileInfo.Length
@@ -532,7 +532,7 @@ Public Class Image
         Return difference
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
             Return 0
         End Try
     End Function
@@ -562,7 +562,7 @@ Public Class Image
             oImage = oBitmapCrop
             Return oImage
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "CropImage", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CropImage", ex, ""))
             Return oImage
         End Try
     End Function
@@ -827,8 +827,8 @@ Public Class Image
         Private _lineNoise As LineNoiseLevel
         Private _guid As String
         Private _fontWhitelist As String
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-        Private Const mcModuleName As String = "Eonic.Tools.Image.CaptchaImage"
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Private Const mcModuleName As String = "Protean.Tools.Image.CaptchaImage"
 
 #Region "  Public Enums"
 
@@ -1038,7 +1038,7 @@ Public Class Image
                 _generatedAt = DateTime.Now
                 _guid = Guid.NewGuid.ToString()
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             End Try
         End Sub
 
@@ -1061,7 +1061,7 @@ Public Class Image
                 End If
                 Return ff(_rand.Next(0, ff.Length - 1))
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "RandomFontFamily", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RandomFontFamily", ex, ""))
                 Return Nothing
             End Try
         End Function
@@ -1083,10 +1083,10 @@ Public Class Image
                 Dim options As Tools.TextOptions = Tools.TextOptions.UseAlpha Or Tools.TextOptions.UseNumeric Or Tools.TextOptions.UnambiguousCharacters
 
                 If lowerCase Then options = options Or Tools.TextOptions.LowerCase
-                Return Eonic.Tools.Text.RandomPassword(size, _randomTextChars, options)
+                Return Protean.Tools.Text.RandomPassword(size, _randomTextChars, options)
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GenerateRandomText", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GenerateRandomText", ex, ""))
                 Return Nothing
             End Try
         End Function
@@ -1141,7 +1141,7 @@ Public Class Image
                 End Select
                 Return New Font(fname, fsize, FontStyle.Bold)
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetFont", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetFont", ex, ""))
                 Return Nothing
             End Try
         End Function
@@ -1195,7 +1195,7 @@ Public Class Image
                 Return bmp
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
                 Return Nothing
             End Try
         End Function

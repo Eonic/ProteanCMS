@@ -10,11 +10,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Eonic.Tools")> 
-<Assembly: AssemblyDescription("Eonic Common Tools")> 
-<Assembly: AssemblyCompany("Eonic Associates LLP")> 
-<Assembly: AssemblyProduct("Eonic.Tools")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2018")>
+<Assembly: AssemblyTitle("Protean.Tools")>
+<Assembly: AssemblyDescription("ProteanCommon Tools")>
+<Assembly: AssemblyCompany("Eonic Associates LLP")>
+<Assembly: AssemblyProduct("Protean.Tools")>
+<Assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2019")>
 <Assembly: AssemblyTrademark("Eonic")> 
 
 <Assembly: ComVisible(False)> 
@@ -33,8 +33,8 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("5.0.163.75")>
-<Assembly: AssemblyFileVersion("5.0.163.75")>
+<Assembly: AssemblyVersion("6.0.5.15")>
+<Assembly: AssemblyFileVersion("6.0.5.15")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 

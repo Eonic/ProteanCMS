@@ -9,7 +9,7 @@ Imports DocumentFormat.OpenXml.Packaging
 Imports DocumentFormat.OpenXml.Spreadsheet
 
 ''' <summary>
-'''   <para>   Eonic.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
+'''   <para>   Protean.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
 '''   <example>
 '''     <para>Exmaple usage to convert an Excel file to XML</para>
 '''     <code>Dim c As New Conversion(Conversion.Type.Excel, Conversion.Type.Xml, "c:\text.xls")</code>
@@ -22,8 +22,8 @@ Public Class Conversion
 
 #Region "    Declarations"
 
-    Public Shared Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Conversion"
+    Public Shared Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.Conversion"
 
     Public Enum Type
 
@@ -149,7 +149,7 @@ Public Class Conversion
 
 #Region "    Initialisation"
 
-    Public Sub New(ByVal inputType As Eonic.Tools.Conversion.Type, ByVal outputType As Eonic.Tools.Conversion.Type)
+    Public Sub New(ByVal inputType As Protean.Tools.Conversion.Type, ByVal outputType As Protean.Tools.Conversion.Type)
 
         Me.nInputType = inputType
         Me.nOutputType = outputType
@@ -157,7 +157,7 @@ Public Class Conversion
 
     End Sub
 
-    Public Sub New(ByVal inputType As Eonic.Tools.Conversion.Type, ByVal outputType As Eonic.Tools.Conversion.Type, ByVal input As Object)
+    Public Sub New(ByVal inputType As Protean.Tools.Conversion.Type, ByVal outputType As Protean.Tools.Conversion.Type, ByVal input As Object)
 
         Me.nInputType = inputType
         Me.nOutputType = outputType
@@ -391,7 +391,7 @@ Public Class Conversion
 
                                 Else
                                     If _fValue.startswith("<") Then
-                                        rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerXml = Eonic.Tools.Text.tidyXhtmlFrag(_fValue, True, True)
+                                        rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerXml = Protean.Tools.Text.tidyXhtmlFrag(_fValue, True, True)
                                         bHasHtml = True
                                     Else
                                         rowElmt.SelectSingleNode("*[position() = " & CLng(ii + 1) & "]").InnerText = Trim(_fValue).Replace(vbTab, "")
@@ -587,7 +587,7 @@ Public Class Conversion
 
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Convert", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Convert", ex, ""))
 
         End Try
 
@@ -603,7 +603,7 @@ Public Class Conversion
             Return ds.GetXml()
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
         End Try
     End Function
 
@@ -660,7 +660,7 @@ Public Class Conversion
             spreadsheetDocument = Nothing
             Return ds
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXML", ex, ""))
         End Try
     End Function
 

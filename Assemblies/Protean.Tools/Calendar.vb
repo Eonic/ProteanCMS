@@ -6,8 +6,8 @@ Public Class Calendar
 
 #Region "Declarations"
 
-    Public Shared Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-    Private Const mcModuleName As String = "Eonic.Tools.Calendar"
+    Public Shared Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+    Private Const mcModuleName As String = "Protean.Tools.Calendar"
 
     Private DateConfig As System.Globalization.DateTimeFormatInfo
 
@@ -113,7 +113,7 @@ Public Class Calendar
             Return oCalendar
 
         Catch ex As Exception
-            RaiseEvent OnError(Nothing, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCalendarXML", ex, ""))
+            RaiseEvent OnError(Nothing, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCalendarXML", ex, ""))
             Return Nothing
         End Try
 

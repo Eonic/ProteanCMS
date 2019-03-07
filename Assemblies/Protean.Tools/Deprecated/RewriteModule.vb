@@ -1,5 +1,5 @@
 '' ---------------------------------------------------------
-'' Library   :   Eonic.Tools.httpModule
+'' Library   :   Protean.Tools.httpModule
 '' Author    :   Trevor Spink
 '' Website   :   www.eonic.co.uk
 ''
