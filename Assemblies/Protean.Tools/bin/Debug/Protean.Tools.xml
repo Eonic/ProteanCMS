@@ -350,19 +350,6 @@ Protean.Tools
  <returns>The index of counter in the collection</returns>
  <remarks></remarks>
 </member>
-<member name="M:Protean.Tools.Database.GetDataSet(System.String,System.String,System.String,System.Boolean,System.Collections.Hashtable,System.Data.CommandType,System.Int32,System.Int32)">
- <summary>
-   Returns a dataset
- </summary>
- <param name="sql">The sql, table or stored procedure to call - when calling a table or SP remember to change querytype.</param>
- <param name="tablename">The name of the table that will be added to the dataset</param>
- <param name="parameters">A hashtable of parameters to be fed into the calling command</param>
- <param name="querytype">The query type: plain text, table or stored procedure</param>
- <param name="datasetname">The name of the dataset to be returned</param>
- <param name="bHandleTimeouts">Indicates whether to pass timeouts through the standard error handling, or ignore them.</param>
- <returns></returns>
- <remarks></remarks>
-</member>
 <member name="T:Protean.Tools.DelegateWrappers.PredicateWrapperDelegate`2">
  <summary>
  

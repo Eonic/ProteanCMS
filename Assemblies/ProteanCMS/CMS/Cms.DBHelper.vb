@@ -1282,7 +1282,7 @@ Partial Public Class Cms
                 End If
 
                 cSql = "select cVersionLang from  tblContentStructure where nStructKey = " & nPageId
-                cLayout = GetDataValue(cSql, , , "default")
+                cLayout = GetDataValue(cSql, , , "default").ToString()
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getPageLang", ex, cSql))
@@ -2748,11 +2748,12 @@ restart:
                     oDs.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
 
-                    Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
+                    Dim oXml As XmlDocument = GetXml(oDs)
+
                     oDs.EnforceConstraints = False
                     For Each oNode In oXml.DocumentElement.SelectNodes("group")
                         oElmt = oNode
-                        If CInt(oElmt.GetAttribute("isMember")) > 0 Then
+                        If CInt("0" & oElmt.GetAttribute("isMember")) > 0 Then
                             oElmt.SetAttribute("isMember", "true")
                         Else
                             oElmt.SetAttribute("isMember", "false")
