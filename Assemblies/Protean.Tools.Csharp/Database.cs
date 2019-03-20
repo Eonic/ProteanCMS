@@ -1119,19 +1119,36 @@ namespace Protean.Tools
 
         public static string SqlDate(object dDateTime, bool bIncludeTime = false)
         {
-            if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
+            try
             {
-                DateTime dxDate = (DateTime)dDateTime;
-                if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
+                if (dDateTime is DateTime) {
+                    DateTime thisDate = (DateTime)dDateTime;
+                    if (bIncludeTime)
+                        return "'" + thisDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
+                    else
+                        return "'" + thisDate.ToString("dd-MMM-yyyy") + "'";
+                }
+                else if (dDateTime is null) {
                     return "null";
-                else if (bIncludeTime)
-                    return "'" + dxDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
+                }
+                else if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
+                {
+                    DateTime dxDate = (DateTime)dDateTime;
+                    if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
+                        return "null";
+                    else if (bIncludeTime)
+                        return "'" + dxDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
+                    else
+                        return "'" + dxDate.ToString("dd-MMM-yyyy") + "'";
+                }
                 else
-                    return "'" + dxDate.ToString("dd-MMM-yyyy") + "'";
-            }
-            else
-                return "null";
+                    return "null";
         }
+            catch (Exception ex)
+            {
+                return "date error";
+            }
+}
 
         public static string SqlFmt(string text)
         {

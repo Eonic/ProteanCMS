@@ -714,7 +714,7 @@ ProcessFlow:
 
 
 
-                Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing)
+                Public Sub maintainUserInGroup(ByVal nUserId As Long, ByVal nGroupId As Long, ByVal remove As Boolean, Optional ByVal cUserEmail As String = Nothing, Optional ByVal cGroupName As String = Nothing, Optional isLast As Boolean = False)
                     PerfMon.Log("Messaging", "maintainUserInGroup")
                     Try
                         'do nothing this is a placeholder

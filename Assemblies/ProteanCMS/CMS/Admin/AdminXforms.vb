@@ -24,6 +24,7 @@ Imports System.Threading
 Imports System.Collections.Specialized
 Imports Protean.Tools
 Imports Protean.Tools.Xml
+Imports Protean.Tools.Text
 Imports System
 Imports System.Linq
 Imports System.Collections.Generic

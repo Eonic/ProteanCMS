@@ -7,6 +7,7 @@ Imports System
 Imports System.Collections.Generic
 Imports System.Text
 Imports System.Drawing.Drawing2D
+Imports Protean.Tools.Text
 
 Public Class Image
 #Region "Declarations"
@@ -1080,9 +1081,9 @@ Public Class Image
                 Dim lowercase As Boolean = True
                 Dim size As Long = _randomTextLength
 
-                Dim options As Tools.TextOptions = Tools.TextOptions.UseAlpha Or Tools.TextOptions.UseNumeric Or Tools.TextOptions.UnambiguousCharacters
+                Dim options As TextOptions = TextOptions.UseAlpha Or TextOptions.UseNumeric Or TextOptions.UnambiguousCharacters
 
-                If lowerCase Then options = options Or Tools.TextOptions.LowerCase
+                If lowercase Then options = options Or TextOptions.LowerCase
                 Return Protean.Tools.Text.RandomPassword(size, _randomTextChars, options)
 
             Catch ex As Exception

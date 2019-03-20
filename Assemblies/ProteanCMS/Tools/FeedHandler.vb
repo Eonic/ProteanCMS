@@ -433,7 +433,7 @@ Public Class FeedHandler
 
             For Each oInstanceElmt In oInstanceXML.DocumentElement.SelectNodes("instance")
                 Dim cId As String = oInstanceElmt.SelectSingleNode("tblContent/cContentForiegnRef").InnerText
-                oInstanceElmt.SelectSingleNode("tblContent/cContentName").InnerText = CleanName(oInstanceElmt.SelectSingleNode("tblContent/cContentName").InnerText, True)
+                oInstanceElmt.SelectSingleNode("tblContent/cContentName").InnerText = Text.CleanName(oInstanceElmt.SelectSingleNode("tblContent/cContentName").InnerText, True)
                 ' If there's no foreign ref then let's use the contentname
                 If cId = "" Then
                     cId = oInstanceElmt.SelectSingleNode("tblContent/cContentName").InnerText

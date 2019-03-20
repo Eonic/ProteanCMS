@@ -7,7 +7,8 @@ Imports System.Drawing.Imaging
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.text
 Imports System.Security.Cryptography
-Imports System.text
+Imports System.Text
+Imports Protean.Tools.Text
 
 Public Class ImgVerify
 
@@ -24,8 +25,8 @@ Public Class ImgVerify
     ''' <remarks>DEPRECATED: use Protean.Tools.Text.RandomPassword instead</remarks>
     Public Shared Function getRandomPassword(ByVal size As Integer, ByVal lowerCase As Boolean) As String
 
-        Dim options As Tools.TextOptions = Tools.TextOptions.UseAlpha Or Tools.TextOptions.UseNumeric
-        If lowerCase Then options = options Or Tools.TextOptions.LowerCase
+        Dim options As TextOptions = TextOptions.UseAlpha Or TextOptions.UseNumeric
+        If lowerCase Then options = options Or TextOptions.LowerCase
         Return Protean.Tools.Text.RandomPassword(size, , options)
 
     End Function

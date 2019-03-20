@@ -168,3 +168,5 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Cop
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.pdb

@@ -1761,7 +1761,7 @@ DoOptions:
 
     Public Function CleanName(ByVal cName As String, Optional ByVal bLeaveAmp As Boolean = False) As String
 
-        Protean.Tools.CleanName(cName, bLeaveAmp, False)
+        Protean.Tools.Text.CleanName(cName, bLeaveAmp, False)
 
     End Function
 

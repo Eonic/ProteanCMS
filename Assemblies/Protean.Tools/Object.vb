@@ -1,4 +1,5 @@
 ﻿Imports System.Reflection
+Imports Protean.Tools.Text
 
 Public Class TypeExtensions
 

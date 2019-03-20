@@ -5,6 +5,7 @@ Imports System.Xml
 Imports System.Reflection
 Imports Protean.Cms.dbHelper
 Imports System
+Imports Protean.Tools.Number
 
 Namespace Integration.Directory
 
@@ -235,7 +236,7 @@ Namespace Integration.Directory
                     ' Save the instance.
                     Dim userid As Long = 0
                     Dim updateStatus As String = myWeb.moDbHelper.setObjectInstance(objectTypes.Directory, _directoryInstance, _directoryId)
-                    If Tools.CheckAndReturnStringAsNumber(updateStatus, userid, GetType(Long)) Then
+                    If CheckAndReturnStringAsNumber(updateStatus, userid, GetType(Long)) Then
                         myWeb.AddResponse(Me.Name & ".DeleteCredentials.Success", "User account has been successfully unlinked from " & Me.Name, , ResponseType.Hint)
                     Else
                         Throw New Exception("Unable to save credentials.")

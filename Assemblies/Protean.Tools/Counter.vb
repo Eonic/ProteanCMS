@@ -10,6 +10,7 @@
 ' ================================================================================================
 Imports System
 Imports System.Collections
+Imports Protean.Tools.Text
 
 
 Public Class Counter
