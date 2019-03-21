@@ -2348,14 +2348,14 @@ restart:
         Protected Function tidyAuditId(ByRef oInstance As XmlElement, ByVal objectType As objectTypes, ByVal nKey As Long) As Long
             Dim cProcessInfo As String = ""
             Dim nAuditId As Long
-            Dim oElmt As XmlElement = Nothing
             Try
 
                 ' Check for Audit Id - if not found, we should be able to retrieve one from the database.
                 nAuditId = 0
 
                 ' First check the node (exists and is numeric)
-                If Tools.Xml.NodeState(oInstance, "descendant-or-self::nAuditId", , , , oElmt) = Tools.Xml.XmlNodeState.HasContents Then
+                If Tools.Xml.NodeState(oInstance, "descendant-or-self::nAuditId") = Tools.Xml.XmlNodeState.HasContents Then
+                    Dim oElmt As XmlElement = oInstance.SelectSingleNode("descendant-or-self::nAuditId")
                     If IsNumeric(oElmt.InnerText()) Then
                         nAuditId = CLng(oElmt.InnerText())
                     End If
@@ -4963,6 +4963,7 @@ restart:
                         oElmt = moPageXml.CreateElement(odr("cDirSchema"))
                         oElmt.SetAttribute("id", odr("nDirKey"))
                         oElmt.SetAttribute("name", odr("cDirName"))
+                        oElmt.SetAttribute("fRef", odr("cDirForiegnRef"))
                         If Not IsDBNull(odr("Member")) Then
                             oElmt.SetAttribute("isMember", "yes")
                         End If

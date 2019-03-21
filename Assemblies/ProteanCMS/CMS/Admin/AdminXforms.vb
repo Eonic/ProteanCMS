@@ -7799,7 +7799,8 @@ Partial Public Class Cms
                     MyBase.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = Cms.dbHelper.CodeType.Membership
 
                     ' Groups
-                    If Tools.Xml.NodeState(MyBase.moXformElmt, "//select[@bind='cCodeGroups']", , , , oElmt) <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                    If Tools.Xml.NodeState(MyBase.moXformElmt, "//select[@bind='cCodeGroups']") <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                        oElmt = MyBase.moXformElmt.SelectSingleNode("//select[@bind='cCodeGroups']")
                         cSQL = "SELECT cDirName + ' [' + cDirSchema + ': ' + CAST(nDirKey As nvarchar) + ']' AS DirName, nDirKey FROM tblDirectory "
                         cSQL &= " WHERE NOT(cDirSchema IN ('Role','User'))"
                         cSQL &= " ORDER BY cDirSchema, cDirName"
@@ -7837,7 +7838,8 @@ Partial Public Class Cms
                     If Tools.Xml.NodeState(MyBase.Instance, "tblCodes/cCodeGroups", , , , , , cCodeGroups) = Tools.Xml.XmlNodeState.HasContents Then
                         Dim oGroups() As String = Split(cCodeGroups, ",")
                         For i As Integer = 0 To oGroups.Length - 1
-                            If Tools.Xml.NodeState(MyBase.moXformElmt, "descendant-or-self::*[@bind='cCodeGroups']/item[value='" & oGroups(i) & "']", , , , oElmt) <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                            If Tools.Xml.NodeState(MyBase.moXformElmt, "descendant-or-self::*[@bind='cCodeGroups']/item[value='" & oGroups(i) & "']") <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                                oElmt = MyBase.moXformElmt.SelectSingleNode("descendant-or-self::*[@bind='cCodeGroups']/item[value='" & oGroups(i) & "']")
                                 oElmt.SetAttribute("selected", "selected")
                             End If
                         Next

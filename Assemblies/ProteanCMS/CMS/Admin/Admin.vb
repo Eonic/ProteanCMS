@@ -2726,7 +2726,8 @@ ProcessFlow:
                     AndAlso Not (moPageXML.DocumentElement.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" & myWeb.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
 
                     Dim oByPage As XmlElement
-                    If Tools.Xml.NodeState(oMenuRoot, "//MenuItem[@cmd='ByPage']", , , , oByPage) <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                    If Tools.Xml.NodeState(oMenuRoot, "//MenuItem[@cmd='ByPage']") <> Tools.Xml.XmlNodeState.NotInstantiated Then
+                        oByPage = oMenuRoot.SelectSingleNode("//MenuItem[@cmd='ByPage']")
                         For Each oMenuElmt In oByPage.SelectNodes("MenuItem[not(@cmd='Normal' or @cmd='Advanced')]")
                             If Not (
                                         (oMenuElmt.GetAttribute("cmd") = "EditPage" _
