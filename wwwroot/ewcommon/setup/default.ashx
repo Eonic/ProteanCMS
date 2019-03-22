@@ -3,14 +3,13 @@
 Imports System
 Imports System.Web
 Imports System.Web.SessionState
-Imports Eonic
-Imports System.xml
+Imports System.Xml
 
 Public Class setupDefault : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
-        Dim oEw As Protean.Setup = New Protean.Setup
+        Dim oEw As Protean.Setup = New Protean.Setup()
 
         If context.Request("xml") <> "" Then
             oEw.mbOutputXml = True

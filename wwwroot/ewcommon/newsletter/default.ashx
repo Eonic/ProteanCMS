@@ -10,7 +10,7 @@ Public Class ewNewsletterDefault : Implements IHttpHandler, IRequiresSessionStat
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
 
-        Dim oEw As Protean.Cms = New Protean.Cms
+        Dim oEw As Protean.Cms = New Protean.Cms()
 
         If context.Request("xml") <> "" Then
             oEw.mbOutputXml = True

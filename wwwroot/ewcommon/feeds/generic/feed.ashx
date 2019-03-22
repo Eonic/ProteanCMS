@@ -8,7 +8,7 @@ Public Class eonicGenericFeed : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
-        Dim oEw As Protean.Cms = New Protean.Cms
+        Dim oEw As Protean.Cms = New Protean.Cms()
         Dim req As HttpRequest = context.Request
         oEw.InitializeVariables()
 
