@@ -3284,11 +3284,17 @@
         <xsl:text>/</xsl:text>
         <xsl:value-of select="@id"/>
         <xsl:text>~</xsl:text>
-        <xsl:value-of select="translate($safeURLName,' ','+')"/>
+        <xsl:value-of select="$safeURLName"/>
         <xsl:value-of select="/Page/@pageExt"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
+          <xsl:when test="$itemMode='live'">
+            <xsl:text>/</xsl:text>
+            <xsl:value-of select="@id"/>
+            <xsl:text>-/</xsl:text>
+            <xsl:value-of select="$safeURLName"/>
+          </xsl:when>
           <xsl:when test="$itemMode='artid' or (contains($menu/descendant-or-self::MenuItem[@id=$parId]/@url,'?pgid'))">
             <xsl:if test="$adminMode='false'">
               <xsl:text>?pgid=</xsl:text>
@@ -3456,8 +3462,7 @@
     <xsl:variable name="strippedName">
       <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
     </xsl:variable>
-    <xsl:value-of select="translate($strippedName,' ','-')"/>
-    <xsl:value-of select="translate($strippedName,'+','-')"/>
+    <xsl:value-of select="translate(translate($strippedName,' ','-'),'+','-')"/>
   </xsl:template>
 
 

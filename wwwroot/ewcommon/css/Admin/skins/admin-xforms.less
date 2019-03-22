@@ -41,9 +41,16 @@
         padding-left: 0;
     }
 
+
     span.checkbox {
         display: inline-block;
     }
+
+    .list-vertical span.checkbox, .multiline span.checkbox{
+        display: block;
+    }
+
+
 
     select.form-control, a.form-control, input.form-control {
         //  height:@admin-field-height;
@@ -722,8 +729,6 @@
         // Checkboxes
         // --------------------------------------------------
 
-        @font-family-icon: 'FontAwesome';
-        @fa-var-check: "\f00c";
         @check-icon: @fa-var-check;
 
 
@@ -780,6 +785,7 @@
                 &:checked + label::after {
                     font-family: @font-family-icon;
                     content: @check-icon;
+                    font-weight: @fa-weight;
                 }
 
                 &:indeterminate + label::after {
@@ -933,6 +939,7 @@
             &.styled:checked + label:after {
                 font-family: @font-family-icon;
                 content: @check-icon;
+                font-weight: @fa-weight;
             }
 
             & .styled:checked + label {

@@ -464,26 +464,67 @@
               <xsl:with-param name="level">1</xsl:with-param>
             </xsl:apply-templates>
             <xsl:text> </xsl:text>
+            <xsl:if test="/Page/ContentDetail">
+              <xsl:variable name="liveURL">
+                <xsl:apply-templates select="$page/ContentDetail/Content" mode="getHref">
+                  <xsl:with-param name="itemMode" select="'live'"/>
+                </xsl:apply-templates>
+              </xsl:variable>
+              <xsl:variable name="liveName">
+                <xsl:value-of select="$page/ContentDetail/Content/@name"/>
+              </xsl:variable>
+              
+              <li class="sharing-tools dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fas fa-share-alt">&#160;</i>
+                  Share
+                 
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={$sitename}{$liveURL}" target="_new">
+                      <i class="fab fa-facebook">&#160;</i>
+                      Facebook</a>
+                  </li>
+                  <li>
+                    <a href="https://twitter.com/home?status={$sitename}{$liveURL}" target="_new">
+                      <i class="fab fa-twitter">&#160;</i>Twitter</a>
+                  </li>
+                  <li>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={$sitename}{$liveURL}&amp;title={$liveName}&amp;summary=&amp;source=" target="_new">
+                      <i class="fab fa-linkedin">&#160;</i>LinkedIn</a>
+                  </li>
+                  <li>
+                    <a href="{$sitename}{$liveURL}">
+                      <i class="fas fa-globe">&#160;</i>
+                      Live URL
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </xsl:if>
           </ul>
-          
+
           <!--<ul class="nav navbar-nav visible-xs">
             <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="adminItem2">
               <xsl:with-param name="level">1</xsl:with-param>
             </xsl:apply-templates>
             <xsl:text> </xsl:text>
           </ul>-->
-          </xsl:if>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-                <!--<span class="glyphicon glyphicon-eye-open"></span>-->
-                <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
-                  <xsl:with-param name="level">1</xsl:with-param>
-                </xsl:apply-templates>
-              <xsl:text> </xsl:text>
-            </li>
-          </ul>
+        </xsl:if>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <!--<span class="glyphicon glyphicon-eye-open"></span>-->
+            <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
+              <xsl:with-param name="level">1</xsl:with-param>
+            </xsl:apply-templates>
+            <xsl:text> </xsl:text>
+          </li>
+
+        </ul>
         </div>
         <!-- /.navbar-collapse -->
+
       </nav>
       
       <div id="headers">
@@ -497,7 +538,6 @@
    
     </div>
     <div class="terminus">&#160;</div>
-    
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
       <!--<div id="breadcrumb">-->
       <ol class="breadcrumb admin-breadcrumb">

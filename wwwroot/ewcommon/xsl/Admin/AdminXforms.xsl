@@ -2254,8 +2254,7 @@
           <xsl:text> radio-inline</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      
-      <xsl:copy-of select="label/node()"/>
+      <xsl:apply-templates select="label" mode="xform-label"/>
       <!-- needed to stop self closing -->
       <xsl:text> </xsl:text>
     </label>
@@ -2470,6 +2469,10 @@
       <br/>
     </xsl:if>-->
 
+  </xsl:template>
+
+  <xsl:template match="label[ancestor::select[contains(@class,'content')] and Content]" mode="xform-label">
+    <xsl:value-of select="Content/@name"/>&#160;<small>[<xsl:value-of select="Content/@type"/>]</small>
   </xsl:template>
 
 </xsl:stylesheet>
