@@ -105,8 +105,11 @@ Public Class xForm
         Get
             Dim oRootGroup As XmlElement = Nothing
             Try
-                If Tools.Xml.NodeState(Me.moXformElmt, "group", , , , oRootGroup) = Tools.Xml.XmlNodeState.NotInstantiated Then
+                If Tools.Xml.NodeState(Me.moXformElmt, "group") = Tools.Xml.XmlNodeState.NotInstantiated Then
+
                     oRootGroup = Nothing
+                Else
+                    oRootGroup = Me.moXformElmt.SelectSingleNode("group")
                 End If
             Catch ex As Exception
                 returnException(mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug)

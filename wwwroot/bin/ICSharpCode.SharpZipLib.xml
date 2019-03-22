@@ -11,7 +11,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2.Decompress(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
-            Decompress the <paramref name="inStream">input</paramref> writing 
+            Decompress the <paramref name="inStream">input</paramref> writing
             uncompressed data to the <paramref name="outStream">output stream</paramref>
             </summary>
             <param name="inStream">The readable stream containing data to decompress.</param>
@@ -20,13 +20,13 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2.Compress(System.IO.Stream,System.IO.Stream,System.Boolean,System.Int32)">
             <summary>
-            Compress the <paramref name="inStream">input stream</paramref> sending 
+            Compress the <paramref name="inStream">input stream</paramref> sending
             result data to <paramref name="outStream">output stream</paramref>
             </summary>
             <param name="inStream">The readable stream to compress.</param>
             <param name="outStream">The output stream to receive the compressed data.</param>
             <param name="isStreamOwner">Both streams are closed on completion if true.</param>
-            <param name="level">Block size acts as compression level (1 to 9) with 1 giving 
+            <param name="level">Block size acts as compression level (1 to 9) with 1 giving
             the lowest compression and 9 the highest.</param>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.BZip2.BZip2Constants">
@@ -43,7 +43,7 @@
             <summary>
             When multiplied by compression parameter (1-9) gives the block size for compression
             9 gives the best compression but uses the most memory.
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.BZip2.BZip2Constants.MaximumAlphaSize">
             <summary>
@@ -115,7 +115,7 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.BZip2.BZip2InputStream">
             <summary>
-            An input stream that decompresses files in the BZip2 format 
+            An input stream that decompresses files in the BZip2 format
             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2InputStream.#ctor(System.IO.Stream)">
@@ -206,7 +206,7 @@
             <param name="offset">Offset in array to begin storing data</param>
             <param name="count">The maximum number of bytes to read</param>
             <returns>The total number of bytes read into the buffer. This might be less
-            than the number of bytes requested if that number of bytes are not 
+            than the number of bytes requested if that number of bytes are not
             currently available or zero if the end of the stream is reached.
             </returns>
         </member>
@@ -223,7 +223,7 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream">
             <summary>
-            An output stream that compresses into the BZip2 format 
+            An output stream that compresses into the BZip2 format
             including file header chars into another stream.
             </summary>
         </member>
@@ -235,19 +235,19 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream.#ctor(System.IO.Stream,System.Int32)">
             <summary>
-            Initialise a new instance of the <see cref="T:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream"></see> 
+            Initialise a new instance of the <see cref="T:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream"></see>
             for the specified stream, using the given blocksize.
             </summary>
             <param name="stream">The stream to write compressed data to.</param>
             <param name="blockSize">The block size to use.</param>
             <remarks>
-            Valid block sizes are in the range 1..9, with 1 giving 
+            Valid block sizes are in the range 1..9, with 1 giving
             the lowest compression and 9 the highest.
             </remarks>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream.Finalize">
             <summary>
-            Ensures that resources are freed and other cleanup operations 
+            Ensures that resources are freed and other cleanup operations
             are performed when the garbage collector reclaims the BZip2OutputStream.
             </summary>
         </member>
@@ -311,7 +311,7 @@
             <param name="offset">The offset in the buffer to start storing data at.</param>
             <param name="count">The maximum number of bytes to read.</param>
             <returns>The total number of bytes read. This might be less than the number of bytes
-            requested if that number of bytes are not currently available, or zero 
+            requested if that number of bytes are not currently available, or zero
             if the end of the stream is reached.</returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream.Write(System.Byte[],System.Int32,System.Int32)">
@@ -347,55 +347,55 @@
         <member name="M:ICSharpCode.SharpZipLib.BZip2.BZip2OutputStream.Flush">
             <summary>
             Flush output buffers
-            </summary>		
+            </summary>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Checksum.Adler32">
-            <summary>
-            Computes Adler32 checksum for a stream of data. An Adler32
-            checksum is not as reliable as a CRC32 checksum, but a lot faster to
-            compute.
+             <summary>
+             Computes Adler32 checksum for a stream of data. An Adler32
+             checksum is not as reliable as a CRC32 checksum, but a lot faster to
+             compute.
             
-            The specification for Adler32 may be found in RFC 1950.
-            ZLIB Compressed Data Format Specification version 3.3)
+             The specification for Adler32 may be found in RFC 1950.
+             ZLIB Compressed Data Format Specification version 3.3)
             
             
-            From that document:
+             From that document:
             
-                 "ADLER32 (Adler-32 checksum)
-                  This contains a checksum value of the uncompressed data
-                  (excluding any dictionary data) computed according to Adler-32
-                  algorithm. This algorithm is a 32-bit extension and improvement
-                  of the Fletcher algorithm, used in the ITU-T X.224 / ISO 8073
-                  standard.
+                  "ADLER32 (Adler-32 checksum)
+                   This contains a checksum value of the uncompressed data
+                   (excluding any dictionary data) computed according to Adler-32
+                   algorithm. This algorithm is a 32-bit extension and improvement
+                   of the Fletcher algorithm, used in the ITU-T X.224 / ISO 8073
+                   standard.
             
-                  Adler-32 is composed of two sums accumulated per byte: s1 is
-                  the sum of all bytes, s2 is the sum of all s1 values. Both sums
-                  are done modulo 65521. s1 is initialized to 1, s2 to zero.  The
-                  Adler-32 checksum is stored as s2*65536 + s1 in most-
-                  significant-byte first (network) order."
+                   Adler-32 is composed of two sums accumulated per byte: s1 is
+                   the sum of all bytes, s2 is the sum of all s1 values. Both sums
+                   are done modulo 65521. s1 is initialized to 1, s2 to zero.  The
+                   Adler-32 checksum is stored as s2*65536 + s1 in most-
+                   significant-byte first (network) order."
             
-             "8.2. The Adler-32 algorithm
+              "8.2. The Adler-32 algorithm
             
-               The Adler-32 algorithm is much faster than the CRC32 algorithm yet
-               still provides an extremely low probability of undetected errors.
+                The Adler-32 algorithm is much faster than the CRC32 algorithm yet
+                still provides an extremely low probability of undetected errors.
             
-               The modulo on unsigned long accumulators can be delayed for 5552
-               bytes, so the modulo operation time is negligible.  If the bytes
-               are a, b, c, the second sum is 3a + 2b + c + 3, and so is position
-               and order sensitive, unlike the first sum, which is just a
-               checksum.  That 65521 is prime is important to avoid a possible
-               large class of two-byte errors that leave the check unchanged.
-               (The Fletcher checksum uses 255, which is not prime and which also
-               makes the Fletcher check insensitive to single byte changes 0 -
-               255.)
+                The modulo on unsigned long accumulators can be delayed for 5552
+                bytes, so the modulo operation time is negligible.  If the bytes
+                are a, b, c, the second sum is 3a + 2b + c + 3, and so is position
+                and order sensitive, unlike the first sum, which is just a
+                checksum.  That 65521 is prime is important to avoid a possible
+                large class of two-byte errors that leave the check unchanged.
+                (The Fletcher checksum uses 255, which is not prime and which also
+                makes the Fletcher check insensitive to single byte changes 0 -
+                255.)
             
-               The sum s1 is initialized to 1 instead of zero to make the length
-               of the sequence part of s2, so that the length does not have to be
-               checked separately. (Any sequence of zeroes has a Fletcher
-               checksum of zero.)"
-            </summary>
-            <see cref="T:ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream"/>
-            <see cref="T:ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream"/>
+                The sum s1 is initialized to 1 instead of zero to make the length
+                of the sequence part of s2, so that the length does not have to be
+                checked separately. (Any sequence of zeroes has a Fletcher
+                checksum of zero.)"
+             </summary>
+             <see cref="T:ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream"/>
+             <see cref="T:ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream"/>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Checksum.Adler32.BASE">
             <summary>
@@ -410,7 +410,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Checksum.Adler32.#ctor">
             <summary>
             Initialise a default instance of <see cref="T:ICSharpCode.SharpZipLib.Checksum.Adler32"></see>
-            </summary>	
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Checksum.Adler32.Reset">
             <summary>
@@ -432,7 +432,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Checksum.Adler32.Update(System.Byte[])">
             <summary>
-            Updates the Adler32 data checksum with the bytes taken from 
+            Updates the Adler32 data checksum with the bytes taken from
             a block of data.
             </summary>
             <param name="buffer">Contains the data to update the checksum with.</param>
@@ -482,7 +482,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Checksum.BZip2Crc.#ctor">
             <summary>
             Initialise a default instance of <see cref="T:ICSharpCode.SharpZipLib.Checksum.BZip2Crc"></see>
-            </summary>	
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Checksum.BZip2Crc.Reset">
             <summary>
@@ -506,7 +506,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Checksum.BZip2Crc.Update(System.Byte[])">
             <summary>
-            Updates the CRC data checksum with the bytes taken from 
+            Updates the CRC data checksum with the bytes taken from
             a block of data.
             </summary>
             <param name="buffer">Contains the data to update the CRC with.</param>
@@ -580,7 +580,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Checksum.Crc32.Update(System.Byte[])">
             <summary>
-            Updates the CRC data checksum with the bytes taken from 
+            Updates the CRC data checksum with the bytes taken from
             a block of data.
             </summary>
             <param name="buffer">Contains the data to update the CRC with.</param>
@@ -665,7 +665,7 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.StreamDecodingException">
             <summary>
-            Indicates that an error occured during decoding of a input stream due to corrupt 
+            Indicates that an error occured during decoding of a input stream due to corrupt
             data or (unintentional) library incompability.
             </summary>
         </member>
@@ -1081,7 +1081,7 @@
             To include a semi-colon it may be quoted as in \;. Each expression can be prefixed by a plus '+' sign or
             a minus '-' sign to denote the expression is intended to include or exclude names.
             If neither a plus or minus sign is found include is the default.
-            A given name is tested for inclusion before checking exclusions.  Only names matching an include spec 
+            A given name is tested for inclusion before checking exclusions.  Only names matching an include spec
             and not matching an exclude spec are deemed to match the filter.
             An empty filter matches any name.
             </summary>
@@ -1353,7 +1353,7 @@
         <member name="T:ICSharpCode.SharpZipLib.Encryption.PkzipClassic">
             <summary>
             PkzipClassic embodies the classic or original encryption facilities used in Pkzip archives.
-            While it has been superceded by more recent and more powerful algorithms, its still in use and 
+            While it has been superceded by more recent and more powerful algorithms, its still in use and
             is viable for preventing casual snooping
             </summary>
         </member>
@@ -1372,7 +1372,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Encryption.PkzipClassicCryptoBase.TransformByte">
             <summary>
-            Transform a single byte 
+            Transform a single byte
             </summary>
             <returns>
             The transformed value
@@ -1386,8 +1386,8 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Encryption.PkzipClassicCryptoBase.UpdateKeys(System.Byte)">
             <summary>
-            Update encryption keys 
-            </summary>		
+            Update encryption keys
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Encryption.PkzipClassicCryptoBase.Reset">
             <summary>
@@ -1416,7 +1416,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Encryption.PkzipClassicEncryptCryptoTransform.TransformBlock(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
             <summary>
-            Transforms the specified region of the input byte array and copies 
+            Transforms the specified region of the input byte array and copies
             the resulting transform to the specified region of the output byte array.
             </summary>
             <param name="inputBuffer">The input for which to compute the transform.</param>
@@ -1473,7 +1473,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Encryption.PkzipClassicDecryptCryptoTransform.TransformBlock(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
             <summary>
-            Transforms the specified region of the input byte array and copies 
+            Transforms the specified region of the input byte array and copies
             the resulting transform to the specified region of the output byte array.
             </summary>
             <param name="inputBuffer">The input for which to compute the transform.</param>
@@ -1510,7 +1510,7 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Encryption.PkzipClassicManaged">
             <summary>
-            Defines a wrapper object to access the Pkzip algorithm. 
+            Defines a wrapper object to access the Pkzip algorithm.
             This class cannot be inherited.
             </summary>
         </member>
@@ -1660,7 +1660,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.GZip.GZip.Decompress(System.IO.Stream,System.IO.Stream,System.Boolean)">
             <summary>
-            Decompress the <paramref name="inStream">input</paramref> writing 
+            Decompress the <paramref name="inStream">input</paramref> writing
             uncompressed data to the <paramref name="outStream">output stream</paramref>
             </summary>
             <param name="inStream">The readable stream containing data to decompress.</param>
@@ -1670,7 +1670,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.GZip.GZip.Compress(System.IO.Stream,System.IO.Stream,System.Boolean,System.Int32,System.Int32)">
             <summary>
-            Compress the <paramref name="inStream">input stream</paramref> sending 
+            Compress the <paramref name="inStream">input stream</paramref> sending
             result data to <paramref name="outStream">output stream</paramref>
             </summary>
             <param name="inStream">The readable stream to compress.</param>
@@ -1747,33 +1747,33 @@
             <param name="innerException">The <see cref="T:System.Exception"/> that caused this exception.</param>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.GZip.GZipInputStream">
-            <summary>
-            This filter stream is used to decompress a "GZIP" format stream.
-            The "GZIP" format is described baseInputStream RFC 1952.
+             <summary>
+             This filter stream is used to decompress a "GZIP" format stream.
+             The "GZIP" format is described baseInputStream RFC 1952.
             
-            author of the original java version : John Leuner
-            </summary>
-            <example> This sample shows how to unzip a gzipped file
-            <code>
-            using System;
-            using System.IO;
+             author of the original java version : John Leuner
+             </summary>
+             <example> This sample shows how to unzip a gzipped file
+             <code>
+             using System;
+             using System.IO;
             
-            using ICSharpCode.SharpZipLib.Core;
-            using ICSharpCode.SharpZipLib.GZip;
+             using ICSharpCode.SharpZipLib.Core;
+             using ICSharpCode.SharpZipLib.GZip;
             
-            class MainClass
-            {
-            	public static void Main(string[] args)
-            	{
-            		using (Stream inStream = new GZipInputStream(File.OpenRead(args[0])))
-            		using (FileStream outStream = File.Create(Path.GetFileNameWithoutExtension(args[0]))) {
-            			byte[] buffer = new byte[4096];
-            			StreamUtils.Copy(inStream, outStream, buffer);
-            		}
-            	}
-            }	
-            </code>
-            </example>
+             class MainClass
+             {
+             	public static void Main(string[] args)
+             	{
+            			using (Stream inStream = new GZipInputStream(File.OpenRead(args[0])))
+            			using (FileStream outStream = File.Create(Path.GetFileNameWithoutExtension(args[0]))) {
+            				byte[] buffer = new byte[4096];
+            				StreamUtils.Copy(inStream, outStream, buffer);
+             		}
+             	}
+             }
+             </code>
+             </example>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.GZip.GZipInputStream.crc">
             <summary>
@@ -1837,10 +1837,10 @@
              <code>
              using System;
              using System.IO;
-             
+            
              using ICSharpCode.SharpZipLib.GZip;
              using ICSharpCode.SharpZipLib.Core;
-             
+            
              class MainClass
              {
              	public static void Main(string[] args)
@@ -1852,7 +1852,7 @@
              			}
              		}
              	}
-             }	
+             }
              </code>
              </example>
         </member>
@@ -1993,7 +1993,7 @@
             
              See http://en.wikipedia.org/wiki/Compress
              See http://wiki.wxwidgets.org/Development:_Z_File_Format
-             
+            
              The file header consists of 3 (or optionally 4) bytes. The first two bytes
              contain the magic marker "0x1f 0x9d", followed by a byte of flags.
             
@@ -2004,10 +2004,10 @@
              <code>
              using System;
              using System.IO;
-             
+            
              using ICSharpCode.SharpZipLib.Core;
              using ICSharpCode.SharpZipLib.LZW;
-             
+            
              class MainClass
              {
              	public static void Main(string[] args)
@@ -2021,7 +2021,7 @@
                                      // now do something with the buffer
              		}
              	}
-             }	
+             }
              </code>
              </example>
         </member>
@@ -2178,27 +2178,27 @@
             </summary>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Tar.TarArchive">
-            <summary>
-            The TarArchive class implements the concept of a
-            'Tape Archive'. A tar archive is a series of entries, each of
-            which represents a file system object. Each entry in
-            the archive consists of a header block followed by 0 or more data blocks.
-            Directory entries consist only of the header block, and are followed by entries
-            for the directory's contents. File entries consist of a
-            header followed by the number of blocks needed to
-            contain the file's contents. All entries are written on
-            block boundaries. Blocks are 512 bytes long.
+             <summary>
+             The TarArchive class implements the concept of a
+             'Tape Archive'. A tar archive is a series of entries, each of
+             which represents a file system object. Each entry in
+             the archive consists of a header block followed by 0 or more data blocks.
+             Directory entries consist only of the header block, and are followed by entries
+             for the directory's contents. File entries consist of a
+             header followed by the number of blocks needed to
+             contain the file's contents. All entries are written on
+             block boundaries. Blocks are 512 bytes long.
             
-            TarArchives are instantiated in either read or write mode,
-            based upon whether they are instantiated with an InputStream
-            or an OutputStream. Once instantiated TarArchives read/write
-            mode can not be changed.
+             TarArchives are instantiated in either read or write mode,
+             based upon whether they are instantiated with an InputStream
+             or an OutputStream. Once instantiated TarArchives read/write
+             mode can not be changed.
             
-            There is currently no support for random access to tar archives.
-            However, it seems that subclassing TarArchive, and using the
-            TarBuffer.CurrentRecord and TarBuffer.CurrentBlock
-            properties, this would be rather trivial.
-            </summary>
+             There is currently no support for random access to tar archives.
+             However, it seems that subclassing TarArchive, and using the
+             TarBuffer.CurrentRecord and TarBuffer.CurrentBlock
+             properties, this would be rather trivial.
+             </summary>
         </member>
         <member name="E:ICSharpCode.SharpZipLib.Tar.TarArchive.ProgressMessageEvent">
             <summary>
@@ -2227,7 +2227,7 @@
             <summary>
             Initialise a TarArchive for output.
             </summary>
-            <param name="stream">The <see cref="T:ICSharpCode.SharpZipLib.Tar.TarOutputStream"/> to use for output.</param> 
+            <param name="stream">The <see cref="T:ICSharpCode.SharpZipLib.Tar.TarOutputStream"/> to use for output.</param>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarArchive.CreateInputTarArchive(System.IO.Stream)">
             <summary>
@@ -2274,8 +2274,8 @@
         <member name="P:ICSharpCode.SharpZipLib.Tar.TarArchive.AsciiTranslate">
             <summary>
             Get/set the ascii file translation flag. If ascii file translation
-            is true, then the file is checked to see if it a binary file or not. 
-            If the flag is true and the test indicates it is ascii text 
+            is true, then the file is checked to see if it a binary file or not.
+            If the flag is true and the test indicates it is ascii text
             file, it will be translated. The translation converts the local
             operating system's concept of line ends into the UNIX line end,
             '\n', which is the defacto standard for a TAR archive. This makes
@@ -2293,7 +2293,7 @@
         <member name="P:ICSharpCode.SharpZipLib.Tar.TarArchive.PathPrefix">
             <summary>
             PathPrefix is added to entry names as they are written if the value is not null.
-            A slash character is appended after PathPrefix 
+            A slash character is appended after PathPrefix
             </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Tar.TarArchive.RootPath">
@@ -2305,7 +2305,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarArchive.SetUserInfo(System.Int32,System.String,System.Int32,System.String)">
             <summary>
             Set user and group information that will be used to fill in the
-            tar archive's entry headers. This information is based on that available 
+            tar archive's entry headers. This information is based on that available
             for the linux operating system, which is not always available on other
             operating systems.  TarArchive allows the programmer to specify values
             to be used in their place.
@@ -2394,12 +2394,12 @@
             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarArchive.ListContents">
-            <summary>
-            Perform the "list" command for the archive contents.
+             <summary>
+             Perform the "list" command for the archive contents.
             
-            NOTE That this method uses the <see cref="E:ICSharpCode.SharpZipLib.Tar.TarArchive.ProgressMessageEvent"> progress event</see> to actually list
-            the contents. If the progress display event is not set, nothing will be listed!
-            </summary>
+             NOTE That this method uses the <see cref="E:ICSharpCode.SharpZipLib.Tar.TarArchive.ProgressMessageEvent"> progress event</see> to actually list
+             the contents. If the progress display event is not set, nothing will be listed!
+             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarArchive.ExtractContents(System.String)">
             <summary>
@@ -2757,7 +2757,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarEntry.CreateTarEntry(System.String)">
             <summary>
             Construct an entry with only a <paramref name="name">name</paramref>.
-            This allows the programmer to construct the entry's header "by hand". 
+            This allows the programmer to construct the entry's header "by hand".
             </summary>
             <param name="name">The name to use for the entry</param>
             <returns>Returns the newly created <see cref="T:ICSharpCode.SharpZipLib.Tar.TarEntry"/></returns>
@@ -2964,6 +2964,28 @@
             <param name="message">A <see cref="T:System.String"/> that describes the error.</param>
             <param name="innerException">The <see cref="T:System.Exception"/> that caused this exception.</param>
         </member>
+        <member name="T:ICSharpCode.SharpZipLib.Tar.TarExtendedHeaderReader">
+            <summary>
+            Reads the extended header of a Tar stream
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.SharpZipLib.Tar.TarExtendedHeaderReader.#ctor">
+            <summary>
+            Creates a new <see cref="T:ICSharpCode.SharpZipLib.Tar.TarExtendedHeaderReader"/>.
+            </summary>
+        </member>
+        <member name="M:ICSharpCode.SharpZipLib.Tar.TarExtendedHeaderReader.Read(System.Byte[],System.Int32)">
+            <summary>
+            Read <paramref name="length"/> bytes from <paramref name="buffer"/>
+            </summary>
+            <param name="buffer"></param>
+            <param name="length"></param>
+        </member>
+        <member name="P:ICSharpCode.SharpZipLib.Tar.TarExtendedHeaderReader.Headers">
+            <summary>
+            Returns the parsed headers as key-value strings
+            </summary>
+        </member>
         <member name="T:ICSharpCode.SharpZipLib.Tar.TarHeader">
              <summary>
              This class encapsulates the Tar Entry Header used in Tar Archives.
@@ -2979,7 +3001,7 @@
             
              This is the ustar (Posix 1003.1) header.
             
-             struct header 
+             struct header
              {
              	char t_name[100];          //   0 Filename
              	char t_mode[8];            // 100 Permissions
@@ -3476,7 +3498,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarHeader.ComputeCheckSum(System.Byte[])">
             <summary>
-            Compute the checksum for a tar entry header.  
+            Compute the checksum for a tar entry header.
             The checksum field must be all spaces prior to this happening
             </summary>
             <param name = "buffer">The tar entry's header buffer.</param>
@@ -3541,7 +3563,7 @@
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Tar.TarInputStream.Position">
             <summary>
-            Gets or sets the position within the stream. 
+            Gets or sets the position within the stream.
             Setting the Position is not supported and throws a NotSupportedExceptionNotSupportedException
             </summary>
             <exception cref="T:System.NotSupportedException">Any attempt to set position</exception>
@@ -3593,24 +3615,24 @@
             <returns>A byte cast to an int; -1 if the at the end of the stream.</returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarInputStream.Read(System.Byte[],System.Int32,System.Int32)">
-            <summary>
-            Reads bytes from the current tar archive entry.
+             <summary>
+             Reads bytes from the current tar archive entry.
             
-            This method is aware of the boundaries of the current
-            entry in the archive and will deal with them appropriately
-            </summary>
-            <param name="buffer">
-            The buffer into which to place bytes read.
-            </param>
-            <param name="offset">
-            The offset at which to place bytes read.
-            </param>
-            <param name="count">
-            The number of bytes to read.
-            </param>
-            <returns>
-            The number of bytes read, or 0 at end of stream/EOF.
-            </returns>
+             This method is aware of the boundaries of the current
+             entry in the archive and will deal with them appropriately
+             </summary>
+             <param name="buffer">
+             The buffer into which to place bytes read.
+             </param>
+             <param name="offset">
+             The offset at which to place bytes read.
+             </param>
+             <param name="count">
+             The number of bytes to read.
+             </param>
+             <returns>
+             The number of bytes read, or 0 at end of stream/EOF.
+             </returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarInputStream.Dispose(System.Boolean)">
             <summary>
@@ -3763,7 +3785,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarInputStream.EntryFactoryAdapter.CreateEntry(System.Byte[])">
             <summary>
             Create an entry based on details in <paramref name="headerBuffer">header</paramref>
-            </summary>			
+            </summary>
             <param name="headerBuffer">The buffer containing entry details.</param>
             <returns>A new <see cref="T:ICSharpCode.SharpZipLib.Tar.TarEntry"/></returns>
         </member>
@@ -3785,7 +3807,7 @@
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarInputStream.readBuffer">
             <summary>
             Buffer used with calls to <code>Read()</code>
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarInputStream.tarBuffer">
             <summary>
@@ -3876,14 +3898,14 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarOutputStream.ReadByte">
             <summary>
-            Read a byte from the stream and advance the position within the stream 
+            Read a byte from the stream and advance the position within the stream
             by one byte or returns -1 if at the end of the stream.
             </summary>
             <returns>The byte value or -1 if at end of stream</returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarOutputStream.Read(System.Byte[],System.Int32,System.Int32)">
             <summary>
-            read bytes from the current stream and advance the position within the 
+            read bytes from the current stream and advance the position within the
             stream by the number of bytes read.
             </summary>
             <param name="buffer">The buffer to store read bytes in.</param>
@@ -3896,7 +3918,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarOutputStream.Flush">
             <summary>
             All buffered data is written to destination
-            </summary>		
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Tar.TarOutputStream.Finish">
             <summary>
@@ -3997,7 +4019,7 @@
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarOutputStream.assemblyBufferLength">
             <summary>
             current 'Assembly' buffer length
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarOutputStream.isClosed">
             <summary>
@@ -4011,7 +4033,7 @@
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarOutputStream.blockBuffer">
             <summary>
-            single block working buffer 
+            single block working buffer
             </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Tar.TarOutputStream.assemblyBuffer">
@@ -4037,7 +4059,7 @@
             
              This class is <i>not</i> thread safe.  This is inherent in the API, due
              to the split of deflate and setInput.
-             
+            
              author of the original java version : Jochen Hoenicke
              </summary>
         </member>
@@ -4177,7 +4199,7 @@
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.Deflater.IsNeedingInput">
             <summary>
             Returns true, if the input buffer is empty.
-            You should then call setInput(). 
+            You should then call setInput().
             NOTE: This method can also return true when the stream
             was finished.
             </summary>
@@ -4385,107 +4407,107 @@
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_MATCH">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MIN_MATCH">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_WBITS">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.WSIZE">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.WMASK">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.HASH_BITS">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.HASH_SIZE">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.HASH_MASK">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.HASH_SHIFT">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MIN_LOOKAHEAD">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_DIST">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.PENDING_BUF_SIZE">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_BLOCK_SIZE">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.DEFLATE_STORED">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.DEFLATE_FAST">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.DEFLATE_SLOW">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.GOOD_LENGTH">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_LAZY">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.NICE_LENGTH">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.MAX_CHAIN">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterConstants.COMPR_FUNC">
             <summary>
             Internal compression engine constant
-            </summary>		
+            </summary>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.Compression.DeflateStrategy">
             <summary>
@@ -4519,10 +4541,22 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.#ctor(ICSharpCode.SharpZipLib.Zip.Compression.DeflaterPending)">
             <summary>
             Construct instance with pending buffer
+            Adler calculation will be peformed
             </summary>
             <param name="pending">
             Pending buffer to use
-            </param>>
+            </param>
+        </member>
+        <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.#ctor(ICSharpCode.SharpZipLib.Zip.Compression.DeflaterPending,System.Boolean)">
+            <summary>
+            Construct instance with pending buffer
+            </summary>
+            <param name="pending">
+            Pending buffer to use
+            </param>
+            <param name="noAdlerCalculation">
+            If no adler calculation should be performed
+            </param>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.Deflate(System.Boolean,System.Boolean)">
             <summary>
@@ -4544,7 +4578,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.NeedsInput">
             <summary>
             Determines if more <see cref="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.SetInput(System.Byte[],System.Int32,System.Int32)">input</see> is needed.
-            </summary>		
+            </summary>
             <returns>Return true if input is needed via <see cref="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.SetInput(System.Byte[],System.Int32,System.Int32)">SetInput</see></returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.SetDictionary(System.Byte[],System.Int32,System.Int32)">
@@ -4558,27 +4592,27 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.Reset">
             <summary>
             Reset internal state
-            </summary>		
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.ResetAdler">
             <summary>
             Reset Adler checksum
-            </summary>		
+            </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.Adler">
             <summary>
             Get current value of Adler checksum
-            </summary>		
+            </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.TotalIn">
             <summary>
             Total data processed
-            </summary>		
+            </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.Strategy">
             <summary>
             Get/set the <see cref="T:ICSharpCode.SharpZipLib.Zip.Compression.DeflateStrategy">deflate strategy</see>
-            </summary>		
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.SetLevel(System.Int32)">
             <summary>
@@ -4600,7 +4634,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.FindLongestMatch(System.Int32)">
              <summary>
-             Find the best (longest) string in the window matching the 
+             Find the best (longest) string in the window matching the
              string starting at strstart.
             
              Preconditions:
@@ -4613,7 +4647,7 @@
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.head">
             <summary>
             Hashtable, hashing three characters to an index for window, so
-            that window[index]..window[index+2] have this hash code.  
+            that window[index]..window[index+2] have this hash code.
             Note that the array should really be unsigned short, so you need
             to and the values with 0xffff.
             </summary>
@@ -4621,7 +4655,7 @@
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.prev">
             <summary>
             <code>prev[index &amp; WMASK]</code> points to the previous index that has the
-            same hash code as the string starting at index.  This way 
+            same hash code as the string starting at index.  This way
             entries with the same hash code are in a linked list.
             Note that the array should really be unsigned short, so you need
             to and the values with 0xffff.
@@ -4642,7 +4676,7 @@
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterEngine.window">
             <summary>
-            This array contains the part of the uncompressed stream that 
+            This array contains the part of the uncompressed stream that
             is of relevance.  The current character is indexed by strstart.
             </summary>
         </member>
@@ -4677,14 +4711,14 @@
             </summary>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterHuffman">
-            <summary>
-            This is the DeflaterHuffman class.
+             <summary>
+             This is the DeflaterHuffman class.
             
-            This class is <i>not</i> thread safe.  This is inherent in the API, due
-            to the split of Deflate and SetInput.
+             This class is <i>not</i> thread safe.  This is inherent in the API, due
+             to the split of Deflate and SetInput.
             
-            author of the original java version : Jochen Hoenicke
-            </summary>
+             author of the original java version : Jochen Hoenicke
+             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterHuffman.Tree.Reset">
             <summary>
@@ -4743,7 +4777,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterHuffman.Reset">
             <summary>
             Reset internal state
-            </summary>		
+            </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterHuffman.SendAllTrees(System.Int32)">
             <summary>
@@ -4768,7 +4802,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterHuffman.FlushBlock(System.Byte[],System.Int32,System.Int32,System.Boolean)">
             <summary>
             Flush block to output with compression
-            </summary>		
+            </summary>
             <param name="stored">Data to flush</param>
             <param name="storedOffset">Index of first byte to flush</param>
             <param name="storedLength">Count of bytes to flush</param>
@@ -4803,11 +4837,11 @@
             <returns>Value with bits reversed</returns>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterPending">
-            <summary>
-            This class stores the pending output of the Deflater.
+             <summary>
+             This class stores the pending output of the Deflater.
             
-            author of the original java version : Jochen Hoenicke
-            </summary>
+             author of the original java version : Jochen Hoenicke
+             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.DeflaterPending.#ctor">
             <summary>
@@ -4818,7 +4852,7 @@
              <summary>
              Inflater is used to decompress data that has been compressed according
              to the "deflate" standard described in rfc1951.
-             
+            
              By default Zlib (rfc1950) headers and footers are expected in the input.
              You can use constructor <code> public Inflater(bool noHeader)</code> passing true
              if there is no Zlib header information
@@ -4875,7 +4909,7 @@
             <summary>
             The adler checksum of the dictionary or of the decompressed
             stream, as it is written in the header resp. footer of the
-            compressed stream. 
+            compressed stream.
             Only valid if mode is DECODE_DICT or DECODE_CHKSUM.
             </summary>
         </member>
@@ -4908,7 +4942,7 @@
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.Inflater.noHeader">
             <summary>
             This variable stores the noHeader flag that was given to the constructor.
-            True means, that the inflated stream doesn't contain a Zlib header or 
+            True means, that the inflated stream doesn't contain a Zlib header or
             footer.
             </summary>
         </member>
@@ -4919,18 +4953,18 @@
             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Inflater.#ctor(System.Boolean)">
-            <summary>
-            Creates a new inflater.
-            </summary>
-            <param name="noHeader">
-            True if no RFC1950/Zlib header and footer fields are expected in the input data
+             <summary>
+             Creates a new inflater.
+             </summary>
+             <param name="noHeader">
+             True if no RFC1950/Zlib header and footer fields are expected in the input data
             
-            This is used for GZIPed/Zipped input.
+             This is used for GZIPed/Zipped input.
             
-            For compatibility with
-            Sun JDK you should provide one byte of input more than needed in
-            this case.
-            </param>
+             For compatibility with
+             Sun JDK you should provide one byte of input more than needed in
+             this case.
+             </param>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Inflater.Reset">
             <summary>
@@ -5108,7 +5142,7 @@
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.Inflater.IsNeedingInput">
             <summary>
             Returns true, if the input buffer is empty.
-            You should then call setInput(). 
+            You should then call setInput().
             NOTE: This method also returns true when the stream is finished.
             </summary>
         </member>
@@ -5214,14 +5248,14 @@
             </returns>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.Compression.PendingBuffer">
-            <summary>
-            This class is general purpose class for writing data to a buffer.
+             <summary>
+             This class is general purpose class for writing data to a buffer.
             
-            It allows you to write bits as well as bytes
-            Based on DeflaterPending.java
+             It allows you to write bits as well as bytes
+             Based on DeflaterPending.java
             
-            author of the original java version : Jochen Hoenicke
-            </summary>
+             author of the original java version : Jochen Hoenicke
+             </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.Compression.PendingBuffer.buffer">
             <summary>
@@ -5327,7 +5361,7 @@
             <summary>
             A special stream deflating or compressing the bytes that are
             written to it.  It uses a Deflater to perform actual deflating.<br/>
-            Authors of the original java version : Tom Tromey, Jochen Hoenicke 
+            Authors of the original java version : Tom Tromey, Jochen Hoenicke
             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream.#ctor(System.IO.Stream)">
@@ -5376,7 +5410,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream.Finish">
             <summary>
-            Finishes the stream by calling finish() on the deflater. 
+            Finishes the stream by calling finish() on the deflater.
             </summary>
             <exception cref="T:ICSharpCode.SharpZipLib.SharpZipBaseException">
             Not all input is deflated
@@ -5723,7 +5757,7 @@
             Number of bytes to skip
             </param>
             <returns>
-            The number of bytes skipped, zero if the end of 
+            The number of bytes skipped, zero if the end of
             stream has been reached
             </returns>
             <exception cref="T:System.ArgumentOutOfRangeException">
@@ -5733,7 +5767,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream.StopDecrypting">
             <summary>
             Clear any cryptographic state.
-            </summary>		
+            </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream.Available">
             <summary>
@@ -5971,15 +6005,15 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Streams.StreamManipulator.TryGetBits(System.Int32,System.Int32@,System.Int32)">
             <summary>
-            Tries to grab the next <paramref name="bitCount"/> bits from the input and 
+            Tries to grab the next <paramref name="bitCount"/> bits from the input and
             sets <paramref name="output"/> to the value, adding <paramref name="outputOffset"/>.
             </summary>
             <returns>true if enough bits could be read, otherwise false</returns>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.Compression.Streams.StreamManipulator.TryGetBits(System.Int32,System.Byte[]@,System.Int32)">
             <summary>
-            Tries to grab the next <paramref name="bitCount"/> bits from the input and 
-            sets <paramref name="output"/> to the value, adding <paramref name="outputOffset"/>.
+            Tries to grab the next <paramref name="bitCount"/> bits from the input and
+            sets <paramref name="index"/> of <paramref name="array"/> to the value.
             </summary>
             <returns>true if enough bits could be read, otherwise false</returns>
         </member>
@@ -6221,7 +6255,7 @@
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.FastZip.RestoreDateTimeOnExtract">
             <summary>
-            Get/set a value indicating wether file dates and times should 
+            Get/set a value indicating wether file dates and times should
             be restored when extracting files from an archive.
             </summary>
             <remarks>The default value is false.</remarks>
@@ -6469,7 +6503,7 @@
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.CompressionMethod.Deflated">
             <summary>
-            Common Zip compression method using a sliding dictionary 
+            Common Zip compression method using a sliding dictionary
             of up to 32KB and secondary compression from Huffman/Shannon-Fano trees
             </summary>
         </member>
@@ -6621,7 +6655,7 @@
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.GeneralBitFlags.UnicodeText">
             <summary>
-            Bit 11 if set indicates the filename and 
+            Bit 11 if set indicates the filename and
             comment fields for this file must be encoded using UTF-8.
             </summary>
         </member>
@@ -6989,7 +7023,7 @@
             <summary>
             This class represents an entry in a zip archive.  This can be a file
             or a directory
-            ZipFile and ZipInputStream will give you instances of this class as 
+            ZipFile and ZipInputStream will give you instances of this class as
             information about the members in an archive.  ZipOutputStream
             uses an instance of this class when creating an entry in a Zip file.
             <br/>
@@ -7015,7 +7049,7 @@
             </summary>
             <param name="name">
             The name for this entry. Can include directory components.
-            The convention for names is 'unix'  style paths with no device names and 
+            The convention for names is 'unix'  style paths with no device names and
             path elements separated by '/' characters.  This is not enforced see <see cref="M:ICSharpCode.SharpZipLib.Zip.ZipEntry.CleanName(System.String)">CleanName</see>
             on how to ensure names are valid if this is desired.
             </param>
@@ -7131,7 +7165,7 @@
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.VersionMadeBy">
             <summary>
             Get the version made by for this entry or zero if unknown.
-            The value / 10 indicates the major version number, and 
+            The value / 10 indicates the major version number, and
             the value mod 10 is the minor version number
             </summary>
         </member>
@@ -7147,52 +7181,52 @@
             and match the values
             </summary>
             <param name="attributes">The attributes to test.</param>
-            <returns>Returns true if the external attributes are known to be DOS/Windows 
+            <returns>Returns true if the external attributes are known to be DOS/Windows
             based and have the same attributes set as the value passed.</returns>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.HostSystem">
-            <summary>
-            Gets the compatability information for the <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.ExternalFileAttributes">external file attribute</see>
-            If the external file attributes are compatible with MS-DOS and can be read
-            by PKZIP for DOS version 2.04g then this value will be zero.  Otherwise the value
-            will be non-zero and identify the host system on which the attributes are compatible.
-            </summary>
-            		
-            <remarks>
-            The values for this as defined in the Zip File format and by others are shown below.  The values are somewhat
-            misleading in some cases as they are not all used as shown.  You should consult the relevant documentation
-            to obtain up to date and correct information.  The modified appnote by the infozip group is
-            particularly helpful as it documents a lot of peculiarities.  The document is however a little dated.
-            <list type="table">
-            <item>0 - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)</item>
-            <item>1 - Amiga</item>
-            <item>2 - OpenVMS</item>
-            <item>3 - Unix</item>
-            <item>4 - VM/CMS</item>
-            <item>5 - Atari ST</item>
-            <item>6 - OS/2 HPFS</item>
-            <item>7 - Macintosh</item>
-            <item>8 - Z-System</item>
-            <item>9 - CP/M</item>
-            <item>10 - Windows NTFS</item>
-            <item>11 - MVS (OS/390 - Z/OS)</item>
-            <item>12 - VSE</item>
-            <item>13 - Acorn Risc</item>
-            <item>14 - VFAT</item>
-            <item>15 - Alternate MVS</item>
-            <item>16 - BeOS</item>
-            <item>17 - Tandem</item>
-            <item>18 - OS/400</item>
-            <item>19 - OS/X (Darwin)</item>
-            <item>99 - WinZip AES</item>
-            <item>remainder - unused</item>
-            </list>
-            </remarks>
+             <summary>
+             Gets the compatability information for the <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.ExternalFileAttributes">external file attribute</see>
+             If the external file attributes are compatible with MS-DOS and can be read
+             by PKZIP for DOS version 2.04g then this value will be zero.  Otherwise the value
+             will be non-zero and identify the host system on which the attributes are compatible.
+             </summary>
+            
+             <remarks>
+             The values for this as defined in the Zip File format and by others are shown below.  The values are somewhat
+             misleading in some cases as they are not all used as shown.  You should consult the relevant documentation
+             to obtain up to date and correct information.  The modified appnote by the infozip group is
+             particularly helpful as it documents a lot of peculiarities.  The document is however a little dated.
+             <list type="table">
+             <item>0 - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)</item>
+             <item>1 - Amiga</item>
+             <item>2 - OpenVMS</item>
+             <item>3 - Unix</item>
+             <item>4 - VM/CMS</item>
+             <item>5 - Atari ST</item>
+             <item>6 - OS/2 HPFS</item>
+             <item>7 - Macintosh</item>
+             <item>8 - Z-System</item>
+             <item>9 - CP/M</item>
+             <item>10 - Windows NTFS</item>
+             <item>11 - MVS (OS/390 - Z/OS)</item>
+             <item>12 - VSE</item>
+             <item>13 - Acorn Risc</item>
+             <item>14 - VFAT</item>
+             <item>15 - Alternate MVS</item>
+             <item>16 - BeOS</item>
+             <item>17 - Tandem</item>
+             <item>18 - OS/400</item>
+             <item>19 - OS/X (Darwin)</item>
+             <item>99 - WinZip AES</item>
+             <item>remainder - unused</item>
+             </list>
+             </remarks>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.Version">
             <summary>
             Get minimum Zip feature version required to extract this entry
-            </summary>		
+            </summary>
             <remarks>
             Minimum features are defined as:<br/>
             1.0 - Default value<br/>
@@ -7225,7 +7259,7 @@
             <summary>
             Get a value indicating whether this entry can be decompressed by the library.
             </summary>
-            <remarks>This is based on the <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.Version"></see> and 
+            <remarks>This is based on the <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.Version"></see> and
             wether the <see cref="M:ICSharpCode.SharpZipLib.Zip.ZipEntry.IsCompressionMethodSupported">compression method</see> is supported.</remarks>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipEntry.ForceZip64">
@@ -7241,7 +7275,7 @@
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.LocalHeaderRequiresZip64">
             <summary>
-            Gets a value indicating if the entry requires Zip64 extensions 
+            Gets a value indicating if the entry requires Zip64 extensions
             to store the full entry values.
             </summary>
             <value>A <see cref="T:System.Boolean"/> value of true if a local header requires Zip64 extensions; false if not.</value>
@@ -7349,7 +7383,7 @@
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.AESSaltLen">
             <summary>
-            Returns the length of the salt, in bytes 
+            Returns the length of the salt, in bytes
             </summary>
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipEntry.AESOverheadSize">
@@ -7486,7 +7520,7 @@
             Use a fixed value.
             </summary>
             <remarks>The actual <see cref="T:System.DateTime"/> value used can be
-            specified via the <see cref="M:ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.#ctor(System.DateTime)"/> constructor or 
+            specified via the <see cref="M:ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.#ctor(System.DateTime)"/> constructor or
             using the <see cref="M:ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.#ctor(ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.TimeSetting)"/> with the setting set
             to <see cref="F:ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.TimeSetting.Fixed"/> which will use the <see cref="T:System.DateTime"/> when this class was constructed.
             The <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipEntryFactory.FixedDateTime"/> property can also be used to set this value.</remarks>
@@ -7823,16 +7857,16 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.ZipExtraData">
             
-            <summary>
-            A class to handle the extra data field for Zip entries
-            </summary>
-            <remarks>
-            Extra data contains 0 or more values each prefixed by a header tag and length.
-            They contain zero or more bytes of actual data.
-            The data is held internally using a copy on write strategy.  This is more efficient but
-            means that for extra data created by passing in data can have the values modified by the caller
-            in some circumstances.
-            </remarks>
+             <summary>
+             A class to handle the extra data field for Zip entries
+             </summary>
+             <remarks>
+             Extra data contains 0 or more values each prefixed by a header tag and length.
+             They contain zero or more bytes of actual data.
+             The data is held internally using a copy on write strategy.  This is more efficient but
+             means that for extra data created by passing in data can have the values modified by the caller
+             in some circumstances.
+             </remarks>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipExtraData.#ctor">
             <summary>
@@ -8156,49 +8190,49 @@
             </summary>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.ZipFile">
-            <summary>
-            This class represents a Zip archive.  You can ask for the contained
-            entries, or get an input stream for a file entry.  The entry is
-            automatically decompressed.
+             <summary>
+             This class represents a Zip archive.  You can ask for the contained
+             entries, or get an input stream for a file entry.  The entry is
+             automatically decompressed.
             
-            You can also update the archive adding or deleting entries.
+             You can also update the archive adding or deleting entries.
             
-            This class is thread safe for input:  You can open input streams for arbitrary
-            entries in different threads.
-            <br/>
-            <br/>Author of the original java version : Jochen Hoenicke
-            </summary>
-            <example>
-            <code>
-            using System;
-            using System.Text;
-            using System.Collections;
-            using System.IO;
+             This class is thread safe for input:  You can open input streams for arbitrary
+             entries in different threads.
+             <br/>
+             <br/>Author of the original java version : Jochen Hoenicke
+             </summary>
+             <example>
+             <code>
+             using System;
+             using System.Text;
+             using System.Collections;
+             using System.IO;
             
-            using ICSharpCode.SharpZipLib.Zip;
+             using ICSharpCode.SharpZipLib.Zip;
             
-            class MainClass
-            {
-            	static public void Main(string[] args)
-            	{
-            		using (ZipFile zFile = new ZipFile(args[0])) {
-            			Console.WriteLine("Listing of : " + zFile.Name);
-            			Console.WriteLine("");
-            			Console.WriteLine("Raw Size    Size      Date     Time     Name");
-            			Console.WriteLine("--------  --------  --------  ------  ---------");
-            			foreach (ZipEntry e in zFile) {
-            				if ( e.IsFile ) {
-            					DateTime d = e.DateTime;
-            					Console.WriteLine("{0, -10}{1, -10}{2}  {3}   {4}", e.Size, e.CompressedSize,
-            						d.ToString("dd-MM-yy"), d.ToString("HH:mm"),
-            						e.Name);
-            				}
-            			}
-            		}
-            	}
-            }
-            </code>
-            </example>
+             class MainClass
+             {
+             	static public void Main(string[] args)
+             	{
+             		using (ZipFile zFile = new ZipFile(args[0])) {
+             			Console.WriteLine("Listing of : " + zFile.Name);
+             			Console.WriteLine("");
+             			Console.WriteLine("Raw Size    Size      Date     Time     Name");
+             			Console.WriteLine("--------  --------  --------  ------  ---------");
+             			foreach (ZipEntry e in zFile) {
+             				if ( e.IsFile ) {
+             					DateTime d = e.DateTime;
+             					Console.WriteLine("{0, -10}{1, -10}{2}  {3}   {4}", e.Size, e.CompressedSize,
+             						d.ToString("dd-MM-yy"), d.ToString("HH:mm"),
+             						e.Name);
+             				}
+             			}
+             		}
+             	}
+             }
+             </code>
+             </example>
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.ZipFile.KeysRequiredEventHandler">
             <summary>
@@ -8667,7 +8701,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipFile.UpdateComparer.Compare(ICSharpCode.SharpZipLib.Zip.ZipFile.ZipUpdate,ICSharpCode.SharpZipLib.Zip.ZipFile.ZipUpdate)">
             <summary>
-            Compares two objects and returns a value indicating whether one is 
+            Compares two objects and returns a value indicating whether one is
             less than, equal to or greater than the other.
             </summary>
             <param name="x">First object to compare</param>
@@ -9469,15 +9503,15 @@
              <br/>
              <br/>Author of the original java version : Jochen Hoenicke
              </summary>
-             
+            
              <example> This sample shows how to read a zip file
              <code lang="C#">
              using System;
              using System.Text;
              using System.IO;
-             
+            
              using ICSharpCode.SharpZipLib.Zip;
-             
+            
              class MainClass
              {
              	public static void Main(string[] args)
@@ -9487,7 +9521,7 @@
              			ZipEntry theEntry;
              			const int size = 2048;
              			byte[] data = new byte[2048];
-             			
+            
              			while ((theEntry = s.GetNextEntry()) != null) {
                              if ( entry.IsFile ) {
              				    Console.Write("Show contents (y/n) ?");
@@ -9511,7 +9545,7 @@
         </member>
         <member name="T:ICSharpCode.SharpZipLib.Zip.ZipInputStream.ReadDataHandler">
             <summary>
-            Delegate for reading bytes from a stream. 
+            Delegate for reading bytes from a stream.
             </summary>
         </member>
         <member name="F:ICSharpCode.SharpZipLib.Zip.ZipInputStream.internalReader">
@@ -9567,7 +9601,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipInputStream.ReadDataDescriptor">
             <summary>
-            Read data descriptor at the end of compressed data. 
+            Read data descriptor at the end of compressed data.
             </summary>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipInputStream.CompleteCloseEntry(System.Boolean)">
@@ -9624,7 +9658,7 @@
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipInputStream.InitialRead(System.Byte[],System.Int32,System.Int32)">
             <summary>
-            Perform the initial read on an entry which may include 
+            Perform the initial read on an entry which may include
             reading encryption headers and setting up inflation.
             </summary>
             <param name="destination">The destination to fill with data read.</param>
@@ -9668,7 +9702,7 @@
             <summary>
             ZipNameTransform transforms names as per the Zip file naming convention.
             </summary>
-            <remarks>The use of absolute names is supported although its use is not valid 
+            <remarks>The use of absolute names is supported although its use is not valid
             according to Zip naming conventions, and should not be used if maximum compatability is desired.</remarks>
         </member>
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipNameTransform.#ctor">
@@ -9750,7 +9784,7 @@
              archive one after another.  It has a special method to start a new
              zip entry.  The zip entries contains information about the file name
              size, compressed size, CRC, etc.
-             
+            
              It includes support for Stored and Deflated entries.
              This class is not thread safe.
              <br/>
@@ -9760,21 +9794,21 @@
              <code>
              using System;
              using System.IO;
-             
+            
              using ICSharpCode.SharpZipLib.Core;
              using ICSharpCode.SharpZipLib.Zip;
-             
+            
              class MainClass
              {
              	public static void Main(string[] args)
              	{
              		string[] filenames = Directory.GetFiles(args[0]);
              		byte[] buffer = new byte[4096];
-             		
+            
              		using ( ZipOutputStream s = new ZipOutputStream(File.Create(args[1])) ) {
-             		
+            
              			s.SetLevel(9); // 0 - store only to 9 - means best compression
-             		
+            
              			foreach (string file in filenames) {
              				ZipEntry entry = new ZipEntry(file);
              				s.PutNextEntry(entry);
@@ -9785,7 +9819,7 @@
              			}
              		}
              	}
-             }	
+             }
              </code>
              </example>
         </member>
@@ -9978,11 +10012,16 @@
         <member name="F:ICSharpCode.SharpZipLib.Zip.ZipStrings.codePage">
             <summary>Code page backing field</summary>
             <remarks>
-            The original Zip specification (https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT) states 
-            that file names should only be encoded with IBM Code Page 437 or UTF-8. 
-            In practice, most zip apps use OEM or system encoding (typically cp437 on Windows). 
+            The original Zip specification (https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT) states
+            that file names should only be encoded with IBM Code Page 437 or UTF-8.
+            In practice, most zip apps use OEM or system encoding (typically cp437 on Windows).
             Let's be good citizens and default to UTF-8 http://utf8everywhere.org/
             </remarks>
+        </member>
+        <member name="F:ICSharpCode.SharpZipLib.Zip.ZipStrings.AutomaticCodePage">
+            Automatically select codepage while opening archive
+            see https://github.com/icsharpcode/SharpZipLib/pull/280#issuecomment-433608324
+            
         </member>
         <member name="P:ICSharpCode.SharpZipLib.Zip.ZipStrings.CodePage">
             <summary>
@@ -10012,7 +10051,7 @@
         <member name="M:ICSharpCode.SharpZipLib.Zip.ZipStrings.ConvertToString(System.Byte[],System.Int32)">
             <summary>
             Convert a portion of a byte array to a string using <see cref="P:ICSharpCode.SharpZipLib.Zip.ZipStrings.CodePage"/>
-            </summary>		
+            </summary>
             <param name="data">
             Data to convert to string
             </param>

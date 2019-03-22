@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.2.4.29\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props" Condition="Exists('C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.2.4.29\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" />
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -53,7 +52,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\Users\trevors\Documents\Visual Studio 2010\Projects\alligatorUK_Local\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'"></SolutionDir>
     <RestorePackages>true</RestorePackages>
     <AssemblyInfoFilePath>AssemblyInfo.vb</AssemblyInfoFilePath>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
@@ -148,15 +147,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="BundleTransformer.Core, Version=1.9.213.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\BundleTransformer.Core.1.9.213\lib\net40\BundleTransformer.Core.dll</HintPath>
+      <HintPath>..\..\packages\BundleTransformer.Core.1.9.213\lib\net40\BundleTransformer.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BundleTransformer.Less, Version=1.9.215.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\BundleTransformer.Less.1.9.215\lib\net40\BundleTransformer.Less.dll</HintPath>
+      <HintPath>..\..\packages\BundleTransformer.Less.1.9.215\lib\net40\BundleTransformer.Less.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BundleTransformer.MicrosoftAjax, Version=1.9.213.0, Culture=neutral, PublicKeyToken=973c344c93aac60d, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\BundleTransformer.MicrosoftAjax.1.9.213\lib\net40\BundleTransformer.MicrosoftAjax.dll</HintPath>
+      <HintPath>..\..\packages\BundleTransformer.MicrosoftAjax.1.9.213\lib\net40\BundleTransformer.MicrosoftAjax.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CMPCDotNet, Version=2.2.0.28082, Culture=neutral, PublicKeyToken=60064b713d9de8f4, processorArchitecture=MSIL">
@@ -180,15 +179,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.ChakraCore, Version=2.4.29.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.ChakraCore.2.4.29\lib\net45\JavaScriptEngineSwitcher.ChakraCore.dll</HintPath>
+      <HintPath>..\..\packages\JavaScriptEngineSwitcher.ChakraCore.2.4.29\lib\net45\JavaScriptEngineSwitcher.ChakraCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Core, Version=2.4.10.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.Core.2.4.10\lib\net45\JavaScriptEngineSwitcher.Core.dll</HintPath>
+      <HintPath>..\..\packages\JavaScriptEngineSwitcher.Core.2.4.10\lib\net45\JavaScriptEngineSwitcher.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="JavaScriptEngineSwitcher.Msie, Version=2.4.29.0, Culture=neutral, PublicKeyToken=c608b2a8cc9e4472, processorArchitecture=MSIL">
-      <HintPath>..\EonicWeb5Installer\packages\JavaScriptEngineSwitcher.Msie.2.4.29\lib\net45\JavaScriptEngineSwitcher.Msie.dll</HintPath>
+      <HintPath>..\..\packages\JavaScriptEngineSwitcher.Msie.2.4.29\lib\net45\JavaScriptEngineSwitcher.Msie.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
@@ -212,11 +211,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MsieJavaScriptEngine, Version=2.2.10.0, Culture=neutral, PublicKeyToken=a3a2846a37ac0d3e, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\MsieJavaScriptEngine.2.2.10\lib\net45\MsieJavaScriptEngine.dll</HintPath>
+      <HintPath>..\..\packages\MsieJavaScriptEngine.2.2.10\lib\net45\MsieJavaScriptEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\ProteanCMSInstaller\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -238,7 +237,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\System.Buffers.4.0.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
+      <HintPath>..\..\packages\System.Buffers.4.0.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
@@ -794,6 +793,5 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.2.4.29\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', 'C:\Users\trevors\Source\Repos\V5Demo_vs_local\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.2.4.29\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props'))" />
   </Target>
 </Project>
