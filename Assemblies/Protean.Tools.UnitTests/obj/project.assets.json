@@ -26,23 +26,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\victoriaj\\.nuget\\packages\\": {},
+    "C:\\Users\\bhimr\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\HostingSpaces\\DevOpsGit\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
+      "projectUniqueName": "D:\\_santosh_workspace\\Projects\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
       "projectName": "Protean.Tools.UnitTests",
-      "projectPath": "D:\\HostingSpaces\\DevOpsGit\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
-      "packagesPath": "C:\\Users\\victoriaj\\.nuget\\packages\\",
-      "outputPath": "D:\\HostingSpaces\\DevOpsGit\\Assemblies\\Protean.Tools.UnitTests\\obj\\",
+      "projectPath": "D:\\_santosh_workspace\\Projects\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\Protean.Tools.UnitTests.csproj",
+      "packagesPath": "C:\\Users\\bhimr\\.nuget\\packages\\",
+      "outputPath": "D:\\_santosh_workspace\\Projects\\ProteanCMS\\Assemblies\\Protean.Tools.UnitTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\victoriaj\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\bhimr\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -50,13 +50,13 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://www.nuget.org/api/v2/": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "D:\\HostingSpaces\\DevOpsGit\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
-              "projectPath": "D:\\HostingSpaces\\DevOpsGit\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj"
+            "D:\\_santosh_workspace\\Projects\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj": {
+              "projectPath": "D:\\_santosh_workspace\\Projects\\ProteanCMS\\Assemblies\\Protean.Tools.Csharp\\Protean.Tools.Csharp.csproj"
             }
           }
         }
