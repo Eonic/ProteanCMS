@@ -2504,7 +2504,7 @@ processFlow:
                         End If
 
                         Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
-                        moDBHelper.ExeProcessSqlScalar(cUpdtSQL)
+                        moDBHelper.ExeProcessSql(cUpdtSQL)
 
 
                     Next
