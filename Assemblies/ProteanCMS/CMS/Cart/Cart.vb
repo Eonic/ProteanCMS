@@ -73,6 +73,10 @@ Partial Public Class Cms
         Private cOrderNoPrefix As String
         Public mcCurrency As String = ""
         Public mcCurrencySymbol As String = ""
+
+        Public mcCurrencyRef As String 'TS requires further investigation as to if these are requred or mcCurrency is sufficient
+        Public mcCurrencyCode As String
+
         Public mcVoucherNumber As String = ""
         Public mcVoucherValue As String = ""
         Public mcVoucherExpires As String = ""
@@ -155,8 +159,7 @@ Partial Public Class Cms
 
         Public mcReEstablishSession As String
 
-        Public mcCurrencyRef As String
-        Public mcCurrencyCode As String
+
         Public mnShippingRootId As Integer
         'Public mcCurrencySymbol As String
 
@@ -487,15 +490,12 @@ Partial Public Class Cms
 
                     If moConfig("Membership") = "on" Then mbEwMembership = True
 
-
-
-
-
                     mcMerchantEmail = moCartConfig("MerchantEmail")
                     mcTermsAndConditions = moCartConfig("TermsAndConditions")
                     'mcOrderNoPrefix = moCartConfig("OrderNoPrefix")
                     mcCurrencySymbol = moCartConfig("CurrencySymbol")
                     mcCurrency = moCartConfig("Currency")
+                    mcCurrencyRef = moCartConfig("Currency")
                     If mcCurrency = "" Then mcCurrency = "GBP"
 
                     Dim moPaymentCfg As XmlNode
@@ -507,6 +507,7 @@ Partial Public Class Cms
                             Dim thisLangNode As XmlElement = moLangCfg.SelectSingleNode("Language[@code='" & myWeb.gcLang & "']")
                             If Not thisLangNode Is Nothing Then
                                 mcCurrency = thisLangNode.GetAttribute("currency")
+                                mcCurrencyRef = thisLangNode.GetAttribute("currency")
                                 moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                                 Dim thisCurrencyNode As XmlElement = moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" & mcCurrency & "']")
                                 mcCurrencySymbol = thisCurrencyNode.GetAttribute("symbol")
@@ -522,6 +523,7 @@ Partial Public Class Cms
                         End If
                         If userxml.GetAttribute("defaultCurrency") <> "" Then
                             mcCurrency = userxml.GetAttribute("defaultCurrency")
+                            mcCurrencyRef = userxml.GetAttribute("defaultCurrency")
                             moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
                             Dim thisCurrencyNode As XmlElement = moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" & mcCurrency & "']")
                             mcCurrencySymbol = thisCurrencyNode.GetAttribute("symbol")
@@ -2476,7 +2478,7 @@ processFlow:
                             ' Apply quantity control
                             If Not IsDBNull(oRow("productDetail")) Then
                                 'not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
-                                CheckQuantities(oCartElmt, oRow("productDetail") & "", CLng(oRow("quantity")))
+                                CheckQuantities(oCartElmt, oRow("productDetail") & "", CLng("0" & oRow("quantity")))
                             End If
 
                             weight = weight + (oRow("weight") * oRow("quantity"))
@@ -4825,9 +4827,9 @@ processFlow:
                     Case "default"
                         oXform.NewFrm(formName)
                         oXform.submission(formName, action, "POST", "return form_check(this);")
-                        oXform.Instance.InnerXml = "<Notes/>"
-                        oFormGrp = oXform.addGroup(oXform.moXformElmt, "notes", , "Please enter any comments on your order here")
-                        oXform.addTextArea(oFormGrp, "Notes/Notes", False, "Notes", "")
+                        oXform.Instance.InnerXml = "<Notes><Notes/></Notes>"
+                        oFormGrp = oXform.addGroup(oXform.moXformElmt, "notes", "term4051", "Please enter any comments on your order here")
+                        oXform.addTextArea(oFormGrp, "Notes/Notes", False, "", "")
                         If moDiscount.bHasPromotionalDiscounts Then
                             'If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
                             If Protean.Tools.Xml.firstElement(oXform.Instance).SelectSingleNode("Notes") Is Nothing Then
@@ -5122,7 +5124,7 @@ processFlow:
                 Else
                     cDestinationCountry = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
                 End If
-
+                If cDestinationCountry = "" Then cDestinationCountry = moCartConfig("DefaultCountry")
                 'Go and collect the valid shipping options available for this order
                 ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
@@ -5202,7 +5204,7 @@ processFlow:
                     'if the root group element exists i.e. we have loaded a form in.
                     oGrpElmt = oOptXform.moXformElmt.SelectSingleNode("group")
                     If oGrpElmt Is Nothing Then
-                        oGrpElmt = oOptXform.addGroup(oOptXform.moXformElmt, "options", "", "Select Delivery Option")
+                        oGrpElmt = oOptXform.addGroup(oOptXform.moXformElmt, "options", "", "Select Payment Method")
                     End If
 
                     ' Even if there is only 1 option we still want to display it, if it is a non-zero value - the visitor should know the description of their delivery option
@@ -5221,7 +5223,12 @@ processFlow:
                                 oOptXform.addInput(oGrpElmt, "nShipOptKey", False, oRow("cShipOptName") & "-" & oRow("cShipOptCarrier"), "hidden")
                                 oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = oRow("nShipOptKey")
 
-                                oOptXform.addInput(oGrpElmt, "tblCartOrder/cShippingDesc", False, "Shipping Method", "readonly")
+                                Dim DelInputElmt As XmlElement = oOptXform.addInput(oGrpElmt, "tblCartOrder/cShippingDesc", False, "Delivery Option", "readonly term4047")
+                                Dim DelInputElmtLabel As XmlElement = DelInputElmt.SelectSingleNode("label")
+                                DelInputElmtLabel.SetAttribute("name", oRow("cShipOptName"))
+                                DelInputElmtLabel.SetAttribute("carrier", oRow("cShipOptCarrier"))
+                                DelInputElmtLabel.SetAttribute("cost", FormatNumber(nShippingCost, 2))
+
                                 Dim DescElement As XmlElement = oOptXform.Instance.SelectSingleNode("tblCartOrder/cShippingDesc")
                                 DescElement.InnerText = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier") & ": " & mcCurrencySymbol & FormatNumber(nShippingCost, 2)
                                 DescElement.SetAttribute("name", oRow("cShipOptName"))
@@ -5398,7 +5405,9 @@ processFlow:
                         If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
                         If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
                         If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Delivery Option"
-                        oGrpElmt.SelectSingleNode("label").InnerText = cGroupTitle
+                        Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
+                        labelElmt.InnerText = cGroupTitle
+                        labelElmt.SetAttribute("class", "term3019")
 
                         ' Just so we don't show the terms and conditions title twice
 
@@ -7104,7 +7113,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     If myWeb.mbAdminMode And CInt("0" & oDR("nCartUserDirId")) > 0 Then
                                         oContent.AppendChild(moDBHelper.GetUserXML(CInt(oDR("nCartUserDirId")), False))
                                     End If
-                                    addNewTextNode("Notes", oContent.FirstChild, oDR("cClientNotes"))
 
                                     Dim aSellerNotes As String() = Split(oDR("cSellerNotes"), "/n")
                                     Dim cSellerNotesHtml As String = "<ul>"

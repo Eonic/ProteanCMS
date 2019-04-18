@@ -2656,7 +2656,7 @@ Partial Public Class Cms
                                         sSql = "Select nContentChildId from tblContentRelation where nContentParentId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     End If
                                     Dim oRead As SqlDataReader = moDbHelper.getDataReader(sSql)
-                                    Dim CSV As String
+                                    Dim CSV As String = ""
                                     While oRead.Read()
                                         If CSV <> "" Then
                                             CSV = CSV & ","
@@ -3360,22 +3360,16 @@ Partial Public Class Cms
                 Dim oFrmElmt As XmlElement
                 Dim sValidResponse As String
                 Dim cProcessInfo As String = ""
-
                 Try
                     'load the xform to be edited
                     moDbHelper.moPageXml = moPageXML
-
-
                     MyBase.NewFrm("MoveFile")
-
                     MyBase.submission("MoveFile", "", "post")
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "folderItem", "", "Move File")
 
                     'search for file in content and pages
                     Dim oFsh As fsHelper = New fsHelper
                     oFsh.initialiseVariables(nType)
-
-
 
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
@@ -5279,10 +5273,10 @@ Partial Public Class Cms
                     MyBase.addBind("cShipOptName", "tblCartShippingMethods/cShipOptName", "true()")
 
                     MyBase.addInput(oGrp1Elmt, "cShipOptCarrier", True, "Carrier")
-                    MyBase.addBind("cShipOptCarrier", "tblCartShippingMethods/cShipOptCarrier", "true()")
+                    MyBase.addBind("cShipOptCarrier", "tblCartShippingMethods/cShipOptCarrier", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "cShipOptTime", True, "Delivery Period")
-                    MyBase.addBind("cShipOptTime", "tblCartShippingMethods/cShipOptTime", "true()")
+                    MyBase.addBind("cShipOptTime", "tblCartShippingMethods/cShipOptTime", "false()")
 
                     MyBase.addInput(oGrp1Elmt, "nShipOptCost", True, "Cost", "short")
                     MyBase.addBind("nShipOptCost", "tblCartShippingMethods/nShipOptCost", "false()")
@@ -5615,8 +5609,7 @@ Partial Public Class Cms
 
                     'update the status if we have submitted it allready
                     If goRequest("nStatus") <> "" Then nStatus = CInt(goRequest("nStatus"))
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Update" & cSchemaName, "", "UpdateOrder")
-
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Update" & cSchemaName, "", "")
                     oGrp1Elmt = MyBase.addGroup(oFrmElmt, "Status", "", cSchemaName & " Status")
                     oSelElmt = MyBase.addSelect1(oGrp1Elmt, "nStatus", True, "Status", "", ApperanceTypes.Full)
                     Select Case nStatus
@@ -5780,46 +5773,43 @@ Partial Public Class Cms
                         If MyBase.valid Then
                             moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, MyBase.Instance)
 
-                            If goRequest("nStatus") = 9 And sendEmailOnShipped Then
+                            If goRequest("nStatus") = 9 Then
 
                                 'Get the carrier name from the ID
-                                Dim CarrierName As String
-                                CarrierName = moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " & myWeb.moRequest("nCarrierId"))
-                                Me.Instance.SelectSingleNode("tblCartOrderDelivery/cCarrierName").InnerText = CarrierName
-
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDelivery, MyBase.Instance)
-
-                                Dim cSubject As String = moCartConfig("OrderEmailSubject")
-                                If String.IsNullOrEmpty(cSubject) Then cSubject = "Order Shipped"
-
-                                'send to customer
-                                Dim oMsg As Messaging = New Messaging
-                                Dim cartXml As New XmlDocument
-                                Dim cartElement As XmlElement = cartXml.CreateElement("Cart")
-                                cartElement.InnerXml = MyBase.Instance.SelectSingleNode("tblCartOrder/cCartXml").InnerXml
-                                cartElement.SetAttribute("InvoiceRef", moCartConfig("OrderNoPrefix") & MyBase.Instance.SelectSingleNode("tblCartOrder/nCartOrderKey").InnerXml)
-                                cartElement.SetAttribute("InvoiceDate", Left(MyBase.Instance.SelectSingleNode("tblCartOrder/dInsertDate").InnerXml, 10))
-                                cartElement.SetAttribute("AccountId", MyBase.Instance.SelectSingleNode("tblCartOrder/nCartUserDirId").InnerXml)
-                                If Not MyBase.Instance.SelectSingleNode("tblCartOrderDelivery") Is Nothing Then
-                                    Dim delElmt As XmlElement = cartXml.CreateElement("Delivery")
-                                    delElmt.InnerXml = MyBase.Instance.SelectSingleNode("tblCartOrderDelivery").InnerXml
-                                    cartElement.AppendChild(delElmt)
-
-                                    Dim carrierId As Long = CInt(delElmt.SelectSingleNode("nCarrierId").InnerText)
-                                    Dim carrierElmt As XmlElement = cartXml.CreateElement("Carrier")
-                                    carrierElmt.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartCarrier, carrierId).Replace("{@code}", delElmt.SelectSingleNode("cCarrierRef").InnerText)
-                                    cartElement.AppendChild(carrierElmt)
+                                If moDbHelper.checkDBObjectExists("tblCartCarrier") And moDbHelper.checkDBObjectExists("tblCartOrderDelivery") Then
+                                    Dim CarrierName As String
+                                    CarrierName = moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " & myWeb.moRequest("nCarrierId"))
+                                    Me.Instance.SelectSingleNode("tblCartOrderDelivery/cCarrierName").InnerText = CarrierName
+                                    moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDelivery, MyBase.Instance)
                                 End If
 
-                                Dim CustomerEmailShippedTemplatePath As String = IIf(moCartConfig("CustomerEmailShippedTemplatePath") <> "", moCartConfig("CustomerEmailShippedTemplatePath"), "/xsl/Cart/mailOrderCustomerDelivery.xsl")
+                                If sendEmailOnShipped Then
+                                    Dim cSubject As String = moCartConfig("OrderEmailSubject")
+                                    If String.IsNullOrEmpty(cSubject) Then cSubject = "Order Shipped"
+                                    'send to customer
+                                    Dim oMsg As Messaging = New Messaging
+                                    Dim cartXml As New XmlDocument
+                                    Dim cartElement As XmlElement = cartXml.CreateElement("Cart")
+                                    cartElement.InnerXml = MyBase.Instance.SelectSingleNode("tblCartOrder/cCartXml").InnerXml
+                                    cartElement.SetAttribute("InvoiceRef", moCartConfig("OrderNoPrefix") & MyBase.Instance.SelectSingleNode("tblCartOrder/nCartOrderKey").InnerXml)
+                                    cartElement.SetAttribute("InvoiceDate", Left(MyBase.Instance.SelectSingleNode("tblCartOrder/dInsertDate").InnerXml, 10))
+                                    cartElement.SetAttribute("AccountId", MyBase.Instance.SelectSingleNode("tblCartOrder/nCartUserDirId").InnerXml)
+                                    If Not MyBase.Instance.SelectSingleNode("tblCartOrderDelivery") Is Nothing Then
+                                        Dim delElmt As XmlElement = cartXml.CreateElement("Delivery")
+                                        delElmt.InnerXml = MyBase.Instance.SelectSingleNode("tblCartOrderDelivery").InnerXml
+                                        cartElement.AppendChild(delElmt)
 
-                                cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
+                                        Dim carrierId As Long = CInt(delElmt.SelectSingleNode("nCarrierId").InnerText)
+                                        Dim carrierElmt As XmlElement = cartXml.CreateElement("Carrier")
+                                        carrierElmt.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartCarrier, carrierId).Replace("{@code}", delElmt.SelectSingleNode("cCarrierRef").InnerText)
+                                        cartElement.AppendChild(carrierElmt)
+                                    End If
+                                    Dim CustomerEmailShippedTemplatePath As String = IIf(moCartConfig("CustomerEmailShippedTemplatePath") <> "", moCartConfig("CustomerEmailShippedTemplatePath"), "/xsl/Cart/mailOrderCustomerDelivery.xsl")
+                                    cProcessInfo = oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText), "Order Shipped")
 
-                                oMsg = Nothing
-
+                                    oMsg = Nothing
+                                End If
                             End If
-
-
                         End If
                     End If
 
@@ -6615,7 +6605,7 @@ Partial Public Class Cms
 
                         If MyBase.valid Then
                             If Not oEmailElmt.InnerText = "" Then
-                                If Not is_valid_email(oEmailElmt.InnerText) Then
+                                If Not Tools.Text.IsEmail(oEmailElmt.InnerText) Then
                                     MyBase.addNote(oElmt, xForm.noteTypes.Alert, "Incorrect Email Address Supplied")
                                 Else
                                     If moDbHelper.AddInvalidEmail(oEmailElmt.InnerText) Then
@@ -7986,7 +7976,7 @@ Partial Public Class Cms
             Public Function xFrmVoucherCode(ByVal nCodeId As Integer) As XmlElement
 
                 Dim cProcessInfo As String = ""
-                Dim cTypePath As String
+                Dim cTypePath As String = ""
                 Try
 
 

@@ -11,7 +11,16 @@
   <xsl:variable name="pageId" select="/Page/@id"/>
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
   <!-- removes xmlns="" on all copy-of responses -->
-  <xsl:variable name="appPath" select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
+  <xsl:variable name="appPath">
+  	<xsl:choose>
+		<xsl:when test="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()!=''">
+		<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
+		</xsl:when>
+		<xsl:otherwise>
+		<xsl:text>/</xsl:text>
+		</xsl:otherwise>
+	</xsl:choose>
+  </xsl:variable>
   <xsl:variable name="menu" select="/Page/Menu"/>
   <xsl:variable name="cart" select="/Page/Cart"/>
   <xsl:variable name="cartPage" select="/Page/Cart[@type='order']/Order/@cmd!=''"/>
@@ -204,6 +213,8 @@
     </xsl:call-template>
   </xsl:variable>
   <!-- -->
+  <xsl:variable name="lazy" select="'off'"/>
+  <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
 
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
@@ -226,7 +237,6 @@
     </xsl:variable>
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
-
       <head>
         <xsl:choose>
           <xsl:when test="ContentDetail">
@@ -247,12 +257,7 @@
         <xsl:if test="/Page/@baseUrl">
           <base href="{/Page/@baseUrl}"/>
         </xsl:if>
-        <xsl:if test="/Page/languages">
-          <link rel="alternate" href="http://{/Page/languages/@defaultDomain}" hreflang="x-default" />
-        </xsl:if>
-        <xsl:for-each select="$currentPage/PageVersion[@verType='3']">
-          <link rel="alternate" href="{@url}" hreflang="{@lang}" />
-        </xsl:for-each>
+        <xsl:apply-templates select="." mode="alternatePages"/>
 
         <!-- IF IE - force to use IE8/9 mode or chromeframe -->
         <!--<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>-->
@@ -318,6 +323,16 @@
       </xsl:if>
 
     </html>
+  </xsl:template>
+
+  <xsl:template match="Page" mode="alternatePages">
+    <xsl:if test="/Page/languages">
+      <link rel="alternate" href="http://{/Page/languages/@defaultDomain}" hreflang="x-default" />
+    </xsl:if>
+    <xsl:for-each select="$currentPage/PageVersion[@verType='3']">
+      <link rel="alternate" href="{@url}" hreflang="{@lang}" />
+    </xsl:for-each>
+
   </xsl:template>
 
   <xsl:template match="Page" mode="metacharset">
@@ -3564,6 +3579,7 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
+    <xsl:param name="mobileDD"/>
     <xsl:variable name="liClass">
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
@@ -3637,6 +3653,12 @@
         </xsl:if>
         <xsl:apply-templates select="." mode="getDisplayName"/>
       </a>
+      <xsl:if test="$mobileDD='true'">
+        <span class="mobile-dd-control">
+          <i class="fa fa-angle-down"> </i>
+          <i class="fa fa-angle-up"> </i>
+        </span>
+      </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
         <xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem"/>
       </ul>
@@ -5100,25 +5122,30 @@
           - ensures its self closing and we can process all nodes!! -->
     <xsl:variable name="img">
       <xsl:element name="img">
+        <xsl:choose>
+          <xsl:when test="$lazy='on'">
+            <xsl:attribute name="data-src">
+              <xsl:value-of select="@src"/>
+            </xsl:attribute>
+            <xsl:attribute name="src">
+              <xsl:value-of select="$lazyplaceholder"/>
+            </xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="src">
+              <xsl:value-of select="@src"/>
+            </xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+       
         <!--<xsl:for-each select="@*[name()!='border' and name()!='align' and name()!='style']">-->
-        <xsl:for-each select="@*[name()!='border' and name()!='align']">
+        <xsl:for-each select="@*[name()!='border' and name()!='align' and name()!='src']">
 
           <xsl:attribute name="{name()}">
             <xsl:choose>
 
               <!-- ##### @Attribute Conditions ##### -->
 
-              <xsl:when test="name()='src'">
-                <xsl:choose>
-                  <xsl:when test="contains(.,'http://')">
-                    <xsl:value-of select="."/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <!--<xsl:value-of select="$siteURL"/>-->
-                    <xsl:value-of select="."/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:when>
 
               <!-- ##### VALIDATION - Attribute "align" can not be used for this element. ##### -->
               <xsl:when test="name()='class' and (ancestor::img[@align] or contains(ancestor::img/@style,'float: '))">
@@ -5134,6 +5161,15 @@
                     <xsl:value-of select="$float"/>
                   </xsl:otherwise>
                 </xsl:choose>
+                <xsl:if test="$lazy='on'">
+                  <xsl:text> lazy</xsl:text>
+                </xsl:if>
+              </xsl:when>
+              <xsl:when test="name()='class'">
+                <xsl:value-of select="."  />
+                <xsl:if test="$lazy='on'">
+                  <xsl:text> lazy</xsl:text>
+                </xsl:if>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="."  />
@@ -5143,7 +5179,8 @@
         </xsl:for-each>
 
         <!-- ##### VALIDATION - Attribute "align" can not be used for this element. ##### -->
-        <xsl:if test="(not(@class) and (@align or contains(@style,'float: '))) or ancestor::Content[@responsiveImg='true']">
+        <xsl:choose>
+         <xsl:when test="(not(@class) and (@align or contains(@style,'float: '))) or ancestor::Content[@responsiveImg='true']">
           <xsl:attribute name="class">
             <xsl:variable name="float" select="substring-before(substring-after(@style,'float: '),';')"/>
             <xsl:variable name="align" select="@align"/>
@@ -5156,9 +5193,20 @@
                 <xsl:value-of select="$float"/>
               </xsl:otherwise>
             </xsl:choose>
-            <xsl:if test="ancestor::Content[@responsiveImg='true']"> img-responsive</xsl:if>
+            <xsl:if test="ancestor::Content[@responsiveImg='true']">
+              <xsl:text> img-responsive</xsl:text>
+            </xsl:if>
+            <xsl:if test="$lazy='on'">
+              <xsl:text> lazy</xsl:text>
+            </xsl:if>
           </xsl:attribute>
-        </xsl:if>
+         </xsl:when>
+           <xsl:when test="not(@class) and $lazy='on'">
+             <xsl:attribute name="class">
+                 <xsl:text>lazy</xsl:text>
+             </xsl:attribute>
+          </xsl:when>
+        </xsl:choose>
 
         <!-- ##### VALIDATION - required attribute "alt" ##### -->
         <xsl:if test="not(@alt)">
@@ -5904,12 +5952,25 @@
           </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
+        
         <xsl:variable name="image">
           <img itemprop="image">
             <!-- SRC -->
-            <xsl:attribute name="src">
-              <xsl:value-of select="$newSrc"/>
-            </xsl:attribute>
+            <xsl:choose>
+              <xsl:when test="$lazy='on'">
+                <xsl:attribute name="data-src">
+                  <xsl:value-of select="$newSrc"/>
+                </xsl:attribute>
+                <xsl:attribute name="src">
+                  <xsl:value-of select="$lazyplaceholder"/>
+                </xsl:attribute>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:attribute name="src">
+                  <xsl:value-of select="$newSrc"/>
+                </xsl:attribute>
+              </xsl:otherwise>
+            </xsl:choose>
             <!-- Width -->
             <xsl:attribute name="width">
               <xsl:choose>
@@ -5948,9 +6009,12 @@
                   <xsl:value-of select="$class" />
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:text>photo thumbnail resized </xsl:text>
+                  <xsl:text>photo thumbnail resized</xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
+              <xsl:if test="$lazy='on'">
+                <xsl:text> lazy</xsl:text>
+              </xsl:if>
             </xsl:attribute>
             <xsl:if test="$style!=''">
               <xsl:attribute name="style">
@@ -5962,6 +6026,7 @@
         <xsl:copy-of select="ms:node-set($image)/*" />
       </xsl:if>
     </xsl:if>
+
   </xsl:template>
 
   <xsl:template match="Content | MenuItem | Discount | productDetail" mode="getThCrop">

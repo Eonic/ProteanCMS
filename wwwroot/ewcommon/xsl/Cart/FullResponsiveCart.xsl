@@ -936,11 +936,32 @@
     </xsl:variable>
     <xsl:if test="Notes/Notes/node()!='' or Notes/PromotionalCode/node()!=''">
       <xsl:if test="Notes/Notes/node()!=''">
-        <h3>
-          <!--Additional information for Your Order-->
-          <xsl:call-template name="term3010" />
-        </h3>
-        <xsl:apply-templates select="Notes/Notes/*" mode="displayNoteLine"/>
+    
+        <div class="alert alert-success notes">
+         
+            <xsl:if test="not(/Page/Cart/Order/@cmd='ShowInvoice') and not(/Page/Cart/Order/@cmd='MakePayment') and (ancestor::*[name()='Cart'])">
+
+              <xsl:if test="not(@readonly) and not(@cartCmd='') and Notes/Notes/node()!=''">
+                <a href="{$parentURL}?cartCmd=Notes" class="btn btn-primary pull-right">
+                  <i class="fa fa-pencil">&#160;</i>&#160;
+                  <xsl:attribute name="title">
+                    <!--Click here to edit the notes on this order.-->
+                    <xsl:call-template name="term3012" />
+                  </xsl:attribute>
+                  <!--Edit Notes-->
+                  <xsl:call-template name="term3013" />
+                </a>
+              </xsl:if>
+            </xsl:if>    
+            <h4 class="alert-title">
+              <!--Additional information for Your Order-->
+              <xsl:call-template name="term3010" />
+            </h4>
+            
+       
+            <xsl:apply-templates select="Notes/Notes/node()" mode="cleanXhtml"/>
+       
+        </div>
       </xsl:if>
       <xsl:if test="Notes/PromotionalCode/node()!=''">
         <p>
@@ -950,18 +971,7 @@
           <xsl:apply-templates select="Notes/PromotionalCode/node()" mode="cleanXhtml"/>
         </p>
       </xsl:if>
-      <xsl:if test="not(@readonly) and Notes/Notes/node()!=''">
-        <p class="optionButtons">
-          <a href="{$parentURL}?cartCmd=Notes" class="button">
-            <xsl:attribute name="title">
-              <!--Click here to edit the notes on this order.-->
-              <xsl:call-template name="term3012" />
-            </xsl:attribute>
-            <!--Edit Notes-->
-            <xsl:call-template name="term3013" />
-          </a>
-        </p>
-      </xsl:if>
+    
     </xsl:if>
   </xsl:template>
 

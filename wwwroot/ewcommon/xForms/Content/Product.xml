@@ -178,6 +178,9 @@
         <bind id="cSkuOptions" nodeset="@SkuOptions" required="false()" type="string"/>
       </bind>
     </bind>
+    <bind nodeset="ProductGroups">
+      <bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+    </bind>
   </model>
   <group ref="EditContent" class="2col">
     <label>Add/Edit Product </label>
@@ -201,6 +204,10 @@
             <value>0</value>
           </item>
         </select1>
+      </group>
+      <group>
+        <label>Product Groups</label>
+        <select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full"/>
       </group>
       <group class="Content">
         <label>Images</label>

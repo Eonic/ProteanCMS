@@ -542,9 +542,9 @@ Public Class xForm
             End If
             'End If
 
-
         Catch ex As Exception
             returnException(mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
+
         End Try
     End Sub
 

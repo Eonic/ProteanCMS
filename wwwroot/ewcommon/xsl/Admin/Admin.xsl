@@ -5028,7 +5028,7 @@
           <xsl:if test="ContentDetail/directory/@parType='User'">
           <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
             <div class="input-group">
-            <input type="text" name="search" value="" class="form-control"/>
+            <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
               <span class="input-group-btn">
             <button type="submit" name="previous" value="Search" class="btn btn-success principle">
               User Search
@@ -5041,6 +5041,22 @@
             </div>
           </form>
         </xsl:if>
+          <xsl:if test="ContentDetail/directory/@parType='Company'">
+            <form action="?ewCmd=ListCompanies" method="post" id="companySearch" class="col-md-4">
+              <div class="input-group">
+                <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
+                <span class="input-group-btn">
+                  <button type="submit" name="previous" value="Search" class="btn btn-success principle">
+                    Company Search
+                    <xsl:text> </xsl:text>
+                    <i class="fa fa-search fa-white">
+                      <xsl:text> </xsl:text>
+                    </i>
+                  </button>
+                </span>
+              </div>
+            </form>
+          </xsl:if>
         </div>
 <div class="row">
   <div class="col-md-12">
@@ -5366,7 +5382,12 @@
           <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=Group&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
-            </i><xsl:text> </xsl:text>Edit</a>&#160;
+          </i><xsl:text> </xsl:text>Edit</a>&#160;
+          <a href="{$appPath}?ewCmd=DirMemberships&amp;type=Group&amp;id={@id}&amp;childTypes=User" class="btn btn-xs btn-primary">
+            <i class="fa fa-users fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Manage Members
+          </a>&#160;
           <a href="{$appPath}?ewCmd=ListUsers&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
@@ -5724,8 +5745,6 @@
                   <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-primary pull-right">
                     <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
                   </a>
-                  <br/>
-                  <br/>
                   <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
                   <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
                   <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
@@ -5819,7 +5838,7 @@
         <xsl:value-of select="@currency"/>
       </td>
       <td>
-        <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
+        <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-xs btn-primary">
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>view order</a>
@@ -5962,111 +5981,131 @@
       </h3>
         </div>
       <div class="panel-body row">
-        <div class="col-md-4">
-          <p>
-            Order Date:&#160; <xsl:call-template name="DD_Mon_YYYY">
-              <xsl:with-param name="date">
-                <xsl:value-of select="$orderDate"/>
-              </xsl:with-param>
-              <xsl:with-param name="showTime">true</xsl:with-param>
-            </xsl:call-template>
-          </p>
-          <p>
-            Order Reference:&#160;<xsl:value-of select="$orderId"/>
-          </p>
+        <div class="col-md-3">
+          <h4>Order Details</h4>
+          <dl class="dl-horizontal">
+            <dt>
+              Order Date
+            </dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="$orderDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">true</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>
+              Order Reference
+            </dt>
+            <dd>
+              <xsl:value-of select="$orderId"/>
+            </dd>
+
           <xsl:if test="@payableType='deposit' and (@payableAmount &gt; 0) ">
-            <p>
-              Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
-            </p>
-            <p>
-              Final Payment Reference:&#160;<strong>
-                <xsl:value-of select="@settlementID" />
-              </strong>
-            </p>
-            <p>
-              Thank you for your deposit. To pay the outstanding balance, please note your Final Payment Reference, above.  <em>Instructions on paying the outstanding balance have been e-mailed to you.</em>
-            </p>
-            <p>
-              If you have any queries, please call for assistance.
-            </p>
+            <dt>
+              Payment Received
+            </dt>
+            <dd>
+              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt>Final Payment Reference</dt>
+            <dd>
+              <xsl:value-of select="@settlementID" />
+            </dd>
           </xsl:if>
           <xsl:if test="@payableType='settlement' or @payableAmount = 0 ">
-            <p>
-              Payment Made:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@paymentMade,'0.00')" />
-            </p>
-            <p>
-              Total Payment Received:&#160;<xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
-            </p>
+            <dt>Payment Made</dt>
+            <dd>
+              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="format-number(@paymentMade,'0.00')" />
+            </dd>
+            <dt>Total Payment Received</dt>
+            <dd>
+              <xsl:value-of select="$currency"/><xsl:value-of select="format-number(@total, '0.00')"/> (paid in full)
+            </dd>
           </xsl:if>
+          </dl>
           <h4>Payment Details</h4>
-          <p>
-            Provider: <xsl:value-of select="PaymentDetails/@provider"/><br/>
-            Ref: <xsl:value-of select="PaymentDetails/@ref"/><br/>
-            Acct: <xsl:value-of select="PaymentDetails/@acct"/><br/>
-            <xsl:for-each select="PaymentDetails/*/*">
-              <xsl:value-of select="local-name()"/>: <xsl:value-of select="node()"/><br/>
+          <dl class="dl-horizontal">
+            <dt>Payment Method</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@provider"/>
+            </dd>
+            <dt>Payment Ref.</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@ref"/>
+            </dd>
+            <dt>Payment Acct</dt>
+            <dd>
+              <xsl:value-of select="PaymentDetails/@acct"/>
+            </dd>
+            <xsl:for-each select="PaymentDetails/*[local-name()!='Ref' or node()!='']/*">
+              <dt>
+                <xsl:value-of select="local-name()"/>
+              </dt>
+              <dd>
+                <xsl:value-of select="node()"/>
+              </dd>
             </xsl:for-each>
-          </p>
-      <xsl:if test="(Notes) and @cmd!='Notes' ">
-        <div class="notes">
-          <xsl:for-each select="Notes/*">
-            <b>
-              <xsl:value-of select="name()"/>
-            </b>
-            <xsl:copy-of select="./node()"/>
-          </xsl:for-each>
-          <xsl:apply-templates select="Notes" mode="displayNotes"/>
-        </div>
-      </xsl:if>
-        </div>
-      <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
-        <div id="deliveryAddress" class="cartAddress col-md-4">
-          <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
-        </div>
-      </xsl:if>
+          </dl>
+      </div>
       <xsl:if test="Contact[@type='Billing Address']">
-        <div id="billingAddress" class="cartAddress col-md-4">
+        <div id="billingAddress" class="cartAddress col-md-3">
           <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
         </div>
       </xsl:if>
+      <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
+        <div id="deliveryAddress" class="cartAddress col-md-3">
+          <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
+        </div>
+      </xsl:if>
       <xsl:if test="DeliveryDetails">
-      <div id="carrier-info" class="col-md-12">
-        <table class="table">
-          <tr>
-            <th>Carrier</th>
-            <th>Ref</th>
-            <th>Collected Date</th>
-            <th>Delivery Date</th>
-            <th>Notes</th>
-          </tr>
-        <xsl:for-each select="DeliveryDetails">
-          <tr>
-            <td>
-              <xsl:value-of select="@carrierName"/>
-            </td>
-            <td><xsl:value-of select="@ref"/></td>
-            <td>
-             <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date">
-                    <xsl:value-of select="@collectionDate"/>
-                  </xsl:with-param>
-                  <xsl:with-param name="showTime">false</xsl:with-param>
-                </xsl:call-template>
-            </td>
-            <td>
-             <xsl:call-template name="DD_Mon_YYYY">
-                  <xsl:with-param name="date">
-                    <xsl:value-of select="@deliveryDate"/>
-                  </xsl:with-param>
-                  <xsl:with-param name="showTime">false</xsl:with-param>
-                </xsl:call-template>
-            </td>
-            <td><xsl:value-of select="@notes"/></td>
-          </tr>
-        </xsl:for-each>
-          </table>
+      <div id="carrier-info" class="col-md-3">
+        <h4>Shipping Details</h4>
+        <dl class="dl-horizontal">
+          <xsl:for-each select="DeliveryDetails">
+          <dt>Carrier</dt>
+          <dd>
+            <xsl:value-of select="@carrierName"/>
+          </dd>
+            <dt>Ref</dt>
+            <dd>
+              <xsl:value-of select="@ref"/>
+            </dd>
+            <dt>Collected Date</dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="@collectionDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>Delivery Date</dt>
+            <dd>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="@deliveryDate"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </dd>
+            <dt>Notes</dt>
+            <dd>
+              <xsl:value-of select="@notes"/>
+            </dd>
+          </xsl:for-each>
+        </dl>
       </div>
-          </xsl:if>
+          </xsl:if>        
+        <xsl:if test="Notes/Notes"><div class="col-md-12">
+          <div class="notes alert alert-danger">
+              <i class="fas fa-lg fa-exclamation-triangle">&#160;</i>&#160;<strong>Notes from customer:</strong>&#160;&#160;
+              <xsl:apply-templates select="Notes" mode="displayNotes"/>
+          </div>
+        </div>
+        </xsl:if>
       </div>
 
     
@@ -6186,12 +6225,6 @@
             </td>
           </tr>
         </xsl:if>
-        <tr>
-          <td colspan="6">
-            Client Notes:<br/>
-            <xsl:apply-templates select="." mode="displayNotes"/>
-          </td>
-        </tr>
         <tr>
           <td colspan="6">
             Seller Notes:<br/>
@@ -9521,7 +9554,7 @@
         <h3>
           History for '<xsl:value-of select="ContentDetail/ContentVersions/Version/@type"/>' '<xsl:value-of select="ContentDetail/ContentVersions/Version/@name"/>'
         </h3>
-        <table cellpadding="0" cellspacing="0" class="adminList">
+        <table cellpadding="0" cellspacing="0" class="table">
           <tr>
             <th>Status</th>
             <th>Version</th>

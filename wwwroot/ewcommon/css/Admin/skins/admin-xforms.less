@@ -35,6 +35,12 @@
     font-size: 14px;
 }
 .ewAdmin #adminLayout {
+    .adminTemplate {
+        .form-control {
+            border-radius:3px;
+        }
+    }
+
     .list-group-item {
         background: transparent;
         border: 0;
@@ -46,7 +52,7 @@
         display: inline-block;
     }
 
-    .list-vertical span.checkbox, .multiline span.checkbox{
+    .list-vertical span.checkbox, .multiline span.checkbox {
         display: block;
     }
 
@@ -61,20 +67,24 @@
         height: @admin-field-height;
     }
 
-    select.form-control[size="2"] {
-        height: @admin-field-height * 2;
-    }
+        select.form-control[size="2"] {
+            height: @admin-field-height * 2;
+        }
 
-    select.form-control[size="3"] {
-        height: @admin-field-height * 3;
-    }
+        select.form-control[size="3"] {
+            height: @admin-field-height * 3;
+        }
 
-    select.form-control[size="4"] {
-        height: @admin-field-height * 4;
-    }
+        select.form-control[size="4"] {
+            height: @admin-field-height * 4;
+        }
 
     select.scroll_10 {
         height: @admin-field-height * 5;
+    }
+
+    select.scroll_15 {
+        height: @admin-field-height * 7;
     }
 
     select.scroll_30 {
@@ -84,6 +94,13 @@
     select#cGroups.form-control {
         min-height: 1200px;
     }
+    .select-wrapper .list-group{
+        margin-bottom:0;
+        .list-group-item{
+            margin-top:0;
+        }
+    }
+    
 
     .btn {
         font-size: @admin-font-size-base
@@ -365,9 +382,9 @@
             margin-top: 5px;
         }
 
-        label.list-group-item {
-            margin-top: 0px;
-        }
+            label.list-group-item {
+                margin-top: 0px;
+            }
 
         .form-control {
             color: @admin-header-font-color;
@@ -449,7 +466,7 @@
 	.admin-space-above{
 		margin-top:15px;
 	}*/
-        .col-md-4 {
+        .col-md-4.form-group {
             border-right: @admin-border;
         }
 
@@ -511,19 +528,19 @@
             }
         }
 
-        .boxStyle .bfh-selectbox-options li {
-            display: inline-block;
-            width: 100%;
-        }
+            .boxStyle .bfh-selectbox-options li {
+                display: inline-block;
+                width: 100%;
+            }
 
         .cssStyle .bfh-selectbox-options li {
             display: inline-block;
             width: 100%;
         }
 
-        .cssStyle .bfh-selectbox-options li a {
-            overflow-y: hidden;
-        }
+            .cssStyle .bfh-selectbox-options li a {
+                overflow-y: hidden;
+            }
 
         .pickIcon .bfh-selectbox-options li {
             display: inline-block;
@@ -546,10 +563,10 @@
             }
         }
 
-        .pickByImage button.imageSelect.selected {
-            padding: 2px;
-            border: 4px solid @brand-primary;
-        }
+            .pickByImage button.imageSelect.selected {
+                padding: 2px;
+                border: 4px solid @brand-primary;
+            }
 
         .previewImage {
             padding-top: 10px;
@@ -611,6 +628,17 @@
             display: inline-block;
             width: 49%;
             padding-right: 15px;
+        }
+
+        .inline-3col .form-group {
+            float: left;
+            display: inline-block;
+            width: 32%;
+            padding-right: 15px;
+
+            select {
+                height: 38px;
+            }
         }
 
         .inline-4col .form-group {
@@ -803,14 +831,14 @@
                     cursor: not-allowed;
                 }
 
-                &:disabled + label {
-                    opacity: 0.65;
+                    &:disabled + label {
+                        opacity: 0.65;
 
-                    &::before {
-                        background-color: @input-bg-disabled;
-                        cursor: not-allowed;
+                        &::before {
+                            background-color: @input-bg-disabled;
+                            cursor: not-allowed;
+                        }
                     }
-                }
             }
 
             &.checkbox-circle label::before {
@@ -914,13 +942,13 @@
                     cursor: not-allowed;
                 }
 
-                &:disabled + label {
-                    opacity: 0.65;
+                    &:disabled + label {
+                        opacity: 0.65;
 
-                    &::before {
-                        cursor: not-allowed;
+                        &::before {
+                            cursor: not-allowed;
+                        }
                     }
-                }
             }
 
             &.radio-inline {

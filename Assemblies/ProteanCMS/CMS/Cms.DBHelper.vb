@@ -1063,7 +1063,7 @@ Partial Public Class Cms
                     sPath = sPath
                 End If
 
-                sSql = "select nStructKey, nStructParId from tblContentStructure where (cStructName like '" & SqlFmt(sPath) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "")) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "-")) & "')"
+                sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" & SqlFmt(sPath) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "")) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "-")) & "')"
 
                 ods = GetDataSet(sSql, "Pages")
 
@@ -1073,26 +1073,34 @@ Partial Public Class Cms
                     ' if there is just one page validate it
                 ElseIf ods.Tables("Pages").Rows.Count = 0 Then
 
-
+                    'do nothing nothing found
 
                 Else
                     For Each oRow In ods.Tables("Pages").Rows
-                        Debug.WriteLine(oRow.Item("nStructKey"))
-                        If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
-                            If bCheckPermissions Then
-
-                                ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
-
-                                If checkPermissionPageId <> 0 _
-                                    And (oRow.Item("nStructKey") = checkPermissionPageId _
-                                    Or IsSystemPage(checkPermissionPageId)) Then
-                                    nPageId = checkPermissionPageId
-                                    Exit For
-                                End If
-                            Else
+                        ' Debug.WriteLine(oRow.Item("nStructKey"))
+                        If Not (oRow.Item("nVersionParId") = 0) Then
+                            'we have a language verion we need to behave differently to confirm id
+                            If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                 nPageId = oRow.Item("nStructKey")
                                 Exit For
+                            End If
+                        Else
+                            If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                If bCheckPermissions Then
+
+                                    ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                    Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                    If checkPermissionPageId <> 0 _
+                                        And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                        Or IsSystemPage(checkPermissionPageId)) Then
+                                        nPageId = checkPermissionPageId
+                                        Exit For
+                                    End If
+                                Else
+                                    nPageId = oRow.Item("nStructKey")
+                                    Exit For
+                                End If
                             End If
                         End If
                     Next
@@ -4706,7 +4714,8 @@ restart:
                         End If
                     End If
 
-                    If bHasChanged Then
+                    If bHasChanged And Not (myWeb Is Nothing) Then
+                        'Not (myWeb Is Nothing) case for bulk imports
                         'Keep Mailing List In Sync.
                         ' If Not cEmail Is Nothing Then
                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
@@ -4811,7 +4820,12 @@ restart:
                                 sSql = "execute spSearchUsers @cSearch='" & goRequest("search") & "'"
                             End If
                         Case Else
-                            sSql = "execute spGetDirectoryItems @cSchemaName = '" & cSchemaName & "'"
+                            If goRequest("search") <> "" Then
+                                sSql = "execute spSearchDirectory @cSearch='" & goRequest("search") & "', @cSchemaName = '" & cSchemaName & "'"
+                            Else
+                                sSql = "execute spGetDirectoryItems @cSchemaName = '" & cSchemaName & "'"
+
+                            End If
                             If nParId <> 0 Then
                                 sSql = sSql & ", @nParDirId= " & nParId
                             End If
@@ -6586,7 +6600,7 @@ restart:
                 oDs = GetDataSet(sSql, cOrderType, "OrderList")
                 For Each oDr In oDs.Tables(0).Rows
                     oElmt = moPageXml.CreateElement(cOrderType)
-                    oElmt.InnerXml = oDr("cCartXml")
+                    oElmt.InnerXml = CStr(oDr("cCartXml") & "")
                     oElmtOrder = oElmt.FirstChild
                     If Not oElmtOrder Is Nothing Then
                         oElmtOrder.SetAttribute("id", oDr("nCartOrderKey"))

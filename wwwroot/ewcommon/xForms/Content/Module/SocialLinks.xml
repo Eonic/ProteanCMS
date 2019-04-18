@@ -44,8 +44,8 @@
       <bind id="cContentFacebook" nodeset="@facebookURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?facebook\.com\/*"/>
       <bind id="cContentTwitter" nodeset="@twitterURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?twitter\.com\/*"/>
       <bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:https:\/\/)?(?:*\.)?linkedin\.com\/*"/>
-      <bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?(?:plus\.)?google\.com\/*"/>
-      <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?pinterest.\*\/*"/>
+      <bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?:www\.)\/*"/>
+      <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)\/*"/>
       <bind id="cContentYoutube" nodeset="@youtubeURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?youtube\.com\/*"/>
       <bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:https:\/\/)?(?:www\.)?instagram\.com\/*"/>
     </bind>

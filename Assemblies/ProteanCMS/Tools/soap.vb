@@ -56,6 +56,8 @@ Public Class SoapClient
             serviceRequest.Headers("SessionReferer") = moCtx.Request.UrlReferrer.OriginalString 'moCtx.Session("Referrer")
             addSoap(serviceRequest, soapBody)
 
+            cProcessInfo = "soapBody:" & soapBody
+
             results.LoadXml(ReturnSoapResponse(serviceRequest))
 
         Catch ex As Exception
@@ -97,12 +99,12 @@ Public Class SoapClient
 
             ' Dim serviceResponse As HttpWebResponse = ex.Response
             ' serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
-            returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
+            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         Catch ex As Exception
 
             'Return ex.Message.tostring
-            returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
+            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         End Try
         serviceResponseBody = serviceResponseStream.ReadToEnd

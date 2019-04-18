@@ -307,32 +307,32 @@ body .ewAdmin #adminHeader{
 }
 @sm-2-col:false;
 div:not(.content-scroller) when not (@sm-2-col = true){
-	.cols2 .list-group-item,
-	.cols2 .listItem{
+	> div:not(.content-cols-responsive).cols2 .list-group-item,
+	> div:not(.content-cols-responsive).cols2 .listItem{
 		.make-md-column(6);
 		@media (max-width: @screen-sm-max){
 			height:auto!important;
 			.lIinner{height:auto!important;}
 		}
 	}
-	 > .cols3 .list-group-item,
-	 > .cols3 .listItem{
+	 > div:not(.content-cols-responsive).cols3 .list-group-item,
+	 > div:not(.content-cols-responsive).cols3 .listItem{
 		.make-md-column(4);
 		@media (max-width: @screen-sm-max){
 			height:auto!important;
 			.lIinner{height:auto!important;}
 		}
 	}
-	.cols4 .list-group-item,
-	.cols4 .listItem{
+	> div:not(.content-cols-responsive).cols4 .list-group-item,
+	> div:not(.content-cols-responsive).cols4 .listItem{
 		.make-md-column(3);
 		@media (max-width: @screen-sm-max){
 			height:auto!important;
 			.lIinner{height:auto!important;}
 		}
 	}
-	.cols5:not(.content-cols-responsive) .list-group-item,
-	.cols5:not(.content-cols-responsive) .listItem{
+	> .cols5:not(.content-cols-responsive) .list-group-item,
+	> .cols5:not(.content-cols-responsive) .listItem{
 		@media (min-width: @screen-md-min){
 			width: 20%;
 			float:left;
@@ -342,8 +342,8 @@ div:not(.content-scroller) when not (@sm-2-col = true){
 			float:left;
 		}
 	}
-	.cols6 .list-group-item,
-	.cols6 .listItem{
+	> .cols6:not(.content-cols-responsive)  .list-group-item,
+	> .cols6:not(.content-cols-responsive)  .listItem{
 		.make-md-column(2);
 		@media (max-width: @screen-sm-max){
 			height:auto!important;
@@ -1030,6 +1030,16 @@ div:not(.content-scroller) {
 
     .quantity {
         width: 150px
+    }
+
+    .linePrice {
+        width: 120px;
+        text-align: right;
+    }
+
+    .lineTotal {
+        width: 120px;
+        text-align:right;
     }
 
     .cart-item .quantity .quantity-input button.update {

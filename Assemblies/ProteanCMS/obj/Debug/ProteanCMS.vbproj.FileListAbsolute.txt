@@ -170,4 +170,3 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.pdb

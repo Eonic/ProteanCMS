@@ -1633,6 +1633,7 @@
               <xsl:text> (2 Way Relationship)</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
+          <xsl:value-of select="$relationType"/>
           <!--</small>-->
         </label>
           <xsl:choose>

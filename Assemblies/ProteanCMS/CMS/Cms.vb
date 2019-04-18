@@ -618,6 +618,9 @@ Public Class Cms
                 ' Convert the root ID
                 If Tools.Number.IsStringNumeric(rootPageIdFromConfig) Then RootPageId = Convert.ToInt32(rootPageIdFromConfig)
 
+
+                Me.GetRequestLanguage()
+
                 Dim newPageId As Long = 0
 
                 If mnPageId < 1 Then
@@ -681,9 +684,9 @@ Public Class Cms
                 If Not mbAdminMode Then
 
                     If mnPageId = gnPageNotFoundId _
-                Or mnPageId = gnPageAccessDeniedId _
-                Or mnPageId = gnPageLoginRequiredId _
-                Or mnPageId = gnPageErrorId Then
+                        Or mnPageId = gnPageAccessDeniedId _
+                        Or mnPageId = gnPageLoginRequiredId _
+                        Or mnPageId = gnPageErrorId Then
                         If RootPageId <> mnPageId Then
                             mbSystemPage = True
 
@@ -1597,7 +1600,8 @@ Public Class Cms
                     GetErrorXml(oPageElmt)
                 End If
 
-                Me.SetPageLanguage()
+                '  Me.SetPageLanguage() 'TS not sure why this is being called twice ???
+
                 oPageElmt.SetAttribute("expireDate", Protean.Tools.Xml.XmlDate(mdPageExpireDate))
                 oPageElmt.SetAttribute("updateDate", Protean.Tools.Xml.XmlDate(mdPageUpdateDate))
                 oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString.ToLower)
@@ -7345,26 +7349,22 @@ Public Class Cms
         End Try
     End Sub
 
-
-    ''' <summary>
-    ''' Check the language setting against cookies and the like
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub SetPageLanguage()
-        PerfMon.Log("Web", "SetPageLanguage")
+    Private Sub GetRequestLanguage()
+        PerfMon.Log("Web", "GetRequestLanguage")
 
         Dim cProcessInfo As String = ""
         Dim oElmt As XmlElement
+        Dim sCurrency As String = ""
 
         Try
             If Not goLangConfig Is Nothing Then
-                'Check Language by Domain
                 For Each oElmt In goLangConfig.ChildNodes
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
                             If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
                                 mcPageLanguage = oElmt.GetAttribute("code")
                                 mcPageLanguageUrlPrefix = "http://" & oElmt.GetAttribute("identifier")
+                                sCurrency = oElmt.GetAttribute("currency")
                             End If
                         Case "path"
                             If Not moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") Is Nothing Then
@@ -7373,6 +7373,7 @@ Public Class Cms
                                 Or moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "?") Then
                                     mcPageLanguage = oElmt.GetAttribute("code")
                                     mcPageLanguageUrlPrefix = "http://" & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
+                                    sCurrency = oElmt.GetAttribute("currency")
                                 End If
                             End If
                         Case "page"
@@ -7383,8 +7384,38 @@ Public Class Cms
                 If mcPageLanguage = "" Then
                     'set Default Language
                     mcPageLanguage = goLangConfig.GetAttribute("code")
+                    sCurrency = goLangConfig.GetAttribute("currency")
                     Me.mcPreferredLanguage = mcPageLanguage
                     mcPageDefaultDomain = "http://" & goLangConfig.GetAttribute("defaultDomain")
+                End If
+            End If
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+    ''' <summary>
+    ''' Check the language setting against cookies and the like
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetPageLanguage()
+        PerfMon.Log("Web", "SetPageLanguage")
+
+        Dim cProcessInfo As String = ""
+        Dim oElmt As XmlElement
+        Dim sCurrency As String = ""
+
+        Try
+            If Not goLangConfig Is Nothing Then
+
+                If mcPageLanguage = "" Then
+                    GetRequestLanguage()
+                End If
+
+                If sCurrency <> "" Then
+                    moSession("bCurrencySelected") = True
+                    moSession("cCurrency") = sCurrency
+                    moSession("cCurrencyRef") = sCurrency
                 End If
 
                 ' if the page requested is a version in another language then set the page language.

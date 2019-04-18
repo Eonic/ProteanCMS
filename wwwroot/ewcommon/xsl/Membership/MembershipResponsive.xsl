@@ -778,6 +778,7 @@
         <xsl:when test="Order[@statusId&gt;=6]">
           <table>
             <thead>
+              <th class="status">Status</th>
               <th class="description">Order reference</th>
               <th class="date">Date</th>
               <th class="price">Order total</th>
@@ -821,7 +822,9 @@
 					<xsl:when test="position()=last()"> last</xsl:when>
 				</xsl:choose>
 			</xsl:attribute>
-			
+      <td class="status">
+          <xsl:value-of select="@status"/>
+      </td>
 			<td class="description">
           <a href="{$href}" title="View order">
             <xsl:value-of select="@InvoiceRef"/>
@@ -908,13 +911,15 @@
 			<xsl:value-of select="$page/Request/ServerVariables/Item[@name='PREVIOUS_PAGE']"/>
 		</xsl:variable>
 
-		<div class="order orderdetail">
+		<div class="order orderdetail panel panel-default">
+      			<div class="panel-body">
 			<xsl:apply-templates select="Order" mode="orderAddresses"/>
 			<xsl:apply-templates select="Order" mode="orderItems"/>
+     
 			<div class="morelink">
 				<a href="{$previousURL}" class="btn btn-primary">Back to orders</a>
 			</div>
-			<div class="terminus">&#160;</div>
+			 </div>
 		</div>
 	</xsl:template>
 	<!-- ##### /Ecommerce List Orders module ##### -->

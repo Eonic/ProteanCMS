@@ -777,7 +777,12 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
+            if (cRes == null) {
+                return null;
+            }
+            else {
             return cRes.ToString();
+            }
         }
 
         public SqlDataReader getDataReader(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */)
