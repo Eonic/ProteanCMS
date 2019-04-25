@@ -1078,7 +1078,7 @@ Partial Public Class Cms
                 Else
                     For Each oRow In ods.Tables("Pages").Rows
                         ' Debug.WriteLine(oRow.Item("nStructKey"))
-                        If Not (oRow.Item("nVersionParId") = 0) Then
+                        If Not (Convert.ToInt32("0" & oRow.Item("nVersionParId").ToString()) = 0) Then
                             'we have a language verion we need to behave differently to confirm id
                             If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                 nPageId = oRow.Item("nStructKey")
@@ -5482,9 +5482,9 @@ restart:
                     ' user id exists
                     sSql = "DELETE FROM dbo.tblXmlCache "
                     'clear from app level too
-                    myWeb.goApp("AdminStructureCache") = Nothing
-
-
+                    If Not myWeb Is Nothing Then
+                        myWeb.goApp("AdminStructureCache") = Nothing
+                    End If
                     MyBase.ExeProcessSql(sSql)
                 End If
             Catch ex As Exception

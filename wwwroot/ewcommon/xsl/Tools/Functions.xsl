@@ -8110,6 +8110,11 @@
     <xsl:value-of select="ew:GetContentLocations($nContentId,$bIncludePrimary,$bExcludeLocations,$bShowHiddenPages)"/>
   </xsl:template>
 
+  <xsl:template name="GetPageIdFromFref">
+    <xsl:param name="fRef"/>
+    <xsl:value-of select="ew:GetPageIdFromFref($fRef)"/>
+  </xsl:template>
+  
 
   <!-- GET PAGE FOREIGN REF ##########################################################################################-->
   <!-- ew:GetPageFref(number) Function 
@@ -8190,7 +8195,13 @@
     <xsl:copy-of select="ew:CleanHTMLElement($htmlstring,$removetags)"/>
   </xsl:template>
 
-
+  <xsl:template name="CleanHTMLNode2">
+    <xsl:param name="htmlstring" />
+    <xsl:param name="removetags" />
+    <xsl:copy-of select="ew:CleanHTMLNode($htmlstring,$removetags)"/>
+  </xsl:template>
+  
+  
   <!--<xsl:template match="select1 | select" mode="getSelectOptions">
     <xsl:variable name="options">
       <options>
