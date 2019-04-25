@@ -1078,7 +1078,7 @@ Partial Public Class Cms
                 Else
                     For Each oRow In ods.Tables("Pages").Rows
                         ' Debug.WriteLine(oRow.Item("nStructKey"))
-                        If Not (Convert.ToInt32("0" & oRow.Item("nVersionParId").ToString()) = 0) Then
+                        If Not (oRow.Item("nVersionParId") = 0) Then
                             'we have a language verion we need to behave differently to confirm id
                             If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                 nPageId = oRow.Item("nStructKey")
@@ -2602,7 +2602,7 @@ restart:
                 ' Add the filter
                 If bGetContentSinceLastLogged Then
                     dLastRun = GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" & ActivityType.PendingNotificationSent & " ORDER BY 1 DESC", , , "")
-                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then cFilterSql = " WHERE Last_Updated > " & sqlDate(dLastRun, True)
+                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then cFilterSql = " WHERE Last_Updated > " & SqlDate(dLastRun, True)
                 End If
 
                 ' Get the pending content
@@ -4012,7 +4012,7 @@ restart:
                     If bOveridePrimary Then
                         oRow("bPrimary") = bPrimary
                     End If
-                    If bUpdatePosition And CInt("0" & cPosition) > 0 Then
+                    If bUpdatePosition And cPosition <> "" Then
                         oRow("cPosition") = cPosition
                     End If
                     oRow("bCascade") = bCascade
@@ -4021,7 +4021,7 @@ restart:
                 End If
 
                 updateDataset(oDs, "ContentLocation", False)
-                nId = ExeProcessSql(sSql)
+                nId = CInt(ExeProcessSqlScalar(sSql))
 
                 If bReorderLocations Then
                     If Not myWeb Is Nothing Then
@@ -4558,7 +4558,7 @@ restart:
 
                 sSqlVersions = "" &
                 "select p.nStructKey as id,  p.nVersionParId as primaryId,  p.cVersionDescription as description,  p.cStructForiegnRef as ref, cStructName as name, nVersionType as type, cVersionLang as lang, a.nStatus as status, a.dInsertDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], dins.cDirName as owner, dins.cDirXml as ownerDetail, dupd.cDirName as updater, dupd.cDirXml as updaterDetail, dbo.fxn_getPageGroups(p.nStructKey) as Groups " &
-                "from tblContentStructure p inner join tblAudit a on p.nAuditId = a.nAuditKey inner join tblDirectory dins on dins.nDirKey = a.nInsertDirId inner join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId  where p.nVersionParId = " & ParPageId & " order by nVersionType, nStructOrder"
+                "from tblContentStructure p inner join tblAudit a on p.nAuditId = a.nAuditKey left outer join tblDirectory dins on dins.nDirKey = a.nInsertDirId left outer join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId  where p.nVersionParId = " & ParPageId & " order by nVersionType, nStructOrder"
                 oDs2 = GetDataSet(sSqlVersions, "Version", "PageVersions")
                 With oDs2.Tables("Version")
                     .Columns("id").ColumnMapping = Data.MappingType.Attribute
@@ -6834,17 +6834,17 @@ restart:
 
                     Dim Tasks As New dbImport(Me.oConn.ConnectionString, mnUserId)
 
-                    System.Threading.ThreadPool.SetMaxThreads(10, 10)
+                    Dim nThreads As Int16 = CInt("0" & myWeb.moConfig("ImportThreads"))
+                    If nThreads = 0 Then nThreads = 10
+                    System.Threading.ThreadPool.SetMaxThreads(nThreads, nThreads)
 
                     Dim doneEvents(totalInstances) As System.Threading.ManualResetEvent
 
                     Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
 
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
-
                         completeCount = completeCount + 1
                         If completeCount > startNo Then
-
                             Dim stateObj As New dbImport.ImportStateObj()
                             stateObj.oInstance = oInstance
                             stateObj.LogId = logId
@@ -7058,7 +7058,10 @@ restart:
                             If bResetLocations Then
                                 RemoveContentLocations(savedId, cContentLocationTable)
                             End If
-
+                            'test case for TDL
+                            If savedId = 59837 Then
+                                cProcessInfo = "break"
+                            End If
                             'now lets add those specificed
                             ' Process locations
                             If Not bOrphan Then

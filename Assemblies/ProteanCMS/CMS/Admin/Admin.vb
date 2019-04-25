@@ -656,6 +656,7 @@ ProcessFlow:
                                     If FilterValue <> "" Then
                                         FilterSQL = " CL.nStructId = '" & FilterValue & "'"
                                         myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType & "|ASC_cl.nDisplayOrder", FilterSQL)
+                                        myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
 

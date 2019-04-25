@@ -58,7 +58,11 @@ Public Class SoapClient
 
             cProcessInfo = "soapBody:" & soapBody
 
-            results.LoadXml(ReturnSoapResponse(serviceRequest))
+            Dim soapResponse As String = ReturnSoapResponse(serviceRequest)
+            cProcessInfo = ServiceUrl & "<br/><br/>"
+            cProcessInfo = cProcessInfo & actionName & "<br/><br/>"
+            cProcessInfo = cProcessInfo & soapResponse
+            results.LoadXml(soapResponse)
 
         Catch ex As Exception
             returnException(mcModuleName, "sendSoapRequest", ex, "", cProcessInfo, gbDebug)

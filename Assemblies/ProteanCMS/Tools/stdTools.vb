@@ -935,16 +935,22 @@ Public Module stdTools
         BreakGroup = 5 'Cheapest Item Free = Group specific
     End Enum
 
-    Public Function Round(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5, Optional ByVal bForceRoundup As Boolean = True) As Decimal
+    Public Function Round(ByVal nNumber As Object, Optional ByVal nDecimalPlaces As Integer = 2, Optional ByVal nSplitNo As Integer = 5, Optional ByVal bForceRoundup As Boolean = True, Optional ByVal bForceRoundDown As Boolean = False) As Decimal
         'PerfMon.Log("stdTools", "RoundUp")
         Try
-
+            Dim RetVal As Decimal
             If bForceRoundup Then
-                Return RoundUp(nNumber, nDecimalPlaces, nSplitNo)
+                RetVal = RoundUp(nNumber, nDecimalPlaces, nSplitNo)
             Else
-                Return FormatNumber(nNumber, nDecimalPlaces)
+                If bForceRoundDown Then
+                    Dim adjustment As Double = Math.Pow(10, nDecimalPlaces)
+                    RetVal = Math.Floor(nNumber * adjustment) / adjustment
+                    'RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
+                Else
+                    RetVal = FormatNumber(nNumber, nDecimalPlaces)
+                End If
             End If
-
+            Return RetVal
         Catch ex As Exception
             Return 0
         End Try

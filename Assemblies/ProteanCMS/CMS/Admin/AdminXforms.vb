@@ -2567,7 +2567,7 @@ Partial Public Class Cms
                         sProductTypes = sProductTypes.Trim().TrimEnd(",") & ","
                         If sProductTypes.Contains(cContentSchemaName & ",") And id > 0 Then
                             If moDbHelper.checkDBObjectExists("sp_GetProductGroups") Then
-                                Dim prodCatElmt As XmlElement = moPageXML.CreateElement("ProductGroups")
+                                Dim prodCatElmt As XmlElement = oTempInstance.OwnerDocument.CreateElement("ProductGroups")
                                 Dim sSQL As String = "execute sp_GetProductGroups " & id
                                 Dim Ids As String = moDbHelper.GetDataValue(sSQL)
                                 Ids.TrimEnd(",")

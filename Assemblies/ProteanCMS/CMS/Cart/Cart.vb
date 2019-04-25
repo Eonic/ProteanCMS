@@ -151,6 +151,7 @@ Partial Public Class Cms
         Public mbVatAtUnit As Boolean = False
         Public mbVatOnLine As Boolean = False
         Public mbRoundup As Boolean = False
+        Public mbRoundDown As Boolean = False
         Public mbDiscountsOn As Boolean = False
         Public mbOveridePrice As Boolean = False
         Public mcPriceModOrder As String = ""
@@ -751,8 +752,6 @@ Partial Public Class Cms
                                     End If
                                     mcCurrencyRef = oDr("cCurrency")
                                     cartXmlFromDatabase = oDr("cCartXml").ToString
-
-
                                 End While
                                 oDr.Close()
                             End If
@@ -796,6 +795,8 @@ Partial Public Class Cms
                     mbVatOnLine = IIf(LCase(moCartConfig("VatOnLine")) = "yes" Or LCase(moCartConfig("VatOnLine")) = "on", True, False)
 
                     mbRoundup = IIf(LCase(moCartConfig("Roundup")) = "yes" Or LCase(moCartConfig("Roundup")) = "on", True, False)
+                    mbRoundDown = IIf(LCase(moCartConfig("Roundup")) = "down", True, False)
+
                     mbDiscountsOn = IIf(LCase(moCartConfig("Discounts")) = "yes" Or LCase(moCartConfig("Discounts")) = "on", True, False)
                     mbOveridePrice = IIf(LCase(moCartConfig("OveridePrice")) = "yes" Or LCase(moCartConfig("OveridePrice")) = "on", True, False)
 
@@ -2850,7 +2851,7 @@ processFlow:
                             Else
                                 'nLineVat = Round((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oDiscItem.GetAttribute("Units")
 
-                                nLineVat = Round((oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100), , , mbRoundup)
+                                nLineVat = Round((oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100), , , mbRoundup, mbRoundDown)
 
                                 'nLineVat = 5000
                             End If
@@ -2865,10 +2866,10 @@ processFlow:
                             'NB: 15-01-2010 Moved into Else so Buy X Get Y Free do not use this, as they can get 0
                             If mbVatAtUnit Then
                                 'Round( Price * Vat ) * Quantity
-                                nLineVat = Round((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices) * (nLineTaxRate / 100), , , mbRoundup) * oElmt.GetAttribute("quantity")
+                                nLineVat = Round((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices) * (nLineTaxRate / 100), , , mbRoundup, mbRoundDown) * oElmt.GetAttribute("quantity")
                             Else
                                 'Round( ( Price * Quantity )* VAT )
-                                nLineVat = Round((((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices)) * oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100), , , mbRoundup)
+                                nLineVat = Round((((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices)) * oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100), , , mbRoundup, mbRoundDown)
                             End If
                         End If
 
@@ -2878,7 +2879,7 @@ processFlow:
                     Next
 
                     If Not LCase(moCartConfig("DontTaxShipping")) = "on" Then
-                        vatAmt = Round((shipCost) * (mnTaxRate / 100), , , mbRoundup) + Round(vatAmt, , , mbRoundup)
+                        vatAmt = Round((shipCost) * (mnTaxRate / 100), , , mbRoundup, mbRoundDown) + Round(vatAmt, , , mbRoundup, mbRoundDown)
                     End If
 
                     oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))

@@ -1092,6 +1092,11 @@ Public Class Cms
                     If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
                         bPageCache = False
                     End If
+                    If gbCart Or gbQuote Then
+                        If CInt("0" + moSession("CartId")) > 0 Then
+                            bPageCache = False
+                        End If
+                    End If
 
                     If bPageCache And Not ibIndexMode And Not gnResponseCode = 404 Then
 
@@ -7388,6 +7393,15 @@ Public Class Cms
                     Me.mcPreferredLanguage = mcPageLanguage
                     mcPageDefaultDomain = "http://" & goLangConfig.GetAttribute("defaultDomain")
                 End If
+
+                If Not moSession Is Nothing Then
+                    If sCurrency <> "" Then
+                        moSession("bCurrencySelected") = True
+                        moSession("cCurrency") = sCurrency
+                        moSession("cCurrencyRef") = sCurrency
+                    End If
+                End If
+
             End If
         Catch ex As Exception
 
@@ -7412,11 +7426,7 @@ Public Class Cms
                     GetRequestLanguage()
                 End If
 
-                If sCurrency <> "" Then
-                    moSession("bCurrencySelected") = True
-                    moSession("cCurrency") = sCurrency
-                    moSession("cCurrencyRef") = sCurrency
-                End If
+
 
                 ' if the page requested is a version in another language then set the page language.
                 If mbAdminMode Then

@@ -542,9 +542,9 @@ Public Class xForm
             End If
             'End If
 
+
         Catch ex As Exception
             returnException(mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
-
         End Try
     End Sub
 
@@ -676,11 +676,9 @@ Public Class xForm
                 If Not oBindElmt.GetAttribute("required") = Nothing And bIsThisBindValid Then
 
                     cProcessInfo = cProcessInfo & " - Required Compile Error: " & oBindElmt.GetAttribute("required")
-
                     expr = xPathNav2.Compile(oBindElmt.GetAttribute("required"))
 
                     cProcessInfo = cProcessInfo & " - Required Expression Error: " & oBindElmt.GetAttribute("required")
-
                     expr.SetContext(nsMgr)
 
                     ' Looking for true() or false()
@@ -721,7 +719,7 @@ Public Class xForm
                         End If
                         cValidationError += oBindElmt.GetAttribute("id") & " - This information must be valid"
                     End If
-                    End If
+                End If
 
                 'case for calculate
                 If Not oBindElmt.GetAttribute("calculate") = Nothing And bIsThisBindValid Then

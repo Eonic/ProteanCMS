@@ -1833,6 +1833,7 @@ Partial Public Module xmlTools
                 sReturnString = Nothing
 
             Catch ex As Exception
+                myWeb.bPageCache = False
                 Return ex.Message
             End Try
 
@@ -1937,7 +1938,7 @@ Partial Public Module xmlTools
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
                 'Return ex.StackTrace.Replace(vbCr & vbLf, String.Empty).Replace(vbLf, String.Empty).Replace(vbCr, String.Empty) & ex.Message
-
+                myWeb.bPageCache = False
                 Return ex.Message
             End Try
 

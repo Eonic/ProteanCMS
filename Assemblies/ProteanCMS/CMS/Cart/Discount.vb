@@ -23,6 +23,7 @@ Partial Public Class Cms
 
             Dim myCart As Cart
             Dim mbRoundUp As Boolean
+            Dim mbRoundDown As Boolean
             Dim mcGroups As String
 
             Public mcCurrency As String
@@ -63,6 +64,7 @@ Partial Public Class Cms
 
                     If Not moCartConfig Is Nothing Then
                         mbRoundUp = (LCase(moCartConfig("Roundup")) = "yes" Or LCase(moCartConfig("Roundup")) = "on")
+                        mbRoundDown = IIf(LCase(moCartConfig("Roundup")) = "down", True, False)
                         mcPriceModOrder = moCartConfig("PriceModOrder")
                         mcUnitModOrder = moCartConfig("UnitModOrder")
                     End If
@@ -87,6 +89,7 @@ Partial Public Class Cms
                     moCartConfig = WebConfigurationManager.GetWebApplicationSection("protean/cart")
 
                     mbRoundUp = myCart.mbRoundup
+                    mbRoundDown = myCart.mbRoundDown
 
                     If LCase(moConfig("Cart")) = "on" Then
                         bIsCartOn = True
