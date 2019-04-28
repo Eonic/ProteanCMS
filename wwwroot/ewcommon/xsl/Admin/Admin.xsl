@@ -5313,6 +5313,17 @@
             <i class="fa fa-user fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>List Users</a>&#160;
+
+          <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='ListContacts']">
+            <a href="{$appPath}?ewCmd=ListContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
+              <i class="fa fa-map-marker fa-white">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Addresses
+            </a>
+          </xsl:if>
+
+
           <a href="{$appPath}?ewCmd=ListDepartments&amp;parid={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-users fa-white">
               <xsl:text> </xsl:text>

@@ -1332,11 +1332,12 @@ ProcessFlow:
                         oCart.ListOrders(0, False,,,, myWeb.moRequest("id"))
                         oCart = Nothing
 
-                    Case "ListUserContacts"
+                    Case "ListUserContacts", "ListContacts"
 
                         sAdminLayout = "ListUserContacts"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContactsXml(CInt("0" & myWeb.moRequest("parid"))))
-                    Case "EditUserContact"
+
+                    Case "EditUserContact", "EditContact"
 
                         sAdminLayout = "EditUserContact"
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1345,7 +1346,7 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "AddUserContact"
+                    Case "AddUserContact", "AddContact"
 
                         sAdminLayout = "AddUserContact"
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1354,7 +1355,8 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "DeleteUserContact"
+
+                    Case "DeleteUserContact", "DeleteContact"
 
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, CInt("0" & myWeb.moRequest("id")))
                         mcEwCmd = "ListUserContacts"

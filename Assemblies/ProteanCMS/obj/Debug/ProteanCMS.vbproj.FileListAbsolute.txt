@@ -128,6 +128,11 @@ C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\Protean
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ProteanCMS.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ProteanCMS.pdb
@@ -143,6 +148,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
@@ -160,13 +166,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll

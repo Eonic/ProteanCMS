@@ -1131,9 +1131,6 @@ Public Class Cms
 
                     moResponse.HeaderEncoding = System.Text.Encoding.UTF8
                     moResponse.ContentEncoding = System.Text.Encoding.UTF8
-
-
-
                     moResponse.Expires = 0
                     moResponse.AppendHeader("Generator", gcGenerator)
 

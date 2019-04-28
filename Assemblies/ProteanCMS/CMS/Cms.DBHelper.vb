@@ -1078,7 +1078,7 @@ Partial Public Class Cms
                 Else
                     For Each oRow In ods.Tables("Pages").Rows
                         ' Debug.WriteLine(oRow.Item("nStructKey"))
-                        If Not (oRow.Item("nVersionParId") = 0) Then
+                        If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
                             'we have a language verion we need to behave differently to confirm id
                             If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                 nPageId = oRow.Item("nStructKey")
@@ -3977,7 +3977,7 @@ restart:
 
         End Sub
 
-        Public Function setContentLocation(ByVal nStructId As Long, ByVal nContentId As Long, Optional ByVal bPrimary As Boolean = False, Optional ByVal bCascade As Boolean = False, Optional ByVal bOveridePrimary As Boolean = False, Optional ByVal cPosition As String = "", Optional ByVal bUpdatePosition As Boolean = True) As Integer
+        Public Function setContentLocation(ByVal nStructId As Long, ByVal nContentId As Long, Optional ByVal bPrimary As Boolean = False, Optional ByVal bCascade As Boolean = False, Optional ByVal bOveridePrimary As Boolean = False, Optional ByVal cPosition As String = "", Optional ByVal bUpdatePosition As Boolean = True, Optional ByVal nDisplayOrder As Long = 0) As Integer
             PerfMon.Log("DBHelper", "setContentLocation")
             'this is so we can save some content without trying to change any locations
             If nStructId = 0 Or nContentId = 0 Then Exit Function
@@ -3998,7 +3998,7 @@ restart:
                     oRow("nContentId") = nContentId
                     oRow("bPrimary") = bPrimary
                     oRow("bCascade") = bCascade
-                    oRow("nDisplayOrder") = 0
+                    oRow("nDisplayOrder") = nDisplayOrder
                     If cPosition <> "" Then
                         oRow("cPosition") = cPosition
                     End If
@@ -7072,6 +7072,7 @@ restart:
                                 End If
                                 For Each oLocation In oInstance.SelectNodes("Location")
                                     Dim sPrimary As Long = 0
+                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayorder"))
                                     If oLocation Is oPrmLoc Then sPrimary = 1
                                     If oLocation.GetAttribute("foriegnRef") <> "" Then
                                         Dim cleanFref As String = oLocation.GetAttribute("foriegnRef")
@@ -7079,10 +7080,10 @@ restart:
                                             cleanFref = cleanFref.Replace("&amp;", "&")
                                         End If
 
-                                        setContentLocationByRef(cleanFref, savedId, sPrimary, 0, oLocation.GetAttribute("position"))
+                                        setContentLocationByRef(cleanFref, savedId, sPrimary, 0, oLocation.GetAttribute("position"), displayOrder)
 
                                     ElseIf oLocation.GetAttribute("id") <> "" Then
-                                        setContentLocation(oLocation.GetAttribute("id"), savedId, sPrimary, False, False, oLocation.GetAttribute("position"))
+                                        setContentLocation(oLocation.GetAttribute("id"), savedId, sPrimary, False, False, oLocation.GetAttribute("position"), True, displayOrder)
                                     End If
                                 Next
                             End If
@@ -7244,7 +7245,7 @@ restart:
         End Function
 
 
-        Public Function setContentLocationByRef(ByVal cStructFRef As String, ByVal nContentId As Integer, ByVal bPrimary As Integer, ByVal bCascade As Integer, ByVal cPosition As String) As Integer
+        Public Function setContentLocationByRef(ByVal cStructFRef As String, ByVal nContentId As Integer, ByVal bPrimary As Integer, ByVal bCascade As Integer, ByVal cPosition As String, Optional ByVal nDisplayOrder As Long = 0) As Integer
 
             PerfMon.Log("DBHelper", "setContentLocationByRef", "ref=" & cStructFRef & " nContentId=" & nContentId)
             Dim cProcessInfo As String = ""
@@ -7259,7 +7260,7 @@ restart:
                 While oDr.Read()
                     nID = oDr("nStructKey")
                     If nID = "" Then nID = 0
-                    lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, False)
+                    lastloc = setContentLocation(nID, nContentId, IIf(bPrimary = 1, True, False), bCascade, False, cPosition, False, nDisplayOrder)
                 End While
                 Return lastloc
 
@@ -9656,7 +9657,9 @@ ReturnMe:
                         cProcessInfo = targetTable & " Update: "
                         If Not instanceElmt.SelectSingleNode("*/" & column.ToString) Is Nothing Then
                             cProcessInfo += column.ToString & " - " & instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml
-                            oRow(column) = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml, IIf(InStr(column.ToString, "Xml") > 0, True, False))
+                            If Not column.AllowDBNull And Not instanceElmt.SelectSingleNode("*/" & column.ToString) Is Nothing Then
+                                oRow(column) = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml, IIf(InStr(column.ToString, "Xml") > 0, True, False))
+                            End If
                         End If
                     Next
                     oRow.EndEdit()
