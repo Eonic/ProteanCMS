@@ -107,6 +107,8 @@
                 <input bind="cImageHeight" class="short keep_empty">
                   <label>Height</label>
                 </input>
+              </group>
+              <group class="inline-4col">
                 <select bind="cConstrainProportions" appearance="full">
                   <item>
                     <label>Constrain proportions</label>
@@ -114,9 +116,6 @@
                   </item>
                 </select>
                 <script type="text/javascript">initialiseConstrainProportions('cConstrainProportions','cResizeImage_2','cImageWidth','cImageHeight','cContentImage');</script>
-              </group>
-              <group class="inline">
-                
                 <select bind="cCrop" appearance="full">
                   <item>
                     <label>Crop</label>

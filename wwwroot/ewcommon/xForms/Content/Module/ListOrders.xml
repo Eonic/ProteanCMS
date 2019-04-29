@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Eonic.Web+Cart+Modules.ListOrders" moduleType="ListOrders" box="" title="" redirectPathId=""/>
+          <Content action="Protean.Cms+Cart+Modules.ListOrders" moduleType="ListOrders" box="" title="" redirectPathId=""/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

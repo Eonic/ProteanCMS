@@ -1063,7 +1063,7 @@ Partial Public Class Cms
                     sPath = sPath
                 End If
 
-                sSql = "select nStructKey, nStructParId from tblContentStructure where (cStructName like '" & SqlFmt(sPath) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "")) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "-")) & "')"
+                sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" & SqlFmt(sPath) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "")) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "-")) & "')"
 
                 ods = GetDataSet(sSql, "Pages")
 
@@ -1073,26 +1073,34 @@ Partial Public Class Cms
                     ' if there is just one page validate it
                 ElseIf ods.Tables("Pages").Rows.Count = 0 Then
 
-
+                    'do nothing nothing found
 
                 Else
                     For Each oRow In ods.Tables("Pages").Rows
-                        Debug.WriteLine(oRow.Item("nStructKey"))
-                        If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
-                            If bCheckPermissions Then
-
-                                ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
-
-                                If checkPermissionPageId <> 0 _
-                                    And (oRow.Item("nStructKey") = checkPermissionPageId _
-                                    Or IsSystemPage(checkPermissionPageId)) Then
-                                    nPageId = checkPermissionPageId
-                                    Exit For
-                                End If
-                            Else
+                        ' Debug.WriteLine(oRow.Item("nStructKey"))
+                        If Not (oRow.Item("nVersionParId") = 0) Then
+                            'we have a language verion we need to behave differently to confirm id
+                            If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                 nPageId = oRow.Item("nStructKey")
                                 Exit For
+                            End If
+                        Else
+                            If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                If bCheckPermissions Then
+
+                                    ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                    Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                    If checkPermissionPageId <> 0 _
+                                        And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                        Or IsSystemPage(checkPermissionPageId)) Then
+                                        nPageId = checkPermissionPageId
+                                        Exit For
+                                    End If
+                                Else
+                                    nPageId = oRow.Item("nStructKey")
+                                    Exit For
+                                End If
                             End If
                         End If
                     Next
@@ -2594,7 +2602,7 @@ restart:
                 ' Add the filter
                 If bGetContentSinceLastLogged Then
                     dLastRun = GetDataValue("SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType=" & ActivityType.PendingNotificationSent & " ORDER BY 1 DESC", , , "")
-                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then cFilterSql = " WHERE Last_Updated > " & sqlDate(dLastRun, True)
+                    If Not (String.IsNullOrEmpty(dLastRun)) AndAlso IsDate(dLastRun) Then cFilterSql = " WHERE Last_Updated > " & SqlDate(dLastRun, True)
                 End If
 
                 ' Get the pending content
@@ -3674,7 +3682,7 @@ restart:
                                 i = i + 1
                             End If
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
                         Next
                     Case "MoveBottom"
@@ -3686,7 +3694,7 @@ restart:
                                 i = i + 1
                             End If
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
                         Next
                     Case "MoveUp"
@@ -3694,15 +3702,15 @@ restart:
                             If oRow(sKeyField) = nContentId And i <> 1 Then
                                 'swap with previous
                                 oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where nAuditId = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item("nAuditId")
+                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oDs.Tables(getTable(objectType)).Rows(i - 2).Item(getKey(objectType))
                                 ExeProcessSql(sSql)
 
                                 oRow(getOrderFname(objectType)) = i - 1
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                                 ExeProcessSql(sSql)
                             Else
                                 oRow(getOrderFname(objectType)) = i
-                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                                sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                                 ExeProcessSql(sSql)
                             End If
                             'non-ideal alternative for updating the entire dataset
@@ -3725,7 +3733,7 @@ restart:
                             End If
 
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where nAuditId = " & oRow("nAuditId")
+                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow("nContentLocationKey")
                             ExeProcessSql(sSql)
 
                             i = i + 1
@@ -4004,7 +4012,7 @@ restart:
                     If bOveridePrimary Then
                         oRow("bPrimary") = bPrimary
                     End If
-                    If bUpdatePosition And CInt("0" & cPosition) > 0 Then
+                    If bUpdatePosition And cPosition <> "" Then
                         oRow("cPosition") = cPosition
                     End If
                     oRow("bCascade") = bCascade
@@ -4013,7 +4021,7 @@ restart:
                 End If
 
                 updateDataset(oDs, "ContentLocation", False)
-                nId = ExeProcessSql(sSql)
+                nId = CInt(ExeProcessSqlScalar(sSql))
 
                 If bReorderLocations Then
                     If Not myWeb Is Nothing Then
@@ -4550,7 +4558,7 @@ restart:
 
                 sSqlVersions = "" &
                 "select p.nStructKey as id,  p.nVersionParId as primaryId,  p.cVersionDescription as description,  p.cStructForiegnRef as ref, cStructName as name, nVersionType as type, cVersionLang as lang, a.nStatus as status, a.dInsertDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], dins.cDirName as owner, dins.cDirXml as ownerDetail, dupd.cDirName as updater, dupd.cDirXml as updaterDetail, dbo.fxn_getPageGroups(p.nStructKey) as Groups " &
-                "from tblContentStructure p inner join tblAudit a on p.nAuditId = a.nAuditKey inner join tblDirectory dins on dins.nDirKey = a.nInsertDirId inner join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId  where p.nVersionParId = " & ParPageId & " order by nVersionType, nStructOrder"
+                "from tblContentStructure p inner join tblAudit a on p.nAuditId = a.nAuditKey left outer join tblDirectory dins on dins.nDirKey = a.nInsertDirId left outer join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId  where p.nVersionParId = " & ParPageId & " order by nVersionType, nStructOrder"
                 oDs2 = GetDataSet(sSqlVersions, "Version", "PageVersions")
                 With oDs2.Tables("Version")
                     .Columns("id").ColumnMapping = Data.MappingType.Attribute
@@ -4706,7 +4714,8 @@ restart:
                         End If
                     End If
 
-                    If bHasChanged Then
+                    If bHasChanged And Not (myWeb Is Nothing) Then
+                        'Not (myWeb Is Nothing) case for bulk imports
                         'Keep Mailing List In Sync.
                         ' If Not cEmail Is Nothing Then
                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
@@ -4811,7 +4820,12 @@ restart:
                                 sSql = "execute spSearchUsers @cSearch='" & goRequest("search") & "'"
                             End If
                         Case Else
-                            sSql = "execute spGetDirectoryItems @cSchemaName = '" & cSchemaName & "'"
+                            If goRequest("search") <> "" Then
+                                sSql = "execute spSearchDirectory @cSearch='" & goRequest("search") & "', @cSchemaName = '" & cSchemaName & "'"
+                            Else
+                                sSql = "execute spGetDirectoryItems @cSchemaName = '" & cSchemaName & "'"
+
+                            End If
                             If nParId <> 0 Then
                                 sSql = sSql & ", @nParDirId= " & nParId
                             End If
@@ -5468,9 +5482,9 @@ restart:
                     ' user id exists
                     sSql = "DELETE FROM dbo.tblXmlCache "
                     'clear from app level too
-                    myWeb.goApp("AdminStructureCache") = Nothing
-
-
+                    If Not myWeb Is Nothing Then
+                        myWeb.goApp("AdminStructureCache") = Nothing
+                    End If
                     MyBase.ExeProcessSql(sSql)
                 End If
             Catch ex As Exception
@@ -6586,7 +6600,7 @@ restart:
                 oDs = GetDataSet(sSql, cOrderType, "OrderList")
                 For Each oDr In oDs.Tables(0).Rows
                     oElmt = moPageXml.CreateElement(cOrderType)
-                    oElmt.InnerXml = oDr("cCartXml")
+                    oElmt.InnerXml = CStr(oDr("cCartXml") & "")
                     oElmtOrder = oElmt.FirstChild
                     If Not oElmtOrder Is Nothing Then
                         oElmtOrder.SetAttribute("id", oDr("nCartOrderKey"))
@@ -6820,17 +6834,17 @@ restart:
 
                     Dim Tasks As New dbImport(Me.oConn.ConnectionString, mnUserId)
 
-                    System.Threading.ThreadPool.SetMaxThreads(10, 10)
+                    Dim nThreads As Int16 = CInt("0" & myWeb.moConfig("ImportThreads"))
+                    If nThreads = 0 Then nThreads = 10
+                    System.Threading.ThreadPool.SetMaxThreads(nThreads, nThreads)
 
                     Dim doneEvents(totalInstances) As System.Threading.ManualResetEvent
 
                     Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
 
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
-
                         completeCount = completeCount + 1
                         If completeCount > startNo Then
-
                             Dim stateObj As New dbImport.ImportStateObj()
                             stateObj.oInstance = oInstance
                             stateObj.LogId = logId
@@ -7044,7 +7058,10 @@ restart:
                             If bResetLocations Then
                                 RemoveContentLocations(savedId, cContentLocationTable)
                             End If
-
+                            'test case for TDL
+                            If savedId = 59837 Then
+                                cProcessInfo = "break"
+                            End If
                             'now lets add those specificed
                             ' Process locations
                             If Not bOrphan Then

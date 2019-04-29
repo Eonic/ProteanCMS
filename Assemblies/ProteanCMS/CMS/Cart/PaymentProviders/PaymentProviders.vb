@@ -147,6 +147,16 @@ Partial Public Class Cms
                             Next
                         End If
 
+                        If oElmt.GetAttribute("invalidGroups") <> "" Then
+                            Dim aInvalidGroups() As String = Split(oElmt.GetAttribute("invalidGroups"), ",")
+                            Dim i2 As Integer
+                            For i2 = 0 To UBound(aInvalidGroups)
+                                If modbHelper.checkUserRole(aInvalidGroups(i2), "Group") Then
+                                    bAllowUser = False
+                                End If
+                            Next
+                        End If
+
                         If oElmt.GetAttribute("validCurrencies") = "all" Or oElmt.GetAttribute("validCurrencies") = "" Then
                             bAllowCurrencies = True
                         Else

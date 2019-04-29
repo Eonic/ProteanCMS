@@ -3622,6 +3622,28 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template name="term4051">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Please enter any comments on your order here</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Please enter any comments on your order here</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="term4052">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Password Reset</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Password Reset</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
   <!-- ################################################################################################ -->
   <!-- SOCIAL NETWORKING!!!!  NO. 5000 - 5500-->

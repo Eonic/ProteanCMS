@@ -777,7 +777,12 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
+            if (cRes == null) {
+                return null;
+            }
+            else {
             return cRes.ToString();
+            }
         }
 
         public SqlDataReader getDataReader(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */)
@@ -925,7 +930,15 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
-            return oScalarValue;
+            if (oScalarValue.GetType() != typeof(DBNull))
+            {
+                return oScalarValue;
+            }
+            else
+            {
+                return nullreturnvalue;
+            };
+
         }
 
         public object GetXmlValue(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, object nullreturnvalue = null)

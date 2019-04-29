@@ -73,6 +73,7 @@ Public Class ImageHelper
         MyBase.New(Location)
     End Sub
 
+    'For the PDF Thumbnail functionality to work you need to copy (GhostScript) gsdll.dll into Windows/System32
 
     Public Class PDFThumbNail
         Public FilePath As String

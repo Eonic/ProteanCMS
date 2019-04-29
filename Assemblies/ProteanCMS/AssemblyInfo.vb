@@ -3,7 +3,6 @@ Imports System.Resources
 Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
-Imports System.Web.ApplicationServices
 
 ' General Information about an assembly is controlled through the following 
 ' set of attributes. Change these attribute values to modify the information
@@ -34,11 +33,11 @@ Imports System.Web.ApplicationServices
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("6.0.5.78")>
+<Assembly: AssemblyVersion("6.0.5.103")>
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.5.78")>
-<Assembly: NeutralResourcesLanguageAttribute("en")>
+<Assembly: AssemblyFileVersion("6.0.5.103")>
+<Assembly: NeutralResourcesLanguageAttribute("en")> 
 

@@ -549,7 +549,7 @@
         <xsl:value-of select="@appearance"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="$fmhz"/>
-        <xsl:if test="help | hint">
+        <xsl:if test="help | hint | alert">
           <xsl:text> input-group</xsl:text>
         </xsl:if>
         <xsl:if test="alert">
@@ -565,6 +565,11 @@
       <xsl:if test="hint">
         <span class="input-group-btn">
           <xsl:apply-templates select="." mode="hintButton"/>
+        </span>
+      </xsl:if>
+      <xsl:if test="alert">
+        <span class="input-group-btn">
+          <xsl:apply-templates select="." mode="alertButton"/>
         </span>
       </xsl:if>
     </div>
@@ -2795,6 +2800,30 @@
         <xsl:text> </xsl:text>
       </i>
     </button>
+  </xsl:template>
+
+  <xsl:template match="input[not(contains(@class,'hidden'))] | secret | select | select1 | range | textarea | upload" mode="alertButton">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="ref2">
+      <xsl:value-of select="translate($ref,'/','-')"/>
+    </xsl:variable>
+    <div class="popover-{$ref2} popoverContent" role="tooltip">
+      <xsl:copy-of select="alert/node()"/>
+    </div>
+    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-contentwrapper=".popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="left" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
+      <i class="fa fa-exclamation-triangle">
+        <xsl:text> </xsl:text>
+      </i>
+    </button>
+    <script>
+      $(function () {
+      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
+      <xsl:text>-btn')
+      .popover('show');</xsl:text>
+      });
+    </script>
   </xsl:template>
 
   <!--	

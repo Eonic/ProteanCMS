@@ -1328,6 +1328,7 @@ namespace Protean.Tools
                     // Remove the namespaces
                     serializedObject = System.Text.RegularExpressions.Regex.Replace(serializedObject, @"xmlns(:\w+?)?="".*?""", "");
                     serializedObject = System.Text.RegularExpressions.Regex.Replace(serializedObject, @"<\?xml.+\?>", "");
+                    serializedObject = System.Text.RegularExpressions.Regex.Replace(serializedObject, @"xsi:nil=""true""", "");
                 }
 
                 // Remove the declaration

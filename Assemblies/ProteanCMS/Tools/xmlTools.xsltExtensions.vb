@@ -518,7 +518,7 @@ Partial Public Module xmlTools
             Dim cHtml As String
             Dim cHtmlOut As String
 
-            If oHtmlNode Is Nothing Then
+            If oHtmlNode Is Nothing Or oHtmlNode.Current.InnerXml.Trim() = "" Then
                 cHtml = ""
                 Return cHtml
             Else
@@ -536,6 +536,7 @@ Partial Public Module xmlTools
                     Return Nothing
                 Else
                     Try
+                        cHtmlOut = cHtmlOut.Replace("&amp;#", "&#")
                         oXML.LoadXml(cHtmlOut)
                         Return oXML.DocumentElement
                     Catch ex As Exception
@@ -724,6 +725,20 @@ Partial Public Module xmlTools
             Dim ids() As String
 
             ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.Directory, fRef)
+
+            If IsNumeric(ids(0)) Then
+                Return CStr(ids(0))
+            Else
+                Return ""
+            End If
+
+        End Function
+
+        Public Function GetPageIdFromFref(ByVal fRef As String) As String
+
+            Dim ids() As String
+
+            ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.ContentStructure, fRef)
 
             If IsNumeric(ids(0)) Then
                 Return CStr(ids(0))
@@ -1818,6 +1833,7 @@ Partial Public Module xmlTools
                 sReturnString = Nothing
 
             Catch ex As Exception
+                myWeb.bPageCache = False
                 Return ex.Message
             End Try
 
@@ -1922,7 +1938,7 @@ Partial Public Module xmlTools
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
                 'Return ex.StackTrace.Replace(vbCr & vbLf, String.Empty).Replace(vbLf, String.Empty).Replace(vbCr, String.Empty) & ex.Message
-
+                myWeb.bPageCache = False
                 Return ex.Message
             End Try
 

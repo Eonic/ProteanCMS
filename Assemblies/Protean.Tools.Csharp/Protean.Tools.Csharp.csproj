@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\..\..\EonicClients\IntoTheBlue_DevOps\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>..\..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="TidyHTML5Managed, Version=1.1.5.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\_objSource\ReferencedAssemblies\TidyHtml5Managed\TidyHtml5Managed_Net45\bin\Release\TidyHTML5Managed.dll</HintPath>
+      <HintPath>..\NonNuget\TidyHTML5Managed.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

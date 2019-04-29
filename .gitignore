@@ -5,3 +5,13 @@
 /.vs/EonicWeb5CMS/v15
 /.vs/ProteanCMS/v15
 /wwwroot/images
+/Assemblies/Protean.Tools/bin
+/Assemblies/Protean.Tools/obj
+/Assemblies/Protean.Tools.Csharp/bin
+/Assemblies/Protean.Tools.Csharp/obj
+/Assemblies/Protean.Tools.Csharp/bin
+/Assemblies/Protean.Tools.UnitTests/bin
+/Assemblies/Protean.Tools.UnitTests/obj
+/Assemblies/ProteanCMS/bin
+/Assemblies/ProteanCMS/obj
+/.vs/ProteanCMS/v16/Server/sqlite3

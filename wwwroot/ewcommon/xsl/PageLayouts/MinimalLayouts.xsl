@@ -6823,7 +6823,9 @@
                     <xsl:with-param name="width" select="$lg-max-width"/>
                     <xsl:with-param name="height" select="$lg-max-height"/>
                   </xsl:apply-templates>
-                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                 
+                </div>
+		 <xsl:if test="Title/node()!='' or Body/node()!=''">
                     <div class="caption">
                       <h4>
                         <xsl:value-of select="Title/node()"/>
@@ -6831,7 +6833,6 @@
                       <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
                     </div>
                   </xsl:if>
-                </div>
               </div>
             </xsl:when>
             <xsl:otherwise>
@@ -7906,8 +7907,25 @@
   <!-- Sub Page Grid Content -->
   <xsl:template match="MenuItem" mode="gridDisplayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='false'">
+          <xsl:value-of select="false()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="lg-max-width">
+      <xsl:apply-templates select="." mode="getFullSizeWidth"/>
+    </xsl:variable>
+    <xsl:variable name="lg-max-height">
+      <xsl:apply-templates select="." mode="getFullSizeHeight"/>
     </xsl:variable>
     <xsl:if test="@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')">
       <div class="grid-item">
@@ -7918,7 +7936,13 @@
         <a href="{$url}" title="{@name}" class="url">
           <div class="thumbnail">
             <xsl:if test="Images/img[@src!='']">
-              <img src="{Images/img[@class='thumbnail']/@src}" class="img-responsive" style="overflow:hidden;"/>
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="$cropSetting" />
+                <xsl:with-param name="class" select="'img-responsive'" />
+                <xsl:with-param name="style" select="'overflow:hidden;'" />
+                <xsl:with-param name="width" select="$lg-max-width"/>
+                <xsl:with-param name="height" select="$lg-max-height"/>
+              </xsl:apply-templates>
             </xsl:if>
             <div class="caption">
               <h4>
@@ -7976,7 +8000,7 @@
       <xsl:if test="@allAsZip='on'">
         <div class="listItem list-group-item">
           <div class="lIinner">
-            <a class="docLink zipicon" href="{$appPath}/ewcommon/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
+            <a class="docLink zipicon" href="{$appPath}ewcommon/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
               <xsl:call-template name="term2074" />
             </a>
           </div>
@@ -8031,6 +8055,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
+		<xsl:value-of select="$appPath"/>
                   <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
@@ -8056,6 +8081,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
+		<xsl:value-of select="$appPath"/>
                   <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
@@ -11309,7 +11335,7 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:value-of select="$appPath"/>
-                    <xsl:text>/ewcommon/tools/download.ashx?docId=</xsl:text>
+                    <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                     <xsl:value-of select="@id"/>
                   </xsl:otherwise>
                 </xsl:choose>
