@@ -532,7 +532,7 @@ Partial Public Class Cms
                         'also need to save the total discount in the cart
                         'TS added in April 09
                         Dim cUpdtSQL As String = "UPDATE tblCartItem SET nDiscountValue = " & nLineTotalSaving & " WHERE nCartItemKey = " & nId
-                        myWeb.moDbHelper.ExeProcessSqlScalar(cUpdtSQL)
+                        myWeb.moDbHelper.ExeProcessSql(cUpdtSQL)
 
                     Next
 

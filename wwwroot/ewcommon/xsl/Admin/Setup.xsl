@@ -114,7 +114,14 @@
     <xsl:variable name="CMSName">
       <xsl:call-template name="eonicwebProductName"/>
     </xsl:variable>
-    
+  
+  <xsl:variable name="BaseUrl">
+        <xsl:call-template name="getSettings">
+          <xsl:with-param name="sectionName" select="'web'"/>
+          <xsl:with-param name="valueName" select="'BaseUrl'"/>
+        </xsl:call-template>
+  </xsl:variable>
+  
   <xsl:template match="Page">
     <xsl:variable name="CMSLogo">
       <xsl:call-template name="eonicwebLogo"/>
