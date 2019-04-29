@@ -126,9 +126,6 @@ function PageContentActions() {
             speed: parallaxspeed
         });
     }
-
- 
-    
     contentScroller();
 
 };
@@ -668,7 +665,7 @@ $(window).resize(function () {
                     $(this).closest('form').submit();
                 });
             });
-        };
+        }
 
         if ($(this).find('.contentLocations').exists()) {
             $(this).find('.contentLocations').each(function (i) {
@@ -680,8 +677,8 @@ $(window).resize(function () {
                     collapsible: true,
                     autoHeight: false
                 });
-                $(this).prepend('<div class="selectedValues"><h4>Selected Values</h4></div>')
-                var $checkboxes_to_limit = $('input', this)
+                $(this).prepend('<div class="selectedValues"></div>');
+                var $checkboxes_to_limit = $('input', this);
                 $('input', this).each(function (i) {
                     if ($(this).is(':checked')) {
                         // add to selected values

@@ -7356,11 +7356,11 @@ Partial Public Class Cms
 
                         MyBase.addSubmit(oGrp1Elmt, "Locate", "Add To Page", "Locate")
                         Dim oResult As XmlElement
-                        oSelElmt2 = MyBase.addSelect(oGrp1Elmt, "Results", True, "", "radiocheckbox multiline selectAll", Protean.xForm.ApperanceTypes.Full)
+                        oSelElmt2 = MyBase.addSelect(oGrp1Elmt, "Results", True, "", "radiocheckbox multiline selectAll content", Protean.xForm.ApperanceTypes.Full)
                         If Not oResults Is Nothing Then
                             For Each oResult In oResults
                                 If oSelElmt2.SelectSingleNode("item[value/node()='" & oResult.GetAttribute("id") & "']") Is Nothing Then
-                                    MyBase.addOption(oSelElmt2, oResult.GetAttribute("name"), oResult.GetAttribute("id"))
+                                    MyBase.addOption(oSelElmt2, oResult.OuterXml, oResult.GetAttribute("id"), True)
                                 End If
                             Next
                         End If
