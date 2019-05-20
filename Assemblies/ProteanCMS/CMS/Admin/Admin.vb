@@ -1332,7 +1332,7 @@ ProcessFlow:
                         oCart.ListOrders(0, False,,,, myWeb.moRequest("id"))
                         oCart = Nothing
 
-                    Case "ListUserContacts", "ListContacts"
+                    Case "ListUserContacts", "ListContacts", "ListDirContacts"
 
                         sAdminLayout = "ListUserContacts"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContactsXml(CInt("0" & myWeb.moRequest("parid"))))
@@ -1346,9 +1346,9 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "AddUserContact", "AddContact"
+                    Case "AddUserContact", "AddContact", "AddDirContact"
 
-                        sAdminLayout = "AddUserContact"
+                        sAdminLayout = mcEwCmd
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
                         If moAdXfm.valid Then
                             oPageDetail.RemoveAll()

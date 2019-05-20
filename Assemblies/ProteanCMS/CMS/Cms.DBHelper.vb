@@ -802,6 +802,8 @@ Partial Public Class Cms
                     Return "cLocationForeignRef"
                 Case 16
                     Return "cShipOptForeignRef"
+                Case 22
+                    Return "cCatForeignRef"
                 Case 26
                     Return "cCode"
                 Case Else
@@ -4714,8 +4716,7 @@ restart:
                         End If
                     End If
 
-                    If bHasChanged And Not (myWeb Is Nothing) Then
-                        'Not (myWeb Is Nothing) case for bulk imports
+                    If bHasChanged Then
                         'Keep Mailing List In Sync.
                         ' If Not cEmail Is Nothing Then
                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
@@ -5006,7 +5007,14 @@ restart:
                         root.SetAttribute("old", "true()")
                     End If
 
-                    If bIncludeContacts Then root.AppendChild(GetUserContactsXml(nUserId))
+                    If bIncludeContacts Then
+                        root.AppendChild(GetUserContactsXml(nUserId))
+                        Dim oCompany As XmlElement
+                        For Each oCompany In root.SelectNodes("Company[@id!='']")
+                            oCompany.AppendChild(GetUserContactsXml(oCompany.GetAttribute("id")))
+                        Next
+                    End If
+
                     If goConfig("Subscriptions") = "on" And Not myWeb Is Nothing Then
                         Dim mySub As New Protean.Cms.Cart.Subscriptions(myWeb)
                         mySub.AddSubscriptionToUserXML(root, nUserId)
@@ -7058,10 +7066,7 @@ restart:
                             If bResetLocations Then
                                 RemoveContentLocations(savedId, cContentLocationTable)
                             End If
-                            'test case for TDL
-                            If savedId = 59837 Then
-                                cProcessInfo = "break"
-                            End If
+
                             'now lets add those specificed
                             ' Process locations
                             If Not bOrphan Then
@@ -9657,7 +9662,8 @@ ReturnMe:
                         cProcessInfo = targetTable & " Update: "
                         If Not instanceElmt.SelectSingleNode("*/" & column.ToString) Is Nothing Then
                             cProcessInfo += column.ToString & " - " & instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml
-                            If Not column.AllowDBNull And Not instanceElmt.SelectSingleNode("*/" & column.ToString) Is Nothing Then
+                            ' 14/05/19 ts remed out as recent change was preventing updates.
+                            If Not (column.AllowDBNull And instanceElmt.SelectSingleNode("*/" & column.ToString) Is Nothing) Then
                                 oRow(column) = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" & column.ToString).InnerXml, IIf(InStr(column.ToString, "Xml") > 0, True, False))
                             End If
                         End If

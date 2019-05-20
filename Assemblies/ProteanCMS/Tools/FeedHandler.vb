@@ -49,7 +49,10 @@ Public Class FeedHandler
         Try
             oDBH = New Cms.dbHelper("Data Source=" & oConfig("DatabaseServer") & "; " &
             "Initial Catalog=" & oConfig("DatabaseName") & "; " &
-            oConfig("DatabaseAuth"), 1)
+            "user id=" & oConfig("DatabaseUsername") & "; password=" & oConfig("DatabasePassword"), 1)
+            oDBH.ResetConnection("Data Source=" & oConfig("DatabaseServer") & "; " &
+                    "Initial Catalog=" & oConfig("DatabaseName") & "; " &
+                    oDBH.GetDBAuth())
             oDBH.myWeb = New Protean.Cms(System.Web.HttpContext.Current)
             oDBH.myWeb.InitializeVariables()
             'oDBH.myWeb.Open()

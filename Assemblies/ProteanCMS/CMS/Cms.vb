@@ -550,15 +550,19 @@ Public Class Cms
 
                 'ensures we have configured JSEngine for Bundle Transformer
                 If goApp("JSEngineEnabled") Is Nothing Or moRequest("rebundle") <> "" Then
-                    Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
-                    msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
-                    Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
-                    '  engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
-                    engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
-                    Dim sJsEngine As String = "MsieJsEngine"
-                    If moConfig("JSEngine") <> "" Then
-                        sJsEngine = moConfig("JSEngine")
-                    End If
+                    '  Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
+                    '  msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
+                    Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current
+                    'engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
+                    '  engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
+                    engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.V8.V8JsEngineFactory())
+                    Dim sJsEngine As String = "V8JsEngine"
+                    'Dim sJsEngine As String = "MsieJsEngine"
+
+                    'Dim sJsEngine As String = "ChakraCoreJsEngine"
+                    '   If moConfig("JSEngine") <> "" Then
+                    '   sJsEngine = moConfig("JSEngine")
+                    '    End If
                     engineSwitcher.DefaultEngineName = sJsEngine
                     goApp("JSEngineEnabled") = sJsEngine
                 End If
@@ -1383,6 +1387,13 @@ Public Class Cms
             sProcessInfo = "Check Index Mode"
             If Not ibIndexMode Then
 
+                sProcessInfo = "Check Membership"
+                If gbMembership Then
+                    MembershipProcess()
+                ElseIf mbAdminMode And mnUserId > 0 Then
+                    RefreshUserXML()
+                End If
+
                 sProcessInfo = "Check Admin Mode"
                 ContentActions()
 
@@ -1405,13 +1416,6 @@ Public Class Cms
                 '  If Not (mbAdminMode) Then
                 layoutCmd = LayoutActions()
                 '  End If
-
-                sProcessInfo = "Check Membership"
-                If gbMembership Then
-                    MembershipProcess()
-                ElseIf mbAdminMode And mnUserId > 0 Then
-                    RefreshUserXML()
-                End If
 
                 AddCart()
 
@@ -6157,11 +6161,12 @@ Public Class Cms
             Dim oDR As DataRow
             Dim nMax As Integer = 0
             Dim cDoneIds As String = ","
+            Dim ochkStr As String = ""
             If IsNumeric(cTop) Then nMax = CInt(cTop)
             For Each oDR In oDS.Tables("Content1").Rows
                 If oDS.Tables("Content").Rows.Count < nMax Or nMax = 0 Then
-                    If IsNumeric(oDR("parId")) Then
-                        Dim ochkStr As String = moDbHelper.checkPagePermission(oDR("parId"))
+                    If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
+                        ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
                         If IsNumeric(ochkStr) Then
                             If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",") Then
                                 oDS.Tables("Content").ImportRow(oDR)
@@ -7413,7 +7418,6 @@ Public Class Cms
         PerfMon.Log("Web", "SetPageLanguage")
 
         Dim cProcessInfo As String = ""
-        Dim oElmt As XmlElement
         Dim sCurrency As String = ""
 
         Try

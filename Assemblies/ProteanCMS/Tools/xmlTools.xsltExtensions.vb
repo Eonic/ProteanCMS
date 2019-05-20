@@ -579,7 +579,7 @@ Partial Public Module xmlTools
 
                 cHtmlOut = convertEntitiesToCodes(cHtmlOut)
 
-                If cHtmlOut = Nothing Or cHtmlOut = "" Then
+                If cHtmlOut = Nothing Or cHtmlOut = "" Or cHtmlOut = vbCrLf Then
                     Return ""
                 Else
                     Try
@@ -726,7 +726,7 @@ Partial Public Module xmlTools
 
             ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.Directory, fRef)
 
-            If IsNumeric(ids(0)) Then
+            If Not ids Is Nothing Then
                 Return CStr(ids(0))
             Else
                 Return ""
@@ -740,11 +740,47 @@ Partial Public Module xmlTools
 
             ids = myWeb.moDbHelper.getObjectsByRef(Cms.dbHelper.objectTypes.ContentStructure, fRef)
 
-            If IsNumeric(ids(0)) Then
+            If Not ids Is Nothing Then
                 Return CStr(ids(0))
             Else
                 Return ""
             End If
+
+        End Function
+
+        Public Function GetContentIdFromFref(ByVal fRef As String) As String
+
+            Dim ids As Long
+            myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString)
+            ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, fRef)
+
+            If Not ids = 0 Then
+                Return CStr(ids)
+            Else
+                Return ""
+            End If
+
+        End Function
+
+        Public Function GetProductGroupIdFromFref(ByVal fRef As String) As String
+
+            Dim ids As Long
+            myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString)
+            ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartProductCategories, fRef)
+            If Not ids = 0 Then
+                Return CStr(ids)
+            Else
+                Return ""
+            End If
+
+        End Function
+
+        Public Function RelateProductToGroup(ByVal ProductId As Long, ByVal ProductGroupId As Long) As String
+
+            Dim ids As String
+            myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString)
+            ids = myWeb.moDbHelper.insertProductGroupRelation(ProductId, CStr(ProductGroupId))
+            Return ids
 
         End Function
 
@@ -1746,6 +1782,17 @@ Partial Public Module xmlTools
             Dim sReturnString As String
 
             Try
+
+                'Convert JSX files
+                'Dim bundleFilePaths As String() = Split(CommaSeparatedFilenames, ",")
+                '  Dim filename As String
+                ' For Each filename In bundleFilePaths
+                ' If filename.EndsWith(".jsx") Then
+                '    Dim ReactEnv As React.IReactEnvironment =
+                '    React.IReactEnvironment.Babel.TransformAndSaveFile(filename)
+
+                'End If
+                ' Next
 
                 Dim bReset As Boolean = False
                 If myWeb Is Nothing Or gbDebug Then

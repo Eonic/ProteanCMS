@@ -898,6 +898,44 @@ Partial Public Class Cms
 
             End Sub
 
+            Public Sub CompanyContact(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
+
+                Try
+
+                    If myWeb.mnUserId > 0 Then
+
+                        Dim adXfm As Object = myWeb.getAdminXform()
+                        adXfm.open(myWeb.moPageXml)
+
+                        Select Case myWeb.moRequest("ewCmd")
+                            Case "addContact", "editContact"
+                                Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), myWeb.mnUserId)
+                                If Not adXfm.valid Then
+                                    contentNode.AppendChild(oXfmElmt)
+                                Else
+                                    myWeb.RefreshUserXML()
+                                End If
+                            Case "delContact"
+                                Dim oContactElmt As XmlElement
+                                For Each oContactElmt In myWeb.GetUserXML(myWeb.mnUserId).SelectNodes("descendant-or-self::Contact")
+                                    Dim oId As XmlElement = oContactElmt.SelectSingleNode("nContactKey")
+                                    If Not oId Is Nothing Then
+                                        If oId.InnerText = myWeb.moRequest("id") Then
+                                            myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, myWeb.moRequest("id"))
+                                            myWeb.RefreshUserXML()
+                                        End If
+                                    End If
+                                Next
+                        End Select
+                    End If
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "UserContacts", ex, "", "", gbDebug)
+                    'Return Nothing
+                End Try
+
+            End Sub
+
 
             Public Sub AddUserToGroup(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
                 Dim groupNode As XmlElement
