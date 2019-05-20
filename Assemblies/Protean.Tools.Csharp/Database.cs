@@ -685,6 +685,41 @@ namespace Protean.Tools
             return nUpdateCount;
         }
 
+        public void ExeProcessSql(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null)
+        {
+            string cProcessInfo = "Running Sql: " + sql;
+            try
+            {
+                SqlCommand oCmd = new SqlCommand(sql, oConn);
+
+                // Set the command type
+                oCmd.CommandType = commandtype;
+
+                // Set the Paremeters if any
+                if (!(parameters == null))
+                {
+                    foreach (DictionaryEntry oEntry in parameters)
+                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                }
+
+                // Open the connection
+                if (oConn.State == ConnectionState.Closed)
+                    oConn.Open();
+
+                oCmd.ExecuteNonQuery();
+                oConn.Close();
+                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataValue", ex, cProcessInfo));
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
         public int ExeProcessSqlfromFile(string filepath, string errmsg = "")
         {
             int nUpdateCount;
