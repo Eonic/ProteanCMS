@@ -51,7 +51,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.5.60</AssemblyVersion>
+    <AssemblyVersion>6.0.9.1</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -111,9 +111,8 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q8-AnyCPU, Version=7.0.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET-Q8-AnyCPU.7.0.4.701\lib\net40-client\Magick.NET-Q8-AnyCPU.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Magick.NET-Q8-AnyCPU, Version=7.13.1.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Magick.NET-Q8-AnyCPU.7.13.1\lib\net40\Magick.NET-Q8-AnyCPU.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
@@ -236,11 +235,6 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-    </Reference>
-    <Reference Include="TidyHTML5Managed, Version=1.1.5.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ReferencedAssemblies\TidyHtml5Managed\TidyHtml5Managed\bin\Release\TidyHTML5Managed.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -369,13 +363,8 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Release" BuildVersion_DetectChanges="False" BuildVersion_StartDate="2000/1/1" />
+      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_DetectChanges="False" BuildVersion_ConfigurationName="Release" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="C:\Users\trevors\Source\Repos\TDLOnline_vs_Local\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets" Condition="Exists('C:\Users\trevors\Source\Repos\TDLOnline_vs_Local\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-  </Target>
 </Project>

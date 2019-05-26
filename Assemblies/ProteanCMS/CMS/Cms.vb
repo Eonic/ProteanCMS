@@ -1908,7 +1908,7 @@ Public Class Cms
                     productGrpSql = " and nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId = " & nGroupId & ")"
                 End If
 
-                Me.GetPageContentFromSelect("cContentSchemaName IN (" & dbHelper.SqlString(contentSchema) & ",'FeedOutput') and CL.nStructId IN(" & pageIds & ")" & productGrpSql, True, , True, pageSize, "dInsertDate DESC", , , blnContentDetail, pageNumber)
+                Me.GetPageContentFromSelect("cContentSchemaName IN (" & dbHelper.SqlString(contentSchema) & ",'FeedOutput') and CL.nStructId IN(" & pageIds & ")" & productGrpSql, True, , True, pageSize, "dInsertDate DESC", , , blnContentDetail, pageNumber,, cRelatedSchemasToShow)
 
                 Dim ProductTypes As String = moConfig("ProductTypes")
                 If ProductTypes = "" Then ProductTypes = "Product,SKU"
@@ -1970,19 +1970,15 @@ Public Class Cms
                     oEc.close()
                     oEc = Nothing
                 End If
+                ' If showRelated Then
+                'DbHelper.addBulkRelatedContent(oPageElmt.SelectSingleNode("/Page/Contents"))
 
-
-                'End of NB code
-                'If showRelated Then
                 '    For Each oElmt In oPageElmt.SelectNodes("/Page/Contents/Content")
-                '        'moDbHelper.addRelatedContent(oElmt, oElmt.GetAttribute("id"),  False)
-                '        moDbHelper.addRelatedContent(oElmt, oElmt.GetAttribute("id"), False, cRelatedSchemasToShow)
-
-                '    Next
+                '      moDbHelper.addRelatedContent(oElmt, oElmt.GetAttribute("id"), False, cRelatedSchemasToShow)
+                'Next
                 'End If
 
             End If
-
 
             Me.SetPageLanguage()
             oPageElmt.SetAttribute("expireDate", Protean.Tools.Xml.XmlDate(mdPageExpireDate))
@@ -3326,7 +3322,7 @@ Public Class Cms
     'End Sub
 
 
-    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False)
+    Public Sub GetPageContentFromSelect(ByVal sWhereSql As String, Optional ByVal bPrimaryOnly As Boolean = False, Optional ByRef nCount As Integer = 0, Optional ByVal bIgnorePermissionsCheck As Boolean = False, Optional ByVal nReturnRows As Integer = 0, Optional ByVal cOrderBy As String = "type, cl.nDisplayOrder", Optional ByRef oContentsNode As XmlElement = Nothing, Optional ByVal cAdditionalJoins As String = "", Optional bContentDetail As Boolean = False, Optional pageNumber As Long = 0, Optional distinct As Boolean = False, Optional cShowSpecificContentTypes As String = "")
         PerfMon.Log("Web", "GetPageContentFromSelect")
         Dim oRoot As XmlElement
         Dim sSql As String
@@ -3439,7 +3435,7 @@ Public Class Cms
             nCount = oDs.Tables("Content").Rows.Count
             PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " & nCount & " returned")
 
-            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth)
+            moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate, True, gnShowRelatedBriefDepth, cShowSpecificContentTypes)
 
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)

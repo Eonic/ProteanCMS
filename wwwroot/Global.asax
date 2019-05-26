@@ -4,12 +4,9 @@
 
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         ' Code that runs on application startup
-        Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
-        msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
-        Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
-        engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
-        engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
-        Dim sJsEngine As String = "MsieJsEngine"
+        Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current
+        engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.V8.V8JsEngineFactory())
+        Dim sJsEngine As String = "V8JsEngine"
         engineSwitcher.DefaultEngineName = sJsEngine
     End Sub
 

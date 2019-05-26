@@ -61,6 +61,38 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function UpdateContentValue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    'first check the user privages
+                    'myApi.mnUserId
+
+                    Dim JsonResult As String = ""
+                    Dim contentId As String = ""
+                    Dim xpath As String = ""
+                    Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+
+            Public Function GetContent(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim JsonResult As String = ""
+                    Dim contentId As String = ""
+
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
 
         End Class
 

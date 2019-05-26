@@ -9,21 +9,10 @@
             Assembly resolver
             </summary>
         </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.AssemblyResolver.ASSEMBLY_NAME">
-            <summary>
-            Name of the ChakraCore assembly
-            </summary>
-        </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.AssemblyResolver.Initialize">
             <summary>
             Initialize a assembly resolver
             </summary>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.AssemblyResolver.IsArmProcessorArchitecture">
-            <summary>
-            Determines whether the current processor architecture is a ARM
-            </summary>
-            <returns>true if the processor architecture is ARM; otherwise, false</returns>
         </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine">
             <summary>
@@ -55,24 +44,14 @@
             JS source context
             </summary>
         </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._externalObjects">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._typeMapper">
             <summary>
-            Set of external objects
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._externalObjectFinalizeCallback">
-            <summary>
-            Callback for finalization of external object
+            Type mapper
             </summary>
         </member>
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._promiseContinuationCallback">
             <summary>
             Callback for continuation of promise
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._nativeFunctions">
-            <summary>
-            List of native function callbacks
             </summary>
         </member>
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._dispatcher">
@@ -93,21 +72,6 @@
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine._initialized">
             <summary>
             Flag indicating whether the JS engine is initialized
-            </summary>
-        </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.Name">
-            <summary>
-            Gets a name of JS engine
-            </summary>
-        </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.Version">
-            <summary>
-            Gets a version of original JS engine
-            </summary>
-        </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.SupportsGarbageCollection">
-            <summary>
-            Gets a value that indicates if the JS engine supports garbage collection
             </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.#ctor">
@@ -163,33 +127,30 @@
             <param name="task">The task, represented as a JavaScript function</param>
             <param name="callbackState">The data argument to be passed to the callback</param>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.MapToScriptType(System.Object)">
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.Name">
             <summary>
-            Makes a mapping of value from the host type to a script type
+            Gets a name of JS engine
             </summary>
-            <param name="value">The source value</param>
-            <returns>The mapped value</returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.MapToScriptType(System.Object[])">
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.Version">
             <summary>
-            Makes a mapping of array items from the host type to a script type
+            Gets a version of original JS engine
             </summary>
-            <param name="args">The source array</param>
-            <returns>The mapped array</returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.MapToHostType(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue)">
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.SupportsScriptPrecompilation">
             <summary>
-            Makes a mapping of value from the script type to a host type
+            Gets a value that indicates if the JS engine supports script pre-compilation
             </summary>
-            <param name="value">The source value</param>
-            <returns>The mapped value</returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.MapToHostType(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue[])">
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.SupportsScriptInterruption">
             <summary>
-            Makes a mapping of array items from the script type to a host type
+            Gets a value that indicates if the JS engine supports script interruption
             </summary>
-            <param name="args">The source array</param>
-            <returns>The mapped array</returns>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.SupportsGarbageCollection">
+            <summary>
+            Gets a value that indicates if the JS engine supports garbage collection
+            </summary>
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngine.Dispose">
             <summary>
@@ -213,11 +174,6 @@
             Settings of the ChakraCore JS engine
             </summary>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory.EngineName">
-            <summary>
-            Gets a name of JS engine
-            </summary>
-        </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory.#ctor">
             <summary>
             Constructs an instance of the ChakraCore JS engine factory
@@ -229,15 +185,124 @@
             </summary>
             <param name="settings">Settings of the ChakraCore JS engine</param>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory.EngineName">
+            <summary>
+            Gets a name of JS engine
+            </summary>
+        </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory.CreateEngine">
             <summary>
             Creates a instance of the ChakraCore JS engine
             </summary>
             <returns>Instance of the ChakraCore JS engine</returns>
         </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript">
+            <summary>
+            Represents a pre-compiled script that can be executed by different instances of the ChakraCore JS engine
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._code">
+            <summary>
+            Source code of the script
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._parseAttributes">
+            <summary>
+            Attribute mask for parsing the script
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._cachedBytes">
+            <summary>
+            Cached data for accelerated recompilation
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._documentName">
+            <summary>
+            Document name
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._loadScriptSourceCodeCallback">
+            <summary>
+            Callback to load the source code of the serialized script
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._codeBytes">
+            <summary>
+            Source code of the script as an array of bytes
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript._scriptLoadingSynchronizer">
+            <summary>
+            Synchronizer of the script source code loading
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.Code">
+            <summary>
+            Gets a source code of the script
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.ParseAttributes">
+            <summary>
+            Gets a attribute mask for parsing the script
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.CachedBytes">
+            <summary>
+            Gets a cached data for accelerated recompilation
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.DocumentName">
+            <summary>
+            Gets a document name
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.LoadScriptSourceCodeCallback">
+            <summary>
+            Gets a callback to load the source code of the serialized script
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.#ctor(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes,System.Byte[],System.String)">
+            <summary>
+            Constructs an instance of pre-compiled script
+            </summary>
+            <param name="code">The source code of the script</param>
+            <param name="parseAttributes">Attribute mask for parsing the script</param>
+            <param name="cachedBytes">Cached data for accelerated recompilation</param>
+            <param name="documentName">Document name</param>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.LoadScriptSourceCode(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue@,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes@)">
+            <summary>
+            Loads a source code of the serialized script
+            </summary>
+            <param name="sourceContext">A cookie identifying the script that can be used
+            by debuggable script contexts</param>
+            <param name="value">The script returned</param>
+            <param name="parseAttributes">Attribute mask for parsing the script</param>
+            <returns>true if the operation succeeded, false otherwise</returns>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCorePrecompiledScript.EngineName">
+            <summary>
+            Gets a name of JS engine for which the pre-compiled script was created
+            </summary>
+        </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings">
             <summary>
             Settings of the ChakraCore JS engine
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.STACK_SIZE_32">
+            <summary>
+            The stack size is sufficient to run the code of modern JavaScript libraries in 32-bit process
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.STACK_SIZE_64">
+            <summary>
+            The stack size is sufficient to run the code of modern JavaScript libraries in 64-bit process
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings._maxStackSize">
+            <summary>
+            The maximum stack size in bytes
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.DisableBackgroundWork">
@@ -266,20 +331,30 @@
             </para>
             </remarks>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.DisableNativeCodeGeneration">
-            <summary>
-            Gets or sets a flag for whether to disable native code generation
-            </summary>
-        </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.DisableFatalOnOOM">
             <summary>
             Gets or sets a flag for whether to disable Failfast fatal error on OOM
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.DisableNativeCodeGeneration">
+            <summary>
+            Gets or sets a flag for whether to disable native code generation
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.EnableExperimentalFeatures">
             <summary>
             Gets or sets a flag for whether to enable all experimental features
             </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.MaxStackSize">
+            <summary>
+            Gets or sets a maximum stack size in bytes
+            </summary>
+            <remarks>
+            <para>Set a <code>0</code> to use the default maximum stack size specified in the header
+            for the executable.
+            </para>
+            </remarks>
         </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings.MemoryLimit">
             <summary>
@@ -291,6 +366,74 @@
             Constructs an instance of the ChakraCore settings
             </summary>
         </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Constants.DllName">
+            <summary>
+            DLL names
+            </summary>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Helpers.EncodingHelpers">
+            <summary>
+            Encoding helpers
+            </summary>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers">
+            <summary>
+            Numeric helpers
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers.IsNumericType(System.Type)">
+            <summary>
+            Gets a value indicating whether the specified type is one of the numeric types
+            </summary>
+            <param name="type">The type</param>
+            <returns>true if the specified type is one of the numeric types; otherwise, false</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers.CastDoubleValueToCorrectType(System.Double)">
+            <summary>
+            Casts a double value to the correct type
+            </summary>
+            <param name="value">Double value</param>
+            <returns>Numeric value with the correct type</returns>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Helpers.ReflectionHelpers">
+            <summary>
+            Reflection helpers
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Helpers.ReflectionHelpers.MethodWithMetadata.CompatibilityScore">
+            TODO: In future will need to change type to <code>double</code>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions">
+            <summary>
+            JS engine factory collection extensions
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection)">
+            <summary>
+            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
+            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            </summary>
+            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
+            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection,System.Action{JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings})">
+            <summary>
+            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
+            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            </summary>
+            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
+            <param name="configure">The delegate to configure the provided <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings"/></param>
+            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection,JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings)">
+            <summary>
+            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
+            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            </summary>
+            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
+            <param name="settings">Settings of the ChakraCore JS engine</param>
+            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
+        </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.DefaultExternalBufferFinalizeCallback">
             <summary>
             Default callback for finalization of external buffer
@@ -299,6 +442,146 @@
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.DefaultExternalBufferFinalizeCallback.Instance">
             <summary>
             Gets a instance of default callback for finalization of external buffer
+            </summary>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem">
+            <summary>
+            Embedded item
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem._hostType">
+            <summary>
+            Host type
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem._hostObject">
+            <summary>
+            Instance of host type
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem._scriptValue">
+            <summary>
+            JavaScript value created from an host item
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem._nativeFunctions">
+            <summary>
+            List of native functions, that used to access to members of host item
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem._disposedFlag">
+            <summary>
+            Flag indicating whether this object is disposed
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.HostType">
+            <summary>
+            Gets a host type
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.HostObject">
+            <summary>
+            Gets a instance of host type
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.ScriptValue">
+            <summary>
+            Gets a JavaScript value created from an host item
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.NativeFunctions">
+            <summary>
+            Gets a list of native functions, that used to access to members of host item
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.IsInstance">
+            <summary>
+            Gets a value that indicates if the host item is an instance
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.#ctor(System.Type,System.Object,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue,System.Collections.Generic.IList{JavaScriptEngineSwitcher.ChakraCore.JsRt.JsNativeFunction})">
+            <summary>
+            Constructs an instance of the embedded item
+            </summary>
+            <param name="hostType">Host type</param>
+            <param name="hostObject">Instance of host type</param>
+            <param name="scriptValue">JavaScript value created from an host item</param>
+            <param name="nativeFunctions">List of native functions, that used to access to members of host item</param>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedItem.Dispose">
+            <summary>
+            Disposes the embedded item
+            </summary>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObject">
+            <summary>
+            Embedded object
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObject.#ctor(System.Object,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue)">
+            <summary>
+            Constructs an instance of the embedded object
+            </summary>
+            <param name="hostObject">Instance of host type</param>
+            <param name="scriptValue">JavaScript value created from an host object</param>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObject.#ctor(System.Object,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue,System.Collections.Generic.IList{JavaScriptEngineSwitcher.ChakraCore.JsRt.JsNativeFunction})">
+            <summary>
+            Constructs an instance of the embedded object
+            </summary>
+            <param name="hostObject">Instance of host type</param>
+            <param name="scriptValue">JavaScript value created from an host object</param>
+            <param name="nativeFunctions">List of native functions, that used to access to members of host object</param>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObject.IsInstance">
+            <summary>
+            Gets a value that indicates if the host item is an instance
+            </summary>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObjectKey">
+            <summary>
+            Key for storage of embedded objects
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObjectKey.HostTypeName">
+            <summary>
+            Name of host type
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObjectKey.HostObject">
+            <summary>
+            Instance of host type
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedObjectKey.#ctor(System.Object)">
+            <summary>
+            Constructs an instance of the key for storage of embedded objects
+            </summary>
+            <param name="hostObject">Instance of host type</param>
+        </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedType">
+            <summary>
+            Embedded type
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedType.#ctor(System.Type,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue)">
+            <summary>
+            Constructs an instance of the embedded type
+            </summary>
+            <param name="hostType">Host type</param>
+            <param name="scriptValue">JavaScript value created from an host type</param>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedType.#ctor(System.Type,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue,System.Collections.Generic.IList{JavaScriptEngineSwitcher.ChakraCore.JsRt.JsNativeFunction})">
+            <summary>
+            Constructs an instance of the embedded type
+            </summary>
+            <param name="hostType">Host type</param>
+            <param name="scriptValue">JavaScript value created from an host type</param>
+            <param name="nativeFunctions">List of native functions, that used to access to members of type</param>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.JsRt.Embedding.EmbeddedType.IsInstance">
+            <summary>
+            Gets a value that indicates if the host item is an instance
             </summary>
         </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsBackgroundWorkItemCallback">
@@ -409,7 +692,7 @@
             maximum number of ticks if there no upcoming idle work to do.
             </returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.ParseScript(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String)">
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.ParseScript(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes@)">
             <summary>
             Parses a script and returns a function representing the script
             </summary>
@@ -420,9 +703,27 @@
             <param name="sourceContext">A cookie identifying the script that can be used
             by debuggable script contexts</param>
             <param name="sourceUrl">The location the script came from</param>
+            <param name="parseAttributes">Attribute mask for parsing the script</param>
             <returns>A function representing the script code</returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.RunScript(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String)">
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.ParseSerializedScript(System.String,System.Byte[],JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSerializedLoadScriptCallback,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String)">
+            <summary>
+            Parses a serialized script and returns a function representing the script
+            </summary>
+            <remarks>
+            <para>Requires an active script context.</para>
+            <para>The runtime will hold on to the buffer until all instances of any functions created from
+            the buffer are garbage collected.</para>
+            </remarks>
+            <param name="script">The script to parse</param>
+            <param name="buffer">The serialized script</param>
+            <param name="scriptLoadCallback">Callback to load the source code of the serialized script</param>
+            <param name="sourceContext">A cookie identifying the script that can be used
+            by debuggable script contexts</param>
+            <param name="sourceUrl">The location the script came from</param>
+            <returns>A function representing the script code</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.RunScript(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes@)">
             <summary>
             Executes a script
             </summary>
@@ -433,9 +734,27 @@
             <param name="sourceContext">A cookie identifying the script that can be used
             by debuggable script contexts</param>
             <param name="sourceUrl">The location the script came from</param>
+            <param name="parseAttributes">Attribute mask for parsing the script</param>
             <returns>The result of the script, if any</returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.SerializeScript(System.String)">
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.RunSerializedScript(System.String,System.Byte[],JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSerializedLoadScriptCallback,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsSourceContext,System.String)">
+            <summary>
+            Runs a serialized script
+            </summary>
+            <remarks>
+            <para>Requires an active script context.</para>
+            <para>The runtime will detach the data from the buffer and hold on to it until all
+            instances of any functions created from the buffer are garbage collected.</para>
+            </remarks>
+            <param name="script">The source code of the serialized script</param>
+            <param name="buffer">The serialized script</param>
+            <param name="scriptLoadCallback">Callback to load the source code of the serialized script</param>
+            <param name="sourceContext">A cookie identifying the script that can be used
+            by debuggable script contexts</param>
+            <param name="sourceUrl">The location the script came from</param>
+            <returns>The result of running the script, if any</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.SerializeScript(System.String,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes@)">
             <summary>
             Serializes a parsed script to a buffer than can be reused
             </summary>
@@ -450,6 +769,7 @@
             </para>
             </remarks>
             <param name="script">The script to serialize</param>
+            <param name="parseAttributes">Attribute mask for parsing the script</param>
             <returns>The buffer to put the serialized script into</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsContext.GetAndClearException">
@@ -968,6 +1288,12 @@
             <param name="info">The object that holds the serialized data</param>
             <param name="context">The contextual information about the source or destination</param>
         </member>
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsFinalizeCallback">
+            <summary>
+            A finalizer callback
+            </summary>
+            <param name="data">The external data that was passed in when creating the object being finalized</param>
+        </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsMemoryAllocationCallback">
             <summary>
             User implemented callback routine for memory allocation events
@@ -1019,12 +1345,6 @@
             </remarks>
             <param name="reference">The object to be collected</param>
             <param name="callbackState">The state passed to <c>JsSetObjectBeforeCollectCallback</c></param>
-        </member>
-        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsObjectFinalizeCallback">
-            <summary>
-            The finalization callback
-            </summary>
-            <param name="data">The external data that was passed in when creating the object being finalized</param>
         </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsParseScriptAttributes">
             <summary>
@@ -1464,8 +1784,9 @@
             <summary>
             Called by the runtime to load the source code of the serialized script
             </summary>
-            <param name="sourceContext">The context passed to Js[Parse|Run]Serialized</param>
-            <param name="value">The result of the compiled script</param>
+            <param name="sourceContext">A cookie identifying the script that can be used
+            by debuggable script contexts</param>
+            <param name="value">The script returned</param>
             <param name="parseAttributes">Attribute mask for parsing the script</param>
             <returns>true if the operation succeeded, false otherwise</returns>
         </member>
@@ -1876,14 +2197,14 @@
             </remarks>
             <returns>The new <c>Object</c></returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue.CreateExternalObject(System.IntPtr,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsObjectFinalizeCallback)">
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue.CreateExternalObject(System.IntPtr,JavaScriptEngineSwitcher.ChakraCore.JsRt.JsFinalizeCallback)">
             <summary>
             Creates a new <c>Object</c> that stores some external data
             </summary>
             <remarks>
             Requires an active script context.
             </remarks>
-            <param name="data">External data that the object will represent. May be null</param>
+            <param name="data">External data that the object will represent. May be null.</param>
             <param name="finalizer">The callback for when the object is finalized. May be null.</param>
             <returns>The new <c>Object</c></returns>
         </member>
@@ -1924,15 +2245,6 @@
             </summary>
             <remarks>Requires an active script context.</remarks>
             <param name="buffer">Buffer for an external memory</param>
-            <returns>The new <c>ArrayBuffer</c> object</returns>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue.CreateExternalArrayBuffer(System.String,System.Text.Encoding)">
-            <summary>
-            Creates a Javascript <c>ArrayBuffer</c> object to access external memory
-            </summary>
-            <remarks>Requires an active script context.</remarks>
-            <param name="value">String value</param>
-            <param name="encoding">Character encoding</param>
             <returns>The new <c>ArrayBuffer</c> object</returns>
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue.CreateError(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue)">
@@ -2444,63 +2756,112 @@
             Native methods
             </summary>
         </member>
-        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers">
+        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper">
             <summary>
-            Numeric helpers
+            Type mapper
             </summary>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers.IsNumericType(System.Type)">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.ExternalObjectPropertyName">
             <summary>
-            Gets a value indicating whether the specified type is one of the numeric types
-            </summary>
-            <param name="type">The type</param>
-            <returns>true if the specified type is one of the numeric types; otherwise, false</returns>
-        </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.Helpers.NumericHelpers.CastDoubleValueToCorrectType(System.Double)">
-            <summary>
-            Casts a double value to the correct type
-            </summary>
-            <param name="value">Double value</param>
-            <returns>Numeric value with the correct type</returns>
-        </member>
-        <member name="T:JavaScriptEngineSwitcher.ChakraCore.Helpers.ReflectionHelpers">
-            <summary>
-            Reflection helpers
+            Name of property to store the external object
             </summary>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Helpers.ReflectionHelpers.MethodWithMetadata.CompatibilityScore">
-            TODO: In future will need to change type to <code>double</code>
-        </member>
-        <member name="T:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._lazyEmbeddedObjects">
             <summary>
-            JS engine factory collection extensions
+            Storage for lazy-initialized embedded objects
             </summary>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection)">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedObjectFinalizeCallback">
             <summary>
-            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
-            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            Callback for finalization of embedded object
             </summary>
-            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
-            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection,System.Action{JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings})">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedObjectStorageInitializationSynchronizer">
             <summary>
-            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
-            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            Synchronizer of embedded object storage's initialization
             </summary>
-            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
-            <param name="configure">The delegate to configure the provided <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings"/></param>
-            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsEngineFactoryCollectionExtensions.AddChakraCore(JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection,JavaScriptEngineSwitcher.ChakraCore.ChakraCoreSettings)">
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedObjectStorageInitialized">
             <summary>
-            Adds a instance of <see cref="T:JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory"/> to
-            the specified <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" />
+            Flag indicating whether the embedded object storage is initialized
             </summary>
-            <param name="source">Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></param>
-            <param name="settings">Settings of the ChakraCore JS engine</param>
-            <returns>Instance of <see cref="T:JavaScriptEngineSwitcher.Core.JsEngineFactoryCollection" /></returns>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._lazyEmbeddedTypes">
+            <summary>
+            Storage for lazy-initialized embedded types
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedTypeFinalizeCallback">
+            <summary>
+            Callback for finalization of embedded type
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedTypeStorageInitializationSynchronizer">
+            <summary>
+            Synchronizer of embedded type storage's initialization
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._embeddedTypeStorageInitialized">
+            <summary>
+            Flag indicating whether the embedded type storage is initialized
+            </summary>
+        </member>
+        <member name="F:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper._disposedFlag">
+            <summary>
+            Flag indicating whether this object is disposed
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.#ctor">
+            <summary>
+            Constructs an instance of type mapper
+            </summary>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.GetOrCreateScriptObject(System.Object)">
+            <summary>
+            Creates a JavaScript value from an host object if the it does not already exist
+            </summary>
+            <param name="obj">Instance of host type</param>
+            <returns>JavaScript value created from an host object</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.GetOrCreateScriptType(System.Type)">
+            <summary>
+            Creates a JavaScript value from an host type if the it does not already exist
+            </summary>
+            <param name="type">Host type</param>
+            <returns>JavaScript value created from an host type</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.MapToScriptType(System.Object)">
+            <summary>
+            Makes a mapping of value from the host type to a script type
+            </summary>
+            <param name="value">The source value</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.MapToScriptType(System.Object[])">
+            <summary>
+            Makes a mapping of array items from the host type to a script type
+            </summary>
+            <param name="args">The source array</param>
+            <returns>The mapped array</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.MapToHostType(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue)">
+            <summary>
+            Makes a mapping of value from the script type to a host type
+            </summary>
+            <param name="value">The source value</param>
+            <returns>The mapped value</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.MapToHostType(JavaScriptEngineSwitcher.ChakraCore.JsRt.JsValue[])">
+            <summary>
+            Makes a mapping of array items from the script type to a host type
+            </summary>
+            <param name="args">The source array</param>
+            <returns>The mapped array</returns>
+        </member>
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.JsRt.TypeMapper.Dispose">
+            <summary>
+            Disposes a type mapper
+            </summary>
         </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings">
             <summary>
@@ -2518,19 +2879,9 @@
             resource lookups using this strongly typed resource class
             </summary>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Common_BufferNotFromPool">
-            <summary>
-            Looks up a localized string similar to "The buffer is not associated with this pool and may not be returned to it."
-            </summary>
-        </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engines_AddingDirectoryToDllSearchPathFailed">
             <summary>
             Looks up a localized string similar to "Failed to add the '{0}' directory to the search path used to locate DLLs for the application."
-            </summary>
-        </member>
-        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engines_ChakraCoreAssemblyDirectoryNotFound">
-            <summary>
-            Looks up a localized string similar to "The '{0}' directory, that should contain `ChakraCore.dll` assembly, does not exist."
             </summary>
         </member>
         <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Runtime_HostDelegateInvocationFailed">
@@ -2623,24 +2974,39 @@
             Looks up a localized string similar to "Could not find suitable method or not enough arguments to invoke of '{0}' method of the host object."
             </summary>
         </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engine_ManualInstallationUnderMonoRequired">
+            <summary>
+            Looks up a localized string similar to "{0} packages do not support installation under Mono, but you can to install the native assembly..."
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engine_BuildNativeAssemblyForCurrentProcessorArchitecture">
+            <summary>
+            Looks up a localized string similar to "You can build the '{0}' assembly for the current processor architecture by using following..."
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engine_VcRedist2017InstallationRequired">
+            <summary>
+            Looks up a localized string similar to "In addition, you still need to install the Microsoft Visual C++ Redistributable for Visual Studio..."
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Engine_MaxStackSizeMustBeNonNegative">
+            <summary>
+            Looks up a localized string similar to "Maximum stack size must be non-negative."
+            </summary>
+        </member>
+        <member name="P:JavaScriptEngineSwitcher.ChakraCore.Resources.Strings.Common_ArgumentHasIncorrectType">
+            <summary>
+            Looks up a localized string similar to "The parameter '{0}' must have a `{1}` type."
+            </summary>
+        </member>
         <member name="T:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher">
             <summary>
-            Provides services for managing the queue of script tasks on the thread with increased stack size
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.STACK_SIZE_32">
-            <summary>
-            The stack size is sufficient to run the code of modern JavaScript libraries in 32-bit process
-            </summary>
-        </member>
-        <member name="F:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.STACK_SIZE_64">
-            <summary>
-            The stack size is sufficient to run the code of modern JavaScript libraries in 64-bit process
+            Provides services for managing the queue of script tasks on the thread with modified stack size
             </summary>
         </member>
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher._thread">
             <summary>
-            The thread with increased stack size
+            The thread with modified stack size
             </summary>
         </member>
         <member name="F:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher._waitHandle">
@@ -2663,14 +3029,16 @@
             Flag that object is destroyed
             </summary>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.#ctor">
+        <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.#ctor(System.Int32)">
             <summary>
             Constructs an instance of script dispatcher
             </summary>
+            <param name="maxStackSize">The maximum stack size, in bytes, to be used by the thread,
+            or 0 to use the default maximum stack size specified in the header for the executable.</param>
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.StartThread">
             <summary>
-            Starts a thread with increased stack size.
+            Starts a thread with modified stack size.
             Loops forever, processing script tasks from the queue.
             </summary>
         </member>
@@ -2682,7 +3050,7 @@
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.InnnerInvoke(System.Func{System.Object})">
             <summary>
-            Runs a specified delegate on the thread with increased stack size,
+            Runs a specified delegate on the thread with modified stack size,
             and returns its result as an <see cref="T:System.Object"/>.
             Blocks until the invocation of delegate is completed.
             </summary>
@@ -2691,7 +3059,7 @@
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.Invoke``1(System.Func{``0})">
             <summary>
-            Runs a specified delegate on the thread with increased stack size,
+            Runs a specified delegate on the thread with modified stack size,
             and returns its result as an <typeparamref name="T" />.
             Blocks until the invocation of delegate is completed.
             </summary>
@@ -2702,7 +3070,7 @@
         </member>
         <member name="M:JavaScriptEngineSwitcher.ChakraCore.ScriptDispatcher.Invoke(System.Action)">
             <summary>
-            Runs a specified delegate on the thread with increased stack size.
+            Runs a specified delegate on the thread with modified stack size.
             Blocks until the invocation of delegate is completed.
             </summary>
             <param name="action">Delegate to invocation</param>

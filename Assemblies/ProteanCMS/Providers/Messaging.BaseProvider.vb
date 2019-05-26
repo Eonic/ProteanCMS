@@ -196,7 +196,9 @@ Namespace Providers
                                 Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                                 cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
-                                If oMessaging.SendSingleMail_Queued(nPageId, cMailingXsl, cEmail, moMailConfig("SenderEmail"), moMailConfig("SenderName"), cSubject) Then
+
+
+                                If oMessaging.SendSingleMail_Direct(nPageId, cMailingXsl, cEmail, moMailConfig("SenderEmail"), moMailConfig("SenderName"), cSubject) Then
                                     'add mssage and return to form so they can sen another
 
                                     Dim oMsgElmt As XmlElement = oPageDetail.OwnerDocument.CreateElement("Content")

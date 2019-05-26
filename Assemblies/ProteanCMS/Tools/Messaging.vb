@@ -1215,8 +1215,70 @@ Public Class Messaging
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
                 oEmail.Subject = cSubject
 
+
                 'otherwise we send it
                 SendQueuedMail(oEmail, moMailConfig("PickupHost"), moMailConfig("PickupLocation"))
+                Return True
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            returnException(mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug)
+            Return False
+        End Try
+    End Function
+
+
+    Function SendSingleMail_Direct(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
+        PerfMon.Log("Messaging", "SendSingleMail_Queued")
+        Try
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+
+
+            Dim oWeb As New Cms
+            oWeb.InitializeVariables()
+            oWeb.Open()
+            oWeb.mnPageId = nPageId
+            oWeb.mbAdminMode = False
+
+            oWeb.mcEwSiteXsl = cEmailXSL
+            'get body
+            oWeb.mnMailMenuId = moMailConfig("RootPageId")
+
+            If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
+                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+
+                'Lets get the title and override the one provided
+                Dim oXml As New XmlDocument
+
+                oXml = htmlToXmlDoc(sEmailBody)
+
+                If Not oXml Is Nothing Then
+                    'override the subject line from the template.
+                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
+                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
+                        If oElmt2.InnerText <> "" Then
+                            cSubject = Trim(oElmt2.InnerText)
+                        End If
+                    End If
+                End If
+                oXml = Nothing
+
+                Dim oEmail As Net.Mail.MailMessage
+
+                oEmail = New Net.Mail.MailMessage
+                oEmail.IsBodyHtml = True
+                oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
+                oEmail.Body = sEmailBody
+                oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
+                oEmail.Subject = cSubject
+
+                Dim sender As New Net.Mail.SmtpClient(goConfig("MailServer"))
+                sender.Send(oEmail)
+
+                'otherwise we send it
+                'SendQueuedMail(oEmail, moMailConfig("PickupHost"), moMailConfig("PickupLocation"))
                 Return True
             Else
                 Return False

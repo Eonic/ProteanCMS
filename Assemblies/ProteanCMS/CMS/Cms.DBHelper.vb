@@ -6851,8 +6851,10 @@ restart:
                     Dim eventsDoneEvt As New System.Threading.ManualResetEvent(False)
 
                     For Each oInstance In ObjectsXml.SelectNodes("Instance | instance")
+
                         completeCount = completeCount + 1
                         If completeCount > startNo Then
+
                             Dim stateObj As New dbImport.ImportStateObj()
                             stateObj.oInstance = oInstance
                             stateObj.LogId = logId
@@ -7610,7 +7612,7 @@ restart:
         End Sub
 
 
-        Public Sub AddDataSetToContent(ByRef oDs As DataSet, ByRef oContent As XmlElement, ByVal nCurrentPageId As Long, ByVal bIgnoreDuplicates As Boolean, ByVal cAddSourceAttribute As String, ByRef dExpireDate As DateTime, ByRef dUpdateDate As DateTime, ByVal bAllowRecursion As Boolean, ByVal nMaxDepth As Integer)
+        Public Sub AddDataSetToContent(ByRef oDs As DataSet, ByRef oContent As XmlElement, ByVal nCurrentPageId As Long, ByVal bIgnoreDuplicates As Boolean, ByVal cAddSourceAttribute As String, ByRef dExpireDate As DateTime, ByRef dUpdateDate As DateTime, ByVal bAllowRecursion As Boolean, ByVal nMaxDepth As Integer, Optional cShowSpecificContentTypes As String = "")
             PerfMon.Log("DBHelper", "AddDataSetToContent - Start")
             Dim sProcessInfo As String = ""
 
@@ -7625,7 +7627,6 @@ restart:
 
                 Dim aNodeTypes() As String
                 Dim cShowRelatedBriefContentTypes As String = goConfig("ShowRelatedBriefContentTypes") & ""
-                Dim cShowSpecificContentTypes As String = ""
                 Dim oXml As XmlDocument = ContentDataSetToXml(oDs, dUpdateDate)
                 Dim oXml2 As XmlNode = oContent.OwnerDocument.ImportNode(oXml.DocumentElement, True)
 
