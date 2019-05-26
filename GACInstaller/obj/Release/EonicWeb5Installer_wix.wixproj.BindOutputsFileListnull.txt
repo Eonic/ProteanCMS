@@ -1,0 +1,2 @@
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Release\ProteanCMSInstaller.wixpdb

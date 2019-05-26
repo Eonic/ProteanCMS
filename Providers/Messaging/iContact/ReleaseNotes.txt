@@ -1,0 +1,41 @@
+﻿
+===============================================================================
+	RELEASE NOTES FOR Eonic.Providers.Messaging.CampaignMonitorEonicWebIntegration
+	
+	Please use this to register what changes have been made and where versions
+	are currently.
+	 
+===============================================================================
+===============================================================================
+	IN PRODUCTION 
+===============================================================================
+1.0.1.3
+
+===============================================================================
+	RELEASE CANDIDATE : ON DS01
+===============================================================================
+
+
+===============================================================================
+===============================================================================
+	NOT YET RELEASED
+===============================================================================
+
+
+===============================================================================
+	RELEASED TO LIVE
+===============================================================================
+1.0.1.2
+[TS]  Messaging.CampaignMonitorTools.Subscribe - enabled additional custom fields to be added
+
+1.0.1.0
+[AG] Signed the assembly pointed it to the newly signed API Wrapper
+DEPENDENCY: Newly Signed API Wrapper
+			EonicWeb 4.1.1.89
+			Eonic.Tools 1.0.0.60
+
+1.0.0.1
+[AG] Eonic.Providers.Messaging.EonicProvider.Admin.MailingListProcess - fix to the related content add content redirection
+
+1.0.0.0
+[AG] New componenent - currently trying to sign the assembly

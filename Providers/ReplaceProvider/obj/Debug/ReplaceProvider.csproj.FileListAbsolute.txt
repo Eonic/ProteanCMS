@@ -1,0 +1,17 @@
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csprojResolveAssemblyReference.cache
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
+D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb

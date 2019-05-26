@@ -1,0 +1,9 @@
+D:\Web\oSource\dotnet4\EonicWeb5Installer\bin\Debug\EonicWeb5Installer.msi
+D:\Web\oSource\dotnet4\EonicWeb5Installer\bin\Debug\EonicWeb5Installer.wixpdb
+obj\\Debug\Product.wixobj
+obj\\Debug\EonicWeb5Installer_wix.wixproj.BindContentsFileListnull.txt
+obj\\Debug\EonicWeb5Installer_wix.wixproj.BindOutputsFileListnull.txt
+obj\\Debug\EonicWeb5Installer_wix.wixproj.BindBuiltOutputsFileListnull.txt
+obj\\Debug\pthD6056379E6B1A8BDB159B4B084FFC1E0\Product.Generated.wixobj
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Debug\ProteanCMSInstaller.msi
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Debug\ProteanCMSInstaller.wixpdb

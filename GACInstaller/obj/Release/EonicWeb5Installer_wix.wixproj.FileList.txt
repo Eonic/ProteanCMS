@@ -1,0 +1,9 @@
+D:\Web\oSource\dotnet4\EonicWeb5Installer\bin\Release\EonicWeb5Installer.msi
+D:\Web\oSource\dotnet4\EonicWeb5Installer\bin\Release\EonicWeb5Installer.wixpdb
+obj\\Release\Product.wixobj
+obj\\Release\pth1D9F3CAB8FB0AF615EB71DEE5B9142C1\Product.Generated.wixobj
+obj\\Release\EonicWeb5Installer_wix.wixproj.BindContentsFileListnull.txt
+obj\\Release\EonicWeb5Installer_wix.wixproj.BindOutputsFileListnull.txt
+obj\\Release\EonicWeb5Installer_wix.wixproj.BindBuiltOutputsFileListnull.txt
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\_objSource\EonicWeb5Installer\bin\Release\ProteanCMSInstaller.wixpdb

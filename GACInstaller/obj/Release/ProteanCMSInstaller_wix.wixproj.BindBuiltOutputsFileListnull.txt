@@ -1,0 +1,2 @@
+D:\HostingSpaces\_objSource\ProteanCMSInstaller\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\_objSource\ProteanCMSInstaller\bin\Release\ProteanCMSInstaller.wixpdb

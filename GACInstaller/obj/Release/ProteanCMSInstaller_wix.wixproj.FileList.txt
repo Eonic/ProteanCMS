@@ -1,0 +1,7 @@
+obj\\Release\Product.wixobj
+obj\\Release\pthFE3E708E080D7FDCADF8429AB4DD4F0C\Product.Generated.wixobj
+D:\HostingSpaces\_objSource\ProteanCMSInstaller\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\_objSource\ProteanCMSInstaller\bin\Release\ProteanCMSInstaller.wixpdb
+obj\\Release\ProteanCMSInstaller_wix.wixproj.BindContentsFileListnull.txt
+obj\\Release\ProteanCMSInstaller_wix.wixproj.BindOutputsFileListnull.txt
+obj\\Release\ProteanCMSInstaller_wix.wixproj.BindBuiltOutputsFileListnull.txt

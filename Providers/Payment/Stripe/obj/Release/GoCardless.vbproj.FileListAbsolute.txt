@@ -1,0 +1,15 @@
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\GoCardlessPaymentProvider.dll.config
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\GoCardlessPaymentProvider.dll
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\GoCardlessPaymentProvider.pdb
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\GoCardlessPaymentProvider.xml
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\GoCardlessSdk.dll
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\Newtonsoft.Json.dll
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\RestSharp.dll
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\Newtonsoft.Json.xml
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\bin\Release\RestSharp.xml
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\GoCardless.vbprojResolveAssemblyReference.cache
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\Eonic.Providers.Payment.Resources.resources
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\GoCardless.vbproj.GenerateResource.Cache
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\GoCardlessPaymentProvider.dll
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\GoCardlessPaymentProvider.xml
+D:\Web\oSource\dotnet4\Providers\Payment\GoCardless\obj\Release\GoCardlessPaymentProvider.pdb

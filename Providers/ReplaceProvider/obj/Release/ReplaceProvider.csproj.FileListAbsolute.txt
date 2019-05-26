@@ -1,0 +1,11 @@
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\bin\Release\ReplaceProvider.pdb
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojResolveAssemblyReference.cache
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
+D:\Web\oSource\dotnet4\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\bin\Release\ReplaceProvider.pdb
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
+D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb

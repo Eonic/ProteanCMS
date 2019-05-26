@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<provider name="Stripe" validGroups="all" validCurrencies="GBP">
+				<description value="Pay by Credit Card (Stripe)"/>
+				<Currency value="GBP"/>
+				<cardsAccepted value="MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch/Maestro:Switch"/>
+        <InstallationID value="6kQq2S25"/>
+        <AccountID value="652enRP62SCaB7Tq"/>
+        <AuthMode value="A"/>
+        <TestMode value="true"/>
+        <CallbackURL value=""/>
+			</provider>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="provider">
+			<bind id="description" nodeset="description/@value" required="true()" type="string"/>
+			<bind id="Currency" nodeset="Currency/@value" required="true()" type="string"/>
+			<bind id="cardsAccepted" nodeset="cardsAccepted/@value" required="true()" type="string"/>
+			<bind id="InstallationID" nodeset="InstallationID/@value" required="true()" type="string"/>
+			<bind id="AccountID" nodeset="AccountID/@value" required="true()" type="string"/>
+      <bind id="Secret" nodeset="Secret/@value" required="false()" type="string"/>
+      <bind id="AuthMode" nodeset="AuthMode/@value" required="true()" type="string"/>
+			<bind id="TestMode" nodeset="TestMode/@value" required="true()" type="string"/>
+			<bind id="CallbackURL" nodeset="CallbackURL/@value" required="false()" type="string"/>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>WorldPay Settings</label>
+		<input bind="description" class="long">
+			<label>Description</label>
+		</input>
+		<input bind="InstallationID">
+			<label>Installation ID</label>
+		</input>
+		<input bind="AccountID">
+			<label>Account ID</label>
+		</input>
+		<input bind="Secret">
+			<label>Secret(MD5 Hash)</label>
+		</input>
+		<input bind="Currency">
+			<label>Currency</label>
+		</input>
+		<textarea bind="cardsAccepted">
+			<label>CardsAccepted</label>
+		</textarea>
+		<select1 bind="TestMode" appearance="full" class="required">
+			<label>TestMode</label>
+			<item>
+				<label>Live</label>
+				<value>0</value>
+			</item>
+			<item>
+				<label>Test Authorised</label>
+				<value>AUTHORISED</value>
+			</item>
+      <item>
+        <label>Test Error</label>
+        <value>ERROR</value>
+      </item>
+      <item>
+        <label>Test Captured</label>
+        <value>CAPTURED</value>
+      </item>
+		</select1>
+		<select1 bind="AuthMode" appearance="full" class="required">
+			<label>Auth Mode</label>
+			<item>
+				<label>AUTH_CAPTURE</label>
+				<value>A</value>
+			</item>
+			<item>
+				<label>AUTH_ONLY</label>
+				<value>E</value>
+			</item>
+		</select1>
+    <input bind="CallbackURL">
+      <label>Callback URL (default blank)</label>
+    </input>
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Save Settings</label>
+		</submit>
+	</group>
+</Content>

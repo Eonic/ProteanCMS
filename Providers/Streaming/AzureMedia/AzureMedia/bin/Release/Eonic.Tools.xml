@@ -1,0 +1,3802 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Eonic.Tools
+</name>
+</assembly>
+<members>
+<member name="T:Eonic.Tools.IFilter.IFilterReturnCodes">
+ 
+ IFilter return codes
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.S_OK">
+ 
+ Success
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_ACCESSDENIED">
+ 
+ The function was denied access to the filter file. 
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_HANDLE">
+ 
+ The function encountered an invalid handle, probably due to a low-memory situation. 
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_INVALIDARG">
+ 
+ The function received an invalid parameter.
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_OUTOFMEMORY">
+ 
+ Out of memory
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_NOTIMPL">
+ 
+ Not implemented
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.E_FAIL">
+ 
+ Unknown error
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_PASSWORD">
+ 
+ File not filtered due to password protection
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_UNKNOWNFORMAT">
+ 
+ The document format is not recognised by the filter
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_NO_TEXT">
+ 
+ No text in current chunk
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_END_OF_CHUNKS">
+ 
+ No more chunks of text available in object
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_NO_MORE_TEXT">
+ 
+ No more text available in chunk
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_NO_MORE_VALUES">
+ 
+ No more property values available in chunk
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_ACCESS">
+ 
+ Unable to access object
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_W_MONIKER_CLIPPED">
+ 
+ Moniker doesn't cover entire region
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_EMBEDDING_UNAVAILABLE">
+ 
+ Unable to bind IFilter for embedded object
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_E_LINK_UNAVAILABLE">
+ 
+ Unable to bind IFilter for linked object
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_S_LAST_TEXT">
+ 
+ This is the last text in the current chunk
+ 
+</member>
+<member name="F:Eonic.Tools.IFilter.IFilterReturnCodes.FILTER_S_LAST_VALUES">
+ 
+ This is the last value in the current chunk
+ 
+</member>
+<member name="T:Eonic.Tools.IFilter.DefaultParser">
+ 
+ Convenience class which provides static methods to extract text from files using installed IFilters
+ 
+</member>
+<member name="T:Eonic.Tools.GnuPG.GnuPGException">
+ <summary>
+ Specific exception thrown whenever a PGP error occurs.
+ 
+ <p/>This class is a simple derivation from the Exception class.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGException.#ctor(System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="message">error message associated with exception</param>
+</member>
+<member name="T:Eonic.Tools.GnuPG.Commands">
+ <summary>
+ List (enum) of available commands (sign, encrypt, sign and encrypt, etc...)
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.Commands.Sign">
+ <summary>
+ Make a signature
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.Commands.Encrypt">
+ <summary>
+ Encrypt  data
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.Commands.SignAndEncrypt">
+ <summary>
+ Sign and encrypt data
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.Commands.Decrypt">
+ <summary>
+ Decrypt data
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.Commands.Verify">
+ <summary>
+ Assume that input is a signature and verify it without generating any output
+ </summary>
+</member>
+<member name="T:Eonic.Tools.GnuPG.VerboseLevel">
+ <summary>
+ List (enum) of available verbose levels (NoVerbose, Verbose, VeryVerbose)
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.VerboseLevel.NoVerbose">
+ <summary>
+ Reset verbose level to 0 (no information shown during processing)
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.VerboseLevel.Verbose">
+ <summary>
+ Give more information during processing.
+ </summary>
+</member>
+<member name="F:Eonic.Tools.GnuPG.VerboseLevel.VeryVerbose">
+ <summary>
+ Give full information during processing (the input data is listed in detail).
+ </summary>
+</member>
+<member name="T:Eonic.Tools.GnuPG.GnuPGWrapper">
+ <summary>
+ This class is a wrapper class for GNU Privacy Guard (GnuPG). It execute the command 
+ line program (gpg.exe) in an different process, redirects standard input (stdin),
+ standard output (stdout) and standard error (stderr) streams, and monitors the 
+ streams to fetch the results of the encryption/signing operation.<p/>
+ 
+ Please note that you must have INSTALLED GnuPG AND generated/imported the 
+ appropriate keys before using this class.<p/>
+ 
+ GnuPG stands for GNU Privacy Guard and is GNU's tool for secure communication and 
+ data storage. It can be used to encrypt data and to create digital signatures. It 
+ includes an advanced key management facility and is compliant with the proposed 
+ OpenPGP Internet standard as described in RFC 2440. As such, GnuPG is a complete 
+ and free replacement for PGP.<p/>
+ 
+ This class has been developed and tested with GnuPG v1.2.0 (MingW32)<p/>
+ 
+ For more about GNU, please refer to http://www.gnu.org <br/>
+ For more about GnuPG, please refer to http://www.gnupg.org <br/>
+ For more about OpenPGP (RFC 2440), please refer to http://www.gnupg.org/rfc2440.html <br/>
+ </summary>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.#ctor(System.String)">
+ <summary>
+ Constructor
+ </summary>
+ <param name="homeDirectory">home directory for GnuPG (where keyrings AND gpg.exe are located)</param>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.command">
+ <summary>
+ Command property: set the type of command to execute (sign, encrypt...)
+ 
+ <p/>Defaults to SignAndEncrypt.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.armor">
+ <summary>
+ Boolean flag: if true, GnuPG creates ASCII armored output (text output). 
+ 
+ <p/>Defaults to true (ASCII ouput).
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.recipient">
+ <summary>
+ Recipient email address - mandatory when <see cref="P:Eonic.Tools.GnuPG.GnuPGWrapper.command">command</see> is Encrypt or SignAndEncrypt
+ 
+ <p/>GnuPG uses this parameter to find the associated public key. You must have imported 
+ this public key in your keyring before.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.originator">
+ <summary>
+ Originator email address - recommended when <see cref="P:Eonic.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt
+ 
+ <p/>GnuPG uses this parameter to find the associated secret key. You must have imported 
+ this secret key in your keyring before. Otherwise, GnuPG uses the first secret key 
+ in your keyring to sign messages. This property is mapped to the "--default-key" option.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.yes">
+ <summary>
+ Boolean flag; if true, GnuPG assumes "yes" on most questions.
+ 
+ <p/>Defaults to true.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.batch">
+ <summary>
+ Boolean flag; if true, GnuPG uses batch mode (Never ask, do not allow 
+ interactive commands).
+ 
+ <p/>Defaults to true.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.passphrase">
+ <summary>
+ Passphrase for using your private key - mandatory when 
+ <see cref="P:Eonic.Tools.GnuPG.GnuPGWrapper.command">command</see> is Sign or SignAndEncrypt.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.homedirectory">
+ <summary>
+ name of the home directory (where keyrings AND gpg.exe are located)
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.passphrasefd">
+ <summary>
+ File descriptor for entering passphrase - defaults to 0 (standard input).
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.exitcode">
+ <summary>
+ Exit code from GnuPG process (0 = success; otherwise an error occured)
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.verbose">
+ <summary>
+ Verbose level (NoVerbose, Verbose, VeryVerbose). 
+ 
+ <p/>Defaults to NoVerbose.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.GnuPG.GnuPGWrapper.ProcessTimeOutMilliseconds">
+ <summary>
+ Timeout for GnuPG process, in milliseconds.
+ 
+ <p/>If the process doesn't exit before the end of the timeout period, the process is terminated (killed).
+ 
+ <p/>Defaults to 10000 (10 seconds).
+ </summary>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.BuildOptions">
+ <summary>
+ Generate a string of GnuPG command line arguments, based on the properties
+ set in this object (e.g. if the <see cref="P:Eonic.Tools.GnuPG.GnuPGWrapper.armor">armor</see> property is true, 
+ this method generates the "--armor" argument).
+ </summary>
+ <returns>GnuPG command line arguments</returns>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.ExecuteCommand(System.String,System.String)">
+ <summary>
+ Execute the GnuPG command defined by all parameters/options/properties.
+ 
+ <p/>Raise a GnuPGException whenever an error occurs.
+ </summary>
+ <param name="inputText"></param>
+ <param name="outputText"></param>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.StandardOutputReader">
+ <summary>
+ Reader thread for standard output
+ 
+ <p/>Updates the private variable _outputString (locks it first)
+ </summary>
+</member>
+<member name="M:Eonic.Tools.GnuPG.GnuPGWrapper.StandardErrorReader">
+ <summary>
+ Reader thread for standard error
+ 
+ <p/>Updates the private variable _errorString (locks it first)
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Conversion">
+ <summary>
+   <para>   Eonic.Tools.Conversion is designed to covert from one data source to another (e.g. Excel to Xml)</para>
+   <example>
+     <para>Exmaple usage to convert an Excel file to XML</para>
+     <code>Dim c As New Conversion(Conversion.Type.Excel, Conversion.Type.Xml, "c:\text.xls")</code>
+     <code>c.Convert()</code>
+     <code>If c.State = Status.Succeeded Then Response.Write c.Output.OuterXml Else Response.Write c.Message</code>
+   </example>
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.CounterCollection.Add(System.String)">
+ <summary>
+ Creates a counter by counter name and adds it to the collection
+ </summary>
+ <param name="counterName">The name of the counter</param>
+ <returns>Returns the actual Counter object</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.CounterCollection.Add(Eonic.Tools.Counter)">
+ <summary>
+ Adds a counter by object
+ </summary>
+ <param name="value">The counter object to add</param>
+ <returns>The index of counter in the collection</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Database.GetDataSet(System.String,System.String,System.String,System.Boolean,System.Collections.Hashtable,System.Data.CommandType,System.Int32,System.Int32)">
+ <summary>
+   Returns a dataset
+ </summary>
+ <param name="sql">The sql, table or stored procedure to call - when calling a table or SP remember to change querytype.</param>
+ <param name="tablename">The name of the table that will be added to the dataset</param>
+ <param name="parameters">A hashtable of parameters to be fed into the calling command</param>
+ <param name="querytype">The query type: plain text, table or stored procedure</param>
+ <param name="datasetname">The name of the dataset to be returned</param>
+ <param name="bHandleTimeouts">Indicates whether to pass timeouts through the standard error handling, or ignore them.</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.DelegateWrappers.PredicateWrapperDelegate`2">
+ <summary>
+ 
+ </summary>
+ <typeparam name="T"></typeparam>
+ <typeparam name="A"></typeparam>
+ <param name="item"></param>
+ <param name="argument"></param>
+ <returns></returns>
+ <remarks>From http://www.paulstovell.com/vb-anonymous-methods</remarks>
+</member>
+<member name="M:Eonic.Tools.Dictionary.getSimpleHashTable(System.String)">
+ <summary>
+     Creates a hashtable based on a colon and comma separated list of key/value string pairs.
+ </summary>
+ <param name="cCSVString">Format is "key1:value1,key2:value2,key3:value3 etc.</param>
+ <returns>Hashtable</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Dictionary.hashtableToCSV(System.Collections.Hashtable@,Eonic.Tools.Dictionary.Dimension,System.Char)">
+ <summary>
+    Creates a CSV from a hashtable.
+    If the key/value cannot be converted to a string, then this will fail.
+    If the key/value contains the separator then it will be removed.
+    
+ </summary>
+ <param name="hashTableToConvert">The hashtable to convert</param>
+ <param name="dimension">Determines whether to use the keys or values in the list </param>
+ <param name="separator">The separator character</param>
+ <returns>A CSV list of the hastable key or values</returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Encryption.Hash">
+ <summary>
+ Hash functions are fundamental to modern cryptography. These functions map binary 
+ strings of an arbitrary length to small binary strings of a fixed length, known as 
+ hash values. A cryptographic hash function has the property that it is computationally
+ infeasible to find two distinct inputs that hash to the same value. Hash functions 
+ are commonly used with digital signatures and for EncData integrity.
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.Hash.Provider">
+ <summary>
+ Type of hash; some are security oriented, others are fast and simple
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Crc32">
+ <summary>
+ Cyclic Redundancy Check provider, 32-bit
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Sha1">
+ <summary>
+ Secure Hashing Algorithm provider, SHA-1 variant, 160-bit
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Sha256">
+ <summary>
+ Secure Hashing Algorithm provider, SHA-2 variant, 256-bit
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Sha384">
+ <summary>
+ Secure Hashing Algorithm provider, SHA-2 variant, 384-bit
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Sha512">
+ <summary>
+ Secure Hashing Algorithm provider, SHA-2 variant, 512-bit
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Hash.Provider.Md5">
+ <summary>
+ Message Digest algorithm 5, 128-bit
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Hash.#ctor(Eonic.Tools.Encryption.Hash.Provider)">
+ <summary>
+ Instantiate a new hash of the specified type
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Hash.Value">
+ <summary>
+ Returns the previously calculated hash
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Hash.Calculate(System.IO.Stream)">
+ <summary>
+ Calculates hash on a stream of arbitrary length
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Hash.Calculate(Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Calculates hash for fixed length <see cref="N:System.Data"/>
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Hash.Calculate(Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Calculates hash for a string with a prefixed salt value. 
+ A "salt" is random EncData prefixed to every hashed value to prevent 
+ common dictionary attacks.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Hash.CalculatePrivate(System.Byte[])">
+ <summary>
+ Calculates hash for an array of bytes
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.Symmetric">
+ <summary>
+ Symmetric encryption uses a single key to encrypt and decrypt. 
+ Both parties (encryptor and decryptor) must share the same secret key.
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Symmetric.Provider.DES">
+ <summary>
+ The EncData Encryption Standard provider supports a 64 bit key only
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Symmetric.Provider.RC2">
+ <summary>
+ The Rivest Cipher 2 provider supports keys ranging from 40 to 128 bits, default is 128 bits
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Symmetric.Provider.Rijndael">
+ <summary>
+ The Rijndael (also known as AES) provider supports keys of 128, 192, or 256 bits with a default of 256 bits
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.Symmetric.Provider.TripleDES">
+ <summary>
+ The TripleDES provider (also known as 3DES) supports keys of 128 or 192 bits with a default of 192 bits
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.#ctor(Eonic.Tools.Encryption.Symmetric.Provider)">
+ <summary>
+ Instantiates a new symmetric encryption object using the specified provider.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Symmetric.KeySizeBytes">
+ <summary>
+ Key size in bytes. We use the default key size for any given provider; if you 
+ want to force a specific key size, set this property
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Symmetric.KeySizeBits">
+ <summary>
+ Key size in bits. We use the default key size for any given provider; if you 
+ want to force a specific key size, set this property
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Symmetric.Key">
+ <summary>
+ The key used to encrypt/decrypt EncData
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Symmetric.InitializationVector">
+ <summary>
+ Using the default Cipher Block Chaining (CBC) mode, all EncData blocks are processed using
+ the value derived from the previous block; the first EncData block has no previous EncData block
+ to use, so it needs an InitializationVector to feed the first block
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.RandomInitializationVector">
+ <summary>
+ generates a random Initialization Vector, if one was not provided
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.RandomKey">
+ <summary>
+ generates a random Key, if one was not provided
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.ValidateKeyAndIv(System.Boolean)">
+ <summary>
+ Ensures that _crypto object has valid Key and IV
+ prior to any attempt to encrypt/decrypt anything
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Encrypt(Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Encrypts the specified EncData using provided key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Encrypt(Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Encrypts the specified EncData using preset key and preset initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Encrypt(System.IO.Stream,Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Encrypts the stream to memory using provided key and provided initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Encrypt(System.IO.Stream,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Encrypts the stream to memory using specified key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Encrypt(System.IO.Stream)">
+ <summary>
+ Encrypts the specified stream to memory using preset key and preset initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Decrypt(Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Decrypts the specified EncData using provided key and preset initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Decrypt(System.IO.Stream,Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Decrypts the specified stream using provided key and preset initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Decrypt(System.IO.Stream)">
+ <summary>
+ Decrypts the specified stream using preset key and preset initialization vector
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Symmetric.Decrypt(Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Decrypts the specified EncData using preset key and preset initialization vector
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.Asymmetric">
+ <summary>
+ Asymmetric encryption uses a pair of keys to encrypt and decrypt.
+ There is a "public" key which is used to encrypt. Decrypting, on the other hand, 
+ requires both the "public" key and an additional "private" key. The advantage is 
+ that people can send you encrypted messages without being able to decrypt them.
+ </summary>
+ <remarks>
+ The only provider supported is the <see cref="T:System.Security.Cryptography.RSACryptoServiceProvider"/>
+ </remarks>
+</member>
+<member name="T:Eonic.Tools.Encryption.Asymmetric.PublicKey">
+ <summary>
+ Represents a public encryption key. Intended to be shared, it 
+ contains only the Modulus and Exponent.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.LoadFromConfig">
+ <summary>
+ Load public key from App.config or Web.config file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.ToConfigSection">
+ <summary>
+ Returns *.config file Xml section representing this public key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.ExportToConfigFile(System.String)">
+ <summary>
+ Writes the *.config file representation of this public key to a file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.LoadFromXml(System.String)">
+ <summary>
+ Loads the public key from its Xml string
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.ToParameters">
+ <summary>
+ Converts this public key to an RSAParameters object
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.ToXml">
+ <summary>
+ Converts this public key to its Xml string representation
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PublicKey.ExportToXmlFile(System.String)">
+ <summary>
+ Writes the Xml representation of this public key to a file
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.Asymmetric.PrivateKey">
+ <summary>
+ Represents a private encryption key. Not intended to be shared, as it 
+ contains all the elements that make up the key.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.LoadFromConfig">
+ <summary>
+ Load private key from App.config or Web.config file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.ToParameters">
+ <summary>
+ Converts this private key to an RSAParameters object
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.ToConfigSection">
+ <summary>
+ Returns *.config file Xml section representing this private key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.ExportToConfigFile(System.String)">
+ <summary>
+ Writes the *.config file representation of this private key to a file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.LoadFromXml(System.String)">
+ <summary>
+ Loads the private key from its Xml string
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.ToXml">
+ <summary>
+ Converts this private key to its Xml string representation
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.PrivateKey.ExportToXmlFile(System.String)">
+ <summary>
+ Writes the Xml representation of this private key to a file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.#ctor">
+ <summary>
+ Instantiates a new asymmetric encryption session using the default key size; 
+ this is usally 1024 bits
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.#ctor(System.Int32)">
+ <summary>
+ Instantiates a new asymmetric encryption session using a specific key size
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.KeyContainerName">
+ <summary>
+ Sets the name of the key container used to store this key on disk; this is an 
+ unavoidable side effect of the underlying Microsoft CryptoAPI. 
+ </summary>
+ <remarks>
+ http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q322/3/71.asp&amp;NoWebContent=1
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.KeySizeBits">
+ <summary>
+ Returns the current key size, in bits
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.KeySizeMaxBits">
+ <summary>
+ Returns the maximum supported key size, in bits
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.KeySizeMinBits">
+ <summary>
+ Returns the minimum supported key size, in bits
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.KeySizeStepBits">
+ <summary>
+ Returns valid key step sizes, in bits
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.DefaultPublicKey">
+ <summary>
+ Returns the default public key as stored in the *.config file
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.Asymmetric.DefaultPrivateKey">
+ <summary>
+ Returns the default private key as stored in the *.config file
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.GenerateNewKeySet(Eonic.Tools.Encryption.Asymmetric.PublicKey@,Eonic.Tools.Encryption.Asymmetric.PrivateKey@)">
+ <summary>
+ Generates a new public/private key pair as objects
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.GenerateNewKeySet(System.String@,System.String@)">
+ <summary>
+ Generates a new public/private key pair as Xml strings
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Encrypt(Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Encrypts EncData using the default public key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Encrypt(Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.Asymmetric.PublicKey)">
+ <summary>
+ Encrypts EncData using the provided public key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Encrypt(Eonic.Tools.Encryption.EncData,System.String)">
+ <summary>
+ Encrypts EncData using the provided public key as Xml
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Decrypt(Eonic.Tools.Encryption.EncData)">
+ <summary>
+ Decrypts EncData using the default private key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Decrypt(Eonic.Tools.Encryption.EncData,Eonic.Tools.Encryption.Asymmetric.PrivateKey)">
+ <summary>
+ Decrypts EncData using the provided private key
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.Decrypt(Eonic.Tools.Encryption.EncData,System.String)">
+ <summary>
+ Decrypts EncData using the provided private key as Xml
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Asymmetric.GetRSAProvider">
+ <summary>
+ gets the default RSA provider using the specified key size; 
+ note that Microsoft's CryptoAPI has an underlying file system dependency that is unavoidable
+ </summary>
+ <remarks>
+ http://support.microsoft.com/default.aspx?scid=http://support.microsoft.com:80/support/kb/articles/q322/3/71.asp&amp;NoWebContent=1
+ </remarks>
+</member>
+<member name="T:Eonic.Tools.Encryption.EncData">
+ <summary>
+ represents Hex, Byte, Base64, or String EncData to encrypt/decrypt;
+ use the .Text property to set/get a string representation 
+ use the .Hex property to set/get a string-based Hexadecimal representation 
+ use the .Base64 to set/get a string-based Base64 representation 
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.EncData.DefaultEncoding">
+ <summary>
+ Determines the default text encoding across ALL EncData instances
+ </summary>
+</member>
+<member name="F:Eonic.Tools.Encryption.EncData.Encoding">
+ <summary>
+ Determines the default text encoding for this EncData instance
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.#ctor">
+ <summary>
+ Creates new, empty encryption EncData
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.#ctor(System.Byte[])">
+ <summary>
+ Creates new encryption EncData with the specified byte array
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.#ctor(System.String)">
+ <summary>
+ Creates new encryption EncData with the specified string; 
+ will be converted to byte array using default encoding
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.#ctor(System.String,System.Text.Encoding)">
+ <summary>
+ Creates new encryption EncData using the specified string and the 
+ specified encoding to convert the string to a byte array.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.IsEmpty">
+ <summary>
+ returns true if no EncData is present
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.StepBytes">
+ <summary>
+ allowed step interval, in bytes, for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.StepBits">
+ <summary>
+ allowed step interval, in bits, for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.MinBytes">
+ <summary>
+ minimum number of bytes allowed for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.MinBits">
+ <summary>
+ minimum number of bits allowed for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.MaxBytes">
+ <summary>
+ maximum number of bytes allowed for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.MaxBits">
+ <summary>
+ maximum number of bits allowed for this EncData; if 0, no limit
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.Bytes">
+ <summary>
+ Returns the byte representation of the EncData; 
+ This will be padded to MinBytes and trimmed to MaxBytes as necessary!
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.Text">
+ <summary>
+ Sets or returns text representation of bytes using the default text encoding
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.Hex">
+ <summary>
+ Sets or returns Hex string representation of this EncData
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Encryption.EncData.Base64">
+ <summary>
+ Sets or returns Base64 string representation of this EncData
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.ToString">
+ <summary>
+ Returns text representation of bytes using the default text encoding
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.ToBase64">
+ <summary>
+ returns Base64 string representation of this EncData
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.EncData.ToHex">
+ <summary>
+ returns Hex string representation of this EncData
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.Utils">
+ <summary>
+ Friend class for shared utility methods used by multiple Encryption classes
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.ToHex(System.Byte[])">
+ <summary>
+ converts an array of bytes to a string Hex representation
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.FromHex(System.String)">
+ <summary>
+ converts from a string Hex representation to an array of bytes
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.FromBase64(System.String)">
+ <summary>
+ converts from a string Base64 representation to an array of bytes
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.ToBase64(System.Byte[])">
+ <summary>
+ converts from an array of bytes to a string Base64 representation
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.GetXmlElement(System.String,System.String)">
+ <summary>
+ retrieve an element from an Xml string
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Encryption.Utils.GetConfigString(System.String,System.Boolean)">
+ <summary>
+ Returns the specified string value from the application .config file
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Encryption.RC4">
+ <summary>
+ Utility class for handling encryption and hashing
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Encryption.RC4.Encrypt(System.String,System.String)">
+ <summary>
+ Returns an encrypted string based on the provided message and passkey
+ </summary>
+ <param name="message"></param>
+ <param name="key"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Encryption.RC4.Decrypt(System.String,System.String)">
+ <summary>
+ Returns a decrypted string based on the provided message and passkey
+ </summary>
+ <param name="message"></param>
+ <param name="key"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Encryption.RC4.EnDeCrypt(System.String,System.String)">
+ <summary>
+ RC4 encryption method
+ </summary>
+ <param name="message"></param>
+ <param name="password"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Encryption.RC4.StringToHex(System.String)">
+ <summary>
+ Turns the provided string value into a hex value (for encryption)
+ </summary>
+ <param name="message"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Encryption.RC4.HexToString(System.String)">
+ <summary>
+ Turns the provided hex value into a string value (for decryption)
+ </summary>
+ <param name="hex"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.FileHelper.GetMIMEType(System.String)">
+ <summary>
+ Returns a MIME type for a given extension
+ </summary>
+ <param name="extension"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Http.Utils">
+ <summary>
+ Eonic.Tools.Http.Utils
+ Collection of shared Http/Web utils
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Http.Utils.ShortenURL(System.String,Eonic.Tools.Http.URLShorteningService,System.String,System.String)">
+ <summary>
+ 
+ </summary>
+ <param name="urlToShorten"></param>
+ <param name="shorteningService"></param>
+ <returns></returns>
+ <remarks>This is derived from TwitterVB, as we wanted to add other services.</remarks>
+</member>
+<member name="T:Eonic.Tools.Http.WebRequest">
+ <summary>
+ Simplified WebRequest class.
+ </summary>
+ <remarks>TODO: Needs a GET method</remarks>
+</member>
+<member name="M:Eonic.Tools.Http.WebRequest.Send(System.String,System.String)">
+ <summary>
+ Instigate a synchronous request and response
+ </summary>
+ <param name="url">The URI to send the request to</param>
+ <param name="request">The request string to send</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Http.WebRequest.Send(System.Uri,System.String)">
+ <summary>
+ Instigate a synchronous request and response
+ </summary>
+ <param name="url">The URI to send the request to</param>
+ <param name="request">The request string to send</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Image.CaptchaImage">
+ <summary>
+ CAPTCHA image generation class
+ </summary>
+ <remarks>
+ Adapted from the excellent code at 
+ http://www.codeproject.com/aspnet/CaptchaImage.asp
+
+ Jeff Atwood
+ http://www.codinghorror.com/
+ </remarks>
+</member>
+<member name="T:Eonic.Tools.Image.CaptchaImage.FontWarpFactor">
+ <summary>
+ Amount of random font warping to apply to rendered text
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Image.CaptchaImage.BackgroundNoiseLevel">
+ <summary>
+ Amount of background noise to add to rendered image
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Image.CaptchaImage.LineNoiseLevel">
+ <summary>
+ Amount of curved line noise to add to rendered image
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.UniqueId">
+ <summary>
+ Returns a GUID that uniquely identifies this Captcha
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.RenderedAt">
+ <summary>
+ Returns the date and time this image was last rendered
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.Font">
+ <summary>
+ Font family to use when drawing the Captcha text. If no font is provided, a random font will be chosen from the font whitelist for each character.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.FontWarp">
+ <summary>
+ Amount of random warping to apply to the Captcha text.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.BackgroundNoise">
+ <summary>
+ Amount of background noise to apply to the Captcha image.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.TextChars">
+ <summary>
+ A string of valid characters to use in the Captcha text. 
+ A random character will be selected from this string for each character.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.TextLength">
+ <summary>
+ Number of characters to use in the Captcha text. 
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.Text">
+ <summary>
+ Returns the randomly generated Captcha text.
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.Width">
+ <summary>
+ Width of Captcha image to generate, in pixels 
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.Height">
+ <summary>
+ Height of Captcha image to generate, in pixels 
+ </summary>
+</member>
+<member name="P:Eonic.Tools.Image.CaptchaImage.FontWhitelist">
+ <summary>
+ A semicolon-delimited list of valid fonts to use when no font is provided.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.RenderImage">
+ <summary>
+ Forces a new Captcha image to be generated using current property value settings.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.RandomFontFamily">
+ <summary>
+ Returns a random font family from the font whitelist
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.GenerateRandomText">
+ <summary>
+ generate random text for the CAPTCHA
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.RandomPoint(System.Int32,System.Int32,System.Int32@,System.Int32@)">
+ <summary>
+ Returns a random point within the specified x and y ranges
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.RandomPoint(System.Drawing.Rectangle)">
+ <summary>
+ Returns a random point within the specified rectangle
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.TextPath(System.String,System.Drawing.Font,System.Drawing.Rectangle)">
+ <summary>
+ Returns a GraphicsPath containing the specified string and font
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.GetFont">
+ <summary>
+ Returns the CAPTCHA font in an appropriate size 
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.GenerateImagePrivate">
+ <summary>
+ Renders the CAPTCHA image
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.WarpText(System.Drawing.Drawing2D.GraphicsPath,System.Drawing.Rectangle)">
+ <summary>
+ Warp the provided text GraphicsPath by a variable amount
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.AddNoise(System.Drawing.Graphics,System.Drawing.Rectangle)">
+ <summary>
+ Add a variable level of graphic noise to the image
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Image.CaptchaImage.AddLine(System.Drawing.Graphics,System.Drawing.Rectangle)">
+ <summary>
+ Add variable level of curved lines to the image
+ </summary>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals">
+ <summary>
+ Global items that need to be visible to the entire library
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.API_RemainingHits">
+ <summary>
+ The number of API calls remaining in the current API period.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.API_HourlyLimit">
+ <summary>
+ The total number of API calls allowed in the current API period.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.API_Reset">
+ <summary>
+ The time when the next API period starts and <c>RemainingHits</c> will reset.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.Proxy_Username">
+ <summary>
+ The username that will be passed to the default proxy server.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.Proxy_Password">
+ <summary>
+ The password that will be passed to the default proxy server.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat">
+ <summary>
+ Specifies how to parse the response from the Trends methods of the Twitter API.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat.Trends">
+ <summary>
+ Returns the top ten topics that are currently trending on Twitter.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat.Current">
+ <summary>
+ Returns the current top 10 trending topics on Twitter.  The response includes the time of the request, the name of each trending topic, and query used on Twitter Search results page for that topic.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat.Daily">
+ <summary>
+ Returns the top 20 trending topics for each hour in a given day.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat.Weekly">
+ <summary>
+ Returns the top 30 trending topics for each day in a given week.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat.ByLocation">
+ <summary>
+ Returns the top 10 trending topics for given location.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener">
+ <summary>
+ Specifies which Url shortening service to use.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener.IsGd">
+ <summary>
+ Indicates that the Is.Gd service will be used.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener.TinyUrl">
+ <summary>
+ Indicates that the TinyUrl service will be used.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener.BrSt">
+ <summary>
+ Indicates that the Br.st service will be used.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener.BitLy">
+ <summary>
+ Indicates that the bit.ly service will be used.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode">
+ <summary>
+ Controls whether a list is public or private.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode.Public">
+ <summary>
+ Indicates that the list will be public.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode.Private">
+ <summary>
+ Indicates that the list will be private.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.ATwiCliConnection.UploadPhoto(System.String,System.Boolean)">
+ <summary>
+ Uploads a Photo to the twicli service without posting a tweet
+ </summary>
+ <param name="p_strFileName">The filename of the picture to upload (note, must be a jpg, gif, or png)</param>
+ 
+ <param name="p_bShowMap">Whether or not to show a google map (EXIF geodata requried)</param>
+ <returns>An object representing the photograph now stored on the twic.li server</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.ATwiCliConnection.UploadPhotoAndTweet(System.String,System.String,System.Boolean)">
+ <summary>
+ Uploads a photo AND updates the users status
+ </summary>
+ <param name="p_strFileName">File name of the picture</param>
+ <param name="p_strTweet">status text</param>
+ <param name="p_bShowMap">Whehter or not to show a google map beside the photo (EXIF data must be encoded if this option is selected)</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.ATwiCliConnection.UploadVideoAndTweet(System.String,System.String,System.Boolean)">
+ <summary>
+ Uploads a video and updates the user's status
+ </summary>
+ <param name="p_strFileName">The file name to be uploaded</param>
+ <param name="p_strTweet">Tweet that should be uploaded along with the file. If empty just the URL is posted</param>
+ <param name="p_bShowMap">Optional to show a google map along with the image.  Note if this is used the EXIF data must be present in the file</param>
+ <returns>An ATwiCliVideo file containing information regarding the file</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.ATwiCliConnection.UploadAudio(System.String)">
+ <summary>
+ Uploads an audiofile to Twic.li and puts it in your my music collection
+ </summary>
+ <param name="p_strFileName">The file to send (must be a .mp3, .m4a, or .wav file less than 50 MB</param>
+ <returns>An ATwiAudioFile with the response back</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.ATwiCliConnection.UploadAudioAndTweet(System.String,System.String)">
+ <summary>
+ uploads an audio file and updates the user's status
+ </summary>
+ <param name="p_strFileName">File name to upload (must be .mp3, .m4a, or .wav and no larger than 50MB</param>
+ <param name="p_strTweet">Text of the tweet.  Keep down to 120 characters or less as this automatically appends the url</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.AyFrogConn.UploadAndPost(System.String,System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.AyFrogConn.yfFileType,System.Boolean,System.String)">
+ <summary>
+ Uploads an image to yFrog and updates the user's twitter status
+ </summary>
+ <param name="p_strFileName">The file that should be uploaded</param>
+ <param name="p_strText">Text of the tweet</param>
+ <param name="p_bPublic">Whether or not it is public. Default is not (private)</param>
+ 
+ <param name="p_strTags">List of the tags that are to be appended.  Geocode is accepted here</param>
+ <returns>The status ID that contains the link.</returns>
+ <remarks></remarks>
+ 
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.ID">
+ <summary>
+ The ID of the direct message.
+ </summary>
+ <value></value>
+ <returns>An <c>Int64</c> representing the direct message ID.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.SenderID">
+ <summary>
+ The ID of the user who sent the direct message.
+ </summary>
+ <value></value>
+ <returns>An <c>Int64</c> representing the sender's user ID.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.Text">
+ <summary>
+ The text of the direct message.
+ </summary>
+ <value></value>
+ <returns>A <c>String</c> representing the direct message.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.RecipientID">
+ <summary>
+ THe ID of the user to whom the message is being sent.
+ </summary>
+ <value></value>
+ <returns>An <c>Int64</c> representing the recipient's user ID.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.CreatedAt">
+ <summary>
+ The date and time that the direct message was posted.
+ </summary>
+ <value></value>
+ <returns>A <c>DateTime</c> representing the date and time the direct message was posted.</returns>
+ <remarks>
+ This value is UTC time.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.CreatedAtLocalTime">
+ <summary>
+ The date and time that the direct message was posted.
+ </summary>
+ <value></value>
+ <returns>A <c>DateTime</c> representing the date and time the direct message was posted.</returns>
+ <remarks>
+ This value is local time.
+ <para/>
+ This property is read-only because it is generated in TwitterVB, rather than the Twitter API.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.SenderScreenName">
+ <summary>
+ The screen name of the user sending the direct message.
+ </summary>
+ <value></value>
+ <returns>A <c>String</c> representing the screen name of the user who sent the message.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.RecipientScreenName">
+ <summary>
+ The screen name of the user receiving the direct message.
+ </summary>
+ <value></value>
+ <returns>A <c>String</c> representing the screen name of the user who received the message.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.Sender">
+ <summary>
+ The user sending the direct message.
+ </summary>
+ <value></value>
+ <returns>A <c>TwitterUser</c> object representing the user who sent the message.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.Recipient">
+ <summary>
+ The user receiving the direct message.
+ </summary>
+ <value></value>
+ <returns>A <c>TwitterUser</c> object representing the user who received the message.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>DirectMessage</c> object.
+ </summary>
+ <param name="DirectMessageNode">An <c>XmlNode</c> from the Twitter API response representing a direct message.</param>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterDirectMessage.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList">
+ <summary>
+ A Twitter list.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.#ctor">
+ <summary>
+ Default constructor.
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>List</c> object.
+ </summary>
+ <param name="ListNode">An <c>XmlNode</c> from the Twitter API response representing a user.</param>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.ID">
+ <summary>
+ The ID of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.Name">
+ <summary>
+ The name of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.FullName">
+ <summary>
+ The full name of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.Slug">
+ <summary>
+ The slug of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>Slug is an alternate name for the list.</remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.Description">
+ <summary>
+ The description of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.SubscriberCount">
+ <summary>
+ The number of users who subscribe to the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.MemberCount">
+ <summary>
+ The number of people who are members of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.Url">
+ <summary>
+ The Url where the list can be found.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.Mode">
+ <summary>
+ Whether or not the list is public or private.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>"Public" and "Private" are the only valid values.</remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList.User">
+ <summary>
+ The user who is the owner of the list.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames">
+ <summary>
+ The parameters that can be used to define a Twitter request.
+ </summary>
+ <remarks>
+ Not every TwitterVB method accepts every parameter.  If you are unsure, consult the <a href="http://apiwiki.twitter.com/Twitter-API-Documentation">Twitter API documentation.</a>
+ </remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.ID">
+ <summary>
+ The ID of the tweet you are requesting.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.Since">
+ <summary>
+ Returns tweets posted after a certain date.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.SinceID">
+ <summary>
+ Returns tweets posted after a certain tweet.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.Count">
+ <summary>
+ How many tweets should be returned by the request.
+ </summary>
+ <remarks>
+ This defaults to 20.
+ </remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.Page">
+ <summary>
+ Which page of results should be returned.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.ScreenName">
+ <summary>
+ The screen name of the user being requested.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.Cursor">
+ <summary>
+ The Cursor for cursorbased Requests.
+ </summary>
+ <remarks>This Parmaeter is hidden because only used internal</remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames.SearchQuery">
+ <summary>
+ The query for user searches
+ </summary>
+ <remarks>This Parmaeter is hidden because only used internal</remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters">
+ <summary>
+ A class that defines a Twitter request.
+ </summary>
+ <remarks>
+ Most TwitterVB actions can be accomplished by just calling the appropriate
+ methods.  If you are looking for more control over your request, you'll want
+ to pass a <c>TwitterParameters</c> object.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters.#ctor">
+ <summary>
+ Default constructor.
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters.BuildUrl(System.String)">
+ <summary>
+ Builds the Url.
+ </summary>
+ <param name="Url">The base url that will be used to build the complete Url.</param>
+ <returns>A <c>String</c> containing the complete Url.</returns>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters.Add(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameterNames,System.Object)">
+ <summary>
+ Adds a parameter to the collection.
+ </summary>
+ <param name="Key">The name of the parameter being added.</param>
+ <param name="Value">The value to be assigned to the parameter.</param>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship">
+ <summary>
+ An object that encapsulates the relationship between two Twitter users. This object provides an interface to the <c>friendships/show</c> Twitter REST API method.
+ An object that represents the relationship between two Twitter users. This object provides an interface to the <c>friendships/show</c> Twitter REST API method.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.Source">
+ <summary>
+ The relationship between the source and target users.
+ </summary>
+ <value></value>
+ <returns>A <c>TwitterRelationshipElement</c> representing the relationship between the source and target users, in the context of the source user.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.Target">
+ <summary>
+ The relationship between the source and target users.
+ </summary>
+ <value></value>
+ <returns>A <c>TwitterRelationshipElement</c> representing the relationship between the source and target users, in the context of the target user.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>TwitterRelationshipElement</c> object.
+ </summary>
+ <param name="RelationshipNode">An <c>XmlNode</c> from the Twitter API response representing a relationship.</param>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement">
+ <summary>
+ Encapsulates the relationship of one user to another
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.ID">
+ <summary>
+ The Twitter ID of the in-context user
+ </summary>
+ <value></value>
+ <returns>An <c>Int64</c> representing the Twitter ID of the in-context user.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.ScreenName">
+ <summary>
+ The Twitter screen name of the in-context user
+ </summary>
+ <value></value>
+ <returns>An <c>string</c> representing the screen name of the in-context user.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.Following">
+ <summary>
+ Whether the in-context user follows the other user
+ </summary>
+ <value></value>
+ <returns>An <c>boolean</c> that indicates if the in-context user follows the other user.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.FollowedBy">
+ <summary>
+ Whether the in-context user is followed by the other user
+ </summary>
+ <value></value>
+ <returns>An <c>boolean</c> that indicates if the in-context user is followed by the other user.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.NotificationsEnabled">
+ <summary>
+ Whether the in-context user receives device notifications regarding status updates of other user
+ </summary>
+ <value></value>
+ <returns>An <c>boolean</c> that indicates if the in-context user receives device notifications regarding status updates of the other user.</returns>
+ <remarks>Due to its private nature, the Twitter API only populates this property in the context of the source user and only if the source user is authenticated.<para />The <c>NotificationsEnabled</c> property of the <c>TwitterRelationshipElement</c> object in the context of the target user will always be Null, as will the <c>NotificationsEnabled</c> property of the <c>TwitterRelationshipElement</c> object in the context of the source user if the source user is unauthenticated.</remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterRelationship.TwitterRelationshipElement.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>TwitterRelationshipElement</c> object.
+ </summary>
+ <param name="RelationshipElementNode">An <c>XmlNode</c> from the Twitter API response representing a relationship element.</param>
+ <remarks>As exposed by the Twitter API, a relationship between two users is made up of two elements. Each element shows Following and FollowedBy relationship in the context of one particular user. Both elements will contain the same information, but are provided by the Twitter API for "clarity".</remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames">
+ <summary>
+ The parameters that can be used to define a search.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.SearchTerm">
+ <summary>
+ The text for which to search.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Lang">
+ <summary>
+ Restricts tweets to the given language.
+ </summary>
+ <remarks>
+ The language must be provided as an <a href="http://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1 code</a>
+ </remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Locale">
+ <summary>
+ Specify the language of the query you are sending (only ja is currently effective). This is intended for language-specific clients and the default should work in the majority of cases.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Rpp">
+ <summary>
+ The number of tweets to return per page, up to a max of 100.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Page">
+ <summary>
+ The page number (starting at 1) to return, up to a max of roughly 1500 results (based on rpp).
+ </summary>
+ <remarks>
+ There are <a href="http://apiwiki.twitter.com/Things-Every-Developer-Should-Know#6Therearepaginationlimits">pagination limits.</a>
+ </remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.SinceID">
+ <summary>
+ Returns tweets with status ids greater than the given id.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Since">
+ <summary>
+ Returns tweets after the given date.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.Until">
+ <summary>
+ Returns tweets before the given date.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.NotFromUser">
+ <summary>
+ Returns tweets excluded such from this user.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.FromUser">
+ <summary>
+ Returns tweets from this user.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="F:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames.ToUser">
+ <summary>
+ Returns tweets addressed to this user.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameters">
+ <summary>
+ A class that defines a search.
+ </summary>
+ <remarks>
+ Most search tasks can be accomplished by just calling the <c>Search</c> method of the <c>SearchMethods</c> object and passing it the
+ text you are searching for.  If you're looking for more control over your search results, you'll want to pass a <c>TwitterSearchParameters</c> object.
+ <para/>
+ You define a search by creating an instance of this class, and adding parameters to it.  At the least, you must define the <c>SearchTerm</c>.  See the example below.
+ <code source="TwitterVB2\examples.vb" region="Advanced Search" lang="vbnet" title="Using TwitterSearchParameters"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameters.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameters.BuildUrl(System.String)">
+ <summary>
+ Builds the search Url
+ </summary>
+ <param name="Url">The base url that will be used to build the complete Url.</param>
+ <returns>A <c>String</c> containing the complete Url.</returns>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameters.Add(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameterNames,System.Object)">
+ <summary>
+ Adds a parameter to the collection.
+ </summary>
+ <param name="Key">The name of the parameter being added.</param>
+ <param name="Value">The value to be assigned to the parameter.</param>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult">
+ <summary>
+ An individual search result
+ </summary>
+ <remarks>
+ The search API returns results that are very different than the rest of the API.  Although a <c>TwitterSearchResult</c> does represent a
+ tweet, it is not the same thing as a <c>TwitterStatus</c>.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.ID">
+ <summary>
+ The ID of the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.CreatedAt">
+ <summary>
+ The date and time that the tweet was created.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This is UTC time.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.CreatedAtLocalTime">
+ <summary>
+ The date and time that the tweet was created.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This is local time.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.StatusUrl">
+ <summary>
+ The Url of the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.Title">
+ <summary>
+ The actual text of the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.Content">
+ <summary>
+ The text of the tweet, with some items rendered as HTML.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ Usernames are rendered as links in this text.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.ProfileImageUrl">
+ <summary>
+ The Url of the avatar of the user who posted the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.Source">
+ <summary>
+ The source of the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This is usually the name of the application that posted the tweet.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.AuthorName">
+ <summary>
+ The screen name of the user who posted the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.AuthorUrl">
+ <summary>
+ The Url of the Twitter profile of the user who posted the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchResult.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a <c>TwitterSearchResult</c> object.
+ </summary>
+ <param name="SearchResultNode">An <c>XmlNode</c> from the Twitter API response representing a search result.</param>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus">
+ <summary>
+ An individual Twitter post.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.ID">
+ <summary>
+ The ID of the tweet.
+ </summary>
+ <value></value>
+ <returns>An <c>Int64</c> representing the tweest ID.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.CreatedAt">
+ <summary>
+ The date and time that the tweet was posted.
+ </summary>
+ <value></value>
+ <returns>A <c>DateTime</c> representing the date and time the tweet was posted.</returns>
+ <remarks>
+ This value is UTC time.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.CreatedAtLocalTime">
+ <summary>
+ The date and time that the tweet was posted.
+ </summary>
+ <value></value>
+ <returns>A <c>DateTime</c> representing the date and time the tweet was posted.</returns>
+ <remarks>
+ This value is local time.
+ <para/>
+ This property is read-only because it is generated in TwitterVB, rather than the Twitter API.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.Text">
+ <summary>
+ The text of the tweet.
+ </summary>
+ <value></value>
+ <returns>A <c>string</c> representing the text of the tweet.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.Favorited">
+ <summary>
+ Whether or not this tweet was favorited by the authenticating user.
+ </summary>
+ <value></value>
+ <returns>A <c>boolean</c> indicating </returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.InReplyToStatusID">
+ <summary>
+ The ID of the message to which this tweet is a reply.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ If this tweet is not a reply, this is zero.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.InReplyToUserID">
+ <summary>
+ The ID of the user to which this tweet is a reply.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ If this tweet is not a reply, this is zero.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.InReplyToScreenName">
+ <summary>
+ The screen name of the user to which this tweet is a reply.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ If this tweet is not a reply, this is zero.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.Source">
+ <summary>
+ The source of the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.Truncated">
+ <summary>
+ Whether or not the text of the tweet has been truncated.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.User">
+ <summary>
+ A <c>TwitterUser</c> object representing the user that posted the tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.IsDirectMessage">
+ <summary>
+ Indicates whether or not the Tweet is a direct message.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>This property is not populated when the object is created.  It is populated by the methods involved with direct messages.  
+ It will always be <c>False</c></remarks> unless set to <c>True</c> by an external method.
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.RetweetedStatus">
+ <summary>
+ The original tweet being retweeted.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ The Twitter API does not populate this on the Home Timeline.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.GeoLat">
+ <summary>
+ The latitude the tweet was sent from
+ </summary>
+ <value></value>
+ <returns>A <c>string</c> representing the latitude the tweet was sent from.</returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.GeoLong">
+ <summary>
+ The longitude the tweet was sent from.
+ </summary>
+ <value></value>
+ <returns>A <c>string</c> representing the longitude the tweet was sent from.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterStatus.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>TwitterStatus</c> object.
+ </summary>
+ <param name="StatusNode">An <c>XmlNode</c> from the Twitter API response representing a status.</param>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterTrend">
+ <summary>
+ A trend currently tracked by Twitter
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterTrend.TrendName">
+ <summary>
+ The name of the trend, as displayed on the Twitter website
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterTrend.TrendText">
+ <summary>
+ Either the URL of a Twitter search, or the terms of a Twitter search, depending on which Trends method was called.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ The Twitter API returns different information for different trends requests.
+ <para/>
+ If you called <c>Trends()</c>, this is a URL to a Twitter search.
+ <para/>
+ If you called <c>TrendsCurrent()</c>, <c>TrendsDaily()</c> or <c>TrendsWeekly()</c>, this is a Twitter search string.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterTrend.AsOf">
+ <summary>
+ The effective date of the Twitter trend.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ If you called <c>TrendsDaily()</c> or <c>TrendsWeekly()</c>, you will usually see multiple trends in the list with different dates.
+ For more information, see <a href="http://apiwiki.twitter.com/Twitter-Search-API-Method:-trends-daily">http://apiwiki.twitter.com/Twitter-Search-API-Method:-trends-daily</a>
+ or <a href="http://apiwiki.twitter.com/Twitter-Search-API-Method:-trends-weekly">http://apiwiki.twitter.com/Twitter-Search-API-Method:-trends-weekly</a>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterTrend.#ctor(System.String,System.String)">
+ <summary>
+ Creates a <c>TwitterTrend</c> object.
+ </summary>
+ <param name="Name">The name of the trend.</param>
+ <param name="Text">The text of the trend.</param>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser">
+ <summary>
+ An individual Twitter user.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ID">
+ <summary>
+ The ID of the user.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ScreenName">
+ <summary>
+ The screen name of the user
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.CreatedAt">
+ <summary>
+ When the user account was created.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This value is UTC time.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.CreatedAtLocalTime">
+ <summary>
+ When the user account was created.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This value is local time.
+ <para/>
+ This property is read-only because it is generated in TwitterVB, rather than the Twitter API.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Description">
+ <summary>
+ The description field from the user's profile.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.FavoritesCount">
+ <summary>
+ How many tweets the user has marked as a favorite.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.FriendsCount">
+ <summary>
+ How many people this user is following.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.FollowersCount">
+ <summary>
+ How many people are following this user.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Location">
+ <summary>
+ The location from the user's profile.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This contains no reliable data; it's just a text field.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Name">
+ <summary>
+ The full name of the user.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This data may not be reliable, since the user can type anything (or nothing at all) here.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Notifications">
+ <summary>
+ Whether or not the user has device notifications active.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileBackgroundColor">
+ <summary>
+ The background color on the user's profile.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileBackgroundImageUrl">
+ <summary>
+ The Url of the user's profile background image.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileImageUrl">
+ <summary>
+ The user's profile image.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileLinkColor">
+ <summary>
+ The user's profile link color.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileSidebarBorderColor">
+ <summary>
+ The user's profile sidebar border color.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileSidebarFillColor">
+ <summary>
+ The user's profile sidebar fill color.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.ProfileTextColor">
+ <summary>
+ The user's profile text color.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Protected">
+ <summary>
+ Whether or not this user's tweets are protected.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Status">
+ <summary>
+ A <c>TwitterStatus</c> object representing the user's last tweet.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.StatusesCount">
+ <summary>
+ The number of tweets the user has posted.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.TimeZone">
+ <summary>
+ The user's time zone
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>
+ This contains no reliable data; it's just a text field.
+ </remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Url">
+ <summary>
+ The Url in the user's profile.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.UTCOffset">
+ <summary>
+ The amount of time, in seconds, between the user's timezone and UTC time.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.Verified">
+ <summary>
+ Whether or not the user is a verified user.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.#ctor(System.Xml.XmlNode)">
+ <summary>
+ Creates a new <c>TwitterUser</c> object.
+ </summary>
+ <param name="UserNode">An <c>XmlNode</c> from the Twitter API response representing a user.</param>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitVidConnection.Upload(System.String,System.String)">
+ <summary>
+ uploads a video to the TwitVid service (without tweeting it)
+ </summary>
+ <param name="p_strFileName">FileName to upload</param>
+ <param name="p_strMessage">Message to include</param>
+ <returns>The MediaID for the file</returns>
+ <remarks>This doesn't actually tweet out the video. The message is embedded in the video as metadata</remarks>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase">
+ <summary>
+ Base class that provides Xml parsing methods to derived classes.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase.XmlInt64_Get(System.Xml.XmlNode)">
+ <summary>
+ Returns the numeric value of an Xml node.
+ </summary>
+ <param name="Node">An <c>XmlNode</c> from the Twitter API response.</param>
+ <returns>An <c>Int64</c> representing the value of the Xml node.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase.XmlString_Get(System.Xml.XmlNode)">
+ <summary>
+ Returns the text of an Xml node.
+ </summary>
+ <param name="Node">An <c>XmlNode</c> from the Twitter API response.</param>
+ <returns>A <c>String</c> representing the value of the Xml node.</returns>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase.XmlBoolean_Get(System.Xml.XmlNode)">
+ <summary>
+ Returns the boolean value of an Xml node.
+ </summary>
+ <param name="Node">An <c>XmlNode</c> from the Twitter API response.</param>
+ <returns>A <c>Boolean</c> representing the value of the Xml node.</returns>
+ <remarks>
+ The the node does not exist or is empty, <c>False</c> is returned.
+ </remarks>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.XmlObjectBase.XmlDate_Get(System.Xml.XmlNode)">
+ <summary>
+ Returns the date value of an Xml node.
+ </summary>
+ <param name="Node">An <c>XmlNode</c> from the Twitter API response.</param>
+ <returns>A <c>Boolean</c> representing the value of the Xml node.</returns>
+ <remarks>
+ The the node does not exist or is empty, <c>Date.MinValue()</c> is returned.
+ </remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI">
+ <summary>
+ Provides access to methods that communicate with Twitter.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.#ctor">
+ <summary>
+ Default constructor
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RateLimit_RemainingHits">
+ <summary>
+ The number of API calls remaining in the current API period.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RateLimit_HourlyLimit">
+ <summary>
+ The total number of API calls allowed in the current API period.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RateLimit_Reset">
+ <summary>
+ The time when the next API period starts and <c>RemainingHits</c> will reset.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.OAuth_Token">
+ <summary>
+ The OAuth Token generated by the OAuth process.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.OAuth_TokenSecret">
+ <summary>
+ The OAuth Token Secret generated by the OAuth process.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ProxyUsername">
+ <summary>
+ The username that will be passed to the default proxy server.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="P:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ProxyPassword">
+ <summary>
+ The password that will be passed to the default proxy server.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.PerformWebRequest(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.PerformWebRequest(System.String,System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.EndingQuote(System.String,System.Int32)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetNextQuotedString(System.String,System.Int32@)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.CleanJsonText(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetImageContentType(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseRelationships(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseDirectMessages(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseLists(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseLists(System.String,System.Int64@)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseStatuses(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseUsers(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseUsers(System.String,System.Int64@)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseBlockedIDs(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseSearchResults(System.String)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseSocialGraph(System.String,System.Int64@)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ParseTrends(System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.TrendFormat)">
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Search(System.String)">
+ <summary>
+ Performs a basic Twitter search for the provided text.
+ </summary>
+ <param name="SearchTerm">The text for which to search.</param>
+ <returns>A <c>List(Of TwitterSearchResult)</c> representing the tweets returned by the search.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Basic Search" lang="vbnet" title="Performing a search"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Search(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterSearchParameters)">
+ <summary>
+ Performs an advanced Twitter search.
+ </summary>
+ <param name="Parameters">A <seealso>TwitterSearchParameters</seealso> object that defines the search.</param>
+ <returns>A <c>List(Of TwitterSearchResult)</c> that represents the list of tweets found by the search.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Advanced Search" lang="vbnet" title="Performing a search"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Trends">
+ <summary>
+ Returns the top ten topics that are currently trending on Twitter.  The response includes the time of the request, 
+ the name of each trend, and the url to the Twitter Search results page for that topic.
+ </summary>
+ <returns>A <c>List(Of TwitterTrend)</c> representing the trends.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Trends" lang="vbnet" title="Retrieving trend information"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.TrendsCurrent">
+ <summary>
+ Returns the current top 10 trending topics on Twitter.  The response includes the time of the request, 
+ the name of each trending topic, and query used on Twitter Search results page for that topic.
+ </summary>
+ <returns>A <c>List(Of TwitterTrend)</c> representing the trends.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Trends" lang="vbnet" title="Retrieving trend information"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.TrendsDaily">
+ <summary>
+ Returns the top 20 trending topics for each hour in a given day.
+ </summary>
+ <returns>A <c>List(Of TwitterTrend)</c> representing the trends.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Trends" lang="vbnet" title="Retrieving trend information"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.TrendsWeekly">
+ <summary>
+ Returns the top 30 trending topics for each day in a given week.
+ </summary>
+ <returns>A <c>List(Of TwitterTrend)</c> representing the trends.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Trends" lang="vbnet" title="Retrieving trend information"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.PublicTimeline">
+ <summary>
+ Gets the 20 most recent tweets from the public timeline
+ </summary>
+ <returns></returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Public Timeline" lang="vbnet" title="Getting the public timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.PublicTimeline(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Gets recent tweets from the public timeline
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns></returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Public Timeline" lang="vbnet" title="Getting the public timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.HomeTimeline">
+ <summary>
+ Retrieves tweets from the authenticated user and the authenticated user's friends
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Home Timeline" lang="vbnet" title="Getting the home timeline"></code>
+ When Twitter publishes the "retweet" changes to the API, this will replace <c>FriendsTimeline()</c>.
+ See <a href="http://apiwiki.twitter.com/Twitter-REST-API-Method:-statuses-home_timeline">http://apiwiki.twitter.com/Twitter-REST-API-Method:-statuses-home_timeline</a> for details.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.HomeTimeline(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves tweets from the authenticated user and the authenticated user's friends
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Home Timeline" lang="vbnet" title="Getting the home timeline"></code>
+ When Twitter publishes the "retweet" changes to the API, this will replace <c>FriendsTimeline()</c>.
+ See <a href="http://apiwiki.twitter.com/Twitter-REST-API-Method:-statuses-home_timeline">http://apiwiki.twitter.com/Twitter-REST-API-Method:-statuses-home_timeline</a> for details.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FriendsTimeline">
+ <summary>
+ Retrieves tweets from the authenticated user and the authenticated user's friends
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Friends Timeline" lang="vbnet" title="Getting the friends timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FriendsTimeline(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves tweets from the authenticated user and the authenticated user's friends
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Friends Timeline" lang="vbnet" title="Getting the friends timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UserTimeline">
+ <summary>
+ Returns a list of tweets from the authenticating user.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get User Timeline" lang="vbnet" title="Getting the user timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UserTimeline(System.String)">
+ <summary>
+ Returns a list of tweets from the specified user
+ </summary>
+ <param name="ScreenName">The screen name of the user whose tweets will be returned.</param>
+ <returns></returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get User Timeline" lang="vbnet" title="Getting the user timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UserTimeline(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Returns a list of tweets from the specified user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get User Timeline" lang="vbnet" title="Getting the user timeline"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Mentions">
+ <summary>
+ Retrieves tweets that contain the screen name of the authenticating user.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Mentions" lang="vbnet" title="Getting mentions"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Mentions(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves tweets that contain the screen name of the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Mentions" lang="vbnet" title="Getting entions"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetedByMe">
+ <summary>
+ Retrieves retweets posted by the authenticating user.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweeted By Me" lang="vbnet" title="Getting tweets you retweeted"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetedByMe(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves retweets posted by the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweeted By Me" lang="vbnet" title="Getting tweets you retweeted"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetedToMe">
+ <summary>
+ Retrieves retweets posted by friends of the authenticating user.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweeted To Me" lang="vbnet" title="Getting tweets you retweeted"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetedToMe(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves retweets posted by friends of the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweeted To Me" lang="vbnet" title="Getting tweets you retweeted"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetsOfMe">
+ <summary>
+ Retrieves tweets from the authenticating user retweeted by others.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweets Of Me" lang="vbnet" title="Getting retweets of your tweets"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.RetweetsOfMe(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves tweets from the authenticating user retweeted by others.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested retweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweets Of Me" lang="vbnet" title="Getting retweets of your tweets"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ShowUpdate(System.Int64)">
+ <summary>
+ Retrieves a specific tweet.
+ </summary>
+ <param name="ID">The ID of the tweet to be retrieved.</param>
+ <returns>A <c>TwitterStatus</c> object representing the requested tweet.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Show a Tweet" lang="vbnet" title="Retrieving a tweet"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Update(System.String)">
+ <summary>
+ Posts a tweet.
+ </summary>
+ <param name="Text">The text of the tweet to be posted.</param>
+ <returns>A <c>TwitterStatus</c> object representing the posted tweet.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Post a Tweet" lang="vbnet" title="Posting a tweet"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ReplyToUpdate(System.String,System.Int64)">
+ <summary>
+ Posts a tweet as a reply to another tweet.
+ </summary>
+ <param name="Text">The text of the tweet to be posted.</param>
+ <param name="ID">The ID of the tweet being replied to.</param>
+ <returns>A <c>TwitterStatus</c> object representing the posted tweet.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Post a Reply" lang="vbnet" title="Posting a reply"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DeleteUpdate(System.Int64)">
+ <summary>
+ Deletes a tweet posted by the authenticating user.
+ </summary>
+ <param name="ID">The ID of the tweet to be deleted.</param>
+ <returns>A <c>TwitterStatus</c> object representing the deleted tweet.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Delete a Tweet" lang="vbnet" title="Deleting a tweet"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Retweet(System.Int64)">
+ <summary>
+ Retweets a tweet.
+ </summary>
+ <param name="ID">Id ID of the tweet being retweeted.</param>
+ <returns>A <c>TwitterStatus</c>representing the retweet.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retweeting a Tweet" lang="vbnet" title="Retweeting a tweet"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Retweets(System.Int64,System.Int64)">
+ <summary>
+ Retrieves up to the first 100 retweets of the specified tweet.
+ </summary>
+ <param name="ID">The tweet whose retweets will be retrieved.</param>
+ <param name="Count">How many retweets to reteieve, up to 100.</param>
+ <returns></returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Retrieving Retweets" lang="vbnet" title="Rerieveing retweets"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Replies">
+ <summary>
+ Retireves of list of tweets that are replies to tweets posted by the selected user.
+ </summary>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Replies" lang="vbnet" title="Getting replies"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Replies(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retireves of list of tweets that are replies to tweets posted by the selected user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> containing the requested tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Replies" lang="vbnet" title="Getting replies"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ShowUser(System.Int64)">
+ <summary>
+ Retrieves data about a specific user.
+ </summary>
+ <param name="ID">The ID of the user whose information is being requested.</param>
+ <returns>A <c>TwitterUser</c> object representing the requested user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get User Information" lang="vbnet" title="Retrieving user information"></code>       
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ShowUser(System.String)">
+ <summary>
+ Retrieves data about a specific user.
+ </summary>
+ <param name="ScreenName">The screen name of the user whose information is being requested.</param>
+ <returns>A <c>TwitterUser</c> object representing the requested user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get User Information" lang="vbnet" title="Retrieving user information"></code>       
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Friends">
+ <summary>
+ Retrieves a list of all the users that are followed by the authenticated user.
+ </summary>
+ <returns>A <c>List(Of TwitterUser)</c> representing all the users that are followed by the authenticating user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Friends" lang="vbnet" title="Retrieving friends"></code>
+ Users who follow many users may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Friends(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves a list of all the users that are followed by the specified user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterUser)</c> representing all the users that are followed by the specified user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Friends" lang="vbnet" title="Retrieving friends"></code>
+ Users who follow many users may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Followers">
+ <summary>
+ Retrieves a list of all the users that follow the authenticated user.
+ </summary>
+ <returns>A <c>List(Of TwitterUser)</c> representing all the users that follow the authenticating user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Followers" lang="vbnet" title="Retrieving followers"></code>
+ Users who have many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Followers(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves a list of all the users that follow the specified user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <returns>A <c>List(Of TwitterUser)</c> representing all the users that follow the specified user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Followers" lang="vbnet" title="Retrieving followers"></code>
+ Users who have many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Followers(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters,Eonic.Tools.Integration.Twitter.TwitterVB2.PagedResults{Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser})">
+ <summary>
+ Retrieves a list of all the users that follow the specified user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object defining how the request should be executed.</param>
+ <param name="Results">The paged results to add the users to</param>
+ <remarks>
+ Users who have many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UserSearch(System.String)">
+ <summary>
+ Performs a people search and returns a list of matching users.
+ </summary>
+ <param name="SearchQuery">A <c>String</c> representing the search term or terms</param>
+ <returns>A <c>List(Of TwitterUser) containing the search results.</c></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UserSearch(System.String,System.Int32)">
+ <summary>
+ Performs a people search and returns a list of matching users.
+ </summary>
+ <param name="SearchQuery">A <c>String</c> representing the search term or terms</param>
+ <param name="PageNumber">An <c>Integer</c> indicating which page of results should be returned.</param>
+ <returns>A <c>List(Of TwitterUser) containing the search results.</c></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListCreate(System.String,System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode)">
+ <summary>
+ Creates a new list for the authenticated user.
+ </summary>
+ <param name="Username">The username of the authenticated user.</param>
+ <param name="ListName">The name of the list.</param>
+ <param name="Mode">Whether the list is public or private.</param>
+ <returns>A <c>TwitterList</c> object representing the new list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Create List" lang="vbnet" title="Creating a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListCreate(System.String,System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode,System.String)">
+ <summary>
+ Creates a new list for the authenticated user.
+ </summary>
+ <param name="Username">The username of the authenticated user.</param>
+ <param name="ListName">The name of the list.</param>
+ <param name="Mode">Whether the list is public or private.</param>
+ <param name="Description">A description of the list.</param>
+ <returns>A <c>TwitterList</c> object representing the new list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Create List" lang="vbnet" title="Creating a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListUpdate(System.String,System.String,System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.ListMode,System.String)">
+ <summary>
+ Updates the specified list.
+ </summary>
+ <param name="Username">The username of the authenticated user.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="ListName">The name of the list.</param>
+ <param name="Mode">Whether the list is public or private.</param>
+ <param name="Description">A description of the list.</param>
+ <returns>A <c>TwitterList</c> object representing the new list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Update List" lang="vbnet" title="Updating a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListsGet(System.String)">
+ <summary>
+ List the lists of the specified user. 
+ </summary>
+ <param name="Username">The username whose lists will be returned.</param>
+ <returns>A <c>List(Of TwitterList)</c> representing the user's lists.  Private lists will be included if the authenticated users is the same as the user who'se lists are being returned.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Lists" lang="vbnet" title="Getting lists"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListGet(System.String,System.String)">
+ <summary>
+ Show the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>TwitterList</c> representing the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List" lang="vbnet" title="Getting a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListDelete(System.String,System.String)">
+ <summary>
+ Deletes the specified list. Must be owned by the authenticated user.
+ </summary>
+ <param name="Username">The username of the list owner.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>TwitterList</c> representing the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Delete List" lang="vbnet" title="Deleting a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListStatuses(System.String,System.String,System.Int64)">
+ <summary>
+ Show recent tweets from members of the specified list.
+ </summary>
+ <param name="Username">The username of the owner of list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="Count">How many statuses to return.  Default is 20.  Maximum is 200.</param>
+ <returns>A <c>List(Of TwitterStatus)</c> representing the requestsed tweets.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List Statuses" lang="vbnet" title="Getting list statuses"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMemberships(System.String)">
+ <summary>
+ List the lists the specified user has been added to.
+ </summary>
+ <param name="Username">The user whose memberships will be returned.</param>
+ <returns>A <c>List(Of TwitterList)</c> representing the requested lists.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List Memberships" lang="vbnet" title="Getting list memberships"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMemberships(System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.PagedResults{Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterList})">
+ <summary>
+ List the lists the specified user has been added to.
+ </summary>
+ <param name="Username">The user whose memberships will be returned.</param>
+ <param name="Results">The paged results to add the lists to</param>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListSubscriptions(System.String)">
+ <summary>
+ List the lists the specified user follows.
+ </summary>
+ <param name="Username">The user whose followed lists will be returned.</param>
+ <returns>A <c>List(Of TwitterList)</c> representing the requested lists.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List Subscriptions" lang="vbnet" title="Getting list subscriptions"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMembers(System.String,System.String)">
+ <summary>
+ Returns the members of the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>List(Of TwitterUser)</c> representing the members of the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List Subscriptions" lang="vbnet" title="Getting list subscriptions"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMembers(System.String,System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.PagedResults{Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterUser})">
+ <summary>
+ Returns the members of the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="Results">The paged results to add the lists to</param>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMembersAdd(System.String,System.String,System.Int64)">
+ <summary>
+ Add a member to a list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="UserID">The ID of the user to add to the list.</param>
+ <returns>A <c>TwitterList</c> representing the list to which the user was added.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Add Member To List" lang="vbnet" title="Adding a member to a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMembersDelete(System.String,System.String,System.Int64)">
+ <summary>
+ Remove a member from a list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="UserID">The ID of the user to remove from the list.</param>
+ <returns>A <c>TwitterList</c> representing the list from which the user was removed.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Remove Member From List" lang="vbnet" title="Removing a member from a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListMembersCheck(System.String,System.String,System.Int64)">
+ <summary>
+ Check if a user is a member of the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="UserID">The ID of the user to check.</param>
+ <returns>A <c>Boolean</c> indicating whether or not the user is a member of the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Check User Membership" lang="vbnet" title="Checking a list for a particular user"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListSubscribers(System.String,System.String)">
+ <summary>
+ Returns the subscribers of the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>List(Of TwitterUser)</c> representing the subscribers of the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get List Subscribers" lang="vbnet" title="Getting list subscribers"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListSubscribe(System.String,System.String)">
+ <summary>
+ Subscribes the authenticated user to the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>TwitterList</c> representing the list to which the user was added.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Subscribe To List" lang="vbnet" title="Subscribing to a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListUnsubscribe(System.String,System.String)">
+ <summary>
+ Subscribes the authenticated user to the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <returns>A <c>TwitterList</c> representing the list to which the user was added.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Unsubscribe From List" lang="vbnet" title="Unsubscribing from a list"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ListSubscribersCheck(System.String,System.String,System.Int64)">
+ <summary>
+ Check if a user is subscribed to the specified list.
+ </summary>
+ <param name="Username">The user who owns the list.</param>
+ <param name="ListID">The ID or slug of the list.</param>
+ <param name="UserID">The ID of the user to check.</param>
+ <returns>A <c>Boolean</c> indicating whether or not the user is a subscriber of the list.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Check User Subscription" lang="vbnet" title="Checking a list for a particular subscriber"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DirectMessages">
+ <summary>
+ Retrieves the last 20 direct messages received by the authenticating user.
+ </summary>
+ <returns>A <c>List(Of <see>TwitterDirectMessage</see>)</c> representing the direct messages.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Direct Messages" lang="vbnet" title="Retrieving direct messages"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DirectMessages(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves the direct messages received by the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object detailing how the request will be executed.</param>
+ <returns>A <c>List(Of <see>TwitterDirectMessage</see>)</c> representing the direct messages.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Direct Messages" lang="vbnet" title="Retrieving direct messages"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DirectMessagesSent">
+ <summary>
+ Retrieves the last 20 direct messages sent by the authenticating user.
+ </summary>
+ <returns>A <c>List(Of <see>TwitterDirectMessage</see>)</c> representing the direct messages.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Sent Direct Messages" lang="vbnet" title="Retrieving sent direct messages"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DirectMessagesSent(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves the direct messages sent by the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object detailing how the request will be executed.</param>
+ <returns>A <c>List(Of <see>TwitterDirectMessage</see>)</c> representing the direct messages.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Sent Direct Messages" lang="vbnet" title="Retrieving sent direct messages"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.SendDirectMessage(System.String,System.String)">
+ <summary>
+ Creates a new direct message
+ </summary>
+ <param name="User">The ID or screen name of the user who is the recipient.</param>
+ <param name="Text">The text of the message.</param>
+ <returns>A <c>TwitterDirectMessage</c> representing the sent message.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Send Direct Message" lang="vbnet" title="Sending a direct message"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DeleteDirectMessage(System.Int64)">
+ <summary>
+ Deletes a direct message sent by the authenticating user.
+ </summary>
+ <param name="ID">The ID of the message to be deleted.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Delete Direct Message" lang="vbnet" title="Deleting a direct message"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Follow(System.Int64)">
+ <summary>
+ Follows the specified user.
+ </summary>
+ <param name="ID">The ID of the user to follow</param>
+ <returns>A <c>TwitterUser</c> object representing the followed user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Follow User" lang="vbnet" title="Following a user"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Follow(System.String)">
+ <summary>
+ Follows the specified user.
+ </summary>
+ <param name="ScreenName">The screen name of the user to follow</param>
+ <returns></returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Follow User" lang="vbnet" title="Following a user"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UnFollow(System.Int64)">
+ <summary>
+ Unfollows the specified user.
+ </summary>
+ <param name="ID">The ID of the user to stop following</param>
+ <returns>A <c>TwitterUser</c> object representing the unfollowed user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Unfollow User" lang="vbnet" title="Unfollowing a user"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UnFollow(System.String)">
+ <summary>
+ Unfollows the specified user.
+ </summary>
+ <param name="ScreenName">The screen name of the user to stop following</param>
+ <returns>A <c>TwitterUser</c> object representing the unfollowed user.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Unfollow User" lang="vbnet" title="Unfollowing a user"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Relationship(System.String,System.String)">
+ <summary>
+ Gets the relationship between two users.
+ </summary>
+ <param name="FollowerScreenName">The screen name of the user doing the following (the 'source' user)</param>
+ <param name="FolloweeScreenName">The screen name of the user being followed (the 'target' user)</param>
+ <returns>A <c>TwitterRelationship</c> object representing the friendship relationship between the two users</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Relationship" lang="vbnet" title="Determining the reltionship between two users"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Relationship(System.Int64,System.Int64)">
+ <summary>
+ Gets the relationship between two users.
+ </summary>
+ <param name="FollowerID">The ID of the user doing the following (the 'source' user)</param>
+ <param name="FolloweeID">The ID of the user being followed (the 'target' user)</param>
+ <returns>A <c>TwitterRelationship</c> object representing the friendship relationship between the two users</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Relationship" lang="vbnet" title="Determining the reltionship between two users"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FriendsIDs">
+ <summary>
+ Returns a list of numeric IDs of users the authenticated user is following.
+ </summary>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Friends" lang="vbnet" title="Retrieving friends IDs"></code>
+ Users who follow many users may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FriendsIDs(System.Int64)">
+ <summary>
+ Returns a list of numeric IDs of users the specified user is following.
+ </summary>
+ <param name="ID">The ID of the user whose friends are being requested.</param>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Friends" lang="vbnet" title="Retrieving friends IDs"></code>
+ Users who follow many users may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FriendsIDs(System.String)">
+ <summary>
+ Returns a list of numeric IDs of users the specified user is following.
+ </summary>
+ <param name="ScreenName">The screen name of the user whose friends are being requested.</param>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Friends" lang="vbnet" title="Retrieving friends IDs"></code>
+ Users who follow many users may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FollowersIDs">
+ <summary>
+ Returns a list of numeric IDs of users the authenticated user is followed by.
+ </summary>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Followers" lang="vbnet" title="Retrieving follower IDs"></code>
+ Users with many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FollowersIDs(System.Int64)">
+ <summary>
+ Returns a list of numeric IDs of users the specified user is followed by.
+ </summary>
+ <param name="ID">The ID of the user whose followers are being requested.</param>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Followers" lang="vbnet" title="Retrieving followers IDs"></code>
+ Users who have many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FollowersIDs(System.String)">
+ <summary>
+ Returns a list of numeric IDs of users the specified user is followed by.
+ </summary>
+ <param name="ScreenName">The screen name of the user whose followers are being requested.</param>
+ <returns>A <c>List(Of Int64)</c> containing the IDs of the requested users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Social Graph Followers" lang="vbnet" title="Retrieving followers IDs"></code>
+ Users who have many followers may experience long wait times because of the way Twitter handles large requests.
+ When you call this method, you should let your users know that there may be a delay or use it in a separate thread.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.AccountInformation">
+ <summary>
+ Returns account information for the authenticated user.
+ </summary>
+ <returns>A <see>TwitterUser</see> representing the authenticated user.</returns>
+ <remarks>
+ This method works by calling Twitter's <a href="http://apiwiki.twitter.com/Twitter-REST-API-Method:-account%C2%A0verify_credentials">account/verify_credentials</a> method.
+ The rate limits on this method are stricter than for other parts of the Twitter API.  Only call this when necessary and cache the results when you do.
+ <code source="TwitterVB2\examples.vb" region="Get Account Information" lang="vbnet" title="Retrieving account information"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Favorites">
+ <summary>
+ Retrieves the last 20 favorites marked by the authenticating user.
+ </summary>
+ <returns>A <c>List(Of <see>TwitterStatus</see>)</c> representing the favorites.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Favorites" lang="vbnet" title="Retrieving favorites"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.Favorites(Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterParameters)">
+ <summary>
+ Retrieves the favorites marked by the authenticating user.
+ </summary>
+ <param name="Parameters">A <see>TwitterParameters</see> object detailing how the request will be executed.</param>
+ <returns>A <c>List(Of <see>TwitterStatus</see>)</c> representing the favorites.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Favorites" lang="vbnet" title="Retrieving favorites"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.AddFavorite(System.Int64)">
+ <summary>
+ Creates a new favorite.
+ </summary>
+ <param name="ID">The ID of the message to be marked as a favorite.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Create Favorite" lang="vbnet" title="Creating a favorite"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.DeleteFavorite(System.Int64)">
+ <summary>
+ Destroys a favorite created by the authenticating user.
+ </summary>
+ <param name="ID">The ID of the favorite to be deleted.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Delete Favorite" lang="vbnet" title="Deleting a favorite"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.BlockUser(System.Int64)">
+ <summary>
+ Blocks the specified user. Destroys a friendship to the blocked user if it exists.
+ </summary>
+ <param name="ID">The ID of the user to be blocked.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Block User" lang="vbnet" title="Blocking a user"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.BlockUser(System.String)">
+ <summary>
+ Blocks the specified user. Destroys a friendship to the blocked user if it exists.
+ </summary>
+ <param name="ScreenName">The screen name of the user to be blocked.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Block User" lang="vbnet" title="Blocking a user"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UnblockUser(System.Int64)">
+ <summary>
+ Un-blocks the specified user. 
+ </summary>
+ <param name="ID">The ID of the user to be un-blocked.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Unblock User" lang="vbnet" title="Unblocking a user"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.UnblockUser(System.String)">
+ <summary>
+ Un-blocks the specified user. 
+ </summary>
+ <param name="ScreenName">The screen name of the user to be un-blocked.</param>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Unblock User" lang="vbnet" title="Unblocking a user"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.BlockedIDs">
+ <summary>
+ Returns a List of IDs blocked by the authenticated user.
+ </summary>
+ <returns>A <c>List(Of Int64)</c>representing the blocked IDs.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Blocked IDs" lang="vbnet" title="Getting blocked IDs"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.BlockedUsers">
+ <summary>
+ Returns a list of users blocked by the authenticating user.
+ </summary>
+ <returns>A <c>List(Of TwitterUser)</c> representing the blocked users.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Get Blocked Users" lang="vbnet" title="Getting blocked users"></code>
+ You can read more about blocking at <a href="http://help.twitter.com/forums/10711/entries/15355">http://help.twitter.com/forums/10711/entries/15355</a>.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.BlockedUsers(System.Int32)">
+ <summary>
+ Returns a list of users blocked by the authenticating user.
+ </summary>
+ <param name="PageNumber">The page number</param>
+ <returns>A <c>List(Of TwitterUser)</c> representing the blocked users.</returns>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ReportSpam(System.Int64)">
+ <summary>
+ Reports a user to Twitter as a spammer.
+ </summary>
+ <param name="ID">The ID of the user who is posting spam.</param>
+ <returns>A <c>TwitterStatus</c> object representing the user being reported.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Reporting a Spammer" lang="vbnet" title="Reporting a Spammer"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ReportSpam(System.String)">
+ <summary>
+ Reports a user to Twitter as a spammer.
+ </summary>
+ <param name="ScreenName">The ID of the user who is posting spam.</param>
+ <returns>A <c>TwitterStatus</c> object representing the user being reported.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="Reporting a Spammer" lang="vbnet" title="Reporting a Spammer"></code>
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetAuthenticationLink(System.String,System.String)">
+ <summary>
+ Returns a URL that will allow users to authenticate your application with Twitter.
+ </summary>
+ <param name="ConsumerKey">The Consumer Key assigned to your application by Twitter.</param>
+ <param name="ConsumerKeySecret">The Consumer Key Secret assigned to your application by Twitter.</param>
+ <returns>A <c>String</c> containing the URL where the user can authenticate your application.</returns>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetAuthenticationLink(System.String,System.String,System.String)">
+ <summary>
+ Returns a URL that will allow users to authenticate your application with Twitter.
+ </summary>
+ <param name="ConsumerKey">The Consumer Key assigned to your application by Twitter.</param>
+ <param name="ConsumerKeySecret">The Consumer Key Secret assigned to your application by Twitter.</param>
+ <param name="CallbackUrl">The Url where users are taken after successful authentication.</param>
+ <returns>A <c>String</c> containing the URL where the user can authenticate your application.</returns>
+ <remarks>
+ This method should only be used when you need to specify a callback url that is different from the one in your Twitter application
+ registration.  For example, you would probably pass a CallbackUrl of "http://localhost" to do local testing.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetAuthorizationLink(System.String,System.String)">
+ <summary>
+ Returns a URL that will allow users to authorize your application with Twitter.
+ </summary>
+ <param name="ConsumerKey">The Consumer Key assigned to your application by Twitter.</param>
+ <param name="ConsumerKeySecret">The Consumer Key Secret assigned to your application by Twitter.</param>
+ <returns>A <c>String</c> containing the URL where the user can authorize your application.</returns>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetAuthorizationLink(System.String,System.String,System.String)">
+ <summary>
+ Returns a URL that will allow users to authorize your application with Twitter.
+ </summary>
+ <param name="ConsumerKey">The Consumer Key assigned to your application by Twitter.</param>
+ <param name="ConsumerKeySecret">The Consumer Key Secret assigned to your application by Twitter.</param>
+ <param name="CallbackUrl">The Url where users are taken after successful authorization.</param>
+ <returns>A <c>String</c> containing the URL where the user can authorize your application.</returns>
+ <remarks>
+ This method should only be used when you need to specify a callback url that is different from the one in your Twitter application
+ registration.  For example, you would probably pass a CallbackUrl of "http://localhost" to do local testing.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ValidatePIN(System.String)">
+ <summary>
+ Asks Twitter to confirm that the user has authorized your application.
+ </summary>
+ <param name="PIN">The PIN number given to your user when they authorized your application.</param>
+ <returns>If the PIN is correct, <c>True</c>, otherwise, <c>False</c>.</returns>
+ <remarks>
+ <c>GetAuthorizationLink()</c> must be called before this method, and both methods must be executed against the same instance 
+ of the <c>TwitterOAuth</c> object.  See the Twitter OAuth Tutorial at the TwitterVB web site for details on the OAuth process.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.GetAccessTokens(System.String,System.String,System.String,System.String)">
+ <summary>
+ Exchanges a request token for an access token from Twitter.
+ </summary>
+ <param name="ConsumerKey"></param>
+ <param name="ConsumerKeySecret"></param>
+ <param name="OAuthToken"></param>
+ <param name="OAuthVerifier"></param>
+ <remarks>
+ <c>GetAuthorizationLink()</c> must be called before this method.  See the Twitter OAuth Tutorial at the TwitterVB web site for details on the OAuth process.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.AuthenticateWith(System.String,System.String,System.String,System.String)">
+ <summary>
+ Configures the TwitterAPI object to use OAuth authentication
+ </summary>
+ <param name="ConsumerKey">The Consumer Key assigned to your application by Twitter.</param>
+ <param name="ConsumerKeySecret">The Consumer Key Secret assigned to your application by Twitter.</param>
+ <param name="Token">The OAuth Token given to you by Twitter when the user authorized your application.</param>
+ <param name="TokenSecret">The OAuth Token Secret given to you by Twitter when the user authorized your application.</param>
+ <remarks>See the Twitter OAuth Tutorial at the Twitter web site for details on the OAuth process.</remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.TweetPhotoUpload(System.String,System.String,System.String,System.String,System.String)">
+ <summary>
+ Uploads a photo from the user's hard drive to the TweetPhoto service
+ </summary>
+ <param name="Filename">The full path and filename of the image to be uploaded to Twitpic.</param>
+ <param name="Message">The message, if any, to include with the picture.</param>
+ <param name="Username">The user's Twitter username.</param>
+ <param name="Password">The user's Twitter password.</param>
+ <param name="APIKey">Your application's TweetPhoto API key..</param>
+ <returns>A <c>String</c> containing the TweetPhoto Url of the picture.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="TweetPhoto" lang="vbnet" title="Posting an image with TweetPhoto"></code>
+ TwitPic does not implement OAuth, so it is up to developers to prompt the users for their Twitter login credentials.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.FileSocialUpload(System.String,System.String,System.String,System.String)">
+ <summary>
+ Uploads a binary file to the site FileSocial.com and publishes the link to Twitter
+ </summary>
+ <param name="UserName">Twitter UserName</param>
+ <param name="Password">Twitter Password</param>
+ <param name="FileName">FileName that you want to upload (note 50M limit)</param>
+ <param name="Message">Message with the file link</param>
+ <returns>The StatusID that is created as a result of the update</returns>
+ <remarks>In order to use this function you will need to register your account <a href="http://filesocial.com">with filesocial.com</a></remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.TwitPicUpload(System.String,System.String,System.String,System.String,System.String)">
+ <summary>
+ Uploads a photo from the user's hard drive to the TwitPic service
+ </summary>
+ <param name="Filename">The full path and filename of the image to be uploaded to Twitpic.</param>
+ <param name="Message">The message, if any, to include with the picture.</param>
+ <param name="Username">The user's Twitter username.</param>
+ <param name="Password">The user's Twitter password.</param>
+ <param name="Source">The source of the post.  This will only work if your application has been registered with Twitpic.com.</param>
+ <returns>A <c>String</c> containing the TwitPic Url of the picture.</returns>
+ <remarks>
+ <code source="TwitterVB2\examples.vb" region="TwitPic" lang="vbnet" title="Posting an image with TwitPic"></code>
+ TwitPic does not implement OAuth, so it is up to developers to prompt the users for their Twitter login credentials.
+ </remarks>
+</member>
+<member name="M:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterAPI.ShortenUrl(System.String,Eonic.Tools.Integration.Twitter.TwitterVB2.Globals.UrlShortener,System.String,System.String,System.String)">
+ <summary>
+ Submits a Url to the selected Url shortening service.
+ </summary>
+ <param name="UrlToShorten">The Url that will be shortened.</param>
+ <param name="Shortener">A <c>UrlShortener</c> indicating which shortener service will be used.</param>
+ <param name="p_strBRST">Optional: if using the Br.ST service you must include this key. otherwise an exception will be raised</param>
+ <param name="p_strbitlyKey">Optional: if using the bit.ly service, you must provide this key.</param>
+ <param name="p_strbitlyUser">Optional: bit.ly user</param>
+ <returns>The shortened Url.</returns>
+ <remarks></remarks>
+ 
+</member>
+<member name="T:Eonic.Tools.Integration.Twitter.TwitterVB2.TwitterOAuth">
+ <summary>
+ A class for implementing OAuth authentication via Twitter.
+ </summary>
+ <remarks></remarks>
+ <exclude/>
+</member>
+<member name="T:Eonic.Tools.XmlNamespaceStripper">
+ <summary>
+ Some of the Twitter XML payloads contain namespaces.  They are implemented poorly and inconsistently.  Rather than try to deal with
+ their sloppy namespacing, this class simply removes all of the namespaces and gives us a clean XML document.
+ </summary>
+ <exclude/>
+</member>
+<member name="M:Eonic.Tools.Number.IsReallyNumeric(System.String)">
+ <summary>
+ IsNumeric is rubbish (http://classicasp.aspfaq.com/general/what-is-wrong-with-isnumeric.html)
+ Here's a string check. 
+ The regular expression can be summed up this way
+ 1. "-" or "+" character, zero or one time
+ 2. one or more digit
+ 3. Optionally: "." followed by one or more digit
+ </summary>
+ <param name="input"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Eonic.Tools.Number.Random">
+ <summary>
+ Random - replaces the awful System.Random with the Mersenne Twister
+ </summary>
+ <remarks>Taken from http://ilovevb.net/Web/blogs/heroicadventure/archive/2008/02/19/a-more-random-random.aspx, based on http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html).</remarks>
+</member>
+<member name="M:Eonic.Tools.Number.Random.#ctor">
+ <summary>
+ Create a new Mersenne Twister random number generator.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Number.Random.#ctor(System.UInt32)">
+ <summary>
+ Create a new Mersenne Twister random number generator with a
+ particular seed.
+ </summary>
+ <param name="seed">The seed for the generator.</param>
+</member>
+<member name="M:Eonic.Tools.Number.Random.#ctor(System.UInt32[])">
+ <summary>
+ Create a new Mersenne Twister random number generator with a
+ particular initial key.
+ </summary>
+ <param name="initialKey">The initial key.</param>
+</member>
+<member name="M:Eonic.Tools.Number.Random.NextUInt32">
+ <summary>
+ Generates a random number between 0 and System.UInt32.MaxValue.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Number.Random.Next">
+ <summary>
+ Generates a random integer between 0 and System.Int32.MaxValue.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Number.Random.Next(System.Int32)">
+ <summary>
+ Generates a random integer between 0 and maxValue.
+ </summary>
+ <param name="maxValue">The maximum value. Must be greater than zero.</param>
+</member>
+<member name="M:Eonic.Tools.Number.Random.Next(System.Int32,System.Int32)">
+ <summary>
+ Generates a random integer between minValue and maxValue.
+ </summary> 
+ <param name="maxValue">The lower bound.</param>
+ <param name="minValue">The upper bound.</param>
+</member>
+<member name="M:Eonic.Tools.Number.Random.NextDouble">
+ <summary>
+ Generates a random floating point number between 0 and 1.
+ </summary>
+</member>
+<member name="M:Eonic.Tools.Text.IsIPAddressInList(System.String,System.String)">
+ <summary>
+ Checks an IP address against a comma delimited list of distinct IP addresses (not ranges)
+ </summary>
+ <param name="cIPAddress">The IP address to look for (e.g. 1.2.3.4)</param>
+ <param name="cIPAddressList">A comma separated list of IP addresses (e.g. 1.2.3.4,2.3.4.5)</param>
+ <returns>Boolean - True if found, False if not or error encountered.</returns>
+ <remarks>Doesn't attempt to validate the IP address at the moment, so is a glorified list finder at the mo.</remarks>
+</member>
+<member name="M:Eonic.Tools.Text.RandomPassword(System.Int32,System.String,Eonic.Tools.Text.TextOptions,Eonic.Tools.Number.Random)">
+ <summary>
+ Generates a Random Password
+ </summary>
+ <param name="size">The size of the password required</param>
+ <param name="charSet">Optional - specify the characters you want to use</param>
+ <param name="options">Optional - options available are UseAlpha, UseNumeric, UseSymbols, UnambiguousCharacters, LowerCase and UpperCase.  Default value is UseAlph, UseNumeric and Lowercase</param>
+ <param name="oRandomObject">Optional - a precreated Random object (useful if repeatedly running through passwords) </param>
+ <returns>String - The randomly generated password.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Text.ReplaceLastCharacter(System.String@,System.Char,System.String)">
+ <summary>
+ Replaces the last instance of a specific character in a string with a replacement string.
+ </summary>
+ <param name="searchString">The string to search</param>
+ <param name="charToFind">The character to find</param>
+ <param name="replacement">The replacement string</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Text.RemoveLastCharacter(System.String@,System.Char)">
+ <summary>
+ Removes the last instance of a specific character in a string with a replacement string.
+ </summary>
+ <param name="searchString">The string to search</param>
+ <param name="charToFind">The character to find</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Text.TruncateString(System.String,System.Int64)">
+ <summary>
+ Truncates strings up to the last word before a length limit.
+ </summary>
+ <param name="input">The string to truncate</param>
+ <param name="limit">The maximum length of the string</param>
+ <returns></returns>
+ <remarks>If a string is truncated ellipses (...) will be added.  In this case the length limit will be lowered by the 3 characters for ellipses to accomodate them</remarks>
+</member>
+<member name="M:Eonic.Tools.Text.Coalesce(System.Object[])">
+ <summary>
+ String Based Coalesce - i.e. returns the first non Nothing, NUll And Empty string
+ </summary>
+ <param name="args"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Xml.loadElement(System.String,System.Xml.XmlDocument@,System.String)">
+ <summary>
+ <para>This allows XML to be loaded in to an element from a given file</para>
+ <para>The following checks are made:</para>
+ <list>
+ <item><term>File Exists?</term><description>Does the file provided by cFilePath actually exist</description></item>
+ <item><term>Valid XML</term><description>Is the loaded XMl actually valid?</description></item>
+ </list>
+ <para>If either check fails, then either Nothing or an empty element with a node name determined by <c>cErrorNodeName</c>.</para>
+ </summary>
+ <param name="cFilePath">The file path of the file that is being loaded</param>
+ <param name="oXmlDocument">Optional - the xml document to generate the return element from</param>
+ <param name="cErrorNodeName">Optional - if the checks fail, then this param determines the name of an empty returned element.</param>
+ <returns>The loaded XML's DocumentElement, or Nothing/empty element</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Xml.NodeState(System.Xml.XmlElement@,System.String,System.String,System.String,Eonic.Tools.Xml.XmlNodeState,System.Xml.XmlElement@,System.String@,System.String@,System.Boolean)">
+ <summary>
+ NodeState - Given a node, looks to see if it has been instantiated and has contents
+ </summary>
+ <param name="oNode">The root node for testing</param>
+ <param name="xPath">The xpath to apply to the root node.  If this is not supplied, the root node is tested.</param>
+ <param name="populateAsText">Text that can be added to the test node.</param>
+ <param name="populateAsXml">Xml that can be added to the test node</param>
+ <param name="populateState">The state that the test node must be in before it can be populated</param>
+ <param name="returnElement">The test node</param>
+ <param name="returnAsXml">The test node's inner xml</param>
+ <param name="returnAsText">The test node's inner text</param>
+ <param name="bCheckTrimmedInnerText">The matched node will have its innertext trimmed and examined</param>
+ <returns>XmlNodeState - the state of the test node.</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Xml.SetInnerXmlThenInnerText(System.Xml.XmlElement@,System.String)">
+ <summary>
+ Attempts to set an element's inner xml from a string - if it fails it will set the inner text instead
+ </summary>
+ <param name="element">the element to set</param>
+ <param name="value">the string to try and set the element for</param>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Xml.Serialize``1(``0)">
+ <summary>
+ Serializes an object and returns the serialization as a string representation of UTF-8 encoded XML
+ </summary>
+ <typeparam name="T">The type of object to serialize</typeparam>
+ <param name="value">The object to serialize</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Eonic.Tools.Xml.XmlSanitizingStream.IsLegalXmlChar(System.Int32)">
+ <summary>
+ Whether a given character is allowed by XML 1.0.
+ </summary>
+</member>
+</members>
+</doc>

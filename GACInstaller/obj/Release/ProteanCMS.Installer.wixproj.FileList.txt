@@ -1,0 +1,7 @@
+D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Release\ProteanCMSInstaller.msi
+D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Release\ProteanCMSInstaller.wixpdb
+obj\\Release\Product.wixobj
+obj\\Release\pth7692FAD22D731B244B24249D39984819\Product.Generated.wixobj
+obj\\Release\ProteanCMS.Installer.wixproj.BindContentsFileListnull.txt
+obj\\Release\ProteanCMS.Installer.wixproj.BindOutputsFileListnull.txt
+obj\\Release\ProteanCMS.Installer.wixproj.BindBuiltOutputsFileListnull.txt
