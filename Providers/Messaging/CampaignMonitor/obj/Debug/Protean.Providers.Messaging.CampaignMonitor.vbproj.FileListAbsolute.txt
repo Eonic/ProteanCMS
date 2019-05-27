@@ -90,7 +90,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.Web.Services.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\TidyHTML5Managed.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\PayPal.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\CMPCDotNet.dll
@@ -121,7 +120,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\PayPal.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\JavaScriptEngineSwitcher.Msie.xml
@@ -146,4 +144,3 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ru-ru\B
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ru-ru\MsieJavaScriptEngine.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbproj.CopyComplete
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\TidyHTML5Managed.pdb

@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><doc>
+﻿<?xml version="1.0" encoding="utf-8"?><span>
+<doc>
   <assembly>
     <name>System.Diagnostics.DiagnosticSource</name>
   </assembly>
@@ -150,4 +151,4 @@
       <returns></returns>
     </member>
   </members>
-</doc>
+</doc></span>

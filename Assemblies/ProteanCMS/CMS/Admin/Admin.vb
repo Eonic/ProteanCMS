@@ -846,7 +846,6 @@ ProcessFlow:
                         Dim nMyContentId As String = myWeb.moRequest("id")
                         Dim cContentXpath As String = myWeb.moRequest("xpath")
                         Dim cContentValue As String = myWeb.moRequest("value")
-
                         Dim oTempInstance As New XmlDocument
 
                         If Not cContentXpath.StartsWith("/instance/tblContent/cContentXmlBrief/Content") Then

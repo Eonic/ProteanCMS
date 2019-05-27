@@ -165,7 +165,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
@@ -178,6 +177,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Less.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Facebook.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.ChakraCore.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.xml
@@ -190,7 +190,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\MsieJavaScriptEngine.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Less.resources.dll
@@ -207,5 +206,3 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Cop
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.xml

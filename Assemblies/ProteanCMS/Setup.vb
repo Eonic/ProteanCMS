@@ -239,12 +239,13 @@ Public Class Setup
         Try
 
             If goApp("JSEngineEnabled") Is Nothing Then
-                Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
-                msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
-                Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Instance
+                ' Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
+                '  msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
+                Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current
                 '  engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
-                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
-                Dim sJsEngine As String = "MsieJsEngine"
+                ' engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
+                engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.V8.V8JsEngineFactory())
+                Dim sJsEngine As String = "V8JsEngine"
                 If goConfig("JSEngine") <> "" Then
                     sJsEngine = goConfig("JSEngine")
                 End If

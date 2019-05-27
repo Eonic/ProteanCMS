@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
   <PropertyGroup>
     <EnableProjectHarvesting>True</EnableProjectHarvesting>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,9 +53,49 @@
     <Content Include="XSLT\_EonicWebV5.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Assemblies\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
+      <Name>Protean.Tools.Csharp</Name>
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Assemblies\Protean.Tools\Protean.Tools.vbproj">
+      <Name>Protean.Tools</Name>
+      <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\Assemblies\ProteanCMS.Installer.Actions\ProteanCMS.Installer.Actions.vbproj">
       <Name>ProteanCMS.Installer.Actions</Name>
       <Project>{82a71ea1-4dd3-4481-aeae-33925f40ee7c}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Assemblies\ProteanCMS\ProteanCMS.vbproj">
+      <Name>ProteanCMS</Name>
+      <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Providers\Messaging\CampaignMonitor\Protean.Providers.Messaging.CampaignMonitor.vbproj">
+      <Name>Protean.Providers.Messaging.CampaignMonitor</Name>
+      <Project>{bc419c76-e146-4038-a46e-3426951e0260}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Providers\ReplaceProvider\ReplaceProvider.csproj">
+      <Name>ReplaceProvider</Name>
+      <Project>{3da89ae2-1242-430e-a609-25a680d10f03}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
@@ -156,6 +195,5 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-
   </Target>
 </Project>
