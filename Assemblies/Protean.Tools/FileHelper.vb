@@ -13,9 +13,6 @@ Imports System.IO
 
 Public Class FileHelper
 
-
-
-
     Shared Function ReplaceIllegalChars(ByVal filePath As String, Optional ByVal replacementChar As String = "-") As String
 
         Try

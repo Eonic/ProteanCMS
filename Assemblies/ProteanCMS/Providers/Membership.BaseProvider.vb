@@ -1312,6 +1312,10 @@ Check:
                         Else
                             If moSession("nUserId") = Nothing Or moSession("nUserId") = 0 Then
                                 'this will get set on close
+                                If IsNumeric(moSession("PreviewUser")) Then
+                                    mnUserId = moSession("PreviewUser")
+                                    myWeb.mbPreview = True
+                                End If
                             Else
                                 ' If there is a user set, we need to check if we are transferring over to a secure site,
                                 ' to see if we should actually be logged off (which we can tell by looking at the cart order
@@ -1330,11 +1334,29 @@ Check:
                                         mnUserId = moSession("nUserId")
                                     End If
                                 Else
-                                    'lets finally set the user Id from the session
-                                    mnUserId = moSession("nUserId")
-                                End If
 
-                            End If
+                                    If myWeb.moRequest("ewCmd") = "PreviewOn" Then
+                                        myWeb.moSession("PreviewUser") = myWeb.moRequest("PreviewUser")
+                                    End If
+
+
+                                    'lets finally set the user Id from the session
+                                    If IsNumeric(moSession("PreviewUser")) Then
+                                            If myWeb.moRequest("ewCmd") = "Normal" Or myWeb.moRequest("ewCmd") = "ExitPreview" Then
+                                                'jump out of admin mode...
+                                                myWeb.moSession("PreviewUser") = Nothing
+                                                myWeb.mbPreview = False
+                                            Else
+                                                mnUserId = moSession("PreviewUser")
+                                                myWeb.mbPreview = True
+                                            End If
+                                        Else
+                                            mnUserId = moSession("nUserId")
+                                        End If
+
+                                    End If
+
+                                End If
                         End If
 
                         Return mnUserId
@@ -1358,7 +1380,7 @@ Check:
                             If moSession("nUserId") = 0 Then
                                 moSession("nUserId") = mnUserId
                             Else
-                                If moSession("nUserId") <> mnUserId Then
+                                If (moSession("nUserId") <> mnUserId) And CStr(moSession("PreviewUser")) = "" Then
                                     'reset to a different value
                                     moSession("nUserId") = mnUserId
                                 End If

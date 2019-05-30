@@ -243,7 +243,7 @@ padding-right:20px;
 }
 .ewAdmin #adminHeader #adminLogo
 {
-    width: 105px;
+    width: 200px;
     height: 33px;
     float: left;
     margin-top: 10px;
@@ -263,11 +263,14 @@ padding-right:20px;
 }
 .ewAdmin #adminHeader #headers
 {
-    margin-left: 190px;
+    margin-left: 220px;
 }
 .ewAdmin #adminHeader #breadcrumb
 {
     padding-top: 6px;
+}
+.ewAdmin #adminHeader .preview #breadcrumb {
+        padding-top: 6px;
 }
 .ewAdmin #adminHeader #getHelp
 {

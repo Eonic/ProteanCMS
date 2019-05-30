@@ -53,6 +53,8 @@ Partial Public Class Cms
         Private lEditContext As String
         Private bClearEditContext As Boolean = True
 
+        Public mnAdminUserId As Integer
+
 #End Region
         Sub New()
 
@@ -65,6 +67,14 @@ Partial Public Class Cms
             moAdXfm = myWeb.getAdminXform()
             moPageXML = myWeb.moPageXml
             ' moXformEditor = myWeb.GetXformEditor()
+
+            If CStr(myWeb.moSession("PreviewUser") & "") <> "" Then
+
+                mnAdminUserId = myWeb.moSession("nUserId")
+
+            Else
+                mnAdminUserId = myWeb.mnUserId
+            End If
 
             moAdXfm.open(moPageXML)
             If Not myWeb.moSession Is Nothing Then
@@ -167,7 +177,7 @@ Partial Public Class Cms
 
                 'If myWeb.moSession("previewMode") = "true" Then
                 '    mbPreviewMode = True
-                '    If IsNumeric(myWeb.moSession("previewUser")) Then oWeb.myWeb.mnUserId = CInt(myWeb.moSession("previewUser"))
+                '    If IsNumeric(myWeb.moSession("previewUser")) Then oWeb.mnAdminUserId = CInt(myWeb.moSession("previewUser"))
                 '    If IsDate(myWeb.moSession("previewDate")) Then oWeb.mdDate = CDate(myWeb.moSession("previewDate"))
                 'Else
                 '    mbPreviewMode = False
@@ -192,7 +202,7 @@ Partial Public Class Cms
                     mcEwCmd = "RptCourses"
                 End If
 
-                If myWeb.mnUserId > 0 Then
+                If mnAdminUserId > 0 Then
                     'lets check the current users permission level
 
                     adminAccessRights()
@@ -229,7 +239,7 @@ ProcessFlow:
                 Select Case mcEwCmd
 
                     Case ""
-                        If myWeb.mnUserId = 0 Then
+                        If mnAdminUserId = 0 Then
 
                             Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                             oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
@@ -245,7 +255,7 @@ ProcessFlow:
 
                                 If mcEwCmd = "AdminDenied" Then
                                     sAdminLayout = "AdminXForm"
-                                    myWeb.mnUserId = 0
+                                    mnAdminUserId = 0
                                     moAdXfm.addNote(moAdXfm.moXformElmt, xForm.noteTypes.Alert, "You do not have administrative access to this site.")
                                 Else
                                     Dim oAdminRoot As XmlElement = myWeb.moPageXml.SelectSingleNode("/Page/AdminMenu/MenuItem")
@@ -263,7 +273,7 @@ ProcessFlow:
                                     myWeb.moSession("adminMode") = "true"
 
                                     If gbSingleLoginSessionPerUser Then
-                                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Logon, myWeb.mnUserId, 0)
+                                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Logon, mnAdminUserId, 0)
                                     End If
 
                                     GoTo ProcessFlow
@@ -323,7 +333,7 @@ ProcessFlow:
                     Case "LogOff"
 
                         If gbSingleLoginSessionPerUser Then
-                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Logoff, myWeb.mnUserId, 0)
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Logoff, mnAdminUserId, 0)
                             If myWeb.moRequest.Cookies("ewslock") IsNot Nothing Then
                                 myWeb.moResponse.Cookies("ewslock").Expires = DateTime.Now.AddDays(-1)
                             End If
@@ -664,7 +674,7 @@ ProcessFlow:
                                     If myWeb.moDbHelper.checkUserRole("Administrator") Then
                                         myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType)
                                     Else
-                                        FilterSQL = " a.nInsertDirId = '" & myWeb.mnUserId & "'"
+                                        FilterSQL = " a.nInsertDirId = '" & mnAdminUserId & "'"
                                         myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType, FilterSQL)
                                     End If
                                 Case "Sale"
@@ -1457,10 +1467,10 @@ ProcessFlow:
                         Dim oMem As New Protean.Cms.Membership(myWeb)
                         If myWeb.moConfig("SecureMembershipAddress") <> "" Then
                             oMem.SecureMembershipProcess("logoffImpersonate")
-                            myWeb.mnUserId = myWeb.moRequest("id")
+                            mnAdminUserId = myWeb.moRequest("id")
                             myWeb.msRedirectOnEnd = myWeb.moConfig("SecureMembershipAddress") & gcProjectPath & "/"
                         Else
-                            myWeb.mnUserId = myWeb.moRequest("id")
+                            mnAdminUserId = myWeb.moRequest("id")
                             myWeb.msRedirectOnEnd = gcProjectPath & "/"
                         End If
 
@@ -1642,8 +1652,9 @@ ProcessFlow:
                             myWeb.moSession("PreviewDate") = Now.Date
                         End If
 
-                        If myWeb.moSession("PreviewUser") Is Nothing Then
-                            myWeb.moSession("PreviewUser") = oWeb.mnUserId
+                        'ensure if no preview user is specified we are anonomous
+                        If CStr("" & myWeb.moSession("PreviewUser")) = "" And CInt("0" & myWeb.moRequest("PreviewUser")) = 0 Then
+                            myWeb.moSession("PreviewUser") = 0
                         End If
 
                         If IsDate(myWeb.moRequest("PreviewDate")) Then
@@ -1655,6 +1666,10 @@ ProcessFlow:
                             myWeb.moSession("PreviewUser") = CInt("0" & myWeb.moRequest("PreviewUser"))
                         End If
                         myWeb.mnUserId = myWeb.moSession("PreviewUser")
+
+                        If CInt("0" & myWeb.moRequest("CartId")) > 0 Then
+                            myWeb.moSession("CartId") = myWeb.moRequest("CartId")
+                        End If
 
                     Case "RelateSearch"
                         If ButtonSubmitted(myWeb.moRequest, "saveRelated") Then
@@ -1957,8 +1972,6 @@ ProcessFlow:
                     myWeb.moSession("editContext") = EditContext
                 End If
 
-
-
                 If mbPreviewMode Then
                     moPageXML.DocumentElement.SetAttribute("previewMode", LCase(mbPreviewMode.ToString))
                     If Not moPageXML.SelectSingleNode("AdminMenu") Is Nothing Then
@@ -2006,10 +2019,16 @@ ProcessFlow:
                 'Get the admin menu for the site
                 GetAdminMenu()
 
-                'get the user permissions
-                myWeb.RefreshUserXML()
 
-                oUserXml = moPageXML.SelectSingleNode("/Page/User")
+
+                If myWeb.mbPreview Then
+                    oUserXml = myWeb.moDbHelper.getUserXMLById(myWeb.moSession("nUserId"))
+                Else
+                    'get the user permissions
+                    myWeb.RefreshUserXML()
+                    oUserXml = moPageXML.SelectSingleNode("/Page/User")
+                End If
+
 
                 pagePermLevel = oUserXml.GetAttribute("pagePermission")
                 'Are you a domain user if so you are god !
@@ -2274,7 +2293,7 @@ ProcessFlow:
                     "Initial Catalog=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
                     "user id=" & oImportRootElmt.GetAttribute("databaseUsername") & "; password=" & oImportRootElmt.GetAttribute("databasePassword")
 
-                            Dim newDb As New dbHelper(DBConn, myWeb.mnUserId, myWeb.moCtx)
+                            Dim newDb As New dbHelper(DBConn, mnAdminUserId, myWeb.moCtx)
                             If newDb.ConnectionValid = False Then
                                 moAdXfm.valid = False
                                 sErrorMsg = "Bad DB Connection - " & DBConn
@@ -2771,13 +2790,14 @@ ProcessFlow:
                 If myWeb.moSession("PreviewUser") = 0 Then
                     oElmt1.SetAttribute("username", "Anonymous")
                 Else
-                    oElmt1.SetAttribute("username", myWeb.moDbHelper.getUserXMLById(myWeb.moSession("PreviewUSer")).GetAttribute("name"))
+                    oElmt1.SetAttribute("username", myWeb.moDbHelper.getUserXMLById(myWeb.moSession("PreviewUser")).GetAttribute("name"))
                 End If
                 oElmt2.SetAttribute("date", IIf(IsDate(myWeb.moSession("PreviewDate")), myWeb.moSession("PreviewDate"), Now.Date))
 
                 'also need to add an xform for the group and the date
 
-
+                'get the origional user details
+                oElmt.AppendChild(myWeb.moDbHelper.getUserXMLById(myWeb.moSession("nUserId")))
                 moPageXML.DocumentElement.AppendChild(oElmt)
 
             Catch ex As Exception

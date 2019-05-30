@@ -2047,7 +2047,8 @@ Partial Public Class Cms
                 oDs = GetDataSet(sSql, getTable(ObjectType), "instance")
                 ReturnNullsEmpty(oDs)
 
-                Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
+                'Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
+                Dim oXml As XmlDocument = GetXml(oDs)
                 oDs.EnforceConstraints = False
 
                 'Convert any text to xml

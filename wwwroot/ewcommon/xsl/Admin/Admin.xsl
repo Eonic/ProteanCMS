@@ -481,6 +481,14 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
+                <i class="fa fa-user">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:value-of select="$page/User/@name"/>
+              </a>
+            </li>
+            <li>
               <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">
                   <xsl:text> </xsl:text>
@@ -573,6 +581,16 @@
             <xsl:text> </xsl:text>
           </ul>-->
           <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
+                <i class="fa fa-user">
+                  <xsl:text> </xsl:text>
+                </i>
+                <span>
+                <xsl:value-of select="$page/User/@name"/>
+                </span>
+              </a>
+            </li>
             <li>
               <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">
@@ -2164,8 +2182,6 @@
 
   <!-- -->
   <xsl:template match="Content" mode="inlineOptionsNoPopup">
-
-
     <xsl:choose>
       <xsl:when test="/Page/@id=@parId">
         <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
@@ -2173,7 +2189,6 @@
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Edit
         </a>
-
       </xsl:when>
       <xsl:otherwise>
         <a href="{$appPath}?ewCmd=EditContent&amp;pgid={@parId}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
@@ -5384,7 +5399,7 @@
             <i class="fa fa-repeat fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Reset Pwd</a>
-          <a href="{$appPath}?ewCmd=ImpersonateUser&amp;id={@id}" class="btn btn-xs btn-success">
+          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-success">
             <i class="fa fa-user-secret fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Impersonate</a>
@@ -6032,6 +6047,14 @@
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>view order</a>
+        <xsl:if test="@statusId&lt;6">
+          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@userId}&amp;CartId={@id}&amp;cartCmd=Cart" class="btn btn-xs btn-primary">
+            <i class="fa fa-cart-plus">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>complete order
+          </a>
+        </xsl:if>
+                
       </td>
     </tr>
   </xsl:template>

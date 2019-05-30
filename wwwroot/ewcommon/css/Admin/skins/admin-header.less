@@ -410,18 +410,26 @@ body.normalMode{
             }
 
             @media (min-width: @screen-md-min) {
-                width: 115px;
+                // width: 115px;
             }
             //padding-left:10px;
         }
 
         .navbar-right a {
-            background: @admin-header-color-warning;
             border-radius: 0 0px @admin-header-border-radius @admin-header-border-radius;
             font-size: 0.65em;
             padding-top: 6px;
             padding-bottom: 6px;
             margin-right: 9px;
+
+            &:hover {
+                background: lighten(@admin-header-bg, 20%) !important;
+                color: #fff
+            }
+        }
+
+        .navbar-right a#logoff {
+            background: @admin-header-color-warning;
 
             &:hover {
                 background: lighten(@admin-header-color-warning, 10%) !important;
@@ -579,7 +587,6 @@ body.normalMode{
             }
 
             @media (min-width: @screen-md-min) {
-                width: 95px;
                 padding: 0;
             }
 
@@ -590,7 +597,6 @@ body.normalMode{
         }
 
         .navbar-right a {
-            background: @admin-header-color-warning;
             border-radius: 0 0px @admin-header-border-radius @admin-header-border-radius;
             font-size: 11px;
             margin: 0;
@@ -604,11 +610,20 @@ body.normalMode{
             }
 
             &:hover {
-                background: lighten(@admin-header-color-warning, 10%) !important;
+                background: lighten(@admin-header-bg, 10%) !important;
                 color: #fff
             }
         }
+
+        .navbar-right a#logoff {
+            background: @admin-header-color-warning;
+
+            &:hover {
+                background: lighten(@admin-header-color-warning, 10%) !important;
+            }
+        }
     }
+
     #bs-admin-navbar-collapse-1 {
         max-height: 400px;
         padding-left: 0;
@@ -625,6 +640,7 @@ body.normalMode{
             }
         }
     }
+
     #bs-admin-navbar-collapse-2 {
         padding-left: 0;
         padding-right: 0;
@@ -659,9 +675,11 @@ body.normalMode{
             background-color: lighten(@admin-header-bg-light, 10%)
         }
     }
+
     .dashboard-menu .switch {
         display: none;
     }
+
     .brand-hover {
         background-color: lighten(@admin-header-bg-light, 10%) !important
     }

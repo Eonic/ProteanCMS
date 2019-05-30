@@ -86,7 +86,7 @@ Public Class XmlSectionHandler
 
     Public Function Create(ByVal parent As Object, ByVal configContext As Object, ByVal section As System.Xml.XmlNode) As Object _
             Implements IConfigurationSectionHandler.Create
-        PerfMon.Log("XmlSectionHandler", "Create")
+        ' PerfMon.Log("XmlSectionHandler", "Create")
         Return section
 
     End Function
@@ -126,7 +126,7 @@ Public Class XmlSerializerSectionHandler
 
     Public Function Create(ByVal parent As Object, ByVal configContext As Object, ByVal section As System.Xml.XmlNode) As Object _
         Implements IConfigurationSectionHandler.Create
-        PerfMon.Log("XmlSerializerSectionHandler", "Create")
+        'PerfMon.Log("XmlSerializerSectionHandler", "Create")
         '-- get the name of the type from the type= attribute on the root node
         Dim xpn As XPathNavigator = section.CreateNavigator
         Dim TypeName As String = xpn.Evaluate("string(@type)").ToString

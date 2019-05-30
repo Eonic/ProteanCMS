@@ -217,20 +217,40 @@
             <span class="hidden">Preview</span>
           </div>
         </div>
-        <div id="headers" class="preview">
+        <div id="headers" class="preview form-inline">
           <span id="breadcrumb">
-            <xsl:text>Previewing as user: </xsl:text><strong>
-              <xsl:value-of select="/Page/User/@name"/>
-            </strong> on date: <strong>
-              <xsl:value-of select="/Page/@pageViewDate"/>
+            <strong>
+              <xsl:value-of select="/Page/PreviewMenu/User/@name"/>
             </strong>
+            <xsl:text> impersonating </xsl:text><strong>
+              <xsl:choose>
+                <xsl:when test="/Page/User">
+                  <xsl:value-of select="/Page/User/@name"/>
+                </xsl:when>
+                <xsl:otherwise>anonymous</xsl:otherwise>
+              </xsl:choose>
+              
+            </strong>
+            <xsl:text> </xsl:text>
+            <!--
+              <label for="PreviewDate"> as of date&#160;</label>
+            <span class="input-group">
+              <input type="text" class="form-control jqDatePicker" name="PreviewDate" value="{/Page/@pageViewDate}">
+              </input>
+              <span class="input-group-btn">
+                <label for="dPublishDate" class="input-group-addon btn btn-default">
+                  <i class="fa fa-calendar"> </i>
+                </label>
+              </span>
+             </span>
+             -->
           </span>
           <xsl:text> </xsl:text>
           <xsl:text> </xsl:text>
-          <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success" id="previewBack">
-            <i class="fa fa-share-alt fa-white">
+          <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success btn-lg pull-right" id="previewBack">
+            Back to Admin<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
             <xsl:text> </xsl:text>
-          </i><xsl:text> </xsl:text>Back to Admin
+          </i>
         </a>
         </div>
         <div class="terminus"> </div>
@@ -329,6 +349,14 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={User/@id}">
+                <i class="fa fa-user">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:value-of select="User/@name"/>
+              </a>
+            </li>
+            <li>
               <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">
                   <xsl:text> </xsl:text>
@@ -421,6 +449,14 @@
             <xsl:text> </xsl:text>
           </ul>-->
           <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a id="myaccount" href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={$page/User/@id}">
+                <i class="fa fa-user">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:value-of select="$page/User/@name"/>
+              </a>
+            </li>
             <li>
               <a id="logoff" href="{$appPath}?ewCmd=LogOff" title="Click here to log off from your active session" >
                 <i class="fa fa-power-off">

@@ -210,12 +210,18 @@ Partial Public Class Cms
 
                     If myWeb.mbAdminMode And endDate = Date.Today Then
                         'Get content by date range and future posts
-                        myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate))
-
+                        If startDate = DateTime.MinValue Then
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "'")
+                        Else
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate))
+                        End If
                     Else
                         'Get content by date range
-                        myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & " and a.dpublishDate <= " & sqlDate(endDate))
-
+                        If startDate = DateTime.MinValue Then
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate <= " & sqlDate(endDate))
+                        Else
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & " and a.dpublishDate <= " & sqlDate(endDate))
+                        End If
                     End If
 
                     'remove content detail

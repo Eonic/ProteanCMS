@@ -85,6 +85,9 @@ Public Class Base
     Public mcModuleName As String = "Protean.Base"
 
     Public Features As New System.Collections.Generic.Dictionary(Of String, String)
+
+    Public mbPreview As Boolean = False
+
 #End Region
 
 #Region "Constructors"

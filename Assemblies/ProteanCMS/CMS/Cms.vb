@@ -167,7 +167,6 @@ Public Class Cms
     Public mbSetNoBrowserCache As Boolean = False
     Public mcPageCacheFolder As String = "\ewCache"
     Private mcSessionReferrer As String = Nothing
-    Public mbPreview As Boolean = False
 
 
     Private _workingSetPrivateMemoryCounter As PerformanceCounter
@@ -548,25 +547,18 @@ Public Class Cms
 
                 mcPagePath = CStr(moRequest("path") & "")
 
-                'ensures we have configured JSEngine for Bundle Transformer
-                If goApp("JSEngineEnabled") Is Nothing Or moRequest("rebundle") <> "" Then
-                    '  Dim msieCfg As New JavaScriptEngineSwitcher.Msie.MsieSettings()
-                    '  msieCfg.EngineMode = JavaScriptEngineSwitcher.Msie.JsEngineMode.ChakraIeJsRt
-                    Dim engineSwitcher As JavaScriptEngineSwitcher.Core.JsEngineSwitcher = JavaScriptEngineSwitcher.Core.JsEngineSwitcher.Current
-                    'engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.ChakraCore.ChakraCoreJsEngineFactory())
-                    '  engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.Msie.MsieJsEngineFactory(msieCfg))
-                    engineSwitcher.EngineFactories.Add(New JavaScriptEngineSwitcher.V8.V8JsEngineFactory())
-                    Dim sJsEngine As String = "V8JsEngine"
-                    'Dim sJsEngine As String = "MsieJsEngine"
+                InitialiseJSEngine()
 
-                    'Dim sJsEngine As String = "ChakraCoreJsEngine"
-                    '   If moConfig("JSEngine") <> "" Then
-                    '   sJsEngine = moConfig("JSEngine")
-                    '    End If
-                    engineSwitcher.DefaultEngineName = sJsEngine
-                    goApp("JSEngineEnabled") = sJsEngine
+                'Get the User ID
+                'if we access base via soap the session is not available
+                If Not moSession Is Nothing Then
+                    Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
+                    mnUserId = oMembershipProv.Activities.GetUserId(Me)
                 End If
+                'We need the userId placed into dbhelper.
+                moDbHelper.mnUserId = mnUserId
 
+                'Initialise the cart
                 If gbCart Or gbQuote Then
                     InitialiseCart()
                     'moCart = New Cart(Me)
@@ -583,16 +575,6 @@ Public Class Cms
                     Throw New Exception(LCase("errortest:" & moRequest("ewerror")))
                 End If
 
-
-                'if we access base via soap the session is not available
-                If Not moSession Is Nothing Then
-                    Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
-                    mnUserId = oMembershipProv.Activities.GetUserId(Me)
-                End If
-
-
-                'We need the userId placed into dbhelper.
-                moDbHelper.mnUserId = mnUserId
 
                 'Logon Redirect Facility
                 'once you are logged on this becomes the root
@@ -780,6 +762,9 @@ Public Class Cms
         End Try
 
     End Sub
+
+
+
 
     Public Sub InitialiseGlobal()
 

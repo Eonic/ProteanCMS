@@ -5,6 +5,7 @@ using System.Xml;
 using System.Data;
 using System.Data.SqlClient;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Protean.Tools
 {
@@ -1060,13 +1061,49 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
-        public static XmlDocument GetXml(DataSet src)
+
+        public XmlDocument GetXml(DataSet src)
         {
-            string strXdoc = src.GetXml();
-            XmlDocument xdoc = new XmlDocument();
-            xdoc.LoadXml(strXdoc);
-            return xdoc;
+            string cProcessInfo = "";
+            try
+                {
+                    DataTable dtCloned = src.Tables[0].Clone();
+                    foreach (DataColumn dc in dtCloned.Columns)
+                        dc.DataType = typeof(string);
+                    foreach (DataRow row in src.Tables[0].Rows)
+                    {
+                        dtCloned.ImportRow(row);
+                    }
+
+                    foreach (DataRow row in dtCloned.Rows)
+                    {
+                        for (int i = 0; i < dtCloned.Columns.Count; i++)
+                        {
+                            dtCloned.Columns[i].ReadOnly = false;
+
+                            if (string.IsNullOrEmpty(row[i].ToString()))
+                                row[i] = string.Empty;
+                        }
+                    }
+
+                    DataSet ds = new DataSet(src.DataSetName);
+                    ds.Tables.Add(dtCloned);
+                    //string strXdocOrig = src.GetXml();
+            
+                    string strXdoc = ds.GetXml();
+                    XmlDocument xdoc = new XmlDocument();
+                    xdoc.LoadXml(strXdoc);
+                    return xdoc;
+                }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetXml", ex, cProcessInfo));
+                return null;
+            }
+
         }
+
+       
 
         public void AddXMLValueToNode(string sql, ref XmlElement oElmt)
         {
