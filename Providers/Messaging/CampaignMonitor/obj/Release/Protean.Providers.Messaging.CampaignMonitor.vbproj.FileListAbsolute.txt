@@ -83,7 +83,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Docum
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\PayPal.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\CMPCDotNet.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaScriptEngineSwitcher.Msie.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Net.FtpClient.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\SoundInTheory.DynamicImage.Extensions.Pdf.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.dll
@@ -95,7 +94,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaS
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\SoundInTheory.DynamicImage.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaScriptEngineSwitcher.V8.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\AlphaFS.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\MsieJavaScriptEngine.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\WebGrease.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Microsoft.Web.Infrastructure.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ClearScript.dll
@@ -113,7 +111,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ICSha
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\PayPal.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaScriptEngineSwitcher.Msie.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Net.FtpClient.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.xml
@@ -126,14 +123,11 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaS
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaScriptEngineSwitcher.V8.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\AlphaFS.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\AlphaFS.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\MsieJavaScriptEngine.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Microsoft.Web.Infrastructure.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Antlr3.Runtime.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru\MsieJavaScriptEngine.resources.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.Resources.resources
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbproj.GenerateResource.cache

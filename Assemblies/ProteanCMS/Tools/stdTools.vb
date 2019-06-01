@@ -1110,8 +1110,6 @@ Public Module stdTools
 
     End Function
 
-
-
     'Sub SetDefaultSortColumn(ByRef moPageXml As XmlDocument, ByVal nSortColumn As Long, Optional ByVal nSortDirection As SortDirection = SortDirection.Ascending)
     '    PerfMon.Log("stdTools", "SetDefaultSortColumn")
     '    Try

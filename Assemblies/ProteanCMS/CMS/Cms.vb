@@ -763,9 +763,6 @@ Public Class Cms
 
     End Sub
 
-
-
-
     Public Sub InitialiseGlobal()
 
         Dim cProcessInfo As String = ""

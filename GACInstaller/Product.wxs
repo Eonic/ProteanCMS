@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.9"?>
+<?define version  = "6.0.11"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Associates LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Associates LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -90,9 +90,9 @@
 
 
 
-              <!--Component Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' Guid='0d34997a-e292-40ae-b62b-894d6766fec3' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+              <Component Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' Guid='0d34997a-e292-40ae-b62b-894d6766fec3' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_JavaScriptEngineSwitcher_V8_Win64_clearscript' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\runtimes\win-x64\native\ClearScript.dll' Assembly='.net' KeyPath='yes' />
-                </Component-->
+                </Component>
               
               <Directory Id='ClearScript' Name='ClearScript'>
                 <Directory Id='ClearScript2' Name='v4.0_5.5.6.0__935d0c957da47c73'>
@@ -104,6 +104,16 @@
                   </Component>
                   <Component Id='com_JavaScriptEngineSwitcher_V8_Win64_base' Win64='no' Guid='e4884c8f-12e0-4907-95ff-5b66360e7094' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_JavaScriptEngineSwitcher_V8_Win64_base' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='v8-base-x64.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\runtimes\win-x64\native\v8-base-x64.dll' Assembly='no' KeyPath='yes' />
+                  </Component>
+                  
+                  <Component Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript32' Guid='cf9f2809-0445-4a46-8190-aa62d1834d68' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                    <File Id='_JavaScriptEngineSwitcher_V8_Win64_clearscript32' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8-32.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.Native.win-x86.3.1.0\runtimes\win-x86\native\ClearScriptV8-32.dll' Assembly='no' KeyPath='yes' />
+                  </Component>
+                  <Component Id='com_JavaScriptEngineSwitcher_V8_Win32' Win64='no' Guid='7de7810c-5ade-474b-819d-d1358c072849' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                    <File Id='_JavaScriptEngineSwitcher_V8_Win32' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='v8-ia32.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.Native.win-x86.3.1.0\runtimes\win-x86\native\v8-ia32.dll' Assembly='no' KeyPath='yes' />
+                  </Component>
+                  <Component Id='com_JavaScriptEngineSwitcher_V8_Win32_base' Win64='no' Guid='46d81fe8-5b63-4d5b-baf2-ef95f177caac' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                    <File Id='_JavaScriptEngineSwitcher_V8_Win32_base' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='v8-base-ia32.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.Native.win-x86.3.1.0\runtimes\win-x86\native\v8-base-ia32.dll' Assembly='no' KeyPath='yes' />
                   </Component>
                 </Directory>
               </Directory>
@@ -128,7 +138,7 @@
                 <File Id='_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.Core.dll' Source='..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_MicrosoftAjax' Guid='b235af82-3a6c-4652-bcee-9ff1c1b6fef2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.9.213\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_MicrosoftAjax' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.MicrosoftAjax.dll' Source='..\packages\BundleTransformer.MicrosoftAjax.1.10.0\lib\net40\BundleTransformer.MicrosoftAjax.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AjaxMin' Guid='27bf7242-eb9e-4a63-a033-db42e6e81430' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AjaxMin' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AjaxMin.dll' Source='..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll' Assembly='.net' KeyPath='yes' />
@@ -302,15 +312,17 @@
 
           <ComponentRef Id='com_AdvancedStringBuilder' />
           
+          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' />
+          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript64' />
+          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript32' />
     
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64' />
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_base' />
 
-          <!--ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' /-->
-          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript64' />
-          <!--
-          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' />
-          
+          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win32' />
+          <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win32_base' />
+
+          <!--         
             <ComponentRef Id='com_ChakraCore_Win_x64' />
             <ComponentRef Id='com_ChakraCore_Win_x86' />
             -->

@@ -580,8 +580,28 @@ Public Class Messaging
                             Try
                                 oSmtpn.Send(oMailn)
                             Catch ex As Exception
-                                oSmtpn.Host = goConfig("MailServer2")
-                                oSmtpn.Send(oMailn)
+                                If goConfig("MailServer2") = "" Then
+                                    If gbDebug Then
+                                        returnException(mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
+                                        Return "ex: " & ex.ToString
+                                    Else
+                                        Return failureMessage & " - Error1: " & ex.Message & " - " & cProcessInfo & " - " & ex.StackTrace
+                                    End If
+                                Else
+                                    Try
+                                        oSmtpn.Host = goConfig("MailServer2")
+                                        oSmtpn.Send(oMailn)
+                                    Catch ex3 As Exception
+                                        If gbDebug Then
+                                            returnException(mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug)
+                                            Return "ex3: " & ex3.ToString
+                                        Else
+                                            Return failureMessage & " - Error1: " & ex3.Message & " - " & cProcessInfo & " - " & ex.StackTrace
+                                        End If
+
+                                    End Try
+                                End If
+
                             End Try
                         End If
                     Catch ex As Exception

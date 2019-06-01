@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.9.0"
+    Public Shared ewAssemblyVersion As String = "6.0.11.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.1.0.0"
@@ -21,7 +21,7 @@ Public Class CustomActions
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared JsonAssemblyVersion As String = "12.0.0.0" '"8.0.1.19229""
     Public Shared YUIAssemblyVersion As String = "1.9.23.0"
-    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.9.213.0"
+    Public Shared MicrosoftAjaxAssemblyVersion As String = "1.10.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
@@ -723,15 +723,47 @@ Public Class CustomActions
             'Move files to correct folders in GAC
             Dim installFolder As String = "C:\Program Files\Eonic Associates LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)\Global Assembly Cache"
             Dim GACFolder As String = "C:\Windows\Microsoft.NET\assembly\GAC_MSIL"
+            Dim System32Folder As String = "C:\Windows\System32"
             Dim fs As New FileIO.FileSystem
-            If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll") Then
-                System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll")
-                System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll")
-                System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll")
+            If System.IO.Directory.Exists(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
+                '64bit files
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll")
+                End If
+                If Not System.IO.File.Exists(System32Folder & "\v8-x64.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", System32Folder & "\v8-x64.dll")
+                End If
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll")
+                End If
+                If Not System.IO.File.Exists(System32Folder & "\v8-base-x64.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", System32Folder & "\v8-base-x64.dll")
+                End If
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll")
+                End If
+                '32bit files
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll")
+                End If
+                If Not System.IO.File.Exists(System32Folder & "\v8-x32.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", System32Folder & "\v8-ia32.dll")
+                End If
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll")
+                End If
+                If Not System.IO.File.Exists(System32Folder & "\v8-base-x32.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", System32Folder & "\v8-base-ia32.dll")
+                End If
+                If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll") Then
+                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll")
+                End If
             End If
-            If Not System.IO.File.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll") Then
-                System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
-                System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
+            If System.IO.Directory.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\") Then
+                If Not System.IO.File.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll") Then
+                    System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
+                    System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
+                End If
             End If
 
             'MyBase.Install(savedState)
@@ -753,6 +785,7 @@ Public Class CustomActions
             End Try
 
             Return ActionResult.Failure
+
 
             'MyBase.Install(savedState)
 
