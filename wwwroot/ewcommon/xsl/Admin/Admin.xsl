@@ -2069,8 +2069,55 @@
         &#160;
       </td>
     </tr>
+    <xsl:apply-templates select="Content[@type='SKU']" mode="AdvancedMode">
+      <xsl:with-param name="contentType" select="'SKU'"/>
+      <xsl:with-param name="parId" select="@parId"/>
+    </xsl:apply-templates>
   </xsl:template>
 
+  <xsl:template match="Content[@type='SKU']" mode="AdvancedMode">
+    <xsl:param name="parId"/>
+    <xsl:param name="contentType"/>
+    <tr>
+      <td class="status">
+        <xsl:apply-templates select="." mode="status_legend"/>
+      </td>
+      <td class="pic">
+        <xsl:text>SKU</xsl:text>
+
+      </td>
+      <td class="manufacturer">
+        <xsl:text> </xsl:text>
+      </td>
+      <td class="name">
+        <xsl:value-of select="Name" />
+      </td>
+      <td class="stockcode">
+        <xsl:value-of select="StockCode" />
+      </td>
+      <td class="stock">
+        <xsl:value-of select="Stock" />
+      </td>
+      <td class="price">
+        <xsl:apply-templates select="." mode="displayPrice" />
+      </td>
+      <td class="optionsButton" nowrap="nowrap">
+        <xsl:apply-templates select="." mode="inlineOptionsNoPopup">
+          <xsl:with-param name="class" select="'list'"/>
+          <xsl:with-param name="parId" select="$parId"/>
+        </xsl:apply-templates>
+        <xsl:text> </xsl:text>
+      </td>
+      <td>
+        <div class="checkbox checkbox-primary">
+          <input type="checkbox" name="id" value="{@id}" class="styled"/>
+          <label>
+            <xsl:text> </xsl:text>
+          </label>
+        </div>
+      </td>
+    </tr>
+  </xsl:template>
 
   <xsl:template match="Page" mode="inlinePopupAdd">
     <xsl:param name="type"/>
@@ -2182,7 +2229,15 @@
 
   <!-- -->
   <xsl:template match="Content" mode="inlineOptionsNoPopup">
+    <xsl:param name="parId"/>
     <xsl:choose>
+      <xsl:when test="$parId!=''">
+        <a href="{$appPath}?ewCmd=EditContent&amp;pgid={$parId}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+          <i class="fa fa-edit fa-white">
+            <xsl:text> </xsl:text>
+          </i><xsl:text> </xsl:text>Edit
+        </a>
+      </xsl:when>
       <xsl:when test="/Page/@id=@parId">
         <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
           <i class="fa fa-edit fa-white">
@@ -2286,7 +2341,7 @@
                   </form>
               </div>
               <div class="col-md-6">
-                <form method="post" action="/?ewCmd=ByType.Product.Location" class="ewXform panel panel-default" id="LocationFilter" name="LocationFilter">
+                <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="ewXform panel panel-default" id="LocationFilter" name="LocationFilter">
                   <div class="panel-body  form-group">
                     <div class="input-group">
                     <label for="Location" class="input-group-addon">Select Location</label>
@@ -4734,7 +4789,7 @@
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
 
-  <xsl:template match="Page[@layout='Profile' and ContentDetail/User]" mode="Admin">
+  <xsl:template match="Page[@layout='Profile']" mode="Admin">
                 <xsl:for-each select="ContentDetail/User">
     <div id="template_ListDirectory" class="panel panel-default">
       <div class="panel-heading">
@@ -4787,7 +4842,7 @@
               </i>
               <xsl:text> </xsl:text>Integrations</a>
           </xsl:if>
-          <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='ListUserContacts']">
+          <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
             <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-map-marker fa-white">
                 <xsl:text> </xsl:text>
@@ -4799,7 +4854,7 @@
               <i class="fa fa-signal fa-white">
                 <xsl:text> </xsl:text>
               </i>
-              <xsl:text> </xsl:text>Activity..</a>
+              <xsl:text> </xsl:text>Activity</a>
           </xsl:if>
           <xsl:choose>
             <xsl:when test="Status='0'">

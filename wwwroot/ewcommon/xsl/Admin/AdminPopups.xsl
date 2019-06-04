@@ -55,7 +55,8 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="SubmitPath">
-    <xsl:text>{$appPath}?contentType=popup&amp;</xsl:text>
+    <xsl:value-of select="$appPath"/>
+    <xsl:text>?contentType=popup&amp;</xsl:text>
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib']" mode="newItemScript">

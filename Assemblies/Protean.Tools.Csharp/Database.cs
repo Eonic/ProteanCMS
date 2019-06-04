@@ -1237,7 +1237,13 @@ namespace Protean.Tools
 
         public static string SqlFmt(string text)
         {
-            return text.Replace("'", "''");
+            if (text == null)
+            {
+                return "";
+            }
+            else { 
+                return text.Replace("'", "''");
+            }
         }
 
         public static string SqlString(string text)

@@ -22,7 +22,6 @@
     Imports System.Text.RegularExpressions
     Imports System.Net.Mail
 Imports Protean.Tools.Dictionary
-Imports Eonic.xmlTools
 Imports Protean.Tools.Xml
 Imports System
 
