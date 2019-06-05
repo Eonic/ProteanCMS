@@ -2046,8 +2046,8 @@ Partial Public Class Cms
                 oDs = GetDataSet(sSql, getTable(ObjectType), "instance")
                 ReturnNullsEmpty(oDs)
 
-                'Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
-                Dim oXml As XmlDocument = GetXml(oDs)
+                Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
+                'Dim oXml As XmlDocument = GetXml(oDs)
                 oDs.EnforceConstraints = False
 
                 'Convert any text to xml
@@ -10269,9 +10269,12 @@ ReturnMe:
                     ' Assume empty values are NULL values - SQl can handle this.
                     If Not String.IsNullOrEmpty(paramValue) And Not params.ContainsKey(paramName) Then
                         If param.GetAttribute("type") = "datetime" Then
-                            paramValue = Replace(SqlDate(paramValue, True), "'", "")
+                            'paramValue = Replace(SqlDate(paramValue, True), "'", "")'
+                            params.Add(paramName, CDate(Replace(SqlDate(paramValue, False), "'", "")))
+                        Else
+                            params.Add(paramName, paramValue)
                         End If
-                        params.Add(paramName, paramValue)
+
                     Else
                         Select Case param.GetAttribute("type")
                             Case "number"

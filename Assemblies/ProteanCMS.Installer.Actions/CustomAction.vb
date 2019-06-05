@@ -10,7 +10,8 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.13.0"
+    Public Shared ewAssemblyVersion As String = "6.0.16.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.1.0.0"
@@ -196,9 +197,11 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Newtonsoft.Json, Version=" & JsonAssemblyVersion & ", Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed")
                     UpdateAssemblyRef(oAssembliesSect, "System.Net.FtpClient, Version=" & SystemNetFTPClientAssemblyVersion & ", Culture=neutral, PublicKeyToken=fa4be07daa57c2b7")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
-                    UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+
+                    ' UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=2030ce1af675e93f")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Protean.Tools.Csharp, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                 End If
 
                 'UpdateAssemblyRef(oAssembliesSect, "Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=EB42632606E9261F")

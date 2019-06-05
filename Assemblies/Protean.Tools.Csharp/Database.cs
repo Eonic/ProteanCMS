@@ -1218,7 +1218,9 @@ namespace Protean.Tools
                 }
                 else if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
                 {
-                    DateTime dxDate = (DateTime)dDateTime;
+                    // DateTime dxDate = (DateTime)dDateTime;
+                    DateTime dxDate = Convert.ToDateTime(dDateTime.ToString());
+                    //DateTime dxDate = DateTime.ParseExact(dDateTime.ToString(), "yyyy-mm-dd", null);
                     if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
                         return "null";
                     else if (bIncludeTime)

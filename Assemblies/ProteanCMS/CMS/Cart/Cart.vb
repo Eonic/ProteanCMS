@@ -476,6 +476,10 @@ Partial Public Class Cms
                         mcCartURL = moCartConfig("SecureURL")
                     End If
 
+                    If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                        EndSession()
+                    End If
+
                     moDiscount = New Discount(Me)
                     mcPagePath = myWeb.mcPagePath
 

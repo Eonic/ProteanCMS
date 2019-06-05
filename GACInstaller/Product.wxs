@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.13"?>
+<?define version  = "6.0.16"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Associates LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Associates LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -170,6 +170,9 @@
                 <Component Id='com_Protean_Tools_Csharp' Guid='1474f490-3ba4-4e54-96d0-f3a1168b5021' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_Protean_Tools_Csharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Tools.Csharp.dll' Source='..\Assemblies\Protean.Tools.Csharp\bin\$(var.Configuration)\Protean.Tools.Csharp.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
+              <Component Id='com_Protean_AppStart' Guid='eb957554-8eaa-430b-a790-7236ed0d2be7' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                <File Id='_Protean_AppStart' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.AppStart.dll' Source='..\Assemblies\Protean.AppStart\bin\$(var.Configuration)\Protean.AppStart.dll' Assembly='.net' KeyPath='yes' />
+              </Component>
                 <Component Id='com_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' Guid='CA3ECC2F-BB9C-41C8-A73B-40739B106AE0' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                     <File Id='_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ProteanCMS.dll' Source='..\Assemblies\ProteanCMS\bin\ProteanCMS.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
@@ -309,6 +312,7 @@
 
            <ComponentRef Id='com_JavaScriptEngineSwitcher_V8' />
            <ComponentRef Id='com_Protean_Tools_Csharp' />
+          <ComponentRef Id='com_Protean_AppStart' />
 
           <ComponentRef Id='com_AdvancedStringBuilder' />
           

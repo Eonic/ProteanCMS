@@ -42,6 +42,7 @@ Installer_Logo.jpg
 ..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll
 ..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll
 ..\packages\Owin.1.0\lib\net40\Owin.dll
+..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll
 ..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
 ..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FTPClient.dll
