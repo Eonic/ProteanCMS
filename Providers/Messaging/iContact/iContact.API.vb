@@ -43,9 +43,9 @@ Public Class iContactAPI
 
     Public errorStr As String
 #Region "New Error Handling"
-    Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-    Private Sub _OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+    Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
         RaiseEvent OnError(sender, e)
     End Sub
 #End Region
@@ -81,7 +81,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
         End Try
     End Sub
 
@@ -93,12 +93,12 @@ Public Class iContactAPI
             Dim useAccountAddress As String = "1"
             Dim archiveByDefault As String = "1"
 
-            Dim campaginXml As String = "<campaigns><campaign><name>" & Eonic.Tools.Xml.EncodeForXml(Name) & "</name><description>" & Eonic.Tools.Xml.EncodeForXml(Description) & "</description><fromName>" & Eonic.Tools.Xml.EncodeForXml(FromName) & "</fromName><fromEmail>" & Eonic.Tools.Xml.EncodeForXml(FromEmail) & "</fromEmail>" & _
-    "<forwardToFriend>" & Eonic.Tools.Xml.EncodeForXml(forwardToFriend) & "</forwardToFriend>" & _
-    "<clickTrackMode>" & Eonic.Tools.Xml.EncodeForXml(clickTrackMode) & "</clickTrackMode>" & _
-    "<subscriptionManagement>" & Eonic.Tools.Xml.EncodeForXml(SubscriptionManagement) & "</subscriptionManagement>" & _
-    "<useAccountAddress>" & Eonic.Tools.Xml.EncodeForXml(useAccountAddress) & "</useAccountAddress>" & _
-    "<archiveByDefault>" & Eonic.Tools.Xml.EncodeForXml(archiveByDefault) & "</archiveByDefault></campaign></campaigns>"
+            Dim campaginXml As String = "<campaigns><campaign><name>" & Protean.Tools.Xml.EncodeForXml(Name) & "</name><description>" & Protean.Tools.Xml.EncodeForXml(Description) & "</description><fromName>" & Protean.Tools.Xml.EncodeForXml(FromName) & "</fromName><fromEmail>" & Protean.Tools.Xml.EncodeForXml(FromEmail) & "</fromEmail>" &
+    "<forwardToFriend>" & Protean.Tools.Xml.EncodeForXml(forwardToFriend) & "</forwardToFriend>" &
+    "<clickTrackMode>" & Protean.Tools.Xml.EncodeForXml(clickTrackMode) & "</clickTrackMode>" &
+    "<subscriptionManagement>" & Protean.Tools.Xml.EncodeForXml(SubscriptionManagement) & "</subscriptionManagement>" &
+    "<useAccountAddress>" & Protean.Tools.Xml.EncodeForXml(useAccountAddress) & "</useAccountAddress>" &
+    "<archiveByDefault>" & Protean.Tools.Xml.EncodeForXml(archiveByDefault) & "</archiveByDefault></campaign></campaigns>"
             Dim xmlDoc As New XmlDocument
             xmlDoc.LoadXml(campaginXml)
             Dim oResponse As New XmlDocument
@@ -106,7 +106,7 @@ Public Class iContactAPI
             Return CLng(oResponse.SelectSingleNode("response/campaigns/campaign/campaignId").InnerText)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -115,12 +115,12 @@ Public Class iContactAPI
     Public Function CreateEmail(ByVal CampaignId As Integer, ByVal MessageType As String, ByVal Subject As String, ByVal HtmlBody As String, ByVal TextBody As String, ByVal MessageName As String) As Integer
         Try
 
-            Dim emailXml As String = "<messages><message><campaignId>" & Eonic.Tools.Xml.EncodeForXml(CampaignId) & "</campaignId>" & _
-    "<subject>" & Eonic.Tools.Xml.EncodeForXml(Subject) & "</subject>" & _
-    "<messageType>normal</messageType>" & _
-    "<messageName>" & Eonic.Tools.Xml.EncodeForXml(MessageName) & "</messageName>" & _
-    "<htmlBody>" & Eonic.Tools.Xml.EncodeForXml(HtmlBody) & "</htmlBody>" & _
-    "<textBody>" & Eonic.Tools.Xml.EncodeForXml(TextBody) & "</textBody>" & _
+            Dim emailXml As String = "<messages><message><campaignId>" & Protean.Tools.Xml.EncodeForXml(CampaignId) & "</campaignId>" &
+    "<subject>" & Protean.Tools.Xml.EncodeForXml(Subject) & "</subject>" &
+    "<messageType>normal</messageType>" &
+    "<messageName>" & Protean.Tools.Xml.EncodeForXml(MessageName) & "</messageName>" &
+    "<htmlBody>" & Protean.Tools.Xml.EncodeForXml(HtmlBody) & "</htmlBody>" &
+    "<textBody>" & Protean.Tools.Xml.EncodeForXml(TextBody) & "</textBody>" &
     "</message></messages>"
             Dim xmlDoc As New XmlDocument
             xmlDoc.LoadXml(emailXml)
@@ -129,7 +129,7 @@ Public Class iContactAPI
             Return CLng(oResponse.SelectSingleNode("response/messages/message/messageId").InnerText)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -138,9 +138,9 @@ Public Class iContactAPI
     Public Function SendEmail(ByVal EmailId As Integer, ByVal RecipientGroupsCSV As String, ByVal sendTime As DateTime) As Integer
         Try
 
-            Dim sendXml As String = "<sends><send><messageId>" & Eonic.Tools.Xml.EncodeForXml(EmailId) & "</messageId>" & _
-           "<includeListIds>" & Eonic.Tools.Xml.EncodeForXml(RecipientGroupsCSV) & "</includeListIds>" & _
-           "<scheduledTime>" & Eonic.Tools.Xml.XmlDate(sendTime, True) & "</scheduledTime>" & _
+            Dim sendXml As String = "<sends><send><messageId>" & Protean.Tools.Xml.EncodeForXml(EmailId) & "</messageId>" &
+           "<includeListIds>" & Protean.Tools.Xml.EncodeForXml(RecipientGroupsCSV) & "</includeListIds>" &
+           "<scheduledTime>" & Protean.Tools.Xml.XmlDate(sendTime, True) & "</scheduledTime>" &
             "</send></sends>"
             Dim xmlDoc As New XmlDocument
             xmlDoc.LoadXml(sendXml)
@@ -156,7 +156,7 @@ Public Class iContactAPI
             Return CLng(oResponse.SelectSingleNode("response/sends/send/recipientCount").InnerText)
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SendEmail", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -222,7 +222,7 @@ Public Class iContactAPI
             Return ""
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -320,7 +320,7 @@ Public Class iContactAPI
 
         Catch ex As Exception
 
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sResponse))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sResponse))
             Return Nothing
         End Try
     End Function
@@ -341,7 +341,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -384,7 +384,7 @@ Public Class iContactAPI
             Return ""
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -404,7 +404,7 @@ Public Class iContactAPI
                 'create list
                 Try
                     Dim WelcomeMessageId As String = moMailConfig("WelcomeMessageID")
-                    Dim listXml As String = "<lists><list><name>" & Eonic.Tools.Xml.EncodeForXml(ListName) & "</name><description/><emailOwnerOnChange>0</emailOwnerOnChange><welcomeOnManualAdd>0</welcomeOnManualAdd><welcomeOnSignupAdd>0</welcomeOnSignupAdd></list></lists>"
+                    Dim listXml As String = "<lists><list><name>" & Protean.Tools.Xml.EncodeForXml(ListName) & "</name><description/><emailOwnerOnChange>0</emailOwnerOnChange><welcomeOnManualAdd>0</welcomeOnManualAdd><welcomeOnSignupAdd>0</welcomeOnSignupAdd></list></lists>"
                     Dim xmlDoc As New XmlDocument
                     xmlDoc.LoadXml(listXml)
                     Dim oResponse As New XmlDocument
@@ -416,7 +416,7 @@ Public Class iContactAPI
                 End Try
             End If
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -438,7 +438,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -461,7 +461,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -482,7 +482,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -503,7 +503,7 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -520,7 +520,7 @@ Public Class iContactAPI
 
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
@@ -563,14 +563,14 @@ Public Class iContactAPI
             End If
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
             Return Nothing
         End Try
     End Function
 
 
     Private Function TransformIncomingXml(ByVal sourceXml As XmlElement) As XmlDocument
-        Dim oTransform As New Eonic.XmlHelper.Transform()
+        Dim oTransform As New Protean.XmlHelper.Transform()
         Dim resultXmlString As String = ""
         Dim messagePlainText As String = ""
         Dim oXml As XmlDocument = New XmlDocument
@@ -596,7 +596,7 @@ Public Class iContactAPI
             Return resultXml
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
             Return Nothing
         End Try
 
@@ -663,7 +663,7 @@ Public Class iContactAPI
                 If resp.StatusCode = HttpStatusCode.NotFound Then
                     Return Nothing
                 Else
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
                     Return "<error>" & ex.Message & "</error>"
                 End If
             End Try
@@ -672,7 +672,7 @@ Public Class iContactAPI
             '  Return cResponse ' oXmlResponse.FirstChild
 
         Catch ex As Exception
-            RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TransformIncomingXml", ex, ""))
             Return Nothing
         End Try
 

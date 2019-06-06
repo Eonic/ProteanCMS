@@ -21,9 +21,9 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -34,14 +34,14 @@ Namespace Providers.Membership
 
     Public Class iContactProvider
 
-        Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-        Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+        Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+        Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
         Public Sub New()
             'do nothing
         End Sub
 
-        Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+        Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
             MemProvider.AdminXforms = New AdminXForms(myWeb)
             'MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -51,14 +51,14 @@ Namespace Providers.Membership
         End Sub
 
         Public Class AdminXForms
-            Inherits Eonic.Providers.Membership.EonicProvider.AdminXForms
+            Inherits Protean.Providers.Membership.EonicProvider.AdminXForms
             Private Const mcModuleName As String = "Providers.Messaging.Generic.AdminXForms"
-            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
-            Sub New(ByRef aWeb As Web)
+            Sub New(ByRef aWeb As Cms)
                 MyBase.New(aWeb)
             End Sub
 
@@ -77,7 +77,7 @@ Namespace Providers.Membership
                     Return MyBase.xFrmUserLogon(FormName)
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "xFrmUserLogon", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "xFrmUserLogon", ex, ""))
                     Return Nothing
                 End Try
             End Function
@@ -121,7 +121,7 @@ Namespace Providers.Membership
                     Return dirXform
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "xFrmUserLogon", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "xFrmUserLogon", ex, ""))
                     Return Nothing
                 End Try
             End Function
@@ -130,9 +130,9 @@ Namespace Providers.Membership
         End Class
 
         Public Class AdminProcess
-            Inherits Web.Admin
-            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Inherits Protean.Cms.Admin
+            Public Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
             Dim _oAdXfm As AdminXForms
 
@@ -146,7 +146,7 @@ Namespace Providers.Membership
                 End Get
             End Property
 
-            Sub New(ByRef aWeb As Web)
+            Sub New(ByRef aWeb As Cms)
                 MyBase.New(aWeb)
             End Sub
 
@@ -154,7 +154,7 @@ Namespace Providers.Membership
         End Class
 
         Public Class Activities
-            Inherits Eonic.Providers.Membership.EonicProvider.Activities
+            Inherits Protean.Providers.Membership.EonicProvider.Activities
             Dim mcModuleName As String = "Eonic.iContact.Providers.Membership.Activities"
             Dim moMailinglistConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
 

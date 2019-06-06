@@ -652,8 +652,7 @@ namespace Protean.Tools
         /// <param name="bCheckTrimmedInnerText">The matched node will have its innertext trimmed and examined</param>
         /// <returns>XmlNodeState - the state of the test node.</returns>
         /// <remarks></remarks>
-        public static Xml.XmlNodeState NodeState(ref XmlElement oNode, string xPath = "", string populateAsText = "", string populateAsXml = "", Xml.XmlNodeState populateState = XmlNodeState.IsEmpty, XmlElement returnElement = null, string returnAsXml = "", string returnAsText = "", bool bCheckTrimmedInnerText = false
-                    )
+        public static Xml.XmlNodeState NodeState(ref XmlElement oNode, string xPath = "", string populateAsText = "", string populateAsXml = "", Xml.XmlNodeState populateState = XmlNodeState.IsEmpty, XmlElement returnElement = null, string returnAsXml = "", string returnAsText = "", bool bCheckTrimmedInnerText = false)
         {
             try
             {
