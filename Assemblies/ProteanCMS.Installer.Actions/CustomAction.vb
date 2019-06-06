@@ -545,7 +545,12 @@ Public Class CustomActions
                 BindingElmt.AppendChild(newElmt)
             End If
             For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Newtonsoft.Json']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "10.0.0.0-" & JsonAssemblyVersion)
+                If oElmt.GetAttribute("oldVersion").StartsWith("10.") Then
+                    oElmt.SetAttribute("oldVersion", "10.0.0.0-" & JsonAssemblyVersion)
+                Else
+                    oElmt.SetAttribute("oldVersion", "8.0.0.0-" & JsonAssemblyVersion)
+                End If
+
                 oElmt.SetAttribute("newVersion", JsonAssemblyVersion)
             Next
 
