@@ -454,7 +454,7 @@ Public Class CustomActions
 
             If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools.Csharp']") Is Nothing Then
                 Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
-                newElmt.InnerXml = "<assemblyIdentity name=""Protean.Tools.Csharp"" publicKeyToken=""2030ce1af675e93f""/><bindingRedirect/>"
+                newElmt.InnerXml = "<assemblyIdentity name=""Protean.Tools.Csharp"" publicKeyToken=""0e5e11efc3341916""/><bindingRedirect/>"
                 BindingElmt.AppendChild(newElmt)
             End If
             For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Protean.Tools.Csharp']/bindingRedirect")
