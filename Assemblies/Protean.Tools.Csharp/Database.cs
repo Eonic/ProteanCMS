@@ -1208,10 +1208,15 @@ namespace Protean.Tools
             {
                 if (dDateTime is DateTime) {
                     DateTime thisDate = (DateTime)dDateTime;
-                    if (bIncludeTime)
-                        return "'" + thisDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
-                    else
-                        return "'" + thisDate.ToString("dd-MMM-yyyy") + "'";
+                    if (thisDate.Year.ToString() == "1") {
+                        return "null";
+                    } else {
+                        if (bIncludeTime)
+                            return "'" + thisDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
+                        else
+                            return "'" + thisDate.ToString("dd-MMM-yyyy") + "'";
+                    }
+
                 }
                 else if (dDateTime is null) {
                     return "null";

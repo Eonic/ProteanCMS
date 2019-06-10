@@ -8,6 +8,9 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Protean.Providers.Messaging.CampaignMonitor", "Providers\Messaging\CampaignMonitor\Protean.Providers.Messaging.CampaignMonitor.vbproj", "{BC419C76-E146-4038-A46E-3426951E0260}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ProteanCMS.Installer", "GACInstaller\ProteanCMS.Installer.wixproj", "{CB4BD400-FB8D-4B71-858F-AE4DD4E53489}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E56FC8F2-7906-4182-BA6A-3FF427EA13C5} = {E56FC8F2-7906-4182-BA6A-3FF427EA13C5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplaceProvider", "Providers\ReplaceProvider\ReplaceProvider.csproj", "{3DA89AE2-1242-430E-A609-25A680D10F03}"
 EndProject
@@ -156,8 +159,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8F245494-C013-432B-BC6E-FE6BA5C38156}
-		BuildVersion_IncrementBeforeBuild = False
 		BuildVersion_StartDate = 2000/1/1
+		BuildVersion_IncrementBeforeBuild = False
+		SolutionGuid = {8F245494-C013-432B-BC6E-FE6BA5C38156}
 	EndGlobalSection
 EndGlobal
