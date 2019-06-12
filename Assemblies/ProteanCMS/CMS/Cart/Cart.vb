@@ -2781,6 +2781,17 @@ processFlow:
                             Next
                             oldCartId = nCartIdUse
                         End If
+                        'Ensure we persist the invoice date and ref.
+                        If nStatusId > 6 Then
+                            'Persist invoice date and invoice ref
+                            Dim tempInstance As New XmlDocument
+                            tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
+                            Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
+                            oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            tempInstance = Nothing
+                            tempOrder = Nothing
+                        End If
 
                     Next
                 End If

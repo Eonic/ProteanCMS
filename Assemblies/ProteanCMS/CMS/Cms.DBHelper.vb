@@ -3778,6 +3778,8 @@ restart:
 
                 sSql = "SELECT nContentId, bPrimary, bCascade, cPosition FROM tblContentLocation WHERE (nStructId = " & nSourcePageId & ") ORDER BY nDisplayOrder"
 
+                Dim positionReMap(1, 1) As Long
+                Dim copyCount As Long = 0
 
                 Dim oDS As DataSet
                 oDS = GetDataSet(sSql, "Content", "Contents")
@@ -3825,6 +3827,10 @@ restart:
                             '' - copy the items and related them to our object
 
                             nContentId = createContentCopy(oDr("nContentId"))
+                            positionReMap(0, copyCount) = oDr("nContentId")
+                            positionReMap(1, copyCount) = nContentId
+                            copyCount = copyCount + 1
+                            ReDim Preserve positionReMap(1, copyCount)
 
                         ElseIf mode = CopyContentType.Locate Then
                             'just get the id
@@ -3842,6 +3848,8 @@ restart:
 
                     Next
                 End If
+
+                ResetContentPositions(nTargetPageId, positionReMap)
 
                 'now we have done that page we need to look at the children
 
@@ -4086,6 +4094,33 @@ restart:
                 Return nId
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setContentLocation", ex, cProcessInfo))
+            End Try
+
+        End Function
+
+        Public Function ResetContentPositions(ByVal pageId As Long, ByVal positionReMap(,) As Long)
+            PerfMon.Log("DBHelper", "ResetContentPositions")
+            Dim cProcessInfo As String = ""
+            Dim sSql As String
+            Try
+                For row As Integer = 0 To positionReMap.GetUpperBound(1)
+                    Dim oldId = positionReMap(0, row)
+                    Dim newId = positionReMap(1, row)
+                    sSql = "select cPosition from tblContentLocation where nStructId = " & pageId & " and  nContentId=" & newId
+                    Dim cPosition As String = ExeProcessSqlScalar(sSql)
+                    If Not cPosition Is Nothing Then
+                        For row2 As Integer = 0 To positionReMap.GetUpperBound(1)
+                            If cPosition.EndsWith("-" & CStr(positionReMap(0, row2))) Then
+                                cPosition = cPosition.Replace("-" & CStr(positionReMap(0, row2)), "-" & CStr(positionReMap(1, row2)))
+                            End If
+                        Next
+                        sSql = "update tblContentLocation set cPosition = '" & cPosition & "' where nStructId = " & pageId & " and  nContentId=" & newId
+                        ExeProcessSql(sSql)
+                    End If
+                Next
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetContentPositions", ex, cProcessInfo))
             End Try
 
         End Function
