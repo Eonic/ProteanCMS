@@ -2506,7 +2506,7 @@ processFlow:
                             '     discountSQL = ", nDiscountValue = " & Discount & " "
                         End If
 
-                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
+                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL &  " WHERE nCartItemKey = " & oRow("id")
                         moDBHelper.ExeProcessSql(cUpdtSQL)
 
 
@@ -2805,6 +2805,9 @@ processFlow:
                     Next
                     If Not oRelatedElmt.InnerXml = "" Then oCartElmt.AppendChild(oRelatedElmt)
                 End If
+
+
+
             Catch ex As Exception
                 returnException(mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug)
             End Try
@@ -7958,6 +7961,41 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
 
         End Function
+
+
+        Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
+            Try
+
+                Dim sSql2 As String
+                Dim ods2 As DataSet
+                Dim ods As DataSet
+                Dim oRow As DataRow
+                Dim sSql As String
+                Dim cShippingDesc As String
+                Dim nShippingCost As String
+                Dim cSqlUpdate As String
+
+
+                sSql = "select * from tblCartShippingMethods "
+                sSql = sSql & " where nShipOptKey = " & nShipOptKey
+                ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
+
+                For Each oRow In ods.Tables("Order").Rows
+                    cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
+                    nShippingCost = oRow("nShipOptCost")
+                    cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                    moDBHelper.ExeProcessSql(cSqlUpdate)
+                Next
+
+
+            Catch ex As Exception
+
+                returnException(mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
+
+            End Try
+        End Function
+
+
 
     End Class
 

@@ -10,6 +10,8 @@ Imports System.IO
 Imports Protean.Tools.Xml
 Imports Protean.Tools.Xml.XmlNodeState
 Imports System
+Imports System.Text
+
 
 Partial Public Class Cms
 
@@ -205,6 +207,57 @@ Partial Public Class Cms
 
             End Function
 
+
+
+            Public Function GetShippingOptions(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim dsShippingOption As DataSet
+
+                    Dim cDestinationCountry As String
+                    Dim nAmount As Long
+                    Dim nQuantity As Long
+                    Dim nWeight As Long
+
+
+                    dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
+
+                    Dim ShippingOptionXml As String = dsShippingOption.GetXml()
+                    Dim xmlDoc As New XmlDocument
+                    xmlDoc.LoadXml(ShippingOptionXml)
+
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                    Return jsonString.Replace("""@", """_")
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetShippingOptions", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+
+            Public Function UpdatedCartShippingOptions(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim cProcessInfo As String = ""
+                    Dim ShipOptKey As String
+                    Dim json As Newtonsoft.Json.Linq.JObject = jObj
+                    ShipOptKey = json.SelectToken("ShipOptKey")
+                    myCart.updateGCgetValidShippingOptionsDS(ShipOptKey)
+
+                    'GetCart(myApi, jObj)
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdatedCartShippingOptions", ex, ""))
+                    Return ex.Message
+                End Try
+
+
+
+            End Function
 
         End Class
 
