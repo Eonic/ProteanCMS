@@ -1075,9 +1075,7 @@ Public Class Cms
 
                 Case Else
 
-                    If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
-                        bPageCache = False
-                    End If
+
                     If gbCart Or gbQuote Then
                         If CInt("0" + moSession("CartId")) > 0 Then
                             bPageCache = False
@@ -1124,6 +1122,10 @@ Public Class Cms
 
                         'TS 21-06-2017 Moved from New() as not required for cached pages I think.
                         Open()
+
+                        If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                            bPageCache = False
+                        End If
 
                         sProcessInfo = "Transform PageXML Using XSLT"
                         If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then

@@ -2958,10 +2958,10 @@ ProcessFlow:
                             oPageDetail.AppendChild(moAdXfm.xFrmUpdateOrder(myWeb.moRequest("id"), cSchemaName))
 
                             Dim forceRefresh As Boolean = False
-
-                            If myWeb.moRequest("nStatus") = 9 Then
-                                forceRefresh = True
-                            End If
+                            'TS removed as we do not want to refresh the cart XML as it destroys discount info and order ref etc.
+                            'If myWeb.moRequest("nStatus") = 9 Then
+                            '       forceRefresh = True
+                            'End If
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail, forceRefresh)
 
                             ':TODO Behaviour to manage resending recipts.
