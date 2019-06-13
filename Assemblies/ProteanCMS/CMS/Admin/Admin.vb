@@ -190,15 +190,22 @@ Partial Public Class Cms
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
 
+
+
                 If Not moConfig("SecureMembershipAddress") = "" Then
                     Dim oMembership As New Protean.Cms.Membership(myWeb)
                     AddHandler oMembership.OnError, AddressOf myWeb.OnComponentError
                     oMembership.SecureMembershipProcess(mcEwCmd)
                 End If
 
-                If mcEwCmd = "" Then
+
+                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                    'case to cater for logoff in preview mode
+                    mcEwCmd = "PreviewOn"
+                ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
                 End If
+
 
                 If myWeb.moRequest("rptCmd") <> "" Then
                     mcEwCmd = "RptCourses"
@@ -1657,6 +1664,11 @@ ProcessFlow:
                         'ensure if no preview user is specified we are anonomous
                         If CStr("" & myWeb.moSession("PreviewUser")) = "" And CInt("0" & myWeb.moRequest("PreviewUser")) = 0 Then
                             myWeb.moSession("PreviewUser") = 0
+                        End If
+
+                        If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                            myWeb.moSession("PreviewUser") = 0
+                            myWeb.msRedirectOnEnd = "/"
                         End If
 
                         If IsDate(myWeb.moRequest("PreviewDate")) Then
