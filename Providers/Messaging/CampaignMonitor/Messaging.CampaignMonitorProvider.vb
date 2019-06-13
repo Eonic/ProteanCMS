@@ -274,7 +274,7 @@ Public Class CampaignMonitor
 
                                 'Send the Email
                                 Try
-                                    thisCampaign.Send(FromEmail, Protean.Tools.Xml.XmlDate(sendDateTime, True))
+                                    thisCampaign.Send(FromEmail, sendDateTime)
                                     moDbHelper.logActivity(dbHelper.ActivityType.Email, myWeb.mnUserId, nPageId, , MyBase.Instance.OuterXml)
                                     moDbHelper.CommitLogToDB(dbHelper.ActivityType.NewsLetterSent, myWeb.mnUserId, myWeb.moSession.SessionID, Now, myWeb.mnPageId, 0, "", True)
                                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Message Sent", True)

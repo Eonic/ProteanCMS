@@ -763,9 +763,6 @@ Public Class Cms
 
     End Sub
 
-
-
-
     Public Sub InitialiseGlobal()
 
         Dim cProcessInfo As String = ""
@@ -6578,9 +6575,12 @@ Public Class Cms
                     ExpireLogic = "> "
                 End If
 
-
                 sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
                 sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
+
+
+                ' sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
+                ' sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
             End If
             PerfMon.Log("Web", "GetStandardFilterSQLForContent-END")
             Return sFilterSQL

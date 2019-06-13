@@ -21,9 +21,9 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
-Imports Eonic.Tools
-Imports Eonic.Tools.Xml
+Imports Protean.Cms
+Imports Protean.Tools
+Imports Protean.Tools.Xml
 Imports System.Net.Mail
 Imports System.Reflection
 Imports System.Net
@@ -37,7 +37,7 @@ Namespace Providers.Messaging
             'do nothing
         End Sub
 
-        Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Eonic.Web)
+        Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
 
             MemProvider.AdminXforms = New AdminXForms(myWeb)
             MemProvider.AdminProcess = New AdminProcess(myWeb)
@@ -47,12 +47,12 @@ Namespace Providers.Messaging
         End Sub
 
         Public Class AdminXForms
-            Inherits Eonic.Providers.Messaging.EonicProvider.AdminXForms
+            Inherits Protean.Providers.Messaging.EonicProvider.AdminXForms
             Private Const mcModuleName As String = "Providers.Messaging.Generic.AdminXForms"
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
 
 
-            Sub New(ByRef aWeb As Web)
+            Sub New(ByRef aWeb As Cms)
                 MyBase.New(aWeb)
             End Sub
 
@@ -145,14 +145,14 @@ Namespace Providers.Messaging
                             sendDateTime = sendDateTime.AddMinutes(SendMins)
 
                             'get the body html
-                            Dim oWeb As New Web
+                            Dim oWeb As New Cms
                             oWeb.InitializeVariables()
                             oWeb.mnPageId = nPageId
                             oWeb.mbAdminMode = False
 
                             Dim cMailingXsl As String = moMailConfig("MailingXsl")
                             If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
-                            Dim ofs As New Eonic.fsHelper(myWeb.moCtx)
+                            Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                             cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
                             myWeb.mcEwSiteXsl = cMailingXsl
@@ -182,7 +182,7 @@ Namespace Providers.Messaging
                                 MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, iContactApi.errorStr, True)
                                 MyBase.valid = False
                             End If
-            
+
                         End If
                     End If
 
@@ -266,12 +266,12 @@ Namespace Providers.Messaging
         End Class
 
         Public Class AdminProcess
-            Inherits Web.Admin
+            Inherits Protean.Cms.Admin
 
-            Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Public Event OnErrorWithWeb(ByRef myweb As Eonic.Web, ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
-            Dim _oAdXfm As Eonic.Providers.Messaging.iContactProvider.AdminXForms
+            Dim _oAdXfm As Protean.Providers.Messaging.iContactProvider.AdminXForms
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
             Dim moIContactApi As iContactAPI
 
@@ -290,7 +290,7 @@ Namespace Providers.Messaging
                 End Get
             End Property
 
-            Sub New(ByRef aWeb As Web)
+            Sub New(ByRef aWeb As Cms)
                 MyBase.New(aWeb)
             End Sub
 
@@ -309,7 +309,7 @@ Namespace Providers.Messaging
 
             '        End Sub
 
-            Public Function MailingListProcess(ByRef oPageDetail As XmlElement, ByRef oWeb As Web, Optional ByRef sAdminLayout As String = "", Optional ByRef cCmd As String = "", Optional ByRef bLoadStructure As Boolean = False, Optional ByRef sEditContext As String = "", Optional bClearEditContext As Boolean = False) As String
+            Public Function MailingListProcess(ByRef oPageDetail As XmlElement, ByRef oWeb As Cms, Optional ByRef sAdminLayout As String = "", Optional ByRef cCmd As String = "", Optional ByRef bLoadStructure As Boolean = False, Optional ByRef sEditContext As String = "", Optional bClearEditContext As Boolean = False) As String
                 Dim cRetVal As String = ""
                 Dim cSQL As String = ""
 
@@ -326,7 +326,7 @@ Namespace Providers.Messaging
 
                     Dim cMailingXsl As String = moMailConfig("MailingXsl")
                     If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
-                    Dim ofs As New Eonic.fsHelper(myWeb.moCtx)
+                    Dim ofs As New Protean.fsHelper(myWeb.moCtx)
                     cMailingXsl = ofs.checkCommonFilePath(cMailingXsl)
 
                     'If cCmd = "IsMailingList" Then
@@ -362,7 +362,7 @@ ProcessFlow:
                             If nNewsletterRoot = 0 Then
                                 Dim defaultPageXml As String = "<DisplayName title="""" linkType=""internal"" exclude=""false"" noindex=""false""/><Images><img class=""icon"" /><img class=""thumbnail"" /><img class=""detail"" /></Images><Description/>"
                                 nNewsletterRoot = myWeb.moDbHelper.insertStructure(0, "", "Newsletters", defaultPageXml, "NewsletterRoot")
-                                Eonic.Config.UpdateConfigValue(myWeb, "eonic/mailinglist", "RootPageId", CStr(nNewsletterRoot))
+                                Protean.Config.UpdateConfigValue(myWeb, "eonic/mailinglist", "RootPageId", CStr(nNewsletterRoot))
 
                             End If
 
@@ -498,7 +498,7 @@ ProcessFlow:
 
                             oPageDetail.AppendChild(oAdXfm.xFrmSendNewsLetter(myWeb.mnPageId, cSubject, moMailConfig("SenderEmail"), moMailConfig("SenderName"), oPageDetail, moMailConfig("ReplyEmail")))
                             'oPageDetail.AppendChild(getCampaignReports(myWeb.mnPageId))
-                            
+
 
                         Case "MailOptOut"
                             sAdminLayout = "OptOut"
@@ -802,7 +802,7 @@ ProcessFlow:
                     End If
 
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainUserInGroup", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "maintainUserInGroup", ex, ""))
                 End Try
             End Sub
 
@@ -810,7 +810,7 @@ ProcessFlow:
         End Class
 
         Public Class Activities
-            Inherits Eonic.Messaging
+            Inherits Protean.Messaging
 
             'Overloads Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
             '    PerfMon.Log("Messaging", "SendMailToList_Queued")

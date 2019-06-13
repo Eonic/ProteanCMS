@@ -4203,7 +4203,8 @@ Partial Public Class Cms
                         If Tools.Xml.NodeState(oXform.Instance, "creditCard/expireDate", , , , oObjCheck, , , True) = Tools.Xml.XmlNodeState.HasContents Then
                             ' Expiry Date is formatted as "04 2004"
                             ' Let's match the pattern
-                            oMatch = oRe.Match(oObjCheck.InnerText)
+
+                            oMatch = oRe.Match(oXform.Instance.SelectSingleNode("creditCard/expireDate").InnerText)
                             If oMatch.Success Then
                                 If oMatch.Groups.Count = 3 Then
                                     If String.Concat(oMatch.Groups(2).Value, oMatch.Groups(1).Value) < Date.Today.ToString("yyyyMM") Then

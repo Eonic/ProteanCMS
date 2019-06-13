@@ -1208,17 +1208,24 @@ namespace Protean.Tools
             {
                 if (dDateTime is DateTime) {
                     DateTime thisDate = (DateTime)dDateTime;
-                    if (bIncludeTime)
-                        return "'" + thisDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
-                    else
-                        return "'" + thisDate.ToString("dd-MMM-yyyy") + "'";
+                    if (thisDate.Year.ToString() == "1") {
+                        return "null";
+                    } else {
+                        if (bIncludeTime)
+                            return "'" + thisDate.ToString("dd-MMM-yyyy HH:mm:ss") + "'";
+                        else
+                            return "'" + thisDate.ToString("dd-MMM-yyyy") + "'";
+                    }
+
                 }
                 else if (dDateTime is null) {
                     return "null";
                 }
                 else if (Microsoft.VisualBasic.Information.IsDate(dDateTime.ToString()))
                 {
-                    DateTime dxDate = (DateTime)dDateTime;
+                    // DateTime dxDate = (DateTime)dDateTime;
+                    DateTime dxDate = Convert.ToDateTime(dDateTime.ToString());
+                    //DateTime dxDate = DateTime.ParseExact(dDateTime.ToString(), "yyyy-mm-dd", null);
                     if (dxDate == DateTime.Parse("0001-01-01") | dxDate == DateTime.Parse("0001-01-01"))
                         return "null";
                     else if (bIncludeTime)
@@ -1237,7 +1244,13 @@ namespace Protean.Tools
 
         public static string SqlFmt(string text)
         {
-            return text.Replace("'", "''");
+            if (text == null)
+            {
+                return "";
+            }
+            else { 
+                return text.Replace("'", "''");
+            }
         }
 
         public static string SqlString(string text)

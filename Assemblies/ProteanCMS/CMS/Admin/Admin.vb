@@ -68,10 +68,12 @@ Partial Public Class Cms
             moPageXML = myWeb.moPageXml
             ' moXformEditor = myWeb.GetXformEditor()
 
-            If CStr(myWeb.moSession("PreviewUser") & "") <> "" Then
-
-                mnAdminUserId = myWeb.moSession("nUserId")
-
+            If Not myWeb.moSession Is Nothing Then
+                If CStr(myWeb.moSession("PreviewUser") & "") <> "" Then
+                    mnAdminUserId = myWeb.moSession("nUserId")
+                Else
+                    mnAdminUserId = myWeb.mnUserId
+                End If
             Else
                 mnAdminUserId = myWeb.mnUserId
             End If

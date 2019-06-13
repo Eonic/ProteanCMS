@@ -140,6 +140,20 @@
     </xsl:choose>
   </xsl:variable>
 
+  <xsl:variable name="pageLang">
+    <xsl:choose>
+      <xsl:when test="/Page/Contents/Content[@name='XmlLang']">
+        <xsl:value-of select="Contents/Content[@name='XmlLang']"/>
+      </xsl:when>
+      <xsl:when test="@userlang and @userlang!=''">
+        <xsl:value-of select="@userlang"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@translang"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
   <!-- Navigation types -->
   <xsl:variable name="DescriptiveContentURLs">
     <xsl:call-template name="getXmlSettings">
@@ -326,13 +340,17 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
-    <xsl:if test="/Page/languages">
-      <link rel="alternate" href="http://{/Page/languages/@defaultDomain}" hreflang="x-default" />
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$currentPage/PageVersion[@verType='0']">
+        <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="x-default" />
+      </xsl:when>
+      <xsl:otherwise>
+        <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:for-each select="$currentPage/PageVersion[@verType='3']">
       <link rel="alternate" href="{@url}" hreflang="{@lang}" />
     </xsl:for-each>
-
   </xsl:template>
 
   <xsl:template match="Page" mode="metacharset">
@@ -1317,6 +1335,7 @@
       <xsl:if test="@adminMode='false'">
         normalMode
       </xsl:if>
+      <xsl:if test="@previewMode='true'"> previewMode</xsl:if>
     </xsl:attribute>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaLeadForensicsID']" mode="MetaLeadForensicsCode"/>
   </xsl:template>
@@ -4606,7 +4625,149 @@
     <xsl:text>None</xsl:text>
   </xsl:template>
 
+  <xsl:template match="Email" mode="reportCell"/>
 
+  <xsl:template match="Mark[number(.)=number(.)]" mode="reportCell">
+    <td>
+      <xsl:value-of select="./node()"/>%
+    </td>
+  </xsl:template>
+
+  <xsl:template match="Status | nStatus | status" mode="reportCell">
+    <td>
+      <xsl:call-template name="StatusLegend">
+        <xsl:with-param name="status">
+          <xsl:value-of select="node()"/>
+        </xsl:with-param>
+      </xsl:call-template>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="Username | Full_Name[not(parent::*//Username)]" mode="reportCell">
+    <td>
+      <a href="mailto:{parent::*//Email/node()}">
+        <xsl:value-of select="node()"/>
+      </a>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="Grade" mode="reportCell">
+    <td>
+      <xsl:attribute name="class">nowrap</xsl:attribute>
+      <xsl:value-of select="./node()"/>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="Company[not(parent::attempt)]" mode="reportCell">
+    <td>
+      <a href="http://:{Website/node()}">
+        <xsl:value-of select="Website/node()"/>
+      </a>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="Details" mode="reportCell">
+    <td>
+      <a href="http://:{./Company/Website/node()}">
+        <xsl:value-of select="./Company/Website/node()"/>
+      </a>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="User" mode="reportCell">
+    <td>
+      <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={ancestor::user/@id}">
+        <span class="btn btn-primary btn-xs">
+          <i class="fa fa-user fa-white">
+            <xsl:text> </xsl:text>
+          </i>
+        </span>
+        &#160;<xsl:choose>
+        <xsl:when test="FirstName and LastName">
+          <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
+        </xsl:when>
+        <xsl:when test="User/FirstName and User/LastName">
+          <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      </a>
+      
+    </td>
+  </xsl:template>
+
+  <xsl:template match="UserXml" mode="reportCell">
+    <td>
+      <xsl:if test="User/LastName/node()!='' or User/FirstName/node()=''">
+        <a href="mailto:{User/Email/node()}">
+          <xsl:value-of select="User/LastName/node()"/>,&#160;<xsl:value-of select="User/FirstName/node()"/>
+        </a>
+      </xsl:if>
+    </td>
+  </xsl:template>
+
+  <xsl:template match="GroupXml" mode="reportCell">
+    <td>
+      <xsl:value-of select="Group/Name/node()"/>
+    </td>
+  </xsl:template>
+
+  <xsl:template name="StatusLegend">
+    <xsl:param name="status"/>
+    <xsl:choose>
+      <xsl:when test="$status='0'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Hidden" data-original-title="Hidden">
+          <i class="fa fa-times text-danger" alt="inactive">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='-1'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
+          <i class="fa fa-check text-success" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='1'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Live" data-original-title="Live">
+          <i class="fa fa-check text-success" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='2'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
+          <i class="fa fa-exclamation text-warning" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='7'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Expired" data-original-title="Expired">
+          <i class="fa fa-clock-o text-danger">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$status"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Version Control reportCell matches-->
+  <xsl:template match="Version" mode="reportCell">
+    <td>
+      <xsl:value-of select="."/>
+      <xsl:if test="parent::node()/@currentLiveVersion!=''">
+        <xsl:text> [</xsl:text>
+        <xsl:value-of select="parent::node()/@currentLiveVersion"/>
+        <xsl:text>]</xsl:text>
+      </xsl:if>
+    </td>
+  </xsl:template>
+  <!-- -->
+  <xsl:template match="Name[parent::Pending]" mode="reportCell">
+    <td>
+      <strong>
+        <xsl:value-of select="."/>
+      </strong>
+    </td>
+  </xsl:template>
+  <!-- -->
 
   <xsl:template name="truncateString">
     <xsl:param name="string"/>
@@ -6717,6 +6878,24 @@
         <xsl:for-each select="/Page/Contents/Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$sort='Price'">
+        <xsl:for-each select="/Page/Contents/Content[@type=$contentType and not(Content[@type='SKU'])]">
+          <xsl:sort select="Prices/Price[@type='rrp']/node()" order="{$order}" data-type="number"/>
+          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+            <xsl:if test="$maxDisplay = '0' or ($maxDisplay &gt; 0 and position() &lt;= $maxDisplay)">
+              <xsl:copy-of select="."/>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="/Page/Contents/Content[@type=$contentType and Content[@type='SKU']]">
+          <xsl:sort select="Content[@type='SKU'][1]/Prices/Price[@type='sale']/node()" order="{$order}" data-type="number"/>
+          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+            <xsl:if test="$maxDisplay = '0' or ($maxDisplay &gt; 0 and position() &lt;= $maxDisplay)">
+              <xsl:copy-of select="."/>
+            </xsl:if>
           </xsl:if>
         </xsl:for-each>
       </xsl:when>

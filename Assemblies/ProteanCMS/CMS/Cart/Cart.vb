@@ -476,6 +476,10 @@ Partial Public Class Cms
                         mcCartURL = moCartConfig("SecureURL")
                     End If
 
+                    If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                        EndSession()
+                    End If
+
                     moDiscount = New Discount(Me)
                     mcPagePath = myWeb.mcPagePath
 
@@ -2776,6 +2780,17 @@ processFlow:
                                 oCartElmt.AppendChild(oElmt)
                             Next
                             oldCartId = nCartIdUse
+                        End If
+                        'Ensure we persist the invoice date and ref.
+                        If nStatusId > 6 Then
+                            'Persist invoice date and invoice ref
+                            Dim tempInstance As New XmlDocument
+                            tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
+                            Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
+                            oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            tempInstance = Nothing
+                            tempOrder = Nothing
                         End If
 
                     Next

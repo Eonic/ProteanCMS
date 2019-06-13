@@ -2035,6 +2035,8 @@ Check:
                         If Not moSession Is Nothing Then
                             cProcessInfo = "Abandon Session"
                             ' AJG : Question - why does this not clear the Session ID?
+                            moSession("nEwUserId") = Nothing
+                            moSession("nUserId") = Nothing
                             moSession.Abandon()
                         End If
 
