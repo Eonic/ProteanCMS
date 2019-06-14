@@ -179,15 +179,15 @@
     <Content Include="xforms\PaymentProvider\Stripe.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
+    <ProjectReference Include="..\..\..\Assemblies\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
       <Name>Protean.Tools.Csharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Protean.Tools\Protean.Tools.vbproj">
+    <ProjectReference Include="..\..\..\Assemblies\Protean.Tools\Protean.Tools.vbproj">
       <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
       <Name>Protean.Tools</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ProteanCMS\ProteanCMS.vbproj">
+    <ProjectReference Include="..\..\..\Assemblies\ProteanCMS\ProteanCMS.vbproj">
       <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
       <Name>ProteanCMS</Name>
     </ProjectReference>

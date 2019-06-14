@@ -21,7 +21,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
-Imports Eonic.Web
+Imports Protean.Cms
 Imports Eonic.Tools
 Imports Eonic.Tools.Xml
 Imports System.Net.Mail
@@ -38,8 +38,8 @@ Namespace Providers.Messaging
 
         Public Class Modules
 
-            Public Event OnError(ByVal sender As Object, ByVal e As Eonic.Tools.Errors.ErrorEventArgs)
-            Private Const mcModuleName As String = "Eonic.CampaignMonitorTools.Modules"
+            Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
+            Private Const mcModuleName As String = "Protean.CampaignMonitorTools.Modules"
 
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
 
@@ -50,10 +50,10 @@ Namespace Providers.Messaging
 
             End Sub
 
-            Public Sub Subscribe(ByRef myWeb As Eonic.Web, ByRef oContentNode As XmlElement)
+            Public Sub Subscribe(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
                 Try
-                    Dim oXform As Eonic.Web.xForm = New Eonic.Web.xForm(myWeb)
+                    Dim oXform As Protean.Cms.xForm = New Protean.Cms.xForm(myWeb)
                     oXform.moPageXML = myWeb.moPageXml
                     oXform.load(oContentNode, True)
                     If oXform.isSubmitted Then
@@ -71,14 +71,14 @@ Namespace Providers.Messaging
                     oXform.addValues()
                     oXform = Nothing
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Subscribe", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Subscribe", ex, ""))
                 End Try
             End Sub
 
-            Public Sub UnSubscribe(ByRef myWeb As Eonic.Web, ByRef oContentNode As XmlElement)
+            Public Sub UnSubscribe(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
 
                 Try
-                    'Dim oXform As Eonic.Web.xForm = New Eonic.Web.xForm(myWeb)
+                    'Dim oXform As Protean.Cms.xForm = New Protean.Cms.xForm(myWeb)
                     'oXform.moPageXML = myWeb.moPageXml
                     'oXform.load(oContentNode, True)
                     'If oXform.isSubmitted Then
@@ -104,7 +104,7 @@ Namespace Providers.Messaging
                     'oXform.addValues()
                     'oXform = Nothing
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Eonic.Tools.Errors.ErrorEventArgs(mcModuleName, "Subscribe", ex, ""))
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Subscribe", ex, ""))
                 End Try
             End Sub
 

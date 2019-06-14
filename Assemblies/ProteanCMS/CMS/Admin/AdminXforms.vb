@@ -8518,7 +8518,10 @@ Partial Public Class Cms
 
                                         If NodeState(menuItem, "DisplayName", , , , , , menuName, True) <> XmlNodeState.HasContents Then
                                             menuName = menuItem.GetAttribute("name")
+                                        Else
+                                            menuName = menuItem.SelectSingleNode("DisplayName").InnerText
                                         End If
+
 
                                         Dim oParentNode As XmlElement = menuItem.ParentNode
                                         Dim oParentParentNode As XmlElement = oParentNode.ParentNode

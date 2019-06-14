@@ -1432,7 +1432,9 @@ Check:
                         'logoff handler
                         If LCase(myWeb.moRequest("ewCmd")) = "logoff" And mnUserId <> 0 Then
 
-                            LogOffProcess(myWeb)
+                            If myWeb.moSession("ewCmd") <> "PreviewOn" Then
+                                LogOffProcess(myWeb)
+                            End If
 
                             'we are logging off so lets redirect
                             If Not myWeb.moConfig("BaseUrl") Is Nothing And Not myWeb.moConfig("BaseUrl") = "" Then
@@ -2035,6 +2037,8 @@ Check:
                         If Not moSession Is Nothing Then
                             cProcessInfo = "Abandon Session"
                             ' AJG : Question - why does this not clear the Session ID?
+                            moSession("nEwUserId") = Nothing
+                            moSession("nUserId") = Nothing
                             moSession.Abandon()
                         End If
 

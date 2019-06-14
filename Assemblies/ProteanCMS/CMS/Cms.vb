@@ -584,19 +584,25 @@ Public Class Cms
                 If mbAdminMode Then
                     ' Admin mode
                     Dim ewCmd As String
-                    ewCmd = IIf(moRequest("ewCmd") = "", moSession("ewCmd"), moRequest("ewCmd"))
+                    If moSession("ewCmd") = "PreviewOn" And LCase(moRequest("ewCmd")) = "logoff" Then
+                        'case to cater for logoff in preview mode
+                        ewCmd = "PreviewOn"
+                    Else
+                        ewCmd = IIf(moRequest("ewCmd") = "", moSession("ewCmd"), moRequest("ewCmd"))
+                    End If
+
 
                     If CLng("0" & moConfig("AdminRootPageId")) > 0 And LCase(ewCmd) <> "logoff" Then
-                        rootPageIdFromConfig = moConfig("AdminRootPageId")
+                            rootPageIdFromConfig = moConfig("AdminRootPageId")
 
-                    ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
-                        ' This is to accomodate users in admin who have admin rights revoked and therefore must 
-                        ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
-                        rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
-                    End If
-                Else
-                    ' Not admin mode
-                    If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
+                        ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
+                            ' This is to accomodate users in admin who have admin rights revoked and therefore must 
+                            ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
+                            rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
+                        End If
+                    Else
+                        ' Not admin mode
+                        If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
                         rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
                     End If
                 End If
@@ -762,9 +768,6 @@ Public Class Cms
         End Try
 
     End Sub
-
-
-
 
     Public Sub InitialiseGlobal()
 
@@ -1078,9 +1081,7 @@ Public Class Cms
 
                 Case Else
 
-                    If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
-                        bPageCache = False
-                    End If
+
                     If gbCart Or gbQuote Then
                         If CInt("0" + moSession("CartId")) > 0 Then
                             bPageCache = False
@@ -1127,6 +1128,10 @@ Public Class Cms
 
                         'TS 21-06-2017 Moved from New() as not required for cached pages I think.
                         Open()
+
+                        If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                            bPageCache = False
+                        End If
 
                         sProcessInfo = "Transform PageXML Using XSLT"
                         If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
@@ -2177,6 +2182,8 @@ Public Class Cms
                                     '  sooo... we may need to bodge the permissions if version control is on
                                     If gbVersionControl Then Me.mnUserPagePermission = dbHelper.PermissionLevel.AddUpdateOwn
                                     GetContentDetailXml(oPageElmt, nContentId)
+                                    ClearPageCache()
+
                                 Else
                                     'lets add the form to Content Detail
                                     Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
@@ -2200,7 +2207,7 @@ Public Class Cms
                                     Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                                     oPageElmt.AppendChild(oPageDetail)
                                     oPageDetail.InnerXml = "<Content type=""message""><div>Content deleted successfully.</div></Content>"
-
+                                    ClearPageCache()
 
                                 Else
                                     'lets add the form to Content Detail
@@ -6578,9 +6585,12 @@ Public Class Cms
                     ExpireLogic = "> "
                 End If
 
-
                 sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
                 sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
+
+
+                ' sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
+                ' sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
             End If
             PerfMon.Log("Web", "GetStandardFilterSQLForContent-END")
             Return sFilterSQL

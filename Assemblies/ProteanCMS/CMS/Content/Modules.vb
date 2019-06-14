@@ -38,7 +38,7 @@ Partial Public Class Cms
                 Try
                     Dim datestring As String = ""
                     Dim startDate As Date
-                    Dim endDate As Date
+                    Dim endDate As Nullable(Of Date) = Nothing
                     Dim dateQuery As String = ""
                     Dim cOrigUrl As String = myWeb.mcOriginalURL
                     Dim cOrigQS As String = ""
@@ -216,11 +216,18 @@ Partial Public Class Cms
                             myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate))
                         End If
                     Else
+                        Dim endstr As String
+                        If endDate Is Nothing Then
+                            endstr = ""
+                        Else
+                            endstr = " and a.dpublishDate <= " & sqlDate(endDate)
+                        End If
+
                         'Get content by date range
                         If startDate = DateTime.MinValue Then
-                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate <= " & sqlDate(endDate))
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "'" & endstr)
                         Else
-                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & " and a.dpublishDate <= " & sqlDate(endDate))
+                            myWeb.GetPageContentFromSelect("CL.nStructId = " & myWeb.mnPageId & " And c.cContentSchemaName = '" & oContentNode.GetAttribute("contentType") & "' and a.dpublishDate >= " & sqlDate(startDate) & endstr)
                         End If
                     End If
 

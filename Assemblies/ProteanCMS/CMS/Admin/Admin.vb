@@ -68,10 +68,12 @@ Partial Public Class Cms
             moPageXML = myWeb.moPageXml
             ' moXformEditor = myWeb.GetXformEditor()
 
-            If CStr(myWeb.moSession("PreviewUser") & "") <> "" Then
-
-                mnAdminUserId = myWeb.moSession("nUserId")
-
+            If Not myWeb.moSession Is Nothing Then
+                If CStr(myWeb.moSession("PreviewUser") & "") <> "" Then
+                    mnAdminUserId = myWeb.moSession("nUserId")
+                Else
+                    mnAdminUserId = myWeb.mnUserId
+                End If
             Else
                 mnAdminUserId = myWeb.mnUserId
             End If
@@ -188,15 +190,22 @@ Partial Public Class Cms
                 If UBound(EwCmd) > 0 Then mcEwCmd2 = EwCmd(1)
                 If UBound(EwCmd) > 1 Then mcEwCmd3 = EwCmd(2)
 
+
+
                 If Not moConfig("SecureMembershipAddress") = "" Then
                     Dim oMembership As New Protean.Cms.Membership(myWeb)
                     AddHandler oMembership.OnError, AddressOf myWeb.OnComponentError
                     oMembership.SecureMembershipProcess(mcEwCmd)
                 End If
 
-                If mcEwCmd = "" Then
+
+                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                    'case to cater for logoff in preview mode
+                    mcEwCmd = "PreviewOn"
+                ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
                 End If
+
 
                 If myWeb.moRequest("rptCmd") <> "" Then
                     mcEwCmd = "RptCourses"
@@ -1657,6 +1666,11 @@ ProcessFlow:
                             myWeb.moSession("PreviewUser") = 0
                         End If
 
+                        If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                            myWeb.moSession("PreviewUser") = 0
+                            myWeb.msRedirectOnEnd = "/"
+                        End If
+
                         If IsDate(myWeb.moRequest("PreviewDate")) Then
                             myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("PreviewDate"))
                         End If
@@ -2956,10 +2970,10 @@ ProcessFlow:
                             oPageDetail.AppendChild(moAdXfm.xFrmUpdateOrder(myWeb.moRequest("id"), cSchemaName))
 
                             Dim forceRefresh As Boolean = False
-
-                            If myWeb.moRequest("nStatus") = 9 Then
-                                forceRefresh = True
-                            End If
+                            'TS removed as we do not want to refresh the cart XML as it destroys discount info and order ref etc.
+                            'If myWeb.moRequest("nStatus") = 9 Then
+                            '       forceRefresh = True
+                            'End If
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail, forceRefresh)
 
                             ':TODO Behaviour to manage resending recipts.
