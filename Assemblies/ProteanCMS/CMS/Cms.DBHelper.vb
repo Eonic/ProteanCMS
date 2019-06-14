@@ -10456,6 +10456,127 @@ ReturnMe:
             End Try
         End Function
 
+        Public Function GetOffers(ByVal cSearchExpression As String) As DataTable
+            PerfMon.Log("dbTools", "GetLocations")
+            Dim sSql As String
+            Dim oDs As DataSet
+            Try
+                sSql = "SELECT [nContentKey], REPLACE([cContentForiegnRef], 'SKU-', '') AS cContentForiegnRef, " &
+                        "CAST([cContentXmlBrief] AS XML).value('(Content/StockCode)[1]', 'Varchar(9)') AS StockCode " &
+                        "FROM [dbo].[tblContent] " &
+                        "WHERE cContentSchemaName = 'SKU' "
+                oDs = getDataSetForUpdate(sSql, "tblOffers")
+                Return oDs.Tables(0)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
+        Public Function GetVenues(ByVal nSupplierId As Integer, ByVal nOfferId As Integer) As DataTable
+            PerfMon.Log("dbTools", "GetLocations")
+            Dim sSql As String
+            Dim oDs As DataSet
+            Try
+                sSql = "select c.* from tblCartContact c join tblITBSupplierOfferVenues v on c.nContactKey = v.nContactId " _
+                + "where v.nOfferId = " + CStr(nOfferId)
+                '"where c.cContactForeignRef = 'SUP-" & CStr(nSupplierId) & "' and v.nOfferId = " + CStr(nOfferId)
+                oDs = getDataSetForUpdate(sSql, "tblCartContact")
+                Return oDs.Tables(0)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
+        Public Function AddVenue(ByVal offerId As Integer, ByRef contact As Contact) As Integer
+            PerfMon.Log("DBHelper", "AddVenue ([args])")
+            Dim sSql As String
+            Dim nId As String
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "INSERT INTO [dbo].[tblCartContact] ([nContactDirId], [nContactCartId], [cContactType], [cContactName], [cContactCompany]," &
+                    " [cContactAddress], [cContactCity], [cContactState], [cContactZip], [cContactCountry], [cContactTel], [cContactFax], [cContactEmail]," &
+                    " [cContactXml], [nAuditId], [cContactForiegnRef], [nLat], [nLong], [cContactForeignRef], [cContactAddress2])" &
+                " VALUES (" &
+                contact.nContactDirId &
+                "," & contact.nContactCartId & "" &
+                ",'" & SqlFmt(contact.cContactType) & "'" &
+                ",'" & SqlFmt(contact.cContactName) & "'" &
+                ",'" & SqlFmt(contact.cContactCompany) & "'" &
+                ",'" & SqlFmt(contact.cContactAddress) & "'" &
+                ",'" & SqlFmt(contact.cContactCity) & "'" &
+                ",'" & SqlFmt(contact.cContactState) & "'" &
+                ",'" & SqlFmt(contact.cContactZip) & "'" &
+                ",'" & SqlFmt(contact.cContactCountry) & "'" &
+                ",'" & SqlFmt(contact.cContactTel) & "'" &
+                ",'" & SqlFmt(contact.cContactFax) & "'" &
+                ",'" & SqlFmt(contact.cContactEmail) & "'" &
+                ",'<Content><LocationSummary>" & SqlFmt(contact.cContactLocationSummary) & "</LocationSummary></Content>'" &
+                "," & getAuditId() &
+                ",'" & SqlFmt(contact.cContactForiegnRef) & "'" &
+                ",'" & contact.nLat & "'" &
+                ",'" & contact.nLong & "'" &
+                ",'" & SqlFmt(contact.cContactForeignRef) & "'" &
+                ",'" & SqlFmt(contact.cContactAddress2) & "')"
+
+                nId = GetIdInsertSql(sSql)
+
+                If nId > 0 Then
+                    sSql = String.Format("INSERT INTO tblITBSupplierOfferVenues (nOfferId, nContactId) VALUES ({0},{1})", offerId, nId)
+                    ExeProcessSql(sSql)
+                End If
+
+                Return nId
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
+                Return False
+            End Try
+        End Function
+
+        Public Function UpdateVenue(ByRef contact As Contact) As Boolean
+            PerfMon.Log("DBHelper", "AddVenue ([args])")
+            Dim sSql As String
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "UPDATE [dbo].[tblCartContact]" &
+                "SET [cContactName] = '" & SqlFmt(contact.cContactName) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactAddress) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactAddress2) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactCity) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactState) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactZip) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactCountry) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactTel) & "'" &
+                ", [cContactFax] = '" & SqlFmt(contact.cContactFax) & "'" &
+                ", [cContactXml] = '<Content><LocationSummary>" & SqlFmt(contact.cContactLocationSummary) & "</LocationSummary></Content>'" &
+                "WHERE [nContactKey] = " & contact.nContactKey
+
+                ExeProcessSql(sSql)
+                Return True
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
+                Return False
+            End Try
+        End Function
+
+        Public Function DeleteVenue(ByRef nContactKey As Integer) As Boolean
+            PerfMon.Log("DBHelper", "AddVenue ([args])")
+            Dim isSuccess As Boolean
+            Try
+                If nContactKey = 0 Then
+                    Throw New ArgumentException("Invalid nContactKey")
+                End If
+                myWeb.moDbHelper.DeleteObject(objectTypes.CartContact, nContactKey)
+                Return True
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, String.Empty))
+                Return False
+            End Try
+        End Function
+
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
             Try

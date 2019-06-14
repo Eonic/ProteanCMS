@@ -11,7 +11,9 @@ Imports Protean.Tools.Xml
 Imports Protean.Tools.Xml.XmlNodeState
 Imports System
 Imports TweetSharp
-
+Imports System.Collections.Generic
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 
 Partial Public Class Cms
 
@@ -21,7 +23,8 @@ Partial Public Class Cms
 
         Public Class JSONActions
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
-            Private Const mcModuleName As String = "Eonic.Cart.JSONActions"
+            Private Const mcModuleName As String = "Eonic.Content.JSONActions"
+            Private Const cContactType As String = "Venue"
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
@@ -32,7 +35,6 @@ Partial Public Class Cms
                 myWeb.InitializeVariables()
                 myWeb.Open()
                 myCart = New Protean.Cms.Cart(myWeb)
-
             End Sub
 
             Public Function TwitterFeed(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
@@ -79,13 +81,10 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
             Public Function GetContent(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
 
                     Dim JsonResult As String = ""
-                    Dim contentId As String = ""
-
                     Return JsonResult
 
                 Catch ex As Exception
@@ -94,9 +93,119 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function SearchContent(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim nRoot As String = searchFilter("nRoot") 'Page to search
+                    Dim cContentType As String = searchFilter("cContentType") 'Comma separated list of content types
+                    Dim cExpression As String = searchFilter("cExpression")
+                    Dim bChilds As Boolean = searchFilter("bChilds") 'Search in child pages
+                    Dim nParId As String = searchFilter("nParId")
+                    Dim bIgnoreParID As String = searchFilter("bIgnoreParID")
+                    Dim bIncRelated As Boolean = searchFilter("bIncRelated")
+                    Dim cTableName As String = searchFilter("cTableName")
+                    Dim cSelectField As String = searchFilter("cSelectField")
+                    Dim cFilterField As String = searchFilter("cFilterField")
+
+                    Dim cTmp As String = String.Empty
+                    If bIncRelated = True Then
+                        Dim sSQL As String = "Select " & cSelectField & " From " & cTableName & " WHERE " & cFilterField & " = " & nParId
+                        Dim oDre As SqlDataReader = myWeb.moDbHelper.getDataReader(sSQL)
+                        Do While oDre.Read
+                            cTmp &= oDre(0) & ","
+                        Loop
+                        oDre.Close()
+                        If Not cTmp = "" Then cTmp = Left(cTmp, Len(cTmp) - 1)
+                    End If
+
+                    Dim searchResultXML As XmlElement
+                    searchResultXML = myWeb.moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, nParId, IIf(bIgnoreParID, 0, nParId), cTmp.Split(","), bIncRelated)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(searchResultXML, Newtonsoft.Json.Formatting.Indented)
+                    Return jsonString.Replace("""@", """_")
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetOffers(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim JsonResult As String = ""
+                    Dim cExpression As String = searchFilter("cExpression")
+
+                    Dim offersTable = myWeb.moDbHelper.GetOffers(cExpression)
+                    JsonResult = JsonConvert.SerializeObject(offersTable)
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetVenues(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim JsonResult As String = ""
+                    Dim supplierId As String = jObj("supplierId")
+                    Dim offerId As String = jObj("offerId")
+
+                    Dim locationTable = myWeb.moDbHelper.GetVenues(supplierId, offerId)
+                    JsonResult = JsonConvert.SerializeObject(locationTable)
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function AddVenue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim nId As Integer
+                Try
+                    Dim offerId As Integer = jObj("offerId")
+                    Dim supplierId As Integer = jObj("supplierId")
+                    Dim contact As Contact = jObj("venue").ToObject(Of Contact)()
+
+                    contact.cContactType = cContactType
+                    contact.cContactForeignRef = String.Format("SUP-{0}", supplierId)
+                    nId = myWeb.moDbHelper.AddVenue(offerId, contact)
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(nId)
+            End Function
+
+            Public Function UpdateVenue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim isSuccess As Boolean
+                Try
+                    Dim contact As Contact = jObj.ToObject(Of Contact)()
+                    contact.cContactType = cContactType
+                    isSuccess = myWeb.moDbHelper.UpdateVenue(contact)
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(isSuccess)
+            End Function
+
+            Public Function DeleteVenue(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim isSuccess As Boolean
+                Try
+                    Dim cContactKey As String = jObj("nContactKey")
+                    isSuccess = myWeb.moDbHelper.DeleteVenue(cContactKey)
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(isSuccess)
+            End Function
+
         End Class
 
 #End Region
+
     End Class
 
 End Class

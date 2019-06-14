@@ -324,6 +324,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CMS\Content\Contact.vb" />
     <Compile Include="ExternalSynchronisation.vb" />
     <Compile Include="Providers\Streaming.BaseProvider.vb" />
     <Compile Include="Providers\Membership.BaseProvider.vb" />
@@ -780,6 +781,10 @@
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\IntoTheBlue\IntoTheBlue_DevOps\Assemblies\IntoTheBlue.Core\IntoTheBlue.Core.csproj">
+      <Project>{0F4F70CF-3D6F-4EBA-BA1E-AFF85E620C2D}</Project>
+      <Name>IntoTheBlue.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
       <Name>Protean.Tools.Csharp</Name>
