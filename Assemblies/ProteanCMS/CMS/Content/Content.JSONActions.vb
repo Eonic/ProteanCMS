@@ -202,6 +202,24 @@ Partial Public Class Cms
                 Return JsonConvert.ToString(isSuccess)
             End Function
 
+            Public Function GetActivityLocations(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim JsonResult As String = ""
+                    Dim category3Id As String = jObj("category3Id")
+
+                    Dim activityLocationsXML As String = myWeb.moDbHelper.GetActivityLocations(category3Id)
+
+                    Dim doc = New XmlDocument()
+                    doc.LoadXml(activityLocationsXML)
+                    JsonResult = JsonConvert.SerializeXmlNode(doc)
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
         End Class
 
 #End Region

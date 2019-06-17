@@ -10520,6 +10520,70 @@ ReturnMe:
             End Try
         End Function
 
+        Public Sub SetSupplierOffer(ByVal offer As SupplierOffer)
+            If offer.nSupplierOfferKey > 0 Then
+                UpdateSupplierOffer(offer)
+            Else
+                AddSupplierOffer(offer)
+            End If
+        End Sub
+
+        Public Sub AddSupplierOffer(ByVal offer As SupplierOffer)
+            PerfMon.Log("dbTools", "AddSupplierOffer")
+            Dim sSql As String
+            Try
+                sSql = "INSERT INTO [dbo].[tblITBSupplierOffer]" &
+                        "([cSupplierOfferForiegnRef],[nCostExcludingVat],[nCostIncludingVat],[cSuppliersRRP],[nOurPrice]," &
+                        "[cDiscount],[nAmountTobeVatCharged],[nAmountZeroRated],[cHonourPrice],[nAgreedAmountTobeVatCharged],[nAgreedAmountZeroRated]," &
+                        "[nVoucherValue],[nVoucherBalance],[nSupplierFee],[nNetValueSupplier],[nGrossAmount],[bIsActive],[bIsDeleted])" &
+                        "VALUES('SKU-" & SqlFmt(offer.cSupplierOfferForiegnRef) & "'" &
+                        "," & offer.nCostExcludingVat &
+                        "," & offer.nCostIncludingVat &
+                        "," & SqlFmt(offer.cSuppliersRRP) &
+                        "," & offer.nOurPrice &
+                        "," & SqlFmt(offer.cDiscount) &
+                        "," & offer.nAmountTobeVatCharged &
+                        "," & offer.nAmountZeroRated &
+                        "," & SqlFmt(offer.cHonourPrice) &
+                        "," & offer.nAgreedAmountTobeVatCharged &
+                        "," & offer.nAgreedAmountZeroRated &
+                        "," & offer.nVoucherValue &
+                        "," & offer.nVoucherBalance &
+                        "," & offer.nSupplierFee &
+                        "," & offer.nNetValueSupplier &
+                        "," & offer.nGrossAmount &
+                        "," & offer.bIsActive &
+                        "," & offer.bIsDeleted &
+                        "," & getAuditId() &
+                        ")"
+                ExeProcessSql(sSql)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+            End Try
+        End Sub
+
+        Public Sub UpdateSupplierOffer(ByVal offer As SupplierOffer)
+            PerfMon.Log("DBHelper", "AddVenue ([args])")
+            Dim sSql As String
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "UPDATE [dbo].[tblITBSupplierOffer]" &
+                "SET [nCostExcludingVat] = " & offer.nCostExcludingVat &
+                ", [nCostIncludingVat] = " & offer.nCostIncludingVat &
+                ", [AmountTobeVatCharged] = " & offer.nAmountTobeVatCharged &
+                ", [AmountZeroRated] = " & offer.nAmountZeroRated &
+                ", [HonourPrice] = " & offer.cHonourPrice &
+                ", [AgreedAmountTobeVatCharged] = " & offer.nAgreedAmountTobeVatCharged &
+                ", [AgreedAmountZeroRated] = " & offer.nAgreedAmountZeroRated &
+                "WHERE [cSupplierOfferForiegnRef] = 'SKU-" & offer.cSupplierOfferForiegnRef & "'"
+
+                ExeProcessSql(sSql)
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
+            End Try
+        End Sub
+
         Public Function GetVenues(ByVal nSupplierId As Integer, ByVal nOfferId As Integer) As DataTable
             PerfMon.Log("dbTools", "GetLocations")
             Dim sSql As String
@@ -10621,6 +10685,23 @@ ReturnMe:
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, String.Empty))
                 Return False
+            End Try
+        End Function
+
+        Public Function GetActivityLocations(ByVal nCategory3Id As Integer) As String
+            PerfMon.Log("dbTools", "GetLocations")
+            Dim sSql = "spGetSKUDetailsForProductCategory"
+            Dim outputXML As String
+
+            Dim arrParms = New System.Collections.Hashtable()
+            arrParms.Add("Category3Id", nCategory3Id)
+
+            Try
+                outputXML = Convert.ToString(GetDataValue(sSql, CommandType.StoredProcedure, arrParms))
+                Return outputXML
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
             End Try
         End Function
 
