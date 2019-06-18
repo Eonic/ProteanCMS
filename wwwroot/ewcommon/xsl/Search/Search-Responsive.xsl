@@ -78,13 +78,13 @@
       </xsl:if>
     </xsl:variable><br/>
     <div class="row">
-    <div class="col-md-6">
-      <form method="post" action="{$searchRedirect}" id="searchInput" class="form-horizontal">
+    <div class="col-md-12">
+      <form method="post" action="{$searchRedirect}" id="searchInput">
         <input type="hidden" name="searchMode" value="{@searchMode}" />
         <input type="hidden" name="contentType" value="{@contentType}" />
         <input type="hidden" name="searchFormId" value="{$searchFormId}" />
         <div class="input-group">
-        <input type="text" class="form-control" name="searchString" id="searchString" value="{$searchString}" placeholder="Search"/>
+        <input type="text" class="form-control" name="searchString" id="searchString2" value="{$searchString}" placeholder="Search"/>
         <xsl:if test="@searchMode='USER'">
           <select name="groupId" id="groupId">
             <xsl:for-each select="/Page/User/Group">
@@ -94,7 +94,7 @@
             </xsl:for-each>
           </select>
         </xsl:if>
-          <div class="input-group-btn">
+          <span class="input-group-btn">
             <button type="submit" class="btn btn-primary" name="Search">
               <i class="fa fa-search">
                 <xsl:text> </xsl:text>
@@ -112,7 +112,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </button>
-          </div>
+          </span>
         </div>
       </form>
     </div>
@@ -161,14 +161,11 @@
     <xsl:param name="searchResults"/>
     <xsl:variable name="contentType" select="SearchResult" />
     <xsl:variable name="startPos" select="0" />
-    <div class="{@contentType}List">
       <div class="cols{@cols} list-group">
         <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
-    </div>
   </xsl:template>
   
   <!-- -->
@@ -228,7 +225,7 @@
                 </xsl:if>
               </xsl:variable>
               <xsl:if test="$docType!=''">
-                <i class="fa fa-lg fa-file-{$docType}-o">
+                <i class="fa fa-lg fa-file-{$docType}-o pull-left">
                   <xsl:text> </xsl:text>
                 </i>
                 <xsl:text> </xsl:text>&#160;
