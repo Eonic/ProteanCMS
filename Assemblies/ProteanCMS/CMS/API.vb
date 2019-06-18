@@ -90,7 +90,7 @@ Public Class API
 
             Dim calledType As Type
 
-            If LCase(ProviderName) = "cms.cart" Then ProviderName = ""
+            If LCase(ProviderName) = "cms.cart" Or LCase(ProviderName) = "cms.content" Then ProviderName = ""
 
             If ProviderName <> "" Then
                 'case for external Providers
