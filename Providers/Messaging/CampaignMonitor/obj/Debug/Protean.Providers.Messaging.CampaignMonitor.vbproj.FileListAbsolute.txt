@@ -65,8 +65,6 @@ D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Debug\x86\v8
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Debug\x86\v8-ia32.dll
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Debug\x86\ChakraCore.dll
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Debug\TidyHTML5Managed.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\x64\ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\x64\v8-base-x64.dll
@@ -76,7 +74,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Providers.Messaging.CampaignMonitor.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\CampaignMonitorAPIWrapper.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ProteanCMS.dll
@@ -108,7 +105,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ProteanCMS.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ProteanCMS.dll.config
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.xml
@@ -138,3 +134,4 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.Web.Services.xml

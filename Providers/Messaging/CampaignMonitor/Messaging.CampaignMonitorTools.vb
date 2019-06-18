@@ -40,9 +40,9 @@ Public Class CampaignMonitorTools
     Public Class Modules
 
         Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
-        Private Const mcModuleName As String = "Eonic.CampaignMonitorTools.Modules"
+        Private Const mcModuleName As String = "Protean.CampaignMonitorTools.Modules"
 
-        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
 
         Public Sub New()
