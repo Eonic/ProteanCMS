@@ -2068,7 +2068,7 @@
     </div>
   </xsl:template>
   <!-- -->
-  <!-- -->
+   <!-- -->
   <xsl:template match="option" mode="List_Options_Radio">
     <xsl:param name="grpIdx"/>
     <xsl:if test="@name!=''">
