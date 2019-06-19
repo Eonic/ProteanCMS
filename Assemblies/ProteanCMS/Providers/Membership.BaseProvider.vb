@@ -1432,7 +1432,9 @@ Check:
                         'logoff handler
                         If LCase(myWeb.moRequest("ewCmd")) = "logoff" And mnUserId <> 0 Then
 
-                            LogOffProcess(myWeb)
+                            If myWeb.moSession("ewCmd") <> "PreviewOn" Then
+                                LogOffProcess(myWeb)
+                            End If
 
                             'we are logging off so lets redirect
                             If Not myWeb.moConfig("BaseUrl") Is Nothing And Not myWeb.moConfig("BaseUrl") = "" Then

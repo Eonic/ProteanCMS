@@ -190,7 +190,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="bodyBuilder">
-      <body>
+    <body id="pg_{@id}" >
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="PreviewMenu"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>

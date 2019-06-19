@@ -10503,6 +10503,111 @@ ReturnMe:
             End Try
         End Function
 
+        Public Function GetContacts(ByVal nSupplierId As Integer, ByVal nDirId As Integer) As DataTable
+            PerfMon.Log("dbTools", "GetContacts")
+            Dim sSql As String
+            Dim oDs As DataSet
+            Try
+                sSql = "select c.* from tblCartContact c " &
+                        "where c.cContactForeignRef = 'SUP-" & CStr(nSupplierId) & "' " &
+                        "and nContactDirId = " & nDirId
+                oDs = getDataSetForUpdate(sSql, "tblCartContact")
+                Return oDs.Tables(0)
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
+                Return Nothing
+            End Try
+        End Function
+
+        Public Function SetContact(ByRef contact As Contact) As Integer
+            If contact.nContactKey > 0 Then
+                UpdateContact(contact)
+            Else
+                AddContact(contact)
+            End If
+        End Function
+
+        Public Function AddContact(ByRef contact As Contact) As Integer
+            PerfMon.Log("DBHelper", "AddContact ([args])")
+            Dim sSql As String
+            Dim nId As String
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "INSERT INTO [dbo].[tblCartContact] ([nContactDirId], [nContactCartId], [cContactType], [cContactName], [cContactCompany]," &
+                    " [cContactAddress], [cContactCity], [cContactState], [cContactZip], [cContactCountry], [cContactTel], [cContactFax], [cContactEmail]," &
+                    " [cContactXml], [nAuditId], [cContactForiegnRef], [nLat], [nLong], [cContactForeignRef], [cContactAddress2])" &
+                " VALUES (" &
+                contact.nContactDirId &
+                "," & contact.nContactCartId & "" &
+                ",'" & SqlFmt(contact.cContactType) & "'" &
+                ",'" & SqlFmt(contact.cContactName) & "'" &
+                ",'" & SqlFmt(contact.cContactCompany) & "'" &
+                ",'" & SqlFmt(contact.cContactAddress) & "'" &
+                ",'" & SqlFmt(contact.cContactCity) & "'" &
+                ",'" & SqlFmt(contact.cContactState) & "'" &
+                ",'" & SqlFmt(contact.cContactZip) & "'" &
+                ",'" & SqlFmt(contact.cContactCountry) & "'" &
+                ",'" & SqlFmt(contact.cContactTel) & "'" &
+                ",'" & SqlFmt(contact.cContactFax) & "'" &
+                ",'" & SqlFmt(contact.cContactEmail) & "'" &
+                ",'<Content><LocationSummary>" & SqlFmt(contact.cContactLocationSummary) & "</LocationSummary></Content>'" &
+                "," & getAuditId() &
+                ",'" & SqlFmt(contact.cContactForiegnRef) & "'" &
+                ",'" & contact.nLat & "'" &
+                ",'" & contact.nLong & "'" &
+                ",'" & SqlFmt(contact.cContactForeignRef) & "'" &
+                ",'" & SqlFmt(contact.cContactAddress2) & "')"
+
+                nId = GetIdInsertSql(sSql)
+                Return nId
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, cProcessInfo))
+                Return False
+            End Try
+        End Function
+
+        Public Function UpdateContact(ByRef contact As Contact) As Boolean
+            PerfMon.Log("DBHelper", "UpdateContact ([args])")
+            Dim sSql As String
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "UPDATE [dbo].[tblCartContact]" &
+                "SET [cContactName] = '" & SqlFmt(contact.cContactName) & "'" &
+                ", [cContactAddress] = '" & SqlFmt(contact.cContactAddress) & "'" &
+                ", [cContactAddress2] = '" & SqlFmt(contact.cContactAddress2) & "'" &
+                ", [cContactCity] = '" & SqlFmt(contact.cContactCity) & "'" &
+                ", [cContactState] = '" & SqlFmt(contact.cContactState) & "'" &
+                ", [cContactZip] = '" & SqlFmt(contact.cContactZip) & "'" &
+                ", [cContactCountry] = '" & SqlFmt(contact.cContactCountry) & "'" &
+                ", [cContactTel] = '" & SqlFmt(contact.cContactTel) & "'" &
+                ", [cContactFax] = '" & SqlFmt(contact.cContactFax) & "'" &
+                ", [cContactXml] = '<Content><LocationSummary>" & SqlFmt(contact.cContactLocationSummary) & "</LocationSummary></Content>'" &
+                "WHERE [nContactKey] = " & contact.nContactKey
+
+                ExeProcessSql(sSql)
+                Return True
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo))
+                Return False
+            End Try
+        End Function
+
+        Public Function DeleteContact(ByRef nContactKey As Integer) As Boolean
+            PerfMon.Log("DBHelper", "DeleteContact ([args])")
+            Try
+                If nContactKey = 0 Then
+                    Throw New ArgumentException("Invalid nContactKey")
+                End If
+                myWeb.moDbHelper.DeleteObject(objectTypes.CartContact, nContactKey)
+                Return True
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, String.Empty))
+                Return False
+            End Try
+        End Function
+
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
             Try

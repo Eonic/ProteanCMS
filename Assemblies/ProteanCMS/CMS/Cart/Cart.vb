@@ -2510,7 +2510,7 @@ processFlow:
                             '     discountSQL = ", nDiscountValue = " & Discount & " "
                         End If
 
-                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL &  " WHERE nCartItemKey = " & oRow("id")
+                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
                         moDBHelper.ExeProcessSql(cUpdtSQL)
 
 
@@ -2807,7 +2807,6 @@ processFlow:
                 SaveCartXML(oCartElmt)
                 'mnCartId = nCartIdUse
 
-
                 If moCartConfig("RelatedProductsInCart") = "On" Then
                     Dim oRelatedElmt As XmlElement = oCartElmt.OwnerDocument.CreateElement("RelatedItems")
                     For i As Integer = 0 To oItemList.Count - 1
@@ -2820,8 +2819,6 @@ processFlow:
                     Next
                     If Not oRelatedElmt.InnerXml = "" Then oCartElmt.AppendChild(oRelatedElmt)
                 End If
-
-
 
             Catch ex As Exception
                 returnException(mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug)
