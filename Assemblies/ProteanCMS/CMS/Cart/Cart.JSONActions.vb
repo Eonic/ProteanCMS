@@ -335,7 +335,7 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
 
-                    Dim contentId As Long
+                    Dim CartItemId As Long
                     Dim PackageOptName As String
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
@@ -343,9 +343,9 @@ Partial Public Class Cms
 
 
                     Dim json As Newtonsoft.Json.Linq.JObject = jObj
-                    contentId = json.SelectToken("contentId")
+                    CartItemId = json.SelectToken("CartItemId")
                     PackageOptName = json.SelectToken("PackageOptName")
-                    myCart.AddProductOption(contentId, PackageOptName, CartXml)
+                    myCart.AddProductOption(CartItemId, PackageOptName)
 
                     'call get cart method
                     'GetCart(myApi, jObj)

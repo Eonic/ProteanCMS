@@ -8008,104 +8008,44 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Private Function AddProductOption(ByVal contentId As Long, ByRef PackageOptName As String, ByVal CartXml As XmlElement) As String
+        Private Sub AddProductOption(ByVal CartItemId As Long, ByRef PackageOptName As String)
 
             Try
-                Dim oElmt As XmlElement
-                oElmt = CartXml.FirstChild
-                Dim itm As XmlElement
-                Dim oProdXml As New XmlDocument
-                'Identify item where packaging needs to match
-                For Each itm In oElmt
-                    oProdXml.InnerXml = itm.OuterXml
-                    If (contentId = Convert.ToInt32(oProdXml.SelectSingleNode("Item").Attributes(0).Value)) Then
-                        Dim oItemInstance As XmlDataDocument = New XmlDataDocument
-                        oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
-                        oElmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
-                        addNewTextNode("nCartOrderId", oElmt, CStr(mnCartId))
-                        Dim cStockCode As String = ""
-                        Dim cOptName As String = ""
-                        Dim bTextOption As Boolean = False
+                Dim oelmt As XmlElement
+                Dim oItemInstance As XmlDataDocument = New XmlDataDocument
+                oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
+                oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
+
+                addNewTextNode("nCartOrderId", oelmt, CStr(mnCartId))
+                addNewTextNode("nItemId", oelmt, 0)
+                addNewTextNode("cItemURL", oelmt, "") 'Erm?
+                addNewTextNode("cItemName", oelmt, PackageOptName)
+                addNewTextNode("nItemOptGrpIdx", oelmt, 0) 'Dont Need
+                addNewTextNode("nItemOptIdx", oelmt, 0) 'Dont Need
+                addNewTextNode("cItemRef", oelmt, "")
 
 
-                        If Not oProdXml.SelectSingleNode("Item/productDetail/Options/OptGroup/Option") Is Nothing Then
-                            cOptName = PackageOptName
+                'no price variation for text options
+                addNewTextNode("nPrice", oelmt, "0")
+                addNewTextNode("nShpCat", oelmt, 0)
+                addNewTextNode("nDiscountCat", oelmt, 0)
+                addNewTextNode("nDiscountValue", oelmt, 0)
+                addNewTextNode("nTaxRate", oelmt, 0)
+                addNewTextNode("nParentId", oelmt, CartItemId)
+                addNewTextNode("cItemUnit", oelmt, 0)
+                addNewTextNode("nQuantity", oelmt, 0)
+                addNewTextNode("nweight", oelmt, 0)
+                addNewTextNode("nAuditId", oelmt, 0)
+                addNewTextNode("xItemXml", oelmt, "")
 
-                        End If
-                        addNewTextNode("cItemName", oElmt, cOptName)
-                        addNewTextNode("nPrice", oElmt, "0")
-                        moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
-                    End If
-                Next
+                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 
             Catch ex As Exception
 
             End Try
 
-            'Try
-            '    'dim ssql as string
 
-            '    ''add options
-            '    Dim oiteminstance As New XmlDocument
-            '    Dim oelmt As XmlElement
-            '    Dim oprice As XmlElement = Nothing
-            '    Dim nweight As Long = 0
-            '    Dim nproductid As String
-            '    Dim nitemid As String
-            '    Dim i As Integer
-
-
-            '    oiteminstance.AppendChild(oiteminstance.CreateElement("instance"))
-            '    oelmt = addNewTextNode("tblcartitem", oiteminstance.DocumentElement)
-            '    addNewTextNode("ncartorderid", oelmt, CStr(mnCartId))
-
-            '    Dim cstockcode As String = ""
-            '    Dim coptname As String = ""
-            '    Dim btextoption As Boolean = False
-
-
-            '    addNewTextNode("citemref", oelmt, cstockcode)
-            '    addNewTextNode("nitemid", oelmt, nproductid)
-            '    addNewTextNode("citemurl", oelmt, myWeb.mcOriginalURL) 'erm?
-            '    addNewTextNode("citemname", oelmt, coptname)
-
-
-            '    'save the option index as -1 for text option
-            '    addNewTextNode("nitemoptgrpidx", oelmt, (i + 1))
-            '    addNewTextNode("nitemoptidx", oelmt, -1)
-            '    'no price variation for text options
-            '    addNewTextNode("nprice", oelmt, "0")
-
-
-            '    addNewTextNode("nshpcat", oelmt, -1)
-            '    addNewTextNode("ntaxrate", oelmt, 0)
-            '    addNewTextNode("nquantity", oelmt, 1)
-            '    addNewTextNode("nweight", oelmt, 0)
-            '    addNewTextNode("nparentid", oelmt, nitemid)
-
-            '    moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oiteminstance.DocumentElement)
-
-
-
-            '    'if modbhelper.checktablecolumnexists("tblcartitem", "xitemxml") then
-
-            '    'ssql = "update tblcartitem set     =" & cartitemid
-
-            '    If Not oprodxml.selectsinglenode("/content/options/optgroup[" & oprodoptions(i)(0) & "]" & "/option[" & oprodoptions(i)(1) & "]/name") Is Nothing Then
-            '        coptname = oprodxml.selectsinglenode("/content/options/optgroup[" & oprodoptions(i)(0) & "]" & "/option[" & oprodoptions(i)(1) & "]/name").innertext
-            '    End If
-
-            '    ' select i.ncartitemkey as id, i.nitemid as contentid, i.citemref as ref, i.citemurl as url, i.citemname as name, i.citemunit as unit, i.nprice as price, i.ntaxrate as taxrate, i.nquantity as quantity, i.nshpcat as shippinglevel, i.ndiscountvalue as discount,i.nweight as weight, i.xitemxml as productdetail, i.nitemoptgrpidx, i.nitemoptidx, i.nparentid, i.xitemxml.value('content[1]/@type','nvarchar(50)') as contenttype, dbo.fxn_getcontentparents(i.nitemid) as parid  from tblcartitem i left join tblcontent p on i.nitemid = p.ncontentkey where ncartorderid=" & ncartiduse
-            '   
-            'addNewTextNode("xitemxml"
-
-
-            'Catch ex As Exception
-
-            'End Try
-
-
-        End Function
+        End Sub
 
 
     End Class
