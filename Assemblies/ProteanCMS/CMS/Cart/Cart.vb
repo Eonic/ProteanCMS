@@ -5891,7 +5891,6 @@ processFlow:
 
                     nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 
-
                     'Options
                     If Not oProdOptions Is Nothing Then
                         For i = 0 To UBound(oProdOptions)
@@ -8008,7 +8007,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Private Sub AddProductOption(ByVal CartItemId As Long, ByRef PackageOptName As String)
+
+        Private Sub AddProductOption(ByRef jObj As Newtonsoft.Json.Linq.JObject)
 
             Try
                 Dim oelmt As XmlElement
@@ -8016,27 +8016,32 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
                 oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
 
+                Dim json As Newtonsoft.Json.Linq.JObject = jObj
+
+                Dim CartItemId As Long = json.SelectToken("CartItemId")
+                Dim ReplaceId As Long = json.SelectToken("ReplaceId")
+                Dim OptionName As String = json.SelectToken("ItemName")
+
+                If (ReplaceId <> 0) Then
+                    addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
+                End If
                 addNewTextNode("nCartOrderId", oelmt, CStr(mnCartId))
-                addNewTextNode("nItemId", oelmt, 0)
-                addNewTextNode("cItemURL", oelmt, "") 'Erm?
-                addNewTextNode("cItemName", oelmt, PackageOptName)
-                addNewTextNode("nItemOptGrpIdx", oelmt, 0) 'Dont Need
-                addNewTextNode("nItemOptIdx", oelmt, 0) 'Dont Need
-                addNewTextNode("cItemRef", oelmt, "")
-
-
-                'no price variation for text options
-                addNewTextNode("nPrice", oelmt, "0")
-                addNewTextNode("nShpCat", oelmt, 0)
-                addNewTextNode("nDiscountCat", oelmt, 0)
-                addNewTextNode("nDiscountValue", oelmt, 0)
-                addNewTextNode("nTaxRate", oelmt, 0)
+                addNewTextNode("nItemId", oelmt, json.SelectToken("ItemId"))
+                addNewTextNode("cItemURL", oelmt, json.SelectToken("ItemURL")) 'Erm?
+                addNewTextNode("cItemName", oelmt, OptionName)
+                addNewTextNode("nItemOptGrpIdx", oelmt, json.SelectToken("ItemOptGrpIdx")) 'Dont Need
+                addNewTextNode("nItemOptIdx", oelmt, json.SelectToken("ItemOptIdx")) 'Dont Need
+                addNewTextNode("cItemRef", oelmt, json.SelectToken("ItemRef"))
+                addNewTextNode("nPrice", oelmt, json.SelectToken("Price"))
+                addNewTextNode("nShpCat", oelmt, json.SelectToken("ShpCat"))
+                addNewTextNode("nDiscountCat", oelmt, json.SelectToken("DiscountCat"))
+                addNewTextNode("nDiscountValue", oelmt, json.SelectToken("DiscountValue"))
+                addNewTextNode("nTaxRate", oelmt, json.SelectToken("TaxRate"))
                 addNewTextNode("nParentId", oelmt, CartItemId)
-                addNewTextNode("cItemUnit", oelmt, 0)
-                addNewTextNode("nQuantity", oelmt, 0)
-                addNewTextNode("nweight", oelmt, 0)
-                addNewTextNode("nAuditId", oelmt, 0)
-                addNewTextNode("xItemXml", oelmt, "")
+                addNewTextNode("cItemUnit", oelmt, json.SelectToken("TaxRate"))
+                addNewTextNode("nQuantity", oelmt, json.SelectToken("Qunatity"))
+                addNewTextNode("nweight", oelmt, json.SelectToken("Weight"))
+                addNewTextNode("xItemXml", oelmt, json.SelectToken("ItemXml"))
 
                 moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 

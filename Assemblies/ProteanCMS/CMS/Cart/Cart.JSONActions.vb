@@ -333,22 +333,13 @@ Partial Public Class Cms
 
             Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim cProcessInfo As String = ""
-
-                    Dim CartItemId As Long
-                    Dim PackageOptName As String
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
 
+                    'add product option
+                    myCart.AddProductOption(jObj)
 
-                    Dim json As Newtonsoft.Json.Linq.JObject = jObj
-                    CartItemId = json.SelectToken("CartItemId")
-                    PackageOptName = json.SelectToken("PackageOptName")
-                    myCart.AddProductOption(CartItemId, PackageOptName)
-
-                    'call get cart method
-                    'GetCart(myApi, jObj)
                 Catch ex As Exception
 
                 End Try
