@@ -2584,6 +2584,8 @@ processFlow:
                                     oElmt.SetAttribute(oAtt.Name, oAtt.Value)
                                 Next
                                 oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+
                             End If
                         Next
 
@@ -5853,8 +5855,20 @@ processFlow:
                             If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
                                 nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                             End If
+
+                            'Add Parent Product to cart if SKU.
+                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                            End If
+
                         End If
                     End If
+
+
 
 
                     addNewTextNode("cItemName", oElmt, cProductText)
