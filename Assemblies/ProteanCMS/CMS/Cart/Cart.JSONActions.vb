@@ -218,10 +218,12 @@ Partial Public Class Cms
                     Dim dsShippingOption As DataSet
 
                     Dim cDestinationCountry As String
+                    ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
 
+                    'check for delivery country , otherwise default setting
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
@@ -327,6 +329,20 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
                 Return JsonConvert.ToString(isSuccess)
+            End Function
+
+            Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    myCart.GetCart(CartXml.FirstChild)
+
+                    'add product option
+                    myCart.AddProductOption(jObj)
+
+                Catch ex As Exception
+
+                End Try
             End Function
 
         End Class

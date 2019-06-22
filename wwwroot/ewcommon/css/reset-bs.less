@@ -412,14 +412,14 @@ div:not(.content-scroller) {
 		    .thumbnail{height:auto!important;}
 	    }
     }
-    .cols2 .grid-item{
+    > div:not(.content-cols-responsive).cols2 .grid-item{
 	    .make-sm-column(6);
 	    @media (max-width: @screen-xs-max){
 		    height:auto!important;
 		    .thumbnail{height:auto!important;}
 	    }
     }
-    .cols3 .grid-item{
+    > div:not(.content-cols-responsive).cols3 .grid-item{
 	    .make-sm-column(4);
 	
 	    @media (max-width: @screen-xs-max){
@@ -427,7 +427,7 @@ div:not(.content-scroller) {
 		    .thumbnail{height:auto!important;}
 	    }
     }
-    .cols4 .grid-item{
+    > div:not(.content-cols-responsive).cols4 .grid-item{
 	    .make-sm-column(3);
 	
 	    @media (max-width: @screen-xs-max){
@@ -435,7 +435,7 @@ div:not(.content-scroller) {
 		    .thumbnail{height:auto!important;}
 	    }
     }
-    .cols5 .grid-item{
+    > div:not(.content-cols-responsive).cols5 .grid-item{
 	    @media (min-width: @screen-sm-min){
 		    width: 20%;
 		    float:left;		
@@ -447,7 +447,7 @@ div:not(.content-scroller) {
 		    .thumbnail{height:auto!important;}
 	    }
     }
-    .cols6 .grid-item{
+    > div:not(.content-cols-responsive).cols6 .grid-item{
 	    .make-sm-column(2);
 	
 	    @media (max-width: @screen-xs-max){
