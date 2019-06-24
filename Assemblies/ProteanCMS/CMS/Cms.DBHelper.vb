@@ -7124,7 +7124,7 @@ restart:
                                 End If
                                 For Each oLocation In oInstance.SelectNodes("Location")
                                     Dim sPrimary As Long = 0
-                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayorder"))
+                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayOrder"))
                                     If oLocation Is oPrmLoc Then sPrimary = 1
                                     If oLocation.GetAttribute("foriegnRef") <> "" Then
                                         Dim cleanFref As String = oLocation.GetAttribute("foriegnRef")

@@ -97,6 +97,8 @@ C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Prot
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 C:\Users\trevors\Source\Repos\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb

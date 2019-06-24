@@ -489,33 +489,42 @@ public static class Text
         string sTidyXhtml = "";
         int crResult = 0;
 
-
         if (!(removeTags == ""))
             shtml = removeTagFromXml(shtml, removeTags);
         TidyManaged.Document oTdyManaged;
         // Using 
         try
         {
-            oTdyManaged = TidyManaged.Document.FromString(shtml);
+                // clear some nasties I haven't allready captured.
+            shtml = shtml.Replace("&amp;nbsp;", "&#160;");
+            shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                oTdyManaged = TidyManaged.Document.FromString(shtml);
             oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
             oTdyManaged.MakeClean = true;
             oTdyManaged.DropFontTags = true;
+            //oTdyManaged.ErrorBuffer = true;
             oTdyManaged.ShowWarnings = true;
             oTdyManaged.OutputXhtml = true;
-            if (bReturnNumbericEntities)
+            oTdyManaged.MakeBare = true;//removed word tags
+            oTdyManaged.CleanWord2000 = true;//removed word tags
+
+                if (bReturnNumbericEntities)
+                {
                 oTdyManaged.OutputNumericEntities = true;
-            oTdyManaged.CleanAndRepair();
-            try
+                }
+           int tidyResult = oTdyManaged.CleanAndRepair();
+           try
             {
                 sTidyXhtml = oTdyManaged.Save();
             }
             catch (Exception ex)
             {
-                sTidyXhtml = "html import conversion error";
+                sTidyXhtml = "<div>html import conversion error result=" + tidyResult + " <br/></div>";
             }
-
+           
             oTdyManaged.Dispose();
-            oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+           oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
             // End Using
 
             return sTidyXhtml;
