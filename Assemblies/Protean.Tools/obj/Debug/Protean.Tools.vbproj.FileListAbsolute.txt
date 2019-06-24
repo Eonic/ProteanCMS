@@ -119,7 +119,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZ
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache

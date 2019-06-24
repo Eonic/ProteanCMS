@@ -8000,7 +8000,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
                 Dim cSqlUpdate As String
-
+                Dim ShippingName As String
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey = " & nShipOptKey
@@ -8014,6 +8014,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Next
 
 
+                If (cShippingDesc = "Evoucher-UK Parcel") Then
+                    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+                    moDBHelper.ExeProcessSql(cSqlpkgopUpdate)
+
+                End If
+                UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
+
             Catch ex As Exception
 
                 returnException(mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
@@ -8026,6 +8033,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
             Try
                 Dim oelmt As XmlElement
+                Dim cSqlUpdate As String
                 Dim oItemInstance As XmlDataDocument = New XmlDataDocument
                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
                 oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
@@ -8035,6 +8043,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim CartItemId As Long = json.SelectToken("CartItemId")
                 Dim ReplaceId As Long = json.SelectToken("ReplaceId")
                 Dim OptionName As String = json.SelectToken("ItemName")
+                Dim ShippingKey As Int32 = Convert.ToInt32(json.SelectToken("ShippingKey"))
 
                 If (ReplaceId <> 0) Then
                     addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
@@ -8059,6 +8068,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
 
+                UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
+
+
+
+
+
             Catch ex As Exception
 
             End Try
@@ -8066,6 +8081,24 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Sub
 
+        Private Sub UpdatePackagingANdDeliveryType(ByVal mnCartId As Int32, ByVal ShippingKey As Int32)
+            Dim strSql As String
+            strSql = "SELECT count(*) as PackagingCount  from tblCartItem where cItemName='Evoucher' AND isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+            Dim evoucherPackagingCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+            strSql = "SELECT count(*) as ProductCount  from tblCartItem WHERE isNull(nParentId,0)=0 and nCartOrderId=" & mnCartId
+            Dim productCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+
+            'if all are evoucher set delivery option to evoucher
+            If (evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            ElseIf (ShippingKey = 64 And evoucherPackagingCount <> productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("66")
+            ElseIf (ShippingKey <> 64 And evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            End If
+        End Sub
 
     End Class
 
