@@ -1339,7 +1339,6 @@ Partial Public Module xmlTools
         End Function
 
         Public Function DeleteContent(ByVal nContentId As String) As String
-
             Try
                 If CLng("0" & nContentId) > 0 Then
                     Return CStr(myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId))
@@ -1350,7 +1349,19 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 Return "Error - Not Deleted" & ex.Message
             End Try
+        End Function
 
+        Public Function DeletePage(ByVal nPageId As String) As String
+            Try
+                If CLng("0" & nPageId) > 0 Then
+                    Return CStr(myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentStructure, nPageId))
+                Else
+                    Return Nothing
+                End If
+
+            Catch ex As Exception
+                Return "Error - Not Deleted" & ex.Message
+            End Try
         End Function
 
         Public Function UpdatePositions(ByVal nContentId As Long, ByVal cPosition As String) As String

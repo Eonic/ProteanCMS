@@ -128,3 +128,14 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbpr
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlClrProvider.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Dmf.Common.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Diagnostics.STrace.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlTDiagM.dll

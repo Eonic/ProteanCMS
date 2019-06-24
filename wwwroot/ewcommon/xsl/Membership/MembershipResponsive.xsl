@@ -954,8 +954,38 @@
 		</div>
 	</xsl:template>
 
+  <!-- ##### Membership User Contacts module ##### -->
+  <xsl:template match="Content[@moduleType='MembershipCompanyContacts']" mode="displayBrief">
+    <xsl:variable name="editForm" select="Content[@name='Edit_User_Contact']"/>
+    <div class="MembershipUserContacts">
+      <xsl:choose>
+        <xsl:when test="$editForm">
+          <!-- Add or edit an address -->
+          <xsl:apply-templates select="$editForm" mode="xform"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$page/User[1]/Company">
+            <a class="btn btn-primary principle" href="{$currentPage/@url}?ewCmd=addContact&amp;ParentDirId={@id}">
+                <i class="fa fa-plus">
+                  <xsl:text> </xsl:text>
+                </i><xsl:text> </xsl:text>
+                Add New Address
+              </a>
+            <h3>Addresses for <xsl:value-of select="Name/node()"/></h3>
+
+            <div class="list orders row">
+              <xsl:apply-templates select="Contacts/Contact" mode="membershipUserContactsDisplayBrief"/>
+              <div class="terminus">&#160;</div>
+            </div>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+
+    </div>
+  </xsl:template>
+
 	<xsl:template match="Contact" mode="membershipUserContactsDisplayBrief">
-		<div class="listItem contact contactbrief">
+		<div class="listItem contact contactbrief col-md-6">
       <div class="lIinner">
 			<h4>
 				<xsl:value-of select="cContactType"/>
