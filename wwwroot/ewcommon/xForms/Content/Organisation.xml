@@ -338,7 +338,7 @@
             <p>However if you would like a different image for the thumbnail or main product page, they can be specified below.</p>
           </help>
         </input>
-        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
         <input bind="cContentThumbnail" class="short pickImage">
           <label>Alternative thumbnail</label>
         </input>
