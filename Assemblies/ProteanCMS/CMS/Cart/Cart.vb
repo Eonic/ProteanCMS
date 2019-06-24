@@ -2584,6 +2584,8 @@ processFlow:
                                     oElmt.SetAttribute(oAtt.Name, oAtt.Value)
                                 Next
                                 oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+
                             End If
                         Next
 
@@ -5853,8 +5855,20 @@ processFlow:
                             If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
                                 nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                             End If
+
+                            'Add Parent Product to cart if SKU.
+                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                            End If
+
                         End If
                     End If
+
+
 
 
                     addNewTextNode("cItemName", oElmt, cProductText)
@@ -5890,7 +5904,6 @@ processFlow:
                     ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
 
                     nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
-
 
                     'Options
                     If Not oProdOptions Is Nothing Then
@@ -5950,6 +5963,7 @@ processFlow:
                                 Else
                                     addNewTextNode("nItemOptGrpIdx", oElmt, oProdOptions(i)(0))
                                     addNewTextNode("nItemOptIdx", oElmt, oProdOptions(i)(1))
+
                                     Dim oPriceElmt As XmlElement = oProdXml.SelectSingleNode(
                                                                 "/Content/Options/OptGroup[" & oProdOptions(i)(0) & "]" &
                                                                 "/option[" & oProdOptions(i)(1) & "]/Prices/Price[@currency='" & mcCurrency & "']"
@@ -7986,7 +8000,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
                 Dim cSqlUpdate As String
-
+                Dim ShippingName As String
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey = " & nShipOptKey
@@ -8000,6 +8014,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Next
 
 
+                If (cShippingDesc = "Evoucher-UK Parcel") Then
+                    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+                    moDBHelper.ExeProcessSql(cSqlpkgopUpdate)
+
+                End If
+                UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
+
             Catch ex As Exception
 
                 returnException(mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
@@ -8008,6 +8029,76 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
 
+        Private Sub AddProductOption(ByRef jObj As Newtonsoft.Json.Linq.JObject)
+
+            Try
+                Dim oelmt As XmlElement
+                Dim cSqlUpdate As String
+                Dim oItemInstance As XmlDataDocument = New XmlDataDocument
+                oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
+                oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
+
+                Dim json As Newtonsoft.Json.Linq.JObject = jObj
+
+                Dim CartItemId As Long = json.SelectToken("CartItemId")
+                Dim ReplaceId As Long = json.SelectToken("ReplaceId")
+                Dim OptionName As String = json.SelectToken("ItemName")
+                Dim ShippingKey As Int32 = Convert.ToInt32(json.SelectToken("ShippingKey"))
+
+                If (ReplaceId <> 0) Then
+                    addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
+                End If
+                addNewTextNode("nCartOrderId", oelmt, CStr(mnCartId))
+                addNewTextNode("nItemId", oelmt, json.SelectToken("ItemId"))
+                addNewTextNode("cItemURL", oelmt, json.SelectToken("ItemURL")) 'Erm?
+                addNewTextNode("cItemName", oelmt, OptionName)
+                addNewTextNode("nItemOptGrpIdx", oelmt, json.SelectToken("ItemOptGrpIdx")) 'Dont Need
+                addNewTextNode("nItemOptIdx", oelmt, json.SelectToken("ItemOptIdx")) 'Dont Need
+                addNewTextNode("cItemRef", oelmt, json.SelectToken("ItemRef"))
+                addNewTextNode("nPrice", oelmt, json.SelectToken("Price"))
+                addNewTextNode("nShpCat", oelmt, json.SelectToken("ShpCat"))
+                addNewTextNode("nDiscountCat", oelmt, json.SelectToken("DiscountCat"))
+                addNewTextNode("nDiscountValue", oelmt, json.SelectToken("DiscountValue"))
+                addNewTextNode("nTaxRate", oelmt, json.SelectToken("TaxRate"))
+                addNewTextNode("nParentId", oelmt, CartItemId)
+                addNewTextNode("cItemUnit", oelmt, json.SelectToken("TaxRate"))
+                addNewTextNode("nQuantity", oelmt, json.SelectToken("Qunatity"))
+                addNewTextNode("nweight", oelmt, json.SelectToken("Weight"))
+                addNewTextNode("xItemXml", oelmt, json.SelectToken("ItemXml"))
+
+                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+
+                UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
+
+
+
+
+
+            Catch ex As Exception
+
+            End Try
+
+
+        End Sub
+
+        Private Sub UpdatePackagingANdDeliveryType(ByVal mnCartId As Int32, ByVal ShippingKey As Int32)
+            Dim strSql As String
+            strSql = "SELECT count(*) as PackagingCount  from tblCartItem where cItemName='Evoucher' AND isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+            Dim evoucherPackagingCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+            strSql = "SELECT count(*) as ProductCount  from tblCartItem WHERE isNull(nParentId,0)=0 and nCartOrderId=" & mnCartId
+            Dim productCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+
+            'if all are evoucher set delivery option to evoucher
+            If (evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            ElseIf (ShippingKey = 64 And evoucherPackagingCount <> productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("66")
+            ElseIf (ShippingKey <> 64 And evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            End If
+        End Sub
 
     End Class
 

@@ -7,10 +7,14 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7D93FD23-F739-4F09-A1B0-F5A8D0451533}</ProjectGuid>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>
@@ -68,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.22.10</AssemblyVersion>
+    <AssemblyVersion>6.0.22.55</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -324,7 +328,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CMS\Content\Contact.vb" />
-    <Compile Include="CMS\Content\SupplierOffer.vb" />
     <Compile Include="ExternalSynchronisation.vb" />
     <Compile Include="Providers\Streaming.BaseProvider.vb" />
     <Compile Include="Providers\Membership.BaseProvider.vb" />
@@ -781,10 +784,6 @@
     <WCFMetadataStorage Include="Service References\proteancms.com\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\IntoTheBlue\IntoTheBlue_DevOps\Assemblies\IntoTheBlue.Core\IntoTheBlue.Core.csproj">
-      <Project>{0F4F70CF-3D6F-4EBA-BA1E-AFF85E620C2D}</Project>
-      <Name>IntoTheBlue.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
       <Name>Protean.Tools.Csharp</Name>

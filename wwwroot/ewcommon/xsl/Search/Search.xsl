@@ -20,26 +20,31 @@
         <xsl:with-param name="searchFormId" select="$searchFormId" />
         <xsl:with-param name="searchString" select="$searchString" />
       </xsl:apply-templates>
+
       <xsl:choose>
         <!-- Display Results -->
-        <xsl:when test="$searchResults!=''">
+        <xsl:when test="count(ms:node-set($searchResults)/*) &gt; 0">
           <xsl:apply-templates select="." mode="searchSummary">
             <xsl:with-param name="searchFormId" select="$searchFormId" />
             <xsl:with-param name="searchString" select="$searchString" />
             <xsl:with-param name="searchResults" select="$searchResults"/>
           </xsl:apply-templates>
+
           <xsl:apply-templates select="." mode="searchResults">
             <xsl:with-param name="searchResults" select="$searchResults"/>
           </xsl:apply-templates>
         </xsl:when>
         
         <!-- Display No Results IF Search was of that type -->
-        <xsl:when test="$searchResults='' and @searchMode=/Page/Request/Form/Item[@name='searchMode']/node()">
+        <xsl:when test="count(ms:node-set($searchResults)/*) &gt; 0 and @searchMode=/Page/Request/Form/Item[@name='searchMode']/node()">
           <xsl:apply-templates select="." mode="searchSummary">
             <xsl:with-param name="searchFormId" select="$searchFormId" />
             <xsl:with-param name="searchString" select="$searchString" />
             <xsl:with-param name="searchResults" select="$searchResults"/>
           </xsl:apply-templates>
+          <!--xsl:apply-templates select="." mode="searchResults">
+            <xsl:with-param name="searchResults" select="$searchResults"/>
+          </xsl:apply-templates-->
         </xsl:when>
       </xsl:choose>
     </div>
@@ -156,24 +161,21 @@
     <xsl:param name="searchResults"/>
     <xsl:variable name="contentType" select="SearchResult" />
     <xsl:variable name="startPos" select="0" />
-
     <div class="{@contentType}List">
-      <div class="cols{@cols}">
+      <div class="cols{@cols} list-group">
         <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
     </div>
-
   </xsl:template>
   
   <!-- -->
 
   <xsl:template match="Content[@type='SearchResult']" mode="displayBrief">
     <xsl:if test="@url!=''">
-      <div class="listItem searchResult">
-        <div class="lIinner">
+      <div class="list-group-item searchResult">
         <a href="{translate(@url,'\','/')}" alt="Click here to go to {@pagetitle}">
           <xsl:choose>
             <xsl:when test="@contenttype!='Download'">
@@ -226,7 +228,10 @@
                 </xsl:if>
               </xsl:variable>
               <xsl:if test="$docType!=''">
-                <img src="/ewcommon/images/icons/Icon_{$docType}.gif" width="16" height="16" alt="{$docType}"/>
+                <i class="fa fa-lg fa-file-{$docType}-o">
+                  <xsl:text> </xsl:text>
+                </i>
+                <xsl:text> </xsl:text>&#160;
               </xsl:if>
             </xsl:otherwise>
           </xsl:choose>
@@ -234,14 +239,19 @@
             <xsl:value-of select="@name"/>
           </span>
         </a>
-        <p>
+        <xsl:variable name="desc">
           <xsl:call-template name="truncateString">
             <xsl:with-param name="string" select="node()"/>
             <xsl:with-param name="length" select="'150'"/>
           </xsl:call-template>
-        </p>
+        </xsl:variable>
+        <xsl:if test="$desc!=''">
+           <p>
+              <xsl:value-of select="$desc"/>
+            </p>
+        </xsl:if>
+       
         </div>
-      </div>
     </xsl:if>
   </xsl:template>
 

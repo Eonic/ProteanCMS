@@ -11,6 +11,8 @@ Imports Protean.Tools.Xml
 Imports Protean.Tools.Xml.XmlNodeState
 Imports System
 Imports System.Text
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
 
 
 Partial Public Class Cms
@@ -22,6 +24,7 @@ Partial Public Class Cms
         Public Class JSONActions
             Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
             Private Const mcModuleName As String = "Eonic.Cart.JSONActions"
+            Private Const cContactType As String = "Venue"
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
@@ -215,10 +218,12 @@ Partial Public Class Cms
                     Dim dsShippingOption As DataSet
 
                     Dim cDestinationCountry As String
+                    ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
 
+                    'check for delivery country , otherwise default setting
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
@@ -257,6 +262,87 @@ Partial Public Class Cms
 
 
 
+            End Function
+
+            Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim JsonResult As String = ""
+                    Dim dirId As String = jObj("dirId")
+                    'Dim offerId As String = jObj("offerId")
+
+                    Dim userContacts = myWeb.moDbHelper.GetUserContactsXml(dirId)
+                    JsonResult = JsonConvert.SerializeObject(userContacts)
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
+            Public Function GetContactForm(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim nId As Integer
+                Try
+
+                    Dim JsonResult As String = ""
+                    Dim oDdoc = New XmlDocument()
+                    Dim contactId As Integer = jObj("contactId")
+                    Dim cAddressType As String = jObj("addressType")
+
+                    Dim oForm As xForm = myCart.contactXform(cAddressType, "", "")
+                    Dim oFormXml As String = oForm.Instance.SelectSingleNode("tblCartContact").OuterXml
+
+                    oDdoc.LoadXml(oFormXml)
+                    JsonResult = JsonConvert.SerializeXmlNode(oDdoc)
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(nId)
+            End Function
+
+            Public Function SetContact(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim nId As Integer
+                Try
+                    Dim supplierId As Integer = jObj("supplierId")
+                    Dim contact As Contact = jObj("venue").ToObject(Of Contact)()
+                    contact.cContactType = cContactType
+                    contact.cContactForeignRef = String.Format("SUP-{0}", supplierId)
+
+                    nId = myWeb.moDbHelper.SetContact(contact)
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(nId)
+            End Function
+
+            Public Function DeleteContact(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim isSuccess As Boolean
+                Try
+                    Dim cContactKey As String = jObj("nContactKey")
+                    isSuccess = myWeb.moDbHelper.DeleteContact(cContactKey)
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, ""))
+                    Return ex.Message
+                End Try
+                Return JsonConvert.ToString(isSuccess)
+            End Function
+
+            Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    myCart.GetCart(CartXml.FirstChild)
+
+                    'add product option
+                    myCart.AddProductOption(jObj)
+
+                Catch ex As Exception
+
+                End Try
             End Function
 
         End Class

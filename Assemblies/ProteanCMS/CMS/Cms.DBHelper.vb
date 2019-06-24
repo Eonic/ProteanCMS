@@ -7124,7 +7124,7 @@ restart:
                                 End If
                                 For Each oLocation In oInstance.SelectNodes("Location")
                                     Dim sPrimary As Long = 0
-                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayorder"))
+                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayOrder"))
                                     If oLocation Is oPrmLoc Then sPrimary = 1
                                     If oLocation.GetAttribute("foriegnRef") <> "" Then
                                         Dim cleanFref As String = oLocation.GetAttribute("foriegnRef")
@@ -10503,95 +10503,14 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function GetOffers(ByVal cSearchExpression As String) As DataTable
-            PerfMon.Log("dbTools", "GetLocations")
+        Public Function GetContacts(ByVal nSupplierId As Integer, ByVal nDirId As Integer) As DataTable
+            PerfMon.Log("dbTools", "GetContacts")
             Dim sSql As String
             Dim oDs As DataSet
             Try
-                sSql = "SELECT [nContentKey], REPLACE([cContentForiegnRef], 'SKU-', '') AS cContentForiegnRef, " &
-                        "CAST([cContentXmlBrief] AS XML).value('(Content/StockCode)[1]', 'Varchar(9)') AS StockCode " &
-                        "FROM [dbo].[tblContent] " &
-                        "WHERE cContentSchemaName = 'SKU' "
-                oDs = getDataSetForUpdate(sSql, "tblOffers")
-                Return oDs.Tables(0)
-            Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
-                Return Nothing
-            End Try
-        End Function
-
-        Public Sub SetSupplierOffer(ByVal offer As SupplierOffer)
-            If offer.nSupplierOfferKey > 0 Then
-                UpdateSupplierOffer(offer)
-            Else
-                AddSupplierOffer(offer)
-            End If
-        End Sub
-
-        Public Sub AddSupplierOffer(ByVal offer As SupplierOffer)
-            PerfMon.Log("dbTools", "AddSupplierOffer")
-            Dim sSql As String
-            Try
-                sSql = "INSERT INTO [dbo].[tblITBSupplierOffer]" &
-                        "([cSupplierOfferForiegnRef],[nCostExcludingVat],[nCostIncludingVat],[cSuppliersRRP],[nOurPrice]," &
-                        "[cDiscount],[nAmountTobeVatCharged],[nAmountZeroRated],[cHonourPrice],[nAgreedAmountTobeVatCharged],[nAgreedAmountZeroRated]," &
-                        "[nVoucherValue],[nVoucherBalance],[nSupplierFee],[nNetValueSupplier],[nGrossAmount],[bIsActive],[bIsDeleted])" &
-                        "VALUES('SKU-" & SqlFmt(offer.cSupplierOfferForiegnRef) & "'" &
-                        "," & offer.nCostExcludingVat &
-                        "," & offer.nCostIncludingVat &
-                        "," & SqlFmt(offer.cSuppliersRRP) &
-                        "," & offer.nOurPrice &
-                        "," & SqlFmt(offer.cDiscount) &
-                        "," & offer.nAmountTobeVatCharged &
-                        "," & offer.nAmountZeroRated &
-                        "," & SqlFmt(offer.cHonourPrice) &
-                        "," & offer.nAgreedAmountTobeVatCharged &
-                        "," & offer.nAgreedAmountZeroRated &
-                        "," & offer.nVoucherValue &
-                        "," & offer.nVoucherBalance &
-                        "," & offer.nSupplierFee &
-                        "," & offer.nNetValueSupplier &
-                        "," & offer.nGrossAmount &
-                        "," & offer.bIsActive &
-                        "," & offer.bIsDeleted &
-                        "," & getAuditId() &
-                        ")"
-                ExeProcessSql(sSql)
-            Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
-            End Try
-        End Sub
-
-        Public Sub UpdateSupplierOffer(ByVal offer As SupplierOffer)
-            PerfMon.Log("DBHelper", "AddVenue ([args])")
-            Dim sSql As String
-            Dim cProcessInfo As String = ""
-            Try
-                sSql = "UPDATE [dbo].[tblITBSupplierOffer]" &
-                "SET [nCostExcludingVat] = " & offer.nCostExcludingVat &
-                ", [nCostIncludingVat] = " & offer.nCostIncludingVat &
-                ", [AmountTobeVatCharged] = " & offer.nAmountTobeVatCharged &
-                ", [AmountZeroRated] = " & offer.nAmountZeroRated &
-                ", [HonourPrice] = " & offer.cHonourPrice &
-                ", [AgreedAmountTobeVatCharged] = " & offer.nAgreedAmountTobeVatCharged &
-                ", [AgreedAmountZeroRated] = " & offer.nAgreedAmountZeroRated &
-                "WHERE [cSupplierOfferForiegnRef] = 'SKU-" & offer.cSupplierOfferForiegnRef & "'"
-
-                ExeProcessSql(sSql)
-
-            Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
-            End Try
-        End Sub
-
-        Public Function GetVenues(ByVal nSupplierId As Integer, ByVal nOfferId As Integer) As DataTable
-            PerfMon.Log("dbTools", "GetLocations")
-            Dim sSql As String
-            Dim oDs As DataSet
-            Try
-                sSql = "select c.* from tblCartContact c join tblITBSupplierOfferVenues v on c.nContactKey = v.nContactId " _
-                + "where v.nOfferId = " + CStr(nOfferId)
-                '"where c.cContactForeignRef = 'SUP-" & CStr(nSupplierId) & "' and v.nOfferId = " + CStr(nOfferId)
+                sSql = "select c.* from tblCartContact c " &
+                        "where c.cContactForeignRef = 'SUP-" & CStr(nSupplierId) & "' " &
+                        "and nContactDirId = " & nDirId
                 oDs = getDataSetForUpdate(sSql, "tblCartContact")
                 Return oDs.Tables(0)
             Catch ex As Exception
@@ -10600,8 +10519,16 @@ ReturnMe:
             End Try
         End Function
 
-        Public Function AddVenue(ByVal offerId As Integer, ByRef contact As Contact) As Integer
-            PerfMon.Log("DBHelper", "AddVenue ([args])")
+        Public Function SetContact(ByRef contact As Contact) As Integer
+            If contact.nContactKey > 0 Then
+                UpdateContact(contact)
+            Else
+                AddContact(contact)
+            End If
+        End Function
+
+        Public Function AddContact(ByRef contact As Contact) As Integer
+            PerfMon.Log("DBHelper", "AddContact ([args])")
             Dim sSql As String
             Dim nId As String
             Dim cProcessInfo As String = ""
@@ -10632,34 +10559,28 @@ ReturnMe:
                 ",'" & SqlFmt(contact.cContactAddress2) & "')"
 
                 nId = GetIdInsertSql(sSql)
-
-                If nId > 0 Then
-                    sSql = String.Format("INSERT INTO tblITBSupplierOfferVenues (nOfferId, nContactId) VALUES ({0},{1})", offerId, nId)
-                    ExeProcessSql(sSql)
-                End If
-
                 Return nId
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, cProcessInfo))
                 Return False
             End Try
         End Function
 
-        Public Function UpdateVenue(ByRef contact As Contact) As Boolean
-            PerfMon.Log("DBHelper", "AddVenue ([args])")
+        Public Function UpdateContact(ByRef contact As Contact) As Boolean
+            PerfMon.Log("DBHelper", "UpdateContact ([args])")
             Dim sSql As String
             Dim cProcessInfo As String = ""
             Try
                 sSql = "UPDATE [dbo].[tblCartContact]" &
                 "SET [cContactName] = '" & SqlFmt(contact.cContactName) & "'" &
                 ", [cContactAddress] = '" & SqlFmt(contact.cContactAddress) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactAddress2) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactCity) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactState) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactZip) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactCountry) & "'" &
-                ", [cContactAddress] = '" & SqlFmt(contact.cContactTel) & "'" &
+                ", [cContactAddress2] = '" & SqlFmt(contact.cContactAddress2) & "'" &
+                ", [cContactCity] = '" & SqlFmt(contact.cContactCity) & "'" &
+                ", [cContactState] = '" & SqlFmt(contact.cContactState) & "'" &
+                ", [cContactZip] = '" & SqlFmt(contact.cContactZip) & "'" &
+                ", [cContactCountry] = '" & SqlFmt(contact.cContactCountry) & "'" &
+                ", [cContactTel] = '" & SqlFmt(contact.cContactTel) & "'" &
                 ", [cContactFax] = '" & SqlFmt(contact.cContactFax) & "'" &
                 ", [cContactXml] = '<Content><LocationSummary>" & SqlFmt(contact.cContactLocationSummary) & "</LocationSummary></Content>'" &
                 "WHERE [nContactKey] = " & contact.nContactKey
@@ -10668,14 +10589,13 @@ ReturnMe:
                 Return True
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, cProcessInfo))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo))
                 Return False
             End Try
         End Function
 
-        Public Function DeleteVenue(ByRef nContactKey As Integer) As Boolean
-            PerfMon.Log("DBHelper", "AddVenue ([args])")
-            Dim isSuccess As Boolean
+        Public Function DeleteContact(ByRef nContactKey As Integer) As Boolean
+            PerfMon.Log("DBHelper", "DeleteContact ([args])")
             Try
                 If nContactKey = 0 Then
                     Throw New ArgumentException("Invalid nContactKey")
@@ -10683,25 +10603,8 @@ ReturnMe:
                 myWeb.moDbHelper.DeleteObject(objectTypes.CartContact, nContactKey)
                 Return True
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddVenue", ex, String.Empty))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, String.Empty))
                 Return False
-            End Try
-        End Function
-
-        Public Function GetActivityLocations(ByVal nCategory3Id As Integer) As String
-            PerfMon.Log("dbTools", "GetLocations")
-            Dim sSql = "spGetSKUDetailsForProductCategory"
-            Dim outputXML As String
-
-            Dim arrParms = New System.Collections.Hashtable()
-            arrParms.Add("Category3Id", nCategory3Id)
-
-            Try
-                outputXML = Convert.ToString(GetDataValue(sSql, CommandType.StoredProcedure, arrParms))
-                Return outputXML
-            Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""))
-                Return Nothing
             End Try
         End Function
 
