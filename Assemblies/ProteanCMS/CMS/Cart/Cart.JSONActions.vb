@@ -234,13 +234,11 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
                     Dim dsShippingOption As DataSet
 
-                    Dim cDestinationCountry As String
+                    Dim cDestinationCountry As String = myCart.moCartConfig("DefaultDeliveryCountry")
                     ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
-
-                    'check for delivery country , otherwise default setting
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
