@@ -2921,6 +2921,10 @@ Public Class Cms
                 moDbHelper.getContentFromModuleGrabber(ocNode)
             Next
 
+            For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@display='group']")
+                moDbHelper.getContentFromProductGroup(ocNode)
+            Next
+
             ' Content Type : ContentGrabber
             For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@type='ContentGrabber']")
                 moDbHelper.getContentFromContentGrabber(ocNode)

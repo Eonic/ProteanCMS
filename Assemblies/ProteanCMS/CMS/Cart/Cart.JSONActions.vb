@@ -13,6 +13,7 @@ Imports System
 Imports System.Text
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
+Imports System.Collections.Generic
 
 
 Partial Public Class Cms
@@ -55,6 +56,19 @@ Partial Public Class Cms
                     cartItems.AppendChild(oItems)
                 End If
                 CartXml.FirstChild.AppendChild(cartItems)
+
+                'Update the XML to wrap up HTML tags in the CDATA section.
+                Dim outputXml As String = CartXml.OuterXml
+                Dim tagList = New List(Of String) From {"p", "div", "ul"}
+                For Each tag As String In tagList
+                    outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
+                    outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
+                Next
+
+                Dim xdoc As XmlDocument = New XmlDocument
+                xdoc.LoadXml(outputXml)
+                CartXml = xdoc.FirstChild
+
                 Return CartXml
             End Function
 
@@ -66,10 +80,13 @@ Partial Public Class Cms
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
 
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
 
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                    Return jsonString
                     'persist cart
                     myCart.close()
 
@@ -226,13 +243,11 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
                     Dim dsShippingOption As DataSet
 
-                    Dim cDestinationCountry As String
+                    Dim cDestinationCountry As String = myCart.moCartConfig("DefaultDeliveryCountry")
                     ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
-
-                    'check for delivery country , otherwise default setting
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 

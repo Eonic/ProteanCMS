@@ -899,38 +899,46 @@ Partial Public Class Cms
             End Sub
 
             Public Sub CompanyContact(ByRef myWeb As Protean.Cms, ByRef contentNode As XmlElement)
-
+                Dim CompanyId As Long = myWeb.moRequest("ParentDirId")
+                Dim bUserValid As Boolean = True
                 Try
 
-                    If myWeb.mnUserId > 0 Then
+                    If myWeb.mnUserId > 0 And myWeb.moPageXml.SelectSingleNode("User/Company[@id='" & CompanyId & "']") IsNot Nothing Then
 
                         Dim adXfm As Object = myWeb.getAdminXform()
                         adXfm.open(myWeb.moPageXml)
 
-                        Select Case myWeb.moRequest("ewCmd")
-                            Case "addContact", "editContact"
-                                Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), myWeb.mnUserId)
-                                If Not adXfm.valid Then
-                                    contentNode.AppendChild(oXfmElmt)
-                                Else
-                                    myWeb.RefreshUserXML()
-                                End If
-                            Case "delContact"
-                                Dim oContactElmt As XmlElement
-                                For Each oContactElmt In myWeb.GetUserXML(myWeb.mnUserId).SelectNodes("descendant-or-self::Contact")
-                                    Dim oId As XmlElement = oContactElmt.SelectSingleNode("nContactKey")
-                                    If Not oId Is Nothing Then
-                                        If oId.InnerText = myWeb.moRequest("id") Then
-                                            myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, myWeb.moRequest("id"))
-                                            myWeb.RefreshUserXML()
-                                        End If
+                        If CInt("0" & myWeb.moRequest("id")) > 0 And myWeb.moPageXml.SelectSingleNode("User/Company/Contact[@id='" & myWeb.moRequest("id") & "']") Is Nothing Then
+                            bUserValid = False
+                        End If
+
+                        If bUserValid Then
+                            Select Case myWeb.moRequest("ewCmd")
+                                Case "addContact", "editContact"
+                                    Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), CompanyId)
+                                    If Not adXfm.valid Then
+                                        contentNode.AppendChild(oXfmElmt)
+                                    Else
+                                        myWeb.RefreshUserXML()
                                     End If
-                                Next
-                        End Select
+                                Case "delContact"
+                                    Dim oContactElmt As XmlElement
+                                    For Each oContactElmt In myWeb.GetUserXML(myWeb.mnUserId).SelectNodes("descendant-or-self::Contact")
+                                        Dim oId As XmlElement = oContactElmt.SelectSingleNode("nContactKey")
+                                        If Not oId Is Nothing Then
+                                            If oId.InnerText = myWeb.moRequest("id") Then
+                                                myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, myWeb.moRequest("id"))
+                                                myWeb.RefreshUserXML()
+                                            End If
+                                        End If
+                                    Next
+                            End Select
+                        End If
+
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UserContacts", ex, "", "", gbDebug)
+                    returnException(mcModuleName, "CompanyContact", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 

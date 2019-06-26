@@ -113,7 +113,7 @@
         <input bind="cContentFullSizePicture" class="short pickImage">
           <label>Main Testimonial Image</label>
         </input>
-        <hint>Smaller images will be automatically resized from the fullsize. If you want to use alterative images you can add them here.</hint>
+        <hint>Smaller images will be automatically resized from the full size. If you want to use alternative images you can add them here.</hint>
         <input bind="cContentThumbnail" class="short pickImage">
           <label>Alternative Thumbnail</label>
         </input>

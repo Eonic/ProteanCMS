@@ -4294,6 +4294,44 @@ restart:
             End Try
         End Sub
 
+        Public Overridable Sub getContentFromProductGroup(ByRef oContent As XmlElement)
+            PerfMon.Log("DBHelper", "getContentFromModuleGrabber")
+
+            Dim cProcessInfo As String = ""
+            Try
+
+
+                Dim cOrderBy As String = ""
+
+                ' Get the parameters SortDirection
+                Dim cSchema As String = oContent.GetAttribute("contentType")
+                Dim nGroupId As Long = CLng("0" & oContent.GetAttribute("groupid"))
+                Dim cSort As String = oContent.GetAttribute("sortBy")
+                Dim cSortDirection As String = oContent.GetAttribute("order")
+
+                ' Validate and Build the SQL conditions that we are going to need
+
+                If cSchema <> "" Then
+
+                    Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+
+                    myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent)
+
+                    'Get Related Items
+                    Dim oContentElmt As XmlElement
+                    For Each oContentElmt In oContent.SelectNodes("Content")
+                        addRelatedContent(oContentElmt, oContentElmt.GetAttribute("id"), myWeb.mbAdminMode)
+                    Next
+
+
+                End If
+
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getContentFromContentGrabber", ex, cProcessInfo))
+            End Try
+        End Sub
+
         Public Overridable Sub getContentFromContentGrabber(ByRef oGrabber As XmlElement)
             PerfMon.Log("DBHelper", "getContentFromContentGrabber")
 
