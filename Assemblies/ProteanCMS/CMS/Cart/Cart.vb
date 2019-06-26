@@ -5768,7 +5768,7 @@ processFlow:
 
         Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "") As Boolean
             PerfMon.Log("Cart", "AddItem")
-            Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemID =" & nProductId
+            Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
             Dim oDR1 As DataRow 'Parent Rows
             Dim oDr2 As DataRow 'Child Rows
@@ -5788,36 +5788,36 @@ processFlow:
                 oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                 oDS.Relations("Rel1").Nested = True
                 'loop through the parent rows to check the product
-                If oDS.Tables("CartItems").Rows.Count > 0 Then
-                    For Each oDR1 In oDS.Tables("CartItems").Rows
-                        If moDBHelper.DBN2int(oDR1.Item("nParentId")) = 0 And oDR1.Item("nItemId") = nProductId Then '(oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
-                            nCountExOptions = 0
-                            NoOptions = 0
-                            'loop through the children(options) and count how many are the same
-                            For Each oDr2 In oDR1.GetChildRows("Rel1")
-                                For i = 0 To UBound(oProdOptions) - 1
-                                    If UBound(oProdOptions(i)) < 1 Then
-                                        'Case for text option with no index
-                                        If oProdOptions(i)(0) = CStr(oDr2.Item("nItemOptGrpIdx")) Then nCountExOptions += 1
-                                    Else
-                                        If oProdOptions(i)(0) = oDr2.Item("nItemOptGrpIdx") And oProdOptions(i)(1) = oDr2.Item("nItemOptIdx") Then nCountExOptions += 1
-                                    End If
-                                Next
-                                NoOptions += 1
-                            Next
-                            If Not oProdOptions Is Nothing Then
-                                'if they are all the same then we have the correct record so it is an update
-                                If ((nCountExOptions) = UBound(oProdOptions)) And ((NoOptions) = UBound(oProdOptions)) Then
-                                    nItemID = oDR1.Item("NCartItemKey") 'ok, got the bugger
-                                    Exit For 'exit the loop other wise we might go through some other ones
-                                End If
+                'If oDS.Tables("CartItems").Rows.Count > 0 Then
+                '    For Each oDR1 In oDS.Tables("CartItems").Rows
+                '        If moDBHelper.DBN2int(oDR1.Item("nParentId")) = 0 And oDR1.Item("nItemId") = nProductId Then '(oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
+                '            nCountExOptions = 0
+                '            NoOptions = 0
+                '            'loop through the children(options) and count how many are the same
+                '            For Each oDr2 In oDR1.GetChildRows("Rel1")
+                '                For i = 0 To UBound(oProdOptions) - 1
+                '                    If UBound(oProdOptions(i)) < 1 Then
+                '                        'Case for text option with no index
+                '                        If oProdOptions(i)(0) = CStr(oDr2.Item("nItemOptGrpIdx")) Then nCountExOptions += 1
+                '                    Else
+                '                        If oProdOptions(i)(0) = oDr2.Item("nItemOptGrpIdx") And oProdOptions(i)(1) = oDr2.Item("nItemOptIdx") Then nCountExOptions += 1
+                '                    End If
+                '                Next
+                '                NoOptions += 1
+                '            Next
+                '            If Not oProdOptions Is Nothing Then
+                '                'if they are all the same then we have the correct record so it is an update
+                '                If ((nCountExOptions) = UBound(oProdOptions)) And ((NoOptions) = UBound(oProdOptions)) Then
+                '                    nItemID = oDR1.Item("NCartItemKey") 'ok, got the bugger
+                '                    Exit For 'exit the loop other wise we might go through some other ones
+                '                End If
 
-                            Else
-                                If NoOptions = 0 Then nItemID = oDR1.Item("NCartItemKey")
-                            End If
-                        End If
-                    Next
-                End If
+                '            Else
+                '                If NoOptions = 0 Then nItemID = oDR1.Item("NCartItemKey")
+                '            End If
+                '        End If
+                '    Next
+                'End If
                 If nItemID = 0 Then
                     'New
                     Dim oElmt As XmlElement
@@ -5862,6 +5862,7 @@ processFlow:
                                 Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
                                 Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
                                 Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
                                 ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
                             End If
 
@@ -6176,7 +6177,7 @@ processFlow:
 
                     'sSql = "delete from tblCartItem where nCartItemKey = " & myWeb.moRequest("id") & "and nCartOrderId = " & mnCartId
                     If nContentId = 0 Then
-                        sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & ") and nCartOrderId = " & mnCartId
                     Else
                         sSql = "select * from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
                     End If
@@ -7934,7 +7935,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
             Try
 
 
-
                 If oShippingOptions Is Nothing Then
 
                     Dim xmlTemp As XmlElement
@@ -7988,6 +7988,25 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
+        Private Sub UpdatePackagingANdDeliveryType(ByVal mnCartId As Int32, ByVal ShippingKey As Int32)
+            Dim strSql As String
+            strSql = "SELECT count(*) as PackagingCount  from tblCartItem where cItemName='Evoucher' AND isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+            Dim evoucherPackagingCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+            strSql = "SELECT count(*) as ProductCount  from tblCartItem WHERE isNull(nParentId,0)=0 and nCartOrderId=" & mnCartId
+            Dim productCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+
+            'if all are evoucher set delivery option to evoucher
+            If (evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            ElseIf (ShippingKey = 64 And evoucherPackagingCount <> productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("66")
+            ElseIf (ShippingKey <> 64 And evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            End If
+        End Sub
+
 
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
@@ -8019,7 +8038,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     moDBHelper.ExeProcessSql(cSqlpkgopUpdate)
 
                 End If
-                UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
+                ' UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
 
             Catch ex As Exception
 
@@ -8081,24 +8100,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Sub
 
-        Private Sub UpdatePackagingANdDeliveryType(ByVal mnCartId As Int32, ByVal ShippingKey As Int32)
-            Dim strSql As String
-            strSql = "SELECT count(*) as PackagingCount  from tblCartItem where cItemName='Evoucher' AND isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
-            Dim evoucherPackagingCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
 
-            strSql = "SELECT count(*) as ProductCount  from tblCartItem WHERE isNull(nParentId,0)=0 and nCartOrderId=" & mnCartId
-            Dim productCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
-
-
-            'if all are evoucher set delivery option to evoucher
-            If (evoucherPackagingCount = productCount) Then
-                Dim update As String = updateGCgetValidShippingOptionsDS("64")
-            ElseIf (ShippingKey = 64 And evoucherPackagingCount <> productCount) Then
-                Dim update As String = updateGCgetValidShippingOptionsDS("66")
-            ElseIf (ShippingKey <> 64 And evoucherPackagingCount = productCount) Then
-                Dim update As String = updateGCgetValidShippingOptionsDS("64")
-            End If
-        End Sub
 
     End Class
 
