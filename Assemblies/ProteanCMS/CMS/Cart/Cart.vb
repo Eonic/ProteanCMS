@@ -5766,7 +5766,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "") As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False) As Boolean
             PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -5788,36 +5788,37 @@ processFlow:
                 oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                 oDS.Relations("Rel1").Nested = True
                 'loop through the parent rows to check the product
-                'If oDS.Tables("CartItems").Rows.Count > 0 Then
-                '    For Each oDR1 In oDS.Tables("CartItems").Rows
-                '        If moDBHelper.DBN2int(oDR1.Item("nParentId")) = 0 And oDR1.Item("nItemId") = nProductId Then '(oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
-                '            nCountExOptions = 0
-                '            NoOptions = 0
-                '            'loop through the children(options) and count how many are the same
-                '            For Each oDr2 In oDR1.GetChildRows("Rel1")
-                '                For i = 0 To UBound(oProdOptions) - 1
-                '                    If UBound(oProdOptions(i)) < 1 Then
-                '                        'Case for text option with no index
-                '                        If oProdOptions(i)(0) = CStr(oDr2.Item("nItemOptGrpIdx")) Then nCountExOptions += 1
-                '                    Else
-                '                        If oProdOptions(i)(0) = oDr2.Item("nItemOptGrpIdx") And oProdOptions(i)(1) = oDr2.Item("nItemOptIdx") Then nCountExOptions += 1
-                '                    End If
-                '                Next
-                '                NoOptions += 1
-                '            Next
-                '            If Not oProdOptions Is Nothing Then
-                '                'if they are all the same then we have the correct record so it is an update
-                '                If ((nCountExOptions) = UBound(oProdOptions)) And ((NoOptions) = UBound(oProdOptions)) Then
-                '                    nItemID = oDR1.Item("NCartItemKey") 'ok, got the bugger
-                '                    Exit For 'exit the loop other wise we might go through some other ones
-                '                End If
+                If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
 
-                '            Else
-                '                If NoOptions = 0 Then nItemID = oDR1.Item("NCartItemKey")
-                '            End If
-                '        End If
-                '    Next
-                'End If
+                    For Each oDR1 In oDS.Tables("CartItems").Rows
+                        If moDBHelper.DBN2int(oDR1.Item("nParentId")) = 0 And oDR1.Item("nItemId") = nProductId Then '(oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
+                            nCountExOptions = 0
+                            NoOptions = 0
+                            'loop through the children(options) and count how many are the same
+                            For Each oDr2 In oDR1.GetChildRows("Rel1")
+                                For i = 0 To UBound(oProdOptions) - 1
+                                    If UBound(oProdOptions(i)) < 1 Then
+                                        'Case for text option with no index
+                                        If oProdOptions(i)(0) = CStr(oDr2.Item("nItemOptGrpIdx")) Then nCountExOptions += 1
+                                    Else
+                                        If oProdOptions(i)(0) = oDr2.Item("nItemOptGrpIdx") And oProdOptions(i)(1) = oDr2.Item("nItemOptIdx") Then nCountExOptions += 1
+                                    End If
+                                Next
+                                NoOptions += 1
+                            Next
+                            If Not oProdOptions Is Nothing Then
+                                'if they are all the same then we have the correct record so it is an update
+                                If ((nCountExOptions) = UBound(oProdOptions)) And ((NoOptions) = UBound(oProdOptions)) Then
+                                    nItemID = oDR1.Item("NCartItemKey") 'ok, got the bugger
+                                    Exit For 'exit the loop other wise we might go through some other ones
+                                End If
+
+                            Else
+                                If NoOptions = 0 Then nItemID = oDR1.Item("NCartItemKey")
+                            End If
+                        End If
+                    Next
+                End If
                 If nItemID = 0 Then
                     'New
                     Dim oElmt As XmlElement
@@ -6150,7 +6151,7 @@ processFlow:
 
         End Function
 
-        Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1) As Integer
+        Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1, Optional ByVal SkipPackaging As Boolean = False) As Integer
             PerfMon.Log("Cart", "RemoveItem")
             '   deletes record from item table in db
 
@@ -6177,7 +6178,11 @@ processFlow:
 
                     'sSql = "delete from tblCartItem where nCartItemKey = " & myWeb.moRequest("id") & "and nCartOrderId = " & mnCartId
                     If nContentId = 0 Then
-                        sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        If (SkipPackaging = False) Then
+                            sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        Else
+                            sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        End If
                     Else
                         sSql = "select * from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
                     End If

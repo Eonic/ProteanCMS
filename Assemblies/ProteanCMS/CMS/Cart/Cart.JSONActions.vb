@@ -118,7 +118,7 @@ Partial Public Class Cms
                     Dim item As Newtonsoft.Json.Linq.JObject
 
                     For Each item In jObj("Item")
-                        myCart.AddItem(item("contentId"), item("qty"), Nothing)
+                        myCart.AddItem(item("contentId"), item("qty"), Nothing, "", 0, "", item("UniqueProduct"))
                     Next
 
                     'Output the new cart
@@ -144,22 +144,14 @@ Partial Public Class Cms
 
                     Dim item As Newtonsoft.Json.Linq.JObject
 
-                    'For Each item In jObj("Item")
-                    '    If item("contentId") Is Nothing Then
-                    '        ItemCount = myCart.RemoveItem(item("itemId"), 0)
-                    '    Else
-                    '        ItemCount = myCart.RemoveItem(0, item("contentId"))
-                    '    End If
-                    'Next
-
-
                     For Each item In jObj("Item")
-                        If item("CartItemId") IsNot Nothing Then
-                            ItemCount = myCart.RemoveItem(item("CartItemId"), 0)
-                            'Else
-                            '    ItemCount = myCart.RemoveItem(0, item("CartItemId"))
+                        If item("contentId") Is Nothing Then
+                            ItemCount = myCart.RemoveItem(item("itemId"), 0)
+                        Else
+                            ItemCount = myCart.RemoveItem(0, item("contentId"))
                         End If
                     Next
+
 
                     If ItemCount = 0 Then
                         myCart.QuitCart()
@@ -205,13 +197,13 @@ Partial Public Class Cms
                             If item("qty") = "0" Then
                                 ItemCount = myCart.RemoveItem(item("itemId"), 0)
                             Else
-                                ItemCount = myCart.UpdateItem(item("CartItemId"), 0, item("qty"))
+                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("SkipPackaging"))
                             End If
                         Else
                             If item("qty") = "0" Then
                                 ItemCount = myCart.RemoveItem(0, item("contentId"))
                             Else
-                                ItemCount = myCart.UpdateItem(item("CartItemId"), 0, item("qty"))
+                                ItemCount = myCart.UpdateItem(0, item("contentId"), item("qty"))
                             End If
                         End If
                     Next
