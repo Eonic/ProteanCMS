@@ -59,7 +59,9 @@ Partial Public Class Cms
 
                 'Update the XML to wrap up HTML tags in the CDATA section.
                 Dim outputXml As String = CartXml.OuterXml
-                Dim tagList = New List(Of String) From {"p", "div", "ul"}
+                outputXml = outputXml.Replace("<div><p>", "<p>")
+                outputXml = outputXml.Replace("</p></div>", "</p>")
+                Dim tagList = New List(Of String) From {"div", "p", "ul", "br", "__text"}
                 For Each tag As String In tagList
                     outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
                     outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
