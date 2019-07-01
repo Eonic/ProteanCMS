@@ -58,16 +58,16 @@ Partial Public Class Cms
                 CartXml.FirstChild.AppendChild(cartItems)
 
                 'Update the XML to wrap up HTML tags in the CDATA section.
-                Dim outputXml As String = CartXml.OuterXml
-                Dim tagList = New List(Of String) From {"p", "div", "ul"}
-                For Each tag As String In tagList
-                    outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
-                    outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
-                Next
+                ' Dim outputXml As String = CartXml.OuterXml
+                '  Dim tagList = New List(Of String) From {"p", "div", "ul"}
+                '  For Each tag As String In tagList
+                ' outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
+                '  outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
+                '  Next
 
-                Dim xdoc As XmlDocument = New XmlDocument
-                xdoc.LoadXml(outputXml)
-                CartXml = xdoc.FirstChild
+                '   Dim xdoc As XmlDocument = New XmlDocument
+                '    xdoc.LoadXml(outputXml)
+                '    CartXml = xdoc.FirstChild
 
                 Return CartXml
             End Function
