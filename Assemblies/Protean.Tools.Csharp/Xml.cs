@@ -439,12 +439,15 @@ namespace Protean.Tools
         {
             try
             {
-                var htmlNodeList = oElmt.SelectNodes("descendant-or-self::*[p | div | ul | span | b | strong | h | section | a]");
-                foreach (XmlNode htmlItem in htmlNodeList)
+                XmlNodeList htmlNodeList = oElmt.SelectNodes("descendant-or-self::*[p | div | ul | span | b | strong | h | section | a]");
+                if (htmlNodeList.Count > 0) //this is required to have htmlNodeList return all correct descendant nodes.
                 {
-                    if (htmlItem.ParentNode != null)
+                    foreach (XmlNode htmlItem in htmlNodeList)
                     {
-                        htmlItem.InnerXml = "<![CDATA[" + htmlItem.InnerXml + "]]>";
+                        if (htmlItem.ParentNode != null)
+                        {
+                            htmlItem.InnerXml = "<![CDATA[" + htmlItem.InnerXml + "]]>";
+                        }
                     }
                 }
             }
