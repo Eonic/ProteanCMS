@@ -6924,7 +6924,7 @@
   </xsl:template>
 
   <!-- FOR ALL RELATED CONTENT -->
-  <xsl:template match="Content[@display='related' or @display='grabber']" mode="getContent">
+  <xsl:template match="Content[@display='related' or @display='grabber' or @display='group']" mode="getContent">
     <xsl:param name="contentType" />
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />

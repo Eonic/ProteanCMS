@@ -57,7 +57,19 @@ Partial Public Class Cms
                 End If
                 CartXml.FirstChild.AppendChild(cartItems)
 
-                TidyHtmltoCData(CartXml)
+                'Update the XML to wrap up HTML tags in the CDATA section.
+                Dim outputXml As String = CartXml.OuterXml
+                outputXml = outputXml.Replace("<div><p>", "<p>")
+                outputXml = outputXml.Replace("</p></div>", "</p>")
+                Dim tagList = New List(Of String) From {"div", "p", "ul", "br", "__text"}
+                For Each tag As String In tagList
+                    outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
+                    outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
+                Next
+
+                Dim xdoc As XmlDocument = New XmlDocument
+                xdoc.LoadXml(outputXml)
+                CartXml = xdoc.FirstChild
 
                 Return CartXml
             End Function
