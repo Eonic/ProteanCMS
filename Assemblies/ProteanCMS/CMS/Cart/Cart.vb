@@ -2784,13 +2784,17 @@ processFlow:
                             oldCartId = nCartIdUse
                         End If
                         'Ensure we persist the invoice date and ref.
-                        If nStatusId > 6 Then
+                        If nStatusId > 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
                             'Persist invoice date and invoice ref
                             Dim tempInstance As New XmlDocument
                             tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
                             Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
-                            oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
-                            oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
+                                oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            End If
+                            If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
+                                oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            End If
                             tempInstance = Nothing
                             tempOrder = Nothing
                         End If
@@ -5645,16 +5649,17 @@ processFlow:
 
         End Function
 
-        Public Sub addDateAndRef(ByRef oCartElmt As XmlElement, Optional invoiceDate As DateTime = Nothing)
+        Public Sub addDateAndRef(ByRef oCartElmt As XmlElement, Optional invoiceDate As DateTime = Nothing, Optional nCartId As Long = 0)
             PerfMon.Log("Cart", "addDateAndRef")
             ' adds current date and an invoice reference number to the cart object.
             ' so the cart now contains all details needed for an invoice
             Dim cProcessInfo As String = ""
+            If nCartId = 0 Then nCartId = mnCartId
             Try
                 If invoiceDate = Nothing Then invoiceDate = Now()
-
+                If nCartId = 0 Then nCartId = oCartElmt.GetAttribute("cartId")
                 oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate))
-                oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(mnCartId))
+                oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(nCartId))
                 If mcVoucherNumber <> "" Then
                     oCartElmt.SetAttribute("payableType", "Voucher")
                     oCartElmt.SetAttribute("voucherNumber", mcVoucherNumber)
@@ -7114,7 +7119,20 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 'Get stored CartXML
                                 If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
                                     oContent.InnerXml = oDR("cCartXML")
-                                Else
+                                    Dim oCartElmt As XmlElement = oContent.FirstChild
+
+                                    'check for invoice date etc.
+                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
+                                        'fix for any items that have lost the invoice date and ref.
+                                        Dim cartId As Long = oDR("nCartOrderKey")
+                                        Dim insertDate As String = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " & cartId)
+                                        addDateAndRef(oCartElmt, insertDate, cartId)
+                                        SaveCartXML(oCartElmt, cartId)
+                                    End If
+
+                                End If
+
+                                If bForceRefresh Then
                                     Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
                                     Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
                                     oContent.InnerXml = oCartListElmt.OuterXml
@@ -7334,11 +7352,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Sub SaveCartXML(ByVal cartXML As XmlElement)
+        Public Sub SaveCartXML(ByVal cartXML As XmlElement, Optional nCartId As Long = 0)
             PerfMon.Log("Cart", "SaveCartXML")
+            If nCartId = 0 Then nCartId = mnCartId
             Try
-                If mnCartId > 0 Then
-                    Dim sSQL As String = "Update tblCartOrder SET cCartXML ='" & SqlFmt(cartXML.OuterXml.ToString) & "' WHERE nCartOrderKey = " & mnCartId
+                If nCartId > 0 Then
+                    Dim sSQL As String = "Update tblCartOrder SET cCartXML ='" & SqlFmt(cartXML.OuterXml.ToString) & "' WHERE nCartOrderKey = " & nCartId
                     moDBHelper.ExeProcessSql(sSQL)
                 End If
 
