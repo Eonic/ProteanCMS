@@ -125,12 +125,15 @@ Partial Public Class Cms
 
                     'Output the new cart
                     myCart.GetCart(CartXml.FirstChild)
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
                     'persist cart
                     myCart.close()
 
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -165,9 +168,12 @@ Partial Public Class Cms
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
+
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -219,9 +225,12 @@ Partial Public Class Cms
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
+
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
