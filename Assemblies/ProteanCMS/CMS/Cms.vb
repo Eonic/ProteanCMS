@@ -2119,6 +2119,26 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
+                Case "BespokeProvider"
+
+                    'ewcommon/tools/ajaxContentForm.ashx?ajaxCmd=BespokeProvider&provider=IntoTheBlue&method=IntoTheBlue.Web.Forms.EditCartItemMessage&cartItemId=123
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/bespokeProvider")
+                    Dim providerName = moRequest("provider")
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(moPrvConfig.Providers(providerName).Type))
+                    Dim calledType As Type
+                    Dim classPath As String = moRequest("method")
+
+                    Dim methodName As String = Right(classPath, Len(classPath) - classPath.LastIndexOf(".") - 1)
+                    classPath = Left(classPath, classPath.LastIndexOf("."))
+
+                    calledType = assemblyInstance.GetType(classPath, True)
+                    Dim o As Object = Activator.CreateInstance(calledType)
+
+                    Dim args(1) As Object
+                    args(0) = Me
+
+                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                 Case "Edit", "Delete"
 
                     'TODO: We Need to confirm Permissions and Right before we allow this !!!!
