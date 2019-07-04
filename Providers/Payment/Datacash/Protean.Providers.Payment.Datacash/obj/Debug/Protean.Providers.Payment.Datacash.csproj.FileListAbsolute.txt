@@ -1,0 +1,2 @@
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CoreCompileInputs.cache

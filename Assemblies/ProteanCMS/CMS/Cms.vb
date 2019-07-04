@@ -2120,12 +2120,12 @@ Public Class Cms
 
             Select Case AjaxCmd
                 Case "BespokeProvider"
-
-                    'ewcommon/tools/ajaxContentForm.ashx?ajaxCmd=BespokeProvider&provider=IntoTheBlue&method=IntoTheBlue.Web.Forms.EditCartItemMessage&cartItemId=123
-                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/bespokeProvider")
-                    Dim providerName = moRequest("provider")
-                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(moPrvConfig.Providers(providerName).Type))
+                    'Dim assemblyInstance As [Assembly]
                     Dim calledType As Type
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/bespokeProviders")
+                    Dim providerName = moRequest("provider")
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
+
                     Dim classPath As String = moRequest("method")
 
                     Dim methodName As String = Right(classPath, Len(classPath) - classPath.LastIndexOf(".") - 1)
@@ -2134,7 +2134,7 @@ Public Class Cms
                     calledType = assemblyInstance.GetType(classPath, True)
                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                    Dim args(1) As Object
+                    Dim args(0) As Object
                     args(0) = Me
 
                     calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)

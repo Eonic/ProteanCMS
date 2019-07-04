@@ -1680,21 +1680,19 @@ processFlow:
 
                 If moCartConfig("AccountingProvider") <> "" Then
                     Dim providerName = moCartConfig("AccountingProvider")
-                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/accountingProvider")
-                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(moPrvConfig.Providers(providerName).Type))
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders")
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
                     Dim calledType As Type
-                    Dim classPath As String = "ProcessOrder"
-
-                    Dim methodName As String = moPrvConfig.Providers(providerName).rootClass
-                    classPath = Left(classPath, classPath.LastIndexOf("."))
-
+                    Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+                    Dim methodName As String = "ProcessOrder"
                     calledType = assemblyInstance.GetType(classPath, True)
                     Dim o As Object = Activator.CreateInstance(calledType)
 
-                    Dim args(1) As Object
+                    Dim args(0) As Object
                     args(0) = oCartElmt
 
                     calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                 End If
 
 

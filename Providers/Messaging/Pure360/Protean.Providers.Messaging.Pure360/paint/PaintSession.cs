@@ -3,7 +3,7 @@ using System.Data;
 using System.Configuration;
 using System.Collections;
 using System.Web;
-using Eonic.Pure360.paint;
+using Protean.Providers.Messaging.Pure360.paint;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.IO;
 
