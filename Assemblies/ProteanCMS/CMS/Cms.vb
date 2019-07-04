@@ -636,7 +636,8 @@ Public Class Cms
 
                         If Not (moRequest("path") = "" Or mcPagePath = "/") Then
                             'then pathname
-                            mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
+                            moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
+                            ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
                             If Not mbAdminMode Then
                                 newPageId = moDbHelper.checkPagePermission(mnPageId)
                             End If
@@ -1570,7 +1571,7 @@ Public Class Cms
                         End If
                     End If
 
-                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 Then
+                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
                         If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
                             Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                             cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
