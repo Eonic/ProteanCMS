@@ -114,7 +114,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharp
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\PayPal.xml
@@ -138,3 +137,5 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\JsonWebTokens.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Tools.Csharp.dll.config

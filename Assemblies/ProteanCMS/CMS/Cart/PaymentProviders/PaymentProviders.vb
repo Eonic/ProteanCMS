@@ -3978,6 +3978,48 @@ Partial Public Class Cms
 
             End Function
 
+            Function xfrmSecure3Dv2(ByVal acs_url As String, ByVal jwt As String, ByVal SongbirdURL As String, ByVal callbackUrl As String) As xForm
+                PerfMon.Log("PaymentProviders", "xfrmSecure3Dv2")
+                Dim oXform As xForm = New xForm
+                Dim oFrmInstance As XmlElement
+                Dim oFrmGroup As XmlElement
+
+                Dim cProcessInfo As String = "xfrmSecure3Dv2"
+                Try
+                    oXform.moPageXML = Me.moPageXml
+
+                    'create the instance
+                    oXform.NewFrm("Secure3Dv2")
+
+                    oXform.submission("Secure3Dv2", "", "POST", "return form_check(this);")
+                    oFrmInstance = oXform.moPageXML.CreateElement("Secure3Dv2")
+
+                    addNewTextNode("JWT", oFrmInstance, jwt)
+                    addNewTextNode("SongbirdURL", oFrmInstance, SongbirdURL)
+                    addNewTextNode("CallbackUrl", oFrmInstance, Replace(callbackUrl, "&amp;", "&"))
+
+                    oXform.Instance.AppendChild(oFrmInstance)
+
+                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "creditCard", "creditCard", "Redirect to 3D Secure")
+
+                    'build the form and the binds
+
+                    oXform.addInput(oFrmGroup, "JWT", True, "", "hidden")
+                    oXform.addBind("JWT", "Secure3Dv2/JWT")
+
+                    oXform.addInput(oFrmGroup, "TermUrl", True, "", "hidden")
+                    oXform.addBind("SongbirdURL", "Secure3Dv2/SongbirdURL")
+                    oXform.addSubmit(oFrmGroup, "Secure3D", "Re-direct to 3D Secure", "ewSubmit")
+                    oXform.addValues()
+                    Return oXform
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+
+            End Function
+
 
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")

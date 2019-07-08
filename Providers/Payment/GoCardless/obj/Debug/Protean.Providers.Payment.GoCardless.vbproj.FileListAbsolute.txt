@@ -107,3 +107,5 @@ D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\obj\Debug\Protean.Provid
 D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\obj\Debug\Protean.Providers.Payment.GoCardless.dll
 D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\obj\Debug\Protean.Providers.Payment.GoCardless.xml
 D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\obj\Debug\Protean.Providers.Payment.GoCardless.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\bin\Debug\JsonWebTokens.dll
+D:\HostingSpaces\DevOpsGit\Providers\Payment\GoCardless\bin\Debug\Protean.Tools.Csharp.dll.config
