@@ -115,5 +115,4 @@
 .slick-arrow.slick-hidden {
     display: none;
 }
-.slick-slider .list-group-item,
-.slick-slider .grid-item{border:0!important;padding:0px!important;margin-bottom:0!important}
+.slick-slider .list-group-item{border:0!important;padding:0px!important;margin-bottom:0!important}
