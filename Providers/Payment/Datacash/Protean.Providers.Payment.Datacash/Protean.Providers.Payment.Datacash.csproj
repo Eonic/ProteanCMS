@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Project\ITB_VS\CMS\bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -40,6 +44,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Transaction, Version=1.1.3.4, Culture=neutral, PublicKeyToken=c23717428eb4e05f">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Transaction.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Datacash.cs" />
@@ -58,6 +66,15 @@
       <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
       <Name>ProteanCMS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\Protean.Providers.Payment.Datacash.dll" />
+    <Content Include="bin\Debug\Protean.Providers.Payment.Datacash.pdb" />
+    <Content Include="bin\Debug\Transaction.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+    <Folder Include="Datacash\dc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
