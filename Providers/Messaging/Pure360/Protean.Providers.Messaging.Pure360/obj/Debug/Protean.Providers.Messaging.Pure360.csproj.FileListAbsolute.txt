@@ -1,0 +1,2 @@
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\obj\Debug\Protean.Providers.Messaging.Pure360.csprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\obj\Debug\Protean.Providers.Messaging.Pure360.csproj.CoreCompileInputs.cache

@@ -13,6 +13,7 @@ Imports System
 Imports System.Text
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
+Imports System.Collections.Generic
 
 
 Partial Public Class Cms
@@ -55,6 +56,21 @@ Partial Public Class Cms
                     cartItems.AppendChild(oItems)
                 End If
                 CartXml.FirstChild.AppendChild(cartItems)
+
+                'Update the XML to wrap up HTML tags in the CDATA section.
+                Dim outputXml As String = CartXml.OuterXml
+                outputXml = outputXml.Replace("<div><p>", "<p>")
+                outputXml = outputXml.Replace("</p></div>", "</p>")
+                Dim tagList = New List(Of String) From {"div", "p", "ul", "br", "__text"}
+                For Each tag As String In tagList
+                    outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
+                    outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
+                Next
+
+                Dim xdoc As XmlDocument = New XmlDocument
+                xdoc.LoadXml(outputXml)
+                CartXml = xdoc.FirstChild
+
                 Return CartXml
             End Function
 
@@ -66,10 +82,13 @@ Partial Public Class Cms
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
 
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
 
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                    Return jsonString
                     'persist cart
                     myCart.close()
 
@@ -101,17 +120,20 @@ Partial Public Class Cms
                     Dim item As Newtonsoft.Json.Linq.JObject
 
                     For Each item In jObj("Item")
-                        myCart.AddItem(item("contentId"), item("qty"), Nothing)
+                        myCart.AddItem(item("contentId"), item("qty"), Nothing, "", 0, "", item("UniqueProduct"))
                     Next
 
                     'Output the new cart
                     myCart.GetCart(CartXml.FirstChild)
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
                     'persist cart
                     myCart.close()
 
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -135,6 +157,7 @@ Partial Public Class Cms
                         End If
                     Next
 
+
                     If ItemCount = 0 Then
                         myCart.QuitCart()
                         myCart.EndSession()
@@ -145,9 +168,12 @@ Partial Public Class Cms
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
+
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -179,7 +205,7 @@ Partial Public Class Cms
                             If item("qty") = "0" Then
                                 ItemCount = myCart.RemoveItem(item("itemId"), 0)
                             Else
-                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"))
+                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("SkipPackaging"))
                             End If
                         Else
                             If item("qty") = "0" Then
@@ -199,9 +225,12 @@ Partial Public Class Cms
                     myCart.GetCart(CartXml.FirstChild)
                     'persist cart
                     myCart.close()
-                    updateCartforJSON(CartXml)
+                    CartXml = updateCartforJSON(CartXml)
+
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    Return jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -217,13 +246,11 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
                     Dim dsShippingOption As DataSet
 
-                    Dim cDestinationCountry As String
+                    Dim cDestinationCountry As String = myCart.moCartConfig("DefaultDeliveryCountry")
                     ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
-
-                    'check for delivery country , otherwise default setting
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
@@ -333,22 +360,13 @@ Partial Public Class Cms
 
             Public Function AddProductOption(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
-                    Dim cProcessInfo As String = ""
-
-                    Dim CartItemId As Long
-                    Dim PackageOptName As String
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
 
+                    'add product option
+                    myCart.AddProductOption(jObj)
 
-                    Dim json As Newtonsoft.Json.Linq.JObject = jObj
-                    CartItemId = json.SelectToken("CartItemId")
-                    PackageOptName = json.SelectToken("PackageOptName")
-                    myCart.AddProductOption(CartItemId, PackageOptName)
-
-                    'call get cart method
-                    'GetCart(myApi, jObj)
                 Catch ex As Exception
 
                 End Try

@@ -68,9 +68,14 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="JsonWebTokens, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\JsonWebTokens.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\EonicClients\IslandLeisureProductsGit\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -91,6 +96,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="IdentityModel\Tokens\JwtHelper.cs" />
     <Compile Include="Number.cs" />
     <Compile Include="Number.Random.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +110,7 @@
     <Compile Include="Xslt.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="eonic.snk" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

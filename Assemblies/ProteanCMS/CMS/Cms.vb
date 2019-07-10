@@ -636,7 +636,8 @@ Public Class Cms
 
                         If Not (moRequest("path") = "" Or mcPagePath = "/") Then
                             'then pathname
-                            mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
+                            moDbHelper.getPageAndArticleIdFromPath(mnPageId, mnArtId, mcPagePath)
+                            ' mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
                             If Not mbAdminMode Then
                                 newPageId = moDbHelper.checkPagePermission(mnPageId)
                             End If
@@ -1570,7 +1571,7 @@ Public Class Cms
                         End If
                     End If
 
-                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 Then
+                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
                         If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
                             Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                             cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
@@ -2119,6 +2120,26 @@ Public Class Cms
             End If
 
             Select Case AjaxCmd
+                Case "BespokeProvider"
+                    'Dim assemblyInstance As [Assembly]
+                    Dim calledType As Type
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/bespokeProviders")
+                    Dim providerName = moRequest("provider")
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
+
+                    Dim classPath As String = moRequest("method")
+
+                    Dim methodName As String = Right(classPath, Len(classPath) - classPath.LastIndexOf(".") - 1)
+                    classPath = Left(classPath, classPath.LastIndexOf("."))
+
+                    calledType = assemblyInstance.GetType(classPath, True)
+                    Dim o As Object = Activator.CreateInstance(calledType)
+
+                    Dim args(0) As Object
+                    args(0) = Me
+
+                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
                 Case "Edit", "Delete"
 
                     'TODO: We Need to confirm Permissions and Right before we allow this !!!!
@@ -2919,6 +2940,10 @@ Public Class Cms
             ' Content Type : ContentGrabber
             For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@display='grabber']")
                 moDbHelper.getContentFromModuleGrabber(ocNode)
+            Next
+
+            For Each ocNode In moPageXml.SelectNodes("/Page/Contents/Content[@display='group']")
+                moDbHelper.getContentFromProductGroup(ocNode)
             Next
 
             ' Content Type : ContentGrabber

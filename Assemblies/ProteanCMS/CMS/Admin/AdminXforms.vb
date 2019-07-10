@@ -7555,7 +7555,7 @@ Partial Public Class Cms
 
                     MyBase.submission("SeeReport", "", "post", "form_check(this)")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Content", "2col")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Content", "")
 
                     Dim oGrp0Elmt As XmlElement = MyBase.addGroup(oFrmElmt, "Criteria", , "Criteria")
 
@@ -7644,7 +7644,7 @@ Partial Public Class Cms
 
                     MyBase.submission("SeeReport", "", "post", "form_check(this)")
 
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Content", "2col")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Content", "")
 
                     Dim oGrp0Elmt As XmlElement = MyBase.addGroup(oFrmElmt, "Criteria", , "Criteria")
 

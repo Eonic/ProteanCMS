@@ -435,6 +435,28 @@ namespace Protean.Tools
             }
         }
 
+        public static void TidyHtmltoCData(ref XmlElement oElmt)
+        {
+            try
+            {
+                XmlNodeList htmlNodeList = oElmt.SelectNodes("descendant-or-self::*[p | div | ul | span | b | strong | h | section | a]");
+                if (htmlNodeList.Count > 0) //this is required to have htmlNodeList return all correct descendant nodes.
+                {
+                    foreach (XmlNode htmlItem in htmlNodeList)
+                    {
+                        if (htmlItem.ParentNode != null)
+                        {
+                            htmlItem.InnerXml = "<![CDATA[" + htmlItem.InnerXml + "]]>";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "removeChildByName", ex, ""));
+            }
+        }
+
         public static void removeChildByName(ref XmlElement oNode, string cRemoveNodeName)
         {
             try

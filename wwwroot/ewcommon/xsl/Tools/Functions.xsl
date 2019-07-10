@@ -6924,7 +6924,7 @@
   </xsl:template>
 
   <!-- FOR ALL RELATED CONTENT -->
-  <xsl:template match="Content[@display='related' or @display='grabber']" mode="getContent">
+  <xsl:template match="Content[@display='related' or @display='grabber' or @display='group']" mode="getContent">
     <xsl:param name="contentType" />
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />
@@ -8151,7 +8151,11 @@
     <xsl:param name="fRef"/>
     <xsl:value-of select="ew:GetPageIdFromFref($fRef)"/>
   </xsl:template>
-  
+
+  <xsl:template name="DeletePage">
+    <xsl:param name="id"/>
+    <xsl:value-of select="ew:DeletePage($id)"/>
+  </xsl:template>
 
   <!-- GET PAGE FOREIGN REF ##########################################################################################-->
   <!-- ew:GetPageFref(number) Function 

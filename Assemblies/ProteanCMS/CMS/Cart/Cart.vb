@@ -1678,6 +1678,24 @@ processFlow:
 
             Try
 
+                If moCartConfig("AccountingProvider") <> "" Then
+                    Dim providerName = moCartConfig("AccountingProvider")
+                    Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders")
+                    Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(providerName).Type.ToString())
+                    Dim calledType As Type
+                    Dim classPath As String = moPrvConfig.Providers(providerName).Parameters("rootClass")
+                    Dim methodName As String = "ProcessOrder"
+                    calledType = assemblyInstance.GetType(classPath, True)
+                    Dim o As Object = Activator.CreateInstance(calledType)
+
+                    Dim args(0) As Object
+                    args(0) = oCartElmt
+
+                    calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
+                End If
+
+
                 For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
@@ -2584,6 +2602,8 @@ processFlow:
                                     oElmt.SetAttribute(oAtt.Name, oAtt.Value)
                                 Next
                                 oElmt.InnerXml = oElmt.SelectSingleNode("Content").InnerXml
+                                Dim oContent As XmlElement = oElmt.SelectSingleNode("Content")
+
                             End If
                         Next
 
@@ -2782,13 +2802,17 @@ processFlow:
                             oldCartId = nCartIdUse
                         End If
                         'Ensure we persist the invoice date and ref.
-                        If nStatusId > 6 Then
+                        If nStatusId > 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
                             'Persist invoice date and invoice ref
                             Dim tempInstance As New XmlDocument
                             tempInstance.LoadXml(myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nCartIdUse))
                             Dim tempOrder As XmlElement = tempInstance.SelectSingleNode("descendant-or-self::Order")
-                            oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
-                            oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            If oCartElmt.GetAttribute("InvoiceDate") = "" And tempOrder.GetAttribute("InvoiceDate") <> "" Then
+                                oCartElmt.SetAttribute("InvoiceDate", tempOrder.GetAttribute("InvoiceDate"))
+                            End If
+                            If oCartElmt.GetAttribute("InvoiceRef") = "" And tempOrder.GetAttribute("InvoiceRef") <> "" Then
+                                oCartElmt.SetAttribute("InvoiceRef", tempOrder.GetAttribute("InvoiceRef"))
+                            End If
                             tempInstance = Nothing
                             tempOrder = Nothing
                         End If
@@ -5643,16 +5667,17 @@ processFlow:
 
         End Function
 
-        Public Sub addDateAndRef(ByRef oCartElmt As XmlElement, Optional invoiceDate As DateTime = Nothing)
+        Public Sub addDateAndRef(ByRef oCartElmt As XmlElement, Optional invoiceDate As DateTime = Nothing, Optional nCartId As Long = 0)
             PerfMon.Log("Cart", "addDateAndRef")
             ' adds current date and an invoice reference number to the cart object.
             ' so the cart now contains all details needed for an invoice
             Dim cProcessInfo As String = ""
+            If nCartId = 0 Then nCartId = mnCartId
             Try
                 If invoiceDate = Nothing Then invoiceDate = Now()
-
+                If nCartId = 0 Then nCartId = oCartElmt.GetAttribute("cartId")
                 oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate))
-                oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(mnCartId))
+                oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(nCartId))
                 If mcVoucherNumber <> "" Then
                     oCartElmt.SetAttribute("payableType", "Voucher")
                     oCartElmt.SetAttribute("voucherNumber", mcVoucherNumber)
@@ -5764,9 +5789,9 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "") As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False) As Boolean
             PerfMon.Log("Cart", "AddItem")
-            Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemID =" & nProductId
+            Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
             Dim oDR1 As DataRow 'Parent Rows
             Dim oDr2 As DataRow 'Child Rows
@@ -5786,7 +5811,8 @@ processFlow:
                 oDS.Relations.Add("Rel1", oDS.Tables("CartItems").Columns("nCartItemKey"), oDS.Tables("CartItems").Columns("nParentId"), False)
                 oDS.Relations("Rel1").Nested = True
                 'loop through the parent rows to check the product
-                If oDS.Tables("CartItems").Rows.Count > 0 Then
+                If (oDS.Tables("CartItems").Rows.Count > 0 And UniqueProduct = False) Then
+
                     For Each oDR1 In oDS.Tables("CartItems").Rows
                         If moDBHelper.DBN2int(oDR1.Item("nParentId")) = 0 And oDR1.Item("nItemId") = nProductId Then '(oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
                             nCountExOptions = 0
@@ -5853,8 +5879,21 @@ processFlow:
                             If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
                                 nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                             End If
+
+                            'Add Parent Product to cart if SKU.
+                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                            End If
+
                         End If
                     End If
+
+
 
 
                     addNewTextNode("cItemName", oElmt, cProductText)
@@ -5890,7 +5929,6 @@ processFlow:
                     ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
 
                     nItemID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
-
 
                     'Options
                     If Not oProdOptions Is Nothing Then
@@ -6136,7 +6174,7 @@ processFlow:
 
         End Function
 
-        Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1) As Integer
+        Public Function UpdateItem(Optional ByVal nItemId As Long = 0, Optional ByVal nContentId As Long = 0, Optional ByVal qty As Long = 1, Optional ByVal SkipPackaging As Boolean = False) As Integer
             PerfMon.Log("Cart", "RemoveItem")
             '   deletes record from item table in db
 
@@ -6163,7 +6201,11 @@ processFlow:
 
                     'sSql = "delete from tblCartItem where nCartItemKey = " & myWeb.moRequest("id") & "and nCartOrderId = " & mnCartId
                     If nContentId = 0 Then
-                        sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        If (SkipPackaging = False) Then
+                            sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & " Or nParentId = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        Else
+                            sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & ") and nCartOrderId = " & mnCartId
+                        End If
                     Else
                         sSql = "select * from tblCartItem where nItemId = " & nContentId & " and nCartOrderId = " & mnCartId
                     End If
@@ -7095,7 +7137,20 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 'Get stored CartXML
                                 If (Not oDR("cCartXML") = "") And bForceRefresh = False Then
                                     oContent.InnerXml = oDR("cCartXML")
-                                Else
+                                    Dim oCartElmt As XmlElement = oContent.FirstChild
+
+                                    'check for invoice date etc.
+                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
+                                        'fix for any items that have lost the invoice date and ref.
+                                        Dim cartId As Long = oDR("nCartOrderKey")
+                                        Dim insertDate As String = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " & cartId)
+                                        addDateAndRef(oCartElmt, insertDate, cartId)
+                                        SaveCartXML(oCartElmt, cartId)
+                                    End If
+
+                                End If
+
+                                If bForceRefresh Then
                                     Dim oCartListElmt As XmlElement = moPageXml.CreateElement("Order")
                                     Me.GetCart(oCartListElmt, oDR("nCartOrderKey"))
                                     oContent.InnerXml = oCartListElmt.OuterXml
@@ -7315,11 +7370,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Public Sub SaveCartXML(ByVal cartXML As XmlElement)
+        Public Sub SaveCartXML(ByVal cartXML As XmlElement, Optional nCartId As Long = 0)
             PerfMon.Log("Cart", "SaveCartXML")
+            If nCartId = 0 Then nCartId = mnCartId
             Try
-                If mnCartId > 0 Then
-                    Dim sSQL As String = "Update tblCartOrder SET cCartXML ='" & SqlFmt(cartXML.OuterXml.ToString) & "' WHERE nCartOrderKey = " & mnCartId
+                If nCartId > 0 Then
+                    Dim sSQL As String = "Update tblCartOrder SET cCartXML ='" & SqlFmt(cartXML.OuterXml.ToString) & "' WHERE nCartOrderKey = " & nCartId
                     moDBHelper.ExeProcessSql(sSQL)
                 End If
 
@@ -7921,7 +7977,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
             Try
 
 
-
                 If oShippingOptions Is Nothing Then
 
                     Dim xmlTemp As XmlElement
@@ -7975,6 +8030,25 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
         End Function
 
+        Private Sub UpdatePackagingANdDeliveryType(ByVal mnCartId As Int32, ByVal ShippingKey As Int32)
+            Dim strSql As String
+            strSql = "SELECT count(*) as PackagingCount  from tblCartItem where cItemName='Evoucher' AND isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+            Dim evoucherPackagingCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+            strSql = "SELECT count(*) as ProductCount  from tblCartItem WHERE isNull(nParentId,0)=0 and nCartOrderId=" & mnCartId
+            Dim productCount As Integer = Convert.ToInt32(moDBHelper.GetDataValue(strSql.ToString, CommandType.Text))
+
+
+            'if all are evoucher set delivery option to evoucher
+            If (evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            ElseIf (ShippingKey = 64 And evoucherPackagingCount <> productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("66")
+            ElseIf (ShippingKey <> 64 And evoucherPackagingCount = productCount) Then
+                Dim update As String = updateGCgetValidShippingOptionsDS("64")
+            End If
+        End Sub
+
 
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
@@ -7987,7 +8061,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
                 Dim cSqlUpdate As String
-
+                Dim ShippingName As String
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey = " & nShipOptKey
@@ -8001,6 +8075,13 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Next
 
 
+                If (cShippingDesc = "Evoucher-UK Parcel") Then
+                    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
+                    moDBHelper.ExeProcessSql(cSqlpkgopUpdate)
+
+                End If
+                ' UpdatePackagingANdDeliveryType(mnCartId, nShipOptKey)
+
             Catch ex As Exception
 
                 returnException(mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
@@ -8008,37 +8089,51 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
-        Private Sub AddProductOption(ByVal CartItemId As Long, ByRef PackageOptName As String)
+
+        Private Sub AddProductOption(ByRef jObj As Newtonsoft.Json.Linq.JObject)
 
             Try
                 Dim oelmt As XmlElement
+                Dim cSqlUpdate As String
                 Dim oItemInstance As XmlDataDocument = New XmlDataDocument
                 oItemInstance.AppendChild(oItemInstance.CreateElement("instance"))
                 oelmt = addNewTextNode("tblCartItem", oItemInstance.DocumentElement)
 
+                Dim json As Newtonsoft.Json.Linq.JObject = jObj
+
+                Dim CartItemId As Long = json.SelectToken("CartItemId")
+                Dim ReplaceId As Long = json.SelectToken("ReplaceId")
+                Dim OptionName As String = json.SelectToken("ItemName")
+                Dim ShippingKey As Int32 = Convert.ToInt32(json.SelectToken("ShippingKey"))
+
+                If (ReplaceId <> 0) Then
+                    addNewTextNode("nCartItemKey", oelmt, CStr(ReplaceId))
+                End If
                 addNewTextNode("nCartOrderId", oelmt, CStr(mnCartId))
-                addNewTextNode("nItemId", oelmt, 0)
-                addNewTextNode("cItemURL", oelmt, "") 'Erm?
-                addNewTextNode("cItemName", oelmt, PackageOptName)
-                addNewTextNode("nItemOptGrpIdx", oelmt, 0) 'Dont Need
-                addNewTextNode("nItemOptIdx", oelmt, 0) 'Dont Need
-                addNewTextNode("cItemRef", oelmt, "")
-
-
-                'no price variation for text options
-                addNewTextNode("nPrice", oelmt, "0")
-                addNewTextNode("nShpCat", oelmt, 0)
-                addNewTextNode("nDiscountCat", oelmt, 0)
-                addNewTextNode("nDiscountValue", oelmt, 0)
-                addNewTextNode("nTaxRate", oelmt, 0)
+                addNewTextNode("nItemId", oelmt, json.SelectToken("ItemId"))
+                addNewTextNode("cItemURL", oelmt, json.SelectToken("ItemURL")) 'Erm?
+                addNewTextNode("cItemName", oelmt, OptionName)
+                addNewTextNode("nItemOptGrpIdx", oelmt, json.SelectToken("ItemOptGrpIdx")) 'Dont Need
+                addNewTextNode("nItemOptIdx", oelmt, json.SelectToken("ItemOptIdx")) 'Dont Need
+                addNewTextNode("cItemRef", oelmt, json.SelectToken("ItemRef"))
+                addNewTextNode("nPrice", oelmt, json.SelectToken("Price"))
+                addNewTextNode("nShpCat", oelmt, json.SelectToken("ShpCat"))
+                addNewTextNode("nDiscountCat", oelmt, json.SelectToken("DiscountCat"))
+                addNewTextNode("nDiscountValue", oelmt, json.SelectToken("DiscountValue"))
+                addNewTextNode("nTaxRate", oelmt, json.SelectToken("TaxRate"))
                 addNewTextNode("nParentId", oelmt, CartItemId)
-                addNewTextNode("cItemUnit", oelmt, 0)
-                addNewTextNode("nQuantity", oelmt, 0)
-                addNewTextNode("nweight", oelmt, 0)
-                addNewTextNode("nAuditId", oelmt, 0)
-                addNewTextNode("xItemXml", oelmt, "")
+                addNewTextNode("cItemUnit", oelmt, json.SelectToken("TaxRate"))
+                addNewTextNode("nQuantity", oelmt, json.SelectToken("Qunatity"))
+                addNewTextNode("nweight", oelmt, json.SelectToken("Weight"))
+                addNewTextNode("xItemXml", oelmt, json.SelectToken("ItemXml"))
 
                 moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement)
+
+                UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
+
+
+
+
 
             Catch ex As Exception
 
@@ -8046,6 +8141,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
         End Sub
+
 
 
     End Class

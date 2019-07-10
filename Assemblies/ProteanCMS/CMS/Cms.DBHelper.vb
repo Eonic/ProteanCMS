@@ -1018,6 +1018,153 @@ Partial Public Class Cms
         End Sub
 
 
+        Friend Function getPageAndArticleIdFromPath(ByRef nPageId As Long, ByRef nArtId As Long, ByVal sFullPath As String, Optional ByVal bSetGlobalPageVariable As Boolean = True, Optional ByVal bCheckPermissions As Boolean = True) As Integer
+            PerfMon.Log("dbHelper", "getPageIdFromPath")
+            Dim aPath() As String
+            Dim sPath As String
+
+            Dim sSql As String
+            Dim ods As DataSet
+            Dim oRow As DataRow
+
+            Dim sProcessInfo As String = ""
+
+            Try
+
+                sPath = sFullPath
+                sPath = goServer.UrlDecode(sPath)
+
+                ' We have to assume that hyphens are spaces here
+                ' Nore : if this is turned on, you will have to update any pages that have hyphens in their names
+                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                    sPath = Replace(sPath, "-", " ")
+                End If
+
+                sProcessInfo = "remove first and final /"
+                If Right(sPath, 1) = "/" Then
+                    sPath = Left(sPath, Len(sPath) - 1)
+                End If
+                If InStr(1, sPath, "/") = 1 Then
+                    sPath = Right(sPath, Len(sPath) - 1)
+                End If
+
+                sProcessInfo = "Strip the QueryString"
+                If InStr(1, sPath, "?") > 0 Then sPath = Left(sPath, InStr(1, sPath, "?") - 1)
+
+                sProcessInfo = "split to path array"
+                aPath = Split(sPath, "/")
+                If UBound(aPath) > 0 Then
+                    'get the last in line
+                    sPath = aPath(UBound(aPath))
+                Else
+                    sPath = sPath
+                End If
+
+
+
+                Select Case myWeb.moConfig("DetailPathType")
+                    Case "ContentType/ContentName"
+                        If aPath(0) = myWeb.moConfig("DetailPrefix") Then
+                            sSql = "select nContentKey from tblContent where cContentName like '" & SqlFmt(sPath) & "'"
+                            ods = GetDataSet(sSql, "Content")
+                            If ods.Tables("Content").Rows.Count = 1 Then
+                                nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
+                            Else
+                                'handling for content versions ?
+                            End If
+                            'now get the page id 
+                            sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
+                            ods = GetDataSet(sSql, "Pages")
+                            If ods.Tables("Pages").Rows.Count = 1 Then
+                                If bCheckPermissions Then
+                                    ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                    Dim checkPermissionPageId As Long = checkPagePermission(ods.Tables("Pages").Rows("0").Item("nStructId"))
+                                    If checkPermissionPageId <> 0 _
+                                                    And (ods.Tables("Pages").Rows("0").Item("nStructId") = checkPermissionPageId _
+                                                    Or IsSystemPage(checkPermissionPageId)) Then
+                                        nPageId = checkPermissionPageId
+                                    End If
+                                Else
+                                    nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
+                                End If
+                                nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
+                            Else
+                                'handling for multiple parents versions ?
+                            End If
+                        End If
+                End Select
+
+                If nArtId = Nothing Then
+                    sSql = "select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '" & SqlFmt(sPath) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "")) & "' or cStructName like '" & SqlFmt(Replace(sPath, " ", "-")) & "')"
+
+                    ods = GetDataSet(sSql, "Pages")
+
+
+                    If ods.Tables("Pages").Rows.Count = 1 Then
+                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
+                        ' if there is just one page validate it
+                    ElseIf ods.Tables("Pages").Rows.Count = 0 Then
+
+                        'do nothing nothing found
+
+                    Else
+                        For Each oRow In ods.Tables("Pages").Rows
+                            ' Debug.WriteLine(oRow.Item("nStructKey"))
+                            If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
+                                'we have a language verion we need to behave differently to confirm id
+                                If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
+                                    nPageId = oRow.Item("nStructKey")
+                                    Exit For
+                                End If
+                            Else
+                                If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                    If bCheckPermissions Then
+
+                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                        Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                        If checkPermissionPageId <> 0 _
+                                            And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                            Or IsSystemPage(checkPermissionPageId)) Then
+                                            nPageId = checkPermissionPageId
+                                            Exit For
+                                        End If
+                                    Else
+                                        nPageId = oRow.Item("nStructKey")
+                                        Exit For
+                                    End If
+                                End If
+                            End If
+                        Next
+                    End If
+                End If
+
+
+
+
+                ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
+                If Not (nPageId > 1 And (sPath <> "")) Then
+                    'page path cannot be found we have an error that we raise later
+                    If sFullPath <> "System+Pages/Page+Not+Found" Then
+                        'first don't cache the page
+                        myWeb.bPageCache = False
+                        nPageId = myWeb.gnPageNotFoundId
+                    Else
+                        nPageId = myWeb.RootPageId
+                    End If
+                End If
+
+                'If bSetGlobalPageVariable Then gnPageId = nPageId
+
+                PerfMon.Log("dbHelper", "getPageAndArticleIdFromPath-end")
+                Return nPageId
+            Catch ex As Exception
+
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getPageAndArticleIdFromPath", ex, sProcessInfo))
+
+            End Try
+        End Function
+
         Friend Function getPageIdFromPath(ByVal sFullPath As String, Optional ByVal bSetGlobalPageVariable As Boolean = True, Optional ByVal bCheckPermissions As Boolean = True) As Integer
             PerfMon.Log("dbHelper", "getPageIdFromPath")
             Dim aPath() As String
@@ -4294,6 +4441,44 @@ restart:
             End Try
         End Sub
 
+        Public Overridable Sub getContentFromProductGroup(ByRef oContent As XmlElement)
+            PerfMon.Log("DBHelper", "getContentFromModuleGrabber")
+
+            Dim cProcessInfo As String = ""
+            Try
+
+
+                Dim cOrderBy As String = ""
+
+                ' Get the parameters SortDirection
+                Dim cSchema As String = oContent.GetAttribute("contentType")
+                Dim nGroupId As Long = CLng("0" & oContent.GetAttribute("groupid"))
+                Dim cSort As String = oContent.GetAttribute("sortBy")
+                Dim cSortDirection As String = oContent.GetAttribute("order")
+
+                ' Validate and Build the SQL conditions that we are going to need
+
+                If cSchema <> "" Then
+
+                    Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
+
+                    myWeb.GetPageContentFromSelect(cWhereSql, , , myWeb.mbAdminMode, 0, cOrderBy, oContent)
+
+                    'Get Related Items
+                    Dim oContentElmt As XmlElement
+                    For Each oContentElmt In oContent.SelectNodes("Content")
+                        addRelatedContent(oContentElmt, oContentElmt.GetAttribute("id"), myWeb.mbAdminMode)
+                    Next
+
+
+                End If
+
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getContentFromContentGrabber", ex, cProcessInfo))
+            End Try
+        End Sub
+
         Public Overridable Sub getContentFromContentGrabber(ByRef oGrabber As XmlElement)
             PerfMon.Log("DBHelper", "getContentFromContentGrabber")
 
@@ -7124,7 +7309,7 @@ restart:
                                 End If
                                 For Each oLocation In oInstance.SelectNodes("Location")
                                     Dim sPrimary As Long = 0
-                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayorder"))
+                                    Dim displayOrder As Long = CInt("0" & oLocation.GetAttribute("displayOrder"))
                                     If oLocation Is oPrmLoc Then sPrimary = 1
                                     If oLocation.GetAttribute("foriegnRef") <> "" Then
                                         Dim cleanFref As String = oLocation.GetAttribute("foriegnRef")

@@ -123,6 +123,9 @@ Partial Public Class Cms
                 Dim strSQL As New Text.StringBuilder
                 'Dim oDr As DataRow
 
+                Dim DiscountApplyDate As DateTime = Now()
+                'TS we should add logic here to get the invoiceDate from the xml if it exists. then we can apply historic discounts by refreshing the cartxml.
+
 
                 Dim sSQLArr() As String = Nothing
 
@@ -166,8 +169,8 @@ Partial Public Class Cms
                         strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ")
                         strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " & myCart.mnCartId)
                         strSQL.Append("WHERE (tblAudit.nStatus = 1) ")
-                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= GETDATE())  ")
-                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= GETDATE()) ")
+                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
+                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
                         strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" & cUserGroupIds & ")) ")
 
                         If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel") Then

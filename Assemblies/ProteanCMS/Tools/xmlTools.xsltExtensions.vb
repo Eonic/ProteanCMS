@@ -525,7 +525,14 @@ Partial Public Module xmlTools
                 cHtml = oHtmlNode.Current.InnerXml
                 cHtml = Protean.Tools.Xml.convertEntitiesToCodes(cHtml)
                 cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
+                cHtml = cHtml.Replace("&amp;#", "&#")
                 cHtml = "<div>" & cHtml & "</div>"
+                If cHtml.Contains("<?xml") Then
+                    cHtml = Regex.Replace(cHtml, "<\?xml*\?>/i", "", RegexOptions.IgnoreCase)
+                    cHtml = cHtml.Replace("<?xml:namespace prefix = o ns = ""urn:schemas-microsoft-com:office:office"" />", "")
+
+                    cHtml = cHtml
+                End If
 
                 cHtmlOut = tidyXhtmlFrag(cHtml, True, True, RemoveTags)
 
@@ -696,8 +703,8 @@ Partial Public Module xmlTools
 
 
                     If bIncludePrimary Then cSql += " AND (l.bPrimary = 0) "
-                    If IsNumeric(nExcludeLocation) Then cSql += " AND (l.nStructId <> " & nExcludeLocation & ") "
-                    If Not (bShowHiddenPages) Then cSql += " AND (a.dExpireDate IS NULL OR a.dExpireDate >= GETDATE()) AND (a.dPublishDate IS NULL OR a.dPublishDate <= GETDATE()) AND (a.nStatus <> 0) "
+                    If IsNumeric(nExcludeLocation) Then cSql += " And (l.nStructId <> " & nExcludeLocation & ") "
+                    If Not (bShowHiddenPages) Then cSql += " And (a.dExpireDate Is NULL Or a.dExpireDate >= GETDATE()) And (a.dPublishDate Is NULL Or a.dPublishDate <= GETDATE()) And (a.nStatus <> 0) "
 
                     cSql += " ORDER BY s.cStructName "
 
@@ -938,20 +945,20 @@ Partial Public Module xmlTools
 
         '    'get all the shipping options for a given shipping weight and price
         '    Dim strSql As New Text.StringBuilder
-        '    strSql.Append("SELECT opt.cShipOptCarrier, opt.cShipOptTime, ")
-        '    strSql.Append("dbo.fxn_shippingTotal(opt.nShipOptKey, " & nPrice.ToString & ", " & nQuantity.ToString & ", " & nWeight.ToString & ") AS nShippingTotal, ")
+        '    strSql.Append("Select opt.cShipOptCarrier, opt.cShipOptTime, ")
+        '    strSql.Append("dbo.fxn_shippingTotal(opt.nShipOptKey, " & nPrice.ToString & ", " & nQuantity.ToString & ", " & nWeight.ToString & ") As nShippingTotal, ")
         '    strSql.Append("tblCartShippingLocations.cLocationNameShort, tblCartShippingLocations.cLocationISOa2 ")
 
         '    strSql.Append("FROM tblCartShippingLocations ")
-        '    strSql.Append("INNER JOIN tblCartShippingRelations ON tblCartShippingLocations.nLocationKey = tblCartShippingRelations.nShpLocId ")
-        '    strSql.Append("RIGHT OUTER JOIN tblCartShippingMethods AS opt ")
-        '    strSql.Append("INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey ON tblCartShippingRelations.nShpOptId = opt.nShipOptKey ")
+        '    strSql.Append("INNER JOIN tblCartShippingRelations On tblCartShippingLocations.nLocationKey = tblCartShippingRelations.nShpLocId ")
+        '    strSql.Append("RIGHT OUTER JOIN tblCartShippingMethods As opt ")
+        '    strSql.Append("INNER JOIN tblAudit On opt.nAuditId = tblAudit.nAuditKey On tblCartShippingRelations.nShpOptId = opt.nShipOptKey ")
 
-        '    strSql.Append("WHERE (opt.nShipOptQuantMin <= 0 OR opt.nShipOptQuantMin <= " & nQuantity.ToString & ") ")
-        '    strSql.Append("AND (opt.nShipOptQuantMax <= 0 OR opt.nShipOptQuantMax >= " & nQuantity.ToString & ") ")
-        '    strSql.Append("AND (opt.nShipOptPriceMin <= 0 OR opt.nShipOptPriceMin <= " & nPrice.ToString & ") ")
-        '    strSql.Append("AND (opt.nShipOptWeightMin <= 0 OR opt.nShipOptWeightMin <= " & nWeight.ToString & ") ")
-        '    strSql.Append("AND (opt.cCurrency IS NULL OR opt.cCurrency = '' OR opt.cCurrency = '') ")
+        '    strSql.Append("WHERE (opt.nShipOptQuantMin <= 0 Or opt.nShipOptQuantMin <= " & nQuantity.ToString & ") ")
+        '    strSql.Append("And (opt.nShipOptQuantMax <= 0 Or opt.nShipOptQuantMax >= " & nQuantity.ToString & ") ")
+        '    strSql.Append("And (opt.nShipOptPriceMin <= 0 Or opt.nShipOptPriceMin <= " & nPrice.ToString & ") ")
+        '    strSql.Append("And (opt.nShipOptWeightMin <= 0 Or opt.nShipOptWeightMin <= " & nWeight.ToString & ") ")
+        '    strSql.Append("And (opt.cCurrency Is NULL Or opt.cCurrency = '' OR opt.cCurrency = '') ")
         '    strSql.Append("AND (tblAudit.nStatus > 0) ")
         '    strSql.Append("AND (tblAudit.dPublishDate = 0 OR tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & ") ")
         '    strSql.Append("AND (tblAudit.dExpireDate = 0 OR tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & ") ")
@@ -1332,7 +1339,6 @@ Partial Public Module xmlTools
         End Function
 
         Public Function DeleteContent(ByVal nContentId As String) As String
-
             Try
                 If CLng("0" & nContentId) > 0 Then
                     Return CStr(myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, nContentId))
@@ -1343,7 +1349,19 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 Return "Error - Not Deleted" & ex.Message
             End Try
+        End Function
 
+        Public Function DeletePage(ByVal nPageId As String) As String
+            Try
+                If CLng("0" & nPageId) > 0 Then
+                    Return CStr(myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentStructure, nPageId))
+                Else
+                    Return Nothing
+                End If
+
+            Catch ex As Exception
+                Return "Error - Not Deleted" & ex.Message
+            End Try
         End Function
 
         Public Function UpdatePositions(ByVal nContentId As Long, ByVal cPosition As String) As String

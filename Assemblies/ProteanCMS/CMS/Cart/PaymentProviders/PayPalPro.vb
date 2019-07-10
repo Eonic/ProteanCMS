@@ -2,14 +2,19 @@
 Imports System.Web.HttpUtility
 Imports System.Web.Configuration
 Imports System.IO
-Imports System.Collections
+Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
 Imports VB = Microsoft.VisualBasic
-Imports Eonic
 Imports Protean.Cms.Cart
 Imports System.Net
 Imports CardinalCommerce
+Imports System.IdentityModel.Tokens
+Imports System.IdentityModel.Tokens.Jwt
+Imports System.Security.Claims
+Imports System.Text
+Imports Newtonsoft.Json.Linq
+
 
 Namespace Providers
     Namespace Payment
@@ -88,6 +93,7 @@ Namespace Providers
 
                     Dim bCv2 As Boolean = False
                     Dim b3DSecure As Boolean = False
+                    Dim b3DSecureV2 As Boolean = False
                     Dim b3DAuthorised As Boolean = False
                     Dim sRedirectURL As String = ""
                     Dim sPaymentRef As String = ""
@@ -172,6 +178,7 @@ Namespace Providers
                         ' Set common variables
                         If oDictOpt("validateCV2") = "on" Then bCv2 = True
                         If oDictOpt("secure3d") = "on" Then b3DSecure = True
+                        If oDictOpt("secure3d") = "v2" Then b3DSecureV2 = True
                         ' Commented out because not allowed on this form
                         ' If oDictOpt("allowSavePayment") = "on" Then bAllowSavePayment = True
 
@@ -200,6 +207,102 @@ Namespace Providers
                             myWeb.moSession("ExpireDate") = myWeb.moRequest("creditCard/expireDate")
                             myWeb.moSession("CardType") = myWeb.moRequest("creditCard/type")
                             myWeb.moSession("MaskedCard") = MaskString(myWeb.moRequest("creditCard/number"), "*", False, 4)
+
+                            If b3DSecureV2 Then
+                                Dim FirstName As String = ""
+                                Dim MiddleName As String = ""
+                                Dim LastName As String = ""
+                                Dim aGivenName() As String = Split(oCartAdd.SelectSingleNode("GivenName").InnerText, " ")
+                                Select Case UBound(aGivenName)
+                                    Case 0
+                                        LastName = aGivenName(0)
+                                        FirstName = aGivenName(0)
+                                    Case 1
+                                        FirstName = aGivenName(0)
+                                        LastName = aGivenName(1)
+                                    Case 2
+                                        FirstName = aGivenName(0)
+                                        MiddleName = aGivenName(1)
+                                        LastName = aGivenName(2)
+                                    Case 3
+                                        FirstName = aGivenName(0)
+                                        MiddleName = aGivenName(1)
+                                        LastName = aGivenName(2)
+                                        'Suffix = aGivenName(3)
+                                End Select
+
+                                Dim Street1 As String = IIf(oCartAdd.SelectSingleNode("Company").InnerText = "", oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText)
+                                Dim Street2 As String = ""
+                                If oCartAdd.SelectSingleNode("Company").InnerText = "" Then
+                                    Street2 = oCartAdd.SelectSingleNode("Street").InnerText
+                                End If
+
+                                Dim jwtPayload As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+                                    {"Payload", New Dictionary(Of String, Object) From {
+                                        {"Consumer", New Dictionary(Of String, Object) From {
+                                            {"Email1", ""},
+                                            {"Email2", ""},
+                                            {"ShippingAddress", New Dictionary(Of String, Object) From {
+                                                {"FullName", oCartAdd.SelectSingleNode("GivenName").InnerText},
+                                                {"FirstName", FirstName},
+                                                {"MiddleName", MiddleName},
+                                                {"LastName", LastName},
+                                                {"Address1", Street1},
+                                                {"Address2", Street2},
+                                                {"Address3", ""},
+                                                {"City", oCartAdd.SelectSingleNode("City").InnerText},
+                                                {"State", oCartAdd.SelectSingleNode("State").InnerText},
+                                                {"PostalCode", oCartAdd.SelectSingleNode("PostalCode").InnerText},
+                                                {"CountryCode", ""},
+                                                {"Phone1", ""},
+                                                {"Phone2", ""}
+                                                }},
+                                            {"BillingAddress", New Dictionary(Of String, Object) From {
+                                                {"FullName", oCartAdd.SelectSingleNode("GivenName").InnerText},
+                                                {"FirstName", FirstName},
+                                                {"MiddleName", MiddleName},
+                                                {"LastName", LastName},
+                                                {"Address1", Street1},
+                                                {"Address2", Street2},
+                                                {"Address3", ""},
+                                                {"City", oCartAdd.SelectSingleNode("City").InnerText},
+                                                {"State", oCartAdd.SelectSingleNode("State").InnerText},
+                                                {"PostalCode", oCartAdd.SelectSingleNode("PostalCode").InnerText},
+                                                {"CountryCode", ""},
+                                                {"Phone1", ""},
+                                                {"Phone2", ""}
+                                                }},
+                                            {"Account", New Dictionary(Of String, Object) From {
+                                                {"AccountNumber", myWeb.moRequest("creditCard/number").Trim},
+                                                {"ExpirationMonth", CInt(Left(myWeb.moRequest("creditCard/expireDate"), 2))},
+                                                {"ExpirationYear", CInt(Right(myWeb.moRequest("creditCard/expireDate"), 4))},
+                                                {"CardCode", myWeb.moRequest("creditCard/CV2").Trim},
+                                                {"NameOnAccount", oCartAdd.SelectSingleNode("GivenName").InnerText}
+                                                }
+                                            }}
+                                        },
+                                         {"OrderDetails", New Dictionary(Of String, Object) From {
+                                            {"OrderNumber", CStr(oEwProv.mnCartId)},
+                                            {"Amount", CStr(CInt(oEwProv.mnPaymentAmount * 100))},
+                                            {"CurrencyCode", oDictOpt("centinalCurrencyCode")},
+                                            {"TransactionId", CStr(oEwProv.mnCartId)}
+                                            }
+                                        }
+                                    }}}
+
+
+
+                                Dim jwtHelper As New Protean.Tools.IdentityModel.Tokens.JwtHelper
+                                Dim sJwt As String = jwtHelper.GenerateJwt(
+                                    oDictOpt("centinalAppKey"),
+                                    oDictOpt("centinalAppId"),
+                                    oDictOpt("OrgUnitId"),
+                                    jwtPayload
+                                )
+
+                                Xform3dSec = oEwProv.xfrmSecure3Dv2(ACSUrl, sJwt, oDictOpt("SongbirdUrl"), sRedirectURL)
+
+                            End If
 
                             If b3DSecure Then
 
@@ -234,9 +337,9 @@ Namespace Providers
                                 Dim testRequest As String = centinelRequest.generatePayload(oDictOpt("centinalTransactionPwd"))
 
                                 Try
-                                    Dim centinelURL As String = "https://paypal.cardinalcommerce.com/maps/txns.asp"
+                                    Dim centinelURL As String = "https//paypal.cardinalcommerce.com/maps/txns.asp"
                                     If nTransactionMode = TransactionMode.Test Then
-                                        centinelURL = "https://centineltest.cardinalcommerce.com/maps/txns.asp"
+                                        centinelURL = "https//centineltest.cardinalcommerce.com/maps/txns.asp"
                                     End If
                                     centinelResponse = centinelRequest.sendHTTP(centinelURL, CInt(oDictOpt("centinalTimeout")))
 
@@ -392,7 +495,7 @@ Namespace Providers
 
                                 ppRequestDetail.CreditCard = ppCreditCard
                                 ppRequestDetail.PaymentDetails = ppDetails
-                                ppRequestDetail.IPAddress = IIf(myWeb.moRequest.ServerVariables("REMOTE_ADDR") = "::1", "88.97.12.224", myWeb.moRequest.ServerVariables("REMOTE_ADDR"))
+                                ppRequestDetail.IPAddress = IIf(myWeb.moRequest.ServerVariables("REMOTE_ADDR") = "1", "88.97.12.224", myWeb.moRequest.ServerVariables("REMOTE_ADDR"))
                                 ppRequestDetail.MerchantSessionId = myWeb.moSession.SessionID
                                 ppRequestDetail.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
 
@@ -502,9 +605,9 @@ Namespace Providers
 
                                     'Create a service Binding in code
 
-                                    Dim endpointAddress As String = "https://api-3t.paypal.com/2.0/"
+                                    Dim endpointAddress As String = "https//api-3t.paypal.com/2.0/"
                                     If nTransactionMode = TransactionMode.Test Then
-                                        endpointAddress = "https://api-3t.sandbox.paypal.com/2.0/"
+                                        endpointAddress = "https//api-3t.sandbox.paypal.com/2.0/"
                                     End If
                                     Dim ppEndpointAddress As New System.ServiceModel.EndpointAddress(endpointAddress)
 
@@ -547,7 +650,7 @@ Namespace Providers
                                                 cProcessInfo = ppAuthPaymentStatus.ToString
 
                                                 If ppAuthPaymentResponse.Errors Is Nothing Then
-                                                    err_msg = "Response not handled: " & cProcessInfo
+                                                    err_msg = "Response Not handled " & cProcessInfo
                                                 Else
                                                     Try
                                                         Dim ppErrors As PayPalAPI.ErrorType() = ppAuthPaymentResponse.Errors
@@ -557,7 +660,7 @@ Namespace Providers
                                                             err_msg = err_msg & ppError.ErrorCode & " - " & ppError.ShortMessage & " - " & ppError.LongMessage
                                                         Next
                                                     Catch ex As Exception
-                                                        err_msg = "Response not handled: " & cProcessInfo
+                                                        err_msg = "Response Not handled " & cProcessInfo
                                                     End Try
                                                 End If
                                             End If
@@ -595,7 +698,7 @@ Namespace Providers
                                                     If cAuthCode <> "" Then
                                                         bIsValid = True
                                                         PaymemtRef = CStr(ppRecuringResponseDetails.ProfileID)
-                                                        err_msg = "Repeat Payment Authorised Ref: " & CStr(ppRecuringResponseDetails.ProfileID)
+                                                        err_msg = "Repeat Payment Authorised Ref " & CStr(ppRecuringResponseDetails.ProfileID)
                                                         ccXform.valid = True
                                                         bSavePayment = True
                                                     Else
@@ -628,7 +731,7 @@ Namespace Providers
                                                     cProcessInfo = ppPaymentStatus.ToString
 
                                                     If ppRecuringResponse.Errors Is Nothing Then
-                                                        err_msg = "Response not handled: " & cProcessInfo
+                                                        err_msg = "Response Not handled " & cProcessInfo
                                                     Else
                                                         Try
                                                             Dim ppErrors As PayPalAPI.ErrorType() = ppRecuringResponse.Errors
@@ -638,7 +741,7 @@ Namespace Providers
                                                                 err_msg = err_msg & ppError.ErrorCode & " - " & ppError.ShortMessage & " - " & ppError.LongMessage
                                                             Next
                                                         Catch ex As Exception
-                                                            err_msg = "Response not handled: " & cProcessInfo
+                                                            err_msg = "Response Not handled " & cProcessInfo
                                                         End Try
                                                     End If
 
@@ -675,7 +778,7 @@ Namespace Providers
                                                     If cAuthCode <> "" Then
                                                         bIsValid = True
                                                         PaymemtRef = CStr(ppPaymentResponse.TransactionID)
-                                                        err_msg = "Payment Authorised Ref: " & CStr(ppPaymentResponse.TransactionID)
+                                                        err_msg = "Payment Authorised Ref " & CStr(ppPaymentResponse.TransactionID)
                                                         ccXform.valid = True
                                                         bSavePayment = True
                                                     Else
@@ -685,7 +788,7 @@ Namespace Providers
                                                         Dim ppError As PayPalAPI.ErrorType
 
                                                         For Each ppError In ppErrors
-                                                            err_msg = err_msg & ppError.ShortMessage & " - " & ppError.ErrorCode & ": " & ppError.LongMessage
+                                                            err_msg = err_msg & ppError.ShortMessage & " - " & ppError.ErrorCode & " " & ppError.LongMessage
                                                         Next
                                                     End If
 
@@ -693,7 +796,7 @@ Namespace Providers
 
                                                     cAuthCode = ppPaymentResponse.TransactionID
                                                     bIsValid = True
-                                                    err_msg = "Payment Pending - Reason: " & ppPaymentResponse.PendingReason.ToString & " - " & CStr(ppPaymentResponse.TransactionID)
+                                                    err_msg = "Payment Pending - Reason " & ppPaymentResponse.PendingReason.ToString & " - " & CStr(ppPaymentResponse.TransactionID)
                                                     ccXform.valid = True
                                                     bSavePayment = True
 
@@ -716,7 +819,7 @@ Namespace Providers
                                                     cProcessInfo = ppPaymentResponse.PaymentStatus.ToString
 
                                                     If ppPaymentResponse.Errors Is Nothing Then
-                                                        err_msg = "Response not handled: " & cProcessInfo
+                                                        err_msg = "Response Not handled " & cProcessInfo
                                                     Else
                                                         Try
                                                             Dim ppErrors As PayPalAPI.ErrorType() = ppPaymentResponse.Errors
@@ -726,7 +829,7 @@ Namespace Providers
                                                                 err_msg = err_msg & ppError.ErrorCode & " - " & ppError.ShortMessage & " - " & ppError.LongMessage
                                                             Next
                                                         Catch ex As Exception
-                                                            err_msg = "Response not handled: " & cProcessInfo
+                                                            err_msg = "Response Not handled: " & cProcessInfo
                                                         End Try
                                                     End If
 
