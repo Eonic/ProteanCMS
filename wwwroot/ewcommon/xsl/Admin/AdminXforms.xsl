@@ -786,16 +786,16 @@
   </xsl:template>
 
   <!-- TinyMCE configuration -->
-  <xsl:template match="textarea" mode="tinymceConfig">
+  <xsl:template match="textarea" mode="xform_control_script">
     <script type="text/javascript">
-      $('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
-      <xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
-      theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
-      theme_modern_buttons2: "<xsl:apply-templates select="." mode="tinymceButtons2"/>",
-      theme_modern_buttons3: "<xsl:apply-templates select="." mode="tinymceButtons3"/>",
-      theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
-      valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
-      });
+        $('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
+        <xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
+        theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
+        theme_modern_buttons2: "<xsl:apply-templates select="." mode="tinymceButtons2"/>",
+        theme_modern_buttons3: "<xsl:apply-templates select="." mode="tinymceButtons3"/>",
+        theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
+        valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
+        });
     </script>
   </xsl:template>
 
@@ -824,7 +824,12 @@
       <xsl:apply-templates select="value/node()" mode="cleanXhtml"/>
       <xsl:text> </xsl:text>
     </textarea>
-    <xsl:apply-templates select="." mode="tinymceConfig"/>
+    <!--xsl:apply-templates select="." mode="tinymceConfig"/-->
+  </xsl:template>
+
+  <xsl:template match="Page" mode="xform_control_scripts">
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
   </xsl:template>
 
   <!-- YouTube Video module embed field -->
@@ -909,6 +914,12 @@
       <xsl:copy-of select="value/node()"/>
       <xsl:text> </xsl:text>
     </textarea>
+  </xsl:template>
+
+  <xsl:template match="textarea[contains(@class,'xml')]" mode="xform_control_script">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
     <script type="text/javascript">
       var editor = CodeMirror.fromTextArea('<xsl:value-of select="$ref"/>', {
       height: "<xsl:value-of select="number(@rows) * 25"/>px",

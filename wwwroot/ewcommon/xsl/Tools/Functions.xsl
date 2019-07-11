@@ -204,6 +204,15 @@
     </xsl:call-template>
   </xsl:variable>
 
+  <xsl:variable name="GoogleTagManagerID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+        <xsl:call-template name="getXmlSettings">
+          <xsl:with-param name="sectionName" select="'web'"/>
+          <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
+        </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+
   <!-- Cal Cmd for Calendars -->
   <xsl:variable name="calendarMonth">
     <xsl:choose>
@@ -262,6 +271,17 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:if test="$GoogleTagManagerID!=''">
+          <!-- Google Tag Manager -->
+          <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
+          </script>
+          <!-- End Google Tag Manager -->
+        </xsl:if>
         <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->
         <title>
@@ -324,9 +344,10 @@
         </xsl:choose>
 
 
-        <xsl:if test="$ScriptAtBottom!='on' or $adminMode">
+        <xsl:if test="$ScriptAtBottom!='on'">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
+        
         <xsl:apply-templates select="/Page/Contents/Content[@type='PlainText' and @name='jsonld']" mode="JSONLD"/>
       </head>
 
@@ -899,7 +920,7 @@
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
-    <xsl:if test="$ScriptAtBottom='on' and not($adminMode)">
+    <xsl:if test="$ScriptAtBottom='on'">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
     <xsl:choose>
@@ -1321,6 +1342,13 @@
           <xsl:value-of select="@artid"/>
         </xsl:if>
       </xsl:attribute>
+      <xsl:if test="$GoogleTagManagerID!=''">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+          <iframe src="https://www.googletagmanager.com/ns.html?id={$GoogleTagManagerID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+      </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
       <xsl:apply-templates select="." mode="footerJs"/>
@@ -7977,6 +8005,11 @@
   <xsl:template name="totitlecase">
     <xsl:param name="text"/>
     <xsl:value-of select="ew:ToTitleCase($text)"/>
+  </xsl:template>
+
+  <xsl:template name="tolowercase">
+    <xsl:param name="text"/>
+    <xsl:value-of select="translate($text, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
   </xsl:template>
 
   <!-- ## REGULAR EXPRESSION TEST ##############################################################################################-->

@@ -166,8 +166,9 @@
     </xsl:if>
     <xsl:apply-templates select="." mode="siteAdminJs"/> 
   </xsl:template>
-  
-    <!-- -->
+
+
+  <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
 
