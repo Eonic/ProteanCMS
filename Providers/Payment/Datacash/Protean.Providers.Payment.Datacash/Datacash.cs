@@ -227,9 +227,9 @@ namespace Protean.Providers.Payment
                 string purchaseDesc = "Make Payment of " + oEwProv.mnPaymentAmount + " " + _oDatacashcfg.SelectSingleNode("currency").Attributes["value"].Value + " by Credit/Debit Card";
 
                 ccXform = oEwProv.creditCardXform(ref oOrder, "PayForm", sSubmitPath, _oDatacashcfg.SelectSingleNode("cardsAccepted").Attributes["value"].Value, true, purchaseDesc, false);
-
+                  
                 // if xform is valid or we have a 3d secure passback
-                if (ccXform.valid || myWeb.moRequest["PaRes"] != "")
+                if ((ccXform.valid || myWeb.moRequest["PaRes"] != "") && ccXform.isSubmitted()==true)
                 {
                     
 
@@ -249,11 +249,12 @@ namespace Protean.Providers.Payment
 
                         string[] aGivenName;
                         var captureMethodObj = "ecomm";
+                        string strMerchantReference = "1234567891";//(oCart.mnCartId).ToString();
                         requestDoc = new DataCash.Document(cfg);
                         requestDoc.@set("Request.Authentication.client", _AccountId);
                         requestDoc.@set("Request.Authentication.password", _AccountPassword);
 
-                        //requestDoc.@set("Request.Transaction.TxnDetails.merchantreference", strMerchantReference);
+                        requestDoc.@set("Request.Transaction.TxnDetails.merchantreference", strMerchantReference);
                         Hashtable attrs = new Hashtable();
                         attrs["currency"] = _Currency;
                         requestDoc.setWithAttributes("Request.Transaction.TxnDetails.amount", Convert.ToString(oOrder.GetAttribute("total")), attrs);
@@ -265,7 +266,7 @@ namespace Protean.Providers.Payment
                         string name = GivenName;
                         string expiryMonth = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(0, 2);
                         int len = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Length;
-                        string expiryYear = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(len - 2, len);
+                        string expiryYear = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(len - 2);
                         string cvc = myWeb.moRequest["creditCard/CV2"];
                         string type = "Card";
                         string issueNumber = "";
@@ -277,7 +278,7 @@ namespace Protean.Providers.Payment
                         {
                             startMonth = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(0, 2);
                             len = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Length;
-                            startYear = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(len - 2, len);
+                            startYear = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(len - 2);
                         }
 
 
@@ -291,17 +292,17 @@ namespace Protean.Providers.Payment
                             requestDoc.set("Request.Transaction.CardTxn.Card.issuenumber", issueNumber);
                         }
 
-                        if (captureMethodObj == "ecomm")
-                        {
-                            //3d secure
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.verify", "yes");
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", _oDatacashcfg.SelectSingleNode("IntoTheBlueDomain").Attributes["value"].Value.ToString() + "/");
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_datetime", DateTime.Now.ToString("yyyyMMdd HH:mm:ss"));
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_desc", "vouchers");
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.device_category", "0");
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.accept_headers", "*/*");
-                            requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.user_agent", HttpContext.Current.Request.Browser.Browser);
-                        }
+                        //if (captureMethodObj == "ecomm")
+                        //{
+                        //    //3d secure
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.verify", "yes");
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", _oDatacashcfg.SelectSingleNode("IntoTheBlueDomain").Attributes["value"].Value.ToString() + "/");
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_datetime", DateTime.Now.ToString("yyyyMMdd HH:mm:ss"));
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_desc", "vouchers");
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.device_category", "0");
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.accept_headers", "*/*");
+                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.user_agent", HttpContext.Current.Request.Browser.Browser);
+                        //}
 
                         XmlNode oCartAdd = oOrder.SelectSingleNode("Contact[@type='Billing Address']");
                         if (oCartAdd != null)
@@ -332,7 +333,7 @@ namespace Protean.Providers.Payment
                             else if (oCartAdd.SelectSingleNode("Street") != null)
                                 requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
                             if (oCartAdd.SelectSingleNode("City") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.city", oCartAdd.SelectSingleNode("City").InnerText.Substring(0, 25));
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
                             if (oCartAdd.SelectSingleNode("State") != null)
                                 requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
                             if (oCartAdd.SelectSingleNode("PostalCode") != null)
@@ -367,7 +368,7 @@ namespace Protean.Providers.Payment
                             else if (oCartAdd.SelectSingleNode("Street") != null)
                                 requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
                             if (oCartAdd.SelectSingleNode("City") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.city", oCartAdd.SelectSingleNode("City").InnerText.Substring(0, 25));
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
                             if (oCartAdd.SelectSingleNode("State") != null)
                                 requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
                             if (oCartAdd.SelectSingleNode("PostalCode") != null)
