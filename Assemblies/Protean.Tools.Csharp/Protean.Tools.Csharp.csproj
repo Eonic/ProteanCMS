@@ -80,6 +80,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlXml" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Calendar.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="IdentityModel\Tokens\JwtHelper.cs" />
