@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
-
 using System.Web.Configuration;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using VB = Microsoft.VisualBasic;
 using Protean;
-
 using System.Net;
 using System.Web;
 using DataCash;
+using static Protean.Cms.Cart;
+
 
 // https://github.com/Worldpay/worldpay-lib-dotnet
 // 
@@ -268,7 +268,7 @@ namespace Protean.Providers.Payment
                             string sRedirectURL;
                             sRedirectURL = moCartConfig["SecureURL"] + returnCmd + "&3dsec=showInvoice";
                             ccXform = this.xfrmSecure3DReturn(sRedirectURL);
-                            //myWeb.moSession("PaRes") = myWeb.moRequest("PaRes")
+                            myWeb.moSession["PaRes"] = myWeb.moRequest["PaRes"];
                         }
                         else
                         {
@@ -278,7 +278,11 @@ namespace Protean.Providers.Payment
                             ccXform.valid = false;
                         }
 
-
+                        if (myWeb.moRequest["3dsec"].ToString() == "showInvoice" && Convert.ToString(myWeb.moSession["PaRes"]) != "")
+                        {
+                            ccXform.valid = true;
+                        }
+                    
                     }
                 // if xform is valid or we have a 3d secure passback
                 if ((ccXform.valid || myWeb.moRequest["PaRes"] == null) && ccXform.isSubmitted()==true)
@@ -503,12 +507,13 @@ namespace Protean.Providers.Payment
 
         public xForm xfrmSecure3DReturn(string acs_url)
         {
-            //PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
+
+                stdTools.PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
             xForm oXform = new Protean.Cms.xForm();
             XmlElement oFrmInstance;
             XmlElement oFrmGroup;
-
-           // string cProcessInfo = "xfrmSecure3D";
+               
+            string cProcessInfo = "xfrmSecure3D";
             try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -517,13 +522,13 @@ namespace Protean.Providers.Payment
 
                 // create the instance
                 oXform.NewFrm("Secure3DReturn");
-               // oXform.submission("Secure3DReturn", goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
+                oXform.submission("Secure3DReturn", stdTools.goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
                 oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn");
                 oXform.Instance.AppendChild(oFrmInstance);
-                //oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
+                oFrmGroup = addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
                 // build the form and the binds
-                // oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
-                //oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
+                //oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
+                oXform.addSubmit(ref oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
                 oXform.addValues();
                 return oXform;
             }
@@ -563,6 +568,35 @@ namespace Protean.Providers.Payment
                 return null;
             }
         }
+
+            public XmlElement addGroup( XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "")
+            {
+                xForm oXform = new Protean.Cms.xForm();
+                
+                XmlElement oGrpElmt;
+                XmlElement oLabelElmt;
+                string cProcessInfo = "";
+                try
+                {
+                    oGrpElmt = oXform.moPageXML.CreateElement("group");
+                    oGrpElmt.SetAttribute("ref", sRef);
+                    if (sClass != "")
+                        oGrpElmt.SetAttribute("class", sClass);
+                    if (sLabel != "")
+                    {
+                        oLabelElmt = oXform.moPageXML.CreateElement("label");
+                        oLabelElmt.InnerXml = sLabel;
+                        oGrpElmt.AppendChild(oLabelElmt);
+                    }
+                    return oGrpElmt;
+                }
+                catch (Exception ex)
+                {
+                    //returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                    return null/* TODO Change to default(_) if this is not a reference type */;
+                }
+            }
+
+        }
     }
-}
 }
