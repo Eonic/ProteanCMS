@@ -255,8 +255,8 @@ namespace Protean.Providers.Payment
                         System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
                         responseDoc = agt.send(authRequest);
                         string strStatus = responseDoc.@get("Response.status");
-                         string AuthCode = responseDoc.get("Response.CardTxn.authcode");
-                       string  PaymentRef = responseDoc.get("Response.datacash_reference");
+                        string AuthCode = responseDoc.get("Response.CardTxn.authcode");
+                        string PaymentRef = responseDoc.get("Response.datacash_reference");
                         string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
                         string strPAReq = responseDoc.@get("Response.CardTxn.ThreeDSecure.pareq_message");
                         if (strStatus == "1")
@@ -305,7 +305,11 @@ namespace Protean.Providers.Payment
                             bool OrderSuccess = false;
                             string AuthCode = "";
                             string[] aGivenName;
-                            string strMerchantReference = "1234567891" + (oCart.mnCartId).ToString();
+                            string attempts = "0" + myWeb.moSession["dcAttempts"];
+                            myWeb.moSession["dcAttempts"] = long.Parse(attempts) + 1;
+                            //requires leading zeros
+                            string strMerchantReference = long.Parse(oCart.mnCartId.ToString() + myWeb.moSession["dcAttempts"]).ToString("D12");
+
                             requestDoc = new DataCash.Document(cfg);
                             requestDoc.@set("Request.Authentication.client", _AccountId);
                             requestDoc.@set("Request.Authentication.password", _AccountPassword);
@@ -491,7 +495,7 @@ namespace Protean.Providers.Payment
                             {
                                 string reason = responseDoc.@get("Response.reason");
                                 err_msg = "Datacash" + strStatus + ": " + reason;
-                                ccXform.addNote("ccXform.moXformElmt", xForm.noteTypes.Alert, err_msg);
+                                ccXform.addNote("creditCard", xForm.noteTypes.Alert, err_msg,true);
                                 ccXform.valid = false;
                             }
                         }
