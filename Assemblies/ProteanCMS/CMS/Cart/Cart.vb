@@ -5802,6 +5802,7 @@ processFlow:
             Dim oProdXml As New XmlDocument
             Dim strPrice1 As String
             Dim nTaxRate As Long = 0
+            Dim giftMessageNode As XmlNode
 
             Dim i As Integer
             Try
@@ -5879,19 +5880,27 @@ processFlow:
                             If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
                                 nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
                             End If
+                            If (UniqueProduct) Then
 
+                                If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                Else
+                                    ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                End If
+                            End If
                             'Add Parent Product to cart if SKU.
                             If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                'Then we need to add the Xml for the ParentProduct.
-                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+                                    'Then we need to add the Xml for the ParentProduct.
+                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
-                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                                End If
+
                             End If
-
                         End If
-                    End If
 
 
 
@@ -5923,7 +5932,7 @@ processFlow:
                     addNewTextNode("nQuantity", oElmt, nQuantity)
                     addNewTextNode("nWeight", oElmt, nWeight)
                     addNewTextNode("nParentId", oElmt, 0)
-                    addNewTextNode("nParentId", oElmt, 0)
+
 
                     Dim ProductXmlElmt As XmlElement = addNewTextNode("xItemXml", oElmt, "")
                     ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml
