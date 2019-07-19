@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
-
 using System.Web.Configuration;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using VB = Microsoft.VisualBasic;
 using Protean;
-
 using System.Net;
 using System.Web;
 using DataCash;
+using static Protean.Cms.Cart;
+
 
 // https://github.com/Worldpay/worldpay-lib-dotnet
 // 
@@ -201,8 +201,9 @@ namespace Protean.Providers.Payment
                 string _Currency = _oDatacashcfg.SelectSingleNode("currency").Attributes["value"].Value;
                 string confFile = _oDatacashcfg.SelectSingleNode("ConfigurationFile").Attributes["value"].Value.ToString();
                 string cProcessInfo = "";
+                var captureMethodObj = "ecomm";
 
-            try
+                try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -228,188 +229,276 @@ namespace Protean.Providers.Payment
 
                 ccXform = oEwProv.creditCardXform(ref oOrder, "PayForm", sSubmitPath, _oDatacashcfg.SelectSingleNode("cardsAccepted").Attributes["value"].Value, true, purchaseDesc, false);
                   
-                // if xform is valid or we have a 3d secure passback
-                if ((ccXform.valid || myWeb.moRequest["PaRes"] != "") && ccXform.isSubmitted()==true)
-                {
-                    
-
-                    DataCash.Config cfg = default(DataCash.Config);
-                    try
+                    // if 3d security response came
+                    if(myWeb.moRequest["PaRes"] != null)
                     {
+                        string parRes = myWeb.moRequest["PaRes"].ToString();
+                        string md = HttpContext.Current.Session["datacash_reference"].ToString();//myWeb.moSession.SessionID.ToString();
+                        string strCompletionURL = "";
+                        string strPaymentProvider;
+                        strPaymentProvider = captureMethodObj;
+
+                        DataCash.Config cfg = default(DataCash.Config);
                         cfg = new DataCash.Config(confFile);
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                    string deviceCat = "0";
-                    DataCash.Document requestDoc = default(DataCash.Document);
-                   
-                        string GivenName = "";
-
-                        string[] aGivenName;
-                        var captureMethodObj = "ecomm";
-                        string strMerchantReference = "1234567891";//(oCart.mnCartId).ToString();
-                        requestDoc = new DataCash.Document(cfg);
-                        requestDoc.@set("Request.Authentication.client", _AccountId);
-                        requestDoc.@set("Request.Authentication.password", _AccountPassword);
-
-                        requestDoc.@set("Request.Transaction.TxnDetails.merchantreference", strMerchantReference);
-                        Hashtable attrs = new Hashtable();
-                        attrs["currency"] = _Currency;
-                        requestDoc.setWithAttributes("Request.Transaction.TxnDetails.amount", Convert.ToString(oOrder.GetAttribute("total")), attrs);
-                        //requestDoc.@set("Request.Transaction.TxnDetails.capturemethod", "ecomm");
-                        requestDoc.@set("Request.Transaction.TxnDetails.capturemethod", captureMethodObj);
-
-
-                        string cardNumber = myWeb.moRequest["creditCard/number"];
-                        string name = GivenName;
-                        string expiryMonth = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(0, 2);
-                        int len = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Length;
-                        string expiryYear = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(len - 2);
-                        string cvc = myWeb.moRequest["creditCard/CV2"];
-                        string type = "Card";
-                        string issueNumber = "";
-                        string startMonth = "";
-                        string startYear = "";
-                        if (myWeb.moRequest["creditCard/issueNumber"] != "")
-                            issueNumber = Convert.ToString(myWeb.moRequest["creditCard/issueNumber"]);
-                        if (myWeb.moRequest["creditCard/issueDate"] != "")
+                        DataCash.Document authRequest = new DataCash.Document(cfg);
+                        authRequest.set("Request.Authentication.client", _AccountId);
+                        authRequest.set("Request.Authentication.password", _AccountPassword);
+                        authRequest.set("Request.Transaction.HistoricTxn.reference", md);
+                        if (parRes != null)
                         {
-                            startMonth = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(0, 2);
-                            len = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Length;
-                            startYear = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(len - 2);
+                            authRequest.set("Request.Transaction.HistoricTxn.pares_message", parRes);
                         }
-
-
-                        requestDoc.set("Request.Transaction.CardTxn.Card.pan", cardNumber);
-                        requestDoc.set("Request.Transaction.CardTxn.Card.expirydate", expiryMonth + '/' + expiryYear);
-                        requestDoc.set("Request.Transaction.CardTxn.Card.Cv2Avs.cv2", cvc);
-
-                        if (type == "SOLO" || type == "MAESTRO")
-                        {
-                            requestDoc.set("Request.Transaction.CardTxn.Card.startdate", startMonth + '/' + startYear);
-                            requestDoc.set("Request.Transaction.CardTxn.Card.issuenumber", issueNumber);
-                        }
-
-                        //if (captureMethodObj == "ecomm")
-                        //{
-                        //    //3d secure
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.verify", "yes");
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", _oDatacashcfg.SelectSingleNode("IntoTheBlueDomain").Attributes["value"].Value.ToString() + "/");
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_datetime", DateTime.Now.ToString("yyyyMMdd HH:mm:ss"));
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_desc", "vouchers");
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.device_category", "0");
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.accept_headers", "*/*");
-                        //    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.user_agent", HttpContext.Current.Request.Browser.Browser);
-                        //}
-
-                        XmlNode oCartAdd = oOrder.SelectSingleNode("Contact[@type='Billing Address']");
-                        if (oCartAdd != null)
-                        {
-
-                            GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
-                            aGivenName = oCartAdd.SelectSingleNode("GivenName").InnerText.ToString().Split(' ');
-
-                            //get the3rdMan details
-                            //customer info
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.title", "");
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.forename", aGivenName[0]);
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.surname", aGivenName[aGivenName.Length - 1]);
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.email", oCartAdd.SelectSingleNode("Email").InnerText);
-                            string PhoneNo = oCartAdd.SelectSingleNode("Telephone").InnerText;
-                            PhoneNo = PhoneNo.Replace("+", "");
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.telephone", PhoneNo);
-
-                            //Billing Address
-                            if (oCartAdd.SelectSingleNode("Company") != null)
-                            {
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Company").InnerText);
-                                if (oCartAdd.SelectSingleNode("Street") != null)
-                                {
-                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_2", oCartAdd.SelectSingleNode("Street").InnerText);
-                                }
-                            }
-                            else if (oCartAdd.SelectSingleNode("Street") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
-                            if (oCartAdd.SelectSingleNode("City") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
-                            if (oCartAdd.SelectSingleNode("State") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
-                            if (oCartAdd.SelectSingleNode("PostalCode") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.postcode", oCartAdd.SelectSingleNode("PostalCode").InnerText);
-                            if (oCartAdd.SelectSingleNode("StrCountry") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.country", getCountryISONum(oCartAdd.SelectSingleNode("Country").InnerText));
-
-                        }
-                        //requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.ip_address", HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"].ToString());
-
-                        oCartAdd = oOrder.SelectSingleNode("Contact[@type='Delivery Address']");
-                        if (oCartAdd != null)
-                        {
-                            GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
-                            aGivenName = oCartAdd.SelectSingleNode("GivenName").InnerText.ToString().Split(' ');
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_title", "");
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_forename", aGivenName[0]);
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_surname", aGivenName[aGivenName.Length - 1]);
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.order_number", "123");
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.sales_channel", "3");
-
-
-                            //Delivery(Address)
-                            if (oCartAdd.SelectSingleNode("Company") != null)
-                            {
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Company").InnerText);
-                                if (oCartAdd.SelectSingleNode("Street") != null)
-                                {
-                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_2", oCartAdd.SelectSingleNode("Street").InnerText);
-                                }
-                            }
-                            else if (oCartAdd.SelectSingleNode("Street") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
-                            if (oCartAdd.SelectSingleNode("City") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
-                            if (oCartAdd.SelectSingleNode("State") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
-                            if (oCartAdd.SelectSingleNode("PostalCode") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.postcode", oCartAdd.SelectSingleNode("PostalCode").InnerText);
-                            if (oCartAdd.SelectSingleNode("StrCountry") != null)
-                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.country", getCountryISONum(oCartAdd.SelectSingleNode("Country").InnerText));
-                        }
-                        //Order Information
-
-                        requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.event_date", DateTime.Now.ToString("yyyy-MM-dd"));
-                        requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", "First Class Royaql Mail");
-                        //XElement xmlActivity = xmlParentBasket.Element("Activities");
-
-                        //XElement stateXml = default(XElement);
-                        //stateXml = new XElement("Products", new XAttribute("count", xmlParentBasket.Element("Activities").Elements().Count().ToString()), from nodeActivity in xmlActivity.Elements() select new XElement("Product", new XElement("code", nodeActivity.Element("strCode").Value), new XElement("quantity", nodeActivity.Element("intquantity").Value), new XElement("price", nodeActivity.Element("dblPrice").Value), new XElement("prod_description", nodeActivity.Element("BasketDescription").Value.Replace("&", ""))));
-
-
-
-                        //XmlDocumentFragment docFrag = default(XmlDocumentFragment);
-                        //docFrag = requestDoc.XMLDocument.CreateDocumentFragment();
-                        //docFrag.InnerXml = stateXml.ToString();
-
-
-                        //XmlNode nodeProd = requestDoc.XMLDocument.DocumentElement;
-
-                        //XmlNodeList xmlnlist = default(XmlNodeList);
-                        ////condition for distribution_channel is remaining
-                        //xmlnlist = nodeProd.SelectNodes("//Request/Transaction/TxnDetails/The3rdMan/OrderInformation");
-                        //  xmlnlist.Item(0).AppendChild(docFrag);
-
-                        requestDoc.@set("Request.Transaction.CardTxn.method", "auth");
-
+                        authRequest.set("Request.Transaction.HistoricTxn.method", "threedsecure_authorization_request");
                         DataCash.Document responseDoc = default(DataCash.Document);
                         Agent agt = default(Agent);
                         agt = new Agent(cfg);
                         System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
-                        responseDoc = agt.send(requestDoc);
+                        responseDoc = agt.send(authRequest);
+                        string strStatus = responseDoc.@get("Response.status");
+                        string AuthCode = responseDoc.get("Response.CardTxn.authcode");
+                        string PaymentRef = responseDoc.get("Response.datacash_reference");
+                        string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
+                        string strPAReq = responseDoc.@get("Response.CardTxn.ThreeDSecure.pareq_message");
+                        if (strStatus == "1")
+                        {
+                            XmlElement oeResponseElmt = ccXform.Instance.OwnerDocument.CreateElement("Response");
+                            oeResponseElmt.SetAttribute("AuthCode", AuthCode);
+                            ccXform.Instance.FirstChild.AppendChild(oeResponseElmt);
+                            oCart.mnPaymentId = oEwProv.savePayment(myWeb.mnUserId, "Datacash", PaymentRef, cMethodName, oeResponseElmt, DateTime.Now, false, oEwProv.mnPaymentAmount);
+                            string sRedirectURL;
+                            sRedirectURL = moCartConfig["SecureURL"] + returnCmd + "&3dsec=showInvoice";
+                            ccXform = this.xfrmSecure3DReturn(sRedirectURL);
+                            myWeb.moSession["PaRes"] = myWeb.moRequest["PaRes"];
+                        }
+                        else
+                        {
+                            string reason = responseDoc.@get("Response.reason");
+                            err_msg = "Datacash" + strStatus + ": " + reason;
+                            ccXform.addNote("ccXform.moXformElmt", xForm.noteTypes.Alert, err_msg);
+                            ccXform.valid = false;
+                        }
 
-                      
+                        if (myWeb.moRequest["3dsec"].ToString() == "showInvoice" && Convert.ToString(myWeb.moSession["PaRes"]) != "")
+                        {
+                            ccXform.valid = true;
+                        }
+                    
+                    }
+                // if xform is valid or we have a 3d secure passback
+                if ((ccXform.valid || myWeb.moRequest["PaRes"] == null) && ccXform.isSubmitted()==true)
+                {
+                       
+                            DataCash.Config cfg = default(DataCash.Config);
+                            try
+                            {
+                                cfg = new DataCash.Config(confFile);
+                            }
+                            catch (Exception ex)
+                            {
 
-                }
+                            }
+                            string deviceCat = "0";
+                            DataCash.Document requestDoc = default(DataCash.Document);
+
+                            string GivenName = "";
+                            string PaymentRef = "";
+                            bool OrderSuccess = false;
+                            string AuthCode = "";
+                            string[] aGivenName;
+                            string attempts = "0" + myWeb.moSession["dcAttempts"];
+                            myWeb.moSession["dcAttempts"] = long.Parse(attempts) + 1;
+                            //requires leading zeros
+                            string strMerchantReference = long.Parse(oCart.mnCartId.ToString() + myWeb.moSession["dcAttempts"]).ToString("D12");
+
+                            requestDoc = new DataCash.Document(cfg);
+                            requestDoc.@set("Request.Authentication.client", _AccountId);
+                            requestDoc.@set("Request.Authentication.password", _AccountPassword);
+
+                            requestDoc.@set("Request.Transaction.TxnDetails.merchantreference", strMerchantReference);
+                            Hashtable attrs = new Hashtable();
+                            attrs["currency"] = _Currency;
+                            requestDoc.setWithAttributes("Request.Transaction.TxnDetails.amount", Convert.ToString(oOrder.GetAttribute("total")), attrs);
+                            requestDoc.@set("Request.Transaction.TxnDetails.capturemethod", captureMethodObj);
+
+
+                            string cardNumber = myWeb.moRequest["creditCard/number"];
+                            string name = GivenName;
+                            string expiryMonth = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(0, 2);
+                            int len = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Length;
+                            string expiryYear = Convert.ToString(myWeb.moRequest["creditCard/expireDate"]).Substring(len - 2);
+                            string cvc = myWeb.moRequest["creditCard/CV2"];
+                            string type = "Card";
+                            string issueNumber = "";
+                            string startMonth = "";
+                            string startYear = "";
+                            if (myWeb.moRequest["creditCard/issueNumber"] != "")
+                                issueNumber = Convert.ToString(myWeb.moRequest["creditCard/issueNumber"]);
+                            if (myWeb.moRequest["creditCard/issueDate"] != "")
+                            {
+                                startMonth = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(0, 2);
+                                len = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Length;
+                                startYear = Convert.ToString(myWeb.moRequest["creditCard/issueDate"]).Substring(len - 2);
+                            }
+
+
+                            requestDoc.set("Request.Transaction.CardTxn.Card.pan", cardNumber);
+                            requestDoc.set("Request.Transaction.CardTxn.Card.expirydate", expiryMonth + '/' + expiryYear);
+                            requestDoc.set("Request.Transaction.CardTxn.Card.Cv2Avs.cv2", cvc);
+
+                            if (type == "SOLO" || type == "MAESTRO")
+                            {
+                                requestDoc.set("Request.Transaction.CardTxn.Card.startdate", startMonth + '/' + startYear);
+                                requestDoc.set("Request.Transaction.CardTxn.Card.issuenumber", issueNumber);
+                            }
+
+                            if (captureMethodObj == "ecomm")
+                            {
+                                //if (_oDatacashcfg.SelectSingleNode("secure3d").Attributes["value"].Value == "on")
+                                //{
+                                    //3d secure
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.verify", "yes");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", _oDatacashcfg.SelectSingleNode("IntoTheBlueDomain").Attributes["value"].Value.ToString() + "/");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_datetime", DateTime.Now.ToString("yyyyMMdd HH:mm:ss"));
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_desc", "vouchers");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.device_category", "0");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.accept_headers", "*/*");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.user_agent", HttpContext.Current.Request.Browser.Browser);
+                                //}
+                            }
+
+                            XmlNode oCartAdd = oOrder.SelectSingleNode("Contact[@type='Billing Address']");
+                            if (oCartAdd != null)
+                            {
+
+                                GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
+                                aGivenName = oCartAdd.SelectSingleNode("GivenName").InnerText.ToString().Split(' ');
+
+                                //get the3rdMan details
+                                //customer info
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.title", "");
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.forename", aGivenName[0]);
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.surname", aGivenName[aGivenName.Length - 1]);
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.email", oCartAdd.SelectSingleNode("Email").InnerText);
+                                string PhoneNo = oCartAdd.SelectSingleNode("Telephone").InnerText;
+                                PhoneNo = PhoneNo.Replace("+", "");
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.telephone", PhoneNo);
+
+                                //Billing Address
+                                if (oCartAdd.SelectSingleNode("Company") != null)
+                                {
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Company").InnerText);
+                                    if (oCartAdd.SelectSingleNode("Street") != null)
+                                    {
+                                        requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_2", oCartAdd.SelectSingleNode("Street").InnerText);
+                                    }
+                                }
+                                else if (oCartAdd.SelectSingleNode("Street") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
+                                if (oCartAdd.SelectSingleNode("City") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
+                                if (oCartAdd.SelectSingleNode("State") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
+                                if (oCartAdd.SelectSingleNode("PostalCode") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.postcode", oCartAdd.SelectSingleNode("PostalCode").InnerText);
+                                if (oCartAdd.SelectSingleNode("StrCountry") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.country", getCountryISONum(oCartAdd.SelectSingleNode("Country").InnerText));
+
+                            }
+                            //requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.ip_address", HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"].ToString());
+
+                            oCartAdd = oOrder.SelectSingleNode("Contact[@type='Delivery Address']");
+                            if (oCartAdd != null)
+                            {
+                                GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
+                                aGivenName = oCartAdd.SelectSingleNode("GivenName").InnerText.ToString().Split(' ');
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_title", "");
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_forename", aGivenName[0]);
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.delivery_surname", aGivenName[aGivenName.Length - 1]);
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.order_number", "123");
+                                requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.CustomerInformation.sales_channel", "3");
+
+
+                                //Delivery(Address)
+                                if (oCartAdd.SelectSingleNode("Company") != null)
+                                {
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Company").InnerText);
+                                    if (oCartAdd.SelectSingleNode("Street") != null)
+                                    {
+                                        requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_2", oCartAdd.SelectSingleNode("Street").InnerText);
+                                    }
+                                }
+                                else if (oCartAdd.SelectSingleNode("Street") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.BillingAddress.street_address_1", oCartAdd.SelectSingleNode("Street").InnerText);
+                                if (oCartAdd.SelectSingleNode("City") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.city", oCartAdd.SelectSingleNode("City").InnerText);
+                                if (oCartAdd.SelectSingleNode("State") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.county", oCartAdd.SelectSingleNode("State").InnerText);
+                                if (oCartAdd.SelectSingleNode("PostalCode") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.postcode", oCartAdd.SelectSingleNode("PostalCode").InnerText);
+                                if (oCartAdd.SelectSingleNode("StrCountry") != null)
+                                    requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.DeliveryAddress.country", getCountryISONum(oCartAdd.SelectSingleNode("Country").InnerText));
+                            }
+                            //Order Information
+
+                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.event_date", DateTime.Now.ToString("yyyy-MM-dd"));
+                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", "First Class Royaql Mail");
+                            //XElement xmlActivity = xmlParentBasket.Element("Activities");
+
+                            //XElement stateXml = default(XElement);
+                            //stateXml = new XElement("Products", new XAttribute("count", xmlParentBasket.Element("Activities").Elements().Count().ToString()), from nodeActivity in xmlActivity.Elements() select new XElement("Product", new XElement("code", nodeActivity.Element("strCode").Value), new XElement("quantity", nodeActivity.Element("intquantity").Value), new XElement("price", nodeActivity.Element("dblPrice").Value), new XElement("prod_description", nodeActivity.Element("BasketDescription").Value.Replace("&", ""))));
+
+
+
+                            //XmlDocumentFragment docFrag = default(XmlDocumentFragment);
+                            //docFrag = requestDoc.XMLDocument.CreateDocumentFragment();
+                            //docFrag.InnerXml = stateXml.ToString();
+
+
+                            //XmlNode nodeProd = requestDoc.XMLDocument.DocumentElement;
+
+                            //XmlNodeList xmlnlist = default(XmlNodeList);
+                            ////condition for distribution_channel is remaining
+                            //xmlnlist = nodeProd.SelectNodes("//Request/Transaction/TxnDetails/The3rdMan/OrderInformation");
+                            //  xmlnlist.Item(0).AppendChild(docFrag);
+
+                            requestDoc.@set("Request.Transaction.CardTxn.method", "auth");
+
+                            DataCash.Document responseDoc = default(DataCash.Document);
+                            Agent agt = default(Agent);
+                            agt = new Agent(cfg);
+                            System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+                            responseDoc = agt.send(requestDoc);
+                            string strStatus = responseDoc.@get("Response.status");
+                            AuthCode = responseDoc.get("Response.CardTxn.authcode");
+                            PaymentRef = responseDoc.get("Response.datacash_reference");
+                        HttpContext.Current.Session["datacash_reference"] = PaymentRef;
+                        myWeb.moSession["PaRes"] = PaymentRef;
+                             string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
+                            string strPAReq = responseDoc.@get("Response.CardTxn.ThreeDSecure.pareq_message");
+                            if (strStatus == "150")
+                            {
+                                string sRedirectURL = "";
+
+                                sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails&3dsec=return";
+                                err_msg = err_msg + "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
+                            ccXform = oEwProv.xfrmSecure3D(str3DUrl, PaymentRef, strPAReq, sRedirectURL);
+                            }
+                            else if (strStatus == "1")
+                            {
+                                XmlElement oeResponseElmt = ccXform.Instance.OwnerDocument.CreateElement("Response");
+                                oeResponseElmt.SetAttribute("AuthCode", AuthCode);
+                                ccXform.Instance.FirstChild.AppendChild(oeResponseElmt);
+                                oCart.mnPaymentId = oEwProv.savePayment(myWeb.mnUserId, "Datacash", PaymentRef, cMethodName, oeResponseElmt, DateTime.Now, false, oEwProv.mnPaymentAmount);
+
+                            }
+                            else
+                            {
+                                string reason = responseDoc.@get("Response.reason");
+                                err_msg = "Datacash" + strStatus + ": " + reason;
+                                ccXform.addNote("creditCard", xForm.noteTypes.Alert, err_msg,true);
+                                ccXform.valid = false;
+                            }
+                        }
                 return ccXform;
             }
             catch (Exception ex)
@@ -422,12 +511,13 @@ namespace Protean.Providers.Payment
 
         public xForm xfrmSecure3DReturn(string acs_url)
         {
-            //PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
+
+                stdTools.PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
             xForm oXform = new Protean.Cms.xForm();
             XmlElement oFrmInstance;
             XmlElement oFrmGroup;
-
-           // string cProcessInfo = "xfrmSecure3D";
+               
+            string cProcessInfo = "xfrmSecure3D";
             try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -436,13 +526,13 @@ namespace Protean.Providers.Payment
 
                 // create the instance
                 oXform.NewFrm("Secure3DReturn");
-               // oXform.submission("Secure3DReturn", goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
+                oXform.submission("Secure3DReturn", stdTools.goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
                 oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn");
                 oXform.Instance.AppendChild(oFrmInstance);
-                //oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
+                oFrmGroup = addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
                 // build the form and the binds
-                // oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
-                //oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
+                //oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
+                oXform.addSubmit(ref oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
                 oXform.addValues();
                 return oXform;
             }
@@ -482,6 +572,35 @@ namespace Protean.Providers.Payment
                 return null;
             }
         }
+
+            public XmlElement addGroup( XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "")
+            {
+                xForm oXform = new Protean.Cms.xForm();
+                
+                XmlElement oGrpElmt;
+                XmlElement oLabelElmt;
+                string cProcessInfo = "";
+                try
+                {
+                    oGrpElmt = oXform.moPageXML.CreateElement("group");
+                    oGrpElmt.SetAttribute("ref", sRef);
+                    if (sClass != "")
+                        oGrpElmt.SetAttribute("class", sClass);
+                    if (sLabel != "")
+                    {
+                        oLabelElmt = oXform.moPageXML.CreateElement("label");
+                        oLabelElmt.InnerXml = sLabel;
+                        oGrpElmt.AppendChild(oLabelElmt);
+                    }
+                    return oGrpElmt;
+                }
+                catch (Exception ex)
+                {
+                    //returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                    return null/* TODO Change to default(_) if this is not a reference type */;
+                }
+            }
+
+        }
     }
-}
 }

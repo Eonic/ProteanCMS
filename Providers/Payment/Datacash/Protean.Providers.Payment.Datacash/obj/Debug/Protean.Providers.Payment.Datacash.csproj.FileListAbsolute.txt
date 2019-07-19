@@ -1,2 +1,8 @@
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Protean.Providers.Payment.Datacash.dll
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Protean.Providers.Payment.Datacash.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CoreCompileInputs.cache
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CopyComplete
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.dll
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.pdb
