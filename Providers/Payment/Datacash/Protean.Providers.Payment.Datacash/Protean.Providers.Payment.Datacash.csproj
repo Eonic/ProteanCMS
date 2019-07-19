@@ -54,20 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools.Csharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools\Protean.Tools.vbproj">
-      <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
-      <Name>Protean.Tools</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Assemblies\ProteanCMS\ProteanCMS.vbproj">
-      <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
-      <Name>ProteanCMS</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="bin\Debug\Protean.Providers.Payment.Datacash.dll" />
     <Content Include="bin\Debug\Protean.Providers.Payment.Datacash.pdb" />
     <Content Include="bin\Debug\Transaction.dll" />
@@ -75,6 +61,23 @@
   <ItemGroup>
     <Folder Include="bin\Release\" />
     <Folder Include="Datacash\dc\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Name>Protean.Tools.Csharp</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools\Protean.Tools.vbproj">
+      <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
+      <Name>Protean.Tools</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Assemblies\ProteanCMS\ProteanCMS.vbproj">
+      <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
+      <Name>ProteanCMS</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

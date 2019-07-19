@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Xml;
-
 using System.Web.Configuration;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using VB = Microsoft.VisualBasic;
 using Protean;
-
 using System.Net;
 using System.Web;
 using DataCash;
+using static Protean.Cms.Cart;
+
 
 // https://github.com/Worldpay/worldpay-lib-dotnet
 // 
@@ -255,8 +255,8 @@ namespace Protean.Providers.Payment
                         System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
                         responseDoc = agt.send(authRequest);
                         string strStatus = responseDoc.@get("Response.status");
-                         string AuthCode = responseDoc.get("Response.CardTxn.authcode");
-                       string  PaymentRef = responseDoc.get("Response.datacash_reference");
+                        string AuthCode = responseDoc.get("Response.CardTxn.authcode");
+                        string PaymentRef = responseDoc.get("Response.datacash_reference");
                         string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
                         string strPAReq = responseDoc.@get("Response.CardTxn.ThreeDSecure.pareq_message");
                         if (strStatus == "1")
@@ -268,7 +268,7 @@ namespace Protean.Providers.Payment
                             string sRedirectURL;
                             sRedirectURL = moCartConfig["SecureURL"] + returnCmd + "&3dsec=showInvoice";
                             ccXform = this.xfrmSecure3DReturn(sRedirectURL);
-                            //myWeb.moSession("PaRes") = myWeb.moRequest("PaRes")
+                            myWeb.moSession["PaRes"] = myWeb.moRequest["PaRes"];
                         }
                         else
                         {
@@ -278,7 +278,11 @@ namespace Protean.Providers.Payment
                             ccXform.valid = false;
                         }
 
-
+                        if (myWeb.moRequest["3dsec"].ToString() == "showInvoice" && Convert.ToString(myWeb.moSession["PaRes"]) != "")
+                        {
+                            ccXform.valid = true;
+                        }
+                    
                     }
                 // if xform is valid or we have a 3d secure passback
                 if ((ccXform.valid || myWeb.moRequest["PaRes"] == null) && ccXform.isSubmitted()==true)
@@ -301,7 +305,11 @@ namespace Protean.Providers.Payment
                             bool OrderSuccess = false;
                             string AuthCode = "";
                             string[] aGivenName;
-                            string strMerchantReference = "1234567891" + (oCart.mnCartId).ToString();
+                            string attempts = "0" + myWeb.moSession["dcAttempts"];
+                            myWeb.moSession["dcAttempts"] = long.Parse(attempts) + 1;
+                            //requires leading zeros
+                            string strMerchantReference = long.Parse(oCart.mnCartId.ToString() + myWeb.moSession["dcAttempts"]).ToString("D12");
+
                             requestDoc = new DataCash.Document(cfg);
                             requestDoc.@set("Request.Authentication.client", _AccountId);
                             requestDoc.@set("Request.Authentication.password", _AccountPassword);
@@ -487,7 +495,7 @@ namespace Protean.Providers.Payment
                             {
                                 string reason = responseDoc.@get("Response.reason");
                                 err_msg = "Datacash" + strStatus + ": " + reason;
-                                ccXform.addNote("ccXform.moXformElmt", xForm.noteTypes.Alert, err_msg);
+                                ccXform.addNote("creditCard", xForm.noteTypes.Alert, err_msg,true);
                                 ccXform.valid = false;
                             }
                         }
@@ -503,12 +511,13 @@ namespace Protean.Providers.Payment
 
         public xForm xfrmSecure3DReturn(string acs_url)
         {
-            //PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
+
+                stdTools.PerfMon.Log("EPDQ", "xfrmSecure3DReturn");
             xForm oXform = new Protean.Cms.xForm();
             XmlElement oFrmInstance;
             XmlElement oFrmGroup;
-
-           // string cProcessInfo = "xfrmSecure3D";
+               
+            string cProcessInfo = "xfrmSecure3D";
             try
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -517,13 +526,13 @@ namespace Protean.Providers.Payment
 
                 // create the instance
                 oXform.NewFrm("Secure3DReturn");
-               // oXform.submission("Secure3DReturn", goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
+                oXform.submission("Secure3DReturn", stdTools.goServer.UrlDecode(acs_url), "POST", "return form_check(this);");
                 oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn");
                 oXform.Instance.AppendChild(oFrmInstance);
-                //oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
+                oFrmGroup = addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
                 // build the form and the binds
-                // oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
-                //oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
+                //oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
+                oXform.addSubmit(ref oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
                 oXform.addValues();
                 return oXform;
             }
@@ -563,6 +572,35 @@ namespace Protean.Providers.Payment
                 return null;
             }
         }
+
+            public XmlElement addGroup( XmlElement oContextNode, string sRef, string sClass = "", string sLabel = "")
+            {
+                xForm oXform = new Protean.Cms.xForm();
+                
+                XmlElement oGrpElmt;
+                XmlElement oLabelElmt;
+                string cProcessInfo = "";
+                try
+                {
+                    oGrpElmt = oXform.moPageXML.CreateElement("group");
+                    oGrpElmt.SetAttribute("ref", sRef);
+                    if (sClass != "")
+                        oGrpElmt.SetAttribute("class", sClass);
+                    if (sLabel != "")
+                    {
+                        oLabelElmt = oXform.moPageXML.CreateElement("label");
+                        oLabelElmt.InnerXml = sLabel;
+                        oGrpElmt.AppendChild(oLabelElmt);
+                    }
+                    return oGrpElmt;
+                }
+                catch (Exception ex)
+                {
+                    //returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                    return null/* TODO Change to default(_) if this is not a reference type */;
+                }
+            }
+
+        }
     }
-}
 }
