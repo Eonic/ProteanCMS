@@ -441,27 +441,51 @@ namespace Protean.Providers.Payment
                             //Order Information
 
                             requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.event_date", DateTime.Now.ToString("yyyy-MM-dd"));
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", "First Class Royaql Mail");
-                            //XElement xmlActivity = xmlParentBasket.Element("Activities");
+                      
+                        requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", oOrder.GetAttribute("shippingDesc"));
 
-                            //XElement stateXml = default(XElement);
-                            //stateXml = new XElement("Products", new XAttribute("count", xmlParentBasket.Element("Activities").Elements().Count().ToString()), from nodeActivity in xmlActivity.Elements() select new XElement("Product", new XElement("code", nodeActivity.Element("strCode").Value), new XElement("quantity", nodeActivity.Element("intquantity").Value), new XElement("price", nodeActivity.Element("dblPrice").Value), new XElement("prod_description", nodeActivity.Element("BasketDescription").Value.Replace("&", ""))));
+                             XmlDocument xml = new XmlDocument();
+                             int itemCount = Convert.ToInt32(oOrder.GetAttribute("itemCount"));
+                             XmlElement root = xml.CreateElement("Products");
+                            root.SetAttribute("count", itemCount.ToString());   
+                            xml.AppendChild(root);
+                            for (int i = 0; i < itemCount; i++)
+                            {
+                                XmlNode oCartItem = oOrder.ChildNodes[i];
+                                XmlElement child = xml.CreateElement("Product");
+                                XmlElement code = xml.CreateElement("code");
+                                code.InnerText = oCartItem.Attributes["ref"].Value;
+                                child.AppendChild(code);
 
+                                XmlElement quantity = xml.CreateElement("quantity");
+                                quantity.InnerText = "1";//oCartItem.Attributes["quantity"].Value;
+                                child.AppendChild(quantity);
 
+                                XmlElement price = xml.CreateElement("price");
+                                price.InnerText = oCartItem.Attributes["price"].Value;
+                                child.AppendChild(price);
 
-                            //XmlDocumentFragment docFrag = default(XmlDocumentFragment);
-                            //docFrag = requestDoc.XMLDocument.CreateDocumentFragment();
-                            //docFrag.InnerXml = stateXml.ToString();
+                                XmlElement prod_description = xml.CreateElement("prod_description");
+                                prod_description.InnerText = oCartItem.SelectSingleNode("Name").InnerText;
+                                child.AppendChild(prod_description);
 
+                            root.AppendChild(child);
 
-                            //XmlNode nodeProd = requestDoc.XMLDocument.DocumentElement;
+                        }
+                        
+                        string stateXml = xml.OuterXml;
 
-                            //XmlNodeList xmlnlist = default(XmlNodeList);
-                            ////condition for distribution_channel is remaining
-                            //xmlnlist = nodeProd.SelectNodes("//Request/Transaction/TxnDetails/The3rdMan/OrderInformation");
-                            //  xmlnlist.Item(0).AppendChild(docFrag);
+                        XmlDocumentFragment docFrag = default(XmlDocumentFragment);
+                        docFrag = requestDoc.XMLDocument.CreateDocumentFragment();
+                        docFrag.InnerXml = stateXml.ToString();
+                        XmlNode nodeProd = requestDoc.XMLDocument.DocumentElement;
 
-                            requestDoc.@set("Request.Transaction.CardTxn.method", "auth");
+                        XmlNodeList xmlnlist = default(XmlNodeList);
+                        ////condition for distribution_channel is remaining
+                        xmlnlist = nodeProd.SelectNodes("//Request/Transaction/TxnDetails/The3rdMan/OrderInformation");
+                        xmlnlist.Item(0).AppendChild(docFrag);
+
+                        requestDoc.@set("Request.Transaction.CardTxn.method", "auth");
 
                             DataCash.Document responseDoc = default(DataCash.Document);
                             Agent agt = default(Agent);
