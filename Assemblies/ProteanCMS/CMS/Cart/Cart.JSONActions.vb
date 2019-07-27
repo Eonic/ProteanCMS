@@ -372,6 +372,26 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    ' myCart.GetCart(CartXml.FirstChild)
+                    'add discount Code option
+                    Return myCart.moDiscount.AddDiscountCode(jObj("Code"))
+
+                    'Output the new cart
+                    myCart.GetCart(CartXml.FirstChild)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                Catch ex As Exception
+
+                End Try
+            End Function
+
+
         End Class
 
 #End Region

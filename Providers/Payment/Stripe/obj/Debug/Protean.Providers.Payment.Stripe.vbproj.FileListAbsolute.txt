@@ -119,3 +119,5 @@ D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\obj\Debug\Protean.Providers.
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\obj\Debug\Protean.Providers.Payment.Stripe.dll
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\obj\Debug\Protean.Providers.Payment.Stripe.xml
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\obj\Debug\Protean.Providers.Payment.Stripe.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\bin\Debug\JsonWebTokens.dll
+D:\HostingSpaces\DevOpsGit\Providers\Payment\Stripe\bin\Debug\Protean.Tools.Csharp.dll.config

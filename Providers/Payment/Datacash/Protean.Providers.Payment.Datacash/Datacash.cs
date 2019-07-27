@@ -357,7 +357,7 @@ namespace Protean.Providers.Payment
                                 //{
                                     //3d secure
                                     requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.verify", "yes");
-                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", _oDatacashcfg.SelectSingleNode("IntoTheBlueDomain").Attributes["value"].Value.ToString() + "/");
+                                    requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.merchant_url", moCartConfig["SecureURL"]);
                                     requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_datetime", DateTime.Now.ToString("yyyyMMdd HH:mm:ss"));
                                     requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.purchase_desc", "vouchers");
                                     requestDoc.@set("Request.Transaction.TxnDetails.ThreeDSecure.Browser.device_category", "0");
@@ -441,7 +441,7 @@ namespace Protean.Providers.Payment
                             //Order Information
 
                             requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.event_date", DateTime.Now.ToString("yyyy-MM-dd"));
-                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", "First Class Royaql Mail");
+                            requestDoc.@set("Request.Transaction.TxnDetails.The3rdMan.OrderInformation.distribution_channel", "First Class Royal Mail");
                             //XElement xmlActivity = xmlParentBasket.Element("Activities");
 
                             //XElement stateXml = default(XElement);
@@ -471,17 +471,16 @@ namespace Protean.Providers.Payment
                             string strStatus = responseDoc.@get("Response.status");
                             AuthCode = responseDoc.get("Response.CardTxn.authcode");
                             PaymentRef = responseDoc.get("Response.datacash_reference");
-                        HttpContext.Current.Session["datacash_reference"] = PaymentRef;
-                        myWeb.moSession["PaRes"] = PaymentRef;
-                             string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
+                            HttpContext.Current.Session["datacash_reference"] = PaymentRef;
+                            myWeb.moSession["PaRes"] = PaymentRef;
+                            string str3DUrl = responseDoc.@get("Response.CardTxn.ThreeDSecure.acs_url");
                             string strPAReq = responseDoc.@get("Response.CardTxn.ThreeDSecure.pareq_message");
                             if (strStatus == "150")
                             {
                                 string sRedirectURL = "";
-
                                 sRedirectURL = moCartConfig["SecureURL"] + "?cartCmd=SubmitPaymentDetails&3dsec=return";
                                 err_msg = err_msg + "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
-                            ccXform = oEwProv.xfrmSecure3D(str3DUrl, PaymentRef, strPAReq, sRedirectURL);
+                                ccXform = oEwProv.xfrmSecure3D(str3DUrl, PaymentRef, strPAReq, sRedirectURL);
                             }
                             else if (strStatus == "1")
                             {
