@@ -113,3 +113,5 @@ D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\obj\Debug\Protean.Provider
 D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\obj\Debug\Protean.Providers.Payment.Worldpay.dll
 D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\obj\Debug\Protean.Providers.Payment.Worldpay.xml
 D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\obj\Debug\Protean.Providers.Payment.Worldpay.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\bin\Debug\JsonWebTokens.dll
+D:\HostingSpaces\DevOpsGit\Providers\Payment\WorldPay\bin\Debug\Protean.Tools.Csharp.dll.config
