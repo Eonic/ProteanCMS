@@ -1003,15 +1003,24 @@
   <xsl:template match="Page" mode="pageJs"></xsl:template>
 
   <xsl:template match="Page" mode="JSONLD">
-    <script type="application/ld+json">
-      <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
-      <xsl:apply-templates select="ContentDetail" mode="JSONLD"/>
-    </script>
+    <xsl:variable name="jsonld">
+      <xsl:choose>
+        <xsl:when test="ContentDetail/Content">
+          <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:if test ="$jsonld!=''">
+        <script type="application/ld+json">
+          <xsl:value-of select="$jsonld"/>
+        </script>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content" mode="JSONLD"></xsl:template>
-
-  <xsl:template match="ContentDetail" mode="JSONLD"></xsl:template>
 
   <!-- -->
   <!--   ################################################   Meta Tags   ##############################################   -->

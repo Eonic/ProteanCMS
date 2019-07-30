@@ -9994,6 +9994,10 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="Content[@type='FAQ']" mode="JSONLD">
+    
+  </xsl:template>
+
   <!-- FAQ Module Accordian -->
   <xsl:template match="Content[@type='Module' and @moduleType='FAQList' and @presentationType='accordian']" mode="displayBrief">
     <!-- Set Variables -->
