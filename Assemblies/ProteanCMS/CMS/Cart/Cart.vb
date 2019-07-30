@@ -6252,6 +6252,9 @@ processFlow:
 
         End Function
 
+
+
+
         ''' <summary>
         ''' Empties all items in a shopping cart.
         ''' </summary>
@@ -7167,7 +7170,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                                 Dim orderNode As XmlElement = oContent.FirstChild
                                 'Add values not stored in cartXml
-                                orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                If Not orderNode Is Nothing Then
+                                    orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                End If
                                 If oDR("cCurrency") Is Nothing Or oDR("cCurrency") = "" Then
                                     oContent.SetAttribute("currency", mcCurrency)
                                     oContent.SetAttribute("currencySymbol", mcCurrencySymbol)

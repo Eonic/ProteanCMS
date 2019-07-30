@@ -343,7 +343,6 @@
           </xsl:otherwise>
         </xsl:choose>
 
-
         <xsl:if test="$ScriptAtBottom!='on'">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
@@ -984,6 +983,7 @@
       <!-- End Facebook Pixel Code -->
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
+    <xsl:apply-templates select="/Page" mode="JSONLD"/>
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
 
@@ -1002,7 +1002,16 @@
   <!-- overidable template to pull in page specific files -->
   <xsl:template match="Page" mode="pageJs"></xsl:template>
 
+  <xsl:template match="Page" mode="JSONLD">
+    <script type="application/ld+json">
+      <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
+      <xsl:apply-templates select="ContentDetail" mode="JSONLD"/>
+    </script>
+  </xsl:template>
 
+  <xsl:template match="Content" mode="JSONLD"></xsl:template>
+
+  <xsl:template match="ContentDetail" mode="JSONLD"></xsl:template>
 
   <!-- -->
   <!--   ################################################   Meta Tags   ##############################################   -->
@@ -1812,7 +1821,7 @@
 
   <xsl:template match="Page" mode="googleUniversalAnalyticsCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script>
+      <script id="GoogleAnalyticsUniversal" data-GoogleAnalyticsUniversalID="{$GoogleAnalyticsUniversalID}">
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -2290,11 +2299,9 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Content" mode="JSONLD">
+  <xsl:template match="Content[@type='plaintext']" mode="JSONLD">
     <xsl:if test="node()!=''">
-      <script type="application/ld+json">
         <xsl:value-of select="node()"/>
-      </script>
     </xsl:if>
   </xsl:template>
 
@@ -2459,7 +2466,7 @@
 
   <xsl:template match="MenuItem[ancestor::Page[@cssFramework='bs3']]" mode="breadcrumbLink">
     <xsl:param name="span" select="false()"/>
-    <li>
+    <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem">
       <xsl:choose>
         <xsl:when test="self::MenuItem[@id=/Page/@id] and not(//ContentDetail)">
           <xsl:attribute name="class">active</xsl:attribute>
@@ -2485,12 +2492,19 @@
               <xsl:attribute name="rel">nofollow</xsl:attribute>
             </xsl:when>
           </xsl:choose>
-
+          <a itemprop="item">
+	     <xsl:attribute name="href">
+              <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+            </xsl:attribute>
           <!-- output page name -->
-          <xsl:apply-templates select="." mode="getDisplayName"/>
+          <span itemprop="name">
+            <xsl:apply-templates select="." mode="getDisplayName"/>
+          </span>
+          <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
+          </a>
         </xsl:when>
         <xsl:otherwise>
-          <a>
+          <a itemprop="item">
 
             <!-- get the href -->
             <xsl:attribute name="href">
@@ -2528,9 +2542,11 @@
                 <xsl:attribute name="rel">nofollow</xsl:attribute>
               </xsl:when>
             </xsl:choose>
-
             <!-- output page name -->
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <span itemprop="name">
+              <xsl:apply-templates select="." mode="getDisplayName"/>
+            </span>
+            <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
           </a>
 
         </xsl:otherwise>

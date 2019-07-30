@@ -552,11 +552,24 @@
         <xsl:if test="help | hint | alert">
           <xsl:text> input-group</xsl:text>
         </xsl:if>
+        <xsl:if test="@prefix!='' or @suffix!=''">
+          <xsl:text> input-group</xsl:text>
+        </xsl:if>
         <xsl:if test="alert">
           <xsl:text> has-alert</xsl:text>
         </xsl:if>
       </xsl:attribute>
+      <xsl:if test="@prefix!=''">
+        <div class="input-group-addon">
+          <xsl:value-of select="@prefix"/>
+        </div>
+      </xsl:if>
       <xsl:apply-templates select="." mode="xform_control"/>
+      <xsl:if test="@suffix!=''">
+        <div class="input-group-addon">
+          <xsl:value-of select="@suffix"/>
+        </div>
+      </xsl:if>
       <xsl:if test="help">
         <span class="input-group-btn">
           <xsl:apply-templates select="." mode="infoButton"/>

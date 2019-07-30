@@ -1065,7 +1065,11 @@ Partial Public Class Cms
                 Select Case myWeb.moConfig("DetailPathType")
                     Case "ContentType/ContentName"
                         If aPath(0) = myWeb.moConfig("DetailPrefix") Then
-                            sSql = "select nContentKey from tblContent where cContentName like '" & SqlFmt(sPath) & "'"
+                            If gbAdminMode Then
+                                sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' order by nVersion desc"
+                            Else
+                                sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and nStatus = 1 order by nVersion desc"
+                            End If
                             ods = GetDataSet(sSql, "Content")
                             If ods.Tables("Content").Rows.Count = 1 Then
                                 nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")

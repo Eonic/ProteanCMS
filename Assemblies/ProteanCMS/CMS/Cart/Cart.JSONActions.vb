@@ -57,19 +57,7 @@ Partial Public Class Cms
                 End If
                 CartXml.FirstChild.AppendChild(cartItems)
 
-                'Update the XML to wrap up HTML tags in the CDATA section.
-                Dim outputXml As String = CartXml.OuterXml
-                outputXml = outputXml.Replace("<div><p>", "<p>")
-                outputXml = outputXml.Replace("</p></div>", "</p>")
-                Dim tagList = New List(Of String) From {"div", "p", "ul", "br", "__text"}
-                For Each tag As String In tagList
-                    outputXml = outputXml.Replace($"<{tag}>", $"<![CDATA[<{tag}>")
-                    outputXml = outputXml.Replace($"</{tag}>", $"</{tag}>]]>")
-                Next
-
-                Dim xdoc As XmlDocument = New XmlDocument
-                xdoc.LoadXml(outputXml)
-                CartXml = xdoc.FirstChild
+                TidyHtmltoCData(CartXml)
 
                 Return CartXml
             End Function
@@ -371,6 +359,26 @@ Partial Public Class Cms
 
                 End Try
             End Function
+
+            Public Function AddDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    ' myCart.GetCart(CartXml.FirstChild)
+                    'add discount Code option
+                    Return myCart.moDiscount.AddDiscountCode(jObj("Code"))
+
+                    'Output the new cart
+                    myCart.GetCart(CartXml.FirstChild)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                Catch ex As Exception
+
+                End Try
+            End Function
+
 
         End Class
 

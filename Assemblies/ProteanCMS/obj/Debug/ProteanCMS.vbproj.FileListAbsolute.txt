@@ -218,6 +218,10 @@ D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Pr
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ChakraCore.dll
@@ -298,10 +302,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitc
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
