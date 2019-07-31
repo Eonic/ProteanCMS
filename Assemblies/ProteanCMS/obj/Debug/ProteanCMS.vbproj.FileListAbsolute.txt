@@ -222,8 +222,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAsse
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\v8-base-x64.dll

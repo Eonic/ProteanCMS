@@ -3896,7 +3896,7 @@ restart:
                             End If
 
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow("nContentLocationKey")
+                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
 
                             i = i + 1

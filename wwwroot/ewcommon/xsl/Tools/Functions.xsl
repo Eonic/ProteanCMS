@@ -3556,6 +3556,7 @@
   <!-- -->
 
   <xsl:template match="Content[@type='Contact']" mode="getSafeURLName">
+      <xsl:variable name="apos">'</xsl:variable>
     <xsl:variable name="name">
       <xsl:choose>
       <xsl:when test="GivenName/node()!=''">
@@ -3568,7 +3569,7 @@
       </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
-    <xsl:value-of select="translate($name,' /\.:','----')"/>
+    <xsl:value-of select="translate(translate($name,' /\.:','----'),$apos,'')"/>
   </xsl:template>
 
   <!--   ##########################################################   Generic Menus   ##########################################################   -->
