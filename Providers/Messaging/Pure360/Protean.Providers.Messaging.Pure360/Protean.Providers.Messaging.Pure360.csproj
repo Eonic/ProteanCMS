@@ -33,6 +33,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,6 +53,64 @@
     <Compile Include="paint\PaintSystemException.cs" />
     <Compile Include="paint\PaintValidationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\com.pure360.paint\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools.Csharp\Protean.Tools.Csharp.csproj">
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Name>Protean.Tools.Csharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Assemblies\Protean.Tools\Protean.Tools.vbproj">
+      <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
+      <Name>Protean.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Assemblies\ProteanCMS\ProteanCMS.vbproj">
+      <Project>{7d93fd23-f739-4f09-a1b0-f5a8d0451533}</Project>
+      <Name>ProteanCMS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\com.pure360.paint\controller.wsdl" />
+    <None Include="Web References\com.pure360.paint\paintKeyValuePair.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\com.pure360.paint\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://paint.pure360.com/paint.pure360.com/ctrlPaintLiteral.wsdl">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\com.pure360.paint\</RelPath>
+      <UpdateFromURL>http://paint.pure360.com/paint.pure360.com/ctrlPaintLiteral.wsdl</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>Protean_Providers_Messaging_Pure360_com_pure360_paint_paintService</CachedSettingsPropName>
+    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

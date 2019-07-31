@@ -10,6 +10,9 @@ using System.Web;
 /// application will make using PAINT.  This inherits from PaintSession
 /// which handles the login and context id plus provides handler methods.
 /// </summary>
+namespace Protean.Providers.Messaging.Pure360.paint
+{
+
 public class PaintMethods : PaintSession
 {
     /**
@@ -631,4 +634,5 @@ public class PaintMethods : PaintSession
         
         return decodedString;
     }
+}
 }
