@@ -108,7 +108,11 @@ Partial Public Class Cms
                     Dim item As Newtonsoft.Json.Linq.JObject
 
                     For Each item In jObj("Item")
-                        myCart.AddItem(item("contentId"), item("qty"), Nothing, "", 0, "", item("UniqueProduct"))
+                        Dim bUnique As Boolean = False
+                        If item.ContainsKey("UniqueProduct") Then
+                            bUnique = item("UniqueProduct")
+                        End If
+                        myCart.AddItem(item("contentId"), item("qty"), Nothing, "", 0, "", bUnique)
                     Next
 
                     'Output the new cart
