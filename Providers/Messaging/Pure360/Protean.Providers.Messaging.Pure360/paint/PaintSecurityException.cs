@@ -6,11 +6,14 @@ using System.Web;
 /// Exception thrown by PAINT when your code attempts to access an action
 /// for which it has insufficient privileges
 /// </summary>
-public class PaintSecurityException : ApplicationException
+namespace Protean.Providers.Messaging.Pure360.paint
 {
-    public PaintSecurityException(String message)
-        : base(message)
-	{
+    public class PaintSecurityException : ApplicationException
+    {
+        public PaintSecurityException(String message)
+            : base(message)
+	    {
 		
-	}
+	    }
+    }
 }
