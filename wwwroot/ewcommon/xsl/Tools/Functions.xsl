@@ -1008,15 +1008,18 @@
         <xsl:when test="ContentDetail/Content">
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
+        <xsl:when test="Contents/Content[@type='Module' and @moduleType='FAQList']">
+          <xsl:apply-templates select="Contents/Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:if test ="$jsonld!=''">
-        <script type="application/ld+json">
-          <xsl:value-of select="$jsonld"/>
-        </script>
+      <script type="application/ld+json">
+        <xsl:value-of select="$jsonld"/>
+      </script>
     </xsl:if>
   </xsl:template>
 
