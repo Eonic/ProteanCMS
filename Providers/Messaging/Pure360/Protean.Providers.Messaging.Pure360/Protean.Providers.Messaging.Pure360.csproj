@@ -31,12 +31,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CampaignMonitorAPIWrapper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b7c83a6736b9233e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="createsend-dotnet, Version=4.2.2.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CampaignMonitor\bin\Release\createsend-dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="paint\PaintMethods.cs" />
     <Compile Include="paint\PaintSecurityException.cs" />
     <Compile Include="paint\PaintSession.cs" />
@@ -58,6 +69,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Provide.cs" />
     <Compile Include="Web References\com.pure360.paint\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

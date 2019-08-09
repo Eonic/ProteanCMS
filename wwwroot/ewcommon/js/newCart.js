@@ -179,3 +179,19 @@ function blankoutFormFields(oInput, val) {
     oInput.attr('readonly', 'readonly');
     oInput.addClass('greyed');
 }
+
+$("#cIsCSUser_true").change(function () {
+
+    if ($('#cIsCSUser_true').exists()) {
+        if ($('#cIsCSUser_true:checked').val() == 'true') {
+            $("#cContactEmail").val("noreply@intotheblue.com");
+            $("#cContactEmail").prop("readonly", true);
+        }
+        else {
+            $("#cContactEmail").val("Please enter email");
+            $("#cContactEmail").removeAttr('readonly');
+        }
+    }
+
+});
+
