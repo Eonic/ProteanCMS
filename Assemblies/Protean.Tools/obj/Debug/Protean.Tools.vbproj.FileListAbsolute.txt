@@ -137,4 +137,5 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbpr
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll

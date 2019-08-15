@@ -2396,6 +2396,19 @@ restart:
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
                                 nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
                             Else
+
+                                'TEST FOR 0 AUDIT ID AND RECREATE
+                                If Tools.Xml.NodeState(oInstance, "descendant-or-self::nAuditId") = Tools.Xml.XmlNodeState.HasContents Then
+                                    Dim oAuditElmt As XmlElement = oInstance.SelectSingleNode("descendant-or-self::nAuditId")
+                                    If IsNumeric(oAuditElmt.InnerText()) Then
+                                        nAuditId = CLng(oAuditElmt.InnerText())
+                                    End If
+                                    If nAuditId = 0 Then
+                                        nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        oInstance.SelectSingleNode("descendant-or-self::nAuditId").InnerText = nAuditId
+                                    End If
+                                End If
+
                                 nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
                             End If
 
