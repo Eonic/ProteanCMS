@@ -365,7 +365,9 @@ $(window).resize(function () {
             var skuName = 'qty_' + skuElement[0];
             //var itemId = '#cartButtons' + skuElement[3] + ', #cartButtons' + skuElement[3] + '_2';
             var options = $(this).find('option').length;
-          
+            var skuId = '#qty_' + skuElement[3];
+
+            var productGroup = $('.ProductListGroup').exists();
 
             if (skuName != '') {
                 $(skuId)
@@ -384,14 +386,9 @@ $(window).resize(function () {
                 .html(salePrice);
             }
 
-            /*if ($(skuName).length)*/
-           
-          
-
             if ($('.product .picture').length > 1) {
                 $('.product .picture').addClass('hidden');
                 $(pictureId).parents('span.picture').removeClass('hidden');
-
             }
 
             // if Products Grouped template is used the Add to Cart button must not be hidden
