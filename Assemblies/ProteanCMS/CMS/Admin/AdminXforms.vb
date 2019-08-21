@@ -8096,7 +8096,7 @@ Partial Public Class Cms
 
                                 If sValidResponse = fUpld.FileName Then
                                     valid = True
-                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse & " - File Uploaded")
+                                    MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse & " - File Imported")
                                 Else
                                     valid = False
                                     MyBase.addNote(moXformElmt, xForm.noteTypes.Alert, sValidResponse)

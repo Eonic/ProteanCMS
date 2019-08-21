@@ -1470,7 +1470,7 @@ Public Class xForm
 
         Try
 
-            oNodes = moXformElmt.SelectNodes("descendant::*[(@ref or @bind) and not(ancestor::model or self::group or self::repeat or self::trigger or self::delete)]")
+            oNodes = moXformElmt.SelectNodes("descendant::*[(@ref or @bind) and not(ancestor::label or ancestor::model or self::group or self::repeat or self::trigger or self::delete)]")
 
 
             ' if the instance is empty we have no values to add.

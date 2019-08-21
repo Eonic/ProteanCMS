@@ -37,7 +37,7 @@
 .ewAdmin #adminLayout {
     .adminTemplate {
         .form-control {
-            border-radius:3px;
+            border-radius: 3px;
         }
     }
 
@@ -67,17 +67,17 @@
         height: @admin-field-height;
     }
 
-        select.form-control[size="2"] {
-            height: @admin-field-height * 2;
-        }
+    select.form-control[size="2"] {
+        height: @admin-field-height * 2;
+    }
 
-        select.form-control[size="3"] {
-            height: @admin-field-height * 3;
-        }
+    select.form-control[size="3"] {
+        height: @admin-field-height * 3;
+    }
 
-        select.form-control[size="4"] {
-            height: @admin-field-height * 4;
-        }
+    select.form-control[size="4"] {
+        height: @admin-field-height * 4;
+    }
 
     select.scroll_10 {
         height: @admin-field-height * 5;
@@ -94,13 +94,15 @@
     select#cGroups.form-control {
         min-height: 1200px;
     }
-    .select-wrapper .list-group{
-        margin-bottom:0;
-        .list-group-item{
-            margin-top:0;
+
+    .select-wrapper .list-group {
+        margin-bottom: 0;
+
+        .list-group-item {
+            margin-top: 0;
         }
     }
-    
+
 
     .btn {
         font-size: @admin-font-size-base
@@ -382,9 +384,9 @@
             margin-top: 5px;
         }
 
-            label.list-group-item {
-                margin-top: 0px;
-            }
+        label.list-group-item {
+            margin-top: 0px;
+        }
 
         .form-control {
             color: @admin-header-font-color;
@@ -528,19 +530,19 @@
             }
         }
 
-            .boxStyle .bfh-selectbox-options li {
-                display: inline-block;
-                width: 100%;
-            }
+        .boxStyle .bfh-selectbox-options li {
+            display: inline-block;
+            width: 100%;
+        }
 
         .cssStyle .bfh-selectbox-options li {
             display: inline-block;
             width: 100%;
         }
 
-            .cssStyle .bfh-selectbox-options li a {
-                overflow-y: hidden;
-            }
+        .cssStyle .bfh-selectbox-options li a {
+            overflow-y: hidden;
+        }
 
         .pickIcon .bfh-selectbox-options li {
             display: inline-block;
@@ -563,10 +565,10 @@
             }
         }
 
-            .pickByImage button.imageSelect.selected {
-                padding: 2px;
-                border: 4px solid @brand-primary;
-            }
+        .pickByImage button.imageSelect.selected {
+            padding: 2px;
+            border: 4px solid @brand-primary;
+        }
 
         .previewImage {
             padding-top: 10px;
@@ -641,12 +643,11 @@
             }
         }
 
-        .inline-4col .form-group {
+        .inline-4col .form-group, .inline .form-group.vshort{
             float: left;
             display: inline-block;
             width: 24%;
             padding-right: 15px;
-
             select {
                 height: 38px;
             }
@@ -831,14 +832,14 @@
                     cursor: not-allowed;
                 }
 
-                    &:disabled + label {
-                        opacity: 0.65;
+                &:disabled + label {
+                    opacity: 0.65;
 
-                        &::before {
-                            background-color: @input-bg-disabled;
-                            cursor: not-allowed;
-                        }
+                    &::before {
+                        background-color: @input-bg-disabled;
+                        cursor: not-allowed;
                     }
+                }
             }
 
             &.checkbox-circle label::before {
@@ -942,13 +943,13 @@
                     cursor: not-allowed;
                 }
 
-                    &:disabled + label {
-                        opacity: 0.65;
+                &:disabled + label {
+                    opacity: 0.65;
 
-                        &::before {
-                            cursor: not-allowed;
-                        }
+                    &::before {
+                        cursor: not-allowed;
                     }
+                }
             }
 
             &.radio-inline {

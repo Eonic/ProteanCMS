@@ -354,11 +354,15 @@ Public Class Messaging
 
                 Dim mailSender As New MailAddress(serverSenderEmail, serverSenderEmailName)
 
-                ' Don't add the sender if it's the same address as the from
-                If Not MailAddress.Equals(mailSender, adFrom) Then
-                    oMailn.Sender = mailSender
-                End If
 
+                If goConfig("overrideFromEmail") = "true" Then
+                    oMailn.From = mailSender
+                Else
+                    ' Don't add the sender if it's the same address as the from
+                    If Not MailAddress.Equals(mailSender, adFrom) Then
+                        oMailn.Sender = mailSender
+                    End If
+                End If
             End If
 
             ' All throught the process check if the e-mail address is actually valid.

@@ -1735,6 +1735,8 @@
     <xsl:param name="relationDirection"/>
     <div class="advancedModeRow row" onmouseover="this.className='rowOver row'" onmouseout="this.className='advancedModeRow row'">
         <div class="col-md-6">
+          <xsl:apply-templates select="." mode="status_legend"/>
+          <xsl:text> </xsl:text>
           <xsl:apply-templates select="." mode="relatedBrief"/>
         </div>
         <xsl:choose>

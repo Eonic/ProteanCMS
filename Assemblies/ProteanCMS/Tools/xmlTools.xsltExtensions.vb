@@ -869,6 +869,7 @@ Partial Public Module xmlTools
                 Return ""
             End Try
         End Function
+
         Public Function EncryptPassword(ByVal sPassword As String) As String
             'RJP 7 Nov 2012. Amended HashString to add use of config setting.
             Try
@@ -879,6 +880,19 @@ Partial Public Module xmlTools
                 'sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                 Return sPassword
 
+            Catch ex As Exception
+                Return "encryptionFailed"
+            End Try
+        End Function
+
+        Public Function GenerateHashFromEncryptedPassword(ByVal encryptionKey As String, ByVal sPassword As String) As String
+            Try
+                'Decrypt password using provided key.
+                Dim sPlainPassword As String = Protean.Tools.Csharp.Encryption.DecryptData(encryptionKey, sPassword)
+                'Encrypt using the protean.
+                sPassword = EncryptPassword(sPlainPassword)
+
+                Return sPassword
             Catch ex As Exception
                 Return "encryptionFailed"
             End Try

@@ -6243,6 +6243,9 @@ processFlow:
 
         End Function
 
+
+
+
         ''' <summary>
         ''' Empties all items in a shopping cart.
         ''' </summary>
@@ -7158,7 +7161,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                                 Dim orderNode As XmlElement = oContent.FirstChild
                                 'Add values not stored in cartXml
-                                orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                If Not orderNode Is Nothing Then
+                                    orderNode.SetAttribute("statusId", oDR("nCartStatus"))
+                                End If
                                 If oDR("cCurrency") Is Nothing Or oDR("cCurrency") = "" Then
                                     oContent.SetAttribute("currency", mcCurrency)
                                     oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
@@ -7932,9 +7937,18 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
                             "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
 
-                    'method allowed for authenticated
-                    sSql &= " or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                           "  where perm.nShippingMethodId = opt.nShipOptKey and perm.nDirId = " & gnAuthUsers & " and perm.nPermLevel = 1) > 0"
+                    'method allowed for authenticated or imporsonating CS users.
+                    Dim shippingGroupCondition As String
+                    Dim customerSuccessGroup = "Customer Services"
+                    If myWeb.moSession("PreviewUser") > 0 And myWeb.moDbHelper.checkUserRole(customerSuccessGroup, "Group") Then
+                        Dim gnCustomerServiceUsers = myWeb.GetUserXML.SelectSingleNode(String.Format("Group[@name='{0}']", customerSuccessGroup)).Attributes("id").Value
+                        shippingGroupCondition = String.Format("perm.nDirId IN ({0},{1})", gnAuthUsers, gnCustomerServiceUsers)
+                    Else
+                        shippingGroupCondition = "perm.nDirId = " & gnAuthUsers
+                    End If
+                    sSql &= " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                           "  where perm.nShippingMethodId = opt.nShipOptKey And " & shippingGroupCondition & " And perm.nPermLevel = 1) > 0"
+
                     ' if no group exists return it.
                     sSql &= " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)"
 

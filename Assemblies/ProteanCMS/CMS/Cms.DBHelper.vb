@@ -1065,7 +1065,11 @@ Partial Public Class Cms
                 Select Case myWeb.moConfig("DetailPathType")
                     Case "ContentType/ContentName"
                         If aPath(0) = myWeb.moConfig("DetailPrefix") Then
-                            sSql = "select nContentKey from tblContent where cContentName like '" & SqlFmt(sPath) & "'"
+                            If gbAdminMode Then
+                                sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' order by nVersion desc"
+                            Else
+                                sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and nStatus = 1 order by nVersion desc"
+                            End If
                             ods = GetDataSet(sSql, "Content")
                             If ods.Tables("Content").Rows.Count = 1 Then
                                 nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
@@ -2392,6 +2396,19 @@ restart:
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
                                 nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
                             Else
+
+                                'TEST FOR 0 AUDIT ID AND RECREATE
+                                If Tools.Xml.NodeState(oInstance, "descendant-or-self::nAuditId") = Tools.Xml.XmlNodeState.HasContents Then
+                                    Dim oAuditElmt As XmlElement = oInstance.SelectSingleNode("descendant-or-self::nAuditId")
+                                    If IsNumeric(oAuditElmt.InnerText()) Then
+                                        nAuditId = CLng(oAuditElmt.InnerText())
+                                    End If
+                                    If nAuditId = 0 Then
+                                        nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        oInstance.SelectSingleNode("descendant-or-self::nAuditId").InnerText = nAuditId
+                                    End If
+                                End If
+
                                 nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
                             End If
 
@@ -3892,7 +3909,7 @@ restart:
                             End If
 
                             'non-ideal alternative for updating the entire dataset
-                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow("nContentLocationKey")
+                            sSql = "update " & getTable(objectType) & " set nDisplayOrder = " & oRow(getOrderFname(objectType)) & " where " & getKey(objectType) & " = " & oRow(getKey(objectType))
                             ExeProcessSql(sSql)
 
                             i = i + 1

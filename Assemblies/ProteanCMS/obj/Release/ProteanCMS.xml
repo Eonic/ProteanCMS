@@ -22,6 +22,625 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="T:Protean.Cms.Synchronisation">
+ <summary>
+ Class for sync methods that are specific to Protean.Cms
+ e.g. syncing fle lists as content to modules
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Admin.MemberCodesProcess(System.Xml.XmlElement@,System.String@)">
+ <summary>
+ The Member code management process.
+ </summary>
+ <param name="oPageDetail">The page ContentDetail node</param>
+ <param name="sAdminLayout">Referential variable for the admin layout</param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Admin.AdminXforms.PageValidation">
+ <summary>
+ Page xform validation:
+ <list>
+   <item>Checks for reserved words</item>
+   <item>Checks for illegal characters</item>
+ </list>
+ </summary>
+ <remarks>This can be overridden, but should be called by the overriding method.</remarks>
+</member>
+<member name="M:Protean.Cms.Admin.AdminXforms.xFrmEditDirectoryItem(System.Int64,System.String,System.Int64,System.String,System.String)">
+ <summary>
+ this routine now calls the Membership provider for this function as it has moved. It should only be being used by legacy overides.
+ </summary>
+ <param name="id"></param>
+ <param name="cDirectorySchemaName"></param>
+ <param name="parId"></param>
+ <param name="cXformName"></param>
+ <param name="FormXML"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Admin.AdminXforms.xFrmMemberCodeset(System.Int32,System.String)">
+ <summary>
+ This adds or edits a codeset, or the groups associated with the code set
+ </summary>
+ <param name="nCodesetKey">The code set ID</param>
+ <param name="cFormName">The type of form we're dealing with - Codes or CodeGroups</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Admin.AdminXforms.xFrmMemberCodeGenerator(System.Int32,System.String)">
+ <summary>
+   Xform for generating codes for codes sets.
+ </summary>
+ <param name="nParentCodeKey">The parent code set id</param>
+ <param name="cFormName">Optional, probably not needed - the type of form we're dealing with - CodeGenerator</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Protean.Cms.Admin.AdminXforms.xFormContentLocations">
+ <summary>
+ 
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="T:Protean.Cms.Admin.XFormEditor">
+ <summary>
+ <para>XFormEditor facilitates the editting of xforms within an xform.</para>
+ <para>
+ It creates a MasterXForm, which is the Content node under ContentDetail of the content being worked on.
+ It maintains a MasterInstance which is the object instance of the content as a whole (from GetObjectInstance)
+ </para>
+ <para>
+ MasterInstance and MasterXform are different, with MasterXform being a subcomponent of MasterInstance
+ </para>
+ <para>
+ It is instantiaated with a content id.  It is then invoked with methods specific to each xform control (e.g. group, input etc).
+ </para>
+ </summary> 
+ <remarks>
+ <para>
+ This is overridden by EonicLMS, which uses it for editting questionnaires.
+ This has been written in a way that should work without EonicLMS (i.e. for generic form editting),
+ but needs the following areas addressed for this generic implementation
+ </para>
+ <list>
+ <item>The xform xml files for each control do not exist.  Currently only found in wellardsCommon</item>
+ <item>xFrmEditXFormInput - New control items will not have binds created. </item>
+ <item>I also think instantiating the object without a content id will not work.  I'm not sure if it actually should be possible.</item>
+ </list>
+ </remarks>
+</member>
+<member name="M:Protean.Cms.Admin.XFormEditor.xFrmEditXFormGroup(System.String,System.String)">
+ <summary>
+ This function returns an xForm to update the form being edited
+ </summary>
+ <param name="cRef">The Ref or Bind of the form element to be edited</param>
+ <param name="cParRef">The Ref or Bind of the form element under which the new element will be inserted</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Admin.XFormEditor.deleteElementAction(System.Xml.XmlNode@,System.String,System.String)">
+ <summary>
+ Deletes nodes that relate to the element / item.
+ Problem we face is that we don't know what to delete from the instance, 
+ so we will assume that the instance node we're loooking for has a matching @ref attribute.
+ If it's an item we will also assume that the @ref node has children that have a child node of value which
+ matches the value of the item being deleted.
+ </summary>
+ <param name="ref"></param>
+ <param name="position"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Calendar.#ctor(Protean.Cms@)">
+ <summary>
+ Creates a new Calendar Object
+ </summary>
+ <param name="aWeb">Eonic Web Parent Object</param>
+ <remarks>Sets up a local DBhelper and moPageXml to use inhertited from Web</remarks>
+</member>
+<member name="M:Protean.Cms.Calendar.apply">
+ <summary>
+ Pull the calendar to the main content based on the inputs provided ,
+ Searching next content and update the relevant nodes with appropritae contents
+ </summary>
+ <remarks>Use a For loop to looking the relvant nodes within the main content</remarks>
+</member>
+<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+ <summary>
+ This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
+ Only works if 3rd party messaging provider enabled.
+ </summary>
+ <param name="StepName"></param>
+ <param name="oCartElmt"></param>
+</member>
+<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
+ <summary>
+ This does the same as get cart without the item information, so we call get cart and delete any items we find
+ </summary>
+ <param name="oCartElmt"></param>
+ <param name="nSelCartId"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
+ <summary>
+ Each user need only have a single active billing address
+ </summary>
+ <param name="UserId"></param>
+ <param name="ContactId"></param>
+ <returns>If Contact ID = 0 then uses last updated</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.EmptyCart">
+ <summary>
+ Empties all items in a shopping cart.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
+ <summary>
+ Calculates and updates the tax rate.
+ </summary>
+ <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
+ <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
+</member>
+<member name="M:Protean.Cms.Cart.SelectCurrency">
+ <summary>
+ Select currency deals with the workflow around choosing a currency when an item is added to the cart.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
+ <summary>
+ takes the mcCurrencyRef and sets the currency for the current order 
+ </summary>
+</member>
+<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
+ <summary>
+ Returns an XML contain information about all of the discounts on the site.
+ Only used to inumberate discounts to display to customers. 
+ WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
+ </summary>
+ <param name="PageElmt"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.getDBObjectNameWithBespokeCheck(System.String)">
+ <summary>
+ Check if a database object has a bespoke equivalent in the database.
+ Bespoke objects are prefixed with the letter "b".
+ e.g. bsp_MyProcedure
+ </summary>
+ <param name="dbObjectName">The object name to check (without the b prefix)</param>
+ <returns>"b" + dbObjectName if it exists, dbObjectName otherwise</returns>
+ <remarks>Note: This doesn't check for the existence of dbObjectName</remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.logObjectStatusChange(System.Int64,Protean.Cms.dbHelper.Status,Protean.Cms.dbHelper.Status)">
+ <summary>
+ Assess an audit id, it's previous and new status and if changed logs the appropriate change
+ </summary>
+ <param name="auditId"></param>
+ <param name="oldStatus"></param>
+ <param name="newStatus"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.recurseUpPathArray(System.Int32,System.String[]@,System.Int32@)">
+ <summary>
+    Given a parent id and a page name (from an array of page paths) this works out if the parent matched the page name.
+    It is intended to give a confirmation of page ids for ambiguous page name by working up the path.
+ </summary>
+ <param name="nParentid">The parent id of the page you've come from</param>
+ <param name="aPath">An array of page names from a path</param>
+ <param name="nStep">The level of the array to inspect</param>
+ <returns>Returns True if the paths match the page IDs all the way up the array</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.BulkContentDelete(System.Collections.Generic.List{System.String})">
+ <summary>
+ Delete content and associated relationships by ID.
+ Bulk method to try and emulate DeleteObject without the bit by bit iteration
+ The items that will be deleted are:
+ the content, any locations for this content, any relations for this content, the related audit records for all three
+ </summary>
+ <param name="contentIDList">A List(Of String) of the IDs to delete</param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.BulkContentDelete(System.String)">
+ <summary>
+ Delete content and associated relationships by ID.
+ Bulk method to try and emulate DeleteObject without the bit by bit iteration
+ The items that will be deleted are:
+ the content, any locations for this content, any relations for this content, the related audit records for all three
+ </summary>
+ <param name="contentIDCSVList">The content IDs to delete as a comma separated list</param>
+ <remarks>I'm not decided on deleting orphan related content.</remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.RemoveContentLocations(System.Int32,System.String)">
+ <summary>
+   <para>This deletes all content locations for an item of content.</para>
+ </summary>
+ <param name="nContentId">The content ID</param>
+ <param name="cTable">Optional - table name for content locations - useful to pass thru to save extra DB calls</param>
+ <returns>The number of items deleted.</returns>
+ <remarks>Note - we changed this from using DeleteObject as it's not conducive for bulk deletes.</remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.GetStandardFilterSQLForContent(System.Boolean,System.Boolean,Protean.Cms.dbHelper.PermissionLevel)">
+ <summary>
+ This attempts to construct the standard SQL filter for getting LIVE content
+ If version control is on it will also assess the page permissions, 
+ and if appropriate, it will get content that is not LIVe but, say, PENDING
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.addBulkRelatedContent(System.Xml.XmlElement@,System.DateTime@,System.Int32)">
+ <summary>
+ This adds related content to child content nodes, given a parent node.
+ The scope of which child nodes are processed is pre-determined by the presence of
+ the @processForRelatedContent=true attribute in the child node.
+ Child nodes are then recursively processed down their related content to a 
+ depth determined by nMaxDepth.
+ Related content nodes may be filtered by type if their parent node has an
+ attribute of showRelated.
+ </summary>
+ <param name="oContentParent">The initial starting node, whose child nodes will be considered for adding related content to</param>
+ <param name="dUpdateDate">The date to get content by. E.g. find related content on such and such a day</param>
+ <param name="nMaxDepth">The levels of related content to try to retrieve.</param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.dbHelper.GetPageBlockedContent(System.Int64)">
+ <summary>
+ This function is to allow content to be added to the page that blocks the automatic loading of a particular contentType, because that content has its own rules for selecting and loading that content type.
+ </summary>
+ <param name="nPageId"></param>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Membership.AccountActivateLink(System.Int32)">
+ <summary>
+ 'We need to activate the link create a hash, We store the activation hash in the UserXML
+ </summary>
+ <param name="AccountID"></param>
+ <returns></returns>
+ <remarks>Cannot store in password field because we need this, We could store in the audit description, allthough don't think this is indexed. Storing in the userXml would be inefficient to search however it could be useful because it is contained in the email</remarks>
+</member>
+<member name="M:Protean.Cms.Search.ContentByDateQuery(System.String,System.String,System.String,System.String,System.String,System.String)">
+ <summary>
+    This returns all valid content within a site for a daterange.
+    Parameters can be optionally called by unit (cUnit, cValue) or a specififed date range (cStartDate, cEndDate).
+ </summary>
+ <param name="cContentTypes">CSV list of content types to search for.</param>
+ <param name="cUnit">Date period to search by : values are "Year","Month","Week","Day"</param>
+ <param name="cValue">Number of units to search for</param>
+ <param name="cStartDate">If searching for specific dates, then set this as the start of the range.</param>
+ <param name="cEndDate">If searching for specific dates, then set this as the end of the range.</param>
+ <param name="cSqlColumnToCheck">Specifies the preference on whether to check the Publish, Insert or Update column (values: PUBLISH,INSERT,UPDATE)</param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Search.SetSearchTrackingCookie">
+ <summary>
+ This is not needed at the moment.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Search.ParseKeywordsAndPhrases(System.String)">
+ <summary>
+ This takes a string and produces an array of the keywords and phrases, where keywords are individual words,
+ and phrases are contained within quotemarks.   Phrases take precedence over keywords.
+ </summary>
+ <param name="searchString">The search string to parse</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Search.BuildLuceneQuery(System.String,System.Xml.XmlElement)">
+ <summary>
+ <para>Builds a Lucene Query Parser based on the keyword string and predefined values in the request object</para>
+ <list>
+ <listheader>The keyword search does the following queries (in order of priority)</listheader>
+ <item>The ss in quotemarks (i.e. as a phrase)</item>
+ <item>The ss without quotemarks (i.e. as it comes)</item>
+ <item>Each term in ss as a fuzzy search</item>
+ </list>
+ 
+ </summary>
+ <param name="keywordsToSearch"></param>
+ <param name="filters"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Search.LivePageLuceneFilter">
+ <summary>
+ Returns a Lucene Filter of the live pages
+ 
+ </summary>
+ <returns></returns>
+ <remarks>
+ Justification for this is that Lucene may become out of date if a page is hidden. 
+ If we return a large result set, then we would have to trawl through all the results
+ checking if they on a live page = Fail.
+ It's quicker to create a live page filter here and filter that into lucene.
+ </remarks>
+</member>
+<member name="P:Protean.Cms.RootPageId">
+ <summary>
+ Sets or gets the root page id.
+ This contains a stop-gap measure to transition the root page from
+ an application context (incorrect) to a session context.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.GetFeedXML(System.String,System.Boolean,System.Int32,System.Boolean,System.String,System.String,System.Boolean,System.String,System.Int32)">
+ <summary>
+   Generates feeds for page content.
+ </summary>
+ <param name="contentSchema">The content schema to search for</param>
+ <param name="showRelated">Add related content to the content retrieved</param>
+ <param name="pageId">The page ID to search for. If 0, then search all available pages.</param>
+ <param name="includeChildPages">If a page ID is specified, then this determines whether or not to go down the site tree as well</param>
+ <param name="mimeType">Optional: The mimeType to output in the HTTP response ContentType Header (default is "text/xml")</param>
+ <param name="feedName">Optional: A name to determine the folder to look in for the feed XSL - default is "generic"</param>
+ <remarks>
+ <list>
+ <listheader>The XSL file name is predetermined by the options that are passed through and have the following precedence:</listheader>
+ <item>/xsl/feeds/&lt;feedname&gt;/&lt;contentSchema&gt;-&lt;mimeType&gt;.xsl  (then check common folders)</item>
+ <item>/xsl/feeds/generic/&lt;contentSchema&gt;-&lt;mimeType&gt;.xsl  (then check common folders)</item>
+ <item>/xsl/feeds/&lt;feedname&gt;/&lt;contentSchema&gt;.xsl  (then check common folders)</item>
+ <item>/xsl/feeds/generic/&lt;contentSchema&gt;.xsl  (then check common folders)</item>
+ </list>
+ </remarks>
+</member>
+<member name="M:Protean.Cms.GetFeedXML(System.String,System.Boolean,System.Boolean,System.String,System.Int32)">
+ <summary>
+ [Deprecated] This gets the feed XML for all available content of a certain schema, 
+ using the google folder of feed xsls to transform the data. 
+ </summary>
+ <param name="contentSchema">The content schema to search for</param>
+ <param name="showRelated">Add related content to the content retrieved</param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.BuildFeedXML(System.String,System.Boolean,System.Int32,System.Boolean,System.Boolean,System.String,System.Int32)">
+ <summary>
+ Gets XML optimised for Feeds
+ </summary>
+ <param name="contentSchema">The content schema to search for</param>
+ <param name="showRelated">Add related content to the content retrieved</param>
+ <param name="pageId">The page ID to search for. If 0, then search all available pages.</param>
+ <param name="includeChildPages">If a page ID is specified, then this determines whether or not to go down the site tree as well</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.BuildFeedXML(System.String,System.Boolean)">
+ <summary>
+ Gets XML optimised for feeds, retrieving all content of a certain schema, plus optionally its related content.
+ </summary>
+ <param name="contentSchema">The content schema to search for</param>
+ <param name="showRelated">Add related content to the content retrieved</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.AddCurrency">
+ <summary>
+ 
+ </summary>
+</member>
+<member name="M:Protean.Cms.AddCart">
+ <summary>
+ 
+ </summary>
+</member>
+<member name="M:Protean.Cms.ContentActions">
+ <summary>
+ Executes processing on specific content types.
+ </summary>
+ <remarks>In most cases, plugins (e.g. Search, Reports) and LayoutActions do this, so this is for content types that require a non-layout, non-function specific approach.</remarks>
+</member>
+<member name="M:Protean.Cms.CommonActions">
+ <summary>
+ Use of this is for discussion, but it is my intention that this could contain a repository of actions
+ that are not necearrily triggered by Content, but rather by command; and yet could be accessible to different 
+ faculties of EonicWeb, such as Admin calls, Ajax calls and Content building calls.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.BespokeActions">
+ <summary>
+ To allow for bespoke content actions to be overloaded
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.LayoutActions">
+ <summary>
+ Executes Actions based on Specific Page Layouts.
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.SiteRedirection">
+ <summary>
+ <para>This provides the facility to redirect a logged on user from PATH A to PATH B if they belong to a certain group/directory item.</para>
+ <para>PATH A and PATH B are assumed to be sites that share the same database.  These could be different sites or just different application paths.</para>
+ <para>PATH A and PATH B cannot be child folders of each other - i.e. if PATH A is /patha, path b could not be /patha/pathb</para>
+ <para>PATH A and PATH B must be of the same type - i.e. both URIs or both Application paths.</para>
+ <example>e.g. "/patha/" and "/pathb/", "http://domain1/" and "http://domain2/", "http://domain1/" and "http://domain2/pathb"</example>
+ <example>But NOT "/patha/" and "http://domain2/pathb"</example>
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.legacyRedirection">
+ <summary>
+ <para>
+ Check the request for certain parameters which if matched will create a 302 redirect
+ For page redirects, ISAPI can't detect what we need, so we are going to need to check if PageURLFormat is set
+ For content (artid) redirects, parameters are driven by the ISAPI rewrite routines which should be updated to do the following
+ </para>
+ <list>
+   <item>
+    If itemNNNN is detected then set u the redirect as follows:
+    <list>
+       <item>pass the path through as path</item>
+       <item>pass itemNNNN through as artid=NNNN</item>
+       <item>set a flag called redirect=statuscode</item>
+    </list>
+   </item>
+ </list>
+ <para>
+ The redirect URL will be "redirPath/NNNN-/Product-Name
+ </para>
+ </summary>
+ <returns></returns>
+ <remarks>This may require the existing pages to be tidied up (i.e. removing hyphens and plusses)</remarks>
+</member>
+<member name="M:Protean.Cms.GetStructureXML(System.Int64,System.Int64,System.Int64)">
+ <summary>
+    Gets the Structure XML, but doesn't add it to the page XML
+ </summary>
+ <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
+ <param name="nRootId">The root ID of the Structure that you want to get</param>
+ <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.GetStructureXML(System.String,System.Int64,System.Int64,System.Boolean,System.Int64)">
+ <summary>
+    Gets the Structure XML, and adds it to the page XML
+ </summary>
+ <param name="cMenuId">Adds an id attribute to the root node</param>
+ <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
+ <param name="nRootId">The root ID of the Structure that you want to get</param>
+ <param name="bLockRoot">Adds a loced attribute to the root node</param>
+ <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.GetStructureXML(System.Int64,System.Int64,System.Int64,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.String)">
+ <summary>
+ Gets the Structure XML
+ </summary>
+ <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
+ <param name="nRootId">The root ID of the Structure that you want to get</param>
+ <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
+ <param name="cMenuId">Adds an id attribute to the root node</param>
+ <param name="bAddMenuToPageXML">If True, this will add the elmt to the page XML</param>
+ <param name="bLockRoot">Adds a loced attribute to the root node</param>
+ <param name="bUseCache">Can be used to force use of the Cache</param>
+ <param name="bIncludeExpiredAndHidden">Include pages that are expired, yet to be published or hidden.</param>
+ <param name="bPruneEvenIfInAdminMode">By default in admin mode all pages even DENIED ones are returned.  If this value is True then regardless of the admin mode status DENIED pages will be removed.</param>
+ <param name="cMenuItemNodeName">Specifies the node name of each Page node.  Default should be "MenuItem".  Note - if not default, then caching will not be employed.</param>
+ <param name="cRootNodeName">Specifies the root node name.  Default should be "Menu".  Note - if not default, then caching will not be employed.</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.TidyMenunode(System.Xml.XmlElement@,System.String,System.String,System.Boolean,System.Int64,System.String,System.String)">
+ <summary>
+ Takes a menu node, and removes the denied nodes
+ 
+ A note on how permissions are inherited.
+ If a page is OPEN, then it will inherit the permission.
+ If a page has a parent permission of DENIED then it will be denied.
+ </summary>
+ <param name="oMenuItem"></param>
+ <param name="cPerm"></param>
+ <param name="cPermSource"></param>
+ <param name="bPruneDenied"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.CheckContentVersions">
+ <summary>
+ The purpose of this function is to check if the user should be seeing a Pending version of the content
+ as opposed to the live one.  If the user is an admin or has AddUpdate permissions then this should be the case
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.GetStandardFilterSQLForContent(System.Boolean)">
+ <summary>
+ This attempts to construct the standard SQL filter for getting LIVE content
+ If version control is on it will also assess the page permissions, 
+ and if appropriate, it will get content that is not LIVe but, say, PENDING
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.CheckMultiParents(System.Xml.XmlElement@,System.Int32)">
+ <summary>
+ Multiple ParentId Checking
+ each content item with mulitple parents replace with current page as parId
+ each content item with no parent replace with current page as parId
+ </summary>
+ <param name="oPage">The Page XML Element</param>
+ <param name="nCurrentPage">The current Page ID</param>
+ <remarks></remarks>
+</member>
+<member name="P:Protean.Cms.ValidatedOutputXml">
+ <summary>
+ If a request has been made for the page xml to be output, 
+ this checks the IP address against locked down addresses
+ if the IP address lockdown config setting has been created.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.SetPageLanguage">
+ <summary>
+ Check the language setting against cookies and the like
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.IsCurrentIPAddressInList(System.String)">
+ <summary>
+ Tests if the current incoming IP address can be found in a CSV list of IP addresses
+ </summary>
+ <param name="ipList">CSV list of IP addresses</param>
+ <returns></returns>
+ <remarks>Uses the incoming request to determine the IP address to check.  Use Protean.Tools.Text.IsIPAddressInList to check a specific IP address</remarks>
+</member>
+<member name="M:Protean.Cms.GetRequestItemAsInteger(System.String,System.Int32)">
+ <summary>
+ 
+ </summary>
+ <param name="itemKey"></param>
+ <param name="defaultValue"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.AddResponse(System.String,System.String,System.Boolean,Protean.stdTools.ResponseType)">
+ <summary>
+ Adds a Response node to the Repsonses node of the page XML
+ Response is a simple text node to convey response information.
+ </summary>
+ <param name="responseName">The identifier for this response</param>
+ <param name="responseText">Optional the text that goes inside the Response node</param>
+ <param name="overwriteDuplicates">Optional if True this will overwrite any Response node with the same Name</param>
+ <remarks>If the Responses node has not been created then it will be.</remarks>
+</member>
+<member name="M:Protean.Cms.ConfigValue(System.String)">
+ <summary>
+ Protean.Cms specific config retrieval.
+ Shared function
+ </summary>
+ <param name="key"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Config">
+ <summary>
+ Protean.Cms specific config retrieval.
+ Shared function
+ </summary>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.PerfMonLog(System.String,System.String,System.String)">
+ <summary>
+ Proxy for logging performance stats
+ This is used for classes that Shadow Protean.Cms becuase PerfLog is found inside
+ a module (stdTools) which means it is not accessible by shadowable classes.
+ This should be a shared class really.
+ </summary>
+ <param name="cModuleName"></param>
+ <param name="cProcessName"></param>
+ <param name="cDescription"></param>
+ <remarks></remarks>
+</member>
 <member name="M:Protean.ExternalSynchronisation.Xslt.RemoveRelatedContentByRef(System.String,System.Int32,System.String)">
  <summary>
  Function to be called from an import XSLT to allow the deletion of content not contained in ValidContentNames.
@@ -9715,625 +10334,6 @@ ProteanCMS
  <param name="css">The aggregated css string</param>
  <param name="maxRules">the max number of rules to contain within a css document</param>
  <remarks>Currently should not risk setting the maxRules to the limit, as the regex may not find all selectors according to specification</remarks>
-</member>
-<member name="T:Protean.Cms.Synchronisation">
- <summary>
- Class for sync methods that are specific to Protean.Cms
- e.g. syncing fle lists as content to modules
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Admin.MemberCodesProcess(System.Xml.XmlElement@,System.String@)">
- <summary>
- The Member code management process.
- </summary>
- <param name="oPageDetail">The page ContentDetail node</param>
- <param name="sAdminLayout">Referential variable for the admin layout</param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Admin.AdminXforms.PageValidation">
- <summary>
- Page xform validation:
- <list>
-   <item>Checks for reserved words</item>
-   <item>Checks for illegal characters</item>
- </list>
- </summary>
- <remarks>This can be overridden, but should be called by the overriding method.</remarks>
-</member>
-<member name="M:Protean.Cms.Admin.AdminXforms.xFrmEditDirectoryItem(System.Int64,System.String,System.Int64,System.String,System.String)">
- <summary>
- this routine now calls the Membership provider for this function as it has moved. It should only be being used by legacy overides.
- </summary>
- <param name="id"></param>
- <param name="cDirectorySchemaName"></param>
- <param name="parId"></param>
- <param name="cXformName"></param>
- <param name="FormXML"></param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Admin.AdminXforms.xFrmMemberCodeset(System.Int32,System.String)">
- <summary>
- This adds or edits a codeset, or the groups associated with the code set
- </summary>
- <param name="nCodesetKey">The code set ID</param>
- <param name="cFormName">The type of form we're dealing with - Codes or CodeGroups</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Admin.AdminXforms.xFrmMemberCodeGenerator(System.Int32,System.String)">
- <summary>
-   Xform for generating codes for codes sets.
- </summary>
- <param name="nParentCodeKey">The parent code set id</param>
- <param name="cFormName">Optional, probably not needed - the type of form we're dealing with - CodeGenerator</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="T:Protean.Cms.Admin.AdminXforms.xFormContentLocations">
- <summary>
- 
- </summary>
- <remarks></remarks>
-</member>
-<member name="T:Protean.Cms.Admin.XFormEditor">
- <summary>
- <para>XFormEditor facilitates the editting of xforms within an xform.</para>
- <para>
- It creates a MasterXForm, which is the Content node under ContentDetail of the content being worked on.
- It maintains a MasterInstance which is the object instance of the content as a whole (from GetObjectInstance)
- </para>
- <para>
- MasterInstance and MasterXform are different, with MasterXform being a subcomponent of MasterInstance
- </para>
- <para>
- It is instantiaated with a content id.  It is then invoked with methods specific to each xform control (e.g. group, input etc).
- </para>
- </summary> 
- <remarks>
- <para>
- This is overridden by EonicLMS, which uses it for editting questionnaires.
- This has been written in a way that should work without EonicLMS (i.e. for generic form editting),
- but needs the following areas addressed for this generic implementation
- </para>
- <list>
- <item>The xform xml files for each control do not exist.  Currently only found in wellardsCommon</item>
- <item>xFrmEditXFormInput - New control items will not have binds created. </item>
- <item>I also think instantiating the object without a content id will not work.  I'm not sure if it actually should be possible.</item>
- </list>
- </remarks>
-</member>
-<member name="M:Protean.Cms.Admin.XFormEditor.xFrmEditXFormGroup(System.String,System.String)">
- <summary>
- This function returns an xForm to update the form being edited
- </summary>
- <param name="cRef">The Ref or Bind of the form element to be edited</param>
- <param name="cParRef">The Ref or Bind of the form element under which the new element will be inserted</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Admin.XFormEditor.deleteElementAction(System.Xml.XmlNode@,System.String,System.String)">
- <summary>
- Deletes nodes that relate to the element / item.
- Problem we face is that we don't know what to delete from the instance, 
- so we will assume that the instance node we're loooking for has a matching @ref attribute.
- If it's an item we will also assume that the @ref node has children that have a child node of value which
- matches the value of the item being deleted.
- </summary>
- <param name="ref"></param>
- <param name="position"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Calendar.#ctor(Protean.Cms@)">
- <summary>
- Creates a new Calendar Object
- </summary>
- <param name="aWeb">Eonic Web Parent Object</param>
- <remarks>Sets up a local DBhelper and moPageXml to use inhertited from Web</remarks>
-</member>
-<member name="M:Protean.Cms.Calendar.apply">
- <summary>
- Pull the calendar to the main content based on the inputs provided ,
- Searching next content and update the relevant nodes with appropritae contents
- </summary>
- <remarks>Use a For loop to looking the relvant nodes within the main content</remarks>
-</member>
-<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
- <summary>
- This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
- Only works if 3rd party messaging provider enabled.
- </summary>
- <param name="StepName"></param>
- <param name="oCartElmt"></param>
-</member>
-<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
- <summary>
- This does the same as get cart without the item information, so we call get cart and delete any items we find
- </summary>
- <param name="oCartElmt"></param>
- <param name="nSelCartId"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
- <summary>
- Each user need only have a single active billing address
- </summary>
- <param name="UserId"></param>
- <param name="ContactId"></param>
- <returns>If Contact ID = 0 then uses last updated</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.EmptyCart">
- <summary>
- Empties all items in a shopping cart.
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
- <summary>
- Calculates and updates the tax rate.
- </summary>
- <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
- <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
-</member>
-<member name="M:Protean.Cms.Cart.SelectCurrency">
- <summary>
- Select currency deals with the workflow around choosing a currency when an item is added to the cart.
- </summary>
- <returns></returns>
-</member>
-<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
- <summary>
- takes the mcCurrencyRef and sets the currency for the current order 
- </summary>
-</member>
-<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
- <summary>
- Returns an XML contain information about all of the discounts on the site.
- Only used to inumberate discounts to display to customers. 
- WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
- </summary>
- <param name="PageElmt"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.getDBObjectNameWithBespokeCheck(System.String)">
- <summary>
- Check if a database object has a bespoke equivalent in the database.
- Bespoke objects are prefixed with the letter "b".
- e.g. bsp_MyProcedure
- </summary>
- <param name="dbObjectName">The object name to check (without the b prefix)</param>
- <returns>"b" + dbObjectName if it exists, dbObjectName otherwise</returns>
- <remarks>Note: This doesn't check for the existence of dbObjectName</remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.logObjectStatusChange(System.Int64,Protean.Cms.dbHelper.Status,Protean.Cms.dbHelper.Status)">
- <summary>
- Assess an audit id, it's previous and new status and if changed logs the appropriate change
- </summary>
- <param name="auditId"></param>
- <param name="oldStatus"></param>
- <param name="newStatus"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.recurseUpPathArray(System.Int32,System.String[]@,System.Int32@)">
- <summary>
-    Given a parent id and a page name (from an array of page paths) this works out if the parent matched the page name.
-    It is intended to give a confirmation of page ids for ambiguous page name by working up the path.
- </summary>
- <param name="nParentid">The parent id of the page you've come from</param>
- <param name="aPath">An array of page names from a path</param>
- <param name="nStep">The level of the array to inspect</param>
- <returns>Returns True if the paths match the page IDs all the way up the array</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.BulkContentDelete(System.Collections.Generic.List{System.String})">
- <summary>
- Delete content and associated relationships by ID.
- Bulk method to try and emulate DeleteObject without the bit by bit iteration
- The items that will be deleted are:
- the content, any locations for this content, any relations for this content, the related audit records for all three
- </summary>
- <param name="contentIDList">A List(Of String) of the IDs to delete</param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.BulkContentDelete(System.String)">
- <summary>
- Delete content and associated relationships by ID.
- Bulk method to try and emulate DeleteObject without the bit by bit iteration
- The items that will be deleted are:
- the content, any locations for this content, any relations for this content, the related audit records for all three
- </summary>
- <param name="contentIDCSVList">The content IDs to delete as a comma separated list</param>
- <remarks>I'm not decided on deleting orphan related content.</remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.RemoveContentLocations(System.Int32,System.String)">
- <summary>
-   <para>This deletes all content locations for an item of content.</para>
- </summary>
- <param name="nContentId">The content ID</param>
- <param name="cTable">Optional - table name for content locations - useful to pass thru to save extra DB calls</param>
- <returns>The number of items deleted.</returns>
- <remarks>Note - we changed this from using DeleteObject as it's not conducive for bulk deletes.</remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.GetStandardFilterSQLForContent(System.Boolean,System.Boolean,Protean.Cms.dbHelper.PermissionLevel)">
- <summary>
- This attempts to construct the standard SQL filter for getting LIVE content
- If version control is on it will also assess the page permissions, 
- and if appropriate, it will get content that is not LIVe but, say, PENDING
- </summary>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.addBulkRelatedContent(System.Xml.XmlElement@,System.DateTime@,System.Int32)">
- <summary>
- This adds related content to child content nodes, given a parent node.
- The scope of which child nodes are processed is pre-determined by the presence of
- the @processForRelatedContent=true attribute in the child node.
- Child nodes are then recursively processed down their related content to a 
- depth determined by nMaxDepth.
- Related content nodes may be filtered by type if their parent node has an
- attribute of showRelated.
- </summary>
- <param name="oContentParent">The initial starting node, whose child nodes will be considered for adding related content to</param>
- <param name="dUpdateDate">The date to get content by. E.g. find related content on such and such a day</param>
- <param name="nMaxDepth">The levels of related content to try to retrieve.</param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.dbHelper.GetPageBlockedContent(System.Int64)">
- <summary>
- This function is to allow content to be added to the page that blocks the automatic loading of a particular contentType, because that content has its own rules for selecting and loading that content type.
- </summary>
- <param name="nPageId"></param>
- <returns></returns>
-</member>
-<member name="M:Protean.Cms.Membership.AccountActivateLink(System.Int32)">
- <summary>
- 'We need to activate the link create a hash, We store the activation hash in the UserXML
- </summary>
- <param name="AccountID"></param>
- <returns></returns>
- <remarks>Cannot store in password field because we need this, We could store in the audit description, allthough don't think this is indexed. Storing in the userXml would be inefficient to search however it could be useful because it is contained in the email</remarks>
-</member>
-<member name="M:Protean.Cms.Search.ContentByDateQuery(System.String,System.String,System.String,System.String,System.String,System.String)">
- <summary>
-    This returns all valid content within a site for a daterange.
-    Parameters can be optionally called by unit (cUnit, cValue) or a specififed date range (cStartDate, cEndDate).
- </summary>
- <param name="cContentTypes">CSV list of content types to search for.</param>
- <param name="cUnit">Date period to search by : values are "Year","Month","Week","Day"</param>
- <param name="cValue">Number of units to search for</param>
- <param name="cStartDate">If searching for specific dates, then set this as the start of the range.</param>
- <param name="cEndDate">If searching for specific dates, then set this as the end of the range.</param>
- <param name="cSqlColumnToCheck">Specifies the preference on whether to check the Publish, Insert or Update column (values: PUBLISH,INSERT,UPDATE)</param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Search.SetSearchTrackingCookie">
- <summary>
- This is not needed at the moment.
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Search.ParseKeywordsAndPhrases(System.String)">
- <summary>
- This takes a string and produces an array of the keywords and phrases, where keywords are individual words,
- and phrases are contained within quotemarks.   Phrases take precedence over keywords.
- </summary>
- <param name="searchString">The search string to parse</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Search.BuildLuceneQuery(System.String,System.Xml.XmlElement)">
- <summary>
- <para>Builds a Lucene Query Parser based on the keyword string and predefined values in the request object</para>
- <list>
- <listheader>The keyword search does the following queries (in order of priority)</listheader>
- <item>The ss in quotemarks (i.e. as a phrase)</item>
- <item>The ss without quotemarks (i.e. as it comes)</item>
- <item>Each term in ss as a fuzzy search</item>
- </list>
- 
- </summary>
- <param name="keywordsToSearch"></param>
- <param name="filters"></param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Search.LivePageLuceneFilter">
- <summary>
- Returns a Lucene Filter of the live pages
- 
- </summary>
- <returns></returns>
- <remarks>
- Justification for this is that Lucene may become out of date if a page is hidden. 
- If we return a large result set, then we would have to trawl through all the results
- checking if they on a live page = Fail.
- It's quicker to create a live page filter here and filter that into lucene.
- </remarks>
-</member>
-<member name="P:Protean.Cms.RootPageId">
- <summary>
- Sets or gets the root page id.
- This contains a stop-gap measure to transition the root page from
- an application context (incorrect) to a session context.
- </summary>
- <value></value>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.GetFeedXML(System.String,System.Boolean,System.Int32,System.Boolean,System.String,System.String,System.Boolean,System.String,System.Int32)">
- <summary>
-   Generates feeds for page content.
- </summary>
- <param name="contentSchema">The content schema to search for</param>
- <param name="showRelated">Add related content to the content retrieved</param>
- <param name="pageId">The page ID to search for. If 0, then search all available pages.</param>
- <param name="includeChildPages">If a page ID is specified, then this determines whether or not to go down the site tree as well</param>
- <param name="mimeType">Optional: The mimeType to output in the HTTP response ContentType Header (default is "text/xml")</param>
- <param name="feedName">Optional: A name to determine the folder to look in for the feed XSL - default is "generic"</param>
- <remarks>
- <list>
- <listheader>The XSL file name is predetermined by the options that are passed through and have the following precedence:</listheader>
- <item>/xsl/feeds/&lt;feedname&gt;/&lt;contentSchema&gt;-&lt;mimeType&gt;.xsl  (then check common folders)</item>
- <item>/xsl/feeds/generic/&lt;contentSchema&gt;-&lt;mimeType&gt;.xsl  (then check common folders)</item>
- <item>/xsl/feeds/&lt;feedname&gt;/&lt;contentSchema&gt;.xsl  (then check common folders)</item>
- <item>/xsl/feeds/generic/&lt;contentSchema&gt;.xsl  (then check common folders)</item>
- </list>
- </remarks>
-</member>
-<member name="M:Protean.Cms.GetFeedXML(System.String,System.Boolean,System.Boolean,System.String,System.Int32)">
- <summary>
- [Deprecated] This gets the feed XML for all available content of a certain schema, 
- using the google folder of feed xsls to transform the data. 
- </summary>
- <param name="contentSchema">The content schema to search for</param>
- <param name="showRelated">Add related content to the content retrieved</param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.BuildFeedXML(System.String,System.Boolean,System.Int32,System.Boolean,System.Boolean,System.String,System.Int32)">
- <summary>
- Gets XML optimised for Feeds
- </summary>
- <param name="contentSchema">The content schema to search for</param>
- <param name="showRelated">Add related content to the content retrieved</param>
- <param name="pageId">The page ID to search for. If 0, then search all available pages.</param>
- <param name="includeChildPages">If a page ID is specified, then this determines whether or not to go down the site tree as well</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.BuildFeedXML(System.String,System.Boolean)">
- <summary>
- Gets XML optimised for feeds, retrieving all content of a certain schema, plus optionally its related content.
- </summary>
- <param name="contentSchema">The content schema to search for</param>
- <param name="showRelated">Add related content to the content retrieved</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.AddCurrency">
- <summary>
- 
- </summary>
-</member>
-<member name="M:Protean.Cms.AddCart">
- <summary>
- 
- </summary>
-</member>
-<member name="M:Protean.Cms.ContentActions">
- <summary>
- Executes processing on specific content types.
- </summary>
- <remarks>In most cases, plugins (e.g. Search, Reports) and LayoutActions do this, so this is for content types that require a non-layout, non-function specific approach.</remarks>
-</member>
-<member name="M:Protean.Cms.CommonActions">
- <summary>
- Use of this is for discussion, but it is my intention that this could contain a repository of actions
- that are not necearrily triggered by Content, but rather by command; and yet could be accessible to different 
- faculties of EonicWeb, such as Admin calls, Ajax calls and Content building calls.
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.BespokeActions">
- <summary>
- To allow for bespoke content actions to be overloaded
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.LayoutActions">
- <summary>
- Executes Actions based on Specific Page Layouts.
- </summary>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.SiteRedirection">
- <summary>
- <para>This provides the facility to redirect a logged on user from PATH A to PATH B if they belong to a certain group/directory item.</para>
- <para>PATH A and PATH B are assumed to be sites that share the same database.  These could be different sites or just different application paths.</para>
- <para>PATH A and PATH B cannot be child folders of each other - i.e. if PATH A is /patha, path b could not be /patha/pathb</para>
- <para>PATH A and PATH B must be of the same type - i.e. both URIs or both Application paths.</para>
- <example>e.g. "/patha/" and "/pathb/", "http://domain1/" and "http://domain2/", "http://domain1/" and "http://domain2/pathb"</example>
- <example>But NOT "/patha/" and "http://domain2/pathb"</example>
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.legacyRedirection">
- <summary>
- <para>
- Check the request for certain parameters which if matched will create a 302 redirect
- For page redirects, ISAPI can't detect what we need, so we are going to need to check if PageURLFormat is set
- For content (artid) redirects, parameters are driven by the ISAPI rewrite routines which should be updated to do the following
- </para>
- <list>
-   <item>
-    If itemNNNN is detected then set u the redirect as follows:
-    <list>
-       <item>pass the path through as path</item>
-       <item>pass itemNNNN through as artid=NNNN</item>
-       <item>set a flag called redirect=statuscode</item>
-    </list>
-   </item>
- </list>
- <para>
- The redirect URL will be "redirPath/NNNN-/Product-Name
- </para>
- </summary>
- <returns></returns>
- <remarks>This may require the existing pages to be tidied up (i.e. removing hyphens and plusses)</remarks>
-</member>
-<member name="M:Protean.Cms.GetStructureXML(System.Int64,System.Int64,System.Int64)">
- <summary>
-    Gets the Structure XML, but doesn't add it to the page XML
- </summary>
- <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
- <param name="nRootId">The root ID of the Structure that you want to get</param>
- <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.GetStructureXML(System.String,System.Int64,System.Int64,System.Boolean,System.Int64)">
- <summary>
-    Gets the Structure XML, and adds it to the page XML
- </summary>
- <param name="cMenuId">Adds an id attribute to the root node</param>
- <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
- <param name="nRootId">The root ID of the Structure that you want to get</param>
- <param name="bLockRoot">Adds a loced attribute to the root node</param>
- <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.GetStructureXML(System.Int64,System.Int64,System.Int64,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.String)">
- <summary>
- Gets the Structure XML
- </summary>
- <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
- <param name="nRootId">The root ID of the Structure that you want to get</param>
- <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
- <param name="cMenuId">Adds an id attribute to the root node</param>
- <param name="bAddMenuToPageXML">If True, this will add the elmt to the page XML</param>
- <param name="bLockRoot">Adds a loced attribute to the root node</param>
- <param name="bUseCache">Can be used to force use of the Cache</param>
- <param name="bIncludeExpiredAndHidden">Include pages that are expired, yet to be published or hidden.</param>
- <param name="bPruneEvenIfInAdminMode">By default in admin mode all pages even DENIED ones are returned.  If this value is True then regardless of the admin mode status DENIED pages will be removed.</param>
- <param name="cMenuItemNodeName">Specifies the node name of each Page node.  Default should be "MenuItem".  Note - if not default, then caching will not be employed.</param>
- <param name="cRootNodeName">Specifies the root node name.  Default should be "Menu".  Note - if not default, then caching will not be employed.</param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.TidyMenunode(System.Xml.XmlElement@,System.String,System.String,System.Boolean,System.Int64,System.String,System.String)">
- <summary>
- Takes a menu node, and removes the denied nodes
- 
- A note on how permissions are inherited.
- If a page is OPEN, then it will inherit the permission.
- If a page has a parent permission of DENIED then it will be denied.
- </summary>
- <param name="oMenuItem"></param>
- <param name="cPerm"></param>
- <param name="cPermSource"></param>
- <param name="bPruneDenied"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.CheckContentVersions">
- <summary>
- The purpose of this function is to check if the user should be seeing a Pending version of the content
- as opposed to the live one.  If the user is an admin or has AddUpdate permissions then this should be the case
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.GetStandardFilterSQLForContent(System.Boolean)">
- <summary>
- This attempts to construct the standard SQL filter for getting LIVE content
- If version control is on it will also assess the page permissions, 
- and if appropriate, it will get content that is not LIVe but, say, PENDING
- </summary>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.CheckMultiParents(System.Xml.XmlElement@,System.Int32)">
- <summary>
- Multiple ParentId Checking
- each content item with mulitple parents replace with current page as parId
- each content item with no parent replace with current page as parId
- </summary>
- <param name="oPage">The Page XML Element</param>
- <param name="nCurrentPage">The current Page ID</param>
- <remarks></remarks>
-</member>
-<member name="P:Protean.Cms.ValidatedOutputXml">
- <summary>
- If a request has been made for the page xml to be output, 
- this checks the IP address against locked down addresses
- if the IP address lockdown config setting has been created.
- </summary>
- <value></value>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.SetPageLanguage">
- <summary>
- Check the language setting against cookies and the like
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.IsCurrentIPAddressInList(System.String)">
- <summary>
- Tests if the current incoming IP address can be found in a CSV list of IP addresses
- </summary>
- <param name="ipList">CSV list of IP addresses</param>
- <returns></returns>
- <remarks>Uses the incoming request to determine the IP address to check.  Use Protean.Tools.Text.IsIPAddressInList to check a specific IP address</remarks>
-</member>
-<member name="M:Protean.Cms.GetRequestItemAsInteger(System.String,System.Int32)">
- <summary>
- 
- </summary>
- <param name="itemKey"></param>
- <param name="defaultValue"></param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.AddResponse(System.String,System.String,System.Boolean,Protean.stdTools.ResponseType)">
- <summary>
- Adds a Response node to the Repsonses node of the page XML
- Response is a simple text node to convey response information.
- </summary>
- <param name="responseName">The identifier for this response</param>
- <param name="responseText">Optional the text that goes inside the Response node</param>
- <param name="overwriteDuplicates">Optional if True this will overwrite any Response node with the same Name</param>
- <remarks>If the Responses node has not been created then it will be.</remarks>
-</member>
-<member name="M:Protean.Cms.ConfigValue(System.String)">
- <summary>
- Protean.Cms specific config retrieval.
- Shared function
- </summary>
- <param name="key"></param>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Config">
- <summary>
- Protean.Cms specific config retrieval.
- Shared function
- </summary>
- <returns></returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.PerfMonLog(System.String,System.String,System.String)">
- <summary>
- Proxy for logging performance stats
- This is used for classes that Shadow Protean.Cms becuase PerfLog is found inside
- a module (stdTools) which means it is not accessible by shadowable classes.
- This should be a shared class really.
- </summary>
- <param name="cModuleName"></param>
- <param name="cProcessName"></param>
- <param name="cDescription"></param>
- <remarks></remarks>
 </member>
 <member name="T:Protean.Syndication">
  <summary>
