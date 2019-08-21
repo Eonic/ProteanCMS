@@ -218,8 +218,6 @@ D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Pr
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\v8-base-x64.dll
