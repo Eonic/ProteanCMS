@@ -31,12 +31,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CampaignMonitorAPIWrapper, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b7c83a6736b9233e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="createsend-dotnet, Version=4.2.2.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CampaignMonitor\bin\Release\createsend-dotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="paint\PaintMethods.cs" />
     <Compile Include="paint\PaintSecurityException.cs" />
     <Compile Include="paint\PaintSession.cs" />
@@ -58,6 +69,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Provide.cs" />
     <Compile Include="Web References\com.pure360.paint\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -83,6 +95,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="bin\Debug\Protean.Providers.Messaging.Pure360.dll.config" />
+    <None Include="bin\Debug\Protean.Tools.Csharp.dll.config" />
+    <None Include="bin\Debug\Protean.Tools.dll.config" />
+    <None Include="bin\Debug\ProteanCMS.dll.config" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\Protean.Providers.Messaging.Pure360.csproj.CopyComplete" />
+    <None Include="obj\Debug\Protean.Providers.Messaging.Pure360.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\Protean.Providers.Messaging.Pure360.csprojAssemblyReference.cache" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -111,6 +131,71 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Protean_Providers_Messaging_Pure360_com_pure360_paint_paintService</CachedSettingsPropName>
     </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\AlphaFS.dll" />
+    <Content Include="bin\Debug\AlphaFS.pdb" />
+    <Content Include="bin\Debug\AlphaFS.xml" />
+    <Content Include="bin\Debug\BundleTransformer.Core.dll" />
+    <Content Include="bin\Debug\BundleTransformer.Core.xml" />
+    <Content Include="bin\Debug\CampaignMonitorAPIWrapper.dll" />
+    <Content Include="bin\Debug\ClearScript.dll" />
+    <Content Include="bin\Debug\CMPCDotNet.dll" />
+    <Content Include="bin\Debug\createsend-dotnet.dll" />
+    <Content Include="bin\Debug\createsend-dotnet.pdb" />
+    <Content Include="bin\Debug\Fonet.dll" />
+    <Content Include="bin\Debug\Fonet.xml" />
+    <Content Include="bin\Debug\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="bin\Debug\ICSharpCode.SharpZipLib.pdb" />
+    <Content Include="bin\Debug\ICSharpCode.SharpZipLib.xml" />
+    <Content Include="bin\Debug\JavaScriptEngineSwitcher.Core.dll" />
+    <Content Include="bin\Debug\JavaScriptEngineSwitcher.Core.xml" />
+    <Content Include="bin\Debug\JavaScriptEngineSwitcher.V8.dll" />
+    <Content Include="bin\Debug\JavaScriptEngineSwitcher.V8.xml" />
+    <Content Include="bin\Debug\JsonWebTokens.dll" />
+    <Content Include="bin\Debug\Lucene.Net.dll" />
+    <Content Include="bin\Debug\Lucene.Net.pdb" />
+    <Content Include="bin\Debug\Lucene.Net.xml" />
+    <Content Include="bin\Debug\Magick.NET-Q8-AnyCPU.dll" />
+    <Content Include="bin\Debug\Magick.NET-Q8-AnyCPU.xml" />
+    <Content Include="bin\Debug\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Debug\Microsoft.Web.Infrastructure.xml" />
+    <Content Include="bin\Debug\Newtonsoft.Json.dll" />
+    <Content Include="bin\Debug\Newtonsoft.Json.pdb" />
+    <Content Include="bin\Debug\PayPal.dll" />
+    <Content Include="bin\Debug\PayPal.xml" />
+    <Content Include="bin\Debug\Protean.Providers.Messaging.Pure360.dll" />
+    <Content Include="bin\Debug\Protean.Providers.Messaging.Pure360.pdb" />
+    <Content Include="bin\Debug\Protean.Tools.Csharp.dll" />
+    <Content Include="bin\Debug\Protean.Tools.Csharp.pdb" />
+    <Content Include="bin\Debug\Protean.Tools.dll" />
+    <Content Include="bin\Debug\Protean.Tools.pdb" />
+    <Content Include="bin\Debug\Protean.Tools.xml" />
+    <Content Include="bin\Debug\ProteanCMS.dll" />
+    <Content Include="bin\Debug\ProteanCMS.pdb" />
+    <Content Include="bin\Debug\ProteanCMS.xml" />
+    <Content Include="bin\Debug\ru-ru\BundleTransformer.Core.resources.dll" />
+    <Content Include="bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll" />
+    <Content Include="bin\Debug\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll" />
+    <Content Include="bin\Debug\SoundInTheory.DynamicImage.dll" />
+    <Content Include="bin\Debug\SoundInTheory.DynamicImage.Extensions.Pdf.dll" />
+    <Content Include="bin\Debug\System.Net.FtpClient.dll" />
+    <Content Include="bin\Debug\System.Net.FtpClient.xml" />
+    <Content Include="bin\Debug\System.Web.Optimization.dll" />
+    <Content Include="bin\Debug\System.Web.Optimization.xml" />
+    <Content Include="bin\Debug\tidy.x64.dll" />
+    <Content Include="bin\Debug\tidy.x86.dll" />
+    <Content Include="bin\Debug\TidyHTML5Managed.dll" />
+    <Content Include="bin\Debug\x64\ChakraCore.dll" />
+    <Content Include="bin\Debug\x64\ClearScriptV8-64.dll" />
+    <Content Include="bin\Debug\x64\v8-base-x64.dll" />
+    <Content Include="bin\Debug\x64\v8-x64.dll" />
+    <Content Include="obj\Debug\Protean.Providers.Messaging.Pure360.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\Protean.Providers.Messaging.Pure360.dll" />
+    <Content Include="obj\Debug\Protean.Providers.Messaging.Pure360.pdb" />
+    <Content Include="obj\Debug\TempPE\Connected Services.paint.Reference.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Connected Services.paintService.Reference.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Web References.com.pure360.paint.Reference.cs.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
