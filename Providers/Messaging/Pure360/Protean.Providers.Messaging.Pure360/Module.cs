@@ -5,12 +5,12 @@ using System.Web.Configuration;
 using System.Xml;
 
 
-namespace Protean.Providers.Messaging.Pure360
+namespace Protean.Providers.Messaging
 {
-
-    public class CampaignMonitorTools
+    
+    public class Pure360Tools
     {
-        public CampaignMonitorTools()
+        public Pure360Tools()
         {
         }
 
@@ -138,4 +138,6 @@ namespace Protean.Providers.Messaging.Pure360
             }
         }
     }
+
 }
+

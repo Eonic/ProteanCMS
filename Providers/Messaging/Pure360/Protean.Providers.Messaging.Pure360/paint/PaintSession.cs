@@ -3,7 +3,7 @@ using System.Data;
 using System.Configuration;
 using System.Collections;
 using System.Web;
-using Protean.Providers.Messaging.Pure360.com.pure360.paint;
+using Protean.Providers.Messaging.com.pure360.paint;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.IO;
 
@@ -12,7 +12,7 @@ using System.IO;
 /// methods are included to implement the standard actions e.g. creating and
 /// email or uploading a list.
 /// </summary>
-namespace Protean.Providers.Messaging.Pure360.paint
+namespace Protean.Providers.Messaging.Pure360Library.paint
 {
     public class PaintSession
     {

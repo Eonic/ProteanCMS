@@ -10,12 +10,11 @@ using System.Net;
 using System.Threading;
 using static Protean.Cms;
 using Microsoft.VisualBasic;
-using Microsoft.SqlServer.Management.Smo;
 
 
 namespace Protean.Providers.Messaging
 {
-    public class Provider
+    public class Pure360
     {
 
         public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, Protean.Providers.Messaging.BaseProvider MemProvider, ref Protean.Cms myWeb)
@@ -330,14 +329,16 @@ namespace Protean.Providers.Messaging
                     createsend_dotnet.BasicList List;
                     createsend_dotnet.BasicSegment Segment;
 
-                    createsend_dotnet.ApiKeyAuthenticationDetails cmAuth = new createsend_dotnet.ApiKeyAuthenticationDetails(moMailConfig["ApiKey"]);
-                    createsend_dotnet.Client CMclient = new createsend_dotnet.Client(cmAuth, moMailConfig["ClientID"]);
+                    //createsend_dotnet.ApiKeyAuthenticationDetails cmAuth = new createsend_dotnet.ApiKeyAuthenticationDetails(moMailConfig["ApiKey"]);
+                    //createsend_dotnet.Client CMclient = new createsend_dotnet.Client(cmAuth, moMailConfig["ClientID"]);
+
+
 
 
                     // gets the lists for the client
                     Hashtable hLists = new Hashtable();
-                    Lists = CMclient.Lists();
-                    Segments = CMclient.Segments();
+                    //Lists = CMclient.Lists();
+                    //Segments = CMclient.Segments();
                     //ss
                     //for (int i = 0; i <=Microsoft.VisualBasic.Information.UBound(Lists as object[]); i++)
                     //{

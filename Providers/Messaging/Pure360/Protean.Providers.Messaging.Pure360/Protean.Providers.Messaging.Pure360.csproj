@@ -7,7 +7,7 @@
     <ProjectGuid>{C12AB746-AD88-40DB-A835-30DAC14875B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Protean.Providers.Messaging.Pure360</RootNamespace>
+    <RootNamespace>Protean.Providers.Messaging</RootNamespace>
     <AssemblyName>Protean.Providers.Messaging.Pure360</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="paint\PaintMethods.cs" />
     <Compile Include="paint\PaintSecurityException.cs" />
@@ -69,7 +68,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Provide.cs" />
+    <Compile Include="Provider.cs" />
     <Compile Include="Web References\com.pure360.paint\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -108,7 +107,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Web References\com.pure360.paint\controller.wsdl" />
-    <None Include="Web References\com.pure360.paint\paintKeyValuePair.datasource">
+    <None Include="Web References\com.pure360.paint\paintKeyValuePair1.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\com.pure360.paint\Reference.map">
