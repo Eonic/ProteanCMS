@@ -6,3 +6,12 @@ D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.dll
 D:\HostingSpaces\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.pdb
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Protean.Providers.Payment.Datacash.dll
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Protean.Providers.Payment.Datacash.pdb
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Newtonsoft.Json.dll
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\bin\Debug\Newtonsoft.Json.xml
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csprojAssemblyReference.cache
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CoreCompileInputs.cache
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.csproj.CopyComplete
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.dll
+D:\_Sonali_WorkPlace\DevOpsGit\Providers\Payment\Datacash\Protean.Providers.Payment.Datacash\obj\Debug\Protean.Providers.Payment.Datacash.pdb

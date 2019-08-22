@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
+namespace Protean.Providers.Messaging.com.pure360.paint {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -23,7 +23,7 @@ namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
     
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3190.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name="paintBinding", Namespace="http://www.pure360.com/paint")]
@@ -35,7 +35,7 @@ namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
         
         /// <remarks/>
         public paintService() {
-            this.Url = global::Protean.Providers.Messaging.Pure360.Properties.Settings.Default.Protean_Providers_Messaging_Pure360_com_pure360_paint_paintService;
+            this.Url = global::Protean.Providers.Messaging.Properties.Settings.Default.Protean_Providers_Messaging_Pure360_com_pure360_paint_paintService;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -131,7 +131,7 @@ namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3190.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -164,7 +164,7 @@ namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.3190.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -198,11 +198,11 @@ namespace Protean.Providers.Messaging.Pure360.com.pure360.paint {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3190.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     public delegate void handleRequestCompletedEventHandler(object sender, handleRequestCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.3190.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class handleRequestCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
