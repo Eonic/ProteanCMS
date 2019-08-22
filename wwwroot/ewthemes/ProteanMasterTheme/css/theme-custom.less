@@ -1,5 +1,12 @@
 ﻿//applies body bg styles from theme settings
 body{background:@background-repeat @background-position @background-attachment @body-bg;}
+.transition-all(@speed: 0.2s) {
+    -webkit-transition: all @speed;
+    -moz-transition: all @speed;
+    -ms-transition: all @speed;
+    -o-transition: all @speed;
+    transition: all @speed;
+}
 .Site{
 //------------------------------------------------
 //HEADINGS AND TEXT
@@ -49,14 +56,14 @@ body{background:@background-repeat @background-position @background-attachment @
         @media(max-width:@xs-grid-max){margin-bottom:@xs-box-margin;}
     }
 //formatted text without box
+    /*:not(.module-centred).module-FormattedText.nobox > h3.title,
+    :not(.module-centred).module-FormattedText.nobox > .editable > h3.title{
+        //.heading-decoration(@brand-warning);
+        .heading-color;
+    }*/
     .module-FormattedText.nobox.module-centred > h3.title:not(.module-with-icon),
     .module-FormattedText.nobox.module-centred > .editable > h3.title:not(.module-with-icon){
         div.center-block{.heading-decoration-centred(@brand-warning)}
-        .heading-color;
-    }
-    :not(.module-centred).module-FormattedText.nobox > h3.title,
-    :not(.module-centred).module-FormattedText.nobox > .editable > h3.title{
-        //.heading-decoration(@brand-warning);
         .heading-color;
     }
     .module-FormattedText.nobox.module-centred > h3.title.module-with-icon,
@@ -65,14 +72,14 @@ body{background:@background-repeat @background-position @background-attachment @
         .heading-color;
     }
 //content list heading without box
-    :not(.module-FormattedText):not(.module-centred).nobox > h3.title,
+    /*:not(.module-FormattedText):not(.module-centred).nobox > h3.title,
     :not(.module-FormattedText):not(.module-centred).nobox > .editable > h3.title{
         //.heading-decoration(@brand-success);
     }
     :not(.module-FormattedText).nobox.module-centred > h3.title,
     :not(.module-FormattedText).nobox.module-centred > .editable > h3.title{
        // div.center-block{.heading-decoration-centred(@brand-success)}
-    }
+    }*/
 //listItem heading
     .listItem h3.title,
     .listItem h4.media-heading{
@@ -202,10 +209,10 @@ body{background:@background-repeat @background-position @background-attachment @
         h1,h2,h3,h4,h5,h6,h2.title,h3.title{color:contrast(@background,@text-color,#fff);}
         h3.title,
         h4.media-heading,
+        //:not(.module-centred).module-FormattedText.nobox > h3.title,
+        //:not(.module-centred).module-FormattedText.nobox > .editable > h3.title,
         .module-FormattedText.nobox.module-centred > h3.title:not(.module-with-icon),
         .module-FormattedText.nobox.module-centred > .editable > h3.title:not(.module-with-icon),
-        :not(.module-centred).module-FormattedText.nobox > h3.title,
-        :not(.module-centred).module-FormattedText.nobox > .editable > h3.title,
         .module-FormattedText.nobox.module-centred > h3.title.module-with-icon,
         .module-FormattedText.nobox.module-centred > .editable > h3.title.module-with-icon{
             .heading-color(@color:@color;@link:@color);
@@ -256,6 +263,48 @@ body{background:@background-repeat @background-position @background-attachment @
     section.primaryBG{
         .NewsList,
         .ProductList{.list-box-content;}
+    }
+    .imageBG {
+        position: absolute;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        background-repeat: no-repeat;
+        //zoom:2;
+        background-size: cover;
+
+        @media(min-width:2000px) {
+            background-position: center center !important
+        }
+        //background-size: cover;
+        //@media(max-width:@screen-xs-max){display:none;}
+        @media(max-width:@screen-xs-max) {
+            background-size: cover;
+            background-position: center center !important;
+        }
+    }
+
+    section.image-wrapper-white {
+        .background-coloring(#fff);
+
+        .fullwidthContainer .image-wrapper-white > .row > div {
+            padding-left: 8%;
+            padding-right: 8%;
+            padding-top: @box-margin;
+            min-height: 200px;
+
+            @media(min-width:@screen-sm-min) {
+                .flex-display();
+                .align-items(center);
+                min-height: 400px;
+                padding-top: @box-margin;
+            }
+
+            h2 {
+                margin-top: 0;
+            }
+        }
     }
 }
 
@@ -569,6 +618,13 @@ body{background:@background-repeat @background-position @background-attachment @
 		}
 		.socialLinks{margin-bottom:@line-height-computed;}
 	}
+    .Product-detail-container{
+        .picture{
+            margin:0;
+            max-width:100%;
+            float:none;
+        }
+    }
 
 }
 //------------------------------------------------

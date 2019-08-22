@@ -5192,19 +5192,25 @@ Public Class Cms
                             If Not goLangConfig Is Nothing Then
                                 'Check Language by Domain
                                 Dim oLangElmt As XmlElement
+                                Dim httpStart As String
+                                If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
+                                    httpStart = "https://"
+                                Else
+                                    httpStart = "http://"
+                                End If
 
                                 If Not goLangConfig.SelectSingleNode("Language[@code='" & pageLang & "']") Is Nothing Then
                                     For Each oLangElmt In goLangConfig.SelectNodes("Language[@code='" & pageLang & "']")
                                         Select Case LCase(oLangElmt.GetAttribute("identMethod"))
                                             Case "domain"
-                                                pvUrlPrefix = "http://" & oLangElmt.GetAttribute("identifier")
+                                                pvUrlPrefix = httpStart & oLangElmt.GetAttribute("identifier")
                                             Case "path"
-                                                pvUrlPrefix = "http://" & goLangConfig.GetAttribute("defaultDomain") & "/" & oLangElmt.GetAttribute("identifier")
+                                                pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain") & "/" & oLangElmt.GetAttribute("identifier")
                                         End Select
                                     Next
                                 End If
 
-                                If pvUrlPrefix = "" Then pvUrlPrefix = "http://" & goLangConfig.GetAttribute("defaultDomain")
+                                If pvUrlPrefix = "" Then pvUrlPrefix = httpStart & goLangConfig.GetAttribute("defaultDomain")
                                 pvElmt.SetAttribute("url", pvUrlPrefix & sUrl)
 
                             End If

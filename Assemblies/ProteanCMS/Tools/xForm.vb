@@ -742,6 +742,15 @@ Public Class xForm
 
                 End If
 
+                If Not oBindElmt.GetAttribute("isUnique") = Nothing And bIsThisBindValid Then
+                    'Confirm the contenttype and the field
+
+                    'Generate the xpath if value is in XML within the field
+
+                    'Query the database to confirm if this value is unique.
+
+                End If
+
                 'case for relevant
                 'case for read-only
 

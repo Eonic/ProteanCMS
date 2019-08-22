@@ -69,7 +69,7 @@
   <xsl:variable name="navwidth" select="'200'"/>
   <xsl:variable name="boxpad" select="'15'"/>
   <xsl:variable name="colpad" select="'20'"/>
-
+  <xsl:variable name="jqueryVer" select="'1.11'"/>
   <!-- Dates -->
   <xsl:variable name="today" select="/Page/Request/ServerVariables/Item[@name='Date']/node()"/>
   <xsl:variable name="currentYear" select="substring($today,1,4)"/>
@@ -343,7 +343,8 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <xsl:if test="$ScriptAtBottom!='on'">
+
+        <xsl:if test="$ScriptAtBottom!='on' or $adminMode">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
@@ -595,8 +596,16 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonJsFiles">
-    <xsl:text>~/ewcommon/js/jquery/jquery-1.11.1.min.js,</xsl:text>
-    <xsl:text>~/ewcommon/js/jquery/jquery-migrate-1.2.1.min.js,</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$jqueryVer='3.4'">
+        <xsl:text>~/ewcommon/js/jquery/jquery-3.4.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>~/ewcommon/js/jquery/jquery-1.11.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery-migrate-1.2.1.min.js,</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>~/ewcommon/js/jquery/ui/1.11.1/jquery-ui.min.js,</xsl:text>
     <xsl:text>~/ewcommon/bs3/js/bootstrap.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/colorpickersliders/tinycolor.js,</xsl:text>

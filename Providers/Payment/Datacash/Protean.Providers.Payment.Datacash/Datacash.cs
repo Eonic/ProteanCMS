@@ -517,7 +517,7 @@ namespace Protean.Providers.Payment
                             else
                             {
                                 string reason = responseDoc.@get("Response.reason");
-                                err_msg = "Datacash" + strStatus + ": " + reason;
+                                err_msg = "Datacash Ref:" + strStatus + ": " + reason;
                                 ccXform.addNote("creditCard", xForm.noteTypes.Alert, err_msg,true);
                                 ccXform.valid = false;
                             }

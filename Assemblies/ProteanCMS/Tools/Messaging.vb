@@ -355,7 +355,7 @@ Public Class Messaging
                 Dim mailSender As New MailAddress(serverSenderEmail, serverSenderEmailName)
 
 
-                If goConfig("overrideFromEmail") = True Then
+                If goConfig("overrideFromEmail") = "on" Then
                     oMailn.From = mailSender
                 Else
                     ' Don't add the sender if it's the same address as the from

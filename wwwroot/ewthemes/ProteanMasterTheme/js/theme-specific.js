@@ -18,7 +18,11 @@
         $('#mainTable').css('margin-bottom', -footer_height);
         $('#mainTable').css('padding-bottom', footer_height);
     });
-    
+    $('.mobile-dd-control').click(function () {
+        $(this).parent().find(".dropdown-menu").toggle();
+        $(this).parent().find(".fa-angle-up").toggle();
+        $(this).parent().find(".fa-angle-down").toggle();
+    });
 
     
 });
@@ -50,6 +54,7 @@ $(window).load(function () {
         fixedNav();
     }
 
+    $('.sp-wrap').smoothproducts();
 
 });
 $(window).resize(function () {

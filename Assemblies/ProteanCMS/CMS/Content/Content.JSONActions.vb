@@ -92,6 +92,24 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function IsUnique(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    'first check the user is validated we do not want this open to non admin users.
+                    Dim cContentType As String
+                    Dim cTableName As String
+                    Dim xPath As String
+                    Dim DataField As String
+
+
+                    Dim JsonResult As String = ""
+                    Return JsonResult
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
             Public Function SearchContent(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim nRoot As String = searchFilter("nRoot") 'Page to search
