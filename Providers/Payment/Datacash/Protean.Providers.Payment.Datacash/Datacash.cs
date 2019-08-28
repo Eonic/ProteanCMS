@@ -271,6 +271,7 @@ namespace Protean.Providers.Payment
                             sRedirectURL = moCartConfig["SecureURL"] + returnCmd + "&3dsec=showInvoice";
                             ccXform = this.xfrmSecure3DReturn(sRedirectURL);
                             myWeb.moSession["PaRes"] = myWeb.moRequest["PaRes"];
+                            //ccXform.valid = true;
                         }
                         else
                         {

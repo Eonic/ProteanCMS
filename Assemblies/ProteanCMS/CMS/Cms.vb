@@ -4201,7 +4201,7 @@ Public Class Cms
                 root = moPageXml.CreateElement("Settings")
 
                 'Please never add any setting here you do not want to be publicly accessible.
-                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
+                Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
                 s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
