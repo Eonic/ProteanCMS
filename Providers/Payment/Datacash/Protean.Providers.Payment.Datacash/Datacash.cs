@@ -268,7 +268,7 @@ namespace Protean.Providers.Payment
                             ccXform.Instance.FirstChild.AppendChild(oeResponseElmt);
                             oCart.mnPaymentId = oEwProv.savePayment(myWeb.mnUserId, "Datacash", PaymentRef, cMethodName, oeResponseElmt, DateTime.Now, false, oEwProv.mnPaymentAmount);
                             string sRedirectURL;
-                            sRedirectURL = moCartConfig["SecureURL"] + returnCmd + "&3dsec=showInvoice";
+                            sRedirectURL = moCartConfig["SecureURL"] + "?" + returnCmd + "&3dsec=showInvoice";
                             ccXform = this.xfrmSecure3DReturn(sRedirectURL);
                             myWeb.moSession["PaRes"] = myWeb.moRequest["PaRes"];
                             //ccXform.valid = true;
@@ -280,13 +280,15 @@ namespace Protean.Providers.Payment
                             ccXform.addNote("ccXform.moXformElmt", xForm.noteTypes.Alert, err_msg);
                             ccXform.valid = false;
                         }
-
+                    }
+                    if  (myWeb.moRequest["3dsec"] != null)
+                    { 
                         if (myWeb.moRequest["3dsec"].ToString() == "showInvoice" && Convert.ToString(myWeb.moSession["PaRes"]) != "")
                         {
                             ccXform.valid = true;
                         }
-
                     }
+
                     // if xform is valid or we have a 3d secure passback
                     if ((ccXform.valid || myWeb.moRequest["PaRes"] == null) && ccXform.isSubmitted() == true)
                     {
@@ -565,7 +567,7 @@ namespace Protean.Providers.Payment
                     oXform.Instance.AppendChild(oFrmInstance);
                     oFrmGroup = addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirect to 3D Secure");
                     // build the form and the binds
-                    //oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
+                   // oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=\"Javascript\">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>");
                     oXform.addSubmit(ref oFrmGroup, "Secure3DReturn", "Show Invoice", "ewSubmit");
                     oXform.addValues();
                     return oXform;

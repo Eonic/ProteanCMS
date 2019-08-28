@@ -2398,7 +2398,7 @@ Public Class xForm
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
         Try
-            oIptElmt = moPageXML.CreateElement("submit")
+            oIptElmt = oContextNode.OwnerDocument.CreateElement("submit")
             oIptElmt.SetAttribute("submission", sSubmission)
             oIptElmt.SetAttribute("ref", sRef)
             oIptElmt.SetAttribute("class", sClass)
@@ -2407,7 +2407,7 @@ Public Class xForm
             End If
 
             If sLabel <> "" Then
-                oLabelElmt = moPageXML.CreateElement("label")
+                oLabelElmt = oContextNode.OwnerDocument.CreateElement("label")
                 oLabelElmt.InnerText = sLabel
                 oIptElmt.AppendChild(oLabelElmt)
             End If
