@@ -224,6 +224,99 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Overridable Function getPaymentMethodButtons(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal nPaymentAmount As Double) As Integer
+                PerfMon.Log("PaymentProviders", "getPaymentMethods")
+                Dim cProcessInfo As String = "getPaymentMethods"
+                Dim oElmt As XmlElement
+                Dim bFirstRow As Boolean = True
+                Try
+
+                    Dim submissionValue As String = ""
+                    Dim refValue As String = ""
+                    'find existing submit and delete
+                    Dim oSubmitBtn As XmlElement = oFrmElmt.SelectSingleNode("submit")
+                    If Not oSubmitBtn Is Nothing Then
+                        submissionValue = oSubmitBtn.GetAttribute("submission")
+                        refValue = oSubmitBtn.GetAttribute("ref")
+                        oSubmitBtn.ParentNode.RemoveChild(oSubmitBtn)
+                    End If
+
+                    Dim nOptCount As Integer = 0
+
+                    For Each oElmt In moPaymentCfg.SelectNodes("provider")
+
+                        Dim bAllowUser As Boolean = False
+                        Dim bAllowCurrencies As Boolean = False
+
+                        If oElmt.GetAttribute("validGroups") = "all" Then
+                            bAllowUser = True
+                        Else
+                            Dim aGroups() As String = Split(oElmt.GetAttribute("validGroups"), ",")
+                            Dim i As Integer
+                            For i = 0 To UBound(aGroups)
+                                If modbHelper.checkUserRole(aGroups(i), "Group") Then
+                                    bAllowUser = True
+                                End If
+                            Next
+                        End If
+
+                        If oElmt.GetAttribute("invalidGroups") <> "" Then
+                            Dim aInvalidGroups() As String = Split(oElmt.GetAttribute("invalidGroups"), ",")
+                            Dim i2 As Integer
+                            For i2 = 0 To UBound(aInvalidGroups)
+                                If modbHelper.checkUserRole(aInvalidGroups(i2), "Group") Then
+                                    bAllowUser = False
+                                End If
+                            Next
+                        End If
+
+                        If oElmt.GetAttribute("validCurrencies") = "all" Or oElmt.GetAttribute("validCurrencies") = "" Then
+                            bAllowCurrencies = True
+                        Else
+                            Dim aCurs() As String = Split(oElmt.GetAttribute("validCurrencies"), ",")
+                            Dim i As Integer
+                            For i = 0 To UBound(aCurs)
+                                If aCurs(i) = mcCurrency Then
+                                    bAllowCurrencies = True
+                                Else
+                                    bAllowCurrencies = False
+                                End If
+                            Next
+                        End If
+
+                        If bAllowUser And bAllowCurrencies Then
+
+                            Dim PaymentLabel As String = oElmt.SelectSingleNode("description/@value").InnerText
+                            'allow html in description node...
+                            Dim bXmlLabel As Boolean = False
+
+                            If oElmt.SelectSingleNode("description").InnerXml <> "" Then
+                                PaymentLabel = oElmt.SelectSingleNode("description").InnerXml
+                                bXmlLabel = True
+                            End If
+
+                            Dim iconclass As String = ""
+                            If Not oElmt.SelectSingleNode("icon/@value") Is Nothing Then
+                                iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
+                            End If
+
+                            'Add new submits
+                            oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
+                            nOptCount = nOptCount + 1
+
+                        End If
+                    Next
+
+
+                    Return nOptCount
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Function paySecPay(ByRef oRoot As XmlElement, ByVal sSubmitPath As String, Optional ByVal sProfile As String = "") As xForm
                 PerfMon.Log("PaymentProviders", "paySecPay")
                 Dim sSql As String

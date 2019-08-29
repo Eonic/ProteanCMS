@@ -1353,33 +1353,39 @@ processFlow:
                             End If
                         End If
 
-                        Dim oOptionXform As xForm = optionsXform(oElmt)
 
-                        If Not oOptionXform.valid Then
-
-
-                            Dim oContentsElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
-                            If oContentsElmt Is Nothing Then
-                                oContentsElmt = moPageXml.CreateElement("Contents")
-                                If moPageXml.DocumentElement Is Nothing Then
-                                    Err.Raise(1004, "addressSubProcess", " PAGE IS NOT CREATED")
-                                Else
-                                    moPageXml.DocumentElement.AppendChild(oContentsElmt)
-                                End If
-                            End If
-                            oContentsElmt.AppendChild(oOptionXform.moXformElmt)
-
-                            'moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oOptionXform.moXformElmt)
-
-                            If Not cRepeatPaymentError = "" Then
-                                oOptionXform.addNote(oOptionXform.moXformElmt.SelectSingleNode("group"), xForm.noteTypes.Alert, cRepeatPaymentError, True)
-                            End If
-                        Else
+                        If mcPaymentMethod <> "" And Not moCartXml.SelectSingleNode("Order/Shipping") Is Nothing Then
                             mnProcessId = 5
                             mcCartCmd = "EnterPaymentDetails"
                             '   execute next step unless form filled out wrong / not in db
                             GoTo processFlow
+                        Else
+                            Dim oOptionXform As xForm = optionsXform(oElmt)
+                            If oOptionXform.valid Then
+                                mnProcessId = 5
+                                mcCartCmd = "EnterPaymentDetails"
+                                '   execute next step unless form filled out wrong / not in db
+                                GoTo processFlow
+                            Else
+                                Dim oContentsElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
+                                If oContentsElmt Is Nothing Then
+                                    oContentsElmt = moPageXml.CreateElement("Contents")
+                                    If moPageXml.DocumentElement Is Nothing Then
+                                        Err.Raise(1004, "addressSubProcess", " PAGE IS NOT CREATED")
+                                    Else
+                                        moPageXml.DocumentElement.AppendChild(oContentsElmt)
+                                    End If
+                                End If
+                                oContentsElmt.AppendChild(oOptionXform.moXformElmt)
+
+                                'moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oOptionXform.moXformElmt)
+
+                                If Not cRepeatPaymentError = "" Then
+                                    oOptionXform.addNote(oOptionXform.moXformElmt.SelectSingleNode("group"), xForm.noteTypes.Alert, cRepeatPaymentError, True)
+                                End If
+                            End If
                         End If
+
 
                     Case "Redirect3ds"
 
@@ -3443,6 +3449,8 @@ processFlow:
             Dim oContactXform As xForm
             Dim submitPrefix As String = "cartBill"
             Dim cProcessInfo As String = submitPrefix
+            Dim oPay As PaymentProviders
+            Dim buttonRef As String = ""
             Try
 
                 If cAddressType.Contains("Delivery") Then submitPrefix = "cartDel"
@@ -3452,10 +3460,25 @@ processFlow:
                     GetCart(oCartElmt)
                 Else
                     oContactXform = contactXform(cAddressType, , , mcCartCmd)
-                    GetCart(oCartElmt)
-                End If
 
-                If oContactXform.valid = False Then
+                    If moPay Is Nothing Then
+                        oPay = New PaymentProviders(myWeb)
+                    Else
+                        oPay = moPay
+                    End If
+                    oPay.mcCurrency = mcCurrency
+
+                    If Not oCartElmt.SelectSingleNode("Order/Shipping") Is Nothing Then
+                        ' we already have shipping selected threfore we can skip Options Xform
+                        Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("group/submit")
+                        buttonRef = oSubmitBtn.GetAttribute("ref")
+                        oPay.getPaymentMethodButtons(oContactXform, oContactXform.moXformElmt.SelectSingleNode("group"), 0)
+                    End If
+
+                    GetCart(oCartElmt)
+                    End If
+
+                    If oContactXform.valid = False Then
                     'show the form
                     Dim oContentElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Contents")
                     If oContentElmt Is Nothing Then
@@ -3496,14 +3519,19 @@ processFlow:
                             Or oContactXform.moXformElmt.GetAttribute("cartCmd") = "ChoosePaymentShippingOption" _
                             Then
 
+                            If Not oCartElmt.SelectSingleNode("Order/Shipping") Is Nothing Then
+                                ' we have payment method buttons on the form.
+                                mcPaymentMethod = myWeb.moRequest(buttonRef)
+                            End If
+
                             mcCartCmd = "ChoosePaymentShippingOption"
                             mnProcessId = 3
 
                         Else
-                            'If mbEwMembership = True And myWeb.mnUserId <> 0 Then
-                            '    'all handled in pick form
-                            'Else
-                            Dim BillingAddressID As Long = setCurrentBillingAddress(myWeb.mnUserId, 0)
+                                'If mbEwMembership = True And myWeb.mnUserId <> 0 Then
+                                '    'all handled in pick form
+                                'Else
+                                Dim BillingAddressID As Long = setCurrentBillingAddress(myWeb.mnUserId, 0)
                             If myWeb.moRequest(submitPrefix & "editAddress" & BillingAddressID) <> "" Then
                                 'we are editing an address form the pick address form so lets go back.
                                 mcCartCmd = "Billing"
@@ -3551,6 +3579,9 @@ processFlow:
                                     Dim sSql As String = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" & mnCartId
                                     Dim DeliveryAddressID As String = moDBHelper.ExeProcessSqlScalar(sSql)
                                     useSavedAddressesOnCart(BillingAddressID, DeliveryAddressID)
+
+                                    mcPaymentMethod = myWeb.moRequest(buttonRef)
+
                                     mcCartCmd = "ChoosePaymentShippingOption"
                                     mnProcessId = 3
                                 Else
@@ -5566,6 +5597,7 @@ processFlow:
             End Try
 
         End Function
+
 
         Public Function getParentCountries(ByRef sTarget As String, ByRef nIndex As Integer) As String
             PerfMon.Log("Cart", "getParentCountries")

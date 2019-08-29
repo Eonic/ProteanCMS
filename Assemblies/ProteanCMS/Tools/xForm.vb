@@ -2392,7 +2392,7 @@ Public Class xForm
 
 
 
-    Function addSubmit(ByRef oContextNode As XmlElement, ByVal sSubmission As String, ByVal sLabel As String, Optional ByVal sRef As String = "submit", Optional ByVal sClass As String = "principle", Optional ByVal sIcon As String = "") As Object
+    Function addSubmit(ByRef oContextNode As XmlElement, ByVal sSubmission As String, ByVal sLabel As String, Optional ByVal sRef As String = "submit", Optional ByVal sClass As String = "principle", Optional ByVal sIcon As String = "", Optional ByVal sValue As String = "") As Object
 
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
@@ -2404,6 +2404,9 @@ Public Class xForm
             oIptElmt.SetAttribute("class", sClass)
             If sIcon <> "" Then
                 oIptElmt.SetAttribute("icon", sIcon)
+            End If
+            If sValue <> "" Then
+                oIptElmt.SetAttribute("value", sValue)
             End If
 
             If sLabel <> "" Then
