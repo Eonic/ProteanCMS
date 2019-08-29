@@ -965,18 +965,22 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:for-each select="$page/User[1]/Company">
-            <a class="btn btn-primary principle" href="{$currentPage/@url}?ewCmd=addContact&amp;ParentDirId={@id}">
+            <xsl:if test="Name">
+              <a class="btn btn-primary principle" href="{$currentPage/@url}?ewCmd=addContact&amp;ParentDirId={@id}">
                 <i class="fa fa-plus">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>
                 Add New Address
               </a>
-            <h3>Addresses for <xsl:value-of select="Name/node()"/></h3>
+              <h3>
+                Addresses for <xsl:value-of select="Name/node()"/>
+              </h3>
 
-            <div class="list orders row">
-              <xsl:apply-templates select="Contacts/Contact" mode="membershipUserContactsDisplayBrief"/>
-              <div class="terminus">&#160;</div>
-            </div>
+              <div class="list orders row">
+                <xsl:apply-templates select="Contacts/Contact" mode="membershipUserContactsDisplayBrief"/>
+                <div class="terminus">&#160;</div>
+              </div>
+            </xsl:if>
           </xsl:for-each>
         </xsl:otherwise>
       </xsl:choose>
