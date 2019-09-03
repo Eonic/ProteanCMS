@@ -637,6 +637,26 @@ namespace Protean.Providers.Payment
                 }
             }
 
+            public bool AddPaymentButton(ref xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue)
+            {
+                string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
+                // allow html in description node...
+                bool bXmlLabel = false;
+
+                if (configXml.SelectSingleNode("description").InnerXml != "")
+                {
+                    PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
+                    bXmlLabel = true;
+                }
+
+                string iconclass = "";
+                if (!(configXml.SelectSingleNode("icon/@value") == null))
+                    iconclass = configXml.SelectSingleNode("icon/@value").InnerText;
+
+                oOptXform.addSubmit(ref oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" + configXml.GetAttribute("name"), iconclass, configXml.GetAttribute("name"));
+                return default(bool);
+            }
+
         }
     }
 }

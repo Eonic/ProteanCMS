@@ -35,6 +35,7 @@
         <add key="DontTaxShipping" value="off" />
         <add key="DefaultDeliveryCountry" value="" />
         <add key="ShippedValidation" value="on" />
+        <add key="PaymentTypeButtons" value="off" />
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -68,6 +69,7 @@
     <bind id="ewDontTaxShipping" nodeset="cart/add[@key='DontTaxShipping']/@value" required="false()" type="string" />
     <bind id="DefaultDeliveryCountry" nodeset="cart/add[@key='DefaultDeliveryCountry']/@value" required="false()" type="string" />
     <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
+    <bind id="PaymentTypeButtons" nodeset="cart/add[@key='PaymentTypeButtons']/@value" required="false()" type="string" />
   </model>
   <group ref="CartSettings">
     <label>Cart Settings</label>
@@ -298,6 +300,18 @@
         </select1>
       <select1 bind="DefaultDeliveryCountry" class="ewQuery" query="Countries" appearance="minimal" >
         <label>Default Delivery Country</label>
+      </select1>
+      <select1 bind="PaymentTypeButtons" appearance="full">
+        <label>Show buttons not radios for Payment Type</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
       </select1>
     </group>
      <submit submission="" ref="submit" class="principle">

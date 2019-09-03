@@ -301,8 +301,13 @@ Partial Public Class Cms
                                 iconclass = oElmt.SelectSingleNode("icon/@value").InnerText
                             End If
 
+
+                            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oElmt.GetAttribute("name"))
+                            oPayProv.Activities.AddPaymentButton(oOptXform, oFrmElmt, oElmt, nPaymentAmount, submissionValue, refValue)
+
+
                             'Add new submits
-                            oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
+                            ' oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & oElmt.GetAttribute("name"), iconclass, oElmt.GetAttribute("name"))
                             nOptCount = nOptCount + 1
 
                         End If

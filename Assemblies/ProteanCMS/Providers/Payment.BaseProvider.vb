@@ -341,6 +341,29 @@ Namespace Providers
 
                 End Function
 
+
+                Public Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
+
+                    Dim PaymentLabel As String = configXml.SelectSingleNode("description/@value").InnerText
+                    'allow html in description node...
+                    Dim bXmlLabel As Boolean = False
+
+                    If configXml.SelectSingleNode("description").InnerXml <> "" Then
+                        PaymentLabel = configXml.SelectSingleNode("description").InnerXml
+                        bXmlLabel = True
+                    End If
+
+                    Dim iconclass As String = ""
+                    If Not configXml.SelectSingleNode("icon/@value") Is Nothing Then
+                        iconclass = configXml.SelectSingleNode("icon/@value").InnerText
+                    End If
+
+                    oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & configXml.GetAttribute("name"), iconclass, configXml.GetAttribute("name"))
+
+                End Function
+
+
+
             End Class
         End Class
 
