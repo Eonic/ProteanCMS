@@ -9,13 +9,20 @@ using System.Xml;
 
 namespace Protean.Tools
 {
-    public class pdf
+    public class PDF
+
     {
+        public static event ErrorEventHandler OnError;
+        public delegate void ErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
+        private const string mcModuleName = "Protean.Tools.PDF";
+
         public MemoryStream GetPDFstream(XmlElement xPageXml ,string XsltPath, string FontPath) {
             {
-                // Next we transform using into FO.Net Xml
-             
-                string styleFile = System.Convert.ToString(XsltPath);
+                try
+                {
+                    // Next we transform using into FO.Net Xml
+
+                    string styleFile = System.Convert.ToString(XsltPath);
 
                 Protean.Tools.Xslt.Transform oTransform = new Protean.Tools.Xslt.Transform();
                 oTransform.XslTFile = XsltPath;
@@ -65,7 +72,14 @@ namespace Protean.Tools
 
                 byte[] Buffer = ofileStream.ToArray();
 
-                return new MemoryStream(Buffer); ;
+                return new MemoryStream(Buffer);
+      
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPDFstream", ex, ""));
+                    return null;
+                }
             }
         }
     }

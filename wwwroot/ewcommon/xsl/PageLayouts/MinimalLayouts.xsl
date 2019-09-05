@@ -8437,7 +8437,12 @@
     </xsl:variable>
     <!--end responsive columns variables-->
     <div class="Links Grid">
-      <div class="cols{@cols}">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix Links Grid content-scroller</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
         <xsl:attribute name="class">
           <xsl:text>cols</xsl:text>
           <xsl:choose>
@@ -8470,7 +8475,6 @@
         <xsl:apply-templates select="ms:node-set($contentList)/node()" mode="displayBriefLinkGrid">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-        <div class="terminus">&#160;</div>
       </div>
     </div>
   </xsl:template>
