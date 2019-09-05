@@ -338,18 +338,11 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\MsieJavaScriptEngine.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JsonWebTokens.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AlphaFS.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AlphaFS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Antlr3.Runtime.pdb
@@ -374,7 +367,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\BundleTransformer.Less.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.ChakraCore.resources.dll

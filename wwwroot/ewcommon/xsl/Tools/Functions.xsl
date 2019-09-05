@@ -204,6 +204,13 @@
     </xsl:call-template>
   </xsl:variable>
 
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'GoogleAPIKey'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
   <xsl:variable name="GoogleTagManagerID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
         <xsl:call-template name="getXmlSettings">
@@ -6968,6 +6975,16 @@
       <xsl:when test="$sort='figure'">
         <xsl:for-each select="/Page/Contents/Content[@type=$contentType]">
           <xsl:sort select="Salary/@figure" order="{$order}" data-type="number"/>
+          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+            <xsl:if test="$maxDisplay = '0' or ($maxDisplay &gt; 0 and position() &lt;= $maxDisplay)">
+              <xsl:copy-of select="."/>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:when test="$sort='StartDate/@sortDate'">
+        <xsl:for-each select="/Page/Contents/Content[@type=$contentType]">
+          <xsl:sort select="StartDate/@sortDate" order="{$order}" data-type="text"/>
           <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
             <xsl:if test="$maxDisplay = '0' or ($maxDisplay &gt; 0 and position() &lt;= $maxDisplay)">
               <xsl:copy-of select="."/>

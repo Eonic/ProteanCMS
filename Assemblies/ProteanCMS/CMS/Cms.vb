@@ -1366,7 +1366,7 @@ Public Class Cms
             BuildPageXML()
 
             Dim layoutCmd As String = ""
-            If Not moSession Is Nothing Then
+            If Not moSession Is Nothing And Not ibIndexMode Then
                 If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
                     If moRequest("noFrames") <> "True" Then ' Fix for frameset double counting                   
                         'moDbHelper.logActivity(dbHelper.ActivityType.PageAccess, mnUserId, mnPageId, mnArtId)

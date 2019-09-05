@@ -6,8 +6,7 @@
   <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/CommonImports.xsl"/>
   <xsl:import href="../../../../../ewcommon_v5-1/xsl/cart/FullResponsiveCart.xsl"/>-->
   <xsl:import href="../../../../../ewcommon_v5-1/xsl/MinimalImports.xsl"/>
-  <!--<xsl:import href="../../xsl/InstalledModules.xsl"/>-->
-  <xsl:import href="D:\HostingSpaces\EonicSites\v5demo\wwwroot\xsl\InstalledModules.xsl"/>
+  <xsl:import href="../../xsl/InstalledModules.xsl"/>
   <xsl:import href="CustomBoxStyles.xsl"/>
   <xsl:import href="layout-templates/header.xsl"/>
 
@@ -107,6 +106,9 @@
         <xsl:text>~/ewThemes/</xsl:text>
         <xsl:value-of select="$theme"/>
         <xsl:text>/js/jasny-bootstrap.min.js,</xsl:text>
+        <xsl:text>~/ewThemes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/smoothproducts.js,</xsl:text>
         <xsl:text>~/ewCommon/js/newcart.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
@@ -139,6 +141,8 @@
     <xsl:value-of select="$thHeight"/>
   </xsl:template>
 
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayWidth">600</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getDisplayHeight">600</xsl:template>
   <!-- ############################################ PAGE LAYOUT ############################################### -->
 
 

@@ -6922,10 +6922,10 @@ processFlow:
 
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                 Else
-                    cCustomerAttachementTemplatePath = ofs.checkCommonFilePath(moConfig("ProjectPath") & cCustomerAttachementTemplatePath)
-
-                    Dim oPDF As New Protean.Tools.pdf
-                    oMsg.addAttachment(oPDF.GetPDFstream(oCartXML, cCustomerAttachementTemplatePath, cCustomerAttachementTemplatePath), "Attachment.pdf")
+                    cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
+                    Dim cFontPath As String = moServer.MapPath("/fonts")
+                    Dim oPDF As New Protean.Tools.PDF
+                    oMsg.addAttachment(oPDF.GetPDFstream(oCartXML, cCustomerAttachementTemplatePath, cFontPath), "Attachment.pdf")
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
 
                 End If

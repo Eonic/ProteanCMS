@@ -72,7 +72,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.23.301</AssemblyVersion>
+    <AssemblyVersion>6.0.23.321</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -804,6 +804,7 @@
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.vbproj">
       <Project>{76e7c871-9cec-4795-b6f2-66439dcd9367}</Project>
       <Name>Protean.Tools</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
