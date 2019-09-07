@@ -32,13 +32,14 @@ namespace Protean.Providers.Messaging
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             }
 
-            public void Subscribe(ref Protean.Cms myWeb, ref XmlElement oContentNode)
+            public void Subscribe(ref Protean.Cms myWeb, ref XmlElement oContentElement)
             {
                 try
                 {
                     Protean.Cms.xForm oXform = new Protean.Cms.xForm(ref myWeb);
                     oXform.moPageXML = myWeb.moPageXml;
-                    oXform.load((oContentNode).ToString());
+                    XmlNode oContentNode = (XmlElement)oContentElement;
+                    oXform.load(ref oContentNode, false);
                     if (oXform.isSubmitted())
                     {
                         oXform.updateInstanceFromRequest();
@@ -47,7 +48,7 @@ namespace Protean.Providers.Messaging
                         {
 
                             // We have an Xform within this content we need to process.
-                            string listId = oContentNode.GetAttribute("listID");
+                            string listId = oContentElement.GetAttribute("listID");
                             if (oXform.Instance.SelectSingleNode("Subscribe/Items/ListId") != null)
                             {
                                 if (oXform.Instance.SelectSingleNode("Subscribe/Items/ListId").InnerText != "")

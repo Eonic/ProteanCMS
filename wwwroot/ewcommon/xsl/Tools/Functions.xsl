@@ -245,7 +245,7 @@
   <!-- -->
   <xsl:variable name="lazy" select="'off'"/>
   <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
-
+  <xsl:variable name="lazyplaceholder" select="''"/>
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
 
@@ -351,7 +351,7 @@
         </xsl:choose>
 
 
-        <xsl:if test="$ScriptAtBottom!='on' or $adminMode">
+        <xsl:if test="$ScriptAtBottom!='on'">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         

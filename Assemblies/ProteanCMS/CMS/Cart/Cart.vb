@@ -1221,11 +1221,13 @@ processFlow:
                         GetCart(oElmt)
 
                     Case "Cart" 'Choose Shipping Costs
-                        If mnProcessId > 3 Then
-                            '   when everything is ready we can show the invoice screen
-                            mcCartCmd = "Confirm"
-                            GoTo processFlow '   execute next step (make the payment)
-                        End If
+
+                        'If mnProcessId > 3 Then
+                        '  ' when everything is ready we can show the invoice screen
+                        '   mcCartCmd = "Confirm"
+                        '   GoTo processFlow '   execute next step (make the payment)
+                        'End If
+
                         '   info to display the cart
                         GetCart(oElmt)
 
@@ -3471,13 +3473,14 @@ processFlow:
                     oPay.mcCurrency = mcCurrency
 
                     GetCart(oCartElmt)
-
-                    If Not oCartElmt.SelectSingleNode("Shipping") Is Nothing Then
-                        ' we already have shipping selected threfore we can skip Options Xform
-                        Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("group/submit")
-                        buttonRef = oSubmitBtn.GetAttribute("ref")
-                        oPay.getPaymentMethodButtons(oContactXform, oContactXform.moXformElmt.SelectSingleNode("group"), 0)
-                        bSubmitPaymentMethod = True
+                    If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then
+                        If Not oCartElmt.SelectSingleNode("Shipping") Is Nothing And moCartConfig("TermsContentId") = "" And moCartConfig("TermsAndConditions") = "" Then
+                            ' we already have shipping selected threfore we can skip Options Xform
+                            Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("group/submit")
+                            buttonRef = oSubmitBtn.GetAttribute("ref")
+                            oPay.getPaymentMethodButtons(oContactXform, oContactXform.moXformElmt.SelectSingleNode("group"), 0)
+                            bSubmitPaymentMethod = True
+                        End If
                     End If
                 End If
 
@@ -5206,8 +5209,12 @@ processFlow:
                 oOptXform.moPageXML = moPageXml
 
                 If Not oOptXform.load("/xforms/Cart/Options.xml") Then
+                    Dim notesXml As String = ""
+                    If Not cartElmt.SelectSingleNode("Notes") Is Nothing Then
+                        notesXml = cartElmt.SelectSingleNode("Notes").OuterXml
+                    End If
                     oOptXform.NewFrm("optionsForm")
-                    oOptXform.Instance.InnerXml = "<nShipOptKey/><cPaymentMethod/><terms/><confirmterms>No</confirmterms><tblCartOrder><cShippingDesc/></tblCartOrder>"
+                    oOptXform.Instance.InnerXml = "<nShipOptKey/><cPaymentMethod/><terms/><confirmterms>No</confirmterms><tblCartOrder><cShippingDesc/><cClientNotes>" & notesXml & "</cClientNotes></tblCartOrder>"
                     If Not (moCartConfig("TermsContentId") = "" And moCartConfig("TermsAndConditions") = "") Then
                         bAddTerms = True
                     End If
@@ -5311,7 +5318,7 @@ processFlow:
                             End If
                         Next
                     Else
-                        oOptXform.addSelect1(oGrpElmt, "nShipOptKey", False, "Delivery Method", "radios multiline", xForm.ApperanceTypes.Full)
+                        oOptXform.addSelect1(oGrpElmt, "nShipOptKey", False, "Delivery Type", "radios multiline", xForm.ApperanceTypes.Full)
                         bFirstRow = True
                         Dim nLastID As Integer = 0
 
@@ -5396,6 +5403,16 @@ processFlow:
 
                     ods = Nothing
 
+                    If LCase(moCartConfig("NotesOnOptions")) = "on" Then
+
+                        ' Dim oNotesGrp As XmlElement = oOptXform.addGroup(oOptXform.moXformElmt, "notes", "term4051", "Please add any details for the delivery here")
+                        oOptXform.addTextArea(oGrpElmt, "tblCartOrder/cClientNotes/Notes/Notes", False, "Please add any details for the delivery here", "")
+                        ' oGrpElmt.AppendChild(oNotesGrp)
+
+                    End If
+
+
+
                     ' Allow to Select Multiple Payment Methods or just one
                     Dim oPaymentCfg As XmlNode
 
@@ -5475,11 +5492,11 @@ processFlow:
 
                         ' Adjust the group title
                         If bAdjustTitle Then
-                            Dim cGroupTitle As String = "Select Delivery and Payment Option"
-                            If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
-                            If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Select Payment Option"
-                            If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Select Delivery Option"
-                            Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
+                        Dim cGroupTitle As String = "Choose Delivery Type and Payment Method"
+                        If bHideDelivery And bHidePayment Then cGroupTitle = "Terms and Conditions"
+                        If bHideDelivery And Not (bHidePayment) Then cGroupTitle = "Choose Payment Method"
+                        If Not (bHideDelivery) And bHidePayment Then cGroupTitle = "Choose Delivery Type"
+                        Dim labelElmt As XmlElement = oGrpElmt.SelectSingleNode("label")
                             labelElmt.InnerText = cGroupTitle
                             labelElmt.SetAttribute("class", "term3019")
 
@@ -5535,57 +5552,65 @@ processFlow:
 
                 If AllowedPaymentMethods.Contains(submittedPaymentMethod) Then ' equates to is submitted
 
+                    'Save notes to cart
+
+                    If LCase(moCartConfig("NotesOnOptions")) = "on" Then
+                        ' If myWeb.moRequest("tblCartOrder/cClientNotes/Notes/Notes") <> "" Then
+                        AddClientNotes(myWeb.moRequest("tblCartOrder/cClientNotes/Notes/Notes"))
+                        ' End If
+                    End If
+
                     If myWeb.moRequest("confirmterms") = "Agree" Or Not bAddTerms Then
 
-                        mcPaymentMethod = submittedPaymentMethod
+                            mcPaymentMethod = submittedPaymentMethod
 
-                        'if we have a profile split it out, allows for more than one set of settings for each payment method, only done for SecPay right now.
-                        If InStr(mcPaymentMethod, "-") Then
-                            Dim aPayMth() As String = Split(mcPaymentMethod, "-")
-                            mcPaymentMethod = aPayMth(0)
-                            mcPaymentProfile = aPayMth(1)
-                        End If
-
-                        sSql2 = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
-                        ods2 = moDBHelper.GetDataSet(sSql2, "Order", "Cart")
-                        Dim oRow2 As DataRow, cSqlUpdate As String
-                        For Each oRow2 In ods2.Tables("Order").Rows
-                            Dim nShipOptKey As Long
-
-                            If Not myWeb.moRequest("nShipOptKey") Is Nothing Then
-                                oRow2("nShippingMethodId") = myWeb.moRequest("nShipOptKey")
+                            'if we have a profile split it out, allows for more than one set of settings for each payment method, only done for SecPay right now.
+                            If InStr(mcPaymentMethod, "-") Then
+                                Dim aPayMth() As String = Split(mcPaymentMethod, "-")
+                                mcPaymentMethod = aPayMth(0)
+                                mcPaymentProfile = aPayMth(1)
                             End If
-                            nShipOptKey = oRow2("nShippingMethodId")
-                            sSql = "select * from tblCartShippingMethods "
-                            sSql = sSql & " where nShipOptKey = " & nShipOptKey
-                            ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
 
-                            For Each oRow In ods.Tables("Order").Rows
-                                cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
-                                nShippingCost = oRow("nShipOptCost")
-                                cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
-                                moDBHelper.ExeProcessSql(cSqlUpdate)
+                            sSql2 = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                            ods2 = moDBHelper.GetDataSet(sSql2, "Order", "Cart")
+                            Dim oRow2 As DataRow, cSqlUpdate As String
+                            For Each oRow2 In ods2.Tables("Order").Rows
+                                Dim nShipOptKey As Long
+
+                                If Not myWeb.moRequest("nShipOptKey") Is Nothing Then
+                                    oRow2("nShippingMethodId") = myWeb.moRequest("nShipOptKey")
+                                End If
+                                nShipOptKey = oRow2("nShippingMethodId")
+                                sSql = "select * from tblCartShippingMethods "
+                                sSql = sSql & " where nShipOptKey = " & nShipOptKey
+                                ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
+
+                                For Each oRow In ods.Tables("Order").Rows
+                                    cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
+                                    nShippingCost = oRow("nShipOptCost")
+                                    cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                                    moDBHelper.ExeProcessSql(cSqlUpdate)
+                                Next
+
+                                ' update the cart xml
+
+                                updateTotals(cartElmt, nAmount, nShippingCost, nShipOptKey)
+
+                                ods2 = Nothing
+
+                                If bForceValidation Then
+                                    oOptXform.updateInstanceFromRequest()
+                                    oOptXform.validate()
+                                Else
+                                    oOptXform.valid = True
+                                End If
                             Next
-
-                            ' update the cart xml
-
-                            updateTotals(cartElmt, nAmount, nShippingCost, nShipOptKey)
-
-                            ods2 = Nothing
-
-                            If bForceValidation Then
-                                oOptXform.updateInstanceFromRequest()
-                                oOptXform.validate()
-                            Else
-                                oOptXform.valid = True
-                            End If
-                        Next
-                    Else
-                        oOptXform.addNote("confirmterms", xForm.noteTypes.Alert, "You must agree to the terms and conditions to proceed")
+                        Else
+                            oOptXform.addNote("confirmterms", xForm.noteTypes.Alert, "You must agree to the terms and conditions to proceed")
+                        End If
                     End If
-                End If
 
-                If oOptXform.valid Then
+                    If oOptXform.valid Then
                     'If we have any order notes we save them
                     If Not oOptXform.Instance.SelectSingleNode("Notes") Is Nothing Then
                         'Open database for reading and writing
@@ -5721,6 +5746,7 @@ processFlow:
                 If invoiceDate = Nothing Then invoiceDate = Now()
                 If nCartId = 0 Then nCartId = oCartElmt.GetAttribute("cartId")
                 oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate))
+                oCartElmt.SetAttribute("InvoiceDateTime", Now())
                 oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(nCartId))
                 If mcVoucherNumber <> "" Then
                     oCartElmt.SetAttribute("payableType", "Voucher")
@@ -8218,6 +8244,48 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
         End Sub
+
+        Public Function AddClientNotes(ByVal sNotesText As String) As String
+            Dim cProcessInfo As String
+            Dim sSql As String
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim sXmlContent As String
+            Try
+                'myCart.moCartXml
+                If mnCartId > 0 Then
+                    sSql = "select * from tblCartOrder where nCartOrderKey=" & mnCartId
+                    oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                    For Each oRow In oDs.Tables("Order").Rows
+                        'load existing notes from Cart
+                        sXmlContent = oRow("cClientNotes") & ""
+                        If sXmlContent = "" Then
+                            sXmlContent = "<Notes><Notes/><PromotionalCode/></Notes>"
+                        End If
+                        Dim NotesXml As New XmlDocument
+                        NotesXml.LoadXml(sXmlContent)
+
+                        If NotesXml.SelectSingleNode("Notes/Notes") Is Nothing Then
+                            NotesXml.DocumentElement.AppendChild(NotesXml.CreateElement("Notes"))
+                        End If
+
+                        NotesXml.SelectSingleNode("Notes/Notes").InnerText = sNotesText
+
+                        oRow("cClientNotes") = NotesXml.OuterXml
+                    Next
+                    myWeb.moDbHelper.updateDataset(oDs, "Order", True)
+                    oDs.Clear()
+                    oDs = Nothing
+
+                    Return sNotesText
+                Else
+
+                    Return ""
+                End If
+            Catch ex As Exception
+                returnException(mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+            End Try
+        End Function
 
 
 
