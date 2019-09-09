@@ -1806,7 +1806,7 @@ Check:
                     Dim pseudoCart As New Protean.Cms.Cart(myWeb)
                     Dim pseudoOrder As Protean.Cms.Cart.Order
 
-                    Dim ewCmd As String = myWeb.moRequest("ewCmd2")
+                    Dim ewCmd As String = myWeb.moRequest("subCmd2")
                     Dim ContentDetailElmt As XmlElement = myWeb.moPageXml.CreateElement("ContentDetail")
                     Dim SelectedPaymentMethod As String
                     Dim bPaymentMethodUpdated As Boolean = False
@@ -1832,7 +1832,7 @@ processFlow:
                                         ewCmd = "PaymentForm"
                                         pseudoOrder = New Protean.Cms.Cart.Order(myWeb)
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
-                                        pseudoOrder.TransactionRef = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "_" & Guid.NewGuid().ToString
+                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
 
                                         pseudoOrder.firstPayment = 0 ' CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Prices/Price[@type='sale']").InnerText)
                                         pseudoOrder.repeatPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
@@ -1877,7 +1877,7 @@ processFlow:
 
                                 pseudoCart.mcPagePath = pseudoCart.mcCartURL & myWeb.mcPagePath
 
-                                ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "?ewCmd=updateSubPayment&ewCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
+                                ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
 
                                 If ccPaymentXform.valid Then
                                     ewCmd = "UpdateSubscription"
@@ -1927,7 +1927,7 @@ processFlow:
                                 " where sub.nDirId = " & myWeb.mnUserId
 
 
-                            Select Case myWeb.moRequest("ewCmd")
+                            Select Case myWeb.moRequest("subCmd")
                                 Case "updateSubPayment"
                                     UpdateSubscriptionPaymentMethod(myWeb, contentNode)
                                     listSubs = False
@@ -2013,7 +2013,7 @@ processFlow:
 
                             If myWeb.mnUserId > 0 Then
 
-                                If myWeb.moRequest("ewCmd") = "Subscribe" Then
+                                If myWeb.moRequest("subCmd") = "Subscribe" Then
 
                                     Dim oSubs As New Protean.Cms.Cart.Subscriptions(myWeb)
                                     oSubs.AddUserSubscription(myWeb.mnArtId, myWeb.mnUserId)
