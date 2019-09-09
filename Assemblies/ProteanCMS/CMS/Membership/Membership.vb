@@ -868,8 +868,12 @@ Partial Public Class Cms
 
                         Dim adXfm As Object = myWeb.getAdminXform()
                         adXfm.open(myWeb.moPageXml)
+                        Dim memCmd As String = myWeb.moRequest("memCmd")
+                        If memCmd = "" And myWeb.moRequest("ewCmd") <> "" Then
+                            memCmd = myWeb.moRequest("ewCmd")
+                        End If
 
-                        Select Case myWeb.moRequest("ewCmd")
+                        Select Case memCmd
                             Case "addContact", "editContact"
                                 Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), myWeb.mnUserId)
                                 If Not adXfm.valid Then
@@ -913,7 +917,12 @@ Partial Public Class Cms
                         End If
 
                         If bUserValid Then
-                            Select Case myWeb.moRequest("ewCmd")
+                            Dim memCmd As String = myWeb.moRequest("memCmd")
+                            If memCmd = "" And myWeb.moRequest("ewCmd") <> "" Then
+                                memCmd = myWeb.moRequest("ewCmd")
+                            End If
+
+                            Select Case memCmd
                                 Case "addContact", "editContact"
                                     Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), CompanyId)
                                     If Not adXfm.valid Then

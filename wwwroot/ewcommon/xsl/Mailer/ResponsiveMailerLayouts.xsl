@@ -809,7 +809,7 @@
               <xsl:text>&#160;</xsl:text>
             </p>
           </xsl:if>
-          <table cellpadding="0" cellspacing="0" >
+          <table cellpadding="0" cellspacing="0" class="emailBtnTable">
             <tr>
               <td class="emailBtn">
                 <a>

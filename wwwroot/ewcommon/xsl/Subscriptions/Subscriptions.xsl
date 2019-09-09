@@ -462,7 +462,7 @@
       <div class="col-md-4">
         <xsl:choose>
           <xsl:when test="/Page/User">
-            <a href="?ewCmd=Subscribe" class="btn btn-action">
+            <a href="?subCmd=Subscribe" class="btn btn-action">
             Sign Up<xsl:text> </xsl:text><i class="fa fa-pencil">
               <xsl:text> </xsl:text>
             </i>
@@ -528,7 +528,7 @@
   <xsl:template match="Content[@type='Module' and @moduleType='ManageUserSubscriptions']" mode="displayBrief">
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:choose>
-      <xsl:when test="$ewCmd='updateSubPayment'">
+      <xsl:when test="$subCmd='updateSubPayment'">
         <xsl:apply-templates select="Content[@type='xform']" mode="xform"/>
       </xsl:when>
       <xsl:otherwise>
@@ -578,10 +578,10 @@
               <br/> Will automatically Renew with
             </xsl:if>
             <xsl:value-of select="@providerName"/>
-            <a href="?ewCmd=updateSubPayment&amp;subId={@id}" class="btn btn-xs btn-primary">
+            <a href="?subCmd=updateSubPayment&amp;subId={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-money">&#160;</i>&#160;Update Payment Method  
           </a>
-          <a href="?ewCmd=cancelSub&amp;subId={@id}" class="btn btn-xs btn-warning">
+          <a href="?subCmd=cancelSub&amp;subId={@id}" class="btn btn-xs btn-warning">
             <i class="fa fa-times">&#160;</i>&#160;Cancel
           </a>
           </xsl:if>

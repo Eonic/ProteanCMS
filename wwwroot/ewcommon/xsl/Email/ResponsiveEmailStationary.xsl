@@ -24,7 +24,7 @@
       width: 100% !important;
       }*/
       .Mail{margin-top:0;}
-      .Mail p{padding-top:0px; margin-top:0px;}
+      .Mail p{padding:0px; margin-top:0px;}
       .Mail table{margin:0;}
 
       /*GENERAL STYLES*/
@@ -44,6 +44,9 @@
       .Mail h3.title{margin:0 0 15px;}
 
       /*BUTTONS*/
+      .emailBtnTable{
+        margin-top:10px;
+      }
       .emailBtn{
       background:<xsl:value-of select="$mainColour"/>;
       padding:5px 15px;

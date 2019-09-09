@@ -837,11 +837,19 @@
           <xsl:value-of select="@data-pleasewaitdetail"/>
         </xsl:attribute>
       </xsl:if>
-      <i class="fa {$icon} fa-white">
+      <xsl:if test="@icon-placement!='right'">
+        <i class="fa {$icon} fa-white">
+          <xsl:text> </xsl:text>
+        </i>
         <xsl:text> </xsl:text>
-      </i>
-      <xsl:text> </xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="label" mode="submitText"/>
+      <xsl:if test="@icon-placement='right'">
+        <xsl:text> </xsl:text>
+        <i class="fa {$icon} fa-white">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:if>
     </button>
   </xsl:template>
 
