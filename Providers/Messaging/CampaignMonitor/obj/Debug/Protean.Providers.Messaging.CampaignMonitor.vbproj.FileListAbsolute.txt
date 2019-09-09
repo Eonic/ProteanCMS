@@ -81,7 +81,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Fonet.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\PayPal.dll
@@ -108,7 +107,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\PayPal.xml
@@ -204,8 +202,5 @@ D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Pro
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x86.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.Web.Services.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.xml
