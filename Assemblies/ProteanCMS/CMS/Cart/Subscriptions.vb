@@ -1739,18 +1739,24 @@ RedoCheck:
                                                        moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, PaymentMethodId) &
                                                        myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
 
-                                Dim PaymentOptionsSelect = Me.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']")
+                                Dim PaymentOptionsSelect As XmlElement = Me.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']")
 
                                 Dim PaymentAmount As Double = CDbl("0" & Me.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText)
                                 Dim PaymentMethod As String = "0" & Me.Instance.SelectSingleNode("tblCartPaymentMethod/cPayMthdProviderName").InnerText
+
+                                Dim xfrmGroup As XmlElement = PaymentOptionsSelect.SelectSingleNode("ancestor::group[1]")
 
                                 Dim oPay As PaymentProviders
                                 Dim bDeny As Boolean = False
                                 oPay = New PaymentProviders(myWeb)
                                 oPay.mcCurrency = moCartConfig("Currency")
 
-                                oPay.getPaymentMethods(Me, PaymentOptionsSelect, PaymentAmount, "")
-
+                                If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then
+                                    oPay.getPaymentMethods(Me, PaymentOptionsSelect, PaymentAmount, "")
+                                Else
+                                    PaymentOptionsSelect.ParentNode.RemoveChild(PaymentOptionsSelect)
+                                    oPay.getPaymentMethodButtons(Me, xfrmGroup, PaymentAmount)
+                                End If
 
                             End If
                             GoTo Check
@@ -1819,6 +1825,10 @@ processFlow:
                                 'Confirm Subscription Details Form
                                 Dim oSubForm As Protean.Cms.Cart.Subscriptions.Forms = New Protean.Cms.Cart.Subscriptions.Forms(myWeb)
                                 Dim confSubForm As XmlElement = oSubForm.xFrmConfirmSubscription(myWeb.moRequest("subId"))
+
+                                Dim oSubmitBtn As XmlElement = confSubForm.SelectSingleNode("group/submit")
+                                Dim buttonRef As String = oSubmitBtn.GetAttribute("ref")
+
                                 If bPaymentMethodUpdated Then
                                     oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Alert, "Payment Updated")
                                 End If
@@ -1826,6 +1836,9 @@ processFlow:
                                 If oSubForm.isSubmitted Then
                                     oSubForm.updateInstanceFromRequest()
                                     oSubForm.validate()
+
+                                    SelectedPaymentMethod = myWeb.moRequest(buttonRef)
+
                                     SelectedPaymentMethod = myWeb.moRequest("cPaymentMethod")
 
                                     If oSubForm.valid Then

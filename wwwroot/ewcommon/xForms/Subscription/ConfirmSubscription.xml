@@ -123,6 +123,9 @@
         <bind id="cPaymentMethod" nodeset="@type" required="true()" type="string"/>
       </bind>
     </bind>
+    <bind nodeset="tblCartPaymentMethod">
+      <bind id="currentPaymentMethod" nodeset="cPayMthdProviderName" required="true()" type="string"/>
+    </bind>
     <bind nodeset="Contact">
       <bind id="cContactName" nodeset="cContactName" required="true()" type="string"/>
       <bind id="cContactEmail" nodeset="cContactEmail" required="true()" type="string"/>
@@ -159,6 +162,9 @@
         <input bind="dExpireDate" class="readonly">
           <label>Next Payment Will Be Collected</label>
         </input>
+        <input bind="currentPaymentMethod" class="readonly">
+          <label>Payment Method</label>
+        </input>
       </group>
     <group class="inline">
       <label>Billing Details</label>
@@ -189,7 +195,7 @@
     </group>
 	</group>
   <group>
-    <select1 bind="cPaymentMethod">
+    <select1 bind="cPaymentMethod" appearance="full">
       <label>Select New Payment Method</label>
     </select1>
   </group>

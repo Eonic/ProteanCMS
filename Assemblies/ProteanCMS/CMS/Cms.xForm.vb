@@ -72,6 +72,32 @@ Partial Public Class Cms
             End Try
         End Function
 
+
+        Overrides Function isUnique(ByVal sValue As String, ByVal sPath As String) As Boolean
+            Dim cProcessInfo As String = ""
+            'Placeholder for overide
+            Try
+
+                'Confirm the contenttype and the field
+                Dim unqiueVal() As String = sPath.Split("|")
+                Dim tableName As String = unqiueVal(0)
+                Dim schemaName As String = unqiueVal(1)
+                Dim fieldName As String = unqiueVal(2)
+                Dim xPath As String = unqiueVal(3)
+                'Generate the xpath if value is in XML within the field
+
+
+                'Query the database to confirm if this value is unique.
+
+                Return myWeb.moDbHelper.isUnique(tableName, schemaName, fieldName, xPath, sValue)
+
+
+            Catch ex As Exception
+                returnException(mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
+                Return ""
+            End Try
+        End Function
+
     End Class
 End Class
 

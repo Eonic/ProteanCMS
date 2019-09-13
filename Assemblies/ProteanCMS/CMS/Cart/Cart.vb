@@ -3476,9 +3476,9 @@ processFlow:
                     If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then
                         If Not oCartElmt.SelectSingleNode("Shipping") Is Nothing And moCartConfig("TermsContentId") = "" And moCartConfig("TermsAndConditions") = "" Then
                             ' we already have shipping selected threfore we can skip Options Xform
-                            Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("group/submit")
+                            Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SubmitAdd']")
                             buttonRef = oSubmitBtn.GetAttribute("ref")
-                            oPay.getPaymentMethodButtons(oContactXform, oContactXform.moXformElmt.SelectSingleNode("group"), 0)
+                            oPay.getPaymentMethodButtons(oContactXform, oSubmitBtn.ParentNode, 0)
                             bSubmitPaymentMethod = True
                         End If
                     End If
