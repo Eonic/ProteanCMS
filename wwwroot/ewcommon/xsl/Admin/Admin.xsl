@@ -3611,6 +3611,9 @@
         <a href="#general" data-toggle="tab">General</a>
       </li>
       <li>
+        <a href="#dublinCore" data-toggle="tab">Dublin Core</a>
+      </li>
+      <li>
         <a href="#google" data-toggle="tab">Google</a>
       </li>
       <li>
@@ -3704,6 +3707,60 @@
             <xsl:with-param name="name">MetaOrganisation</xsl:with-param>
             <xsl:with-param name="type">Organisation</xsl:with-param>
           </xsl:call-template>
+        </table>
+      </div>
+      <div class="tab-pane panel" id="dublinCore">
+        <table cellpadding="0" class="table">
+        <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Title</xsl:with-param>
+          <xsl:with-param name="name">DCTitle</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+        <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Creator</xsl:with-param>
+          <xsl:with-param name="name">DCCreator</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+         <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Subject</xsl:with-param>
+          <xsl:with-param name="name">DCSubject</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Description</xsl:with-param>
+          <xsl:with-param name="name">DCDescription</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Date</xsl:with-param>
+          <xsl:with-param name="name">DCDate</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Type</xsl:with-param>
+          <xsl:with-param name="name">DCType</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Format</xsl:with-param>
+          <xsl:with-param name="name">DCFormat</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Language</xsl:with-param>
+          <xsl:with-param name="name">DCLanguage</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Relation</xsl:with-param>
+          <xsl:with-param name="name">DCRelation</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
+          <xsl:call-template name="editNamedContent">
+          <xsl:with-param name="desc">DC.Coverage</xsl:with-param>
+          <xsl:with-param name="name">DCCoverage</xsl:with-param>
+          <xsl:with-param name="type">MetaData</xsl:with-param>
+        </xsl:call-template>
         </table>
       </div>
       <div class="tab-pane panel" id="google">

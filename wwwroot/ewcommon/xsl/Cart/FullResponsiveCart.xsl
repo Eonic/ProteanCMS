@@ -1622,13 +1622,13 @@
         </xsl:choose>
         <xsl:text>&#160;</xsl:text>
       </label>
-      <input type="text" name="qty_{@id}" id="qty_{$id}" value="1" size="3" class="qtybox form-control"/>
-      <button class="btn btn-action qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{$id}','-')">
+      <input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
+      <button class="btn btn-action qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">
         <i class="fa fa-minus">
           <xsl:text> </xsl:text>
         </i>
       </button>
-      <button class="btn btn-action qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{$id}','+')">
+      <button class="btn btn-action qty-plus" type="button" value="+" onClick="incrementQuantity('qty_{@id}','+')">
         <i class="fa fa-plus">
           <xsl:text> </xsl:text>
         </i>
