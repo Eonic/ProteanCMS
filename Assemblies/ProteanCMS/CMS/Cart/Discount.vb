@@ -1257,7 +1257,7 @@ NoDiscount:
                         For Each oRow In oDs.Tables("Order").Rows
                             'load existing notes from Cart
                             sXmlContent = oRow("cClientNotes") & ""
-                            If sXmlContent <> "" Then
+                            If sXmlContent = "" Then
                                 sXmlContent = "<Notes><PromotionalCode/></Notes>"
                             End If
                             Dim NotesXml As New XmlDocument
@@ -1266,13 +1266,13 @@ NoDiscount:
                             If Not NotesXml.SelectSingleNode("Notes/PromotionalCode[node()='" & sCode & "']") Is Nothing Then
                                 'do nothing code exists
                             Else
-                                If NotesXml.SelectSingleNode("Notes/PromotionalCode[") Is Nothing Then
+                                If NotesXml.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
                                     'add another promotional code
                                     Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
                                     NotesXml.SelectSingleNode("Notes").AppendChild(newElmt)
                                 Else
-                                    If NotesXml.SelectSingleNode("Notes/PromotionalCode[0]").InnerText = "" Then
-                                        NotesXml.SelectSingleNode("Notes/PromotionalCode[0]").InnerText = sCode
+                                    If NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = "" Then
+                                        NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = sCode
                                     Else
                                         'add another promotional code
                                         Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
