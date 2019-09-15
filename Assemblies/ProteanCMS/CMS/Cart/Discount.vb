@@ -1588,6 +1588,33 @@ NoDiscount:
                 End Try
             End Sub
 
+            Public Function RemoveDiscountCode() As String
+                Dim cProcessInfo As String
+                Dim sSql As String
+                Dim oDs As DataSet
+                Dim oRow As DataRow
+                Try
+                    'myCart.moCartXml
+                    If myCart.mnCartId > 0 Then
+                        sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
+                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                        For Each oRow In oDs.Tables("Order").Rows
+                            oRow("cClientNotes") = Nothing
+                        Next
+                        myWeb.moDbHelper.updateDataset(oDs, "Order", True)
+                        oDs.Clear()
+                        oDs = Nothing
+
+                        Return ""
+                    Else
+
+                        Return ""
+                    End If
+                Catch ex As Exception
+                    returnException(mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Function
+
 #End Region
 
 #Region "Copied Cart Functions"
