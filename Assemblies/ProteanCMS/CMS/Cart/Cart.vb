@@ -5936,7 +5936,9 @@ processFlow:
                             If cProductText = "" Then
                                 cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
                             End If
-                            oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                            If nPrice = 0 Then
+                                oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                            End If
                             If Not oProdXml.SelectSingleNode("/Content[@overridePrice='True']") Is Nothing Then
                                 mbOveridePrice = True
                             End If
@@ -5961,16 +5963,16 @@ processFlow:
                             End If
                             'Add Parent Product to cart if SKU.
                             If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                    'Then we need to add the Xml for the ParentProduct.
-                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
-                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                                End If
-
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
                             End If
+
                         End If
+                    End If
 
 
 
