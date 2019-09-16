@@ -742,12 +742,18 @@ Public Class xForm
 
                 End If
 
-                If Not oBindElmt.GetAttribute("isUnique") = Nothing And bIsThisBindValid Then
-                    'Confirm the contenttype and the field
-
-                    'Generate the xpath if value is in XML within the field
-
-                    'Query the database to confirm if this value is unique.
+                If oBindElmt.GetAttribute("unique") <> "" And bIsThisBindValid Then
+                    If objValue <> "" Then
+                        If isUnique(objValue, oBindElmt.GetAttribute("unique")) Then
+                        Else
+                            bIsValid = False
+                            bIsThisBindValid = False
+                            If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=""msg-1008"">This must be unique</span>") Then
+                                missedError = True
+                            End If
+                            cValidationError += oBindElmt.GetAttribute("id") & " - This must be unique"
+                        End If
+                    End If
 
                 End If
 
@@ -867,6 +873,18 @@ Public Class xForm
             Return cReturn
         Catch ex As Exception
             returnException(mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug)
+            Return ""
+        End Try
+    End Function
+
+
+    Overridable Function isUnique(ByVal sValue As String, ByVal sPath As String) As Boolean
+        Dim cProcessInfo As String = ""
+        'Placeholder for overide
+        Try
+            Return True
+        Catch ex As Exception
+            returnException(mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
     End Function

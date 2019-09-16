@@ -170,6 +170,10 @@ Namespace Providers
 
                 Public myWeb As Protean.Cms
 
+                Public Sub New()
+
+                End Sub
+
                 Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Protean.Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
 
                     Dim cBillingAddress As String
@@ -268,8 +272,8 @@ Namespace Providers
 
                             Case "Cheque"
                                 ' to be done
-                                ' Case "PayPalPro" (MOVED TO PROVIDER LIB)
-                                ' ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
+                                ' Case "PayPalPro"(MOVED To PROVIDER Lib)
+                              '  ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
 
                             Case "PayPalExpress"
                                 ccPaymentXform = oEwProv.payPayPalExpress(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)

@@ -64,6 +64,7 @@ Namespace Providers
 
 
             Public Class Activities
+
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
                 Private myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode
@@ -74,6 +75,7 @@ Namespace Providers
                     Test = 1
                     Fail = 2
                 End Enum
+
 
                 Public Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
                     PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
@@ -337,9 +339,9 @@ Namespace Providers
                                 Dim testRequest As String = centinelRequest.generatePayload(oDictOpt("centinalTransactionPwd"))
 
                                 Try
-                                    Dim centinelURL As String = "https//paypal.cardinalcommerce.com/maps/txns.asp"
+                                    Dim centinelURL As String = "https://paypal.cardinalcommerce.com/maps/txns.asp"
                                     If nTransactionMode = TransactionMode.Test Then
-                                        centinelURL = "https//centineltest.cardinalcommerce.com/maps/txns.asp"
+                                        centinelURL = "https://centineltest.cardinalcommerce.com/maps/txns.asp"
                                     End If
                                     centinelResponse = centinelRequest.sendHTTP(centinelURL, CInt(oDictOpt("centinalTimeout")))
 
@@ -605,9 +607,9 @@ Namespace Providers
 
                                     'Create a service Binding in code
 
-                                    Dim endpointAddress As String = "https//api-3t.paypal.com/2.0/"
+                                    Dim endpointAddress As String = "https://api-3t.paypal.com/2.0/"
                                     If nTransactionMode = TransactionMode.Test Then
-                                        endpointAddress = "https//api-3t.sandbox.paypal.com/2.0/"
+                                        endpointAddress = "https://api-3t.sandbox.paypal.com/2.0/"
                                     End If
                                     Dim ppEndpointAddress As New System.ServiceModel.EndpointAddress(endpointAddress)
 
@@ -1122,6 +1124,26 @@ Namespace Providers
                         returnException(mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
+
+                End Function
+
+                Public Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
+
+                    Dim PaymentLabel As String = configXml.SelectSingleNode("description/@value").InnerText
+                    'allow html in description node...
+                    Dim bXmlLabel As Boolean = False
+
+                    If configXml.SelectSingleNode("description").InnerXml <> "" Then
+                        PaymentLabel = configXml.SelectSingleNode("description").InnerXml
+                        bXmlLabel = True
+                    End If
+
+                    Dim iconclass As String = ""
+                    If Not configXml.SelectSingleNode("icon/@value") Is Nothing Then
+                        iconclass = configXml.SelectSingleNode("icon/@value").InnerText
+                    End If
+
+                    oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & configXml.GetAttribute("name"), iconclass, configXml.GetAttribute("name"))
 
                 End Function
 
