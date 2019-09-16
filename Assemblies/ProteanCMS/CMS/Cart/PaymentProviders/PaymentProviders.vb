@@ -235,7 +235,7 @@ Partial Public Class Cms
                     Dim submissionValue As String = ""
                     Dim refValue As String = ""
                     'find existing submit and delete
-                    Dim oSubmitBtn As XmlElement = oFrmElmt.SelectSingleNode("submit")
+                    Dim oSubmitBtn As XmlElement = oOptXform.RootGroup.SelectSingleNode("descendant::submit")
                     If Not oSubmitBtn Is Nothing Then
                         submissionValue = oSubmitBtn.GetAttribute("submission")
                         refValue = oSubmitBtn.GetAttribute("ref")

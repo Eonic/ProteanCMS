@@ -10673,6 +10673,33 @@ ReturnMe:
             End Try
         End Function
 
+        Public Overloads Function isUnique(ByVal tableName As String, ByVal schemaName As String, ByVal columnName As String, ByVal xPath As String, ByVal ValueToTest As String) As Boolean
+
+            Dim bUnique As Boolean = False
+
+            Try
+                Dim sSQL As String = ""
+
+                Dim itemId As String = myWeb.moRequest("id")
+
+                If tableName = "tblContent" Then
+                    sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" & SqlFmt(schemaName) & "' and cast(tblContent.cContentXmlBrief as xml).value('" & xPath & "', 'nvarchar(255)') = '" & ValueToTest & "'"
+
+                    If itemId <> "" Then
+                        sSQL = sSQL & " and nContentKey != " & itemId
+                    End If
+
+                    Dim recordCount As Long = ExeProcessSqlScalar(sSQL)
+                    If recordCount = 0 Then bUnique = True
+                End If
+
+                Return bUnique
+
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+
 
         ''' <summary>
         ''' This function is to allow content to be added to the page that blocks the automatic loading of a particular contentType, because that content has its own rules for selecting and loading that content type.
