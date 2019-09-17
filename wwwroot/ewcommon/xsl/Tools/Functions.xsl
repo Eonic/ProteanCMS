@@ -1144,34 +1144,34 @@
       <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCTitle']">
-      <meta name="DCTitle" content="{Contents/Content[@type='MetaData' and @name='DCTitle']}" />
+      <meta name="DC.Title" content="{Contents/Content[@type='MetaData' and @name='DCTitle']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCCreator']">
-      <meta name="DCCreator" content="{Contents/Content[@type='MetaData' and @name='DCCreator']}" />
+      <meta name="DC.Creator" content="{Contents/Content[@type='MetaData' and @name='DCCreator']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCSubject']">
-      <meta name="DCSubject" content="{Contents/Content[@type='MetaData' and @name='DCSubject']}" />
+      <meta name="DC.Subject" content="{Contents/Content[@type='MetaData' and @name='DCSubject']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCDescription']">
-      <meta name="DCDescription" content="{Contents/Content[@type='MetaData' and @name='DCDescription']}" />
+      <meta name="DC.Description" content="{Contents/Content[@type='MetaData' and @name='DCDescription']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCDate']">
-      <meta name="DCDate" content="{Contents/Content[@type='MetaData' and @name='DCDate']}" />
+      <meta name="DC.Date" content="{Contents/Content[@type='MetaData' and @name='DCDate']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCType']">
-      <meta name="DCType" content="{Contents/Content[@type='MetaData' and @name='DCType']}" />
+      <meta name="DC.Type" content="{Contents/Content[@type='MetaData' and @name='DCType']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCFormat']">
-      <meta name="DCFormat" content="{Contents/Content[@type='MetaData' and @name='DCFormat']}" />
+      <meta name="DC.Format" content="{Contents/Content[@type='MetaData' and @name='DCFormat']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCLanguage']">
-      <meta name="DCLanguage" content="{Contents/Content[@type='MetaData' and @name='DCLanguage']}" />
+      <meta name="DC.Language" content="{Contents/Content[@type='MetaData' and @name='DCLanguage']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCRelation']">
-      <meta name="DCRelation" content="{Contents/Content[@type='MetaData' and @name='DCRelation']}" />
+      <meta name="DC.Relation" content="{Contents/Content[@type='MetaData' and @name='DCRelation']}" />
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCCoverage']">
-      <meta name="DCCoverage" content="{Contents/Content[@type='MetaData' and @name='DCCoverage']}" />
+      <meta name="DC.Coverage" content="{Contents/Content[@type='MetaData' and @name='DCCoverage']}" />
     </xsl:if>
   </xsl:template>
 
