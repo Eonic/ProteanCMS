@@ -3289,7 +3289,7 @@
               <tr>
                 <th></th>
                 <th>Product Group</th>
-                <th>Product Name</th>
+                <th>Group Type</th>
                 <th>Product Count</th>
                 <th>
                   <xsl:text> </xsl:text>
@@ -3319,18 +3319,23 @@
                       <xsl:value-of select="cCatName/text()"/>
                     </strong>
                   </td>
-
                   <td>
-                    <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-success">
-                      <i class="fa fa-gift fa-white">
-                        <xsl:text> </xsl:text>
-                      </i><xsl:text> </xsl:text>Add Products</a>
+                    <strong>
+                      <xsl:value-of select="@cCatSchemaName"/>
+                    </strong>
                   </td>
                   <td>
                     <strong>
                       (<xsl:value-of select="@Count"/>)
                     </strong>
                   </td>
+                  <td>
+                    <a href="{$appPath}?ewCmd=AddProductGroupsProduct&amp;GroupId={@nCatKey}" class="btn btn-xs btn-success">
+                      <i class="fa fa-gift fa-white">
+                        <xsl:text> </xsl:text>
+                      </i><xsl:text> </xsl:text>Add Products</a>
+                  </td>
+
                   <td>
                     <a href="{$appPath}?ewCmd=EditProductGroups&amp;GroupId={@nCatKey}" class="btn btn-xs btn-primary">
                       <i class="fa fa-pencil fa-white">

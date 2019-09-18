@@ -205,7 +205,7 @@ Partial Public Class Cms
                             If item("qty") = "0" Then
                                 ItemCount = myCart.RemoveItem(item("itemId"), 0)
                             Else
-                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("SkipPackaging"))
+                                ItemCount = myCart.UpdateItem(item("itemId"), 0, item("qty"), item("skipPackaging"))
                             End If
                         Else
                             If item("qty") = "0" Then
