@@ -1807,6 +1807,11 @@ processFlow:
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
                                 ListId = moMailConfig("QuoteList")
+                            Case "Newsletter"
+                                If moMailConfig("NewsletterList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                End If
+                                ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
                             oMessaging.Activities.addToList(ListId, Name, Email, valDict)
@@ -2697,6 +2702,10 @@ processFlow:
                                     If Not IsDBNull(oRowSO("bCollection")) Then
                                         bCollection = oRowSO("bCollection")
                                     End If
+                                    If moCartConfig("DefaultShippingMethod") <> "" Then
+                                        'logic to overide below...
+                                    End If
+
                                     If (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
                                         shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
@@ -4081,7 +4090,9 @@ processFlow:
                         End If
 
 
-
+                        If myWeb.moRequest("cContactOpt-In") <> "" Then
+                            AddToLists("Newsletter", moCartXml, myWeb.moRequest("cContactName"), myWeb.moRequest("cContactEmail"))
+                        End If
 
                     End If
 

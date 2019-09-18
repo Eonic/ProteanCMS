@@ -1721,6 +1721,7 @@
 
       <xsl:if test="not(contains(@search,'pick'))">
         <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
+          <xsl:sort select="@status" data-type="number" order="ascending"/>
           <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
           <xsl:with-param name="formName" select="$formName" />
           <xsl:with-param name="relationType" select="$relationType" />
@@ -1734,7 +1735,7 @@
     <xsl:param name="relationType"/>
     <xsl:param name="relationDirection"/>
     <div class="advancedModeRow row" onmouseover="this.className='rowOver row'" onmouseout="this.className='advancedModeRow row'">
-        <div class="col-md-6">
+        <div class="col-md-7">
           <xsl:apply-templates select="." mode="status_legend"/>
           <xsl:text> </xsl:text>
           <xsl:apply-templates select="." mode="relatedBrief"/>
@@ -1748,7 +1749,7 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <div class="col-md-6 buttons">
+            <div class="col-md-5 buttons">
               <button type="button" name="RelateTop_{@id}" value=" " class="btn btn-arrow btn-primary btn-xs" onClick="disableButton(this);{$formName}.submit()">
                 <i class="fa fa-arrow-up fa-white">
                   <xsl:text> </xsl:text>

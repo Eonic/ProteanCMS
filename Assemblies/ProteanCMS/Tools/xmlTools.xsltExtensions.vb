@@ -1620,7 +1620,11 @@ Partial Public Module xmlTools
 
                     Case "ProductGroups"
 
-                        sql = "select nCatKey as value, cCatName as name from tblCartProductCategories order by cCatName"
+                        sql = "select nCatKey as value, cCatName as name from tblCartProductCategories"
+                        If Query2 <> "" Then
+                            sql = sql & " where cCatSchemaName='" & Query2 & "'"
+                        End If
+                        sql = sql & " order by cCatName"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
