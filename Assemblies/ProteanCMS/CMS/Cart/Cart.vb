@@ -2702,18 +2702,29 @@ processFlow:
                                     If Not IsDBNull(oRowSO("bCollection")) Then
                                         bCollection = oRowSO("bCollection")
                                     End If
-                                    If moCartConfig("DefaultShippingMethod") <> "" Then
+                                    If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
                                         'logic to overide below...
-                                    End If
+                                        If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                            If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                            End If
+                                        End If
+                                     End If
+                                        If (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
+                                            shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                            oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                            oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                            oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                            oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                            oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                        End If
 
-                                    If (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
-                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                    End If
+
                                 Next
 
                             End If
