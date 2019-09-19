@@ -106,23 +106,23 @@ Partial Public Class Cms
                     End If
 
                     Dim item As Newtonsoft.Json.Linq.JObject
-
-                    For Each item In jObj("Item")
-                        Dim bUnique As Boolean = False
-                        Dim cProductPrice As Double = 0
-                        Dim sProductName As String = ""
-                        If item.ContainsKey("UniqueProduct") Then
-                            bUnique = item("UniqueProduct")
-                        End If
-                        If item.ContainsKey("itemPrice") Then
-                            cProductPrice = item("itemPrice")
-                        End If
-                        If item.ContainsKey("productName") Then
-                            sProductName = item("productName")
-                        End If
-                        myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique)
-                    Next
-
+                    If (jObj("Item") IsNot Nothing) Then
+                        For Each item In jObj("Item")
+                            Dim bUnique As Boolean = False
+                            Dim cProductPrice As Double = 0
+                            Dim sProductName As String = ""
+                            If item.ContainsKey("UniqueProduct") Then
+                                bUnique = item("UniqueProduct")
+                            End If
+                            If item.ContainsKey("itemPrice") Then
+                                cProductPrice = item("itemPrice")
+                            End If
+                            If item.ContainsKey("productName") Then
+                                sProductName = item("productName")
+                            End If
+                            myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique)
+                        Next
+                    End If
                     'Output the new cart
                     myCart.GetCart(CartXml.FirstChild)
                     CartXml = updateCartforJSON(CartXml)
