@@ -1041,12 +1041,13 @@ RedoCheck:
 
             Public Sub AddSubscriptionToUserXML(ByRef oElmt As XmlElement, ByVal nSubUserId As Integer)
                 Try
-                    Dim cSQL As String = "SELECT tblSubscription.nSubKey,tblSubscription.cRenewalStatus, tblSubscription.nSubContentId, tblSubscription.cSubXML, tblAudit.nStatus, tblAudit.dPublishDate, tblAudit.dExpireDate" &
-                    " FROM tblSubscription INNER JOIN" &
-                    " tblAudit ON tblSubscription.nAuditId = tblAudit.nAuditKey" &
+                    Dim cSQL As String = "SELECT s.nSubKey,s.cRenewalStatus, s.nSubContentId, s.dStartDate, s.nPeriod, s.cPeriodUnit, s.nValueNet, s.nPaymentMethodId, pm.cPayMthdProviderName, s.bPaymentMethodActive, tblSubscription.cSubXML, tblAudit.nStatus, tblAudit.dPublishDate, tblAudit.dExpireDate" &
+                    " FROM tblSubscription s INNER JOIN" &
+                    " tblAudit a ON s.nAuditId = tblAudit.nAuditKey INNER JOIN" &
+                    " tblCartPaymentMethod pm On s.nPaymentMethodId = pm.nPayMthdKey" &
                     " WHERE tblSubscription.nDirId = " & nSubUserId
 
-                    Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Subscriptions", "Subscriptions")
+                    Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Subscriptions", "Subscription")
                     If oDS.Tables("Subscriptions").Rows.Count > 0 Then
                         oDS.Tables("Subscriptions").Columns("nSubKey").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("nSubContentId").ColumnMapping = MappingType.Attribute
@@ -1056,6 +1057,12 @@ RedoCheck:
                         'oDS.Tables("Subscriptions").Columns("dEndDate").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("dPublishDate").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("dExpireDate").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("nPeriod").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("cPeriodUnit").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("nValueNet").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("nPaymentMethodId").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("cPayMthdProviderName").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("bPaymentMethodActive").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("cSubXML").ColumnMapping = MappingType.SimpleContent
                         Dim oSubElmt As XmlElement = oElmt.OwnerDocument.CreateElement("Subscriptions")
                         Dim oTmp As New XmlDocument

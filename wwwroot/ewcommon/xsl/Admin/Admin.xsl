@@ -4947,7 +4947,6 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-md-4">
-
             <h1>
               <xsl:value-of select="FirstName"/>
               <xsl:text> </xsl:text>
@@ -4986,6 +4985,71 @@
         </div>
 
       </div>
+      <xsl:if test="Subscriptions">
+        <h4 class="title">Subscriptions</h4>
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <th>Usernane</th>
+            <th>Subscription Name</th>
+            <th>Active</th>
+            <th>Start Date</th>
+            <th>Next Renewal</th>
+          </tr>
+          <xsl:for-each select="Subscriptions/Subscriptions">
+            <tr>
+               <td>
+                <xsl:value-of select="Content/Name/node()"/>
+              </td>
+              <td>
+                <xsl:value-of select="@cRenewalStatus"/>
+              </td>
+              <td>
+                <xsl:call-template name="DD_Mon_YYYY">
+                  <xsl:with-param name="date">
+                    <xsl:value-of select="dStartDate/node()"/>
+                  </xsl:with-param>
+                  <xsl:with-param name="showTime">false</xsl:with-param>
+                </xsl:call-template>
+
+              </td>
+              <td>
+                <xsl:call-template name="DD_Mon_YYYY">
+                  <xsl:with-param name="date">
+                    <xsl:value-of select="dExpireDate/node()"/>
+                  </xsl:with-param>
+                  <xsl:with-param name="showTime">false</xsl:with-param>
+                </xsl:call-template>
+              </td>
+              <td colspan="3">
+
+                <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                  <i class="fa fa-edit">&#160;</i>&#160;Manage
+                </a>
+                <!--a href="{$appPath}?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
+                  <i class="fa fa-edit">&#160;</i>&#160;Cancel
+                </a-->
+
+              </td>
+            </tr>
+            <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+              <xsl:if test="Subscriptions">
+                <tr>
+                  <td>
+                    <xsl:apply-templates select="." mode="AdminSubscriptions">
+                      <xsl:with-param name="GroupID">
+                        <xsl:value-of select="@nCatKey"/>
+                      </xsl:with-param>
+                    </xsl:apply-templates>
+                  </td>
+                </tr>
+              </xsl:if>
+            </xsl:if>
+          </xsl:for-each>
+        </table>
+      </xsl:if>
+      
+      <h4>Website Orders</h4>
         <table class="panel-body table table-striped">
           <tbody>
             <tr>

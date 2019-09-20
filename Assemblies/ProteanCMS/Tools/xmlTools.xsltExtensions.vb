@@ -61,6 +61,7 @@ Partial Public Module xmlTools
         End Sub
 #End Region
 
+
 #Region "XSLT Functions"
 
         Private Sub SaveObject(ByVal Name As String, ByVal Item As Object)
@@ -1438,6 +1439,15 @@ Partial Public Module xmlTools
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
 
                         sql = "select cDirName as value, cDirName as name from tblDirectory where cDirSchema='" & Query2 & "'"
+                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        oXfrms.addOption(SelectElmt, "All", "all")
+                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
+
+                    Case "ShippingMethods"
+                        'Returns all of a specified type in the directory to specify the type use attribute "query2"
+
+                        sql = "select nShipOptKey as value, cShipOptName as name from tblCartShippingMethods"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOption(SelectElmt, "All", "all")
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)

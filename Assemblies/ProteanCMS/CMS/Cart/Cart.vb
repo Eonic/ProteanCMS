@@ -1329,7 +1329,7 @@ processFlow:
                         End If
 
                     Case "Billing" 'Check if order has Billing Address                
-
+                        GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
                         If mcCartCmd <> "Billing" Then
@@ -4051,7 +4051,10 @@ processFlow:
                                 Else
                                     'If it exists and we are here means we may have changed the Delivery address
                                     'country
-                                    RemoveDeliveryOption(mnCartId)
+
+                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
+
+                                    ' RemoveDeliveryOption(mnCartId)
                                 End If
 
 
