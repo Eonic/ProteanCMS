@@ -1329,7 +1329,7 @@ processFlow:
                         End If
 
                     Case "Billing" 'Check if order has Billing Address                
-
+                        GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
                         If mcCartCmd <> "Billing" Then
@@ -1807,6 +1807,11 @@ processFlow:
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
                                 ListId = moMailConfig("QuoteList")
+                            Case "Newsletter"
+                                If moMailConfig("NewsletterList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                End If
+                                ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
                             oMessaging.Activities.addToList(ListId, Name, Email, valDict)
@@ -2697,7 +2702,19 @@ processFlow:
                                     If Not IsDBNull(oRowSO("bCollection")) Then
                                         bCollection = oRowSO("bCollection")
                                     End If
-                                    If (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
+                                    If (moCartConfig("DefaultShippingMethod") <> Nothing And moCartConfig("DefaultShippingMethod") <> "") Then
+                                        'logic to overide below...
+                                        If (oCartElmt.HasAttribute("shippingType") And oCartElmt.GetAttribute("shippingType") = "0") Then
+                                            If (oRowSO("nShipOptKey") = moCartConfig("DefaultShippingMethod")) Then
+                                                shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                                oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                                oCartElmt.SetAttribute("shippingType", moCartConfig("DefaultShippingMethod") & "")
+                                                oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                                oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                                oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                            End If
+                                        End If
+                                    ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
                                         shipCost = CDbl("0" & oRowSO("nShipOptCost"))
                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
                                         oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
@@ -2705,6 +2722,8 @@ processFlow:
                                         oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
                                         oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                     End If
+
+
                                 Next
 
                             End If
@@ -4031,7 +4050,10 @@ processFlow:
                                 Else
                                     'If it exists and we are here means we may have changed the Delivery address
                                     'country
-                                    RemoveDeliveryOption(mnCartId)
+
+                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
+
+                                    ' RemoveDeliveryOption(mnCartId)
                                 End If
 
 
@@ -4081,7 +4103,9 @@ processFlow:
                         End If
 
 
-
+                        If myWeb.moRequest("cContactOpt-In") <> "" Then
+                            AddToLists("Newsletter", moCartXml, myWeb.moRequest("cContactName"), myWeb.moRequest("cContactEmail"))
+                        End If
 
                     End If
 

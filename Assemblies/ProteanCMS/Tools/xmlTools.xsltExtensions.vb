@@ -61,6 +61,7 @@ Partial Public Module xmlTools
         End Sub
 #End Region
 
+
 #Region "XSLT Functions"
 
         Private Sub SaveObject(ByVal Name As String, ByVal Item As Object)
@@ -1442,6 +1443,15 @@ Partial Public Module xmlTools
                         oXfrms.addOption(SelectElmt, "All", "all")
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
+
+                    Case "ShippingMethods"
+                        'Returns all of a specified type in the directory to specify the type use attribute "query2"
+
+                        sql = "select nShipOptKey as value, cShipOptName as name from tblCartShippingMethods"
+                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        oXfrms.addOption(SelectElmt, "All", "all")
+                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
                     Case "Users"
 
                         ' This is different from Directory in that it tries to format the users nicely
@@ -1620,7 +1630,11 @@ Partial Public Module xmlTools
 
                     Case "ProductGroups"
 
-                        sql = "select nCatKey as value, cCatName as name from tblCartProductCategories order by cCatName"
+                        sql = "select nCatKey as value, cCatName as name from tblCartProductCategories"
+                        If Query2 <> "" Then
+                            sql = sql & " where cCatSchemaName='" & Query2 & "'"
+                        End If
+                        sql = sql & " order by cCatName"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 

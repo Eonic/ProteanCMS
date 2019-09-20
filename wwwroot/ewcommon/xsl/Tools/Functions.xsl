@@ -565,11 +565,7 @@
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
 
-    <!-- page module specific javascripts -->
-    <xsl:apply-templates select="." mode="jQuery" />
 
-    <!-- page specific javascripts -->
-    <xsl:apply-templates select="." mode="pageJs"/>
 
     <!--  Google analytics javascript  -->
     <xsl:choose>
@@ -938,6 +934,12 @@
     <xsl:if test="$ScriptAtBottom='on'">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
+    
+    <!-- page module specific javascripts -->
+    <xsl:apply-templates select="." mode="jQuery" />
+    <!-- page specific javascripts -->
+    <xsl:apply-templates select="." mode="pageJs"/>
+    
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>

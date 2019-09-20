@@ -6872,9 +6872,7 @@
                     <xsl:with-param name="width" select="$lg-max-width"/>
                     <xsl:with-param name="height" select="$lg-max-height"/>
                   </xsl:apply-templates>
-                 
-                </div>
-		 <xsl:if test="Title/node()!='' or Body/node()!=''">
+                  <xsl:if test="Title/node()!='' or Body/node()!=''">
                     <div class="caption">
                       <h4>
                         <xsl:value-of select="Title/node()"/>
@@ -6882,6 +6880,7 @@
                       <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
                     </div>
                   </xsl:if>
+                </div>
               </div>
             </xsl:when>
             <xsl:otherwise>

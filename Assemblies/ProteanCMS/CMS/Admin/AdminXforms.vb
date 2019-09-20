@@ -5971,6 +5971,17 @@ Partial Public Class Cms
                     MyBase.addInput(oGrp1Elmt, "cCatName", True, "Name")
                     MyBase.addBind("cCatName", "tblCartProductCategories/cCatName", "true()")
 
+                    Dim oSchemaSelect As XmlElement = MyBase.addSelect1(oGrp1Elmt, "cCatSchemaName", True, "Group Type",, ApperanceTypes.Full)
+                    MyBase.addOption(oSchemaSelect, SchemaName, SchemaName)
+                    Dim aOptions() As String = myWeb.moCart.moCartConfig("ProductCategoryTypes").Split(",")
+                    If aOptions.Length > 0 Then
+                        For i As Integer = 0 To aOptions.Length - 1
+                            MyBase.addOption(oSchemaSelect, aOptions(i), aOptions(i))
+                        Next
+                    End If
+                    MyBase.addBind("cCatSchemaName", "tblCartProductCategories/cCatSchemaName")
+
+
                     MyBase.addTextArea(oGrp1Elmt, "cCatDescription", True, "Description", , 15, 50)
                     MyBase.addBind("cCatDescription", "tblCartProductCategories/cCatDescription")
 
