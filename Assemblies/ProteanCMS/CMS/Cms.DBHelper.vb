@@ -7333,8 +7333,26 @@ restart:
                                         If InStr(cleanFref, "&") Then
                                             cleanFref = cleanFref.Replace("&amp;", "&")
                                         End If
+                                        Dim updateLocation As Boolean = True
+                                        If sPrimary = 1 Then
+                                            'does the item have a primary location that does not match the fRef ?
+                                            ' if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
+                                            Dim sSQL As String = "select count(*)  FROM [ew_demo_elitemodelsonline_co_uk].[dbo].[tblContentLocation] cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
+                                            If ExeProcessSqlScalar(sSQL) > 0 Then
+                                                'this item has an alternate primary location, then make sure we don't add it 
+                                                updateLocation = False
+                                                Dim pageids() As String = getObjectsByRef(objectTypes.ContentStructure, cleanFref)
+                                                For i = 0 To pageids.Length - 1
+                                                    'and delete the existing location for that fRef
+                                                    RemoveContentLocation(pageids(i), savedId)
+                                                Next
 
-                                        setContentLocationByRef(cleanFref, savedId, sPrimary, 0, oLocation.GetAttribute("position"), displayOrder)
+
+                                            End If
+                                        End If
+                                        If updateLocation Then
+                                            setContentLocationByRef(cleanFref, savedId, sPrimary, 0, oLocation.GetAttribute("position"), displayOrder)
+                                        End If
 
                                     ElseIf oLocation.GetAttribute("id") <> "" Then
                                         setContentLocation(oLocation.GetAttribute("id"), savedId, sPrimary, False, False, oLocation.GetAttribute("position"), True, displayOrder)
