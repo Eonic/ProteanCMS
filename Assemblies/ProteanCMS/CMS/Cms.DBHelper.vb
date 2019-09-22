@@ -1064,11 +1064,62 @@ Partial Public Class Cms
 
                 Select Case myWeb.moConfig("DetailPathType")
                     Case "ContentType/ContentName"
-                        If aPath(0) = myWeb.moConfig("DetailPrefix") Then
+
+                        Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
+                        Dim thisPrefix As String = ""
+                        Dim thisContentType As String = ""
+                        Dim oDr As SqlDataReader
+
+                        Dim i As Integer
+
+
+                        If nArtId = Nothing Then
+                            If Not myWeb.moRequest("artid") = "" Then
+                                nArtId = myWeb.GetRequestItemAsInteger("artid", 0)
+                            End If
+                        End If
+
+                        If nArtId <> Nothing And Not gbAdminMode Then
+                            'article id was passed in the url so we may need to redirect
+
+                            sSql = "select cContentSchemaName, cContentName from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where nContentKey = " & nArtId
+                            Dim contentType As String = ""
+                            Dim contentName As String = ""
+                            Dim redirectUrl As String = ""
+
+                            oDr = getDataReader(sSql)
+
+                            Do While oDr.Read
+                                contentType = oDr(0)
+                                contentName = oDr(1)
+                            Loop
+
+                            For i = 0 To prefixs.Length - 1
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                If contentType = thisContentType Then
+                                    redirectUrl &= "/" & thisPrefix & "/" & contentName.ToString.Replace(" ", "-").Trim("-")
+                                End If
+                            Next
+
+                            If sFullPath <> redirectUrl Then
+                                myWeb.msRedirectOnEnd = redirectUrl
+                            End If
+
+                        End If
+
+                        For i = 0 To prefixs.Length - 1
+                            If prefixs(i).Substring(0, prefixs(i).IndexOf("/")) = aPath(0) Then
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                            End If
+                        Next
+
+                        If thisPrefix <> "" Then
                             If gbAdminMode Then
-                                sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' order by nVersion desc"
+                                sSql = "select TOP(1) nContentKey  from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and cContentSchemaName like '" & thisContentType & "' order by nVersion desc"
                             Else
-                                sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and nStatus = 1 order by nVersion desc"
+                                sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and cContentSchemaName like '" & thisContentType & "' " & myWeb.GetStandardFilterSQLForContent() & " order by nVersion desc"
                             End If
                             ods = GetDataSet(sSql, "Content")
                             If ods.Tables("Content").Rows.Count = 1 Then
@@ -7337,7 +7388,7 @@ restart:
                                         If sPrimary = 1 Then
                                             'does the item have a primary location that does not match the fRef ?
                                             ' if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
-                                            Dim sSQL As String = "select count(*)  FROM [ew_demo_elitemodelsonline_co_uk].[dbo].[tblContentLocation] cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
+                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
                                             If ExeProcessSqlScalar(sSQL) > 0 Then
                                                 'this item has an alternate primary location, then make sure we don't add it 
                                                 updateLocation = False
