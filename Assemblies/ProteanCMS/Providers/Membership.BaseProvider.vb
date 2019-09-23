@@ -1519,7 +1519,7 @@ Check:
 
                             If Not (adXfm.valid) Then
                                 ' Call in additional authentication checks
-                                If myWeb.moConfig("AlternativeAuthentication") = "On" Then
+                                If LCase(myWeb.moConfig("AlternativeAuthentication")) = "on" Then
                                     bAdditionalChecks = Me.AlternativeAuthentication(myWeb)
                                 End If
 
@@ -1950,7 +1950,7 @@ Check:
                             If cIPList = "" OrElse Tools.Text.IsIPAddressInList(moRequest.UserHostAddress, cIPList) Then
 
                                 cProcessInfo = "Decrypting token"
-                                Dim oEnc As New Protean.Tools.Encryption.RC4()
+                                ' Dim oEnc As New Protean.Tools.Encryption.RC4()
 
                                 cToken = moRequest("token")
                                 cKey = moConfig("AlternativeAuthenticationKey")
@@ -1971,6 +1971,7 @@ Check:
                                     If nReturnId > 0 Then
                                         bCheck = True
                                         mnUserId = nReturnId
+                                        myWeb.mnUserId = mnUserId
                                     End If
 
                                 ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then

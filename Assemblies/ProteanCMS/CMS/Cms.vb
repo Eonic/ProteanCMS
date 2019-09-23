@@ -5123,9 +5123,21 @@ Public Class Cms
                         Next
                     End If
 
+                    If moConfig("TrailingSlash") = "on" Then
+                        sUrl = "/" & sUrl.Trim("/") & "/"
+                    End If
+
                     ' Account for a root url
                     If sUrl = "" Then
                         sUrl = "/"
+                    End If
+
+                    If sUrl = "//" Then
+                        sUrl = "/"
+                    End If
+
+                    If sUrl = "/" Then
+                        sUrl = DomainURL
                     End If
 
                     'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
