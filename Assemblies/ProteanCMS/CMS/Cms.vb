@@ -577,7 +577,7 @@ Public Class Cms
 
 
                 'Logon Redirect Facility
-                'once you are logged on this becomes the root
+                'once you are logged on this becomes the root 
                 ' If in Admin, always defer to the AdminRootPageId
                 '    unless you are logging off, then you are going to the user site.
                 ' If not Admin, then check if we're logged in
@@ -3858,6 +3858,12 @@ Public Class Cms
                     End If
 
                 End If
+                If sRedirectPath.Contains("token=") Then
+
+                    sRedirectPath = Regex.Replace(sRedirectPath, "(token=.*?)&", "")
+                End If
+
+
                 msRedirectOnEnd = sRedirectPath
             End If
 

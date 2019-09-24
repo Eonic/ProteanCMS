@@ -1335,7 +1335,8 @@ Check:
                                     End If
                                 Else
 
-                                    If myWeb.moRequest("ewCmd") = "PreviewOn" Then
+                                    'feature to turn on preview mode with supplied user ID if token provided then this is happening in alternativeauthentication
+                                    If myWeb.moRequest("ewCmd") = "PreviewOn" And IsNumeric(myWeb.moRequest("PreviewUser")) Then
                                         myWeb.moSession("PreviewUser") = myWeb.moRequest("PreviewUser")
                                     End If
 
@@ -1972,9 +1973,17 @@ Check:
                                         bCheck = True
                                         mnUserId = nReturnId
                                         myWeb.mnUserId = mnUserId
+                                        If moRequest("ewCmd") = "PreviewOn" Then
+                                            moSession("adminMode") = "true"
+                                            moSession("ewCmd") = "PreviewOn"
+                                            myWeb.mbAdminMode = True
+                                            myWeb.mbPreview = True
+                                            myWeb.moSession("PreviewUser") = "0"
+                                        End If
+
                                     End If
 
-                                ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
+                                    ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
 
                                     ' Authentication is by way of user ID
                                     cProcessInfo = "User ID Authentication: " & cDecrypted

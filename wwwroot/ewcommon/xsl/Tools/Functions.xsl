@@ -1351,11 +1351,13 @@
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
 
           <xsl:variable name="href">
-            <xsl:if test="$siteURL=''">
-              <xsl:text>http</xsl:text>
-              <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-              <xsl:text>://</xsl:text>
-              <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
+              <xsl:if test="$siteURL=''">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:if>
             </xsl:if>
             <xsl:choose>
               <xsl:when test="/Page/ContentDetail">

@@ -1979,6 +1979,9 @@ Partial Public Module xmlTools
                             fsh.initialiseVariables(fsHelper.LibraryType.Style)
 
                             scriptFile = String.Format("{0}/style.css", TargetFile)
+                            sReturnError = "error getting " & CommaSeparatedFilenames
+                            'sReturnError = "error getting " & oCssWebClient.FullCssFile
+
                             Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
                             fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
                             scriptFile = fsh.SaveFile("style.css", TargetFile, info)
@@ -2030,9 +2033,9 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
 
-                Return ex.StackTrace.Replace(vbCr & vbLf, String.Empty).Replace(vbLf, String.Empty).Replace(vbCr, String.Empty) & ex.Message
+                ' Return ex.StackTrace
                 myWeb.bPageCache = False
-                'Return ex.Message
+                Return sReturnError
             End Try
 
         End Function
