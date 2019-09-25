@@ -2445,7 +2445,7 @@ processFlow:
 
                                     Dim oProd As XmlElement = moPageXml.CreateElement("product")
                                     oProd.InnerXml = oRow("productDetail")
-                                    If oProd.SelectSingleNode("Content[@overridePrice='True']") Is Nothing Then
+                                    If oProd.SelectSingleNode("Content[@overridePrice='true']") Is Nothing Then
                                         oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"))
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
@@ -5963,7 +5963,7 @@ processFlow:
                             If nPrice = 0 Then
                                 oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
                             End If
-                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='True']") Is Nothing Then
+                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
                                 mbOveridePrice = True
                             End If
                             'lets add the discount to the cart if supplied
