@@ -9010,6 +9010,8 @@ restart:
                             oGroupArr(cCount) & "," &
                             getAuditId(, , "ContentRelation") & ")"
                             savedId = GetIdInsertSql(cSQl)
+                        Else
+                            savedId = nCatProductRelKey
                         End If
 
                         strReturn.Append(savedId)

@@ -199,7 +199,7 @@ Partial Public Class Cms
                 End If
 
 
-                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) <> "logoff" Then
+                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) <> "normal" Then
                     'case to cater for logoff in preview mode
                     mcEwCmd = "PreviewOn"
                 ElseIf mcEwCmd = "" Then

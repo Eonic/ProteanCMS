@@ -373,7 +373,9 @@
         <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="x-default" />
       </xsl:when>
       <xsl:otherwise>
-        <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
+        <xsl:if test="$currentPage/PageVersion[@verType='3']">
+          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />          
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:for-each select="$currentPage/PageVersion[@verType='3']">
