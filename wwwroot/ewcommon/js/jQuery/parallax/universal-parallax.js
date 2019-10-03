@@ -87,7 +87,8 @@ var universalParallax = function universalParallax() {
 			speed: typeof param.speed !== 'undefined' ? param.speed : 1.5,
 			className: typeof param.className !== 'undefined' ? param.className : 'parallax'
 		};
-		var parallax = document.getElementsByClassName(param.className);
+		//var parallax = document.getElementsByClassName(param.className);
+        var parallax = $('div:not(parent::.parallax__container).parallax');
 
 		for (var i = 0; parallax.length > i; i++) {
 			// make container div

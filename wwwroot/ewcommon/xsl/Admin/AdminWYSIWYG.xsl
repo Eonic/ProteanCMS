@@ -1347,7 +1347,7 @@
         <xsl:for-each select="/Page/Contents/Content[@type='Module' and @position = $position]">
           <section class="wrapper-sm {@background}">
             <xsl:attribute name="class">
-              <xsl:text>wrapper-sm </xsl:text>
+              <xsl:text>wrapper-sm test </xsl:text>
               <xsl:value-of select="@background"/>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:if test="@marginBelow='false'">
@@ -1391,10 +1391,8 @@
                 <xsl:when test="@data-stellar-background-ratio!='0'">
                   <xsl:choose>
                     <xsl:when test="@data-stellar-background-ratio!='10'">
-                        <div class="parallax">
-                          <xsl:attribute name="style">
-                            background-image: url('<xsl:value-of select="@backgroundImage"/>');
-                          </xsl:attribute>
+                        <div class="parallax" data-parallax-image="{@backgroundImage}">
+                          <xsl:text> </xsl:text>
                         </div>
                     </xsl:when>
                     <xsl:otherwise>

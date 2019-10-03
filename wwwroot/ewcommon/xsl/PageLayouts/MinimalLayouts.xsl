@@ -532,7 +532,7 @@
                 <xsl:when test="@data-stellar-background-ratio!='0'">
                   <xsl:choose>
                     <xsl:when test="@data-stellar-background-ratio!='10'">
-                      <section style="height:100%" class="parallax-wrapper">
+                      <section style="height:100%" class="parallax-wrapper" >
                         <xsl:if test="@data-stellar-background-ratio!='10'">
                           <xsl:attribute name="data-parallax-speed">
                             <xsl:if test="@data-stellar-background-ratio&lt;='5'">
@@ -555,10 +555,8 @@
                             </xsl:if>
                           </xsl:attribute>
                         </xsl:if>
-                        <div class="parallax">
-                          <xsl:attribute name="style">
-                            background-image: url('<xsl:value-of select="@backgroundImage"/>');
-                          </xsl:attribute>
+                        <div class="parallax" data-parallax-image="{@backgroundImage}">
+    
                         </div>
                       </section>
                     </xsl:when>

@@ -8372,8 +8372,9 @@ restart:
                     For Each oElmt In oContentParent.SelectNodes("Content[@processForRelatedContent='true']" & sContentLevelxPath)
 
                         ' Add to the related IDs
-                        cRelatedIds &= oElmt.GetAttribute("id") & ","
-
+                        If oElmt.GetAttribute("id") <> "" Then
+                            cRelatedIds &= oElmt.GetAttribute("id") & ","
+                        End If
                         ' Build a content type filter for this content's child nodes
                         ' if the content has a filter, indicated by the repsence of a showRelated attribute
                         ' Note: we only build these content filters if the content is Brief content - this
