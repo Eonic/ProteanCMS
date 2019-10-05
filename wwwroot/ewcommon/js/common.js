@@ -162,7 +162,7 @@ function contentScroller() {
                 $(this).find(".slick-slide").outerHeight(highestBox);
             }
         });
-        $(this).slick({
+        $(this).not('.slick-initialized').slick({
             dots: dots,
             infinite: true,
             slidesToShow: slidestoShow,

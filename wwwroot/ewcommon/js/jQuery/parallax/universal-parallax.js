@@ -88,7 +88,7 @@ var universalParallax = function universalParallax() {
 			className: typeof param.className !== 'undefined' ? param.className : 'parallax'
 		};
 		//var parallax = document.getElementsByClassName(param.className);
-        var parallax = $('div:not(parent::.parallax__container).parallax');
+        var parallax = $('*:not(.parallax__container) > .parallax');
 
 		for (var i = 0; parallax.length > i; i++) {
 			// make container div

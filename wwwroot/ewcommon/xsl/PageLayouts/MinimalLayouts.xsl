@@ -535,7 +535,7 @@
                       <section style="height:100%" class="parallax-wrapper" >
                         <xsl:if test="@data-stellar-background-ratio!='10'">
                           <xsl:attribute name="data-parallax-speed">
-                            <xsl:if test="@data-stellar-background-ratio&lt;='5'">
+                            <xsl:if test="@data-stellar-background-ratio&lt;'5'">
                               <xsl:text>1.3</xsl:text>
                             </xsl:if>
                             <xsl:if test="@data-stellar-background-ratio&gt;='5' and @data-stellar-background-ratio&lt;'10'">
