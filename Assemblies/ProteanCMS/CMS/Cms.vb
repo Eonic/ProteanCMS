@@ -7010,8 +7010,25 @@ Public Class Cms
             'First we get the page XML
             Dim cEwSitePDFXsl As String = moConfig("PagePDFXslPath")
 
-            If moPageXml.OuterXml = "" Then
-                GetPageXML()
+            If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                bPageCache = False
+            End If
+
+            sProcessInfo = "Transform PageXML Using XSLT"
+            If mbAdminMode And Not ibIndexMode And Not gnResponseCode = 404 Then
+                sProcessInfo = "In Admin Mode"
+                If moAdmin Is Nothing Then moAdmin = New Admin(Me)
+                'Dim oAdmin As Admin = New Admin(Me)
+                'Dim oAdmin As Protean.Cms.Admin = New Protean.Cms.Admin(Me)
+                moAdmin.open(moPageXml)
+                moAdmin.adminProcess(Me)
+                moAdmin.close()
+                moAdmin = Nothing
+            Else
+                If moPageXml.OuterXml = "" Then
+                    sProcessInfo = "Getting Page XML"
+                    GetPageXML()
+                End If
             End If
 
             'Next we transform using into FO.Net Xml
@@ -7028,79 +7045,86 @@ Public Class Cms
             icPageWriter = New IO.StringWriter
             moTransform.ProcessTimed(moPageXml, icPageWriter)
 
+
+
             Dim foNetXml As String = icPageWriter.ToString
 
-            'now we use FO.Net to generate our PDF
-
-            Dim oFoNet As New Fonet.FonetDriver()
-            Dim ofileStream As New System.IO.MemoryStream()
-            Dim oTxtReader As New System.IO.StringReader(foNetXml)
-            oFoNet.CloseOnExit = False
-
-            Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
-
-            rendererOpts.Author = "ProteanCMS"
-            rendererOpts.EnablePrinting = True
-            rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
-            ' rendererOpts.Kerning = True
-            ' rendererOpts.EnableCopy = True
-
-            'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-            'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
-            Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
-            Dim subDirs As DirectoryInfo() = dir.GetDirectories()
-            Dim files As FileInfo() = dir.GetFiles()
-            Dim fi As FileInfo
-
-            For Each fi In files
-                Dim cExt As String = LCase(fi.Extension)
-                Select Case cExt
-                    Case ".otf"
-                        rendererOpts.AddPrivateFont(fi)
-                End Select
-            Next fi
-
-            oFoNet.Options = rendererOpts
-            oFoNet.Render(oTxtReader, ofileStream)
-
-            'oImp.UndoImpersonation()
-
-            'End If
-
-
-            'And then we stram out to the browser
-
-            moResponse.Buffer = True
-            moResponse.Expires = 0
-            goServer.ScriptTimeout = 10000
-
-            strFileSize = ofileStream.Length
-
-            Dim Buffer() As Byte = ofileStream.ToArray
-            'oFileStream.Read(Buffer, 0, CInt(strFileSize))
-            'oFileStream.Close()
-
-            'downloadBytes = ofileStream.ToArray
-
-            ctx.Response.Clear()
-            'Const adTypeBinary = 1
-            ctx.Response.AddHeader("Connection", "keep-alive")
-            If ctx.Request.QueryString("mode") = "open" Then
-                ctx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+            If foNetXml.StartsWith("<html") Then
+                moResponse.Write(foNetXml)
             Else
-                ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
-            End If
-            ctx.Response.AddHeader("Content-Length", strFileSize)
-            'ctx.Response.Charset = "UTF-8"
-            ctx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
-            ctx.Response.BinaryWrite(Buffer)
-            ctx.Response.Flush()
+                'now we use FO.Net to generate our PDF
 
-            objStream = Nothing
-            oFoNet = Nothing
-            oTxtReader = Nothing
-            ofileStream = Nothing
+                Dim oFoNet As New Fonet.FonetDriver()
+                Dim ofileStream As New System.IO.MemoryStream()
+                Dim oTxtReader As New System.IO.StringReader(foNetXml)
+                oFoNet.CloseOnExit = False
+
+                Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
+
+                rendererOpts.Author = "ProteanCMS"
+                rendererOpts.EnablePrinting = True
+                rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
+                ' rendererOpts.Kerning = True
+                ' rendererOpts.EnableCopy = True
+
+                'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+
+                Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
+                Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                Dim files As FileInfo() = dir.GetFiles()
+                Dim fi As FileInfo
+
+                For Each fi In files
+                    Dim cExt As String = LCase(fi.Extension)
+                    Select Case cExt
+                        Case ".otf"
+                            rendererOpts.AddPrivateFont(fi)
+                    End Select
+                Next fi
+
+                oFoNet.Options = rendererOpts
+                oFoNet.Render(oTxtReader, ofileStream)
+
+                'oImp.UndoImpersonation()
+
+                'End If
+
+
+                'And then we stram out to the browser
+
+                moResponse.Buffer = True
+                moResponse.Expires = 0
+                goServer.ScriptTimeout = 10000
+
+                strFileSize = ofileStream.Length
+
+                Dim Buffer() As Byte = ofileStream.ToArray
+                'oFileStream.Read(Buffer, 0, CInt(strFileSize))
+                'oFileStream.Close()
+
+                'downloadBytes = ofileStream.ToArray
+
+                ctx.Response.Clear()
+                'Const adTypeBinary = 1
+                ctx.Response.AddHeader("Connection", "keep-alive")
+                If ctx.Request.QueryString("mode") = "open" Then
+                    ctx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+                Else
+                    ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                End If
+                ctx.Response.AddHeader("Content-Length", strFileSize)
+                'ctx.Response.Charset = "UTF-8"
+                ctx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
+                ctx.Response.BinaryWrite(Buffer)
+                ctx.Response.Flush()
+
+                objStream = Nothing
+                oFoNet = Nothing
+                oTxtReader = Nothing
+                ofileStream = Nothing
+            End If
+
 
         Catch ex As Exception
 
