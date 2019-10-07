@@ -213,6 +213,9 @@
             </input>
           </case>
         </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
 
       </group>
     </group>
