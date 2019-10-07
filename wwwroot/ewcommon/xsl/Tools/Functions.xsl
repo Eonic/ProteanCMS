@@ -373,7 +373,9 @@
         <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="x-default" />
       </xsl:when>
       <xsl:otherwise>
-        <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
+        <xsl:if test="$currentPage/PageVersion[@verType='3']">
+          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />          
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:for-each select="$currentPage/PageVersion[@verType='3']">
@@ -656,7 +658,7 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
@@ -670,7 +672,7 @@
           <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick2.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery'] and not(/Page/@adminMode)">
@@ -1351,11 +1353,13 @@
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
 
           <xsl:variable name="href">
-            <xsl:if test="$siteURL=''">
-              <xsl:text>http</xsl:text>
-              <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-              <xsl:text>://</xsl:text>
-              <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
+              <xsl:if test="$siteURL=''">
+                <xsl:text>http</xsl:text>
+                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+                <xsl:text>://</xsl:text>
+                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+              </xsl:if>
             </xsl:if>
             <xsl:choose>
               <xsl:when test="/Page/ContentDetail">

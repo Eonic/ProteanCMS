@@ -1329,7 +1329,7 @@ processFlow:
                         End If
 
                     Case "Billing" 'Check if order has Billing Address                
-
+                        GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
                         If mcCartCmd <> "Billing" Then
@@ -2445,7 +2445,7 @@ processFlow:
 
                                     Dim oProd As XmlElement = moPageXml.CreateElement("product")
                                     oProd.InnerXml = oRow("productDetail")
-                                    If oProd.SelectSingleNode("Content[@overridePrice='True']") Is Nothing Then
+                                    If oProd.SelectSingleNode("Content[@overridePrice='true']") Is Nothing Then
                                         oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"))
                                         cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
                                         If Not oCheckPrice Is Nothing Then
@@ -2714,15 +2714,14 @@ processFlow:
                                                 oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
                                             End If
                                         End If
-                                     End If
-                                        If (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
-                                            shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                                            oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                                            oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                                            oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                                            oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                                            oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                                        End If
+                                    ElseIf (shipCost = -1 Or CDbl("0" & oRowSO("nShipOptCost")) < shipCost) And bCollection = False Then
+                                        shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                                        oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                                        oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                                        oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                                        oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                                        oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                                    End If
 
 
                                 Next
@@ -4051,7 +4050,10 @@ processFlow:
                                 Else
                                     'If it exists and we are here means we may have changed the Delivery address
                                     'country
-                                    RemoveDeliveryOption(mnCartId)
+
+                                    'TS commented out for ITB as deliery option has been set earlier we don't want to remove unless invalid for target address.
+
+                                    ' RemoveDeliveryOption(mnCartId)
                                 End If
 
 
@@ -5961,7 +5963,7 @@ processFlow:
                             If nPrice = 0 Then
                                 oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
                             End If
-                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='True']") Is Nothing Then
+                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
                                 mbOveridePrice = True
                             End If
                             'lets add the discount to the cart if supplied

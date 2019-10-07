@@ -25,6 +25,8 @@
         <cDiscountUserCode />
         <nDiscountCodeType />
         <nDiscountCodeBank />
+        <bApplyToOrder />
+        <cFreeShippingMethods />
         <nAuditId/>
         <nAuditKey/>
         <dPublishDate/>
@@ -140,6 +142,17 @@
             </select1>
           </case>
         </switch>
+        <select bind="bApplyToOrder" appearance="full" class="required vshort">
+          <hint>This discount will be applied to the entire order and not Not Products in a Product Group, therefore you will not need to select a product group for this discount.</hint>
+
+          <item>
+            <label>Apply to Entire order</label>
+             <value>1</value>
+          </item>
+        </select>
+        <select bind="cFreeShippingMethods" appearance="minimal" class="required vshort ewQuery" query="ShippingMethods" rows="10">
+          <label>Free Shipping for These Methods</label>
+        </select>
       </group>
       <group>
         <label>Status</label>

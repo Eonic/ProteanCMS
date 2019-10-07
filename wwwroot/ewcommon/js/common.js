@@ -95,6 +95,7 @@ $(document).ready(function () {
 $(window).load(function () {
     $('.matchHeight-body .grid-item').matchHeight();
     $('.matchHeight-body .listItem').matchHeight();
+ 
     PageContentActions();
     matchHeightResponsive();
 });
@@ -117,9 +118,9 @@ $(window).resize(function () {
 
 function PageContentActions() {
 
-    if (typeof universalParallax == 'function') {
+    if (typeof universalParallax === 'function') {
         var parallaxspeed = $('.parallax-wrapper').last().data("parallax-speed");
-        if (parallaxspeed == '') {
+        if (parallaxspeed === '') {
             parallaxspeed = 1;
         }
         new universalParallax().init({
@@ -127,8 +128,8 @@ function PageContentActions() {
         });
     }
     contentScroller();
+}
 
-};
 function contentScroller() {
 
 //CAN WE USE MATCH HEIGHT SCROLLER HERE? WHY IS THIS DIFFERENT ON WINDOWS RESIZE?
@@ -161,7 +162,7 @@ function contentScroller() {
                 $(this).find(".slick-slide").outerHeight(highestBox);
             }
         });
-        $(this).slick({
+        $(this).not('.slick-initialized').slick({
             dots: dots,
             infinite: true,
             slidesToShow: slidestoShow,

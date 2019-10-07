@@ -577,7 +577,7 @@ Public Class Cms
 
 
                 'Logon Redirect Facility
-                'once you are logged on this becomes the root
+                'once you are logged on this becomes the root 
                 ' If in Admin, always defer to the AdminRootPageId
                 '    unless you are logging off, then you are going to the user site.
                 ' If not Admin, then check if we're logged in
@@ -3858,6 +3858,12 @@ Public Class Cms
                     End If
 
                 End If
+                If sRedirectPath.Contains("token=") Then
+
+                    sRedirectPath = Regex.Replace(sRedirectPath, "(token=.*?)&", "")
+                End If
+
+
                 msRedirectOnEnd = sRedirectPath
             End If
 
@@ -5123,9 +5129,21 @@ Public Class Cms
                         Next
                     End If
 
+                    If moConfig("TrailingSlash") = "on" Then
+                        sUrl = "/" & sUrl.Trim("/") & "/"
+                    End If
+
                     ' Account for a root url
                     If sUrl = "" Then
                         sUrl = "/"
+                    End If
+
+                    If sUrl = "//" Then
+                        sUrl = "/"
+                    End If
+
+                    If sUrl = "/" Then
+                        sUrl = DomainURL
                     End If
 
                     'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
@@ -5436,7 +5454,7 @@ Public Class Cms
 
 
             Dim sProcessInfo As String = "addPageDetailLinksToStructure"
-            Dim cSQL As String = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate" &
+            Dim cSQL As String = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" &
             " FROM tblContent INNER JOIN" &
             " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" &
             " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" &
@@ -5455,11 +5473,28 @@ Public Class Cms
                     Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
                     ' If legacyRdirection is on, this means that we need to use the new format SEO friendly URLs
                     cURL = oMenuItem.GetAttribute("url")
-                    'If moConfig("LegacyRedirect") = "on" Then
-                    cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                    ' Else
-                    '     cURL &= "/Item" & oDR(0).ToString
-                    ' End If
+
+
+                    Select Case moConfig("DetailPathType")
+                        Case "ContentType/ContentName"
+                            Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+                            Dim thisPrefix As String = ""
+                            Dim thisContentType As String = ""
+                            Dim i As Integer
+                            For i = 0 To prefixs.Length - 1
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                If thisContentType = oDR(5).ToString() Then
+                                    cURL &= "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                End If
+                            Next
+                        Case Else
+                            'If moConfig("LegacyRedirect") = "on" Then
+                            cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                            ' Else
+                            '     cURL &= "/Item" & oDR(0).ToString
+                            ' End If
+                    End Select
                     oContElmt.SetAttribute("url", cURL)
                     oContElmt.SetAttribute("name", oDR(1).ToString)
                     oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))

@@ -202,5 +202,10 @@ D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Pro
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.Web.Services.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Fonet.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\createsend-dotnet.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.pdb

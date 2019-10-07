@@ -1,5 +1,4 @@
 ﻿@import (less) '/ewcommon/bs3/css/custom-theme/jquery-ui-1.10.0.custom.css';
-//@import (less) '/ewcommon/icons/fa/css/font-awesome.min.css';
 @import (less) '/ewcommon/icons/fa5/css/all.css';
 @import (less) '/ewcommon/icons/fa5/css/v4-shims.min.css';
 @import (less) '/ewcommon/icons/icomoon/style.css';
@@ -12,6 +11,30 @@
 @import (less) '/ewcommon/js/jquery/slick-carousel/slick.css';
 @import (less) '/ewcommon/js/jquery/slick-carousel/slick-theme.css';
 
-//@import '/ewcommon/css/Layout/bsLayouts.css';
-//@import '/ewcommon/css/xforms/xforms.css';
-//@import '/ewcommon/css/Cart/cartLayout.css';
+
+.parallax__container {
+    clip: rect(0, auto, auto, 0);
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -100;
+}
+
+.parallax__container .parallax {
+    /* can be put in a seperate class for better control */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* --------------------------- */
+    position: fixed;
+    top: 0;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    width: 100%;
+}
+
