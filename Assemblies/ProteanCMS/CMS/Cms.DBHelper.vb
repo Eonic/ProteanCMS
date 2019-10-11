@@ -6296,8 +6296,7 @@ restart:
                             Dim fsHelper As New Protean.fsHelper
                             Dim filePath As String = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl")
 
-                            sReturn = oMsg.emailer
-                            (oXmlDetails.DocumentElement, goConfig("ProjectPath") & filePath _
+                            sReturn = oMsg.emailer(oXmlDetails.DocumentElement, goConfig("ProjectPath") & filePath _
                                                 , sSenderName _
                                                 , sSenderEmail _
                                                 , cEmail _
