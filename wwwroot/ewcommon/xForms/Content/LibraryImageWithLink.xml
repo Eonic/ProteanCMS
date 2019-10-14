@@ -68,6 +68,7 @@
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
         <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
         <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+        <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			</bind>
 			<bind nodeset="cContentXmlDetail/Content">
 				<bind id="cContentImageTitle" nodeset="Title" required="false()" type="string"/>
@@ -80,6 +81,7 @@
         <bind id="cContentLink" nodeset="@externalLink" required="false()" type="string"/>
         <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
         <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+        <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			</bind>
 		</bind>
 	</model>
@@ -181,7 +183,9 @@
             </input>
           </case>
         </switch>
-
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
       </group>
     </group>
 	</group>
