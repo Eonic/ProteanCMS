@@ -111,6 +111,7 @@ Partial Public Class Cms
                             Dim bUnique As Boolean = False
                             Dim cProductPrice As Double = 0
                             Dim sProductName As String = ""
+                            Dim bPackegingRequired As Boolean = False
                             If item.ContainsKey("UniqueProduct") Then
                                 bUnique = item("UniqueProduct")
                             End If
@@ -120,7 +121,9 @@ Partial Public Class Cms
                             If item.ContainsKey("productName") Then
                                 sProductName = item("productName")
                             End If
+
                             myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique)
+
                         Next
                     End If
                     'Output the new cart
@@ -278,8 +281,17 @@ Partial Public Class Cms
                     Dim json As Newtonsoft.Json.Linq.JObject = jObj
                     ShipOptKey = json.SelectToken("ShipOptKey")
                     myCart.updateGCgetValidShippingOptionsDS(ShipOptKey)
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    myCart.GetCart(CartXml.FirstChild)
 
-                    'GetCart(myApi, jObj)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
 
                 Catch ex As Exception
@@ -362,10 +374,21 @@ Partial Public Class Cms
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                    myCart.GetCart(CartXml.FirstChild)
+                    'myCart.GetCart(CartXml.FirstChild)
 
                     'add product option
                     myCart.AddProductOption(jObj)
+                    'myCart.UpdatePackagingANdDeliveryType()
+                    myCart.GetCart(CartXml.FirstChild)
+                    'persist cart
+                    myCart.close()
+
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
 
                 Catch ex As Exception
 
