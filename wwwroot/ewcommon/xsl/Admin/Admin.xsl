@@ -4986,18 +4986,28 @@
 
       </div>
       <xsl:if test="Subscriptions">
-        <h4 class="title">Subscriptions</h4>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+        <h4 class="panel-title">Subscriptions</h4>
+          </div>
         <table class="table">
           <tr>
+            <th>Status</th>
+            <th>Sub Ref</th>
             <th>Name</th>
-            <th>Usernane</th>
-            <th>Subscription Name</th>
-            <th>Active</th>
+            <th>Term</th>
             <th>Start Date</th>
-            <th>Next Renewal</th>
+            <th>Expire Date</th>
+            <th>&#160;</th>
           </tr>
           <xsl:for-each select="Subscriptions/Subscriptions">
             <tr>
+              <td>
+                <xsl:value-of select="@nStatus"/>
+              </td>
+              <td>
+                <xsl:value-of select="@nSubKey"/>
+              </td>
                <td>
                 <xsl:value-of select="Content/Name/node()"/>
               </td>
@@ -5007,7 +5017,7 @@
               <td>
                 <xsl:call-template name="DD_Mon_YYYY">
                   <xsl:with-param name="date">
-                    <xsl:value-of select="dStartDate/node()"/>
+                    <xsl:value-of select="@dStartDate"/>
                   </xsl:with-param>
                   <xsl:with-param name="showTime">false</xsl:with-param>
                 </xsl:call-template>
@@ -5016,14 +5026,14 @@
               <td>
                 <xsl:call-template name="DD_Mon_YYYY">
                   <xsl:with-param name="date">
-                    <xsl:value-of select="dExpireDate/node()"/>
+                    <xsl:value-of select="@dExpireDate"/>
                   </xsl:with-param>
                   <xsl:with-param name="showTime">false</xsl:with-param>
                 </xsl:call-template>
               </td>
               <td colspan="3">
 
-                <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={@nSubKey}"  class="btn btn-primary btn-sm">
                   <i class="fa fa-edit">&#160;</i>&#160;Manage
                 </a>
                 <!--a href="{$appPath}?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
@@ -5047,9 +5057,12 @@
             </xsl:if>
           </xsl:for-each>
         </table>
+        </div>
       </xsl:if>
-      
-      <h4>Website Orders</h4>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">Orders</h4>
+        </div>
         <table class="panel-body table table-striped">
           <tbody>
             <tr>
@@ -5067,6 +5080,7 @@
             </xsl:apply-templates>
           </tbody>
         </table>
+      </div>
     </div>
     </xsl:for-each>
   </xsl:template>

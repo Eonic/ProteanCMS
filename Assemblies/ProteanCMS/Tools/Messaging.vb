@@ -11,6 +11,7 @@ Imports VB = Microsoft.VisualBasic
 Imports System.Web.Configuration
 Imports System.Text.RegularExpressions
 Imports System
+Imports PreMailer.Net
 
 Public Class Messaging
 
@@ -296,6 +297,18 @@ Public Class Messaging
             End If
             messageHtml = sWriter.ToString()
             sWriter.Close()
+            'Call to Pre-Mailer to move css to inline style attributes.
+            Dim hostUrl As String = goRequest.Url.Host
+            Dim urlScheme As String = "http://"
+            If goRequest.IsSecureConnection Then
+                urlScheme = "https://"
+            End If
+            If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
+                hostUrl = urlScheme + hostUrl
+            End If
+            Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), messageHtml)
+            messageHtml = preMailerResult.Html
+
 
             ' Transform for Plain Text
             sWriter = New StringWriter
@@ -562,6 +575,7 @@ Public Class Messaging
                         If goConfig("MailServerUsername") <> "" Then
                             oSmtpn.UseDefaultCredentials = False
                             oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"), goConfig("MailServerUsernameDomain"))
+                            'oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"))
                         End If
                         If LCase(goConfig("MailServerSSL")) = "on" Then
                             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
