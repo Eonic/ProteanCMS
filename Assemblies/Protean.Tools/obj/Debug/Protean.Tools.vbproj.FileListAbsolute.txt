@@ -151,8 +151,16 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ServiceBrokerEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Management.Sdk.Sfc.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Smo.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SmoExtended.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.SqlEnum.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.Dmf.dll
