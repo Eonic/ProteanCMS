@@ -5185,6 +5185,9 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Continental", 1)
                     MyBase.addOption(oSelElmt, "Country", 2)
                     MyBase.addOption(oSelElmt, "Region", 3)
+                    MyBase.addOption(oSelElmt, "County", 4)
+                    MyBase.addOption(oSelElmt, "Post Town", 5)
+                    MyBase.addOption(oSelElmt, "Postal Code", 5)
                     MyBase.addBind("nLocationType", "tblCartShippingLocations/nLocationType", "true()")
 
                     MyBase.addInput(oFrmElmt, "cNameFull", True, "Full Name", "required")
@@ -6850,57 +6853,40 @@ Partial Public Class Cms
 
             'Moved to edit content instead
 
-            'Public Function xFrmEditSubscription(ByVal nContentId As Integer, ByVal nPageID As Integer, Optional ByVal nGroup As Integer = 0) As XmlElement
-            '    Dim cProcessInfo As String = ""
-            '    Try
-            '        MyBase.NewFrm("EditSubscription")
-            '        MyBase.load("/xforms/content/Subscription.xml", myWeb.maCommonFolders)
+            Public Function xFrmEditUserSubscription(ByVal nSubId As Integer) As XmlElement
+                Dim cProcessInfo As String = ""
+                Try
+                    MyBase.NewFrm("EditUserSubscription")
+                    MyBase.load("/xforms/Subscription/EditSubscription.xml", myWeb.maCommonFolders)
+                    Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
 
-            '        If nContentId > 0 Then
-            '            MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, nContentId)
-            '        End If
-            '        Dim i As Integer = 1
-            '        Dim bDone As Boolean = False
-            '        Dim cItems As String = ""
-            '        Do Until bDone = True
-            '            Dim oElmt As XmlElement = MyBase.moXformElmt.SelectSingleNode("group/group/group/select1[@bind ='nGroup_" & i & "']")
-            '            If Not oElmt Is Nothing Then
-            '                If Not cItems = "" Then
-            '                    oElmt.InnerXml = cItems
-            '                Else
-            '                    Dim oDR As SqlDataReader = moDbHelper.getDataReader("SELECT NULL As nDirKey, '-------' As cDirName UNION Select nDirKey, cDirName From tblDirectory WHERE cDirSchema = 'Group' Order By cDirName")
-            '                    Do While oDR.Read
-            '                        MyBase.addOption(oElmt, oDR(1), IIf(IsDBNull(oDR(0)), "", oDR(0)))
-            '                    Loop
-            '                    oDR.Close()
-            '                    cItems = oElmt.InnerXml
-            '                End If
-            '                i += 1
-            '            Else
-            '                bDone = True
-            '            End If
-            '        Loop
+                    If nSubId > 0 Then
+                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, nSubId)
+                        '  MyBase.Instance = existingInstance
+                        MyBase.Instance.InnerXml = existingInstance.InnerXml
 
-            '        If MyBase.isSubmitted Then
-            '            MyBase.updateInstanceFromRequest()
-            '            MyBase.validate()
-            '            If MyBase.valid Then
-            '                Dim nCId As Integer = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
-            '                If nPageID > 0 Then moDbHelper.setContentLocation(nPageID, nCId, True)
-            '                If nGroup > 0 Then
-            '                    Dim mySub As New Protean.Cms.Cart.Subscriptions(myWeb)
-            '                    mySub.SubscriptionToGroup(nCId, nGroup)
-            '                End If
-            '            End If
-            '        End If
+                    End If
+                    moXformElmt.SelectSingleNode("descendant-or-self::instance").InnerXml = MyBase.Instance.InnerXml
+                    Dim i As Integer = 1
+                    Dim bDone As Boolean = False
+                    Dim cItems As String = ""
 
-            '        MyBase.addValues()
-            '        Return MyBase.moXformElmt
-            '    Catch ex As Exception
-            '        returnException(mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
-            '        Return Nothing
-            '    End Try
-            'End Function
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+                            Dim nCId As Integer = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, MyBase.Instance, nSubId)
+                        End If
+                    End If
+
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
 
 
             Public Function xFrmRenewSubscription(ByVal nSubscriptionId As String) As XmlElement

@@ -11,13 +11,13 @@ namespace ProteanCMS.UnitTests
         public void CreateUser()
         {
 
-          //  Protean.Cms ptnCMS = new Protean.Cms();
+            //   Protean.Cms ptnCMS = new Protean.Cms();
 
-         //   XmlDocument oUserInstance = new XmlDocument();
+            //   XmlDocument oUserInstance = new XmlDocument();
 
-            // here we need to get the instance from the Xform for the website and populate the default values.
+            //      here we need to get the instance from the Xform for the website and populate the default values.
 
-         //   ptnCMS.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, oUserInstance.DocumentElement);
+            //   ptnCMS.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, oUserInstance.DocumentElement);
            
             // force pass
             Assert.IsTrue(true);
