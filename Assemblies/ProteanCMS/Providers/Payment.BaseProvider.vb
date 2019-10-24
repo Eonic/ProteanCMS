@@ -345,6 +345,19 @@ Namespace Providers
 
                 End Function
 
+                Public Function GetMethodDetail(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
+                    Dim cProcessInfo As String = ""
+                    Try
+
+                        Return "Not Available"
+
+                    Catch ex As Exception
+                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        Return ""
+                    End Try
+
+                End Function
+
 
                 Public Function AddPaymentButton(ByRef oOptXform As xForm, ByRef oFrmElmt As XmlElement, ByVal configXml As XmlElement, ByVal nPaymentAmount As Double, ByVal submissionValue As String, ByVal refValue As String) As Boolean
 

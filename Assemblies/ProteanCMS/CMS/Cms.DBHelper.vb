@@ -8372,8 +8372,9 @@ restart:
                     For Each oElmt In oContentParent.SelectNodes("Content[@processForRelatedContent='true']" & sContentLevelxPath)
 
                         ' Add to the related IDs
-                        cRelatedIds &= oElmt.GetAttribute("id") & ","
-
+                        If oElmt.GetAttribute("id") <> "" Then
+                            cRelatedIds &= oElmt.GetAttribute("id") & ","
+                        End If
                         ' Build a content type filter for this content's child nodes
                         ' if the content has a filter, indicated by the repsence of a showRelated attribute
                         ' Note: we only build these content filters if the content is Brief content - this
@@ -10754,7 +10755,20 @@ ReturnMe:
                 Dim itemId As String = myWeb.moRequest("id")
 
                 If tableName = "tblContent" Then
-                    sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" & SqlFmt(schemaName) & "' and cast(tblContent.cContentXmlBrief as xml).value('" & xPath & "', 'nvarchar(255)') = '" & ValueToTest & "'"
+                    sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" & SqlFmt(schemaName) & "' "
+
+                    Dim columnFilter As String = ""
+                    Select Case columnName
+                        Case "cContentName"
+                            'cContentName is compared for uniqueness by trimming/removing all spaces (including internal). 
+                            'Ex. following query will return match for comparison of "product name" with "  product     name"
+                            columnFilter = "and replace(replace(replace(replace(lower(rtrim(ltrim(cContentName))),' ','<>'),'><',''),'<>',' '), ' ', '-') = " &
+                                "replace(replace(replace(replace(lower(rtrim(ltrim('" + ValueToTest + "'))),' ','<>'),'><',''),'<>',' '), ' ', '-')"
+                        Case "cContentXmlBrief"
+                            columnFilter = "and cast(tblContent.cContentXmlBrief as xml).value('" & xPath & "', 'nvarchar(255)') = '" & ValueToTest & "'"
+                        Case Else
+                    End Select
+                    sSQL = sSQL & columnFilter
 
                     If itemId <> "" Then
                         sSQL = sSQL & " and nContentKey != " & itemId

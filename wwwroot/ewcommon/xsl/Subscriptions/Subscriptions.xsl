@@ -530,6 +530,7 @@
     <xsl:variable name="contentType" select="@contentType" />
     <xsl:choose>
       <xsl:when test="$subCmd='updateSubPayment'">
+        <a href="{$currentPage/@url}">Back to your subscriptions</a>
         <xsl:apply-templates select="Content[@type='xform']" mode="xform"/>
       </xsl:when>
       <xsl:otherwise>

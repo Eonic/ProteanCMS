@@ -3644,6 +3644,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <xsl:template name="term4060">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Thank You, Your payment method has been updated</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Thank You, Your payment method has been updated</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
   <!-- ################################################################################################ -->
   <!-- SOCIAL NETWORKING!!!!  NO. 5000 - 5500-->

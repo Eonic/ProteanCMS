@@ -204,6 +204,9 @@ Partial Public Class Cms
                     mcEwCmd = "PreviewOn"
                 ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
+                ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And LCase(mcEwCmd) = "normal" Then
+                    myWeb.moSession("ewCmd") = ""
+                    mnAdminUserId = myWeb.mnUserId
                 End If
 
 
@@ -225,10 +228,16 @@ Partial Public Class Cms
                     'End If
 
                 ElseIf Not LCase(mcEwCmd) = LCase("LogOff") And Not LCase(mcEwCmd) = LCase("PasswordReminder") And Not LCase(mcEwCmd) = LCase("AR") Then
+                    If LCase(myWeb.moRequest("ewCmd")) = "logoff" Then
+                        myWeb.moSession("ewCmd") = ""
+                    End If
                     myWeb.moSession("ewAuth") = ""
                     myWeb.mnUserId = 0
                     mcEwCmd = ""
                 End If
+
+
+
                 'lets remember the page we are editing
                 If myWeb.mnPageId < 1 Then
                     myWeb.mnPageId = myWeb.moSession("pgid")
@@ -259,7 +268,11 @@ ProcessFlow:
                                 adminAccessRights()
 
                                 If moPageXML.DocumentElement.SelectSingleNode("AdminMenu/MenuItem") Is Nothing Then
-                                    mcEwCmd = "AdminDenied"
+                                    If LCase(mcEwCmd) = "logoff" Then
+                                    Else
+                                        mcEwCmd = "AdminDenied"
+
+                                    End If
                                 End If
 
                                 If mcEwCmd = "AdminDenied" Then
@@ -1853,7 +1866,7 @@ ProcessFlow:
                         oWeb.mbAdminMode = False
                         If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
-                    Case "Subscriptions", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
+                    Case "Subscriptions", "EditUserSubscription", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -3992,6 +4005,16 @@ SP:
                     'Else
                     '    sAdminLayout = "AdminXForm"
                     'End If
+
+                Case "EditUserSubscription"
+                    oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditUserSubscription(myWeb.moRequest("id")), True))
+                    If oADX.valid Then
+                        cCmd = "ManageUserSubscription"
+                        GoTo SP
+                    Else
+                        sAdminLayout = "AdminXForm"
+                    End If
+
                 Case "MoveSubscription"
 
                     sAdminLayout = "Subscriptions"

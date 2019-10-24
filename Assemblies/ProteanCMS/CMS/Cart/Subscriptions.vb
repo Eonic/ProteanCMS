@@ -1041,28 +1041,28 @@ RedoCheck:
 
             Public Sub AddSubscriptionToUserXML(ByRef oElmt As XmlElement, ByVal nSubUserId As Integer)
                 Try
-                    Dim cSQL As String = "SELECT s.nSubKey,s.cRenewalStatus, s.nSubContentId, s.dStartDate, s.nPeriod, s.cPeriodUnit, s.nValueNet, s.nPaymentMethodId, pm.cPayMthdProviderName, s.bPaymentMethodActive, tblSubscription.cSubXML, tblAudit.nStatus, tblAudit.dPublishDate, tblAudit.dExpireDate" &
+                    Dim cSQL As String = "SELECT s.nSubKey,s.cRenewalStatus, s.nSubContentId, s.dStartDate, s.nPeriod, s.cPeriodUnit, s.nValueNet, s.nPaymentMethodId, pm.cPayMthdProviderName, s.bPaymentMethodActive, a.nStatus, a.dPublishDate, a.dExpireDate, s.cSubXML" &
                     " FROM tblSubscription s INNER JOIN" &
-                    " tblAudit a ON s.nAuditId = tblAudit.nAuditKey INNER JOIN" &
+                    " tblAudit a ON s.nAuditId = a.nAuditKey INNER JOIN" &
                     " tblCartPaymentMethod pm On s.nPaymentMethodId = pm.nPayMthdKey" &
-                    " WHERE tblSubscription.nDirId = " & nSubUserId
+                    " WHERE s.nDirId = " & nSubUserId
 
                     Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Subscriptions", "Subscription")
                     If oDS.Tables("Subscriptions").Rows.Count > 0 Then
                         oDS.Tables("Subscriptions").Columns("nSubKey").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("nSubContentId").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("cRenewalStatus").ColumnMapping = MappingType.Attribute
-                        oDS.Tables("Subscriptions").Columns("nStatus").ColumnMapping = MappingType.Attribute
-                        'oDS.Tables("Subscriptions").Columns("dStartDate").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("dStartDate").ColumnMapping = MappingType.Attribute
                         'oDS.Tables("Subscriptions").Columns("dEndDate").ColumnMapping = MappingType.Attribute
-                        oDS.Tables("Subscriptions").Columns("dPublishDate").ColumnMapping = MappingType.Attribute
-                        oDS.Tables("Subscriptions").Columns("dExpireDate").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("nPeriod").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("cPeriodUnit").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("nValueNet").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("nPaymentMethodId").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("cPayMthdProviderName").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("bPaymentMethodActive").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("nStatus").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("dPublishDate").ColumnMapping = MappingType.Attribute
+                        oDS.Tables("Subscriptions").Columns("dExpireDate").ColumnMapping = MappingType.Attribute
                         oDS.Tables("Subscriptions").Columns("cSubXML").ColumnMapping = MappingType.SimpleContent
                         Dim oSubElmt As XmlElement = oElmt.OwnerDocument.CreateElement("Subscriptions")
                         Dim oTmp As New XmlDocument
@@ -1837,7 +1837,7 @@ processFlow:
                                 Dim buttonRef As String = oSubmitBtn.GetAttribute("ref")
 
                                 If bPaymentMethodUpdated Then
-                                    oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Alert, "Payment Updated")
+                                    oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", True, "term4060")
                                 End If
 
                                 If oSubForm.isSubmitted Then
@@ -1854,7 +1854,7 @@ processFlow:
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
                                         pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
 
-                                        pseudoOrder.firstPayment = 0 ' CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Prices/Price[@type='sale']").InnerText)
+                                        pseudoOrder.firstPayment = 0 'CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
                                         pseudoOrder.repeatPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
                                         pseudoOrder.delayStart = True ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
                                         pseudoOrder.startDate = CDate(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText)
@@ -1941,7 +1941,7 @@ processFlow:
 
                         If myWeb.mnUserId > 0 Then
 
-                            sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as providerId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" &
+                            sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as paymentMethodId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" &
                                 " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " &
                                 " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " &
                                 " where sub.nDirId = " & myWeb.mnUserId
@@ -1987,8 +1987,11 @@ processFlow:
 
                                         Dim paymentStatus As String
                                         Try
-                                            paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId").ToString())
+                                            paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("paymentMethodId").ToString())
                                             oElmt.SetAttribute("paymentStatus", paymentStatus)
+                                            Dim oPaymentMethodDetails As XmlElement = myWeb.moPageXml.CreateElement("PaymentMethodDetails")
+                                            oPaymentMethodDetails.InnerXml = oPayProv.Activities.GetMethodDetail(myWeb, oDr("paymentMethodId").ToString())
+                                            oElmt.AppendChild(oPaymentMethodDetails)
                                         Catch ex2 As Exception
                                             oElmt.SetAttribute("paymentStatus", "error")
                                         End Try
@@ -1998,7 +2001,10 @@ processFlow:
 
                                     'Get Payment Method Details
                                     Dim oPaymentMethod As XmlElement = myWeb.moPageXml.CreateElement("PaymentMethod")
-                                    oPaymentMethod.InnerXml = CStr(oDr("cPayMthdDetailXml") & "")
+                                    If Not IsDBNull(oDr("paymentMethodId")) Then
+                                        oPaymentMethod.InnerXml = myWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, oDr("paymentMethodId"))
+                                    End If
+                                    ' oPaymentMethod.InnerXml = CStr(oDr("cPayMthdDetailXml") & "")
                                     oElmt.AppendChild(oPaymentMethod)
 
                                     contentNode.AppendChild(oElmt)
