@@ -1132,6 +1132,8 @@ Partial Public Module xmlTools
 
                                     oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath)
 
+                                    'create a WEBP version of the image.
+
                                     oImage.Close()
                                     oImage = Nothing
 

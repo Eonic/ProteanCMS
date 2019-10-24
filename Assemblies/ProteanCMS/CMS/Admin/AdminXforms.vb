@@ -5185,6 +5185,9 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Continental", 1)
                     MyBase.addOption(oSelElmt, "Country", 2)
                     MyBase.addOption(oSelElmt, "Region", 3)
+                    MyBase.addOption(oSelElmt, "County", 4)
+                    MyBase.addOption(oSelElmt, "Post Town", 5)
+                    MyBase.addOption(oSelElmt, "Postal Code", 5)
                     MyBase.addBind("nLocationType", "tblCartShippingLocations/nLocationType", "true()")
 
                     MyBase.addInput(oFrmElmt, "cNameFull", True, "Full Name", "required")

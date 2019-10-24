@@ -10011,7 +10011,7 @@ ReturnMe:
 
                     'Run the insert and get back the new id
                     cProcessInfo = targetTable & " Get ID"
-                    Dim ExecuteQuery As String = "SELECT @@IDENTITY"
+                    Dim ExecuteQuery As String = "SELECT IDENT_CURRENT('" & targetTable & "')"
                     Dim getid As New SqlCommand(ExecuteQuery, oConn)
                     'cProcessInfo = targetTable & " Get ID: nUpdateCount : " & oDs.GetXml
                     nUpdateCount = oDataAdpt.Update(oDs, targetTable)

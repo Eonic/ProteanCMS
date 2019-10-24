@@ -5704,8 +5704,8 @@ processFlow:
 
                         arrLoc = Nothing
 
-                        If IIf(IsDBNull(oDr("cLocationNameShort")), "", oDr("cLocationNameShort")) = Trim(sTarget) _
-                        Or IIf(IsDBNull(oDr("cLocationNameFull")), "", oDr("cLocationNameFull")) = Trim(sTarget) Then
+                        If IIf(IsDBNull(LCase(oDr("cLocationNameShort"))), "", LCase(oDr("cLocationNameShort"))) = LCase(Trim(sTarget)) _
+                        Or IIf(IsDBNull(LCase(oDr("cLocationNameFull"))), "", LCase(oDr("cLocationNameFull"))) = LCase(Trim(sTarget)) Then
                             nTargetId = oDr("nLocationKey")
                         End If
                     End While
@@ -5722,9 +5722,9 @@ processFlow:
 
                 oDr.Close()
                 oDr = Nothing
-                If sCountryList = "" Then
-                    Err.Raise(1004, "getParentCountries", sTarget & " cannot be found as a delivery location, please add via the admin system.")
-                End If
+                ' If sCountryList = "" Then
+                '  Err.Raise(1004, "getParentCountries", sTarget & " cannot be found as a delivery location, please add via the admin system.")
+                ' End If
 
                 Return sCountryList
             Catch ex As Exception
@@ -8027,7 +8027,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
 
-        Private Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
 
             Try
                 Dim sSql As String
