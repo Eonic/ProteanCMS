@@ -164,7 +164,11 @@
       <!-- The File Upload image preview & resize plugin -->
       <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
     </xsl:if>
-    <xsl:apply-templates select="." mode="siteAdminJs"/> 
+    <xsl:apply-templates select="." mode="siteAdminJs"/>
+
+    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+    
+    
   </xsl:template>
 
 

@@ -601,7 +601,7 @@
     <xsl:text>script_url: '/ewcommon/js/tinymce/tinymce.min.js',
 			mode: "exact",
 			theme: "modern",
-			width: "625",
+			width: "auto",
       content_css: ['/ewcommon/js/tinymce/plugins/leaui_code_editor/css/pre.css'],
 			relative_urls: false,
 			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor advlist code visualblocks contextmenu fullscreen searchreplace youtube leaui_code_editor",

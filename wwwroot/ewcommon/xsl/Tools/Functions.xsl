@@ -351,7 +351,7 @@
         </xsl:choose>
 
 
-        <xsl:if test="$ScriptAtBottom!='on'">
+        <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
@@ -558,7 +558,7 @@
     <xsl:apply-templates select="." mode="siteJs"/>
 
     <!-- admin javascripts -->
-    <xsl:if test="/Page/@adminMode">
+    <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
     </xsl:if>
 
@@ -933,7 +933,7 @@
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
-    <xsl:if test="$ScriptAtBottom='on'">
+    <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
     
