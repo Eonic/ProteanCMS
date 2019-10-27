@@ -35,8 +35,6 @@ D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlTDi
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pdb
@@ -57,12 +55,8 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnosti
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.IO.Packaging.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\JsonWebTokens.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlClrProvider.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Dmf.Common.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Diagnostics.STrace.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.ServiceBrokerEnum.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.RegSvrEnum.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlTDiagM.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
@@ -72,8 +66,9 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.x
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Dmf.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json.xml

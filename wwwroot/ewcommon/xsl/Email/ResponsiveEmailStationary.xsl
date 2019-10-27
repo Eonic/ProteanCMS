@@ -178,7 +178,7 @@
             <tr>
               <td>
                 <center>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
             <table width="600" cellpadding="0" cellspacing="0">
               <tr>
                 <td>
@@ -211,7 +211,7 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
           </td>
         </tr>
       </table>
@@ -224,7 +224,7 @@
             <tr>
               <td style="padding:0;border:0;" id="emailContent">
                 <center>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
             <table width="600" cellpadding="0" cellspacing="0">
               <tr>
                 <td>
@@ -236,7 +236,7 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
           </td>
         </tr>
       </table>
@@ -249,7 +249,7 @@
             <tr>
               <td class="emailFooterWrapper">
                 <center>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
             <table width="600" cellpadding="0" cellspacing="0">
               <tr>
                 <td>
@@ -292,7 +292,7 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
+                  <!--[if mso]>
           </td>
         </tr>
       </table>

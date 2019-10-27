@@ -3762,7 +3762,7 @@
       </xsl:choose>
     </xsl:variable>
       <xsl:choose>
-          <xsl:when test="$lang='de' or $lang='fr' or $lang='fi' or $lang='sp' or $lang='pt'">
+        <xsl:when test="$lang='de' or $lang='fr' or $lang='fi' or $lang='sp' or $lang='pt'">
             <span itemprop="price" content="{format-number($price,'###,###,##0.00')}">
               <xsl:value-of select="format-number($price,'###,###,##0.00')"/>
             </span>

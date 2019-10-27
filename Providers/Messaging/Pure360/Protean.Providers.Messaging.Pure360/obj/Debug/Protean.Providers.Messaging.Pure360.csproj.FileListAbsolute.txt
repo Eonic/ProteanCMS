@@ -1,5 +1,4 @@
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\obj\Debug\Protean.Providers.Messaging.Pure360.csprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\obj\Debug\Protean.Providers.Messaging.Pure360.csproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\x64\ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\x64\v8-base-x64.dll
@@ -119,5 +118,4 @@ D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Mes
 D:\_Sonali_WorkPlace\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\obj\Debug\Protean.Providers.Messaging.Pure360.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\CampaignMonitorAPIWrapper.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\createsend-dotnet.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\createsend-dotnet.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\Pure360\Protean.Providers.Messaging.Pure360\bin\Debug\Newtonsoft.Json.xml
