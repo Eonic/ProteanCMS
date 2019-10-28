@@ -167,15 +167,15 @@
     <xsl:apply-templates select="." mode="siteAdminJs"/>
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-    
-    
-  </xsl:template>
 
+  </xsl:template>
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
 
+  
+  
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
     <body id="pg_{@id}" class="normalMode">
