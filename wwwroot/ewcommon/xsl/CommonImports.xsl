@@ -12,6 +12,7 @@
   <xsl:import href="xForms/xForms.xsl"/>
   <xsl:import href="xForms/xForms-bs.xsl"/>
   <xsl:import href="Admin/Admin.xsl"/>
+  <xsl:import href="Admin/AdminxForms.xsl"/>
   <xsl:import href="Admin/AdminWYSIWYG.xsl"/>
   <xsl:import href="Cart/Cart.xsl"/>
   <xsl:import href="Subscriptions/Subscriptions.xsl"/>
