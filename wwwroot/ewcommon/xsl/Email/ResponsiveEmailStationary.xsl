@@ -178,11 +178,11 @@
             <tr>
               <td>
                 <center>
-                  <!--[if mso]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>[if mso]&gt;
+            &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;![endif]</xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
                       <td id="siteLogo" style="padding:10px {$hPadding}px">
@@ -211,24 +211,24 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if mso]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
-                </center>
-              </td>
+                  <xsl:comment>[if mso]&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+          &lt;![endif]</xsl:comment>
+          </center>
+        </td>
             </tr>
           </table>
           <table width="100%" style="margin-bottom:0;" cellpadding="0" cellspacing="0">
             <tr>
               <td style="padding:0;border:0;" id="emailContent">
                 <center>
-                  <!--[if mso]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>[if mso]&gt;
+                    &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+                    &lt;tr&gt;
+                    &lt;td&gt;
+                    &lt;![endif]</xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
                       <td class="emailContentWrapper">
@@ -236,11 +236,11 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if mso]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
+                  <xsl:comment>[if mso]&gt;
+                    &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;![endif]</xsl:comment>
                 </center>
               </td>
             </tr>
@@ -249,14 +249,14 @@
             <tr>
               <td class="emailFooterWrapper">
                 <center>
-                  <!--[if mso]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>[if mso]&gt;
+                    &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+                    &lt;tr&gt;
+                    &lt;td&gt;
+                    &lt;![endif]</xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
-                      <td style="padding:0px {$hPadding}px" valign="top" class="emailCol">
+                      <td style="padding:0px {$hPadding}px" width="50%" valign="top" class="emailCol">
                         <xsl:if test="$CompanyTel!=''">
                           <strong>Tel: </strong><a href="tel:{$CompanyTel}">
                             <xsl:value-of select="$CompanyTel"/>
@@ -292,11 +292,11 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if mso]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
+                  <xsl:comment>[if mso]&gt;
+                    &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;![endif]</xsl:comment>
                 </center>
               </td>
             </tr>
