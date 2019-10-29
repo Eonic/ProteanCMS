@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
+  <xsl:template match="Page" mode="xform_control_scripts">
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
+  </xsl:template>
+
+  <xsl:template match="*" mode="xform_control_script"></xsl:template>
+
   <!-- -->
   <!-- ========================== XFORM ========================== -->
   <!-- -->

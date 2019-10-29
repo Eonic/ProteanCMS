@@ -66,7 +66,7 @@
   <!-- -->
   <!-- -->	
    <xsl:template match="Page[@layout='Logon_Register']" mode="Layout">
-    <div class="container" id="template_Logon_Register">
+    <div id="template_Logon_Register">
 
       <div id="column1" class="column1">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserMyAccount']" mode="xform"/>
@@ -175,7 +175,7 @@
 	</xsl:template>
 	
    <xsl:template match="Page[@layout='Password_Reminder']" mode="Layout">
-    <div class="container" id="template_Logon_Register">
+    <div id="template_Logon_Register">
       <xsl:apply-templates select="/" mode="layoutHeader"/>
       <div id="body">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='PasswordReminder' or @name='ResetAccount')]" mode="xform"/>
@@ -189,7 +189,7 @@
   </xsl:template>
 
 	<xsl:template match="Page[@layout='Password_Change']" mode="Layout">
-		<div class="container" id="template_Logon_Register">
+		<div id="template_Logon_Register">
 			<xsl:apply-templates select="/" mode="layoutHeader"/>
 			<div id="body">
 				<xsl:apply-templates select="/Page/Contents/Content[@type='xform' and (@name='ResetPassword')]" mode="xform"/>
@@ -202,7 +202,7 @@
 	</xsl:template>	
 	
   <xsl:template match="Page[@layout='Account_Reset']" mode="Layout">
-    <div class="container" id="template_Logon_Register">
+    <div id="template_Logon_Register">
       <xsl:apply-templates select="/" mode="layoutHeader"/>
       <div id="column1">
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='ConfirmPassword']" mode="xform"/>
@@ -225,7 +225,7 @@
 
 
   <xsl:template match="Page[@layout='List_Quotes']" mode="Layout">
-    <div class="container" id="template_List_Quotes">
+    <div id="template_List_Quotes">
       <xsl:apply-templates select="/" mode="layoutHeader"/>
 		<h3>
 			<!--Your Quotes-->
@@ -325,7 +325,7 @@
   </xsl:template>
   <!-- -->
 	<xsl:template match="Page[@layout='List_Orders']" mode="Layout">
-		<div class="container" id="template_List_Orders">
+		<div id="template_List_Orders">
 			<xsl:apply-templates select="/" mode="layoutHeader"/>
 			<xsl:choose>
 				<xsl:when test="not(/Page/ContentDetail/Content[@type='order'])">

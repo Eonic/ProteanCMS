@@ -574,7 +574,7 @@ Public Class Messaging
                         End If
                         If goConfig("MailServerUsername") <> "" Then
                             oSmtpn.UseDefaultCredentials = False
-                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"), goConfig("MailServerUsernameDomain"))
+                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword").Replace("&lt;", "<").Replace("&gt;", "<"), goConfig("MailServerUsernameDomain"))
                             'oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"))
                         End If
                         If LCase(goConfig("MailServerSSL")) = "on" Then

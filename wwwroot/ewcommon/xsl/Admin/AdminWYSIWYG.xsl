@@ -164,14 +164,18 @@
       <!-- The File Upload image preview & resize plugin -->
       <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
     </xsl:if>
-    <xsl:apply-templates select="." mode="siteAdminJs"/> 
-  </xsl:template>
+    <xsl:apply-templates select="." mode="siteAdminJs"/>
 
+    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+
+  </xsl:template>
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
 
+  
+  
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
     <body id="pg_{@id}" class="normalMode">

@@ -351,7 +351,7 @@
         </xsl:choose>
 
 
-        <xsl:if test="$ScriptAtBottom!='on'">
+        <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
@@ -558,7 +558,7 @@
     <xsl:apply-templates select="." mode="siteJs"/>
 
     <!-- admin javascripts -->
-    <xsl:if test="/Page/@adminMode">
+    <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
     </xsl:if>
 
@@ -566,9 +566,6 @@
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
-
-
-
     <!--  Google analytics javascript  -->
     <xsl:choose>
       <xsl:when test="$GoogleAnalyticsUniversalID!=''">
@@ -580,7 +577,6 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -933,7 +929,7 @@
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
-    <xsl:if test="$ScriptAtBottom='on'">
+    <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
     
