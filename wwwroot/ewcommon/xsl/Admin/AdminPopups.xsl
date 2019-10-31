@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
-	<xsl:import href="Admin.xsl"/>
 	<xsl:import href="../Tools/Functions.xsl"/>
 	<xsl:import href="../xForms/xForms.xsl"/>
   <xsl:import href="../xForms/xForms-bs.xsl"/>
+  <xsl:import href="Admin.xsl"/>
   <xsl:import href="../localisation/SystemTranslations.xsl"/>
 	
 	<xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
@@ -36,11 +36,11 @@
           <xsl:apply-templates select="." mode="Admin"/>
           </div>
         </div>
+        <xsl:apply-templates select="." mode="LayoutAdminJs"/>
       </div>
   </xsl:template>
 
-	<xsl:template match="Page" mode="style">
-    <link rel="icon" type="image/ico" href="http://eyecareplans/favicon.ico" />
+	<!--xsl:template match="Page" mode="style">
     <link rel="stylesheet" type="text/css" href="/ewcommon/css/base.css" />
     <link rel="stylesheet" type="text/css" href="/ewcommon/js/jQuery/ui/1.10.2/css/smoothness/jquery-ui-1.10.2.custom.min.css" />
     <link rel="stylesheet" type="text/css" href="/ewcommon/css/Layout/dynamiclayout.css.aspx?fullwidth=900&amp;colPad=20&amp;boxPad=15&amp;NavWidth=170" />
@@ -52,7 +52,7 @@
     <link type="text/css" rel="stylesheet" href="/ewcommon/js/jquery/treeview/jquery.treeview.css" />
     <link type="text/css" rel="stylesheet" href="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.css" />
     <link type="text/css" rel="stylesheet" href="/ewcommon/js/jquery/gccolor.1.0.3/css/gccolor.css" />
-  </xsl:template>
+  </xsl:template-->
 
   <xsl:template match="Page" mode="SubmitPath">
     <xsl:value-of select="$appPath"/>

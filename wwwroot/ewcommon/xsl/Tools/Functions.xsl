@@ -250,7 +250,6 @@
   <!-- -->
 
 
-
   <xsl:template match="Page">
     <xsl:variable name="pageLang">
       <xsl:choose>
@@ -391,9 +390,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset={Contents/Content[@name='EncType' or @name='EncType']}"/>
   </xsl:template>
 
-  <xsl:template match="Page" mode="htmlattr">
+  <xsl:template match="Page" mode="htmlattr"></xsl:template>
 
-  </xsl:template>
+
+  <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
