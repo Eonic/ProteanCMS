@@ -6,6 +6,7 @@
   <!-- ## IMPORTS ALL COMMON USED XSLs   #######################################################   -->
 
   <xsl:import href="../Tools/Functions.xsl"/>
+  <xsl:import href="../xForms/xForms-bs-mininal.xsl"/>
   <xsl:import href="../Admin/Admin.xsl"/>
   <xsl:import href="../Admin/AdminWYSIWYG.xsl"/>
   <xsl:import href="ResponsiveMailerLayouts.xsl"/>

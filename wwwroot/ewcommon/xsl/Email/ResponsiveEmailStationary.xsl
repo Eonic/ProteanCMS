@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
-	THIS IS THE EMAIL STATIONARY XSL FOR EONIC
-	IT IS NOT A TEMPLATE.
--->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
   <!--STYLE VARIABLES-->
@@ -45,14 +42,14 @@
 
       /*BUTTONS*/
       .emailBtnTable{
-        margin-top:10px;
+      margin-top:10px;
       }
-      .emailBtn{
+      .emailBtn, .moreLinkBtn{
       background:<xsl:value-of select="$mainColour"/>;
       padding:5px 15px;
       border-radius:100px;
       }
-      .emailBtn a{
+      .emailBtn a, .moreLinkBtn a{
       color:#fff;
       text-decoration:none;
       }
@@ -95,8 +92,10 @@
       /*HEADER*/
       #emailHeader{
       margin-bottom:0;
-      background:#ffffff;
       border-bottom:4px solid <xsl:value-of select="$mainColour"/>;
+      }
+      #emailHeader td{
+      background:#ffffff;
       }
       #siteLogo img{
       max-width:200px;
