@@ -108,3 +108,11 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.C
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AngleSharp.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AngleSharp.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CoreCompileInputs.cache

@@ -70,5 +70,12 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Dmf.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Fonet.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlClrProvider.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Dmf.Common.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.Diagnostics.STrace.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlTDiagM.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CoreCompileInputs.cache

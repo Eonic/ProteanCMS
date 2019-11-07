@@ -9,3 +9,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Relea
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMS.Installer.Actions.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMSInstallActions.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMSInstallActions.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Release\ProteanCMS.Installer.Actions.vbproj.CoreCompileInputs.cache

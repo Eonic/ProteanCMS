@@ -20,5 +20,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\ICSharpCo
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Fonet.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache

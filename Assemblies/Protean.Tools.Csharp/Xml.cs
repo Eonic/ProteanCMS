@@ -1110,6 +1110,8 @@ namespace Protean.Tools
                     cReturn = "";
                 else if(dDate is DateTime){
                     string cFormat = "yyyy-MM-dd";
+                    if (bIncludeTime)
+                        cFormat += "THH:mm:ss";
                     DateTime thisdate = (DateTime)dDate;
                     cReturn = thisdate.ToString(cFormat);
                 }

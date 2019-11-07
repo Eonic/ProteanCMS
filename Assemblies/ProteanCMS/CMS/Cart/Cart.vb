@@ -5770,7 +5770,7 @@ processFlow:
                 If invoiceDate = Nothing Then invoiceDate = Now()
                 If nCartId = 0 Then nCartId = oCartElmt.GetAttribute("cartId")
                 oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate))
-                oCartElmt.SetAttribute("InvoiceDateTime", Now())
+                oCartElmt.SetAttribute("InvoiceDateTime", Protean.Tools.Xml.XmlDate(invoiceDate, True))
                 oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(nCartId))
                 If mcVoucherNumber <> "" Then
                     oCartElmt.SetAttribute("payableType", "Voucher")
@@ -7248,7 +7248,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
                                 Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
                                 Do While oDRe.Read
-                                    oContent.SetAttribute("created", xmlDateTime(oDRe.GetValue(0)))
+                                    oContent.SetAttribute("created", Protean.Tools.Xml.XmlDate(oDRe.GetValue(0), True))
                                 Loop
                                 oDRe.Close()
 
@@ -7258,8 +7258,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     Dim oCartElmt As XmlElement = oContent.FirstChild
 
                                     'check for invoice date etc.
-                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
+                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
                                         'fix for any items that have lost the invoice date and ref.
+                                        'also fix when datetime no stored in XML format.
                                         Dim cartId As Long = oDR("nCartOrderKey")
                                         Dim insertDate As String = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " & cartId)
                                         addDateAndRef(oCartElmt, insertDate, cartId)

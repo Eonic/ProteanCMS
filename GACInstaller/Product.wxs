@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.24"?>
+<?define version  = "6.0.25"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Associates LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Associates LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -231,8 +231,19 @@
                 </Component>
 
 
+              <!-- Libraies for PreMailer.Net -->
+              <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.4.6.0\lib\net461\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+              </Component>
+              <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.0.13.0\lib\net46\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
+              </Component>
+              <Component Id='com_PreMailerNet' Guid='bc7a3deb-4135-44f4-ad2e-2099d2b18b64' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+                <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\packages\PreMailer.Net.2.1.1\lib\net46\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
+              </Component>
 
-                <!-- The 'ReplaceProvider' project output. -->
+
+              <!-- The 'ReplaceProvider' project output. -->
               <!--Directory Id='ReplaceProvider.Binaries' /-->
               <!-- The 'Eonic.Providers.Messaging.CampaignMonitor' project output. -->
               <!--Directory Id='Eonic.Providers.Messaging.CampaignMonitor.Binaries' /-->
@@ -315,6 +326,10 @@
           <ComponentRef Id='com_Protean_AppStart' />
 
           <ComponentRef Id='com_AdvancedStringBuilder' />
+
+          <ComponentRef Id='com_System_Text_Encoding_CodePages' />
+          <ComponentRef Id='com_AngleSharp' />
+          <ComponentRef Id='com_PreMailerNet' />
           
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' />
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript64' />
