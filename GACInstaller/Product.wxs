@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.26"?>
+<?define version  = "6.0.29"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Associates LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Associates LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -64,7 +64,7 @@
                 <File Id='_B20C138E_295E_F3EB_3EC1_D53E7993DC9D' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='WebActivatorEx.dll' Source='..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_B9914EC8_D12B_85D0_6750_114591DFF224' Guid='CE47B5AE-C174-4DF0-A24A-4961C86FA578' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_B9914EC8_D12B_85D0_6750_114591DFF224' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='CampaignMonitorAPIWrapper.dll' Source='..\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_B9914EC8_D12B_85D0_6750_114591DFF224' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='CampaignMonitorAPIWrapper.dll' Source='..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_D6B83311_BC5C_813C_0A8A_F51BD806D360' Guid='451A4792-C5B6-48EA-A56D-F0C6B67FA834' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_D6B83311_BC5C_813C_0A8A_F51BD806D360' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='CMPCDotNet.dll' Source='..\Assemblies\NonNuget\CMPCDotNet.dll' Assembly='.net' KeyPath='yes' />
@@ -177,10 +177,10 @@
                     <File Id='_47119BB9_5091_9F08_7BCB_3FC0FC9C7A3C' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ProteanCMS.dll' Source='..\Assemblies\ProteanCMS\bin\ProteanCMS.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_Eonic_Providers_Messaging_CampaignMonitor' Guid='ea7edd77-2c4d-4f5d-aef1-d33daf6ed21b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_Eonic_Providers_Messaging_CampaignMonitor' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Providers.Messaging.CampaignMonitor.dll' Source='..\Providers\Messaging\CampaignMonitor\bin\$(var.Configuration)\Protean.Providers.Messaging.CampaignMonitor.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_Eonic_Providers_Messaging_CampaignMonitor' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Protean.Providers.Messaging.CampaignMonitor.dll' Source='..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\$(var.Configuration)\Protean.Providers.Messaging.CampaignMonitor.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_409D5BCA_2D2F_7043_7C57_A2BCBCE4C0BA' Guid='BCDDB1DF-1DF8-413F-87C0-CD39D69D6E39' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_409D5BCA_2D2F_7043_7C57_A2BCBCE4C0BA' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='createsend-dotnet.dll' Source='..\Providers\Messaging\CampaignMonitor\bin\$(var.Configuration)\createsend-dotnet.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_409D5BCA_2D2F_7043_7C57_A2BCBCE4C0BA' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='createsend-dotnet.dll' Source='..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\$(var.Configuration)\createsend-dotnet.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_Eonic_ReplaceProvider' Guid='9bb4574b-31b4-4317-b87e-e906ab412a5f' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='com_Eonic_ReplaceProvider' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ReplaceProvider.dll' Source='..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll' Assembly='.net' KeyPath='yes' />
@@ -239,7 +239,7 @@
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.0.13.0\lib\net46\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_PreMailerNet' Guid='bc7a3deb-4135-44f4-ad2e-2099d2b18b64' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\packages\PreMailer.Net.2.1.1\lib\net46\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_PreMailerNet' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='PreMailer.Net.dll' Source='..\Assemblies\NonNuget\PreMailer.Net.dll' Assembly='.net' KeyPath='yes' />
               </Component>
 
 

@@ -14,4 +14,3 @@ D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Release\ReplaceProvider
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb
-D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CoreCompileInputs.cache
