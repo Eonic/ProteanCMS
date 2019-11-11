@@ -6305,12 +6305,26 @@
         </a>
       </td>
       <td>
-
         <!--xsl:value-of select="@created"/-->
-        <xsl:call-template name="DD_Mon_YY">
-							<xsl:with-param name="date"><xsl:value-of select="@created"/></xsl:with-param>
-							<xsl:with-param name="showTime">true</xsl:with-param>
-					</xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="Order/@InvoiceDateTime!=''">
+            <xsl:call-template name="DD_Mon_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="Order/@InvoiceDateTime"/>
+              </xsl:with-param>
+              <xsl:with-param name="showTime">true</xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="DD_Mon_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@created"/>
+              </xsl:with-param>
+              <xsl:with-param name="showTime">true</xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+ 
       </td>
       <td>
         <xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@total,'0.00')"/>

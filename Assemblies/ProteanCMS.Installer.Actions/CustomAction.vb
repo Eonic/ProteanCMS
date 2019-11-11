@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.24.0"
+    Public Shared ewAssemblyVersion As String = "6.0.29.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
@@ -27,6 +27,7 @@ Public Class CustomActions
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
     Public Shared SystemNetFTPClientAssemblyVersion As String = "1.0.5824.34026"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "4.6.0.0"
 
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
@@ -280,6 +281,9 @@ Public Class CustomActions
                 ' End If
                 ' jsEng.InnerXml = "<core><engines><add name=""MsieJsEngine"" type=""JavaScriptEngineSwitcher.Msie.MsieJsEngine, JavaScriptEngineSwitcher.Msie, Version=" & jsSwitcherMSIEAssemblyVersion & ", Culture=neutral, PublicKeyToken=C608B2A8CC9E4472"" /></engines></core>"
                 ' jsEng.SetAttribute("xmlns", "http://tempuri.org/JavaScriptEngineSwitcher.Configuration.xsd")
+
+
+
 
                 webConfig.Save(WebFilePath)
 
@@ -628,6 +632,16 @@ Public Class CustomActions
             For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='TidyHTML5Managed']/bindingRedirect")
                 oElmt.SetAttribute("oldVersion", "0.0.0.0-" & TidyHTML5ManagedAssemblyVersion)
                 oElmt.SetAttribute("newVersion", TidyHTML5ManagedAssemblyVersion)
+            Next
+
+            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Text.Encoding.CodePages']") Is Nothing Then
+                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
+                newElmt.InnerXml = "<assemblyIdentity name=""System.Text.Encoding.CodePages"" publicKeyToken=""b03f5f7f11d50a3a""/><bindingRedirect/>"
+                BindingElmt.AppendChild(newElmt)
+            End If
+            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Text.Encoding.CodePages']/bindingRedirect")
+                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & SystemTextEncodingCodePagesAssemblyVersion)
+                oElmt.SetAttribute("newVersion", SystemTextEncodingCodePagesAssemblyVersion)
             Next
 
 
