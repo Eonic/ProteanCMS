@@ -58,8 +58,9 @@ Public Class Messaging
     Public Sub addAttachment(ByVal contentStream As System.IO.Stream, ByVal name As String)
         Dim cProcessInfo As String = "emailCart"
         Try
+            contentStream.Position = 0
 
-            Dim oAtt As New Attachment(contentStream, name)
+            Dim oAtt As New Attachment(contentStream, name, "application/pdf")
             If Attachments Is Nothing Then
                 Attachments = New Collection
             End If
