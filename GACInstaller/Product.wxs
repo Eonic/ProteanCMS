@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version  = "6.0.29"?>
+<?define version  = "6.0.30"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS into GAC $(var.version) (64bit)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Associates LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Associates LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -7,8 +7,8 @@
         <Property Id='DiskPrompt' Value='ProteanCMS into GAC $(var.version) \n(64bit) Installation' />
         <Property Id='ARPCOMMENTS' Value='ProteanCMS GAC Installer' />
         <Property Id='ARPCONTACT' Value='Trevor Spink' />
-        <Property Id='ARPHELPLINK' Value='http://www.ProteanCMS.com' />
-        <Property Id='ARPURLINFOABOUT' Value='http://www.ProteanCMS.com' />
+        <Property Id='ARPHELPLINK' Value='https://www.proteancms.com' />
+        <Property Id='ARPURLINFOABOUT' Value='https://www.proteancms.com' />
         <Property Id='ARPHELPTELEPHONE' Value='+44 1892 534044' />
         <!-- The '.NET Framework' launch condition. -->
         <PropertyRef Id='NETFRAMEWORK40FULL' />
@@ -131,9 +131,9 @@
                   <File Id='_ChakraCore_Win_x86' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ChakraCore.dll' Source='..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x86.2.4.29\runtimes\win-x86\native\ChakraCore.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 -->
-              <!--Component Id='com_EcmaScript' Guid='96cd66a7-4cbf-4e31-abf9-64792af11d05' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+              <Component Id='com_EcmaScript' Guid='96cd66a7-4cbf-4e31-abf9-64792af11d05' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_EcmaScript' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='EcmaScript.NET.dll' Source='..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.Net.dll' Assembly='.net' KeyPath='yes' />
-              </Component-->
+              </Component>
               <Component Id='com_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' Guid='8F9ED269-F3B4-42AE-87C4-BF9CD55414B8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='BundleTransformer.Core.dll' Source='..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll' Assembly='.net' KeyPath='yes' />
               </Component>
@@ -308,7 +308,7 @@
           <!--ComponentRef Id='com_YUI' /-->
             <ComponentRef Id='com_MicrosoftAjax' />
             <ComponentRef Id='com_AjaxMin' />
-          <!--ComponentRef Id='com_EcmaScript' /-->
+            <ComponentRef Id='com_EcmaScript' />
             <ComponentRef Id='com_TidyHTML5Managed' />
             <ComponentRef Id='com_MagickNETQ8AnyCPU' />
             <ComponentRef Id='com_Facebook' />

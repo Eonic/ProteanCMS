@@ -74,7 +74,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
@@ -114,4 +113,3 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.C
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml

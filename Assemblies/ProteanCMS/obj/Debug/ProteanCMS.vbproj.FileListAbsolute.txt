@@ -299,9 +299,6 @@ D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\bin\Microsof
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\bhimraj_workspace\Projects\Repos\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\x64\v8-base-x64.dll
@@ -343,7 +340,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll.config
@@ -379,6 +375,9 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitc
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml

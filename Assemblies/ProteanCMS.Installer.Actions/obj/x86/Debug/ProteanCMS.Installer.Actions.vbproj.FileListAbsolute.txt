@@ -3,7 +3,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Pro
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\ProteanCMSInstallActions.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Deployment.WindowsInstaller.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Web.Administration.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\bin\Debug\Microsoft.Deployment.WindowsInstaller.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.Installer.Actions\obj\x86\Debug\ProteanCMS.Installer.Actions.vbproj.CopyComplete
