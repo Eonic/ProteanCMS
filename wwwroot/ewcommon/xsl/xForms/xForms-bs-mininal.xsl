@@ -1412,9 +1412,10 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="input-small jqDatePicker form-control" placeholder="{$inlineHint}"/>
+        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
+        <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
         <span class="input-group-btn">
-          <label for="{$ref}" class="input-group-addon btn btn-default">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-default">
             <i class="fa fa-calendar">
               <xsl:text> </xsl:text>
             </i>

@@ -1091,8 +1091,8 @@ namespace Protean.Tools
                                     row[i] = string.Empty;
                                 }
                                 else {
-                                row[i] = Protean.Tools.Xml.XmlDate(row[i], true);
-                              }
+                                    row[i] = Protean.Tools.Xml.XmlDate(row[i], true);
+                                  }
                             }
                             else if(string.IsNullOrEmpty(row[i].ToString())){
                                 row[i] = string.Empty;

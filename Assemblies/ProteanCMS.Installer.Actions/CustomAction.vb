@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.29.0"
+    Public Shared ewAssemblyVersion As String = "6.0.33.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
@@ -27,11 +27,12 @@ Public Class CustomActions
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
     Public Shared SystemNetFTPClientAssemblyVersion As String = "1.0.5824.34026"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "4.6.0.0"
-
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "4.0.2.0"
+    'We have real problems with this specific DLL' the one PreMailer.Net references is 4.6.0.0 but installs as 4.0.2.0 in GAC therefore old version encompasses 4.6.0.0 to scale back to 4.0.2.0
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
+    Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -640,10 +641,19 @@ Public Class CustomActions
                 BindingElmt.AppendChild(newElmt)
             End If
             For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='System.Text.Encoding.CodePages']/bindingRedirect")
-                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & SystemTextEncodingCodePagesAssemblyVersion)
+                oElmt.SetAttribute("oldVersion", "0.0.0.0-4.6.0.0")
                 oElmt.SetAttribute("newVersion", SystemTextEncodingCodePagesAssemblyVersion)
             Next
 
+            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='AlphaFS']") Is Nothing Then
+                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
+                newElmt.InnerXml = "<assemblyIdentity name=""AlphaFS"" publicKeyToken=""4d31a58f7d7ad5c9""/><bindingRedirect/>"
+                BindingElmt.AppendChild(newElmt)
+            End If
+            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='AlphaFS']/bindingRedirect")
+                oElmt.SetAttribute("oldVersion", "0.0.0.0-" & AlphaFSAssemblyVersion)
+                oElmt.SetAttribute("newVersion", AlphaFSAssemblyVersion)
+            Next
 
 
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
@@ -658,46 +668,48 @@ Public Class CustomActions
             'Add the AssetHandler for .Less
             Dim sm As New Microsoft.Web.Administration.ServerManager
 
-            Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
+            '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
+            'get default config section
+            Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
 
-            If Not appHostConfig Is Nothing Then
+            If Not webDefaultLocationConfig Is Nothing Then
 
-                Dim handlerSection As Microsoft.Web.Administration.ConfigurationSection = appHostConfig.GetSection("system.webServer/handlers")
+                'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
 
-                If handlerSection Is Nothing Then
+                'If handlerSection Is Nothing Then
 
-                    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
+                '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
 
-                    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
-                    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
+                '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
+                '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
 
-                    For Each handlerElmt In handlerCollection
-                        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
-                            lessHandlerElmt = handlerElmt
-                        End If
-                    Next
-                    If lessHandlerElmt Is Nothing Then
-                        lessHandlerElmt = handlerCollection.CreateElement("add")
-                        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
-                        lessHandlerElmt.SetAttributeValue("path", "*.less")
-                        lessHandlerElmt.SetAttributeValue("verb", "GET")
-                        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
-                        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
-                        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
-                        handlerCollection.AddAt(0, lessHandlerElmt)
-                    End If
+                '    For Each handlerElmt In handlerCollection
+                '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
+                '            lessHandlerElmt = handlerElmt
+                '        End If
+                '    Next
+                '    If lessHandlerElmt Is Nothing Then
+                '        lessHandlerElmt = handlerCollection.CreateElement("add")
+                '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
+                '        lessHandlerElmt.SetAttributeValue("path", "*.less")
+                '        lessHandlerElmt.SetAttributeValue("verb", "GET")
+                '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
+                '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
+                '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
+                '        handlerCollection.AddAt(0, lessHandlerElmt)
+                '    End If
 
-                    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
+                '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
 
-                    sm.CommitChanges()
-                    sm = Nothing
-                Else
-                    Try
-                        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
-                    Catch ex As Exception
-                        'do nuffing
-                    End Try
-                End If
+                '    sm.CommitChanges()
+                '    sm = Nothing
+                'Else
+                '    Try
+                '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
+                '    Catch ex As Exception
+                '        'do nuffing
+                '    End Try
+                'End If
 
             Else
                 Try
@@ -771,13 +783,13 @@ Public Class CustomActions
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll") Then
                     System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll")
                 End If
-                If Not System.IO.File.Exists(System32Folder & "\v8-x32.dll") Then
+                If Not System.IO.File.Exists(System32Folder & "\v8-ia32.dll") Then
                     System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", System32Folder & "\v8-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll") Then
                     System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll")
                 End If
-                If Not System.IO.File.Exists(System32Folder & "\v8-base-x32.dll") Then
+                If Not System.IO.File.Exists(System32Folder & "\v8-base-ia32.dll") Then
                     System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", System32Folder & "\v8-base-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll") Then
