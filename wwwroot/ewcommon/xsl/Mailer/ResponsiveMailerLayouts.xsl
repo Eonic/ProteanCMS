@@ -344,7 +344,7 @@
           <div>
             <xsl:apply-templates select="." mode="inlinePopupOptions" />
           </div>
-          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;margin-bottom:{$boxMargin}px">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;padding-bottom:{$boxMargin}px">
             <tr>
               <td width="100%" style="width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
@@ -387,7 +387,7 @@
                         <xsl:if test="@rss and @rss!='false'">
                           <xsl:attribute name="colspan">2</xsl:attribute>
                         </xsl:if>
-                        <xsl:apply-templates select="." mode="moreLink">
+                        <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
                               <xsl:when test="format-number(@link,'0')!='NaN'">
@@ -467,7 +467,7 @@
                         <xsl:if test="@rss and @rss!='false'">
                           <xsl:attribute name="colspan">2</xsl:attribute>
                         </xsl:if>
-                        <xsl:apply-templates select="." mode="moreLink">
+                        <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
                               <xsl:when test="format-number(@link,'0')!='NaN'">

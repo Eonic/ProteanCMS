@@ -167,24 +167,17 @@
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:if test="ContentDetail/Content[@type='xform']/descendant::input[contains(@class,'pickImage') or contains(@class,'pickDocument') or contains(@class,'pickMedia')]">
-            <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
-      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
-      <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-      <!-- The basic File Upload plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-      <!-- The File Upload processing plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-      <!-- The File Upload image preview & resize plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-    </xsl:if>
+      
     <xsl:apply-templates select="." mode="siteAdminJs"/>
 
+    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
+
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
+  
   </xsl:template>
+
+  <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
+  
   
     <!-- -->
   <!--   ##################  Edit Structure - dynamically generated from menu   ##############################   -->
@@ -216,22 +209,11 @@
     <xsl:if test="@cssFramework!='bs3'">
     <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
     </xsl:if>
-        <xsl:if test="@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib'">
-            <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
-      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
-      <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-      <!-- The basic File Upload plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-      <!-- The File Upload processing plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-      <!-- The File Upload image preview & resize plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-    </xsl:if>
+
     <script type="text/javascript" src="/ewcommon/js/ewAdmin.js">&#160;</script>
     <!--level: <xsl:value-of select="$menuLevelDepth"/>-->
+
+    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
  
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     
@@ -4167,72 +4149,167 @@
           </xsl:for-each>
         </div>
       </div>
-      <script>
-<xsl:text>
+
+      <!-- Terminus class fix to floating columns -->
+      <div class="terminus">&#160;</div>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent']" mode="LayoutAdminJs">
+    <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+    <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+    <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+    <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+    <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+    <!-- The basic File Upload plugin -->
+    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+    <!-- The File Upload processing plugin -->
+    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+    <!-- The File Upload image preview & resize plugin -->
+    <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+  </xsl:template>
+
+    <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
+
+    <xsl:variable name="MaxUploadWidth">
+      <xsl:apply-templates select="." mode="MaxUploadWidth"/>
+    </xsl:variable>
+    <xsl:variable name="MaxUploadHeight">
+      <xsl:apply-templates select="." mode="MaxUploadHeight"/>
+    </xsl:variable>
+    <xsl:variable name="rootPath">
+      <xsl:choose>
+        <xsl:when test="@layout='ImageLib'">
+          <xsl:call-template name="getSettings">
+            <xsl:with-param name="sectionName" select="'web'"/>
+            <xsl:with-param name="valueName" select="'ImageRootPath'"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="@layout='DocsLib'">
+          <xsl:call-template name="getSettings">
+            <xsl:with-param name="sectionName" select="'web'"/>
+            <xsl:with-param name="valueName" select="'DocRootPath'"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="@layout='MediaLib'">
+          <xsl:call-template name="getSettings">
+            <xsl:with-param name="sectionName" select="'web'"/>
+            <xsl:with-param name="valueName" select="'MediaRootPath'"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="partPath"  select="translate(descendant::folder[@active='true']/@path,'\','/')"/>
+
+    <xsl:variable name="targetPath">
+      <xsl:text>/</xsl:text>
+      <xsl:choose>
+        <xsl:when test="starts-with($rootPath,'/')">
+          <xsl:value-of select="substring-after($rootPath,'/')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$rootPath"/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:choose>
+        <xsl:when test="starts-with($partPath,'/')">
+          <xsl:value-of select="substring-after($partPath,'/')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$partPath"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable name="submitPath">
+      <xsl:apply-templates select="." mode="SubmitPath"/>
+    </xsl:variable>
+
+    <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
+      <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+      <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
+      <!-- The basic File Upload plugin -->
+      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
+      <!-- The File Upload processing plugin -->
+      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
+      <!-- The File Upload image preview & resize plugin -->
+      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+    </xsl:if>
+
+    <script>
+      <xsl:text>
         $('#fileupload').fileupload({
         url: '/ewcommon/tools/FileTransferHandler.ashx?storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>',
         dataType: 'json',
         sequentialUploads: true,
         dropZone:$('#uploadFiles'),
 </xsl:text>
-        <xsl:if test="$MaxUploadWidth!='0'">
-          <xsl:text>disableImageResize: /Android(?!.*Chrome)|Opera/.test(navigator.userAgent),</xsl:text>
-          <xsl:text>imageMaxWidth: </xsl:text><xsl:value-of select="$MaxUploadWidth"/><xsl:text>,</xsl:text>
-          <xsl:text>imageMaxHeight: </xsl:text><xsl:value-of select="$MaxUploadHeight"/><xsl:text>,</xsl:text>
-        </xsl:if>
-        <xsl:apply-templates select="." mode="fileTypeScript"/>
-        <xsl:text>
+      <xsl:if test="$MaxUploadWidth!='0'">
+        <xsl:text>disableImageResize: /Android(?!.*Chrome)|Opera/.test(navigator.userAgent),</xsl:text>
+        <xsl:text>imageMaxWidth: </xsl:text>
+        <xsl:value-of select="$MaxUploadWidth"/>
+        <xsl:text>,</xsl:text>
+        <xsl:text>imageMaxHeight: </xsl:text>
+        <xsl:value-of select="$MaxUploadHeight"/>
+        <xsl:text>,</xsl:text>
+      </xsl:if>
+      <xsl:apply-templates select="." mode="fileTypeScript"/>
+      <xsl:text>
         done: function (e, data) {
         $.each(data.files, function (index, file) {
         var targetPath = '</xsl:text><xsl:value-of select="$targetPath"/>';
-        var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
-        <xsl:apply-templates select="." mode="newItemScript"/>
-        $('#files').prepend(newItem);
-        
-        $('#files .item-image .panel').prepareLibImages();
+      var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
+      <xsl:apply-templates select="." mode="newItemScript"/>
+      $('#files').prepend(newItem);
 
-        $("[data-toggle=popover]").popover({
-            html: true,
-            container: '#files',
-            trigger: 'hover',
-            viewport: '#files',
-            content: function () {
-                return $(this).prev('.popoverContent').html();
-            }
-        });
-        if ($('.pickImageModal').exists()) {
-           $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
-              ev.preventDefault();
-              $('.modal-dialog').addClass('loading')
-              $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
-              var target = $(this).attr("href");
-              // load the url and show modal on success
-              var currentModal = $('.pickImageModal')
-              currentModal.load(target, function () {
-                  $('.modal-dialog').removeClass('loading')
-                  currentModal.modal("show");
-                
-              });
-          });
-        };
-       
-        
-        });
-        },
-        progressall: function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress .bar').css(
-        'width',
-        progress + '%'
-        );
-        }
-        });
-      </script>
-      
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
-    </div>
+      $('#files .item-image .panel').prepareLibImages();
+
+      $("[data-toggle=popover]").popover({
+      html: true,
+      container: '#files',
+      trigger: 'hover',
+      viewport: '#files',
+      content: function () {
+      return $(this).prev('.popoverContent').html();
+      }
+      });
+      if ($('.pickImageModal').exists()) {
+      $('.pickImageModal').find('a[data-toggle!="popover"]').click(function (ev) {
+      ev.preventDefault();
+      $('.modal-dialog').addClass('loading')
+      $('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p>');
+      var target = $(this).attr("href");
+      // load the url and show modal on success
+      var currentModal = $('.pickImageModal')
+      currentModal.load(target, function () {
+      $('.modal-dialog').removeClass('loading')
+      currentModal.modal("show");
+
+      });
+      });
+      };
+
+
+      });
+      },
+      progressall: function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress .bar').css(
+      'width',
+      progress + '%'
+      );
+      }
+      });
+    </script>
+
   </xsl:template>
+  
 
   <xsl:template match="Page" mode="SubmitPath">
     <xsl:text>/?</xsl:text>
@@ -6228,12 +6305,26 @@
         </a>
       </td>
       <td>
-
         <!--xsl:value-of select="@created"/-->
-        <xsl:call-template name="DD_Mon_YY">
-							<xsl:with-param name="date"><xsl:value-of select="@created"/></xsl:with-param>
-							<xsl:with-param name="showTime">true</xsl:with-param>
-					</xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="Order/@InvoiceDateTime!=''">
+            <xsl:call-template name="DD_Mon_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="Order/@InvoiceDateTime"/>
+              </xsl:with-param>
+              <xsl:with-param name="showTime">true</xsl:with-param>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="DD_Mon_YY">
+              <xsl:with-param name="date">
+                <xsl:value-of select="@created"/>
+              </xsl:with-param>
+              <xsl:with-param name="showTime">true</xsl:with-param>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+ 
       </td>
       <td>
         <xsl:value-of select="@currencySymbol"/>&#160;<xsl:value-of select="format-number(Order/@total,'0.00')"/>
@@ -8562,17 +8653,7 @@
         <textarea rows="20" cols="80" id="ace-edit">
           <xsl:copy-of select="ContentDetail/*"/>
         </textarea>
-        <script src="/ewcommon/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-        <script>
 
-          $('#ace-edit').val(formatXml($('#ace-edit').val()))
-
-
-          var editor = ace.edit("ace-edit");
-          editor.setOption("maxLines", 1000)
-          editor.setTheme("ace/theme/tomorrow");
-          editor.session.setMode("ace/mode/xml");
-        </script>
         <a href="{$appPath}?ewCmd=ScheduledItemRunNow&amp;type={$page/Request/QueryString/Item[@name='type']/node()}&amp;id={$page/Request/QueryString/Item[@name='id']/node()}" class="btn btn-success btn-xs">
           <i class="fa fa-play">&#160;</i>&#160;Run Again
         </a>
@@ -8581,6 +8662,17 @@
         </a>
       </div>
     </div>
+  </xsl:template>
+
+  <xsl:template match="Page[@layout='ScheduledItemRunNow']" mode="LayoutAdminJs">
+    <script src="/ewcommon/js/ace/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+      $('#ace-edit').val(formatXml($('#ace-edit').val()))
+      var editor = ace.edit("ace-edit");
+      editor.setOption("maxLines", 1000)
+      editor.setTheme("ace/theme/tomorrow");
+      editor.session.setMode("ace/mode/xml");
+    </script>
   </xsl:template>
 
   <!--System Pages-->
@@ -11134,6 +11226,21 @@
 			</xsl:choose>
 			
 	</xsl:template>
+  
+  <xsl:template match="Page[@layout='WebStats']" mode="LayoutAdminJs">
+    <xsl:choose>
+      <xsl:when test="$statsId!=''">
+        <script LANGUAGE="JavaScript">
+          function GoToStats() {
+          document.statsform.submit();
+          };
+        </script>
+      </xsl:when>
+      <xsl:otherwise>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
 
   <xsl:template match="Page[@adminMode='true' and @layout='GoogleAnalytics']" mode="bodyBuilder">
     <body id="pg_{@id}" class="ewAdmin">

@@ -1064,12 +1064,17 @@ namespace Protean.Tools
 
         public XmlDocument GetXml(DataSet src)
         {
+            // TS This function was added when we move to C# as GetXML does not return null fields in the XML. Need to convert to string and return empty string.
+            // TS Additional issues with date formats as we need to ensure the convertion to date still outputs Valid XML dates.
             string cProcessInfo = "";
             try
                 {
+                    
                     DataTable dtCloned = src.Tables[0].Clone();
-                    foreach (DataColumn dc in dtCloned.Columns)
-                        dc.DataType = typeof(string);
+                    foreach (DataColumn dc in dtCloned.Columns){
+                            dc.DataType = typeof(string);
+                    }
+
                     foreach (DataRow row in src.Tables[0].Rows)
                     {
                         dtCloned.ImportRow(row);
@@ -1080,9 +1085,18 @@ namespace Protean.Tools
                         for (int i = 0; i < dtCloned.Columns.Count; i++)
                         {
                             dtCloned.Columns[i].ReadOnly = false;
-
-                            if (string.IsNullOrEmpty(row[i].ToString()))
+                            if (src.Tables[0].Columns[i].DataType == typeof(DateTime)) {
+                                if (string.IsNullOrEmpty(row[i].ToString()))
+                                {
+                                    row[i] = string.Empty;
+                                }
+                                else {
+                                    row[i] = Protean.Tools.Xml.XmlDate(row[i], true);
+                                  }
+                            }
+                            else if(string.IsNullOrEmpty(row[i].ToString())){
                                 row[i] = string.Empty;
+                            }
                         }
                     }
 

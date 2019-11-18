@@ -150,28 +150,21 @@
         <xsl:text>~/Bundles/Admin</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
-    <xsl:if test="ContentDetail/Content[@type='xform']/descendant::input[contains(@class,'pickImage') or contains(@class,'pickDocument') or contains(@class,'pickMedia')] | ContentDetail/folder">
-            <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
-      <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
-      <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
-      <!-- The basic File Upload plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">/* */</script>
-      <!-- The File Upload processing plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
-      <!-- The File Upload image preview & resize plugin -->
-      <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
-    </xsl:if>
-    <xsl:apply-templates select="." mode="siteAdminJs"/> 
-  </xsl:template>
+ 
+    <xsl:apply-templates select="." mode="siteAdminJs"/>
 
+    <xsl:apply-templates select="." mode="LayoutAdminJs"/>
+    
+    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+
+  </xsl:template>
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
 
+  
+  
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">
     <body id="pg_{@id}" class="normalMode">

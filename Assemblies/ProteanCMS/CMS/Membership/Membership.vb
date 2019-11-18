@@ -907,12 +907,14 @@ Partial Public Class Cms
                 Dim bUserValid As Boolean = True
                 Try
 
-                    If myWeb.mnUserId > 0 And myWeb.moPageXml.SelectSingleNode("User/Company[@id='" & CompanyId & "']") IsNot Nothing Then
+                    ' If myWeb.mnUserId > 0 And myWeb.moPageXml.SelectSingleNode("User/Company[@id='" & CompanyId & "']") IsNot Nothing Then
+
+                    If myWeb.mnUserId > 0 Then
 
                         Dim adXfm As Object = myWeb.getAdminXform()
                         adXfm.open(myWeb.moPageXml)
 
-                        If CInt("0" & myWeb.moRequest("id")) > 0 And myWeb.moPageXml.SelectSingleNode("User/Company/Contact[@id='" & myWeb.moRequest("id") & "']") Is Nothing Then
+                        If CInt("0" & myWeb.moRequest("id")) > 0 And Not (myWeb.moPageXml.SelectSingleNode("User/Company/Contacts/Contact/nContactKey[text()='" & myWeb.moRequest("id") & "']") Is Nothing) Then
                             bUserValid = False
                         End If
 
@@ -924,7 +926,7 @@ Partial Public Class Cms
 
                             Select Case memCmd
                                 Case "addContact", "editContact"
-                                    Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), CompanyId)
+                                    Dim oXfmElmt As XmlElement = adXfm.xFrmEditDirectoryContact(myWeb.moRequest("id"), CompanyId, "/xforms/directory/CompanyContact.xml")
                                     If Not adXfm.valid Then
                                         contentNode.AppendChild(oXfmElmt)
                                     Else

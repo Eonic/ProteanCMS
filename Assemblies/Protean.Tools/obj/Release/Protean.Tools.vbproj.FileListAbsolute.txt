@@ -55,6 +55,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.IO.Packaging.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Fonet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\JsonWebTokens.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlClrProvider.dll
@@ -71,8 +72,8 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-An
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml

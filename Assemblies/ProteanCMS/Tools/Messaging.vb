@@ -71,7 +71,23 @@ Public Class Messaging
             End If
         End Try
     End Sub
+    Public Sub addAttachmentAsPdf(ByVal contentStream As System.IO.Stream, ByVal name As String)
+        Dim cProcessInfo As String = "emailCart"
+        Try
+            contentStream.Position = 0
 
+            Dim oAtt As New Attachment(contentStream, name, "application/pdf")
+            If Attachments Is Nothing Then
+                Attachments = New Collection
+            End If
+            Attachments.Add(oAtt)
+
+        Catch ex As Exception
+            If gbDebug Then
+                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+            End If
+        End Try
+    End Sub
 
     Public Sub addAttachment(ByVal fileLocation As String, Optional ByVal deleteAfterAttach As Boolean = False)
         Dim cProcessInfo As String = "emailCart"
@@ -574,7 +590,7 @@ Public Class Messaging
                         End If
                         If goConfig("MailServerUsername") <> "" Then
                             oSmtpn.UseDefaultCredentials = False
-                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"), goConfig("MailServerUsernameDomain"))
+                            oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword").Replace("&lt;", "<").Replace("&gt;", "<"), goConfig("MailServerUsernameDomain"))
                             'oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"))
                         End If
                         If LCase(goConfig("MailServerSSL")) = "on" Then

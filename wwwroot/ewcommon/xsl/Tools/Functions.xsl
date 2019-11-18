@@ -250,7 +250,6 @@
   <!-- -->
 
 
-
   <xsl:template match="Page">
     <xsl:variable name="pageLang">
       <xsl:choose>
@@ -351,7 +350,7 @@
         </xsl:choose>
 
 
-        <xsl:if test="$ScriptAtBottom!='on'">
+        <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
@@ -391,9 +390,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset={Contents/Content[@name='EncType' or @name='EncType']}"/>
   </xsl:template>
 
-  <xsl:template match="Page" mode="htmlattr">
+  <xsl:template match="Page" mode="htmlattr"></xsl:template>
 
-  </xsl:template>
+
+  <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -558,7 +558,7 @@
     <xsl:apply-templates select="." mode="siteJs"/>
 
     <!-- admin javascripts -->
-    <xsl:if test="/Page/@adminMode">
+    <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
     </xsl:if>
 
@@ -566,9 +566,6 @@
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
-
-
-
     <!--  Google analytics javascript  -->
     <xsl:choose>
       <xsl:when test="$GoogleAnalyticsUniversalID!=''">
@@ -580,7 +577,6 @@
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -933,7 +929,7 @@
   <!-- Javascripts that can be brought in in the footer of the HTML document, e.g. asynchronous scripts -->
   <xsl:template match="Page" mode="footerJs">
     <!-- common javascript -->
-    <xsl:if test="$ScriptAtBottom='on'">
+    <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
     
@@ -6053,6 +6049,15 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      
+       <xsl:variable name="max-width-xs">
+            <xsl:apply-templates select="." mode="getThWidth-xs"/>
+      </xsl:variable>
+      <xsl:variable name="max-height-xs">
+            <xsl:apply-templates select="." mode="getThHeight-xs"/>
+      </xsl:variable>
+        
+          
       <xsl:variable name="cropvar">
         <xsl:choose>
           <xsl:when test="$crop='true'">
@@ -6093,77 +6098,108 @@
             <xsl:with-param name="forceResize" select="$forceResize" />
           </xsl:call-template>
         </xsl:variable>
+        
+        
+          
+        <xsl:variable name="newSrc-xs">
+          <xsl:call-template name="resize-image">
+            <xsl:with-param name="path" select="$src"/>
+            <xsl:with-param name="max-width" select="$max-width-xs"/>
+            <xsl:with-param name="max-height" select="$max-height-xs"/>
+            <xsl:with-param name="file-prefix">
+              <xsl:text>~th-xs-</xsl:text>
+              <xsl:value-of select="$max-width"/>
+              <xsl:text>x</xsl:text>
+              <xsl:value-of select="$max-height"/>
+              <xsl:text>/~th-</xsl:text>
+              <xsl:if test="$cropvar='true'">
+                <xsl:text>crop-</xsl:text>
+              </xsl:if>
+              <xsl:if test="not($no-stretch)">
+                <xsl:text>strch-</xsl:text>
+              </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="file-suffix" select="''"/>
+            <xsl:with-param name="quality" select="100"/>
+            <xsl:with-param name="crop" select="$cropvar" />
+            <xsl:with-param name="no-stretch" select="$no-stretch" />
+            <xsl:with-param name="forceResize" select="$forceResize" />
+          </xsl:call-template>
+        </xsl:variable>
+        
         <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
         
         <xsl:variable name="image">
-          <img itemprop="image">
-            <!-- SRC -->
-            <xsl:choose>
-              <xsl:when test="$lazy='on'">
-                <xsl:attribute name="data-src">
-                  <xsl:value-of select="$newSrc"/>
-                </xsl:attribute>
-                <xsl:attribute name="src">
-                  <xsl:value-of select="$lazyplaceholder"/>
-                </xsl:attribute>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:attribute name="src">
-                  <xsl:value-of select="$newSrc"/>
-                </xsl:attribute>
-              </xsl:otherwise>
-            </xsl:choose>
-            <!-- Width -->
-            <xsl:attribute name="width">
+          <picture>
+            <!--New image tags-->
+            <img itemprop="image">
+              <!-- SRC -->
               <xsl:choose>
-                <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-                  <xsl:value-of select="$max-width"/>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:value-of select="substring-before($imageSize,'x')" />
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc"/>
+                  </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>
-
-            </xsl:attribute>
-            <!-- Height -->
-            <xsl:attribute name="height">
-              <xsl:choose>
-                <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
-                  <xsl:value-of select="$max-height"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:value-of select="substring-after($imageSize,'x')" />
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:attribute>
-            <!-- Alt -->
-            <xsl:attribute name="alt">
-              <xsl:value-of select="$alt" />
-            </xsl:attribute>
-            <!-- Title -->
-            <xsl:attribute name="title">
-              <xsl:value-of select="$alt" />
-            </xsl:attribute>
-            <!-- Class -->
-            <xsl:attribute name="class">
-              <xsl:choose>
-                <xsl:when test="$class!=''">
-                  <xsl:value-of select="$class" />
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:text>photo thumbnail resized</xsl:text>
-                </xsl:otherwise>
-              </xsl:choose>
-              <xsl:if test="$lazy='on'">
-                <xsl:text> lazy</xsl:text>
-              </xsl:if>
-            </xsl:attribute>
-            <xsl:if test="$style!=''">
-              <xsl:attribute name="style">
-                <xsl:value-of select="$style" />
+              <!-- Width -->
+              <xsl:attribute name="width">
+                <xsl:choose>
+                  <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                    <xsl:value-of select="$max-width"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="substring-before($imageSize,'x')" />
+                  </xsl:otherwise>
+                </xsl:choose>
               </xsl:attribute>
-            </xsl:if>
-          </img>
+              <!-- Height -->
+              <xsl:attribute name="height">
+                <xsl:choose>
+                  <xsl:when test="contains($newSrc,'awaiting-image-thumbnail.gif')">
+                    <xsl:value-of select="$max-height"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="substring-after($imageSize,'x')" />
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <!-- Alt -->
+              <xsl:attribute name="alt">
+                <xsl:value-of select="$alt" />
+              </xsl:attribute>
+              <!-- Title -->
+              <xsl:attribute name="title">
+                <xsl:value-of select="$alt" />
+              </xsl:attribute>
+              <!-- Class -->
+              <xsl:attribute name="class">
+                <xsl:choose>
+                  <xsl:when test="$class!=''">
+                    <xsl:value-of select="$class" />
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>photo thumbnail resized</xsl:text>
+                  </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$lazy='on'">
+                  <xsl:text> lazy</xsl:text>
+                </xsl:if>
+              </xsl:attribute>
+              <xsl:if test="$style!=''">
+                <xsl:attribute name="style">
+                  <xsl:value-of select="$style" />
+                </xsl:attribute>
+              </xsl:if>
+            </img>
+          </picture>
         </xsl:variable>
         <xsl:copy-of select="ms:node-set($image)/*" />
       </xsl:if>
@@ -6864,6 +6900,19 @@
   <!-- -->
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
+  
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
+  
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
+  
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
+    <xsl:apply-templates select="." mode="getThWidth"/>  
+  </xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-md">
+    <xsl:apply-templates select="." mode="getThHeight"/>  
+  </xsl:template>
 
 
   <!-- Get Sub Page Thumbnail Dimensions -->

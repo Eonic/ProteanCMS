@@ -5185,6 +5185,9 @@ Partial Public Class Cms
                     MyBase.addOption(oSelElmt, "Continental", 1)
                     MyBase.addOption(oSelElmt, "Country", 2)
                     MyBase.addOption(oSelElmt, "Region", 3)
+                    MyBase.addOption(oSelElmt, "County", 4)
+                    MyBase.addOption(oSelElmt, "Post Town", 5)
+                    MyBase.addOption(oSelElmt, "Postal Code", 5)
                     MyBase.addBind("nLocationType", "tblCartShippingLocations/nLocationType", "true()")
 
                     MyBase.addInput(oFrmElmt, "cNameFull", True, "Full Name", "required")
@@ -6316,13 +6319,13 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmEditDirectoryContact(Optional ByVal id As Long = 0, Optional ByVal nUID As Integer = 0) As XmlElement
+            Public Function xFrmEditDirectoryContact(Optional ByVal id As Long = 0, Optional ByVal nUID As Integer = 0, Optional xFormPath As String = "/xforms/directory/UserContact.xml") As XmlElement
                 Dim cProcessInfo As String = ""
                 Try
 
 
                     MyBase.NewFrm("EditContact")
-                    MyBase.load("/xforms/directory/UserContact.xml", myWeb.maCommonFolders)
+                    MyBase.load(xFormPath, myWeb.maCommonFolders)
 
                     If id > 0 Then
                         MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartContact, id)
@@ -6340,7 +6343,11 @@ Partial Public Class Cms
                         MyBase.updateInstanceFromRequest()
                         'MyBase.instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = myweb.mnUserId
                         MyBase.addValues()
-                        MyBase.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = nUID
+                        If nUID > 0 Then
+                            'if not supplied we do not want to overwrite it.
+                            MyBase.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = nUID
+                        End If
+
                         MyBase.validate()
                         If MyBase.valid Then
                             moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, MyBase.Instance, IIf(id > 0, id, -1))

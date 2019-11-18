@@ -116,6 +116,8 @@
       <bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
       <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/>
       <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
+      
+      <bind id="cXSLTPath" nodeset="ews2:xsltPath" required="false()" type="string"/>
       <!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
       <bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
     </bind>
@@ -184,6 +186,9 @@
           </input>
           <input bind="cBccRecipientEmail">
             <label>BCC Recipient email</label>
+          </input>
+          <input bind="cXSLTPath">
+            <label>XSLT Path</label>
           </input>
         </group>
         <input bind="cSubject" class="long">

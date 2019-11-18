@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
-	THIS IS THE EMAIL STATIONARY XSL FOR EONIC
-	IT IS NOT A TEMPLATE.
--->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   
   <!--STYLE VARIABLES-->
@@ -45,14 +42,14 @@
 
       /*BUTTONS*/
       .emailBtnTable{
-        margin-top:10px;
+      margin-top:10px;
       }
-      .emailBtn{
+      .emailBtn, .moreLinkBtn{
       background:<xsl:value-of select="$mainColour"/>;
       padding:5px 15px;
       border-radius:100px;
       }
-      .emailBtn a{
+      .emailBtn a, .moreLinkBtn a{
       color:#fff;
       text-decoration:none;
       }
@@ -95,8 +92,10 @@
       /*HEADER*/
       #emailHeader{
       margin-bottom:0;
-      background:#ffffff;
       border-bottom:4px solid <xsl:value-of select="$mainColour"/>;
+      }
+      #emailHeader td{
+      background:#ffffff;
       }
       #siteLogo img{
       max-width:200px;
@@ -178,11 +177,13 @@
             <tr>
               <td>
                 <center>
-                  <!--[if gte mso 9]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+            &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+              &lt;tr&gt;
+                &lt;td&gt;
+                  &lt;![endif]</xsl:text>
+                  </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
                       <td id="siteLogo" style="padding:10px {$hPadding}px">
@@ -211,24 +212,28 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
-                </center>
-              </td>
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+          &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+          &lt;![endif]</xsl:text>
+                  </xsl:comment>
+          </center>
+        </td>
             </tr>
           </table>
           <table width="100%" style="margin-bottom:0;" cellpadding="0" cellspacing="0">
             <tr>
               <td style="padding:0;border:0;" id="emailContent">
                 <center>
-                  <!--[if gte mso 9]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+                    &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+                    &lt;tr&gt;
+                    &lt;td&gt;
+                    &lt;![endif]</xsl:text>
+                  </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
                       <td class="emailContentWrapper">
@@ -236,11 +241,13 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+                    &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;![endif]</xsl:text>
+                  </xsl:comment>
                 </center>
               </td>
             </tr>
@@ -249,14 +256,16 @@
             <tr>
               <td class="emailFooterWrapper">
                 <center>
-                  <!--[if gte mso 9]>
-            <table width="600" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <![endif]-->
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+                    &lt;table width="620" cellpadding="0" cellspacing="0"&gt;
+                    &lt;tr&gt;
+                    &lt;td&gt;
+                    &lt;![endif]</xsl:text>
+                  </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
-                      <td style="padding:0px {$hPadding}px" valign="top" class="emailCol">
+                      <td style="padding:0px {$hPadding}px" width="50%" valign="top" class="emailCol">
                         <xsl:if test="$CompanyTel!=''">
                           <strong>Tel: </strong><a href="tel:{$CompanyTel}">
                             <xsl:value-of select="$CompanyTel"/>
@@ -292,11 +301,13 @@
                       </td>
                     </tr>
                   </table>
-                  <!--[if gte mso 9]>
-          </td>
-        </tr>
-      </table>
-      <![endif]-->
+                  <xsl:comment>
+                    <xsl:text>[if mso]&gt;
+                    &lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/table&gt;
+                    &lt;![endif]</xsl:text>
+                  </xsl:comment>
                 </center>
               </td>
             </tr>

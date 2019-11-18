@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
+  <xsl:template match="Page" mode="xform_control_scripts">
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
+  </xsl:template>
+  
+  <xsl:template match="*" mode="xform_control_script"></xsl:template>
+
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
@@ -929,9 +936,10 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="input-small jqDatePicker form-control" placeholder="{$inlineHint}"/>
+        <input type="text" name="{$ref}" id="{$ref}" value="{value/node()}" class="hidden "/>
+        <input type="text" name="{$ref}-alt" id="{$ref}-alt" value="{$displayDate}" class="jqDatePicker input-small form-control" placeholder="{$inlineHint}"/>
         <span class="input-group-btn">
-          <label for="{$ref}" class="input-group-addon btn btn-default">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-default">
             <i class="fa fa-calendar">
               <xsl:text> </xsl:text>
             </i>

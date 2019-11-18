@@ -5704,8 +5704,8 @@ processFlow:
 
                         arrLoc = Nothing
 
-                        If IIf(IsDBNull(oDr("cLocationNameShort")), "", oDr("cLocationNameShort")) = Trim(sTarget) _
-                        Or IIf(IsDBNull(oDr("cLocationNameFull")), "", oDr("cLocationNameFull")) = Trim(sTarget) Then
+                        If IIf(IsDBNull(LCase(oDr("cLocationNameShort"))), "", LCase(oDr("cLocationNameShort"))) = LCase(Trim(sTarget)) _
+                        Or IIf(IsDBNull(LCase(oDr("cLocationNameFull"))), "", LCase(oDr("cLocationNameFull"))) = LCase(Trim(sTarget)) Then
                             nTargetId = oDr("nLocationKey")
                         End If
                     End While
@@ -5722,9 +5722,9 @@ processFlow:
 
                 oDr.Close()
                 oDr = Nothing
-                If sCountryList = "" Then
-                    Err.Raise(1004, "getParentCountries", sTarget & " cannot be found as a delivery location, please add via the admin system.")
-                End If
+                ' If sCountryList = "" Then
+                '  Err.Raise(1004, "getParentCountries", sTarget & " cannot be found as a delivery location, please add via the admin system.")
+                ' End If
 
                 Return sCountryList
             Catch ex As Exception
@@ -5770,7 +5770,7 @@ processFlow:
                 If invoiceDate = Nothing Then invoiceDate = Now()
                 If nCartId = 0 Then nCartId = oCartElmt.GetAttribute("cartId")
                 oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate))
-                oCartElmt.SetAttribute("InvoiceDateTime", Now())
+                oCartElmt.SetAttribute("InvoiceDateTime", Protean.Tools.Xml.XmlDate(invoiceDate, True))
                 oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix & CStr(nCartId))
                 If mcVoucherNumber <> "" Then
                     oCartElmt.SetAttribute("payableType", "Voucher")
@@ -7248,7 +7248,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
                                 Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
                                 Do While oDRe.Read
-                                    oContent.SetAttribute("created", xmlDateTime(oDRe.GetValue(0)))
+                                    oContent.SetAttribute("created", Protean.Tools.Xml.XmlDate(oDRe.GetValue(0), True))
                                 Loop
                                 oDRe.Close()
 
@@ -7258,8 +7258,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                     Dim oCartElmt As XmlElement = oContent.FirstChild
 
                                     'check for invoice date etc.
-                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And oCartElmt.GetAttribute("InvoiceDate") = "" Then
+                                    If CLng(oCartElmt.GetAttribute("statusId")) >= 6 And (oCartElmt.GetAttribute("InvoiceDate") = "" Or Not (oCartElmt.GetAttribute("InvoiceDateTime").Contains("T"))) Then
                                         'fix for any items that have lost the invoice date and ref.
+                                        'also fix when datetime no stored in XML format.
                                         Dim cartId As Long = oDR("nCartOrderKey")
                                         Dim insertDate As String = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " & cartId)
                                         addDateAndRef(oCartElmt, insertDate, cartId)
@@ -8027,7 +8028,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Sub
 
 
-        Private Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
+        Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
 
             Try
                 Dim sSql As String

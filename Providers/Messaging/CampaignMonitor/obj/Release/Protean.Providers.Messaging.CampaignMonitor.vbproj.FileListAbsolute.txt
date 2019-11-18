@@ -62,8 +62,6 @@ D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Release\x86\
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Release\x86\v8-ia32.dll
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Release\x86\ChakraCore.dll
 D:\HostingSpaces\_objSource\Providers\Messaging\CampaignMonitor\bin\Release\TidyHTML5Managed.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\x64\ClearScriptV8-64.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\x64\v8-base-x64.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\x64\v8-x64.dll
@@ -72,7 +70,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Prote
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Providers.Messaging.CampaignMonitor.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Providers.Messaging.CampaignMonitor.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\createsend-dotnet.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ProteanCMS.dll
@@ -86,7 +83,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\CMPCD
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Net.FtpClient.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\SoundInTheory.DynamicImage.Extensions.Pdf.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.dll
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Fonet.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\BundleTransformer.Core.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Web.Optimization.dll
@@ -105,7 +101,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Prote
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ProteanCMS.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ProteanCMS.dll.config
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\createsend-dotnet.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\DocumentFormat.OpenXml.xml
@@ -114,9 +109,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\PayPa
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Net.FtpClient.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Lucene.Net.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Fonet.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Newtonsoft.Json.pdb
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\BundleTransformer.Core.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\System.Web.Optimization.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JavaScriptEngineSwitcher.Core.xml
@@ -131,8 +123,19 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\ru-ru
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.Resources.resources
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbproj.GenerateResource.cache
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\JsonWebTokens.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Tools.Csharp.dll.config
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\createsend-dotnet.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Fonet.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\PreMailer.Net.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\AngleSharp.dll
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\createsend-dotnet.pdb
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Release\AngleSharp.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Release\Protean.Providers.Messaging.CampaignMonitor.vbproj.CoreCompileInputs.cache

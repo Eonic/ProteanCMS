@@ -1,5 +1,3 @@
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\AdvancedStringBuilder.dll

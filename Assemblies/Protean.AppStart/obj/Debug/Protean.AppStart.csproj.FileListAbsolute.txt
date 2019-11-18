@@ -1,0 +1,14 @@
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\Protean.AppStart.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\AdvancedStringBuilder.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\ClearScript.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.Core.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.V8.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\AdvancedStringBuilder.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.Core.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\JavaScriptEngineSwitcher.V8.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Debug\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.csproj.CopyComplete
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Debug\Protean.AppStart.pdb
