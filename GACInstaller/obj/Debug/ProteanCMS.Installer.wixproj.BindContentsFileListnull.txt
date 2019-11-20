@@ -22,6 +22,7 @@ Installer_Logo.jpg
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll
 ..\Assemblies\NonNuget\CMPCDotNet.dll
 ..\packages\DocumentFormat.OpenXml.2.8.1\lib\net46\DocumentFormat.OpenXml.dll
+..\Assemblies\NonNuget\EcmaScript.Net.dll
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Debug\Protean.Providers.Messaging.CampaignMonitor.dll
 ..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll
 ..\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll

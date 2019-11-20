@@ -11,6 +11,5 @@ D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.
 D:\HostingSpaces\_objSource\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
-D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb

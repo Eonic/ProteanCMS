@@ -58,6 +58,22 @@ Public Class Messaging
     Public Sub addAttachment(ByVal contentStream As System.IO.Stream, ByVal name As String)
         Dim cProcessInfo As String = "emailCart"
         Try
+
+            Dim oAtt As New Attachment(contentStream, name)
+            If Attachments Is Nothing Then
+                Attachments = New Collection
+            End If
+            Attachments.Add(oAtt)
+
+        Catch ex As Exception
+            If gbDebug Then
+                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+            End If
+        End Try
+    End Sub
+    Public Sub addAttachmentAsPdf(ByVal contentStream As System.IO.Stream, ByVal name As String)
+        Dim cProcessInfo As String = "emailCart"
+        Try
             contentStream.Position = 0
 
             Dim oAtt As New Attachment(contentStream, name, "application/pdf")
@@ -72,7 +88,6 @@ Public Class Messaging
             End If
         End Try
     End Sub
-
 
     Public Sub addAttachment(ByVal fileLocation As String, Optional ByVal deleteAfterAttach As Boolean = False)
         Dim cProcessInfo As String = "emailCart"

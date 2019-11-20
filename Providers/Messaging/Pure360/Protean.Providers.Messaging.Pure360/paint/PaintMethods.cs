@@ -137,9 +137,9 @@ public class PaintMethods : PaintSession
                         Hashtable removeInput = new Hashtable();
 
                         // Remove the existing list
-                        removeInput.Add("beanId", ((String)loadOutputFields["beanId"]));
-                        this.sendRequest("bus_facade_campaign_list", "remove", removeInput);
-                        listFound = true;
+                        //removeInput.Add("beanId", ((String)loadOutputFields["beanId"]));
+                        //this.sendRequest("bus_facade_campaign_list", "remove", removeInput);
+                        //listFound = true;
 
                        // addType = "append";
                 }
@@ -160,7 +160,7 @@ public class PaintMethods : PaintSession
             int endFirstRowPos = 0;
             int customFieldCount = 0;
             String firstRow = null;
-            String[] fieldNames = null;
+            String[] fieldNames = {"Email","Mobile"};
             
             // Extract the first row from the list data
             endFirstRowPos = (listDataSource.IndexOf("\n") + 1);
@@ -236,7 +236,7 @@ public class PaintMethods : PaintSession
     public Hashtable addList(String listName,
                                DataTable listDataTable,
                                String notifyUri, 
-                               String addType = "store"
+                               String addType = "append"
                                )
     {
 
@@ -280,16 +280,16 @@ public class PaintMethods : PaintSession
 
                         // Remove the existing list
                         
-                        if (addType == "store")
-                        {
-                            actionInput.Add("beanId", ((String)loadOutputFields["beanId"]));
-                            this.sendRequest("bus_facade_campaign_list", "remove", actionInput);
+                        //if (addType == "store")
+                        //{
+                        //    actionInput.Add("beanId", ((String)loadOutputFields["beanId"]));
+                        //    this.sendRequest("bus_facade_campaign_list", "remove", actionInput);
                         
-                        }
-                        else {
-                           // actionInput.Add("entityId", ((String)loadOutputFields["entityId"]));
-                           // this.sendRequest("bus_facade_campaign_list", "load", actionInput);
-                        }
+                        //}
+                        //else {
+                        //   // actionInput.Add("entityId", ((String)loadOutputFields["entityId"]));
+                        //   // this.sendRequest("bus_facade_campaign_list", "load", actionInput);
+                        //}
                         listFound = true;
                     }
                 }

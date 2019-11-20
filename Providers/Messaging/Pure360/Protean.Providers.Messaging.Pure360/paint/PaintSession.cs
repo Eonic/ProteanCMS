@@ -6,6 +6,7 @@ using System.Web;
 using Protean.Providers.Messaging.com.pure360.paint;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.IO;
+using System.Collections.Generic;
 
 /// <summary>
 /// Utility class for creating and re-using a session within PAINT.  Utility
@@ -177,7 +178,7 @@ namespace Protean.Providers.Messaging.Pure360Library.paint
             paintKeyValuePair[] entityPairs = null;
             paintKeyValuePair[] processPairs = null;
             paintKeyValuePair[] resultPairs = null;
-            paintService ps = null;
+            paintService ps = new paintService();// null;
             Hashtable resultOutput = null;
 
             // Check that the context is valid
@@ -191,7 +192,7 @@ namespace Protean.Providers.Messaging.Pure360Library.paint
             processPairs = this.convertDataToPaintPairs(processInput);
 
             // Call the PAINT service
-           // ps = paintService;
+            // ps = paintService;
             resultPairs = ps.handleRequest(this.contextId,
                                             className,
                                             processName,
@@ -350,6 +351,31 @@ namespace Protean.Providers.Messaging.Pure360Library.paint
             }
 
             return convertedHashtable;
+        }
+
+        public Hashtable GetListName(String facadeBean, Hashtable searchResults)
+        {
+            Hashtable ListDetails = null;
+            Hashtable Lists = new Hashtable();
+
+            foreach (String tmpKey in searchResults.Keys)
+            {
+                Hashtable loadInput = (Hashtable)searchResults[tmpKey];
+                Hashtable beanInst = this.sendRequest(facadeBean, "load", loadInput, null);
+
+                if (beanInst != null)
+                {
+                    ListDetails = (Hashtable)beanInst["bus_entity_campaign_list"];
+                    if (ListDetails != null)
+                    {
+                        Lists.Add(loadInput["listId"].ToString(), ListDetails["listName"].ToString());
+                    }
+
+                }
+
+            }
+
+            return Lists;
         }
     }
 }
