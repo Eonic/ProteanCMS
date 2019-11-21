@@ -11111,6 +11111,10 @@ ReturnMe:
                                 modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, bResetLocations, ImportStateObj.bOrphan)
                             End If
                         Else
+
+                            If ImportStateObj.oInstance.getAttribute("delete").contains("true") Then
+                                ImportStateObj.bSkipExisting = True
+                            End If
                             'clean up sugical update as we are doing inserts or straight replacements.
                             Dim oRemoveElmt As XmlElement
                             For Each oRemoveElmt In ImportStateObj.oInstance.selectnodes("descendant-or-self::*[@updateSurgical!='']")

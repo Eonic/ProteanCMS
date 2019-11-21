@@ -596,18 +596,18 @@ $.fn.prepareAdminXform = function () {
         });
     };
 
-    $('.ewXform label').each(function () {
-        if ($(this).parent().is('span.radiocheckbox')) {
+   // $('.ewXform label').each(function () {
+   //     if ($(this).parent().is('span.radiocheckbox')) {
 
-        }
-        else {
+  //      }
+   //     else {
             // think of a better method, this screws design when there is HTML in a label, 
             //typically: 
             //      <p>TEXT</p>
             //      :
             //$(this).append(':')
-        }
-    });
+   //     }
+  //  });
 
 };
 

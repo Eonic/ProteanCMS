@@ -169,11 +169,8 @@
     </xsl:call-template>
       
     <xsl:apply-templates select="." mode="siteAdminJs"/>
-
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-  
   </xsl:template>
 
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
@@ -3423,27 +3420,30 @@
         </div>
       </div>
       <div class="col-md-9">
-        <div class="panel default-panel">
-          <div class="panel-heading">
-        <form action="{$appPath}?ewCmd=DiscountRules" class="ewXform" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
-          Add Rule &#160;
-          <select name="newDiscountType" id="newDiscountType" class="required full">
+      <form action="{$appPath}?ewCmd=DiscountRules" class="ewXform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
+        <div class="input-group">
+	    <span class="input-group-addon">Add Rule &#160;</span>
+
+
+          <select name="newDiscountType" id="newDiscountType" class="required full form-control">
             <option value="">Select type</option>
-            <option value="1">Basic</option>
+            <option value="1">Basic Percentage Discount or Money Off</option>
             <option value="2">Product Quantity/Price Breaks</option>
             <option value="5">Group Quantity/Price Breaks</option>
             <option value="3">X for the Price of Y</option>
             <option value="4">Cheapest Item Free</option>
           </select>
-          &#160;
+          <span class="input-group-btn">
           <button type="submit" name="addNewDiscountRule" id="addNewDiscountRule"  value="Add" class="btn btn-success principle">
             <i class="fa fa-plus fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Add
           </button>
-          <div class="terminus">&#160;</div>
+	  </span>
+	  </div>
         </form>
-          </div>
+        <div class="panel panel-default">
+ 
         <table cellpadding="0" cellspacing="1" class="table">
           <tr>
             <th></th>
@@ -3566,11 +3566,25 @@
             </tr>
               <tr>
                   <td>&#160;</td>
-                  <td colspan="4">
+                  <td colspan="1">
                       <strong>Start Date:</strong>
-                      <xsl:value-of select="@publishDate"/>
+		      &#160;
+                       <xsl:call-template name="DD_Mon_YYYY">
+                          <xsl:with-param name="date">
+                            <xsl:value-of select="@publishDate"/>
+                          </xsl:with-param>
+                          <xsl:with-param name="showTime">true</xsl:with-param>
+                        </xsl:call-template>
+                    </td>
+                    <td colspan="3">
                       <strong>Expire Date:</strong>
-                      <xsl:value-of select="@expireDate"/>
+		      &#160;
+                        <xsl:call-template name="DD_Mon_YYYY">
+                          <xsl:with-param name="date">
+                            <xsl:value-of select="@expireDate"/>
+                          </xsl:with-param>
+                          <xsl:with-param name="showTime">true</xsl:with-param>
+                        </xsl:call-template>
                   </td>
               </tr>
           </xsl:for-each>
@@ -4155,7 +4169,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent']" mode="LayoutAdminJs">
+  <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
     <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->

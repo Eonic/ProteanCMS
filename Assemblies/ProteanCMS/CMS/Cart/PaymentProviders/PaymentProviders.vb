@@ -3669,14 +3669,18 @@ Partial Public Class Cms
                                 Dim oItemTax As Protean.PayPalAPI.BasicAmountType = New Protean.PayPalAPI.BasicAmountType
                                 oItemTax.currencyID = getPPCurencyFromCode(mcCurrency)
                                 'oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"), 2)
-                                oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2)
+                                oItemTax.Value = 0 'FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2)
                                 'oItemTax.Value = FormatNumber(CDbl("0" & oItemElmt.GetAttribute("itemTax")), 2) / oItemElmt.GetAttribute("quantity")
                                 oItem.Tax = oItemTax
                                 'itemAmount
                                 'Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
                                 Dim oItemAmount As Protean.PayPalAPI.BasicAmountType = New Protean.PayPalAPI.BasicAmountType
                                 oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency)
-                                oItemAmount.Value = FormatNumber(oItemElmt.GetAttribute("itemTotal"), 2)
+                                Dim linetotal As Double = oItemElmt.GetAttribute("itemTotal")
+                                ' If oItemTax.Value > 0 Then
+                                ' linetotal = linetotal - oItemTax.Value
+                                '  End If
+                                oItemAmount.Value = FormatNumber(linetotal, 2)
                                 oItem.Amount = oItemAmount
                                 oItemGroup(i) = oItem
                                 i = i + 1

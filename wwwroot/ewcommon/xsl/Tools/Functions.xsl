@@ -8719,7 +8719,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
                 <xsl:attribute name="style">
-                  background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                  background-image: url('<xsl:value-of select="@backgroundImage"/>') 50% 50% no-repeat;
                 </xsl:attribute>
             </xsl:if>
             <xsl:choose>
