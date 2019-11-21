@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Protean.Providers.Messaging.com.pure360.paint;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Configuration;
@@ -7,7 +8,7 @@ using System.Xml;
 
 namespace Protean.Providers.Messaging
 {
-    
+
     public class Pure360Tools
     {
         public Pure360Tools()
@@ -20,7 +21,7 @@ namespace Protean.Providers.Messaging
 
             public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
 
-            private const string mcModuleName = "Protean.CampaignMonitorTools.Modules";
+            private const string mcModuleName = "Protean.Pure360Tools.Modules";
 
             private System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
 
@@ -32,13 +33,13 @@ namespace Protean.Providers.Messaging
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             }
 
-            public void Subscribe(ref Protean.Cms myWeb, ref XmlElement oContentElement)
+            public void Subscribe(ref Protean.Cms myWeb, ref XmlElement oContentElmt)
             {
                 try
                 {
                     Protean.Cms.xForm oXform = new Protean.Cms.xForm(ref myWeb);
                     oXform.moPageXML = myWeb.moPageXml;
-                    XmlNode oContentNode = (XmlElement)oContentElement;
+                    XmlNode oContentNode = (XmlNode)oContentElmt;
                     oXform.load(ref oContentNode, false);
                     if (oXform.isSubmitted())
                     {
@@ -48,47 +49,21 @@ namespace Protean.Providers.Messaging
                         {
 
                             // We have an Xform within this content we need to process.
-                            string listId = oContentElement.GetAttribute("listID");
+                            string listId = oContentElmt.GetAttribute("listID");
                             if (oXform.Instance.SelectSingleNode("Subscribe/Items/ListId") != null)
                             {
                                 if (oXform.Instance.SelectSingleNode("Subscribe/Items/ListId").InnerText != "")
                                     listId = oXform.Instance.SelectSingleNode("Subscribe/Items/ListId").InnerText;
                             }
-                            string apiKey = moMailConfig["ApiKey"];
+                           // string apiKey = moMailConfig["ApiKey"];
                             string email = oXform.Instance.SelectSingleNode("Subscribe/Items/Email").InnerText;
                             string name = oXform.Instance.SelectSingleNode("Subscribe/Items/Name").InnerText;
-                            createsend_dotnet.ApiKeyAuthenticationDetails cmAuth = new createsend_dotnet.ApiKeyAuthenticationDetails(moMailConfig["ApiKey"]);
-                            createsend_dotnet.Subscriber subscriber = new createsend_dotnet.Subscriber(cmAuth, listId);
-                            // lets loop through the nodes to add custom fields
-                            int i = 0;
+                            Pure360.Activities activities = new Pure360.Activities();
+                            Dictionary<string, string> value = new Dictionary<string, string>();
+                            value.Add(name, email);
+                            activities.AddToList(listId, name, email, value);
 
-                            foreach (var oElmt in oXform.Instance.SelectNodes("Subscribe/Items/*"))
-                            {//ss
-                             //if ((oElmt.Name == "Name" | oElmt.Name == "Email" | oElmt.Name == "ListId"))
-                                i = i + 1;
-                            }
-                            List<createsend_dotnet.SubscriberCustomField> customFields = new List<createsend_dotnet.SubscriberCustomField>();
-                            i = 0;
-                            foreach (var oElmt in oXform.Instance.SelectNodes("Subscribe/Items/*"))
-                            {//ss
-                                //if (!(oElmt.Name == "Name" | oElmt.Name == "Email" | oElmt.Name == "ListId")) ss
-                                //{
-                                //    createsend_dotnet.SubscriberCustomField customField = new createsend_dotnet.SubscriberCustomField();
-                                //    customField.Key = oElmt.Name;
-                                //    customField.Value = oElmt.innertext;
-                                //    customFields.Add(customField);
-                                //    i = i + 1;
-                                //}
-                            }
-                            try
-                            {
-                                subscriber.Add(email, name, customFields, false);
-                                oXform.RootGroup.InnerXml = "<div class=\"subscribed\">" + oXform.Instance.SelectSingleNode("SubscribedMessage").InnerXml + "</div>";
-                            }
-                            catch (Exception ex)
-                            {
-                                oXform.RootGroup.InnerXml = "<div class=\"error\">" + ex.Message + "</div>";
-                            }
+                           
                         }
                     }
                     oXform.addValues();
@@ -137,6 +112,7 @@ namespace Protean.Providers.Messaging
                     OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Subscribe", ex, ""));
                 }
             }
+        
         }
     }
 
