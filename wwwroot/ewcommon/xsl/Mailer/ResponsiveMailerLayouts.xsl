@@ -698,7 +698,7 @@
     </xsl:variable>
 
     <!-- Output Module -->
-    <table class="ContentList" width="100%" style="width:100%;">
+    <table class="ContentList" cellspacing="0" cellpadding="0" width="100%" style="width:100%;">
       <xsl:if test="count(ms:node-set($contentList)/*) &gt; 0">
         <xsl:call-template name="outputContentListTDs">
           <xsl:with-param name="contentList" select="$contentList" />
@@ -765,7 +765,7 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'listItem'"/>
+      <xsl:with-param name="class" select="'listItem emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailNewsList">
@@ -946,7 +946,7 @@
       </xsl:apply-templates>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'listItem hproduct'"/>
+      <xsl:with-param name="class" select="'listItem hproduct emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailProductList">
@@ -981,6 +981,7 @@
             <xsl:apply-templates select="Manufacturer" mode="cleanXhtml"/>
             <!--</td>-->
           </xsl:if>
+          <br/>
           <xsl:choose>
             <xsl:when test="Content[@type='SKU']">
               <xsl:apply-templates select="Content[@type='SKU'][1]" mode="displayPrice" />
@@ -994,6 +995,9 @@
             <xsl:apply-templates select="ShortDescription/node()" mode="cleanXhtml"/>
           </xsl:if>
           <!--read more-->
+
+          <br/>
+          <br/>
           <table cellpadding="0" cellspacing="0">
             <tr>
               <td class="emailBtn">
