@@ -16,12 +16,13 @@ Installer_Logo.jpg
 ..\packages\WebGrease.1.6.0\lib\WebGrease.dll
 ..\packages\AjaxMin.5.14.5506.26202\lib\net40\AjaxMin.dll
 ..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll
-..\packages\AngleSharp.0.13.0\lib\net46\AngleSharp.dll
+..\Assemblies\NonNuget\AngleSharp.dll
 ..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll
 ..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\CampaignMonitorAPIWrapper.dll
 ..\Assemblies\NonNuget\CMPCDotNet.dll
 ..\packages\DocumentFormat.OpenXml.2.8.1\lib\net46\DocumentFormat.OpenXml.dll
+..\Assemblies\NonNuget\EcmaScript.Net.dll
 ..\..\ProteanCMS Addons\Providers\Messaging\CampaignMonitor\bin\Release\Protean.Providers.Messaging.CampaignMonitor.dll
 ..\packages\BundleTransformer.Core.1.10.0\lib\net40\BundleTransformer.Core.dll
 ..\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll
@@ -46,7 +47,7 @@ Installer_Logo.jpg
 ..\Assemblies\NonNuget\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\Assemblies\Protean.Tools.Csharp\bin\Release\Protean.Tools.Csharp.dll
-..\packages\System.Text.Encoding.CodePages.4.6.0\lib\net461\System.Text.Encoding.CodePages.dll
+..\Assemblies\NonNuget\System.Text.Encoding.CodePages.dll
 ..\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
 ..\packages\System.Net.FtpClient.1.0.5824.34026\lib\net40\System.Net.FTPClient.dll
 ..\Assemblies\NonNuget\tidy.x64.dll

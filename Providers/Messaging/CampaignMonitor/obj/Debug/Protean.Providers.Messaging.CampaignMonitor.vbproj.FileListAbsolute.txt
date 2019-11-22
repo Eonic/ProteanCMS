@@ -181,7 +181,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Protean
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ProteanCMS.dll.config
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Newtonsoft.Json.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Lucene.Net.xml
@@ -192,6 +191,7 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\BundleT
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\System.Web.Optimization.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\AlphaFS.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\JavaScriptEngineSwitcher.V8.xml
+D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\AngleSharp.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Microsoft.Web.Infrastructure.xml
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\Antlr3.Runtime.pdb
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
@@ -200,7 +200,6 @@ D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\bin\Debug\ru-ru\J
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.Resources.resources
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbproj.GenerateResource.cache
-D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbproj.CoreCompileInputs.cache
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.dll
 D:\HostingSpaces\DevOpsGit\Providers\Messaging\CampaignMonitor\obj\Debug\Protean.Providers.Messaging.CampaignMonitor.xml

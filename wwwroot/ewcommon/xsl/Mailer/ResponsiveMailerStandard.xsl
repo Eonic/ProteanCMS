@@ -56,6 +56,21 @@
     </body>
   </xsl:template>
 
+
+  <xsl:template match="/" mode="mailBoxStyles">
+    <div data-value="panel-primary">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h6 class="panel-title">panel-primary</h6>
+        </div>
+        <div class="panel-body">
+          <xsl:text>Example Text </xsl:text>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+
+
   <!--   ########################   Main Email Layout   ############################   -->
 
   <xsl:template match="Page" mode="bodyLayout">

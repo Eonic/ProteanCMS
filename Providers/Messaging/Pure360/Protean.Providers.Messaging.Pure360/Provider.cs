@@ -10,12 +10,16 @@ using System.Net;
 using System.Threading;
 using static Protean.Cms;
 using Microsoft.VisualBasic;
+using Protean.Providers.Messaging.Pure360Library.paint;
+
+
 
 
 namespace Protean.Providers.Messaging
 {
     public class Pure360
     {
+        PaintMethods p = new PaintMethods();
 
         public void Initiate(ref object _AdminXforms, ref object _AdminProcess, ref object _Activities, Protean.Providers.Messaging.BaseProvider MemProvider, ref Protean.Cms myWeb)
         {
@@ -267,40 +271,40 @@ namespace Protean.Providers.Messaging
                             object oListSegments = null;
                             try
                             {
-                               // campaignId = createsend_dotnet.Campaign.Create(cmAuth, moMailConfig["ClientID"], CampaignSubject, CampaignName, FromName, FromEmail, ReplyEmail, htmlUrl, textUrl, ListIds, SegmentIds);
-                              //  createsend_dotnet.Campaign thisCampaign = new createsend_dotnet.Campaign(cmAuth, campaignId.ToString());
+                                // campaignId = createsend_dotnet.Campaign.Create(cmAuth, moMailConfig["ClientID"], CampaignSubject, CampaignName, FromName, FromEmail, ReplyEmail, htmlUrl, textUrl, ListIds, SegmentIds);
+                                //  createsend_dotnet.Campaign thisCampaign = new createsend_dotnet.Campaign(cmAuth, campaignId.ToString());
 
-                          //      if (campaignId is CampaignMonitorAPIWrapper.CampaignMonitorAPI.Result)
-                           //     {
-                                    //ss 
-                                    //base.addNote(oFrmElmt, xForm.noteTypes.Alert, campaignId.Message, true);
-                            //        base.valid = false;
-                            //    }
-                            //    else
-                            //    {
-                                    // add the campaign Id to the instance.
-                           //         XmlElement oElmt4 = moPageXML.CreateElement("CampaignId");
-                           //         oElmt4.InnerText = campaignId.ToString();
-                            //        base.Instance.AppendChild(oElmt4);
-                            //        DateTime sendDateTime = DateTime.Now;
-                            //        sendDateTime = sendDateTime.AddHours(SendHours);
-                            //        sendDateTime = sendDateTime.AddMinutes(SendMins);
-
-                                    // Send the Email
-                              //      try
-                              //      {
-                                //        thisCampaign.Send(FromEmail, sendDateTime);
-                               //         moDbHelper.logActivity(dbHelper.ActivityType.Email, myWeb.mnUserId, nPageId, 0, base.Instance.OuterXml);
-                               //         moDbHelper.CommitLogToDB(dbHelper.ActivityType.NewsLetterSent, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, myWeb.mnPageId, 0, "", true);
-                                        // base.addNote(oFrmElmt.ToString(), xForm.noteTypes.Alert, "Message Sent", true);
-                              //      }
-                            //        catch (Exception ex)
-                             //       {//ss
-                                        //base.addNote(oFrmElmt.ToString(), xForm.noteTypes.Alert, ex.Message, true);
+                                //      if (campaignId is CampaignMonitorAPIWrapper.CampaignMonitorAPI.Result)
+                                //     {
+                                //ss 
+                                //base.addNote(oFrmElmt, xForm.noteTypes.Alert, campaignId.Message, true);
                                 //        base.valid = false;
-                               //     }
-                              //  }
-                           }
+                                //    }
+                                //    else
+                                //    {
+                                // add the campaign Id to the instance.
+                                //         XmlElement oElmt4 = moPageXML.CreateElement("CampaignId");
+                                //         oElmt4.InnerText = campaignId.ToString();
+                                //        base.Instance.AppendChild(oElmt4);
+                                //        DateTime sendDateTime = DateTime.Now;
+                                //        sendDateTime = sendDateTime.AddHours(SendHours);
+                                //        sendDateTime = sendDateTime.AddMinutes(SendMins);
+
+                                // Send the Email
+                                //      try
+                                //      {
+                                //        thisCampaign.Send(FromEmail, sendDateTime);
+                                //         moDbHelper.logActivity(dbHelper.ActivityType.Email, myWeb.mnUserId, nPageId, 0, base.Instance.OuterXml);
+                                //         moDbHelper.CommitLogToDB(dbHelper.ActivityType.NewsLetterSent, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, myWeb.mnPageId, 0, "", true);
+                                // base.addNote(oFrmElmt.ToString(), xForm.noteTypes.Alert, "Message Sent", true);
+                                //      }
+                                //        catch (Exception ex)
+                                //       {//ss
+                                //base.addNote(oFrmElmt.ToString(), xForm.noteTypes.Alert, ex.Message, true);
+                                //        base.valid = false;
+                                //     }
+                                //  }
+                            }
                             catch (Exception ex)
                             {//ss
                                 //base.addNote(oFrmElmt.ToString(), xForm.noteTypes.Alert, ex.Message, true);
@@ -323,35 +327,21 @@ namespace Protean.Providers.Messaging
             {
                 try
                 {
-                    // Dim _api As CampaignMonitorAPIWrapper.CampaignMonitorAPI.api = New CampaignMonitorAPI.api()
-                    object Lists;
-                    object Segments;
-                    createsend_dotnet.BasicList List;
-                    createsend_dotnet.BasicSegment Segment;
+                    PaintMethods p = new PaintMethods();
+                    p.login(moMailConfig["P360Username"].ToString(), moMailConfig["P360Password"].ToString());
 
-                    //createsend_dotnet.ApiKeyAuthenticationDetails cmAuth = new createsend_dotnet.ApiKeyAuthenticationDetails(moMailConfig["ApiKey"]);
-                    //createsend_dotnet.Client CMclient = new createsend_dotnet.Client(cmAuth, moMailConfig["ClientID"]);
+                    Hashtable searchInput = new Hashtable();
+                    Hashtable resultOutput = null;
+                    string listName = "";
+                    searchInput.Add("listName", listName);
+                    resultOutput = p.search("bus_facade_campaign_list", searchInput);
+                    Hashtable Lists = null;
+                    Lists = p.GetListName("bus_facade_campaign_list", resultOutput);
 
-
-
-
-                    // gets the lists for the client
-                    Hashtable hLists = new Hashtable();
-                    //Lists = CMclient.Lists();
-                    //Segments = CMclient.Segments();
-                    //ss
-                    //for (int i = 0; i <=Microsoft.VisualBasic.Information.UBound(Lists as object[]); i++)
-                    //{
-
-                    //List =Lists[i];
-                    //base.addOption(ref oSelElmt, List.Name, List.ListID);
-                    //for (var j = 0; j <= Information.UBound(Segments as object[]); j++)
-                    //{
-                    //    Segment = Segments[j];
-                    //    if (Segment.ListID == List.ListID)
-                    //        base.addOption(ref oSelElmt, "--- " + Segment.Title, "SEGMENT" + Segment.SegmentID);
-                    //}
-                    //}
+                    foreach (var key in Lists.Keys)
+                    {
+                        base.addOption(ref oSelElmt, Lists[key].ToString(), key.ToString());
+                    }
 
                     return oSelElmt;
                 }
@@ -1597,61 +1587,69 @@ namespace Protean.Providers.Messaging
 
                     // do nothing this is a placeholder
                     // We have an Xform within this content we need to process.
-                    string apiKey = moMailConfig["ApiKey"];
-                    createsend_dotnet.ApiKeyAuthenticationDetails cmAuth = new createsend_dotnet.ApiKeyAuthenticationDetails(moMailConfig["ApiKey"]);
-                    createsend_dotnet.Subscriber subscriber = new createsend_dotnet.Subscriber(cmAuth, ListId);
-                    List<createsend_dotnet.SubscriberCustomField> customFields = new List<createsend_dotnet.SubscriberCustomField>();
+                    // string apiKey = moMailConfig["ApiKey"];
 
-                    createsend_dotnet.List list = new createsend_dotnet.List(cmAuth, ListId);
+                    DataTable applicants = new DataTable();
 
-                    foreach (var oElmt in values)
-                    {
-                        if (!(oElmt.Key == "Name" | oElmt.Key == "Email"))
-                        {
-                            // scan the custom feilds to check exists
-                            if (customCount > 0)
-                            {
-                                bool cfExists = false;
-                                foreach (var cf in list.CustomFields())
-                                {
-                                    if (cf.FieldName == oElmt.Key)
-                                        cfExists = true;
-                                }
-                                // if not exists create it
-                                if (!cfExists)
-                                {
-                                    System.Collections.Generic.List<string> opts = new System.Collections.Generic.List<string>();
-                                    createsend_dotnet.CustomFieldDataType dt = createsend_dotnet.CustomFieldDataType.Text;
-                                    if ((oElmt.Key).ToLower().Contains("date"))
-                                        dt = createsend_dotnet.CustomFieldDataType.Date;
-                                    try
-                                    {
-                                        list.CreateCustomField(oElmt.Key, dt, opts, true);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                    }
-                                }
+                    applicants.Columns.Add("Email");
+                    applicants.Columns.Add("Registration_Datetime", typeof(DateTime));
+                    applicants.Columns.Add("Mobile");
+                    applicants.Columns.Add("ID");
+                    applicants.Columns.Add("First_Name");
+                    applicants.Columns.Add("Last_Name");
+                    applicants.Columns.Add("Salary");
+                    applicants.Columns.Add("Sector");
+                    applicants.Columns.Add("Partner");
+                    applicants.Columns.Add("PartnerID");
+                    applicants.Columns.Add("Last_Registration_Datetime", typeof(DateTime));
+                    applicants.Columns.Add("Registration_Count");
+                    applicants.Columns.Add("Country");
+                    applicants.Columns.Add("Postcode");
+                    applicants.Columns.Add("Job_Title");
+                    applicants.Columns.Add("Step");
+                    applicants.Columns.Add("Step_Change_Date", typeof(DateTime));
+                    applicants.Columns.Add("Email_Review_Purchased");
+                    applicants.Columns.Add("Training_Advice_Requested");
+                    applicants.Columns.Add("Interview_Coaching_Requested");
+                    applicants.Columns.Add("LinkedIn_Requested");
+                    applicants.Columns.Add("Pro_CV");
+                    applicants.Columns.Add("Job_Hunting");
+                    applicants.Columns.Add("Tags");
+                    applicants.Columns.Add("Purchased_Product_Ids");
 
-                                createsend_dotnet.SubscriberCustomField customField = new createsend_dotnet.SubscriberCustomField();
-                                customField.Key = oElmt.Key;
-                                customField.Value = oElmt.Value;
-                                customFields.Add(customField);
-                            }
-                            customCount = customCount - 1;
-                        }
-                    }
 
-                    try
-                    {
-                        subscriber.Add(email, name, customFields, true, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.Contains("205"))
-                            subscriber.Update(email, email, name, customFields, true, true);
-                        cProcessInfo = ex.Message;
-                    }
+
+                    DataRow MyRow = applicants.NewRow();
+                    MyRow["ID"] = "1001";
+                    MyRow["First_Name"] = "Santosh";
+                    MyRow["Last_Name"] = "Chandratre";
+                    MyRow["Email"] = "Santosh@gmail.com";
+                    MyRow["Mobile"] = "12345678911";
+                    MyRow["Salary"] = "10001";
+                    MyRow["Sector"] = "Infysion";
+                    MyRow["Partner"] = "test";
+                    MyRow["PartnerID"] = "9870";
+                    MyRow["Registration_Datetime"] = "11/23/2019";
+                    MyRow["Last_Registration_Datetime"] = "11/23/2019";
+                    //  MyRow["Registration_Count"] = applicant.id; Count for Notes containing "Client Updated Details by %"
+                    MyRow["Country"] = "India";
+                    // Add Post county
+                    MyRow["Postcode"] = "TN163BN";
+                    MyRow["Job_Title"] = "Developer";
+                    MyRow["Step"] = "Test";
+                    MyRow["Step_Change_Date"] = "11/23/2019";
+                    MyRow["Tags"] = "test";
+                    MyRow["Purchased_Product_Ids"] = "1470";
+
+
+                    applicants.Rows.Add(MyRow);
+                    PaintMethods p = new PaintMethods();
+                    string listName = "Pure360ListTest";
+                    Hashtable resultOutput = null;
+                    p.login(moMailConfig["P360Username"].ToString(), moMailConfig["P360Password"].ToString());
+
+                    resultOutput = p.addList(listName, applicants, null, "store");
+                   // SaveToFile(resultOutput, goServer.MapPath("/logs/p360LastSync.xml"));
 
 
                     return true;
@@ -1859,7 +1857,7 @@ namespace Protean.Providers.Messaging
                 public XmlElement oMasterList;
                 public string CmListID;
                 // Public finished As CountdownEvent
-              // public CampaignMonitorAPIWrapper.CampaignMonitorAPI.api API;
+                // public CampaignMonitorAPIWrapper.CampaignMonitorAPI.api API;
             }
 
             public void UpdateListStats(ListObj MyList)
@@ -1867,12 +1865,12 @@ namespace Protean.Providers.Messaging
                 string cProcessInfo = "Updating stats for ListID: " + MyList.CmListID;
                 try
                 {
-                  //  CampaignMonitorAPIWrapper.CampaignMonitorAPI.ListStatistics ls = (CampaignMonitorAPIWrapper.CampaignMonitorAPI.ListStatistics)MyList.API.GetListStats(moMailConfig["ApiKey"], MyList.CmListID);
-                 //   XmlElement listElmt = (XmlElement)MyList.oMasterList.SelectSingleNode(("List[@id='" + MyList.CmListID + "']"));
-                  //  listElmt.SetAttribute("subscribers", (ls.TotalActiveSubscribers).ToString());
-                  //  listElmt.SetAttribute("unsubscribes", (ls.TotalUnsubscribes).ToString());
-                  //  listElmt.SetAttribute("deleted", (ls.TotalDeleted).ToString());
-                 //   listElmt.SetAttribute("bounces", (ls.TotalBounces).ToString());
+                    //  CampaignMonitorAPIWrapper.CampaignMonitorAPI.ListStatistics ls = (CampaignMonitorAPIWrapper.CampaignMonitorAPI.ListStatistics)MyList.API.GetListStats(moMailConfig["ApiKey"], MyList.CmListID);
+                    //   XmlElement listElmt = (XmlElement)MyList.oMasterList.SelectSingleNode(("List[@id='" + MyList.CmListID + "']"));
+                    //  listElmt.SetAttribute("subscribers", (ls.TotalActiveSubscribers).ToString());
+                    //  listElmt.SetAttribute("unsubscribes", (ls.TotalUnsubscribes).ToString());
+                    //  listElmt.SetAttribute("deleted", (ls.TotalDeleted).ToString());
+                    //   listElmt.SetAttribute("bounces", (ls.TotalBounces).ToString());
                 }
                 catch (Exception ex)
                 {
@@ -1882,7 +1880,85 @@ namespace Protean.Providers.Messaging
                 {
                 }
             }
+
+            //public string Pure360.AddListState.syncAllApplicants( String ListName, String addType = "store")
+            //{
+            //     PaintMethods paint = null;
+
+            //    try
+            //    {
+            //        DataTable applicants = new DataTable();
+
+            //        applicants.Columns.Add("Email");
+            //        applicants.Columns.Add("Registration_Datetime", typeof(DateTime));
+            //        applicants.Columns.Add("Mobile");
+            //        applicants.Columns.Add("ID");
+            //        applicants.Columns.Add("First_Name");
+            //        applicants.Columns.Add("Last_Name");
+            //        applicants.Columns.Add("Salary");
+            //        applicants.Columns.Add("Sector");
+            //        applicants.Columns.Add("Partner");
+            //        applicants.Columns.Add("PartnerID");
+            //        applicants.Columns.Add("Last_Registration_Datetime", typeof(DateTime));
+            //        applicants.Columns.Add("Registration_Count");
+            //        applicants.Columns.Add("Country");
+            //        applicants.Columns.Add("Postcode");
+            //        applicants.Columns.Add("Job_Title");
+            //        applicants.Columns.Add("Step");
+            //        applicants.Columns.Add("Step_Change_Date", typeof(DateTime));
+            //        applicants.Columns.Add("Email_Review_Purchased");
+            //        applicants.Columns.Add("Training_Advice_Requested");
+            //        applicants.Columns.Add("Interview_Coaching_Requested");
+            //        applicants.Columns.Add("LinkedIn_Requested");
+            //        applicants.Columns.Add("Pro_CV");
+            //        applicants.Columns.Add("Job_Hunting");
+            //        applicants.Columns.Add("Tags");
+            //        applicants.Columns.Add("Purchased_Product_Ids");
+
+                  
+
+            //        DataRow MyRow = applicants.NewRow();
+            //        MyRow["ID"] ="123";
+            //        MyRow["First_Name"] = "Sonali";
+            //        MyRow["Last_Name"] = "Sonwane";
+            //        MyRow["Email"] = "Sonali@gmail.com";
+            //        MyRow["Mobile"] = "123456789";
+            //        MyRow["Salary"] = "100";
+            //        MyRow["Sector"] = "Infysion";
+            //        MyRow["Partner"] = "test";
+            //        MyRow["PartnerID"] = "987";
+            //        MyRow["Registration_Datetime"] = "10/23/2019";
+            //        MyRow["Last_Registration_Datetime"] = "10/23/2019";
+            //        //  MyRow["Registration_Count"] = applicant.id; Count for Notes containing "Client Updated Details by %"
+            //        MyRow["Country"] = "India";
+            //        // Add Post county
+            //        MyRow["Postcode"] = "TN163BN";
+            //        MyRow["Job_Title"] = "Developer";
+            //        MyRow["Step"] = "Test";
+            //        MyRow["Step_Change_Date"] = "10/23/2019";
+            //        MyRow["Tags"] = "test";
+            //        MyRow["Purchased_Product_Ids"] = "147";
+
+                  
+            //        applicants.Rows.Add(MyRow);
+            //        paint = new PaintMethods();
+            //        paint.login(moMailConfig["P360Username"].ToString(), moMailConfig["P360Password"].ToString());
+            //        Hashtable resultOutput = null;
+                  
+            //        resultOutput = paint.addList("Pure360List", applicants, null, "store");
+            //        // SaveToFile(resultOutput, goServer.MapPath("/logs/p360LastSync.xml"));
+            //        string msg = "test";
+            //       return  msg;
+            //    }
+            //    catch(Exception ex)
+            //    {
+
+            //    }
+
+            //    }
+               
+            }
         }
     }
-}
+
 

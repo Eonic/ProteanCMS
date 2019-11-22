@@ -150,7 +150,7 @@
              <value>1</value>
           </item>
         </select>
-        <select bind="cFreeShippingMethods" appearance="minimal" class="required vshort ewQuery" query="ShippingMethods" rows="10">
+        <select bind="cFreeShippingMethods" appearance="minimal" class="ewQuery scroll_10" query="ShippingMethods">
           <label>Free Shipping for These Methods</label>
         </select>
       </group>
