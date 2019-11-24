@@ -302,11 +302,26 @@ where cl.nStructId = " & myWeb.mnPageId)
                 End Try
             End Sub
 
+
+            Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+                Try
+                    If Not myWeb.mbAdminMode Then
+                        If myWeb.moRequest.QueryString.ToString().Contains(oContentNode.GetAttribute("querystringcontains")) Then
+                            oContentNode.ParentNode.RemoveChild(oContentNode)
+                        End If
+                    End If
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                End Try
+            End Sub
+
         End Class
 
 #End Region
 
-        Protected Overrides Sub Finalize()
+    Protected Overrides Sub Finalize()
             MyBase.Finalize()
         End Sub
     End Class
