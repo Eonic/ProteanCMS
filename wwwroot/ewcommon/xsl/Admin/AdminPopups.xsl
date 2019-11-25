@@ -242,7 +242,7 @@
           <xsl:variable name="fileCount" select="count(file)"/>
           <xsl:variable name="itemCount" select="'24'"/>
           <xsl:choose>
-            <xsl:when test="$fld='' and $fileCount &gt; $itemCount">
+            <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
               <xsl:variable name="startPos">
                 <xsl:choose>
                   <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
@@ -253,7 +253,17 @@
               </xsl:variable>
               <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
               <div class="alert alert-info">
-              <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">Next <xsl:value-of select="$itemCount"/></a>
+                <xsl:if test="$startPos&gt;=$itemCount">
+                  <a class="btn btn-primary btn-sm" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;startPos={($startPos - $itemCount)}">
+                    Previous <xsl:value-of select="$itemCount"/>
+                  </a>
+                </xsl:if>
+
+                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;showall=all">
+                  Show All
+                </a>
+
+                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">Next <xsl:value-of select="$itemCount"/></a>
               <span class="small">Showing <xsl:value-of select="($startPos + 1)"/> to <xsl:value-of select="$endPos"/> of <xsl:value-of select="$fileCount"/> files</span>
               </div>
             <xsl:apply-templates select="file[position() &gt;= $startPos and position() &lt;= $endPos]" mode="ImageFile">
