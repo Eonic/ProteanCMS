@@ -306,7 +306,7 @@ where cl.nStructId = " & myWeb.mnPageId)
             Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
                     If Not myWeb.mbAdminMode Then
-                        If myWeb.moRequest.QueryString.ToString().Contains(oContentNode.GetAttribute("querystringcontains")) Then
+                        If Not myWeb.moRequest.QueryString.ToString().Contains(oContentNode.GetAttribute("querystringcontains")) Then
                             oContentNode.ParentNode.RemoveChild(oContentNode)
                         End If
                     End If
