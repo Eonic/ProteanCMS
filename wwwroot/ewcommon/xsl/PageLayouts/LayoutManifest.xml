@@ -155,6 +155,7 @@
       <Module type="iFrame" name="iFrame">iFrame</Module>
       <Module type="EmbeddedHTML" name="Embedded HTML">Embed HTML into the page.</Module>
       <Module type="FlashMovie" name="Flash Movie">Flash Movie (SWF or FLV file)</Module>
+      <Module type="Conditional1Column" name="Conditional 1 Column">Conditional 1 Column</Module>
       <!--<Module type="GoogleAd" name="Google Ad">Google Ad placement</Module>-->
     </ModuleGroup>
   </ModuleTypes>

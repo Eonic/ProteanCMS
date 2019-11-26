@@ -168,13 +168,14 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-
-    var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&amp;0x3|0x8;return v.toString(16);});
+    <xsl:text>var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r</xsl:text>
+    <xsl:text disable-output-escaping="yes"><![CDATA[&]]></xsl:text>
+    <xsl:text>0x3|0x8;return v.toString(16);});</xsl:text>
 
     var newItem = '<div class="image-thumbnail"><div class="popoverContent" id="imgpopover' + guid + '" role="tooltip">' + file.name.replace(/\ /g,'-') + '<br /></div>';
     newItem = newItem + '<a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover' + guid + '" data-placement="top"><img src="' + targetPath + '/' + file.name.replace(/\ /g,'-') + '" class="img-responsive" /></a></div>';
     newItem = newItem + '<div class="description"></div>';
-    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text> </i> Pick Image </a>';
+    newItem = newItem + '<a onclick="passImgFileToForm(\'EditContent\',\'{$targetFeild}\',\'' + targetPath + '/' + file.name.replace(/\ /g,'-') + '\');" class="btn btn-xs btn-info"><i class="fa fa-picture-o fa-white"><xsl:text> </xsl:text></i> Pick Image</a>';
     newItem = '<div class="item item-image col-md-2 col-sm-4"><div class="panel">' + newItem + '</div></div>';
   </xsl:template>
 
@@ -194,6 +195,14 @@
         </xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="pathonly">
+      <xsl:if test="$page/Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly']">
+        <xsl:text>&amp;ewCmd2=PathOnly</xsl:text>
+      </xsl:if>
+      <xsl:if test="$page/Request/QueryString/Item[@name='pathonly' and node()='true']">
+        <xsl:text>&amp;pathonly=true</xsl:text>
+      </xsl:if>
+    </xsl:variable>
     <li id="node{translate(@path,'\','-')}" data-tree-level="{$level}" data-tree-parent="{translate(parent::folder/@path,'\','-')}">
         <xsl:attribute name="class">
             <xsl:text>list-group-item level-</xsl:text>
@@ -202,7 +211,7 @@
               <xsl:text> active </xsl:text>
             </xsl:if>
          </xsl:attribute>
-        <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
+        <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}">
            <i>
             <xsl:attribute name="class">
               <xsl:text>fa fa-lg</xsl:text>
@@ -238,11 +247,19 @@
           </xsl:with-param>
         </xsl:call-template>
       </xsl:variable>
-        <div class="row" id="files">
+      <xsl:variable name="pathonly">
+        <xsl:if test="$page/Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly']">
+          <xsl:text>&amp;ewCmd2=PathOnly</xsl:text>
+        </xsl:if>
+        <xsl:if test="$page/Request/QueryString/Item[@name='pathonly' and node()='true']">
+          <xsl:text>&amp;pathonly=true</xsl:text>
+        </xsl:if>
+      </xsl:variable>
+      <div class="row" id="files">
           <xsl:variable name="fileCount" select="count(file)"/>
           <xsl:variable name="itemCount" select="'24'"/>
           <xsl:choose>
-            <xsl:when test="$fld='' and $fileCount &gt; $itemCount">
+            <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
               <xsl:variable name="startPos">
                 <xsl:choose>
                   <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
@@ -253,7 +270,17 @@
               </xsl:variable>
               <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
               <div class="alert alert-info">
-              <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">Next <xsl:value-of select="$itemCount"/></a>
+                <xsl:if test="$startPos&gt;=$itemCount">
+                  <a class="btn btn-primary btn-sm" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos - $itemCount)}">
+                    Previous <xsl:value-of select="$itemCount"/>
+                  </a>
+                </xsl:if>
+
+                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;showall=all">
+                  Show All
+                </a>
+
+                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">Next <xsl:value-of select="$itemCount"/></a>
               <span class="small">Showing <xsl:value-of select="($startPos + 1)"/> to <xsl:value-of select="$endPos"/> of <xsl:value-of select="$fileCount"/> files</span>
               </div>
             <xsl:apply-templates select="file[position() &gt;= $startPos and position() &lt;= $endPos]" mode="ImageFile">
@@ -454,7 +481,7 @@
                                     <xsl:text> </xsl:text>Pick Media
                                   </a>
                                 </xsl:when>
-                                <xsl:when test="/Page[@ewCmd='ImageLib' and Request/QueryString/Item[@name='ewCmd2']/node()='PathOnly']">
+                                <xsl:when test="/Page[@ewCmd='ImageLib' and Request/QueryString/Item[@name='ewCmd2']/node()='PathOnly'] or $page/Request/QueryString/Item[@name='pathonly' and node()='true']">
                                   <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
                                     <a onclick="passImgFileToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate($fld,'\','/')}/{$filename}');" class="btn btn-xs btn-default" href="#">
                                       <i class="fa fa-picture-o fa-white">

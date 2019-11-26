@@ -200,7 +200,7 @@
                 </Component>
                 
                 <Component Id='com_MagickNETQ8AnyCPU' Guid='64c1d4d3-1fda-4e48-a2cd-ced361f8e8d9' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8AnyCPU' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-AnyCPU.dll' Source='..\packages\Magick.NET-Q8-AnyCPU.7.13.1\lib\net40\Magick.NET-Q8-AnyCPU.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETQ8AnyCPU' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-AnyCPU.dll' Source='..\packages\Magick.NET-Q8-AnyCPU.7.14.15\lib\net40\Magick.NET-Q8-AnyCPU.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 
                 <Component Id='com_Facebook' Guid='05e7d0c7-5f82-4eab-a281-1b768643c2cf' Permanent='no' SharedDllRefCount='no' Transitive='no'>

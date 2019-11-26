@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content action="Protean.Cms+Content+Modules.Conditional" position="" contentType="Module" moduleType="Conditional1Column" background="" title="" link="" linkType="internal" linkText="Read more" data-stellar-background-ratio="10" querystringcontains=""/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="cQueryStringContains" nodeset="@querystringcontains" required="false()" type="string"/>
+      
+    </bind>
+    <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnPresentationBinds">
+      <bind id="cModuleBox" nodeset="@background" required="false()" type="string"/>
+      <bind id="backgroundImage" nodeset="@backgroundImage" required="false()" type="string"/>
+      <bind id="data-stellar-background-ratio" nodeset="@data-stellar-background-ratio" required="false()" type="string"/>
+      <bind id="fullWidth" nodeset="@fullWidth" required="false()" type="string"/>
+      <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent" class="2col">
+    <label>Edit 1 Column Module</label>
+    <group>
+      <group>
+        <!-- These hidden fields and bindings are required for the component-->
+        <input bind="nContentKey" class="hidden">
+          <label>ContentId</label>
+        </input>
+        <input bind="cModuleType" class="hidden">
+          <label>ModuleType</label>
+        </input>
+
+        <!-- end of hidden fields -->
+        <group id="columnPresentation">
+          <label>Presentation</label>
+          <select1 bind="cModuleBox" class="bgStyle" appearance="minimal">
+            <label>Background Style</label>
+            <item>
+              <label>None</label>
+              <value>false</value>
+            </item>
+            <item>
+              <label>Alternative</label>
+              <value>bg-alt</value>
+            </item>
+          </select1>
+          <input bind="backgroundImage" class="pickImageFile bs-only">
+            <label>Background Image</label>
+            <value></value>
+          </input>
+          <range bind="data-stellar-background-ratio" start="0" end="30" step="1">
+            <label>Background Scroll Rate</label>
+          </range>
+          <select1 bind="fullWidth"  appearance="full">
+            <label>Full Width Content</label>
+            <item>
+              <label>No</label>
+              <value></value>
+            </item>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+          </select1>
+          <select1 bind="marginBelow" appearance="full">
+            <label class="bold-label">Margin Below Section</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+            <help class="inline">
+              <p>By default column modules have a margin below them. If you would like to remove this for this module, please select "no"</p>
+            </help>
+          </select1>
+        </group>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+        <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
+    </group>
+    <group>
+      <group>
+        <label>Content</label>
+        <input bind="cModuleTitle" class="long">
+          <label>Title or Name</label>
+        </input>
+      </group>
+      <group>
+          <label>Conditional Rules</label>
+          <div>Module will show when the following conditions are met.</div>
+          <input bind="cQueryStringContains" class="long">
+            <label>QueryString Contains</label>
+          </input>
+      </group>
+      <group>
+        <label>Module Links</label>
+        <select1 bind="cLinkType" appearance="full" class="required">
+          <label>Type of link</label>
+          <item>
+            <label>Internal (Going to a page on this site)</label>
+            <value>internal</value>
+            <toggle case="cLinkType_1" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>External (Going to another site)</label>
+            <value>external</value>
+            <toggle case="cLinkType_2" event="DOMActivate"/>
+          </item>
+        </select1>
+        <switch class="disable">
+          <case id="cLinkType_1">
+            <select1 bind="cModuleLink" class="siteTree">
+              <label>Link to page</label>
+            </select1>
+          </case>
+          <case id="cLinkType_2">
+            <input bind="cModuleLink" class="short">
+              <label>Link to URL</label>
+            </input>
+          </case>
+        </switch>
+        <input bind="cModuleLinkText" class="long">
+          <label>Module footer link text</label>
+        </input>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save 1 Column Module</label>
+    </submit>
+  </group>
+</Content>

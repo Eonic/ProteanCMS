@@ -1962,6 +1962,11 @@ Partial Public Module xmlTools
                 Else
                     If Not myWeb.moCtx.Application.Get(TargetFile) Is Nothing And bReset = False Then
                         sReturnString = myWeb.moCtx.Application.Get(TargetFile)
+
+                        If Not sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
+                            myWeb.bPageCache = False
+                        End If
+
                     Else
 
                         Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
@@ -1991,6 +1996,8 @@ Partial Public Module xmlTools
                             If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                 sReturnString += scriptFile
                             Else
+
+                                myWeb.bPageCache = False
                                 sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             End If
 
