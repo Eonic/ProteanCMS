@@ -4039,6 +4039,15 @@
     <xsl:variable name="submitPath">
       <xsl:apply-templates select="." mode="SubmitPath"/>
     </xsl:variable>
+
+    <xsl:variable name="pathonly">
+      <xsl:if test="$page/Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly']">
+        <xsl:text>&amp;pathonly=true</xsl:text>
+      </xsl:if>
+      <xsl:if test="$page/Request/QueryString/Item[@name='pathonly' and node()='true']">
+        <xsl:text>&amp;pathonly=true</xsl:text>
+      </xsl:if>
+    </xsl:variable>
     
     <div id="template_FileSystem" class="panel panel-default">
       <div class="panel-heading">
@@ -4048,7 +4057,7 @@
          <ul class="pageControlButtons">
             <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
             <li>
-              <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;fld={parent::folder/@path}" class="btn btn-primary">
+              <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
                 <xsl:if test="$submitPath!='/?'">
                   <xsl:attribute name="data-toggle">modal</xsl:attribute>
                   <xsl:attribute name="data-target">
@@ -4064,7 +4073,7 @@
             </xsl:if>
             <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
               <li>
-                <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=addFolder&amp;fld={@path}" class="btn btn-success">
+                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-toggle">modal</xsl:attribute>
                     <xsl:attribute name="data-target">

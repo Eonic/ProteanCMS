@@ -33,6 +33,7 @@ Public Class CustomActions
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "7.14.5.0"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -654,6 +655,18 @@ Public Class CustomActions
                 oElmt.SetAttribute("oldVersion", "0.0.0.0-" & AlphaFSAssemblyVersion)
                 oElmt.SetAttribute("newVersion", AlphaFSAssemblyVersion)
             Next
+
+
+            If oSectXml.SelectSingleNode("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET-Q8-AnyCPU']") Is Nothing Then
+                Dim newElmt As XmlElement = oSectXml.CreateElement("dependentAssembly")
+                newElmt.InnerXml = "<assemblyIdentity name=""Magick.NET-Q8-AnyCPU"" publicKeyToken=""2004825badfa91ec""/><bindingRedirect/>"
+                BindingElmt.AppendChild(newElmt)
+            End If
+            For Each oElmt In oSectXml.SelectNodes("/runtime/assemblyBinding/dependentAssembly[assemblyIdentity/@name='Magick.NET-Q8-AnyCPU']/bindingRedirect")
+                oElmt.SetAttribute("oldVersion", "0.0.0.0-7.0.0.0")
+                oElmt.SetAttribute("newVersion", MagickNETAssemblyVersion)
+            Next
+
 
 
             BindingElmt.SetAttribute("xmlns", "urn:schemas-microsoft-com:asm.v1")
