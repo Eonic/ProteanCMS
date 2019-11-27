@@ -30,5 +30,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Too
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.xml
