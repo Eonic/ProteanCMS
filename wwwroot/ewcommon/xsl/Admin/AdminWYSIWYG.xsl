@@ -161,9 +161,6 @@
 
   <!-- -->
   <xsl:template match="Page" mode="siteAdminJs"></xsl:template>
-
-
-  
   
   <!--In admin WYSIWYG mode-->
   <xsl:template match="Page[@adminMode='false']" mode="bodyBuilder">

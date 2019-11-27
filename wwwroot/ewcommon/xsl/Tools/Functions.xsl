@@ -1041,6 +1041,27 @@
 
   <xsl:template match="Content" mode="JSONLD"></xsl:template>
 
+  <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
+                
+  <xsl:variable name="preloader-color" select="'#333333'"/>
+
+  <xsl:template match="Page" mode="preloader">
+    <style>
+      <xsl:text>.loader{position: fixed;left:0;top:0;width: 100%;height: 100%;z-index: 10000;background:</xsl:text>
+      <xsl:value-of select="$preloader-background"/>
+      <xsl:text>;}#loader-1:before, #loader-1:after{content: "";position: absolute;top: 45%;left: 45%;width: 100px;height: 100px;border-radius: 100%;border: 10px solid transparent;border-top-color:</xsl:text>
+      <xsl:value-of select="$preloader-color"/>
+      <xsl:text>;}#loader-1:before{z-index: 100;animation: spin 1s infinite;}#loader-1:after{border: 10px solid #ccc;}@keyframes spin{0%{-webkit-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}100%{-webkit-transform: rotate(360deg);-ms-transform: rotate(360deg);-o-transform: rotate(360deg);transform: rotate(360deg);}}</xsl:text>
+    </style>
+    <div class="loader">
+      <div class="loader-container">
+        <div id="loader-1" role="status">
+          <xsl:text> </xsl:text>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+
   <!-- -->
   <!--   ################################################   Meta Tags   ##############################################   -->
   <!-- -->
@@ -8719,7 +8740,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
                 <xsl:attribute name="style">
-                  background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                  background-image: url('<xsl:value-of select="@backgroundImage"/>') 50% 50% no-repeat;
                 </xsl:attribute>
             </xsl:if>
             <xsl:choose>

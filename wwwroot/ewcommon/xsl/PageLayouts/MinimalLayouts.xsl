@@ -562,14 +562,14 @@
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="style">
-                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>' 50% 50% no-repeat);
                       </xsl:attribute>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>' 50% 50% no-repeat);
                   </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>
@@ -1309,8 +1309,12 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='1Column']" mode="displayBrief">
+  <xsl:template match="Content[@moduleType='1Column' or @moduleType='Conditional1Column']" mode="displayBrief">
     <div class="row">
+      <xsl:if test="$adminMode and @moduleType='Conditional1Column'">
+        <xsl:attribute name="class">row conditional-block</xsl:attribute>
+        <div class="conditional-note">This block is conditional on the querystring containing '<xsl:value-of select="@querystringcontains"/>'</div>
+      </xsl:if>
       <div id="column1-{@id}" class="column1 col-md-12">
         <xsl:apply-templates select="/Page" mode="addModule">
           <xsl:with-param name="text">Add Module</xsl:with-param>

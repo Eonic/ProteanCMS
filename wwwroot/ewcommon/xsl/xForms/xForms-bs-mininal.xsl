@@ -19,6 +19,7 @@
     </xsl:if>
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
+  
   <!-- -->
   <xsl:template match="Content | div[@class='xform']" mode="xform">
     <form method="{model/submission/@method}" action="" data-fv-framework="bootstrap"
@@ -332,6 +333,16 @@
           </div>
         </xsl:for-each>
       </div>
+    </div>
+  </xsl:template>
+  
+  <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
+    <div class="input-group">
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
+      <span class="input-group-btn">
+           <xsl:apply-templates select="submit" mode="xform"/>
+      </span>
+      test
     </div>
   </xsl:template>
 

@@ -997,72 +997,83 @@ NEW BS ADMIN HEADER
 
 
 // - In site edit button styling
-.Site, .Email{
-	.addmodule{.clearfix();}
-	.ewAdmin.options.addmodule{
-		border-color: lighten(@admin-header-color-link, 10%)!important;
-	}
-	.ewAdmin {
-		.dropdown-menu a:hover
-		{
-			background: @admin-header-color-link;
-			color: @admin-header-color;
-		}
-		.addHere
-		{
-			color: lighten(@admin-header-color-link, 10%);
-		}
-	}
+.Site, .Email {
+    .addmodule {
+        .clearfix();
+    }
 
-	.dragging
-	{
-		padding: 3px;
-		margin-bottom:3px;
-		border: dashed 1px; 
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		border-color: lighten(@admin-header-color-link, 10%)!important;
-		z-index:10000;
-	}
+    .ewAdmin.options.addmodule {
+        border-color: lighten(@admin-header-color-link, 10%) !important;
+    }
 
-	.ewAdmin .dropdown-menu li.title 
-	{
-		margin: 3px 5px 2px 20px!important;
-    
-		color:rgba(0,0,0,0.4);
-		padding:0;
-	}
-	#mainTitle .ewAdmin .dropdown-menu{
-		li a,
-		li.title{
-			font-size:14px;
-		}
-	}
+    .conditional-block {
+        border-color: lighten(@admin-header-color-warning, 10%) !important;
+    }
 
-	.ewAdmin.options.addmodule
-	{
-		padding: 3px;
-		margin-bottom:3px;
-		border: dashed 1px; 
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-	}
-	.ewAdmin.options.addmodule a.btn
-	{
-		margin-right:0;
-		margin-left:4px;
-	 }
+    .conditional-note {
+        color: lighten(@admin-header-color-warning, 10%) !important;
+        font-size: 11px;
+        font-weight: 400;
+        padding: 3px;
+        letter-spacing: normal;
+    }
 
-	 .ewAdmin .dropdown
-	{
-		font-weight: normal;
-		font-size: 13px !important;
-		line-height: 20px !important;
-		text-decoration: none;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		height:auto !important;
-	}
+    .ewAdmin {
+        .dropdown-menu a:hover {
+            background: @admin-header-color-link;
+            color: @admin-header-color;
+        }
+
+        .addHere {
+            color: lighten(@admin-header-color-link, 10%);
+        }
+    }
+
+    .dragging {
+        padding: 3px;
+        margin-bottom: 3px;
+        border: dashed 1px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        border-color: lighten(@admin-header-color-link, 10%) !important;
+        z-index: 10000;
+    }
+
+    .ewAdmin .dropdown-menu li.title {
+        margin: 3px 5px 2px 20px !important;
+        color: rgba(0,0,0,0.4);
+        padding: 0;
+    }
+
+    #mainTitle .ewAdmin .dropdown-menu {
+        li a,
+        li.title {
+            font-size: 14px;
+        }
+    }
+
+    .ewAdmin.options.addmodule, .conditional-block {
+        padding: 3px;
+        margin-bottom: 3px;
+        border: dashed 1px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+    }
+
+    .ewAdmin.options.addmodule a.btn {
+        margin-right: 0;
+        margin-left: 4px;
+    }
+
+    .ewAdmin .dropdown {
+        font-weight: normal;
+        font-size: 13px !important;
+        line-height: 20px !important;
+        text-decoration: none;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        height: auto !important;
+    }
 }
 
 .ewAdmin .dropdown-menu li.updown 
