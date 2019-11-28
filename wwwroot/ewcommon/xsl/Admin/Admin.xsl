@@ -920,7 +920,7 @@
      <xsl:apply-templates select="AdminMenu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="adminLink"/>
   </xsl:template>
 
-  <xsl:template match="Page[@ewCmd='ByPage' or @ewCmd='Normal' or @ewCmd='Advanced' or @ewCmd='EditPage' or @ewCmd='EditPageLayout' or @ewCmd='EditPagePermissions' or @ewCmd='EditPageRights' or @ewCmd='LocateSearch']" mode="adminBreadcrumb">
+  <xsl:template match="Page[@ewCmd='ByPage' or @ewCmd='Normal' or @ewCmd='Advanced' or @ewCmd='EditPage' or @ewCmd='EditPageLayout' or @ewCmd='EditMailLayout'  or @ewCmd='EditPagePermissions' or @ewCmd='EditPageRights' or @ewCmd='LocateSearch']" mode="adminBreadcrumb">
     <xsl:if test="/Page/@id != ''">
       <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbSt"/>
     </xsl:if>
@@ -1751,7 +1751,7 @@
     </div>
   </xsl:template>
   <!-- -->
-  <xsl:template match="Page[@layout='Advanced']" mode="Admin">
+  <xsl:template match="Page[@layout='Advanced' or @layout='AdvancedMail']" mode="Admin">
     <div class="row" id="tpltAdvancedMode">
       <div class="col-md-3">
         <div class="panel panel-default">
