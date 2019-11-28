@@ -29,6 +29,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.Native-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.NET-Q8-x64.xml

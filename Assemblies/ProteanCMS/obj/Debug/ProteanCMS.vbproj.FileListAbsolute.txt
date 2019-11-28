@@ -382,3 +382,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
