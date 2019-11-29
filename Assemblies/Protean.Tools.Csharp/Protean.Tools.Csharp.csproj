@@ -68,21 +68,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
-      <HintPath>..\..\..\EonicClients\storeandinsure_git\storeandinsure_git\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
+      <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="JsonWebTokens, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NonNuget\JsonWebTokens.dll</HintPath>
     </Reference>
     <Reference Include="Magick.NET-Q8-x64, Version=7.14.5.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
-      <HintPath>..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\lib\net40\Magick.NET-Q8-x64.dll</HintPath>
+      <HintPath>..\..\packages\Magick.NET-Q8-x64.7.14.5\lib\net40\Magick.NET-Q8-x64.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\EonicClients\IslandLeisureProductsGit\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -136,6 +139,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets'))" />
   </Target>
+  <Import Project="..\..\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" />
 </Project>
