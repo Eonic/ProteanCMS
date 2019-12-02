@@ -118,10 +118,10 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailer"
         Try
-
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
-
-            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+            If CheckUserIP() Then
+                Dim oMsg As Protean.Messaging = New Protean.Messaging
+                sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+            End If
 
             Return sMessage
 

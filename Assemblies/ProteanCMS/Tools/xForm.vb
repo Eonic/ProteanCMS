@@ -1721,7 +1721,9 @@ Public Class xForm
 
     End Sub
 
-    Function addGroup(ByRef oContextNode As XmlElement, ByVal sRef As String, Optional ByVal sClass As String = "", Optional ByVal sLabel As String = "", Optional ByRef oInsertBeforeNode As XmlElement = Nothing) As XmlElement
+
+
+    Function addGroup(ByRef oContextNode As XmlElement, ByVal sRef As String, Optional ByVal sClass As String = "", Optional ByVal sLabel As String = "", Optional ByVal oInsertBeforeNode As XmlElement = Nothing) As XmlElement
         Dim oGrpElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -1750,6 +1752,8 @@ Public Class xForm
             Return Nothing
         End Try
     End Function
+
+
 
     Function addSwitch(ByRef oContextNode As XmlElement, ByVal sRef As String, Optional ByVal sClass As String = "", Optional ByVal sLabel As String = "", Optional ByRef oInsertBeforeNode As XmlElement = Nothing) As XmlElement
         Dim oGrpElmt As XmlElement
@@ -1826,7 +1830,20 @@ Public Class xForm
         End Try
     End Function
 
-    Function addInput(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByRef sClass As String = "") As XmlElement
+    Function addInput(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String) As XmlElement
+
+        Dim cProcessInfo As String = ""
+        Try
+
+            Return addInput(oContextNode, sRef, bBound, sLabel, "")
+        Catch ex As Exception
+            returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+
+    Function addInput(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal sClass As String) As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -1853,7 +1870,6 @@ Public Class xForm
             Return Nothing
         End Try
     End Function
-
 
 
     Function addBind(ByVal sId As String, ByVal sXpath As String, Optional ByVal sRequired As String = "false()", Optional ByVal sType As String = "string", Optional ByRef oBindParent As XmlElement = Nothing, Optional ByVal sConstraint As String = "") As XmlElement
@@ -1951,7 +1967,9 @@ Public Class xForm
         End Try
     End Function
 
-    Function addRange(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal oStart As Object, ByVal oEnd As Object, Optional ByVal oStep As Object = "", Optional ByRef sClass As String = "") As XmlElement
+
+
+    Function addRange(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal oStart As Object, ByVal oEnd As Object, Optional ByVal oStep As Object = "", Optional ByVal sClass As String = "") As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -2031,7 +2049,7 @@ Public Class xForm
         End Try
     End Function
 
-    Function addSelect(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByRef sClass As String = "", Optional ByRef nAppearance As ApperanceTypes = ApperanceTypes.Minimal) As XmlElement
+    Function addSelect(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByVal sClass As String = "", Optional ByVal nAppearance As ApperanceTypes = ApperanceTypes.Minimal) As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -2071,7 +2089,7 @@ Public Class xForm
         End Try
     End Function
 
-    Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByRef sClass As String = "", Optional ByRef nAppearance As ApperanceTypes = ApperanceTypes.Minimal) As XmlElement
+    Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByVal sClass As String = "", Optional ByVal nAppearance As ApperanceTypes = ApperanceTypes.Minimal) As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
