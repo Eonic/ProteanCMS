@@ -8,7 +8,6 @@ Imports System.Web.Configuration
 Imports Microsoft.VisualBasic
 Imports System.Net
 Imports System.IO
-Imports Eonic.stdTools
 
 <WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")> _
 <WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _

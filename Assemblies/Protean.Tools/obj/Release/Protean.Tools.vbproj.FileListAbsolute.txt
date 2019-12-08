@@ -35,6 +35,7 @@ D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Microsoft.SqlServer.SqlTDi
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll.config
@@ -42,7 +43,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dl
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.ConnectionInfo.dll
@@ -68,7 +69,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Cs
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
