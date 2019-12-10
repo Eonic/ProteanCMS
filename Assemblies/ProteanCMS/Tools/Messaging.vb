@@ -1319,17 +1319,39 @@ Public Class Messaging
                 End If
                 oXml = Nothing
 
+                Dim oSmtpn As New SmtpClient
+
+                oSmtpn.Host = goConfig("MailServer")
+                If goConfig("MailServerPort") <> "" Then
+                    oSmtpn.Port = goConfig("MailServerPort")
+                End If
+
+                If goConfig("MailServerUsername") <> "" Then
+                    oSmtpn.UseDefaultCredentials = False
+                    oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword").Replace("&lt;", "<").Replace("&gt;", "<"), goConfig("MailServerUsernameDomain"))
+                End If
+                If LCase(goConfig("MailServerSSL")) = "on" Then
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+                    oSmtpn.EnableSsl = True
+                    oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network
+                End If
+
                 Dim oEmail As Net.Mail.MailMessage
 
                 oEmail = New Net.Mail.MailMessage
                 oEmail.IsBodyHtml = True
-                oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
+
+                If LCase(goConfig("overrideFromEmail")) = "on" Then
+                    oEmail.From = New Net.Mail.MailAddress(goConfig("ServerSenderEmail"), cFromName)
+                Else
+                    oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
+                End If
+
                 oEmail.Body = sEmailBody
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
                 oEmail.Subject = cSubject
 
-                Dim sender As New Net.Mail.SmtpClient(goConfig("MailServer"))
-                sender.Send(oEmail)
+                oSmtpn.Send(oEmail)
 
                 'otherwise we send it
                 'SendQueuedMail(oEmail, moMailConfig("PickupHost"), moMailConfig("PickupLocation"))

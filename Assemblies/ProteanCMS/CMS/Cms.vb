@@ -1261,12 +1261,14 @@ Public Class Cms
                                     oTransform.ProcessTimed(moPageXml, textWriter)
                                     'save the page
                                     If Not oTransform.bError Then
-                                        If bPageCache Then
-                                            SavePage(sCachePath, textWriter.ToString())
-                                            sServeFile = mcPageCacheFolder & sCachePath
-                                        Else
-                                            moResponse.Write(textWriter.ToString())
-                                        End If
+                                        '  If bPageCache Then
+
+                                        SavePage(sCachePath, textWriter.ToString())
+                                        sServeFile = mcPageCacheFolder & sCachePath
+
+                                        '  Else
+                                        '  moResponse.Write(textWriter.ToString())
+                                        'End If
                                     Else
                                         moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
                                         gnResponseCode = 500

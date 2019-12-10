@@ -220,7 +220,11 @@ Partial Public Class Cms
                     adminAccessRights()
 
                     If moPageXML.DocumentElement.SelectSingleNode("AdminMenu/MenuItem") Is Nothing Then
-                        mcEwCmd = "LogOff"
+
+                        If Not mcEwCmd = "PreviewOn" Then
+                            mcEwCmd = "LogOff"
+                        End If
+
                     End If
 
                     'If Not myWeb.moDbHelper.checkUserRole("Administrator") Then
@@ -479,7 +483,7 @@ ProcessFlow:
 
                     Case "InstallTheme"
 
-                        Dim SoapObj As New ProteanCMS.com.ewAdminProxySoapClient
+                        Dim SoapObj As New proteancms.com.ewAdminProxySoapClient
                         Dim themesPage As System.Xml.Linq.XElement = SoapObj.GetThemes(System.Environment.MachineName, myWeb.moRequest.ServerVariables("SERVER_NAME"))
                         Dim ContextThemesPage As XmlElement = moPageXML.CreateElement("Themes")
                         Dim xreader As XmlReader = themesPage.CreateReader()
@@ -2070,7 +2074,7 @@ ProcessFlow:
                         For Each oMenuElmt In myWeb.moPageXml.SelectNodes("/Page/AdminMenu/descendant-or-self::*")
 
                             Dim ewCmd As String = oMenuElmt.GetAttribute("cmd")
-                            If Not ewCmd = "" Then
+                            If Not (ewCmd = "" Or ewCmd = "PreviewOn") Then
                                 'do you have permissions on the current ewCmd ?
                                 If oUserXml.SelectSingleNode("descendant-or-self::MenuItem[@cmd='" & ewCmd & "' and @adminRight='true']") Is Nothing Then
 

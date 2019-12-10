@@ -342,7 +342,6 @@
       <span class="input-group-btn">
            <xsl:apply-templates select="submit" mode="xform"/>
       </span>
-      test
     </div>
   </xsl:template>
 
