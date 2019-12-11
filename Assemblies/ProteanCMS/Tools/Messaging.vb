@@ -228,6 +228,40 @@ Public Class Messaging
         End Try
     End Sub
 
+    Overridable Sub AddToLists(StepName As String, Optional Name As String = "", Optional Email As String = "", Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing)
+
+        Dim cProcessInfo As String = ""
+        Try
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+            If Not moMailConfig Is Nothing Then
+
+                Dim sMessagingProvider As String = ""
+
+                If Not moMailConfig Is Nothing Then
+                    sMessagingProvider = moMailConfig("MessagingProvider")
+                End If
+
+                If sMessagingProvider <> "" Then
+                    Dim myWeb As New Protean.Cms(moCtx)
+                    Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+
+                    If valDict Is Nothing Then valDict = New System.Collections.Generic.Dictionary(Of String, String)
+
+                    Dim ListId As String = ""
+                    ListId = StepName
+
+                    If ListId <> "" Then
+                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
+                    End If
+                End If
+            End If
+
+        Catch ex As Exception
+            returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
+        End Try
+
+    End Sub
+
     Public Function emailer(
                                 ByVal oBodyXML As XmlElement,
                                 ByVal xsltPath As String,

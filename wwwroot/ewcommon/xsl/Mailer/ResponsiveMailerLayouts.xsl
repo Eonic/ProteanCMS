@@ -427,6 +427,9 @@
           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
             <tr>
               <td width="100%" style="width:100%;" class="emailModulePadding">
+                <xsl:if test="@iconStyle='Centre'">
+                  <xsl:attribute name="class">emailModulePadding emailTextCentre</xsl:attribute>
+                </xsl:if>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
                   <xsl:if test="/Page/@adminMode">
                     <tr>
@@ -437,10 +440,17 @@
                       </td>
                     </tr>
                   </xsl:if>
+                  <xsl:if test="@uploadIcon!=''">
+                    <tr>
+                      <td class="emailUploadIcon">
+                        <img src="{@uploadIcon}" class="emailIcon" alt="icon"/>
+                      </td>
+                    </tr>
+                  </xsl:if>
                   <xsl:if test="(@rss and @rss!='false') or @title!=''">
                     <tr>
                       <xsl:if test="@title!=''">
-                        <td width="100%" style="width:100%;">
+                        <td width="100%" style="width:100%;" class="emailModuleHeading">
                           <h2 class="title">
                             <xsl:apply-templates select="." mode="moduleLink" />
                           </h2>
