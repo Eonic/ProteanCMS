@@ -1435,6 +1435,8 @@ Public Class Messaging
 
     End Function
 
+
+
     ''Public Sub courseReminder(ByRef oResultsXml As XmlElement, ByVal cUserName As String, ByVal cUserEmail As String, ByVal subject As String, ByVal sEmailTemplate As String, ByRef fForm As Collections.Specialized.NameValueCollection) 'As String
     ''    PerfMon.Log("Messaging", "courseReminder")
     ''    ' This takes the candidate course results Report xml and sends email to all the users highlighted in the form.
