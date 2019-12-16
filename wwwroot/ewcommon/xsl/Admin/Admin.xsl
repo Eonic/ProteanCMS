@@ -8102,7 +8102,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='NewMail']" mode="Admin">
+  <xsl:template match="Page[@layout='NewMail' or @layout='AddMailModule']" mode="Admin">
     <div class="adminTemplate" id="template_AdminXForm">
       <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
     </div>
