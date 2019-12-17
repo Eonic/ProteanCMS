@@ -56,6 +56,14 @@
     </body>
   </xsl:template>
 
+  <xsl:template match="Page[@ewCmd='MailPreviewOn']" mode="bodyBuilder">
+    <body style="margin:0;padding:0;" class="Site">
+      <xsl:apply-templates select="PreviewMenu"/>
+      <xsl:apply-templates select="." mode="emailBody"/>
+      <xsl:apply-templates select="." mode="emailStyle"/>
+    </body>
+  </xsl:template>
+
 
   <!--   ########################   Main Email Layout   ############################   -->
 
