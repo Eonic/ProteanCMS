@@ -852,7 +852,7 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'listItem vevent'"/>
+      <xsl:with-param name="class" select="'listItem vevent emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailEventList">
@@ -1053,7 +1053,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'list document'"/>
+      <xsl:with-param name="class" select="'list document emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <h3 class="title">
@@ -1147,7 +1147,9 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+    <xsl:apply-templates select="." mode="inlinePopupOptions">
+      <xsl:with-param name="class" select="emailModulePadding"/>
+    </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailJobList">
       <tr>
         <td>

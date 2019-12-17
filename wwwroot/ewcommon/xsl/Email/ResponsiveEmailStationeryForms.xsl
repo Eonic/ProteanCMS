@@ -112,15 +112,15 @@
     <xsl:apply-templates select="." mode="subject"/>
   </xsl:template>
   <!--STYLE VARIABLES-->
-  <xsl:variable name="hPadding">10</xsl:variable>
+  <!--<xsl:variable name="hPadding">10</xsl:variable>
   <xsl:variable name="boxMargin">25</xsl:variable>
   <xsl:variable name="emailWidth">620</xsl:variable>
   <xsl:variable name="mainColour">#1ba5d8</xsl:variable>
 
   <xsl:template match="Content" mode="getThWidth">300</xsl:template>
-  <xsl:template match="Content" mode="getThHeight">300</xsl:template>
+  <xsl:template match="Content" mode="getThHeight">300</xsl:template>-->
 
-  <xsl:template match="*" mode="emailStyle">
+  <!--<xsl:template match="*" mode="emailStyle">
     <style>
       /*html,
       body{
@@ -172,6 +172,7 @@
       border-bottom:1px solid #cccccc;
       padding:5px 0;
       }
+      .emailCartContent{border-top:1px solid #cccccc;}
       .emailQuantity,
       .emailProduct{
       vertical-align:top;}
@@ -323,7 +324,7 @@
       }
       }
     </style>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <xsl:template match="*" mode="emailBody">
