@@ -2,6 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:import href="../Tools/Functions.xsl"/>
+  <xsl:import href="ResponsiveEmailStyles.xsl"/>
 
   <xsl:variable name="siteURL">
 
