@@ -8102,7 +8102,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='NewMail' or @layout='AddMailModule']" mode="Admin">
+  <xsl:template match="Page[@layout='NewMail' or @layout='AddMailModule' or @layout='EditMailContent']" mode="Admin">
     <div class="adminTemplate" id="template_AdminXForm">
       <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
     </div>
@@ -8112,10 +8112,13 @@
     <div class="report" id="template_EditStructure">
       <div id="column2" class="reportSet">
         <xsl:for-each select="ContentDetail/Content[@type='Message']">
-          <div class="group">
-            <h3>Result</h3>
+       
+          <div class="alert alert-info">
+            <i class="fa fa-check fa-2x pull-left">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:value-of select="node()"/>
           </div>
-          <xsl:value-of select="node()"/>
         </xsl:for-each>
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
 
@@ -8145,7 +8148,12 @@
           <div class="group">
             <h3>Result</h3>
           </div>
-          <xsl:value-of select="node()"/>
+          <div class="alert alert-info">
+            <i class="fa fa-check fa-2x pull-left">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:value-of select="node()"/>
+          </div>
         </xsl:for-each>
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
         <xsl:apply-templates select="ContentDetail/Report" mode="CampaignReport"/>
@@ -8169,12 +8177,14 @@
       <div class="col-md-9">
         <xsl:choose>
           <xsl:when test="ContentDetail/Content[@type='Message']">
-            <div class="group">
-              <h3>Result</h3>
-            </div>
             <xsl:for-each select="ContentDetail/Content[@type='Message']">
-              <xsl:value-of select="node()"/>
-              <br/>
+              <div class="alert alert-info">
+                <i class="fa fa-check fa-2x pull-left">
+                  <xsl:text> </xsl:text>
+                </i>
+                &#160;
+                <xsl:value-of select="node()"/>
+              </div>
             </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
