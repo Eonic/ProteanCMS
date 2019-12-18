@@ -604,10 +604,13 @@
   <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
+  
   <xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
     <xsl:choose>
       <xsl:when test="@resize='true'">
-        <xsl:apply-templates select="." mode="resize-image"/>
+        <xsl:apply-templates select="." mode="resize-image">
+          <xsl:with-param name="rootpath" select="$siteURL"/>
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="node()" mode="cleanXhtml"/>
