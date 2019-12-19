@@ -1381,6 +1381,19 @@ Public Class Messaging
                     oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
                 End If
 
+                ' PREMailer Code
+                Dim hostUrl As String = goRequest.Url.Host
+                Dim urlScheme As String = "http://"
+                If goRequest.IsSecureConnection Then
+                    urlScheme = "https://"
+                End If
+                If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
+                    hostUrl = urlScheme + hostUrl
+                End If
+                Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), sEmailBody)
+                sEmailBody = preMailerResult.Html
+
+
                 oEmail.Body = sEmailBody
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
                 oEmail.Subject = cSubject
