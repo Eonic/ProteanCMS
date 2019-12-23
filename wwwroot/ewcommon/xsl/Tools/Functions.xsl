@@ -6954,6 +6954,7 @@
     <xsl:param name="maxHeight"/>
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
+    <xsl:param name="rootpath"/>
     <xsl:variable name="max-width">
       <xsl:choose>
         <xsl:when test="$maxWidth!=''">
@@ -6979,6 +6980,7 @@
       <xsl:with-param name="max-height" select="$max-height"/>
       <xsl:with-param name="crop" select="$crop"/>
       <xsl:with-param name="no-stretch" select="$no-stretch"/>
+      <xsl:with-param name="rootpath" select="$rootpath"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -6987,6 +6989,7 @@
     <xsl:param name="max-height" />
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
+    <xsl:param name="rootpath"/>
     <xsl:variable name="newSrc">
       <xsl:call-template name="resize-image">
         <xsl:with-param name="path" select="img/@src"/>
@@ -7019,7 +7022,7 @@
     <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-    <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+    <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
 
   </xsl:template>
 

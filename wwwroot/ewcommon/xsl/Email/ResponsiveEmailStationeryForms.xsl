@@ -2,6 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:import href="../Tools/Functions.xsl"/>
+  <xsl:import href="ResponsiveEmailStyles.xsl"/>
 
   <xsl:variable name="siteURL">
 
@@ -112,15 +113,15 @@
     <xsl:apply-templates select="." mode="subject"/>
   </xsl:template>
   <!--STYLE VARIABLES-->
-  <xsl:variable name="hPadding">10</xsl:variable>
+  <!--<xsl:variable name="hPadding">10</xsl:variable>
   <xsl:variable name="boxMargin">25</xsl:variable>
   <xsl:variable name="emailWidth">620</xsl:variable>
   <xsl:variable name="mainColour">#1ba5d8</xsl:variable>
 
   <xsl:template match="Content" mode="getThWidth">300</xsl:template>
-  <xsl:template match="Content" mode="getThHeight">300</xsl:template>
+  <xsl:template match="Content" mode="getThHeight">300</xsl:template>-->
 
-  <xsl:template match="*" mode="emailStyle">
+  <!--<xsl:template match="*" mode="emailStyle">
     <style>
       /*html,
       body{
@@ -138,6 +139,11 @@
       .Mail,
       #emailContent{background:#ECECEC}
       .Mail a{color:<xsl:value-of select="$mainColour"/>;text-decoration:none}
+      .cleanLink a,
+      a .cleanLink{
+      color:<xsl:value-of select="$mainColour"/>!important;
+      text-decoration:none!important;
+      }
       .Mail td,
       .Mail th{
       font-family:Arial, sans-serif;
@@ -161,8 +167,30 @@
       padding-bottom:10px;
       vertical-align: top;
       }
+      .emailQuantity,
+      .emailProduct,
+      .emailLineTotal{
+      border-bottom:1px solid #cccccc;
+      padding:5px 0;
+      }
+      .emailCartContent{border-top:1px solid #cccccc;}
+      .emailQuantity,
+      .emailProduct{
+      vertical-align:top;}
+      .emailQuantity{
+      width: 25px;
+      white-space:nowrap!important;
+      }
+      .emailRef,
+      .Mail .emailSmall{font-size:11px;}
+      .Mail .emailLineTotal{
+      color:<xsl:value-of select="$mainColour"/>;
+      font-weight:bold;
+      }
+      .emailCartTotals{padding-top:10px;}
 
       /*HEADINGS*/
+      .Mail h1, .Mail h2, .Mail h3, .Mail h4, .Mail h5, .Mail h6{margin:0;}
       .Mail h1{
       font-size: 26px;
       line-height: 27px;
@@ -231,11 +259,7 @@
       #emailHeader td{
       background:#ffffff;
       }
-      #siteLogo{
-      max-width:200px;
-      }
       #siteLogo img{
-      max-width:200px;
       display:block;
       }
 
@@ -301,7 +325,7 @@
       }
       }
     </style>
-  </xsl:template>
+  </xsl:template>-->
 
 
   <xsl:template match="*" mode="emailBody">
@@ -439,8 +463,6 @@
                           <strong>VAT Number: </strong>
                           <xsl:value-of select="$VATnumber"/>
                         </xsl:if>
-                        <br/>
-                        <unsubscribe>Unsubscribe</unsubscribe>
                       </td>
                     </tr>
                   </table>

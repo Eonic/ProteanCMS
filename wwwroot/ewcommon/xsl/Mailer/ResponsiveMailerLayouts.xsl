@@ -604,10 +604,13 @@
   <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
+  
   <xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
     <xsl:choose>
       <xsl:when test="@resize='true'">
-        <xsl:apply-templates select="." mode="resize-image"/>
+        <xsl:apply-templates select="." mode="resize-image">
+          <xsl:with-param name="rootpath" select="$siteURL"/>
+        </xsl:apply-templates>
       </xsl:when>
       <xsl:otherwise>
         <xsl:apply-templates select="node()" mode="cleanXhtml"/>
@@ -852,7 +855,7 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'listItem vevent'"/>
+      <xsl:with-param name="class" select="'listItem vevent emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailEventList">
@@ -1053,7 +1056,7 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:apply-templates select="." mode="inlinePopupOptions">
-      <xsl:with-param name="class" select="'list document'"/>
+      <xsl:with-param name="class" select="'list document emailModulePadding'"/>
       <xsl:with-param name="sortBy" select="$sortBy"/>
     </xsl:apply-templates>
     <h3 class="title">
@@ -1147,7 +1150,9 @@
         <xsl:with-param name="parId" select="$parId"/>
       </xsl:apply-templates>
     </xsl:variable>
-    <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+    <xsl:apply-templates select="." mode="inlinePopupOptions">
+      <xsl:with-param name="class" select="emailModulePadding"/>
+    </xsl:apply-templates>
     <table cellpadding="0" cellspacing="0" width="100%" style="width:100%;" class="emailJobList">
       <tr>
         <td>

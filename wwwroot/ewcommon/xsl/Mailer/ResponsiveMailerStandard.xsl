@@ -3,7 +3,7 @@
 
   <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/Mailer/MailerImports.xsl"/>-->
   <xsl:import href="ResponsiveMailerImports.xsl"/>
-  <xsl:import href="../Email/ResponsiveEmailStationary.xsl"/>
+  <xsl:import href="../Email/ResponsiveEmailStationery.xsl"/>
 
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
 

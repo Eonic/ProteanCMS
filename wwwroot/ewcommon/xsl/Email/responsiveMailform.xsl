@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:import href="ResponsiveEmailStationaryForms.xsl"/>
+  <xsl:import href="ResponsiveEmailStationeryForms.xsl"/>
 
   <xsl:template match="/">
     <xsl:apply-imports/>
@@ -16,7 +16,7 @@
     <table cellspacing="0" cellpadding="0">
       <tr>
         <td class="emailModuleHeadingPadding emailPaddingBottom">
-          <h2>Responsive Email Enquiry</h2>
+          <h2>Email Enquiry</h2>
         </td>
       </tr>
       <tr>
