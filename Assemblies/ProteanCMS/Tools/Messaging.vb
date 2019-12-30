@@ -1274,9 +1274,11 @@ Public Class Messaging
             oWeb.mcEwSiteXsl = cEmailXSL
             'get body
             oWeb.mnMailMenuId = moMailConfig("RootPageId")
+            Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+
 
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
-                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+
 
                 'Lets get the title and override the one provided
                 Dim oXml As New XmlDocument
