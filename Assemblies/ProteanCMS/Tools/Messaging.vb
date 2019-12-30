@@ -228,6 +228,28 @@ Public Class Messaging
         End Try
     End Sub
 
+    ' deleting physical files given full path
+    Public Sub deleteAttachmentPDF(ByVal fileLocation As String)
+        Dim cProcessInfo As String = "emailCart"
+        Try
+            If fileLocation <> "" Then
+
+                If Not Attachments Is Nothing Then
+                    Attachments.Clear()
+                End If
+
+                Dim fsh As Protean.fsHelper = New fsHelper
+                fsh.DeleteFile(fileLocation)
+
+            End If
+
+        Catch ex As Exception
+            If gbDebug Then
+                returnException(mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug)
+            End If
+        End Try
+    End Sub
+
     Overridable Sub AddToLists(StepName As String, Optional Name As String = "", Optional Email As String = "", Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing)
 
         Dim cProcessInfo As String = ""
@@ -327,7 +349,6 @@ Public Class Messaging
             Else
                 styleFile = goServer.MapPath(xsltPath)
             End If
-
             If Me.HasLanguage And oXml.DocumentElement IsNot Nothing Then
                 oXml.DocumentElement.SetAttribute("translang", Me.Language)
             End If
@@ -1401,22 +1422,22 @@ Public Class Messaging
 
 
             sEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId)
-                emailStructure.Add("EmailBody", sEmailBody)
-                'Lets get the title and override the one provided
-                Dim oXml As New XmlDocument
+            emailStructure.Add("EmailBody", sEmailBody)
+            'Lets get the title and override the one provided
+            Dim oXml As New XmlDocument
 
-                oXml = htmlToXmlDoc(sEmailBody)
+            oXml = htmlToXmlDoc(sEmailBody)
 
-                If Not oXml Is Nothing Then
-                    'override the subject line from the template.
-                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
-                        If oElmt2.InnerText <> "" Then
-                            cSubject = Trim(oElmt2.InnerText)
-                            emailStructure.Add("Subject", cSubject)
-                        End If
+            If Not oXml Is Nothing Then
+                'override the subject line from the template.
+                If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
+                    Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
+                    If oElmt2.InnerText <> "" Then
+                        cSubject = Trim(oElmt2.InnerText)
+                        emailStructure.Add("Subject", cSubject)
                     End If
                 End If
+            End If
             oXml = Nothing
 
             Return emailStructure
@@ -1434,15 +1455,15 @@ Public Class Messaging
         Try
             'dictionary object
             Dim oDic As New UserEmailDictionary
-            Dim oDBH As New Cms.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " & _
-            "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
+            Dim oDBH As New Cms.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " &
+            "Initial Catalog=" & goConfig("DatabaseName") & "; " &
             goConfig("DatabaseAuth"), 1)
-            Dim cSQL As String = "SELECT nDirKey, cDirXml" & _
-            " FROM tblDirectory" & _
-            " WHERE (((SELECT TOP 1 tblDirectoryRelation.nDirChildId" & _
-            " FROM tblDirectoryRelation INNER JOIN" & _
-            " tblDirectory Groups ON tblDirectoryRelation.nDirParentId = Groups.nDirKey" & _
-            " WHERE (Groups.nDirKey IN (" & groupIds & ")) AND (tblDirectoryRelation.nDirChildId = tblDirectory.nDirKey)" & _
+            Dim cSQL As String = "SELECT nDirKey, cDirXml" &
+            " FROM tblDirectory" &
+            " WHERE (((SELECT TOP 1 tblDirectoryRelation.nDirChildId" &
+            " FROM tblDirectoryRelation INNER JOIN" &
+            " tblDirectory Groups ON tblDirectoryRelation.nDirParentId = Groups.nDirKey" &
+            " WHERE (Groups.nDirKey IN (" & groupIds & ")) AND (tblDirectoryRelation.nDirChildId = tblDirectory.nDirKey)" &
             " GROUP BY tblDirectoryRelation.nDirChildId)) IS NOT NULL)"
 
             Dim oDS As DataSet = oDBH.GetDataSet(cSQL, "Users", "Addresses")
