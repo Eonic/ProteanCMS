@@ -1265,43 +1265,20 @@ Public Class Messaging
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
 
-            Dim oWeb As New Cms
-            oWeb.InitializeVariables()
-            oWeb.Open()
-            oWeb.mnPageId = nPageId
-            oWeb.mbAdminMode = False
-
-            oWeb.mcEwSiteXsl = cEmailXSL
-            'get body
-            oWeb.mnMailMenuId = moMailConfig("RootPageId")
-
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
-                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+                Dim emailStructure As Hashtable
 
-                'Lets get the title and override the one provided
-                Dim oXml As New XmlDocument
-
-                oXml = htmlToXmlDoc(sEmailBody)
-
-                If Not oXml Is Nothing Then
-                    'override the subject line from the template.
-                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
-                        If oElmt2.InnerText <> "" Then
-                            cSubject = Trim(oElmt2.InnerText)
-                        End If
-                    End If
-                End If
-                oXml = Nothing
+                emailStructure = SetEmailBodyAndSubject(nPageId, cEmailXSL, cRepientMail, cFromEmail, cFromName, cSubject)
 
                 Dim oEmail As Net.Mail.MailMessage
 
                 oEmail = New Net.Mail.MailMessage
                 oEmail.IsBodyHtml = True
                 oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
-                oEmail.Body = sEmailBody
+                oEmail.Body = emailStructure("EmailBody").ToString()
+
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
-                oEmail.Subject = cSubject
+                oEmail.Subject = emailStructure("Subject").ToString()
 
 
                 'otherwise we send it
@@ -1321,37 +1298,10 @@ Public Class Messaging
     Function SendSingleMail_Direct(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
         PerfMon.Log("Messaging", "SendSingleMail_Queued")
         Try
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
-
-
-            Dim oWeb As New Cms
-            oWeb.InitializeVariables()
-            oWeb.Open()
-            oWeb.mnPageId = nPageId
-            oWeb.mbAdminMode = False
-
-            oWeb.mcEwSiteXsl = cEmailXSL
-            'get body
-            oWeb.mnMailMenuId = moMailConfig("RootPageId")
-
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
-                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+                Dim emailStructure As Hashtable
 
-                'Lets get the title and override the one provided
-                Dim oXml As New XmlDocument
-
-                oXml = htmlToXmlDoc(sEmailBody)
-
-                If Not oXml Is Nothing Then
-                    'override the subject line from the template.
-                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
-                        If oElmt2.InnerText <> "" Then
-                            cSubject = Trim(oElmt2.InnerText)
-                        End If
-                    End If
-                End If
-                oXml = Nothing
+                emailStructure = SetEmailBodyAndSubject(nPageId, cEmailXSL, cRepientMail, cFromEmail, cFromName, cSubject)
 
                 Dim oSmtpn As New SmtpClient
 
@@ -1390,13 +1340,13 @@ Public Class Messaging
                 If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
                     hostUrl = urlScheme + hostUrl
                 End If
-                Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), sEmailBody)
-                sEmailBody = preMailerResult.Html
+                Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), emailStructure("EmailBody"))
+                Dim sEmailBody As String = preMailerResult.Html
 
 
                 oEmail.Body = sEmailBody
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
-                oEmail.Subject = cSubject
+                oEmail.Subject = emailStructure("Subject")
 
                 oSmtpn.Send(oEmail)
 
@@ -1413,6 +1363,68 @@ Public Class Messaging
         End Try
     End Function
 
+    Public Function SetInlineCss(ByVal sEmailBody As String)
+        Try
+            Dim hostUrl As String = goRequest.Url.Host
+            Dim urlScheme As String = "http://"
+            If goRequest.IsSecureConnection Then
+                urlScheme = "https://"
+            End If
+            If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
+                hostUrl = urlScheme + hostUrl
+            End If
+            Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), sEmailBody)
+            sEmailBody = preMailerResult.Html
+            Return sEmailBody
+
+        Catch ex As Exception
+
+        End Try
+
+
+    End Function
+    Public Function SetEmailBodyAndSubject(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String)
+        Try
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+
+            Dim oWeb As New Cms
+            oWeb.InitializeVariables()
+            oWeb.Open()
+            oWeb.mnPageId = nPageId
+            oWeb.mbAdminMode = False
+
+            oWeb.mcEwSiteXsl = cEmailXSL
+            'get body
+            oWeb.mnMailMenuId = moMailConfig("RootPageId")
+            Dim sEmailBody As String
+            Dim emailStructure As New Hashtable
+
+
+            sEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId)
+                emailStructure.Add("EmailBody", sEmailBody)
+                'Lets get the title and override the one provided
+                Dim oXml As New XmlDocument
+
+                oXml = htmlToXmlDoc(sEmailBody)
+
+                If Not oXml Is Nothing Then
+                    'override the subject line from the template.
+                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
+                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
+                        If oElmt2.InnerText <> "" Then
+                            cSubject = Trim(oElmt2.InnerText)
+                            emailStructure.Add("Subject", cSubject)
+                        End If
+                    End If
+                End If
+            oXml = Nothing
+
+            Return emailStructure
+
+        Catch ex As Exception
+
+        End Try
+    End Function
     Public Function GetGroupEmails(ByVal groupIds As String) As UserEmailDictionary
         PerfMon.Log("Messaging", "GetGroupEmails")
         'Retrieves a list of email addresses from the groups
@@ -1973,6 +1985,8 @@ Public Class XMLEmail
             Return Nothing
         End Try
     End Function
+
+
 
     Public Enum ToType
         [To] = 0
