@@ -2330,7 +2330,7 @@ processFlow:
             '   Content for the XML that will display all the information stored for the Cart
             '   This is a list of cart items (and quantity, price ...), totals,
             '   billing & delivery addressi and delivery method.
-
+            Dim ReceiptDeliveryType As Int16
             Dim oDs As DataSet
             Dim oDs2 As DataSet
 
@@ -2403,7 +2403,7 @@ processFlow:
                     quant = 0 '   get number of items & sum of collective prices (ie. cart total) from db
                     total = 0.0#
                     weight = 0.0#
-
+                    ReceiptDeliveryType = 0
                     ' Process promo code from external refs.
                     If myWeb.moSession("promocode") <> "" Or myWeb.moRequest("promocode") <> "" Then
                         If myWeb.moRequest("promocode") <> "" Then
@@ -2688,6 +2688,10 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
+                        If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                            ReceiptDeliveryType = oRow("nReceiptType")
+                            oCartElmt.SetAttribute("ReceiptType", ReceiptDeliveryType)
+                        End If
 
                         If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
                             shipCost = -1
@@ -4056,6 +4060,13 @@ processFlow:
                                     ' RemoveDeliveryOption(mnCartId)
                                 End If
 
+                                If (myWeb.moRequest("cIsDelivery") = "true" And myWeb.moRequest("cIsPaperRecieptForDelAddress") = "true") Then
+                                    If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                                        'check flag condition
+                                        Dim cSqlUpdate As String = "UPDATE tblCartOrder SET nReceiptType=2 WHERE nCartOrderKey=" & mnCartId
+                                        moDBHelper.ExeProcessSql(cSqlUpdate)
+                                    End If
+                                End If
 
                                 For Each oElmt In oXform.Instance.SelectNodes("tblCartContact")
                                     Dim cThisAddressType As String = oElmt.SelectSingleNode("cContactType").InnerText
@@ -5826,6 +5837,9 @@ processFlow:
                     addNewTextNode("nTaxRate", oElmt, CStr(mnTaxRate))
                     addNewTextNode("nGiftListId", oElmt, "0")
                     addNewTextNode("nAuditId", oElmt)
+                    'validate column exists then only
+                    addNewTextNode("nReceiptType", oElmt, "0")
+
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
                     Return mnCartId
                 Else
