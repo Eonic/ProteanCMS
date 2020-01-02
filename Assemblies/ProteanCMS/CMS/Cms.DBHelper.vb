@@ -2486,7 +2486,16 @@ restart:
                             'TS not sure about this it seems the logic to set this is further on.
 
                             ' Update the update fields.
-                            addNewTextNode("dUpdateDate", oTableNode, Protean.Tools.Xml.XmlDate(Now(), True), True, True) 'always force this
+                            Dim forceUpdate As Boolean = False
+                            Dim updateDateNode As XmlElement = oInstance.SelectSingleNode("*/dUpdateDate")
+                            If updateDateNode IsNot Nothing Then
+                                If updateDateNode.GetAttribute("force") = "true" Then
+                                    forceUpdate = True
+                                End If
+                            End If
+                            If forceUpdate = False Then 'always force this
+                                addNewTextNode("dUpdateDate", oTableNode, Protean.Tools.Xml.XmlDate(Now(), True), True, True)
+                            End If
                             addNewTextNode("nUpdateDirId", oTableNode, mnUserId, True, True) 'always force this
                         Case Else
                             ' do nowt
@@ -2550,7 +2559,18 @@ restart:
                                 'addNewTextNode("nInsertDirId", oTableNode, mnUserId, True, True) 'always force this
                             End If
 
-                            addNewTextNode("dUpdateDate", oTableNode, Protean.Tools.Xml.XmlDate(Now(), True), True, True) 'always force this
+
+                            Dim forceUpdate As Boolean = False
+                            Dim updateDateNode As XmlElement = oInstance.SelectSingleNode("tblContent/dUpdateDate")
+                            If updateDateNode IsNot Nothing Then
+                                If updateDateNode.GetAttribute("force") = "true" Then
+                                    forceUpdate = True
+                                End If
+                            End If
+                            If forceUpdate = False Then 'always force this
+                                addNewTextNode("dUpdateDate", oTableNode, Protean.Tools.Xml.XmlDate(Now(), True), True, True)
+                            End If
+
                             addNewTextNode("nUpdateDirId", oTableNode, mnUserId, True, True) 'always force this
                             If oInstance.SelectSingleNode("descendant-or-self::nStatus") Is Nothing Then
                                 addNewTextNode("nStatus", oTableNode, "1", True, True)
@@ -5022,7 +5042,8 @@ restart:
                         If Not moMailConfig Is Nothing Then
                             sMessagingProvider = moMailConfig("MessagingProvider")
                         End If
-                        If moMessaging Is Nothing Then
+                        If moMessaging Is Nothing And myWeb IsNot Nothing Then
+                            'myWeb IsNot Nothing prevents being called from bulk imports.
                             moMessaging = New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
                         End If
                         If moMessaging IsNot Nothing AndAlso moMessaging.AdminProcess IsNot Nothing Then

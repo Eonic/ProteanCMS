@@ -6267,10 +6267,20 @@ Partial Public Class Cms
 
                     Select Case MyBase.getSubmitted
                         Case "AddSelected"
-                            moDbHelper.saveShippingDirRelation(id, goRequest("Groups"))
+                            If goRequest("Groups") <> "" Then
+                                moDbHelper.saveShippingDirRelation(id, goRequest("Groups"))
+                            End If
+                            If goRequest("Roles") <> "" Then
+                                moDbHelper.saveShippingDirRelation(id, goRequest("Roles"))
+                            End If
                         Case "DenySelected"
                             If bDeny Then
-                                moDbHelper.saveShippingDirRelation(id, goRequest("Groups"), True, dbHelper.PermissionLevel.Denied)
+                                If goRequest("Groups") <> "" Then
+                                    moDbHelper.saveShippingDirRelation(id, goRequest("Groups"), True, dbHelper.PermissionLevel.Denied)
+                                End If
+                                If goRequest("Roles") <> "" Then
+                                    moDbHelper.saveShippingDirRelation(id, goRequest("Roles"), True, dbHelper.PermissionLevel.Denied)
+                                End If
                             End If
                         Case "RemoveSelected"
                             moDbHelper.saveShippingDirRelation(id, goRequest("Items"), False)
@@ -6287,6 +6297,17 @@ Partial Public Class Cms
                     " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
                     "ORDER BY cDirName"
                     MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
+
+                    oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
+
+                    sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Role') AND" &
+                    " (((SELECT nCartShippingPermissionKey" &
+                    " FROM tblCartShippingPermission" &
+                    " WHERE (nShippingMethodId = " & id & ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" &
+                    "ORDER BY cDirName"
+                    MyBase.addOptionsFromSqlDataReader(oElmt2, moDbHelper.getDataReader(sSql), "name", "value")
+
+
 
                     oFrmGrp3 = MyBase.addGroup(oFrmElmt, "RelatedObjects", "", "All Groups with permissions for Shipping Method")
                     MyBase.addNote(oFrmGrp3, xForm.noteTypes.Hint, "Please note: Permissions can also be inherited from pages above")
