@@ -2331,8 +2331,14 @@ ProcessFlow:
                             Else
                                 Dim ImportDS As New DataSet
                                 Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                Dim nTop As Integer = CInt("0" & oImportRootElmt.GetAttribute("top"))
                                 If sSql = "" Then
-                                    sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                    If nTop > 0 Then
+                                        sSql = "select TOP " & nTop.ToString() & " * from " & oImportRootElmt.GetAttribute("tableName")
+                                    Else
+                                        sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+
+                                    End If
                                 End If
                                 ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
                                 oImportXml.LoadXml(ImportDS.GetXml())

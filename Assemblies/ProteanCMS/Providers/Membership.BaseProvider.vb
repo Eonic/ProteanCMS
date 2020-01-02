@@ -786,12 +786,12 @@ Check:
 
                         cDirectorySchemaName = MyBase.Instance.SelectSingleNode("tblDirectory/cDirSchema").InnerText
 
+                        'lets add the groups to the instance
+                        oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
+                        MyBase.Instance.InsertAfter(oGrpElmt, MyBase.Instance.LastChild)
+
                         If cDirectorySchemaName = "User" Then
 
-                            'lets add the groups to the instance
-
-                            oGrpElmt = moDbHelper.getGroupsInstance(id, parId)
-                            MyBase.Instance.InsertAfter(oGrpElmt, MyBase.Instance.LastChild)
                             If goConfig("Subscriptions") = "on" Then
                                 Dim oSub As New Cart.Subscriptions(myWeb)
                                 oSub.AddSubscriptionToUserXML(MyBase.Instance, id)
