@@ -518,49 +518,57 @@ Partial Public Module xmlTools
             Dim oXML As New XmlDocument
             Dim cHtml As String
             Dim cHtmlOut As String
+            Try
 
-            If oHtmlNode Is Nothing Or oHtmlNode.Current.InnerXml.Trim() = "" Then
+
+                If oHtmlNode Is Nothing Or oHtmlNode.Current.InnerXml.Trim() = "" Then
+                    cHtml = ""
+                    Return cHtml
+                Else
+                    cHtml = oHtmlNode.Current.InnerXml
+                    cHtml = Protean.Tools.Xml.convertEntitiesToCodes(cHtml)
+                    cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
+                    cHtml = cHtml.Replace("&amp;#", "&#")
+                    cHtml = "<div>" & cHtml & "</div>"
+                    If cHtml.Contains("<?xml") Then
+                        cHtml = Regex.Replace(cHtml, "<\?xml*\?>/i", "", RegexOptions.IgnoreCase)
+                        cHtml = cHtml.Replace("<?xml:namespace prefix = o ns = ""urn:schemas-microsoft-com:office:office"" />", "")
+
+                        cHtml = cHtml
+                    End If
+
+                    cHtmlOut = tidyXhtmlFrag(cHtml, True, True, RemoveTags)
+
+                    cHtmlOut = Replace(cHtmlOut, "&#x0;", "")
+                    cHtmlOut = Replace(cHtmlOut, " &#0;", "")
+
+                    If cHtmlOut = Nothing Or cHtmlOut = "" Then
+                        Return Nothing
+                    Else
+                        Try
+                            cHtmlOut = cHtmlOut.Replace("&amp;#", "&#")
+                            oXML.LoadXml(cHtmlOut)
+                            Return oXML.DocumentElement
+                        Catch ex As Exception
+                            'Lets try option 2 first before we raise an error
+                            ' RaiseEvent XSLTError(ex.ToString)
+                            Try
+                                oXML = New XmlDocument
+                                oXML.AppendChild(oXML.CreateElement("div"))
+                                oXML.DocumentElement.InnerXml = cHtmlOut
+                                Return oXML.DocumentElement
+                            Catch ex2 As Exception
+                                Return cHtmlOut
+                            End Try
+                        End Try
+                    End If
+                End If
+
+            Catch ex As Exception
                 cHtml = ""
                 Return cHtml
-            Else
-                cHtml = oHtmlNode.Current.InnerXml
-                cHtml = Protean.Tools.Xml.convertEntitiesToCodes(cHtml)
-                cHtml = Replace(Replace(cHtml, "&gt;", ">"), "&lt;", "<")
-                cHtml = cHtml.Replace("&amp;#", "&#")
-                cHtml = "<div>" & cHtml & "</div>"
-                If cHtml.Contains("<?xml") Then
-                    cHtml = Regex.Replace(cHtml, "<\?xml*\?>/i", "", RegexOptions.IgnoreCase)
-                    cHtml = cHtml.Replace("<?xml:namespace prefix = o ns = ""urn:schemas-microsoft-com:office:office"" />", "")
+            End Try
 
-                    cHtml = cHtml
-                End If
-
-                cHtmlOut = tidyXhtmlFrag(cHtml, True, True, RemoveTags)
-
-                cHtmlOut = Replace(cHtmlOut, "&#x0;", "")
-                cHtmlOut = Replace(cHtmlOut, " &#0;", "")
-
-                If cHtmlOut = Nothing Or cHtmlOut = "" Then
-                    Return Nothing
-                Else
-                    Try
-                        cHtmlOut = cHtmlOut.Replace("&amp;#", "&#")
-                        oXML.LoadXml(cHtmlOut)
-                        Return oXML.DocumentElement
-                    Catch ex As Exception
-                        'Lets try option 2 first before we raise an error
-                        ' RaiseEvent XSLTError(ex.ToString)
-                        Try
-                            oXML = New XmlDocument
-                            oXML.AppendChild(oXML.CreateElement("div"))
-                            oXML.DocumentElement.InnerXml = cHtmlOut
-                            Return oXML.DocumentElement
-                        Catch ex2 As Exception
-                            Return cHtmlOut
-                        End Try
-                    End Try
-                End If
-            End If
         End Function
 
         Public Function CleanHTMLElement(ByVal oContextNode As Object, ByVal RemoveTags As String) As Object
