@@ -1275,6 +1275,7 @@ Public Class Cms
                                         moResponse.Write(textWriter.ToString())
                                     End If
                                 Else
+                                    moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                     oTransform.ProcessTimed(moPageXml, moResponse)
                                 End If
 
@@ -1317,6 +1318,7 @@ Public Class Cms
                     If sServeFile <> "" Then
                         moResponse.AddHeader("X-Frame-Options", "DENY")
                         Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
+                        moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
                         If filelen > 260 Then
                             moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
                         Else
@@ -1614,8 +1616,8 @@ Public Class Cms
                 ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                 If gbClone _
                     AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
-                    ' If the current page is a cloned page
-                    oPageElmt.SetAttribute("clone", "true")
+                        ' If the current page is a cloned page
+                        oPageElmt.SetAttribute("clone", "true")
                 End If
             Else
                 'Invalid Licence
@@ -5490,7 +5492,7 @@ Public Class Cms
                                 thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
                                 thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                 If thisContentType = oDR(5).ToString() Then
-                                    cURL &= "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                    cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
                                 End If
                             Next
                         Case Else
