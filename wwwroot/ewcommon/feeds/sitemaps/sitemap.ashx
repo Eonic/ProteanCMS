@@ -13,14 +13,16 @@ Public Class sitemapsOrg_sitemap : Implements IHttpHandler, IRequiresSessionStat
         Dim oEw As Protean.Cms = New Protean.Cms
 
         oEw.InitializeVariables()
+        oEw.Open()
+
         oEw.mcEwSiteXsl = "/ewcommon/xsl/feeds/sitemaps/sitemap.xsl"
 
         context.Response.ContentType = "text/xml"
 
         'TODO: Showing Content on sitemapsOrgSitemap
-        If Not oEw.moConfig("sitemapsOrgContentTypes") = "" Then
+        If Not oEw.moConfig("GoogleContentTypes") = "" Then
             oEw.GetPageXML()
-            oEw.addPageDetailLinksToStructure(oEw.moConfig("sitemapsOrgContentTypes"))
+            oEw.addPageDetailLinksToStructure(oEw.moConfig("GoogleContentTypes"))
         End If
 
         If context.Request("xml") <> "" Then

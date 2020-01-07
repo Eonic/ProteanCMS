@@ -33,6 +33,13 @@ public static class Text
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
 
+
+        public static string HtmlHeaderDateTime(this DateTime date)
+        {
+            return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
+        }
+
+
         public static string MaskString(string cInitialString, string cMaskchar = "*", bool bKeepSpaces = false, int nNoCharsToLeave = 4)
     {
         string cNewString = "";
