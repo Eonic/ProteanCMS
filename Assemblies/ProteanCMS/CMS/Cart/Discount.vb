@@ -638,7 +638,8 @@ Partial Public Class Cms
                                     oDiscountElmt.SetAttribute("Applied", 1)
 
 
-                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing And oDiscountLoop.SelectSingleNode("ApplyToTotal").Value.ToString() = "True") Then
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
                                         If (AmountToDiscount = 0) Then
                                             bApplyOnTotal = True
                                         Else
