@@ -1276,7 +1276,7 @@ NoDiscount:
                 Dim DiscountApplyDate As DateTime = Now()
                 Dim oDsDiscounts As DataSet
                 Dim doc As New XmlDocument()
-                Dim oDiscountMessage As String = "The code you have provided is invalid for this transaction"
+                Dim oDiscountMessage As String = "The promo code you have provided is invalid for this transaction"
                 Dim minimumOrderTotal As Double = 0
                 Dim maximumOrderTotal As Double = 0
 
