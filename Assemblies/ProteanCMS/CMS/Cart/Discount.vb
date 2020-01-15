@@ -130,7 +130,7 @@ Partial Public Class Cms
                 Dim sSQLArr() As String = Nothing
 
                 Dim nCount As Integer
-
+                Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
 
 
@@ -212,10 +212,13 @@ Partial Public Class Cms
                             If cPromoCodeUserEntered <> "" Then
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
+
                                 oCartXML.AppendChild(oDiscountMessage)
                             End If
                             Return 0
                         Else
+
+
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns
@@ -354,7 +357,18 @@ Partial Public Class Cms
 
                             Return nTotalSaved
                         End If
+                        ''code to validate exchange functionality
+                    ElseIf (cCartItemIds = "" And cPromoCodeUserEntered <> String.Empty) Then
+
+                        strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+
+
+                            dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                        Return dDisountAmount
                     Else
+
                         Return 0
                     End If
 
