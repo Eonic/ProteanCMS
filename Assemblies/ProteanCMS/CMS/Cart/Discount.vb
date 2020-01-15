@@ -688,11 +688,32 @@ Partial Public Class Cms
                                 oPriceElmt.SetAttribute("TotalSaving", oPriceElmt.GetAttribute("UnitSaving") * oPriceElmt.GetAttribute("Units"))
 
                                 'we will always apply these
-                                'oDiscountLoop.SetAttribute("Applied", 1)
+                                oDiscountLoop.SetAttribute("Applied", 1)
+                                RemainingAmountToDiscount = RemainingAmountToDiscount + oPriceLine.GetAttribute("TotalSaving")
                                 Dim oDiscountElmt As XmlElement
                                 'set the discount remianing if this rule is available on other products..
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
-                                    oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    ''oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+
+
+
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
+                                        If (AmountToDiscount = 0) Then
+                                            bApplyOnTotal = True
+                                        Else
+
+                                            bApplyOnTotal = False
+                                            oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - RemainingAmountToDiscount)
+                                        End If
+
+
+                                    Else
+
+                                        oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    End If
+
+
                                 Next
 
                             End If
