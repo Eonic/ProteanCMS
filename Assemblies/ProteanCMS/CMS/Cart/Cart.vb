@@ -5842,12 +5842,14 @@ processFlow:
                     addNewTextNode("nGiftListId", oElmt, "0")
                     addNewTextNode("nAuditId", oElmt)
                     'validate column exists then only
-                    addNewTextNode("nReceiptType", oElmt, "0")
+                    If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                        addNewTextNode("nReceiptType", oElmt, "0")
+                    End If
 
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
-                    Return mnCartId
-                Else
-                    mnCartId = 0
+                        Return mnCartId
+                    Else
+                        mnCartId = 0
                     Return mnCartId
                 End If
 
@@ -5901,7 +5903,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False) As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "") As Boolean
             PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -5967,7 +5969,12 @@ processFlow:
 
                     addNewTextNode("nCartOrderId", oElmt, CStr(mnCartId))
                     addNewTextNode("nItemId", oElmt, nProductId)
-                    addNewTextNode("cItemURL", oElmt, myWeb.GetContentUrl(nProductId)) 'Erm?
+                    If overideUrl = "" Then
+                        addNewTextNode("cItemURL", oElmt, myWeb.GetContentUrl(nProductId)) 'Erm?
+                    Else
+                        addNewTextNode("cItemURL", oElmt, overideUrl) 'Erm?
+                    End If
+
 
                     If ProductXml <> "" Then
                         oProdXml.InnerXml = ProductXml

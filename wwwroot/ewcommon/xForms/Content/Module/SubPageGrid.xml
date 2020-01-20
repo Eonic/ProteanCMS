@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="SubPageGrid" contentType="MenuItem" box="" title="" pagelink="" link="" linkType="internal" linkText="Go to this section" sortBy="Position" order="ascending" cols="1" stepCount="0" display="all" position="" listGroup="true"/>
+          <Content moduleType="SubPageGrid" contentType="MenuItem" box="" title="" pagelink="" link="" linkType="internal" linkText="Go to this section" sortBy="Position" order="ascending" cols="1" stepCount="0" display="all" position="" listGroup="true" crop=""/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -43,6 +43,7 @@
       <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
       <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
@@ -148,6 +149,17 @@
           </case>
           <case id="cSortBy_2"/>
         </switch>
+        <select1 bind="cCrop" appearance="full" class="vshort">
+          <label>Crop</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+        </select1>
       </group>
       <group>
         <label>Module Links</label>

@@ -112,6 +112,7 @@ Partial Public Class Cms
                             Dim cProductPrice As Double = 0
                             Dim sProductName As String = ""
                             Dim bPackegingRequired As Boolean = False
+                            Dim sOverideURL As String = ""
                             If item.ContainsKey("UniqueProduct") Then
                                 bUnique = item("UniqueProduct")
                             End If
@@ -121,8 +122,10 @@ Partial Public Class Cms
                             If item.ContainsKey("productName") Then
                                 sProductName = item("productName")
                             End If
-
-                            myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique)
+                            If item.ContainsKey("url") Then
+                                sOverideURL = item("url")
+                            End If
+                            myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
 
                         Next
                     End If
@@ -399,10 +402,12 @@ Partial Public Class Cms
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-
+                    Dim strMessage As String = String.Empty
                     If Not (jObj("Code") Is Nothing) Then
-                        myCart.moDiscount.AddDiscountCode(jObj("Code"))
-
+                        strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
+                        If (strMessage <> String.Empty) Then
+                            Return strMessage
+                        End If
                         myCart.GetCart(CartXml.FirstChild)
                         'persist cart
                         myCart.close()
