@@ -5765,10 +5765,9 @@ Public Class Cms
             sFilterSql = GetStandardFilterSQLForContent()
 
             sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" &
-                    " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" &
+                    " left outer join tblContentLocation CL on c.nContentKey = CL.nContentId and CL.bPrimary = 1" &
                     " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
-                    " where( CL.nContentId = " & nContentId
-            sSql = sSql & sFilterSql & " and CL.bPrimary = 1) order by type, cl.nDisplayOrder"
+                    " where(c.nContentKey = " & nContentId & sFilterSql & ") order by type, cl.nDisplayOrder"
 
             Dim oDs As DataSet = New DataSet
             oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents")
@@ -5776,20 +5775,53 @@ Public Class Cms
             If oDs.Tables.Count > 0 AndAlso oDs.Tables(0).Rows.Count > 0 Then
 
                 For Each oRow In oDs.Tables(0).Rows
-                    ContentName = oRow("name")
-                    If oRow("parId").ToString.Contains(",") Then
-                        ParentPages = oRow("parId").ToString.Split(",")
-                        If ParentPages(0) > 0 Then
-                            PrimaryPageId = ParentPages(0)
-                        End If
+
+                    If oRow("type") = "SKU" Then
+                        'get the id of the parent product
+
+                        sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" &
+                                " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" &
+                                " inner join tblAudit a on c.nAuditId = a.nAuditKey" &
+                                " inner join tblContentRelation cr on c.nContentKey = cr.nContentParentId" &
+                                " where( cr.nContentChildId = " & nContentId
+                        sSql = sSql & sFilterSql & " and CL.bPrimary = 1) order by type, cl.nDisplayOrder"
+                        Dim oDs2 As DataSet = New DataSet
+
+                        Dim oRow2 As DataRow
+                        oDs2 = moDbHelper.GetDataSet(sSql, "Content", "Contents")
+                        For Each oRow2 In oDs2.Tables(0).Rows
+                            ContentName = oRow2("name")
+                            If oRow2("parId").ToString.Contains(",") Then
+                                ParentPages = oRow2("parId").ToString.Split(",")
+                                If ParentPages(0) > 0 Then
+                                    PrimaryPageId = ParentPages(0)
+                                End If
+                            Else
+                                If IsNumeric(oRow2("parId")) Then
+                                    PrimaryPageId = oRow2("parId")
+                                End If
+                            End If
+                            ContentURL = "/" & CStr(oRow2("id")) & "-/"
+                        Next
+
                     Else
-                        If IsNumeric(oRow("parId")) Then
-                            PrimaryPageId = oRow("parId")
+
+                        ContentName = oRow("name")
+                        If oRow("parId").ToString.Contains(",") Then
+                            ParentPages = oRow("parId").ToString.Split(",")
+                            If ParentPages(0) > 0 Then
+                                PrimaryPageId = ParentPages(0)
+                            End If
+                        Else
+                            If IsNumeric(oRow("parId")) Then
+                                PrimaryPageId = oRow("parId")
+                            End If
                         End If
                     End If
+
                 Next
             End If
-            If PrimaryPageId > 0 Then
+                If PrimaryPageId > 0 Then
                 Dim pageMenuElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" & PrimaryPageId & "']")
                 If Not pageMenuElmt Is Nothing Then
                     ContentURL = pageMenuElmt.GetAttribute("url") & ContentURL
