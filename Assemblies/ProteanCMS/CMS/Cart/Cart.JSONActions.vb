@@ -123,7 +123,7 @@ Partial Public Class Cms
                                 sProductName = item("productName")
                             End If
                             If item.ContainsKey("url") Then
-                                sProductName = item("url")
+                                sOverideURL = item("url")
                             End If
                             myCart.AddItem(item("contentId"), item("qty"), Nothing, sProductName, cProductPrice, "", bUnique, sOverideURL)
 
@@ -402,10 +402,12 @@ Partial Public Class Cms
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-
+                    Dim strMessage As String = String.Empty
                     If Not (jObj("Code") Is Nothing) Then
-                        myCart.moDiscount.AddDiscountCode(jObj("Code"))
-
+                        strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
+                        If (strMessage <> String.Empty) Then
+                            Return strMessage
+                        End If
                         myCart.GetCart(CartXml.FirstChild)
                         'persist cart
                         myCart.close()

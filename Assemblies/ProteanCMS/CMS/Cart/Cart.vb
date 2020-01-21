@@ -5872,12 +5872,14 @@ processFlow:
                     addNewTextNode("nGiftListId", oElmt, "0")
                     addNewTextNode("nAuditId", oElmt)
                     'validate column exists then only
-                    addNewTextNode("nReceiptType", oElmt, "0")
+                    If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                        addNewTextNode("nReceiptType", oElmt, "0")
+                    End If
 
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
-                    Return mnCartId
-                Else
-                    mnCartId = 0
+                        Return mnCartId
+                    Else
+                        mnCartId = 0
                     Return mnCartId
                 End If
 
