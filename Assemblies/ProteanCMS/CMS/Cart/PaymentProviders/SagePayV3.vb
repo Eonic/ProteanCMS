@@ -439,10 +439,11 @@ Namespace Providers
                                         myWeb.moSession("SecurityKey") = oResponseDict("SecurityKey")
 
                                         Dim sRedirectURL As String
+
                                         If oEwProv.moCartConfig("SecureURL").EndsWith("/") Then
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds"
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds
                                         Else
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds"
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds
                                         End If
 
                                         bIsValid = False

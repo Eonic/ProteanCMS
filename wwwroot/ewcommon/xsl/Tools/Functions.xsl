@@ -566,17 +566,7 @@
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
-    <!--  Google analytics javascript  -->
-    <xsl:choose>
-      <xsl:when test="$GoogleAnalyticsUniversalID!=''">
-        <xsl:apply-templates select="." mode="googleUniversalAnalyticsCode"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
+  
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -1000,6 +990,20 @@
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
     <xsl:apply-templates select="/Page" mode="JSONLD"/>
+    
+    <!--  Google analytics javascript  -->
+    <xsl:choose>
+      <xsl:when test="$GoogleAnalyticsUniversalID!=''">
+        <xsl:apply-templates select="." mode="googleUniversalAnalyticsCode"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>  
+    
+  
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
 

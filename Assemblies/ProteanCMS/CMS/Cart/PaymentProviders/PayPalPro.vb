@@ -202,7 +202,9 @@ Namespace Providers
                         Dim ppRequestDetail As New Protean.PayPalAPI.DoDirectPaymentRequestDetailsType()
                         Dim ppRecuringRequestDetail As New Protean.PayPalAPI.CreateRecurringPaymentsProfileRequestDetailsType()
 
-                        'create the payment request
+
+
+                        'only do this if we are not being redirected back
                         If ccXform.valid Then
 
                             'save some card details in session for later
@@ -366,11 +368,10 @@ Namespace Providers
                                     If Enrolled = "Y" And Not (ACSUrl = "U" Or ACSUrl = "N") Then
                                         'Card is enrolled and interface is active.
                                         If oEwProv.moCartConfig("SecureURL").EndsWith("/") Then
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds"
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds
                                         Else
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds"
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds
                                         End If
-
                                         Xform3dSec = oEwProv.xfrmSecure3D(ACSUrl, CStr(oEwProv.mnCartId), Payload, sRedirectURL)
                                     Else
                                         'Card is not enrolled continue as usual
@@ -388,9 +389,10 @@ Namespace Providers
                                 b3DAuthorised = True
                             End If
 
+                        End If
 
-                            'Revised for SOAP API
-                            If ccXform.valid Then
+                        'create the payment request
+                        If ccXform.valid Or myWeb.moRequest("MD") <> "" Then
                                 ''Setup the PayPal Payment Object.
                                 Dim ppBillingAddress As Protean.PayPalAPI.AddressType = New Protean.PayPalAPI.AddressType()
 
@@ -425,9 +427,11 @@ Namespace Providers
 
                                 Dim ppCardOwner As Protean.PayPalAPI.PayerInfoType = New Protean.PayPalAPI.PayerInfoType()
                                 ppCardOwner.Address = ppBillingAddress
-                                ppCardOwner.PayerName = ppCardOwnerName
+                            ppCardOwner.PayerName = ppCardOwnerName
 
-                                Dim ppCreditCard As Protean.PayPalAPI.CreditCardDetailsType = New Protean.PayPalAPI.CreditCardDetailsType()
+
+
+                            Dim ppCreditCard As Protean.PayPalAPI.CreditCardDetailsType = New Protean.PayPalAPI.CreditCardDetailsType()
 
                                 ppCreditCard.CardOwner = ppCardOwner
 
@@ -505,22 +509,20 @@ Namespace Providers
                                     Dim ppScheduleDetails As New PayPalAPI.ScheduleDetailsType()
                                     Dim ppPaymentPeriod As New PayPalAPI.BillingPeriodDetailsType()
                                     Dim ppRepeatAmount As New Protean.PayPalAPI.BasicAmountType()
-                                    Select Case UCase(oEwProv.mcCurrency)
-                                        Case "EUR"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
-                                        Case "USD"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
-                                        Case "GBP"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                        Case Else
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                    End Select
+                                Select Case UCase(oEwProv.mcCurrency)
+                                    Case "EUR"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
+                                    Case "USD"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
+                                    Case "GBP"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                                    Case Else
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                                End Select
 
+                                ppRepeatAmount.Value = repeatAmt
 
-                                    ppRepeatAmount.Value = repeatAmt
-
-
-                                    ppScheduleDetails.AutoBillOutstandingAmount = PayPalAPI.AutoBillType.AddToNextBilling
+                                ppScheduleDetails.AutoBillOutstandingAmount = PayPalAPI.AutoBillType.AddToNextBilling
                                     ppPaymentPeriod.Amount = ppRepeatAmount
                                     ppPaymentPeriod.BillingFrequency = repeatFrequency
                                     Select Case repeatInterval
@@ -571,18 +573,15 @@ Namespace Providers
                                     ppRecuringRequestDetail.RecurringPaymentsProfileDetails = ppRecuringProfileDetails
 
                                 End If
-
-
                             End If
 
-                        End If
 
                         If b3DSecure Then
 
                             'check for return from aquiring bank
                             If myWeb.moRequest("MD") <> "" Then
                                 b3DAuthorised = True
-                                ppRequestDetail = myWeb.moSession("ppPayment")
+                                '  ppRequestDetail = myWeb.moSession("ppPayment")
                             Else
                                 myWeb.moSession("ppPayment") = ppRequestDetail
                             End If

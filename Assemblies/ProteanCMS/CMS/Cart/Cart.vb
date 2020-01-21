@@ -1390,7 +1390,10 @@ processFlow:
 
 
                     Case "Redirect3ds"
-
+                        If myWeb.moRequest("PaymentMethod") <> "" Then
+                            'ts added because missing from session and now added to the return redirect from SagePay (may need to add to paypal pro too)
+                            Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
+                        End If
                         Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
                         Dim Redirect3dsXform As xForm = New xForm
                         Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
@@ -1417,6 +1420,11 @@ processFlow:
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
 
                         Dim ccPaymentXform As xForm = New xForm
+
+
+
+                        cProcessInfo = "Payment Method from session = '" & mcPaymentMethod & "'"
+
 
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
@@ -3291,26 +3299,38 @@ processFlow:
             Dim oError As XmlElement
             Dim oMsg As XmlElement
             Dim cProcessInfo As String = ""
+            Dim StockLevel As Long = Nothing
             Try
                 ' Load product xml
                 oProd.InnerXml = cProdXml
 
                 ' Locate the Stock Node
-                oStock = oProd.SelectSingleNode("//Stock")
-
-                ' Ignore empty nodes
-                If Not (oStock Is Nothing) Then
-                    ' Ignore non-numeric nodes
+                oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']")
+                If oStock Is Nothing Then
+                    oStock = oProd.SelectSingleNode("//Stock")
                     If IsNumeric(oStock.InnerText) Then
-                        ' If the requested quantity is greater than the stock level, add a warning to the cart - only check tihs on an active cart.
-                        If CLng(cItemQuantity) > CLng(oStock.InnerText) And mnProcessId < 6 Then
-                            If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
-                            oError = oCartElmt.SelectSingleNode("error")
-                            oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
-                            oMsg.SetAttribute("type", "stock")
+                        StockLevel = CLng(oStock.InnerText)
+                    End If
+                Else
+                    'step through locations to get total quantity
+                    For Each oStock In oProd.SelectNodes("//Stock/Location")
+                        If IsNumeric(oStock.InnerText) Then
+                            If StockLevel = Nothing Then StockLevel = 0
+                            StockLevel = StockLevel + CLng(oStock.InnerText)
                         End If
+                    Next
+                End If
+
+                If StockLevel <> Nothing Then
+                    ' If the requested quantity is greater than the stock level, add a warning to the cart - only check tihs on an active cart.
+                    If CLng(cItemQuantity) > CLng(StockLevel) And mnProcessId < 6 Then
+                        If oCartElmt.SelectSingleNode("error") Is Nothing Then oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"))
+                        oError = oCartElmt.SelectSingleNode("error")
+                        oMsg = addElement(oError, "msg", "<span class=""term3080"">You have requested more items than are currently <em>in stock</em> for <strong class=""product-name"">" & oProd.SelectSingleNode("//Name").InnerText & "</strong> (only <span class=""quantity-available"">" & oStock.InnerText & "</span> available).</span><br/>", True)
+                        oMsg.SetAttribute("type", "stock")
                     End If
                 End If
+
             Catch ex As Exception
                 returnException(mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug)
             End Try
@@ -3336,7 +3356,11 @@ processFlow:
                         For Each oRow In oDs.Tables("Item").Rows
 
                             oProd.InnerXml = oRow("cContentXmlDetail")
-                            oStock = oProd.SelectSingleNode("//Stock")
+
+                            oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']")
+                            If oStock Is Nothing Then
+                                oStock = oProd.SelectSingleNode("//Stock")
+                            End If
 
                             ' Ignore empty nodes
                             If Not (oStock Is Nothing) Then
@@ -3356,7 +3380,13 @@ processFlow:
 
                             'For Brief
                             oProd.InnerXml = oRow("cContentXmlBrief")
-                            oStock = oProd.SelectSingleNode("//Stock")
+
+                            oStock = Nothing
+                            oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']")
+                            If oStock Is Nothing Then
+                                oStock = oProd.SelectSingleNode("//Stock")
+                            End If
+
                             ' Ignore empty nodes
                             If Not (oStock Is Nothing) Then
                                 ' Ignore non-numeric nodes

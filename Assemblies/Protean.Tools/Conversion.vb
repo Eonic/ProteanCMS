@@ -608,7 +608,7 @@ Public Class Conversion
     End Function
 
     Private Function ReadExcelFile(ByVal filename As String) As DataSet
-
+        Dim cProcessInfo As String
         Dim ds As New DataSet()
         Try
             Dim spreadsheetDocument As SpreadsheetDocument = SpreadsheetDocument.Open(filename, False)
@@ -641,7 +641,12 @@ Public Class Conversion
                                     columnIndex += 1
                                 Loop While columnIndex < cellColumnIndex
                             End If
-                            temprow(columnIndex) = GetValueOfCell(spreadsheetDocument, cell)
+                            Dim cellVal As String = GetValueOfCell(spreadsheetDocument, cell)
+                            Try
+                                temprow(columnIndex) = cellVal
+                            Catch ex As Exception
+                                cProcessInfo = "Not found " & columnIndex
+                            End Try
                             columnIndex += 1
                         Next
 

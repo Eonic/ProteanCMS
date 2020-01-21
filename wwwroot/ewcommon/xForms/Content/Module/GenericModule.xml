@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" />
+          <Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" />
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

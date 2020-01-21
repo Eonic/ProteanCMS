@@ -298,7 +298,9 @@ Namespace Providers
                                     End If
 
                                 Else
-                                    ccPaymentXform = oEwProv.payOnAccount(oOrder, oCart.mcPagePath & returnCmd)
+                                    ' TS 16 Jan 2020 we should never default to pay on account.
+
+                                    '  ccPaymentXform = oEwProv.payOnAccount(oOrder, oCart.mcPagePath & returnCmd)
                                 End If
                         End Select
 
