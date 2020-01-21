@@ -616,6 +616,12 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>~/ewcommon/js/common.js</xsl:text>
+
+    <xsl:if test="//Content[@type='CookiePolicy']">
+      <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
+      <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
+    </xsl:if>
+    
   </xsl:template>
 
   <!-- template to bring in all the jQuery and plugins that are as standard on each page -->
@@ -680,8 +686,10 @@
     </xsl:if>
 
     <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
+      <!-- MOVED to commonJsFiles
       <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
       <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
+      -->
       <script type="text/javascript">
         <xsl:text>$(document).ready(function () {</xsl:text>
         <xsl:text>$.cookieCuttr(</xsl:text>
@@ -8638,21 +8646,30 @@
   <xsl:template name="bundle-js">
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
+    <xsl:param name="async"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
+      <xsl:with-param name="async" select="$async"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="render-js-files">
     <xsl:param name="list" />
+    <xsl:param name="async" />
     <xsl:variable name="seperator" select="','"/>
     <xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="text/javascript" src="{$first}{$bundleVersion}">/* */</script>
+      <script type="text/javascript" src="{$first}{$bundleVersion}">
+        <xsl:if test="$async!=''">
+          <xsl:attribute name="async">async</xsl:attribute>
+        </xsl:if>
+        <xsl:text>/* */</xsl:text>
+      </script>
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
+        <xsl:with-param name="async" select="$async"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>

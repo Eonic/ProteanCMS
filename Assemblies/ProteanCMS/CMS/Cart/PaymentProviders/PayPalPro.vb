@@ -368,9 +368,9 @@ Namespace Providers
                                     If Enrolled = "Y" And Not (ACSUrl = "U" Or ACSUrl = "N") Then
                                         'Card is enrolled and interface is active.
                                         If oEwProv.moCartConfig("SecureURL").EndsWith("/") Then
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "?cartCmd=Redirect3ds"
                                         Else
-                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds
+                                            sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds"
                                         End If
                                         Xform3dSec = oEwProv.xfrmSecure3D(ACSUrl, CStr(oEwProv.mnCartId), Payload, sRedirectURL)
                                     Else
