@@ -671,6 +671,25 @@ Public Class xForm
                     cValidationError += oBindElmt.GetAttribute("id") & " - " & sMessage
                 End If
 
+                'case for calculate
+                If Not oBindElmt.GetAttribute("calculate") = Nothing And bIsThisBindValid Then
+
+                    ' Get the current object value
+                    expr = xPathNav2.Compile(oBindElmt.GetAttribute("calculate"))
+                    expr.SetContext(nsMgr)
+                    Dim sValue2 As String = CStr(xPathNav2.Evaluate(expr))
+
+                    If sAttribute <> "" Then
+                        updateElmt = oInstance.SelectSingleNode(sXpathNoAtt, nsMgr)
+                        updateElmt.SetAttribute(sAttribute, sValue2)
+                    Else
+
+                        If Not String.IsNullOrEmpty(sXpath) AndAlso Not oInstance.SelectSingleNode(sXpath) Is Nothing Then
+                            oInstance.SelectSingleNode(sXpath).InnerText = sValue2
+                            objValue = sValue2
+                        End If
+                    End If
+                End If
 
                 'case for required 
                 If Not oBindElmt.GetAttribute("required") = Nothing And bIsThisBindValid Then
@@ -721,26 +740,7 @@ Public Class xForm
                     End If
                 End If
 
-                'case for calculate
-                If Not oBindElmt.GetAttribute("calculate") = Nothing And bIsThisBindValid Then
 
-                    ' Get the current object value
-                    expr = xPathNav2.Compile(oBindElmt.GetAttribute("calculate"))
-                    expr.SetContext(nsMgr)
-                    Dim sValue2 As String = CStr(xPathNav2.Evaluate(expr))
-
-                    If sAttribute <> "" Then
-                        updateElmt = oInstance.SelectSingleNode(sXpathNoAtt, nsMgr)
-                        updateElmt.SetAttribute(sAttribute, sValue2)
-                    Else
-
-                        If Not String.IsNullOrEmpty(sXpath) AndAlso Not oInstance.SelectSingleNode(sXpath) Is Nothing Then
-                            oInstance.SelectSingleNode(sXpath).InnerText = sValue2
-                        End If
-                    End If
-
-
-                End If
 
                 If oBindElmt.GetAttribute("unique") <> "" And bIsThisBindValid Then
                     If objValue <> "" Then

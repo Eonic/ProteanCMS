@@ -8,11 +8,10 @@ Imports System.Web.Configuration
 Imports Microsoft.VisualBasic
 Imports System.Net
 Imports System.IO
-Imports Eonic.stdTools
 
-<WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")> _
-<WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")>
+<WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Public Class Services
     Inherits System.Web.Services.WebService
 #Region "Declarations"
@@ -205,14 +204,11 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
-
-
             Dim oMsg As Protean.Messaging = New Protean.Messaging
+
             oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
             sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
             oMsg.deleteAttachment(cAttachmentFilePath)
-
-
             Return sMessage
 
         Catch ex As System.Exception
@@ -221,6 +217,34 @@ Public Class Services
 
     End Function
 
+    <WebMethod(Description:="Sends Email From Website xForm with Attachment and delete file (from physical file)")>
+    Public Function emailerWithAttachmentPDF(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean) As Object
+
+        Dim sMessage As String
+
+        Dim cProcessInfo As String = "emailerWithAttachment"
+        Try
+            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim arrayItem As String
+            Dim strFilePath As String() = cAttachmentFilePath.Split(",")
+
+            For Each arrayItem In strFilePath
+                oMsg.addAttachment(arrayItem, bDeleteAfterSend)
+            Next
+
+            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+            'deleting physical files given full path
+            For Each arrayItem In strFilePath
+                oMsg.deleteAttachmentPDF(arrayItem)
+            Next
+
+            Return sMessage
+
+        Catch ex As System.Exception
+            Return ex.Message & " - " & ex.GetBaseException.Message
+        End Try
+
+    End Function
 
     <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
     Public Function emailerWithFTPAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean, ByVal FTPServer As String, ByVal FTPUsername As String, ByVal FTPPassword As String, ByVal FTPFolder As String) As Object

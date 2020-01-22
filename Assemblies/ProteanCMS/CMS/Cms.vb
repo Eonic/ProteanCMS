@@ -1261,18 +1261,21 @@ Public Class Cms
                                     oTransform.ProcessTimed(moPageXml, textWriter)
                                     'save the page
                                     If Not oTransform.bError Then
-                                        If bPageCache Then
-                                            SavePage(sCachePath, textWriter.ToString())
-                                            sServeFile = mcPageCacheFolder & sCachePath
-                                        Else
-                                            moResponse.Write(textWriter.ToString())
-                                        End If
+                                        '  If bPageCache Then
+
+                                        SavePage(sCachePath, textWriter.ToString())
+                                        sServeFile = mcPageCacheFolder & sCachePath
+
+                                        '  Else
+                                        '  moResponse.Write(textWriter.ToString())
+                                        'End If
                                     Else
                                         moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
                                         gnResponseCode = 500
                                         moResponse.Write(textWriter.ToString())
                                     End If
                                 Else
+                                    moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                     oTransform.ProcessTimed(moPageXml, moResponse)
                                 End If
 
@@ -1315,6 +1318,7 @@ Public Class Cms
                     If sServeFile <> "" Then
                         moResponse.AddHeader("X-Frame-Options", "DENY")
                         Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
+                        moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
                         If filelen > 260 Then
                             moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
                         Else
@@ -1612,8 +1616,8 @@ Public Class Cms
                 ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                 If gbClone _
                     AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
-                    ' If the current page is a cloned page
-                    oPageElmt.SetAttribute("clone", "true")
+                        ' If the current page is a cloned page
+                        oPageElmt.SetAttribute("clone", "true")
                 End If
             Else
                 'Invalid Licence
@@ -3188,7 +3192,7 @@ Public Class Cms
             If oDs.Tables.Count > 0 Then
                 nCount = oDs.Tables("Content").Rows.Count
                 moDbHelper.AddDataSetToContent(oDs, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
-                AddGroupsToContent(oRoot)
+                '   AddGroupsToContent(oRoot)
             End If
 
 
@@ -3460,7 +3464,7 @@ Public Class Cms
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
             'End If
-            AddGroupsToContent(oRoot)
+            ' AddGroupsToContent(oRoot)
         Catch ex As Exception
 
             ' returnException(mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -3599,7 +3603,7 @@ Public Class Cms
             'If gbCart Or gbQuote Then
             '    moDiscount.getAvailableDiscounts(oRoot)
             'End If
-            AddGroupsToContent(oRoot)
+            '   AddGroupsToContent(oRoot)
         Catch ex As Exception
 
             ' returnException(mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -5488,7 +5492,7 @@ Public Class Cms
                                 thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
                                 thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                 If thisContentType = oDR(5).ToString() Then
-                                    cURL &= "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                    cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
                                 End If
                             Next
                         Case Else
@@ -5678,7 +5682,7 @@ Public Class Cms
             'End If
 
 
-            AddGroupsToContent(oRoot)
+            '  AddGroupsToContent(oRoot)
 
 
 
@@ -5697,36 +5701,47 @@ Public Class Cms
             ' TS This is hammering performance on sites with lots of discount rules and doesn't seem to be used anywhere ?
             ' if this is requred we need only pull back categories for (products or other content names sold) that are on the current page seriously reducing the time required.
 
+            'build In statement
 
-            'Dim cSQL As String = "SELECT tblCartProductCategories.nCatKey AS id, tblCartProductCategories.cCatSchemaName AS type, tblCartProductCategories.nCatParentId AS parent, " & _
-            '" tblCartProductCategories.cCatName AS name, tblCartProductCategories.cCatDescription AS description, tblCartCatProductRelations.nContentId" & _
-            '" FROM tblCartProductCategories INNER JOIN" & _
-            '" tblAudit ON tblCartProductCategories.nAuditId = tblAudit.nAuditKey INNER JOIN" & _
-            '" tblCartCatProductRelations ON tblCartProductCategories.nCatKey = tblCartCatProductRelations.nCatId"
-            'If Not Me.mbAdminMode Then
-            '    cSQL &= " WHERE tblAudit.nStatus = 1 " & _
-            '    " and (tblAudit.dPublishDate is null or tblAudit.dPublishDate = 0 or tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & " )" & _
-            '    " and (tblAudit.dExpireDate is null or tblAudit.dExpireDate = 0 or tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & " )"
-            'End If
-            'Dim oDS As New DataSet
-            'oDS = moDbHelper.GetDataSet(cSQL, "ContentGroup", "ContentGroups")
-            'Dim oDR As DataRow
+            Dim oContElmt As XmlElement
+            Dim InStatement As String = " tblCartCatProductRelations.nContentId IN("
+            For Each oContElmt In oContentElmt.SelectNodes("Content")
+                InStatement = InStatement + oContElmt.GetAttribute("id") + ","
+            Next
+            InStatement = InStatement.Trim(",") & ")"
 
-            'PerfMon.Log("Web", "AddGroupsToContent-startloop-" & oDS.Tables("ContentGroup").Rows.Count)
+            Dim cSQL As String = "SELECT tblCartProductCategories.nCatKey AS id, tblCartProductCategories.cCatSchemaName As type, tblCartProductCategories.nCatParentId As parent, " &
+            " tblCartProductCategories.cCatName As name, tblCartProductCategories.cCatDescription As description, tblCartCatProductRelations.nContentId" &
+            " FROM tblCartProductCategories INNER JOIN" &
+            " tblAudit On tblCartProductCategories.nAuditId = tblAudit.nAuditKey INNER JOIN" &
+            " tblCartCatProductRelations On tblCartProductCategories.nCatKey = tblCartCatProductRelations.nCatId"
+            If Not Me.mbAdminMode Then
+                cSQL &= " WHERE tblAudit.nStatus = 1 " &
+                " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & " )" &
+                " And (tblAudit.dExpireDate Is null Or tblAudit.dExpireDate = 0 Or tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & " )" &
+                " And " + InStatement
+            Else
+                cSQL &= " where " + InStatement
+            End If
+            Dim oDS As New DataSet
+            oDS = moDbHelper.GetDataSet(cSQL, "ContentGroup", "ContentGroups")
+            Dim oDR As DataRow
 
-            'For Each oDR In oDS.Tables("ContentGroup").Rows
-            '    Dim oContElmt As XmlElement
-            '    For Each oContElmt In oContentElmt.SelectNodes("Content[@id='" & oDR("nContentId") & "']")
-            '        Dim oGroupElmt As XmlElement = oContentElmt.OwnerDocument.CreateElement("ContentGroup")
-            '        oGroupElmt.SetAttribute("id", oDR("id") & "")
-            '        oGroupElmt.SetAttribute("type", oDR("type") & "")
-            '        oGroupElmt.SetAttribute("name", oDR("name") & "")
-            '        oGroupElmt.SetAttribute("parent", oDR("parent") & "")
-            '        oGroupElmt.InnerText = oDR("description") & ""
-            '        oContElmt.AppendChild(oGroupElmt)
-            '    Next
-            'Next
-            'PerfMon.Log("Web", "AddGroupsToContent-end")
+            PerfMon.Log("Web", "AddGroupsToContent-startloop-" & oDS.Tables("ContentGroup").Rows.Count)
+
+            For Each oDR In oDS.Tables("ContentGroup").Rows
+
+                For Each oContElmt In oContentElmt.SelectNodes("Content[@id='" & oDR("nContentId") & "']")
+                    Dim oGroupElmt As XmlElement = oContentElmt.OwnerDocument.CreateElement("ContentGroup")
+                    oGroupElmt.SetAttribute("id", oDR("id") & "")
+                    oGroupElmt.SetAttribute("type", oDR("type") & "")
+                    oGroupElmt.SetAttribute("name", oDR("name") & "")
+                    oGroupElmt.SetAttribute("parent", oDR("parent") & "")
+                    oGroupElmt.InnerText = oDR("description") & ""
+                    oContElmt.AppendChild(oGroupElmt)
+                Next
+            Next
+            PerfMon.Log("Web", "AddGroupsToContent-end")
 
         Catch ex As Exception
             'returnException(mcModuleName, "AddGroupsToConent", ex, gcEwSiteXsl, "", gbDebug)
@@ -6391,6 +6406,8 @@ Public Class Cms
                         Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
                         Dim getSafeURLName As String = contentElmt.GetAttribute("name")
 
+                        AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
+
                         If Not oPageElmt Is Nothing Then
                             Dim oContentDetail As XmlElement = contentElmt
                             If Not (oContentDetail Is Nothing) _
@@ -6405,7 +6422,6 @@ Public Class Cms
                                 GetContentBriefXml(oPageElmt, nArtId)
                             End If
                         End If
-                        AddGroupsToContent(oRoot)
                         retElmt = oRoot.FirstChild
 
                         If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
@@ -6575,7 +6591,7 @@ Public Class Cms
                     If Not oPageElmt Is Nothing Then
                         oPageElmt.AppendChild(oRoot.FirstChild)
                     End If
-                    AddGroupsToContent(oRoot)
+                    ' AddGroupsToContent(oRoot)
                     retElmt = oRoot.FirstChild
                     Return oRoot.FirstChild
                 Else
@@ -6588,7 +6604,7 @@ Public Class Cms
                 If Not oPageElmt Is Nothing Then
                     oPageElmt.AppendChild(oRoot)
                 End If
-                AddGroupsToContent(oRoot)
+                ' AddGroupsToContent(oRoot)
                 retElmt = moContentDetail
                 moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, Me.SessionID(), Now, mnArtId, 0, "")
                 Return moContentDetail

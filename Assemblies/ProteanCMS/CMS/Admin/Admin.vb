@@ -22,6 +22,7 @@ Imports System.Web.Configuration
 Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
+Imports System.Reflection
 
 Partial Public Class Cms
     Public Class Admin
@@ -54,6 +55,8 @@ Partial Public Class Cms
         Private bClearEditContext As Boolean = True
 
         Public mnAdminUserId As Integer
+        Public adminLayout As String = ""
+
 
 #End Region
         Sub New()
@@ -220,7 +223,11 @@ Partial Public Class Cms
                     adminAccessRights()
 
                     If moPageXML.DocumentElement.SelectSingleNode("AdminMenu/MenuItem") Is Nothing Then
-                        mcEwCmd = "LogOff"
+
+                        If Not mcEwCmd = "PreviewOn" Then
+                            mcEwCmd = "LogOff"
+                        End If
+
                     End If
 
                     'If Not myWeb.moDbHelper.checkUserRole("Administrator") Then
@@ -250,7 +257,99 @@ Partial Public Class Cms
                     nParId = myWeb.moSession("nParId")
                 End If
 
-                GoTo ProcessFlow
+                Dim AdminMenuNode As XmlElement
+                If mcEwCmd <> "" Then
+                    AdminMenuNode = myWeb.moPageXml.SelectSingleNode("/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='" & mcEwCmd & "']")
+                    If Not AdminMenuNode Is Nothing Then
+                        Dim classPath As String = AdminMenuNode.GetAttribute("action")
+                        'Check for bespoke behaviour
+                        If Not classPath = "" Then
+
+                            Dim calledType As Type
+                            Dim assemblyName As String = AdminMenuNode.GetAttribute("assembly")
+                            Dim assemblyType As String = AdminMenuNode.GetAttribute("assemblyType")
+                            Dim providerName As String = AdminMenuNode.GetAttribute("providerName")
+                            Dim providerType As String = AdminMenuNode.GetAttribute("providerType")
+                            If providerType = "" Then providerType = "messaging"
+
+                            Dim methodName As String = Right(classPath, Len(classPath) - classPath.LastIndexOf(".") - 1)
+
+                            classPath = Left(classPath, classPath.LastIndexOf("."))
+
+                            If providerName <> "" Then
+                                'case for external Providers
+                                Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & providerType & "Providers")
+                                Dim assemblyInstance As [Assembly]
+
+                                If Not moPrvConfig.Providers(providerName & "Local") Is Nothing Then
+                                    If moPrvConfig.Providers(providerName & "Local").Parameters("path") <> "" Then
+                                        assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName & "Local").Parameters("path")))
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                    Else
+                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName & "Local").Type)
+                                        calledType = assemblyInstance.GetType(classPath, True)
+                                    End If
+                                Else
+                                    Select Case moPrvConfig.Providers(providerName).Parameters("path")
+                                        Case ""
+                                            assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                            calledType = assemblyInstance.GetType(classPath, True)
+                                        Case "builtin"
+                                            Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                            'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                            prepProviderName = moPrvConfig.Providers(providerName).Type
+                                            calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
+                                        Case Else
+                                            assemblyInstance = [Assembly].LoadFrom(myWeb.goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                            classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
+                                            calledType = assemblyInstance.GetType(classPath, True)
+                                    End Select
+
+                                    'If moPrvConfig.Providers(providerName).Parameters("path") <> "" Then
+                                    '    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                    'Else
+                                    '    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                    'End If
+                                End If
+
+                                '  calledType = assemblyInstance.GetType(classPath, True)
+
+
+                            ElseIf assemblyType <> "" Then
+                                'case for external DLL's
+                                Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
+                                calledType = assemblyInstance.GetType(classPath, True)
+                            Else
+                                'case for methods within EonicWeb Core DLL
+                                calledType = System.Type.GetType(classPath, True)
+                            End If
+
+                            Dim o As Object = Activator.CreateInstance(calledType)
+
+                            Dim args(1) As Object
+                            args(0) = Me
+                            args(1) = oPageDetail
+
+                            calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
+                            'Error Handling ?
+                            'Object Clearup ?
+
+                            calledType = Nothing
+                            If adminLayout <> "" Then
+                                sAdminLayout = adminLayout
+                            End If
+
+                            GoTo AfterProcessFlow
+                        Else
+                            GoTo ProcessFlow
+                        End If
+                    Else
+                        GoTo ProcessFlow
+                    End If
+                Else
+                    GoTo ProcessFlow
+                End If
 
 ProcessFlow:
 
@@ -479,7 +578,7 @@ ProcessFlow:
 
                     Case "InstallTheme"
 
-                        Dim SoapObj As New ProteanCMS.com.ewAdminProxySoapClient
+                        Dim SoapObj As New proteancms.com.ewAdminProxySoapClient
                         Dim themesPage As System.Xml.Linq.XElement = SoapObj.GetThemes(System.Environment.MachineName, myWeb.moRequest.ServerVariables("SERVER_NAME"))
                         Dim ContextThemesPage As XmlElement = moPageXML.CreateElement("Themes")
                         Dim xreader As XmlReader = themesPage.CreateReader()
@@ -1880,6 +1979,8 @@ ProcessFlow:
 
                 SupplimentalProcess(sAdminLayout, oPageDetail)
 
+AfterProcessFlow:
+
                 ' Supplimental Process check for Go To Process Flow
                 If sAdminLayout = "GoToProcessFlow" Then
                     GoTo ProcessFlow
@@ -2070,7 +2171,7 @@ ProcessFlow:
                         For Each oMenuElmt In myWeb.moPageXml.SelectNodes("/Page/AdminMenu/descendant-or-self::*")
 
                             Dim ewCmd As String = oMenuElmt.GetAttribute("cmd")
-                            If Not ewCmd = "" Then
+                            If Not (ewCmd = "" Or ewCmd = "PreviewOn") Then
                                 'do you have permissions on the current ewCmd ?
                                 If oUserXml.SelectSingleNode("descendant-or-self::MenuItem[@cmd='" & ewCmd & "' and @adminRight='true']") Is Nothing Then
 

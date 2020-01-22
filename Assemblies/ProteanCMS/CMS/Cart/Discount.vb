@@ -130,7 +130,7 @@ Partial Public Class Cms
                 Dim sSQLArr() As String = Nothing
 
                 Dim nCount As Integer
-
+                Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
 
 
@@ -212,10 +212,13 @@ Partial Public Class Cms
                             If cPromoCodeUserEntered <> "" Then
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
+
                                 oCartXML.AppendChild(oDiscountMessage)
                             End If
                             Return 0
                         Else
+
+
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns
@@ -354,7 +357,18 @@ Partial Public Class Cms
 
                             Return nTotalSaved
                         End If
+                        ''code to validate exchange functionality
+                    ElseIf (cCartItemIds = "" And cPromoCodeUserEntered <> String.Empty) Then
+
+                        strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+
+
+                            dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                        Return dDisountAmount
                     Else
+
                         Return 0
                     End If
 
@@ -454,93 +468,96 @@ Partial Public Class Cms
                     'the item
                     Dim oItemElmt As XmlElement
                     Dim nTotalSaved As Decimal = 0
+
                     For Each oItemElmt In oCartXML.SelectNodes("Item")
-                        'Item ID
-                        Dim nLineTotalSaving As Decimal
-                        Dim nId As Integer = oItemElmt.GetAttribute("id")
-                        oPriceElmt = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/DiscountPrice")
-                        If Not oPriceElmt Is Nothing Then
+                            'Item ID
+                            Dim nLineTotalSaving As Decimal
+                            Dim nId As Integer = oItemElmt.GetAttribute("id")
+                            oPriceElmt = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/DiscountPrice")
+                            If Not oPriceElmt Is Nothing Then
 
-                            'NB 16/02/2010 added rounding
-                            Dim nNewUnitPrice As Decimal = Round(oPriceElmt.GetAttribute("UnitPrice"), , , mbRoundUp)
-                            Dim nNewTotal As Decimal = oPriceElmt.GetAttribute("Total")
-                            Dim nUnitSaving As Decimal = oPriceElmt.GetAttribute("UnitSaving")
-                            nLineTotalSaving = oPriceElmt.GetAttribute("TotalSaving")
-
-
-                            'set up new attreibutes and change price
-                            oItemElmt.SetAttribute("id", nId)
-                            'NB 16/02/2010 added rounding
-                            oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
-                            oItemElmt.SetAttribute("price", nNewUnitPrice)
-                            oItemElmt.SetAttribute("unitSaving", nUnitSaving)
-                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving)
-                            oItemElmt.SetAttribute("itemTotal", nNewTotal)
-
-                            'this will change
-                            nTotalSaved += nLineTotalSaving
+                                'NB 16/02/2010 added rounding
+                                Dim nNewUnitPrice As Decimal = Round(oPriceElmt.GetAttribute("UnitPrice"), , , mbRoundUp)
+                                Dim nNewTotal As Decimal = oPriceElmt.GetAttribute("Total")
+                                Dim nUnitSaving As Decimal = oPriceElmt.GetAttribute("UnitSaving")
+                                nLineTotalSaving = oPriceElmt.GetAttribute("TotalSaving")
 
 
+                                'set up new attreibutes and change price
+                                oItemElmt.SetAttribute("id", nId)
+                                'NB 16/02/2010 added rounding
+                                oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), , , mbRoundUp))
+                                oItemElmt.SetAttribute("price", nNewUnitPrice)
+                                oItemElmt.SetAttribute("unitSaving", nUnitSaving)
+                                oItemElmt.SetAttribute("itemSaving", nLineTotalSaving)
+                                oItemElmt.SetAttribute("itemTotal", nNewTotal)
 
-                            'now to add the discount items to the cart
-                            For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3)]")
-                                oDiscountElmt.SetAttribute("AppliedToCart", 1)
-                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountElmt.CloneNode(True), True))
-                            Next
-                            Dim oTmpElmt As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/DiscountPrice")
-                            oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oTmpElmt.CloneNode(True), True))
-                        End If
-
-                        'That was the Price Modifiers done, now for the unit modifiers (not group yet)
-                        'TS: I don't really understand this next bit, if anyone does can you document it better.
-
-                        For Each oDiscountItemTest In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/DiscountItem")
-                            If CDec(oDiscountItemTest.GetAttribute("TotalSaving")) <= CDec(oItemElmt.GetAttribute("itemTotal")) Then
-                                oDiscountItemTest.SetAttribute("AppliedToCart", 1)
-                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(True), True))
-                                Dim oDiscountInfo As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/Discount[@nDiscountKey=" & oDiscountItemTest.GetAttribute("nDiscountKey") & "]")
-                                If Not oDiscountInfo Is Nothing Then
-                                    oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(True), True))
-                                End If
-                                oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("itemTotal") - oDiscountItemTest.GetAttribute("TotalSaving"))
-                                nLineTotalSaving += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
-                                nTotalSaved += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
-                            Else
-                                If IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) Then
-                                    If oDiscountItemTest.GetAttribute("nDiscountCat") = 4 Then
-                                        If nDelIDs(0) = 0 Then
-                                            nDelIDs(0) = oDiscountItemTest.GetAttribute("nDiscountKey")
-                                        Else
-                                            ReDim Preserve nDelIDs(UBound(nDelIDs) + 1)
-                                            nDelIDs(UBound(nDelIDs)) = oDiscountItemTest.GetAttribute("nDiscountKey")
-                                        End If
-
-                                    Else
-
-                                        'Discount greater than quanity on this line.... should give discount overall
-
-                                        oDiscountItemTest.SetAttribute("AppliedToCart", 1)
-                                        oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(True), True))
-                                        Dim oDiscountInfo As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/Discount[@nDiscountKey=" & oDiscountItemTest.GetAttribute("nDiscountKey") & "]")
-                                        If Not oDiscountInfo Is Nothing Then
-                                            oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(True), True))
-                                        End If
-                                        oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("itemTotal") - oDiscountItemTest.GetAttribute("TotalSaving"))
-                                        nLineTotalSaving += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
-                                        nTotalSaved += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
-                                    End If
+                                'this will change
+                                nTotalSaved += nLineTotalSaving
 
 
-                                End If
+
+                                'now to add the discount items to the cart
+                                For Each oDiscountElmt In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3)]")
+                                    oDiscountElmt.SetAttribute("AppliedToCart", 1)
+                                    oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountElmt.CloneNode(True), True))
+                                Next
+                                Dim oTmpElmt As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/DiscountPrice")
+                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oTmpElmt.CloneNode(True), True))
                             End If
+
+                            'That was the Price Modifiers done, now for the unit modifiers (not group yet)
+                            'TS: I don't really understand this next bit, if anyone does can you document it better.
+
+                            For Each oDiscountItemTest In oDiscountXml.SelectNodes("Discounts/Item[@id=" & nId & "]/DiscountItem")
+                                If CDec(oDiscountItemTest.GetAttribute("TotalSaving")) <= CDec(oItemElmt.GetAttribute("itemTotal")) Then
+                                    oDiscountItemTest.SetAttribute("AppliedToCart", 1)
+                                    oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(True), True))
+                                    Dim oDiscountInfo As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/Discount[@nDiscountKey=" & oDiscountItemTest.GetAttribute("nDiscountKey") & "]")
+                                    If Not oDiscountInfo Is Nothing Then
+                                        oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(True), True))
+                                    End If
+                                    oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("itemTotal") - oDiscountItemTest.GetAttribute("TotalSaving"))
+                                    nLineTotalSaving += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
+                                    nTotalSaved += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
+                                Else
+                                    If IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) Then
+                                        If oDiscountItemTest.GetAttribute("nDiscountCat") = 4 Then
+                                            If nDelIDs(0) = 0 Then
+                                                nDelIDs(0) = oDiscountItemTest.GetAttribute("nDiscountKey")
+                                            Else
+                                                ReDim Preserve nDelIDs(UBound(nDelIDs) + 1)
+                                                nDelIDs(UBound(nDelIDs)) = oDiscountItemTest.GetAttribute("nDiscountKey")
+                                            End If
+
+                                        Else
+
+                                            'Discount greater than quanity on this line.... should give discount overall
+
+                                            oDiscountItemTest.SetAttribute("AppliedToCart", 1)
+                                            oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(True), True))
+                                            Dim oDiscountInfo As XmlElement = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" & nId & "]/Discount[@nDiscountKey=" & oDiscountItemTest.GetAttribute("nDiscountKey") & "]")
+                                            If Not oDiscountInfo Is Nothing Then
+                                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(True), True))
+                                            End If
+                                            oItemElmt.SetAttribute("itemTotal", oItemElmt.GetAttribute("itemTotal") - oDiscountItemTest.GetAttribute("TotalSaving"))
+                                            nLineTotalSaving += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
+                                            nTotalSaved += CDec(oDiscountItemTest.GetAttribute("TotalSaving"))
+                                        End If
+
+
+                                    End If
+                                End If
+                            Next
+
+                            'also need to save the total discount in the cart
+                            'TS added in April 09
+                            Dim cUpdtSQL As String = "UPDATE tblCartItem SET nDiscountValue = " & nLineTotalSaving & " WHERE nCartItemKey = " & nId
+                            myWeb.moDbHelper.ExeProcessSql(cUpdtSQL)
+
                         Next
+                    'End If
 
-                        'also need to save the total discount in the cart
-                        'TS added in April 09
-                        Dim cUpdtSQL As String = "UPDATE tblCartItem SET nDiscountValue = " & nLineTotalSaving & " WHERE nCartItemKey = " & nId
-                        myWeb.moDbHelper.ExeProcessSql(cUpdtSQL)
-
-                    Next
 
                     If Not nDelIDs(0) = 0 Then
                         Dim nIX As Integer
@@ -569,6 +586,8 @@ Partial Public Class Cms
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
                 Dim oPriceElmt As XmlElement
+                Dim bApplyOnTotal As Boolean = False
+                Dim RemainingAmountToDiscount As Double = 0
                 Try
                     'loop through the items
                     For Each oItemLoop In oDiscountXML.SelectNodes("Discounts/Item")
@@ -598,13 +617,16 @@ Partial Public Class Cms
                         'loop through the basic money discounts'
                         For Each oDiscountLoop In oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]")
                             'now work out new unit prices etc
+
                             Dim nNewPrice As Decimal = oPriceElmt.GetAttribute("UnitPrice")
                             Dim AmountToDiscount As Decimal = oDiscountLoop.GetAttribute("nDiscountValue")
                             If oDiscountLoop.GetAttribute("nDiscountRemaining") <> "" Then
                                 AmountToDiscount = oDiscountLoop.GetAttribute("nDiscountRemaining")
                             End If
                             nNewPrice = nNewPrice - (AmountToDiscount / oItemLoop.GetAttribute("quantity"))
-                            If nNewPrice > 0 Then 'only apply it if its not gonna go below 0
+                            If nNewPrice > 0 And bApplyOnTotal = False Then 'only apply it if its not gonna go below 0
+
+
                                 Dim oPriceLine As XmlElement = oDiscountXML.CreateElement("DiscountPriceLine")
 
                                 'this works the price out for this discount based on previous stuff
@@ -628,7 +650,22 @@ Partial Public Class Cms
                                 Dim oDiscountElmt As XmlElement
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
                                     oDiscountElmt.SetAttribute("Applied", 1)
+
+
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
+                                        If (AmountToDiscount = 0) Then
+                                            bApplyOnTotal = True
+                                        Else
+                                            bApplyOnTotal = False
+                                        End If
+                                    End If
                                 Next
+
+                                'if apply on total is true in discount rule, set flag to true
+                                'which will skip flag status to true.
+
+
                             Else
 
                                 nNewPrice = 0
@@ -651,11 +688,32 @@ Partial Public Class Cms
                                 oPriceElmt.SetAttribute("TotalSaving", oPriceElmt.GetAttribute("UnitSaving") * oPriceElmt.GetAttribute("Units"))
 
                                 'we will always apply these
-                                'oDiscountLoop.SetAttribute("Applied", 1)
+                                oDiscountLoop.SetAttribute("Applied", 1)
+                                RemainingAmountToDiscount = RemainingAmountToDiscount + oPriceLine.GetAttribute("TotalSaving")
                                 Dim oDiscountElmt As XmlElement
                                 'set the discount remianing if this rule is available on other products..
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
-                                    oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    ''oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+
+
+
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
+                                        If (AmountToDiscount = 0) Then
+                                            bApplyOnTotal = True
+                                        Else
+
+                                            bApplyOnTotal = False
+                                            oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - RemainingAmountToDiscount)
+                                        End If
+
+
+                                    Else
+
+                                        oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    End If
+
+
                                 Next
 
                             End If
@@ -1246,15 +1304,85 @@ NoDiscount:
             Public Function AddDiscountCode(ByVal sCode As String) As String
                 Dim cProcessInfo As String
                 Dim sSql As String
+                Dim strSQL As New Text.StringBuilder
                 Dim oDs As DataSet
                 Dim oRow As DataRow
                 Dim sXmlContent As String
+                Dim docOrder As New XmlDocument()
+                Dim DiscountApplyDate As DateTime = Now()
+                Dim oDsDiscounts As DataSet
+                Dim doc As New XmlDocument()
+                Dim oDiscountMessage As String = "The promo code you have provided is invalid for this transaction"
+                Dim minimumOrderTotal As Double = 0
+                Dim maximumOrderTotal As Double = 0
+
+                Dim applyToTotal As Boolean = False
+
+                Dim cUserGroupIds As String = getUserGroupIDs() 'get the user groups
                 Try
-                    'myCart.moCartXml
                     If myCart.mnCartId > 0 Then
                         sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                        sXmlContent = oDs.Tables(0).Rows(0)("cCartXml") & ""
+                        docOrder.LoadXml(sXmlContent)
+                        Dim orderTotal As Double = docOrder.SelectSingleNode("Order").Attributes("total").Value
+
+                        strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName,  ")
+                        strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, tblCartDiscountRules.nDiscountCompoundBehaviour,  ")
+                        strSQL.Append("tblCartDiscountRules.nDiscountValue, tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity,  ")
+                        strSQL.Append("  tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId,  ")
+                        strSQL.Append("tblCartDiscountRules.nDiscountCodeType, tblCartDiscountRules.cDiscountUserCode  ")
+                        strSQL.Append("FROM tblCartDiscountRules  ")
+                        strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey AND (tblAudit.nStatus = 1) ")
+                        If sCode <> "" Then
+                            strSQL.Append("WHERE tblCartDiscountRules.cDiscountCode= '" & sCode & "'")
+                        End If
+                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
+                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
+
+
+                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                        If oDsDiscounts.Tables(0).Rows.Count = 0 Then
+                            If sCode <> "" Then
+                                oDsDiscounts.Clear()
+                                oDsDiscounts = Nothing
+                                Return oDiscountMessage
+
+                            End If
+
+                        Else
+                            Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                            doc.LoadXml(additionalInfo)
+
+                            If (doc.InnerXml.Contains("MinimumOrderValue")) Then
+                                minimumOrderTotal = doc.SelectSingleNode("additionalXml").SelectSingleNode("MinimumOrderValue").InnerText
+                            End If
+                            If (doc.InnerXml.Contains("MaximumOrderValue")) Then
+                                maximumOrderTotal = doc.SelectSingleNode("additionalXml").SelectSingleNode("MaximumOrderValue").InnerText
+                            End If
+                            If (doc.InnerXml.Contains("ApplyToTotal")) Then
+                                If (doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText = "") Then
+                                    applyToTotal = False
+                                Else
+                                    applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText)
+                                End If
+                                If (applyToTotal) Then
+                                    If (orderTotal < maximumOrderTotal And orderTotal > maximumOrderTotal) Then
+                                        oDsDiscounts.Clear()
+                                        oDsDiscounts = Nothing
+                                        Return oDiscountMessage
+
+                                    End If
+                                End If
+                            End If
+                            oDsDiscounts.Clear()
+                            oDsDiscounts = Nothing
+                        End If
+                        'myCart.moCartXml
+
                         For Each oRow In oDs.Tables("Order").Rows
+
+
                             'load existing notes from Cart
                             sXmlContent = oRow("cClientNotes") & ""
                             If sXmlContent = "" Then

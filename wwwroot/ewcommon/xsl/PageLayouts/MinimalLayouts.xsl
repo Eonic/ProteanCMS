@@ -7877,6 +7877,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='false'">
+          <xsl:value-of select="false()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -7948,6 +7958,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="gridDisplayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="@cropSetting"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -7962,14 +7973,15 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:variable name="cropSetting">
-      <xsl:choose>
+      <!--<xsl:choose>
         <xsl:when test="$crop='false'">
           <xsl:value-of select="false()"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="true()"/>
         </xsl:otherwise>
-      </xsl:choose>
+      </xsl:choose>-->
+    <xsl:value-of select="$crop"/>
     </xsl:variable>
     <xsl:variable name="lg-max-width">
       <xsl:apply-templates select="." mode="getFullSizeWidth"/>

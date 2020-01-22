@@ -221,8 +221,8 @@ Public Class FeedHandler
                                 oTransform.Process(xreader, xWriter)
 
                                 sDoc = oWriter.ToString()
-                                sDoc = Regex.Replace(sDoc, "&gt;", ">")
-                                sDoc = Regex.Replace(sDoc, "&lt;", "<")
+                                ' sDoc = Regex.Replace(sDoc, "&gt;", ">")
+                                ' sDoc = Regex.Replace(sDoc, "&lt;", "<")
                                 sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc)
                                 Dim filename As String
                                 Dim xDoc As New XmlDocument
@@ -268,7 +268,10 @@ Public Class FeedHandler
 
                             Catch ex2 As Exception
                                 processInfo = sDoc
-                                AddExternalError(ex2)
+
+                                AddExternalMessage(ex2.ToString & ex2.StackTrace.ToString & " DOC {" & sDoc & "} EndDoc")
+                                bResult = False
+                                ' AddExternalError(ex2)
                             End Try
 
 
@@ -549,7 +552,7 @@ Public Class FeedHandler
     End Sub
 
     Sub AddExternalError(ByVal ex As Exception)
-        AddExternalMessage(ex.ToString)
+        AddExternalMessage(ex.ToString & ex.StackTrace.ToString)
         bResult = False
     End Sub
 

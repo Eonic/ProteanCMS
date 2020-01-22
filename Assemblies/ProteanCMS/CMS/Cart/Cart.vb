@@ -2330,7 +2330,7 @@ processFlow:
             '   Content for the XML that will display all the information stored for the Cart
             '   This is a list of cart items (and quantity, price ...), totals,
             '   billing & delivery addressi and delivery method.
-
+            Dim ReceiptDeliveryType As Int16
             Dim oDs As DataSet
             Dim oDs2 As DataSet
 
@@ -2403,7 +2403,7 @@ processFlow:
                     quant = 0 '   get number of items & sum of collective prices (ie. cart total) from db
                     total = 0.0#
                     weight = 0.0#
-
+                    ReceiptDeliveryType = 0
                     ' Process promo code from external refs.
                     If myWeb.moSession("promocode") <> "" Or myWeb.moRequest("promocode") <> "" Then
                         If myWeb.moRequest("promocode") <> "" Then
@@ -2688,6 +2688,10 @@ processFlow:
                         oCartElmt.SetAttribute("shippingType", oRow("nShippingMethodId") & "")
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
+                        If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                            ReceiptDeliveryType = oRow("nReceiptType")
+                            oCartElmt.SetAttribute("ReceiptType", ReceiptDeliveryType)
+                        End If
 
                         If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
                             shipCost = -1
@@ -4056,49 +4060,60 @@ processFlow:
                                     ' RemoveDeliveryOption(mnCartId)
                                 End If
 
+                                If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
+                                    If (myWeb.moRequest("cIsDelivery") = "true" And myWeb.moRequest("cIsPaperRecieptForDelAddress") = "true") Then
+                                        'check flag condition
+                                        Dim cSqlUpdate As String = "UPDATE tblCartOrder SET nReceiptType=2 WHERE nCartOrderKey=" & mnCartId
+                                        moDBHelper.ExeProcessSql(cSqlUpdate)
 
-                                For Each oElmt In oXform.Instance.SelectNodes("tblCartContact")
-                                    Dim cThisAddressType As String = oElmt.SelectSingleNode("cContactType").InnerText
-                                    sSql = "Select nContactKey from tblCartContact where cContactType = '" & cThisAddressType & "' and nContactCartid=" & mnCartId
-                                    Dim sContactKey1 As String = moDBHelper.ExeProcessSqlScalar(sSql)
-                                    Dim saveInstance As XmlElement = moPageXml.CreateElement("instance")
-                                    saveInstance.AppendChild(oElmt.Clone)
-                                    moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, saveInstance, sContactKey1)
-                                    If cThisAddressType = "Delivery Address" Then bSavedDelivery = True
-                                Next
-
-                                'if the option save Delivery is true then
-                                If bSavedDelivery = False Then
-                                    If myWeb.moRequest("cIsDelivery") = "True" Or (mbNoDeliveryAddress And cAddressType = "Billing Address") Then
-                                        If myWeb.moRequest("cIsDelivery") = "True" And mnShippingRootId > 0 Then
-                                            'mnShippingRootId
-                                            'check if the submitted country matches one in the delivery list
-                                            Dim oCheckElmt As XmlElement = moPageXml.CreateElement("ValidCountries")
-                                            ListShippingLocations(oCheckElmt)
-                                            Dim cCountry As String = oXform.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText
-                                            If oCheckElmt.SelectSingleNode("descendant-or-self::TreeItem[@Name='" & cCountry & "' or @name='" & cCountry & "' or @nameShort='" & cCountry & "']") Is Nothing Then
-                                                oXform.valid = False
-                                                oXform.addNote("cContactCountry", xForm.noteTypes.Alert, "Cannot Deliver to this country. please select another.", True)
-                                            End If
-                                        End If
-                                        If oXform.valid Then
-                                            sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" & mnCartId
-                                            Dim sContactKey2 As String = moDBHelper.ExeProcessSqlScalar(sSql)
-                                            oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Delivery Address"
-                                            moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oXform.Instance, sContactKey2)
-                                            'going to set it back to a billing address
-                                            oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Billing Address"
-                                        End If
+                                    Else
+                                        'check flag condition
+                                        Dim cSqlUpdate As String = "UPDATE tblCartOrder SET nReceiptType=1 WHERE nCartOrderKey=" & mnCartId
+                                        moDBHelper.ExeProcessSql(cSqlUpdate)
                                     End If
                                 End If
+                                For Each oElmt In oXform.Instance.SelectNodes("tblCartContact")
+                                        Dim cThisAddressType As String = oElmt.SelectSingleNode("cContactType").InnerText
+                                        sSql = "Select nContactKey from tblCartContact where cContactType = '" & cThisAddressType & "' and nContactCartid=" & mnCartId
+                                        Dim sContactKey1 As String = moDBHelper.ExeProcessSqlScalar(sSql)
+                                        Dim saveInstance As XmlElement = moPageXml.CreateElement("instance")
+                                        saveInstance.AppendChild(oElmt.Clone)
+                                        moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, saveInstance, sContactKey1)
+                                        If cThisAddressType = "Delivery Address" Then bSavedDelivery = True
+                                    Next
 
-                                If Not oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") Is Nothing Then
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']").InnerText)
-                                End If
+                                    'if the option save Delivery is true then
+                                    If bSavedDelivery = False Then
+                                        If myWeb.moRequest("cIsDelivery") = "True" Or (mbNoDeliveryAddress And cAddressType = "Billing Address") Then
+                                            If myWeb.moRequest("cIsDelivery") = "True" And mnShippingRootId > 0 Then
+                                                'mnShippingRootId
+                                                'check if the submitted country matches one in the delivery list
+                                                Dim oCheckElmt As XmlElement = moPageXml.CreateElement("ValidCountries")
+                                                ListShippingLocations(oCheckElmt)
+                                                Dim cCountry As String = oXform.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText
+                                                If oCheckElmt.SelectSingleNode("descendant-or-self::TreeItem[@Name='" & cCountry & "' or @name='" & cCountry & "' or @nameShort='" & cCountry & "']") Is Nothing Then
+                                                    oXform.valid = False
+                                                    oXform.addNote("cContactCountry", xForm.noteTypes.Alert, "Cannot Deliver to this country. please select another.", True)
+                                                End If
+                                            End If
+                                            If oXform.valid Then
+                                                sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" & mnCartId
+                                                Dim sContactKey2 As String = moDBHelper.ExeProcessSqlScalar(sSql)
+                                                oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Delivery Address"
+                                                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oXform.Instance, sContactKey2)
+                                                'going to set it back to a billing address
+                                                oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Billing Address"
+                                            End If
+                                        End If
+                                    End If
 
-                            Else
-                                ' Throw an error to indicate that the user has timed out
-                                mnProcessError = 4
+                                    If Not oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") Is Nothing Then
+                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']").InnerText)
+                                    End If
+
+                                Else
+                                    ' Throw an error to indicate that the user has timed out
+                                    mnProcessError = 4
                             End If
                         End If
 
@@ -5826,6 +5841,9 @@ processFlow:
                     addNewTextNode("nTaxRate", oElmt, CStr(mnTaxRate))
                     addNewTextNode("nGiftListId", oElmt, "0")
                     addNewTextNode("nAuditId", oElmt)
+                    'validate column exists then only
+                    addNewTextNode("nReceiptType", oElmt, "0")
+
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
                     Return mnCartId
                 Else
@@ -5883,7 +5901,7 @@ processFlow:
 
         End Sub
 
-        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False) As Boolean
+        Public Function AddItem(ByVal nProductId As Long, ByVal nQuantity As Long, ByVal oProdOptions As Array, Optional ByVal cProductText As String = "", Optional ByVal nPrice As Double = 0, Optional ProductXml As String = "", Optional UniqueProduct As Boolean = False, Optional overideUrl As String = "") As Boolean
             PerfMon.Log("Cart", "AddItem")
             Dim cSQL As String = "Select * From tblCartItem WHERE nCartOrderID = " & mnCartId & " AND nItemiD =" & nProductId
             Dim oDS As New DataSet
@@ -5949,7 +5967,12 @@ processFlow:
 
                     addNewTextNode("nCartOrderId", oElmt, CStr(mnCartId))
                     addNewTextNode("nItemId", oElmt, nProductId)
-                    addNewTextNode("cItemURL", oElmt, myWeb.GetContentUrl(nProductId)) 'Erm?
+                    If overideUrl = "" Then
+                        addNewTextNode("cItemURL", oElmt, myWeb.GetContentUrl(nProductId)) 'Erm?
+                    Else
+                        addNewTextNode("cItemURL", oElmt, overideUrl) 'Erm?
+                    End If
+
 
                     If ProductXml <> "" Then
                         oProdXml.InnerXml = ProductXml

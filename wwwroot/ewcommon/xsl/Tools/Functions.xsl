@@ -1047,15 +1047,15 @@
 
   <xsl:template match="Page" mode="preloader">
     <style>
-      <xsl:text>.loader{position: fixed;left:0;top:0;width: 100%;height: 100%;z-index: 10000;background:</xsl:text>
+      <xsl:text>.preloader{position: fixed;left:0;top:0;width: 100%;height: 100%;z-index: 10000;background:</xsl:text>
       <xsl:value-of select="$preloader-background"/>
-      <xsl:text>;}#loader-1:before, #loader-1:after{content: "";position: absolute;top: 45%;left: 45%;width: 100px;height: 100px;border-radius: 100%;border: 10px solid transparent;border-top-color:</xsl:text>
+      <xsl:text>;}#preloader-1:before, #loader-1:after{content: "";position: absolute;top: 45%;left: 45%;width: 100px;height: 100px;border-radius: 100%;border: 10px solid transparent;border-top-color:</xsl:text>
       <xsl:value-of select="$preloader-color"/>
-      <xsl:text>;}#loader-1:before{z-index: 100;animation: spin 1s infinite;}#loader-1:after{border: 10px solid #ccc;}@keyframes spin{0%{-webkit-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}100%{-webkit-transform: rotate(360deg);-ms-transform: rotate(360deg);-o-transform: rotate(360deg);transform: rotate(360deg);}}</xsl:text>
+      <xsl:text>;}#preloader-1:before{z-index: 100;animation: spin 1s infinite;}#loader-1:after{border: 10px solid #ccc;}@keyframes spin{0%{-webkit-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}100%{-webkit-transform: rotate(360deg);-ms-transform: rotate(360deg);-o-transform: rotate(360deg);transform: rotate(360deg);}}</xsl:text>
     </style>
-    <div class="loader">
-      <div class="loader-container">
-        <div id="loader-1" role="status">
+    <div class="preloader">
+      <div class="preloader-container">
+        <div id="preloader-1" role="status">
           <xsl:text> </xsl:text>
         </div>
       </div>
@@ -6954,6 +6954,7 @@
     <xsl:param name="maxHeight"/>
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
+    <xsl:param name="rootpath"/>
     <xsl:variable name="max-width">
       <xsl:choose>
         <xsl:when test="$maxWidth!=''">
@@ -6979,6 +6980,7 @@
       <xsl:with-param name="max-height" select="$max-height"/>
       <xsl:with-param name="crop" select="$crop"/>
       <xsl:with-param name="no-stretch" select="$no-stretch"/>
+      <xsl:with-param name="rootpath" select="$rootpath"/>
     </xsl:apply-templates>
   </xsl:template>
 
@@ -6987,6 +6989,7 @@
     <xsl:param name="max-height" />
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
+    <xsl:param name="rootpath"/>
     <xsl:variable name="newSrc">
       <xsl:call-template name="resize-image">
         <xsl:with-param name="path" select="img/@src"/>
@@ -7019,7 +7022,7 @@
     <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-    <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
+    <img src="{$rootpath}{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{img/@alt}" class="photo {$responsiveImg}"/>
 
   </xsl:template>
 

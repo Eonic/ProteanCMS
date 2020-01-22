@@ -228,6 +228,62 @@ Public Class Messaging
         End Try
     End Sub
 
+    ' deleting physical files given full path
+    Public Sub deleteAttachmentPDF(ByVal fileLocation As String)
+        Dim cProcessInfo As String = "emailCart"
+        Try
+            If fileLocation <> "" Then
+
+                If Not Attachments Is Nothing Then
+                    Attachments.Clear()
+                End If
+
+                Dim fsh As Protean.fsHelper = New fsHelper
+                fsh.DeleteFile(fileLocation)
+
+            End If
+
+        Catch ex As Exception
+            If gbDebug Then
+                returnException(mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug)
+            End If
+        End Try
+    End Sub
+
+    Overridable Sub AddToLists(StepName As String, Optional Name As String = "", Optional Email As String = "", Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing)
+
+        Dim cProcessInfo As String = ""
+        Try
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+            If Not moMailConfig Is Nothing Then
+
+                Dim sMessagingProvider As String = ""
+
+                If Not moMailConfig Is Nothing Then
+                    sMessagingProvider = moMailConfig("MessagingProvider")
+                End If
+
+                If sMessagingProvider <> "" Then
+                    Dim myWeb As New Protean.Cms(moCtx)
+                    Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+
+                    If valDict Is Nothing Then valDict = New System.Collections.Generic.Dictionary(Of String, String)
+
+                    Dim ListId As String = ""
+                    ListId = StepName
+
+                    If ListId <> "" Then
+                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
+                    End If
+                End If
+            End If
+
+        Catch ex As Exception
+            returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
+        End Try
+
+    End Sub
+
     Public Function emailer(
                                 ByVal oBodyXML As XmlElement,
                                 ByVal xsltPath As String,
@@ -293,7 +349,6 @@ Public Class Messaging
             Else
                 styleFile = goServer.MapPath(xsltPath)
             End If
-
             If Me.HasLanguage And oXml.DocumentElement IsNot Nothing Then
                 oXml.DocumentElement.SetAttribute("translang", Me.Language)
             End If
@@ -1231,43 +1286,20 @@ Public Class Messaging
             Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
 
-            Dim oWeb As New Cms
-            oWeb.InitializeVariables()
-            oWeb.Open()
-            oWeb.mnPageId = nPageId
-            oWeb.mbAdminMode = False
-
-            oWeb.mcEwSiteXsl = cEmailXSL
-            'get body
-            oWeb.mnMailMenuId = moMailConfig("RootPageId")
-
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
-                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+                Dim emailStructure As Hashtable
 
-                'Lets get the title and override the one provided
-                Dim oXml As New XmlDocument
-
-                oXml = htmlToXmlDoc(sEmailBody)
-
-                If Not oXml Is Nothing Then
-                    'override the subject line from the template.
-                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
-                        If oElmt2.InnerText <> "" Then
-                            cSubject = Trim(oElmt2.InnerText)
-                        End If
-                    End If
-                End If
-                oXml = Nothing
+                emailStructure = SetEmailBodyAndSubject(nPageId, cEmailXSL, cRepientMail, cFromEmail, cFromName, cSubject)
 
                 Dim oEmail As Net.Mail.MailMessage
 
                 oEmail = New Net.Mail.MailMessage
                 oEmail.IsBodyHtml = True
                 oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
-                oEmail.Body = sEmailBody
+                oEmail.Body = emailStructure("EmailBody").ToString()
+
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
-                oEmail.Subject = cSubject
+                oEmail.Subject = emailStructure("Subject").ToString()
 
 
                 'otherwise we send it
@@ -1287,49 +1319,57 @@ Public Class Messaging
     Function SendSingleMail_Direct(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
         PerfMon.Log("Messaging", "SendSingleMail_Queued")
         Try
-            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
-
-
-            Dim oWeb As New Cms
-            oWeb.InitializeVariables()
-            oWeb.Open()
-            oWeb.mnPageId = nPageId
-            oWeb.mbAdminMode = False
-
-            oWeb.mcEwSiteXsl = cEmailXSL
-            'get body
-            oWeb.mnMailMenuId = moMailConfig("RootPageId")
-
             If Protean.Tools.Text.IsEmail(cFromEmail.Trim()) And Protean.Tools.Text.IsEmail(cRepientMail.Trim()) Then
-                Dim sEmailBody As String = oWeb.ReturnPageHTML(oWeb.mnPageId)
+                Dim emailStructure As Hashtable
 
-                'Lets get the title and override the one provided
-                Dim oXml As New XmlDocument
+                emailStructure = SetEmailBodyAndSubject(nPageId, cEmailXSL, cRepientMail, cFromEmail, cFromName, cSubject)
 
-                oXml = htmlToXmlDoc(sEmailBody)
+                Dim oSmtpn As New SmtpClient
 
-                If Not oXml Is Nothing Then
-                    'override the subject line from the template.
-                    If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
-                        Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
-                        If oElmt2.InnerText <> "" Then
-                            cSubject = Trim(oElmt2.InnerText)
-                        End If
-                    End If
+                oSmtpn.Host = goConfig("MailServer")
+                If goConfig("MailServerPort") <> "" Then
+                    oSmtpn.Port = goConfig("MailServerPort")
                 End If
-                oXml = Nothing
+
+                If goConfig("MailServerUsername") <> "" Then
+                    oSmtpn.UseDefaultCredentials = False
+                    oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword").Replace("&lt;", "<").Replace("&gt;", "<"), goConfig("MailServerUsernameDomain"))
+                End If
+                If LCase(goConfig("MailServerSSL")) = "on" Then
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+                    oSmtpn.EnableSsl = True
+                    oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network
+                End If
 
                 Dim oEmail As Net.Mail.MailMessage
 
                 oEmail = New Net.Mail.MailMessage
                 oEmail.IsBodyHtml = True
-                oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
+
+                If LCase(goConfig("overrideFromEmail")) = "on" Then
+                    oEmail.From = New Net.Mail.MailAddress(goConfig("ServerSenderEmail"), cFromName)
+                Else
+                    oEmail.From = New Net.Mail.MailAddress(cFromEmail.Trim(), cFromName)
+                End If
+
+                ' PREMailer Code
+                Dim hostUrl As String = goRequest.Url.Host
+                Dim urlScheme As String = "http://"
+                If goRequest.IsSecureConnection Then
+                    urlScheme = "https://"
+                End If
+                If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
+                    hostUrl = urlScheme + hostUrl
+                End If
+                Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), emailStructure("EmailBody"))
+                Dim sEmailBody As String = preMailerResult.Html
+
+
                 oEmail.Body = sEmailBody
                 oEmail.To.Add(New Net.Mail.MailAddress(cRepientMail.Trim()))
-                oEmail.Subject = cSubject
+                oEmail.Subject = emailStructure("Subject")
 
-                Dim sender As New Net.Mail.SmtpClient(goConfig("MailServer"))
-                sender.Send(oEmail)
+                oSmtpn.Send(oEmail)
 
                 'otherwise we send it
                 'SendQueuedMail(oEmail, moMailConfig("PickupHost"), moMailConfig("PickupLocation"))
@@ -1344,6 +1384,68 @@ Public Class Messaging
         End Try
     End Function
 
+    Public Function SetInlineCss(ByVal sEmailBody As String)
+        Try
+            Dim hostUrl As String = goRequest.Url.Host
+            Dim urlScheme As String = "http://"
+            If goRequest.IsSecureConnection Then
+                urlScheme = "https://"
+            End If
+            If Not hostUrl.StartsWith(urlScheme, StringComparison.OrdinalIgnoreCase) Then
+                hostUrl = urlScheme + hostUrl
+            End If
+            Dim preMailerResult As InlineResult = PreMailer.Net.PreMailer.MoveCssInline(New Uri(hostUrl), sEmailBody)
+            sEmailBody = preMailerResult.Html
+            Return sEmailBody
+
+        Catch ex As Exception
+
+        End Try
+
+
+    End Function
+    Public Function SetEmailBodyAndSubject(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cRepientMail As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String)
+        Try
+            Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+
+            Dim oWeb As New Cms
+            oWeb.InitializeVariables()
+            oWeb.Open()
+            oWeb.mnPageId = nPageId
+            oWeb.mbAdminMode = False
+
+            oWeb.mcEwSiteXsl = cEmailXSL
+            'get body
+            oWeb.mnMailMenuId = moMailConfig("RootPageId")
+            Dim sEmailBody As String
+            Dim emailStructure As New Hashtable
+
+
+            sEmailBody = oWeb.ReturnPageHTML(oWeb.mnPageId)
+            emailStructure.Add("EmailBody", sEmailBody)
+            'Lets get the title and override the one provided
+            Dim oXml As New XmlDocument
+
+            oXml = htmlToXmlDoc(sEmailBody)
+
+            If Not oXml Is Nothing Then
+                'override the subject line from the template.
+                If Not oXml.SelectSingleNode("html/head/title") Is Nothing Then
+                    Dim oElmt2 As XmlElement = oXml.SelectSingleNode("html/head/title")
+                    If oElmt2.InnerText <> "" Then
+                        cSubject = Trim(oElmt2.InnerText)
+                        emailStructure.Add("Subject", cSubject)
+                    End If
+                End If
+            End If
+            oXml = Nothing
+
+            Return emailStructure
+
+        Catch ex As Exception
+
+        End Try
+    End Function
     Public Function GetGroupEmails(ByVal groupIds As String) As UserEmailDictionary
         PerfMon.Log("Messaging", "GetGroupEmails")
         'Retrieves a list of email addresses from the groups
@@ -1353,15 +1455,15 @@ Public Class Messaging
         Try
             'dictionary object
             Dim oDic As New UserEmailDictionary
-            Dim oDBH As New Cms.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " & _
-            "Initial Catalog=" & goConfig("DatabaseName") & "; " & _
+            Dim oDBH As New Cms.dbHelper("Data Source=" & goConfig("DatabaseServer") & "; " &
+            "Initial Catalog=" & goConfig("DatabaseName") & "; " &
             goConfig("DatabaseAuth"), 1)
-            Dim cSQL As String = "SELECT nDirKey, cDirXml" & _
-            " FROM tblDirectory" & _
-            " WHERE (((SELECT TOP 1 tblDirectoryRelation.nDirChildId" & _
-            " FROM tblDirectoryRelation INNER JOIN" & _
-            " tblDirectory Groups ON tblDirectoryRelation.nDirParentId = Groups.nDirKey" & _
-            " WHERE (Groups.nDirKey IN (" & groupIds & ")) AND (tblDirectoryRelation.nDirChildId = tblDirectory.nDirKey)" & _
+            Dim cSQL As String = "SELECT nDirKey, cDirXml" &
+            " FROM tblDirectory" &
+            " WHERE (((SELECT TOP 1 tblDirectoryRelation.nDirChildId" &
+            " FROM tblDirectoryRelation INNER JOIN" &
+            " tblDirectory Groups ON tblDirectoryRelation.nDirParentId = Groups.nDirKey" &
+            " WHERE (Groups.nDirKey IN (" & groupIds & ")) AND (tblDirectoryRelation.nDirChildId = tblDirectory.nDirKey)" &
             " GROUP BY tblDirectoryRelation.nDirChildId)) IS NOT NULL)"
 
             Dim oDS As DataSet = oDBH.GetDataSet(cSQL, "Users", "Addresses")
@@ -1412,6 +1514,8 @@ Public Class Messaging
         End Try
 
     End Function
+
+
 
     ''Public Sub courseReminder(ByRef oResultsXml As XmlElement, ByVal cUserName As String, ByVal cUserEmail As String, ByVal subject As String, ByVal sEmailTemplate As String, ByRef fForm As Collections.Specialized.NameValueCollection) 'As String
     ''    PerfMon.Log("Messaging", "courseReminder")
@@ -1902,6 +2006,8 @@ Public Class XMLEmail
             Return Nothing
         End Try
     End Function
+
+
 
     Public Enum ToType
         [To] = 0

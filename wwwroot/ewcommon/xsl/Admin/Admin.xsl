@@ -8069,16 +8069,16 @@
                 <xsl:value-of select="@name"/>
               </td>
               <td>
-                <a href="{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
                   <i class="fa fa-edit">&#160;</i>&#160;View / Edit</a>
-                <a href="{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
+                <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-primary">
                   <i class="fa fa-copy">&#160;</i>&#160;Copy
                 </a>
-                <a href="{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-default">
+                <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-default">
                   <i class="fa fa-eye">&#160;</i>&#160;Preview</a>
-                <a href="{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-success">
+                <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-success">
                   <i class="fa fa-envelope">&#160;</i>&#160;Send</a>
-                <a href="{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
+                <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-xs btn-danger">
                   <i class="fa fa-trash-o">&#160;</i>&#160;Delete</a>
               </td>
             </tr>
@@ -8087,11 +8087,11 @@
                 <td>
                   &#160;&#160;&#160;<xsl:value-of select="@name"/>
                 </td>
-                <td>test
-                  <a href="{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-success">View / Edit</a>
-                  <a href="{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
-                  <a href="{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
-                  <a href="{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
+                <td>
+                  <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-success">View / Edit</a>
+                  <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton show">Preview</a>
+                  <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton move">Send</a>
+                  <a href="/{$appPath}?ewCmd=DeletePageMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="adminButton delete">Delete</a>
                 </td>
               </tr>
             </xsl:for-each>
@@ -8102,7 +8102,7 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='NewMail']" mode="Admin">
+  <xsl:template match="Page[@layout='NewMail' or @layout='AddMailModule' or @layout='EditMailContent']" mode="Admin">
     <div class="adminTemplate" id="template_AdminXForm">
       <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
     </div>
@@ -8112,10 +8112,13 @@
     <div class="report" id="template_EditStructure">
       <div id="column2" class="reportSet">
         <xsl:for-each select="ContentDetail/Content[@type='Message']">
-          <div class="group">
-            <h3>Result</h3>
+       
+          <div class="alert alert-info">
+            <i class="fa fa-check fa-2x pull-left">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:value-of select="node()"/>
           </div>
-          <xsl:value-of select="node()"/>
         </xsl:for-each>
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
 
@@ -8145,7 +8148,12 @@
           <div class="group">
             <h3>Result</h3>
           </div>
-          <xsl:value-of select="node()"/>
+          <div class="alert alert-info">
+            <i class="fa fa-check fa-2x pull-left">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:value-of select="node()"/>
+          </div>
         </xsl:for-each>
         <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
         <xsl:apply-templates select="ContentDetail/Report" mode="CampaignReport"/>
@@ -8169,12 +8177,14 @@
       <div class="col-md-9">
         <xsl:choose>
           <xsl:when test="ContentDetail/Content[@type='Message']">
-            <div class="group">
-              <h3>Result</h3>
-            </div>
             <xsl:for-each select="ContentDetail/Content[@type='Message']">
-              <xsl:value-of select="node()"/>
-              <br/>
+              <div class="alert alert-info">
+                <i class="fa fa-check fa-2x pull-left">
+                  <xsl:text> </xsl:text>
+                </i>
+                &#160;
+                <xsl:value-of select="node()"/>
+              </div>
             </xsl:for-each>
           </xsl:when>
           <xsl:otherwise>
