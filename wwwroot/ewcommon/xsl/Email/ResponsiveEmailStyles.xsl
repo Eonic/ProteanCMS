@@ -212,17 +212,17 @@
       .emailLabel,
       .emailAnswer{
       display:block !important;
-      width:100% !important;
+      width:auto !important;
       }
       .emailListImage1{
       display:block !important;
-      width:100% !important;
+      width:auto!important;
       vertical-align:top;
       padding:0 0 20px;
       }
       .emailListSummary{
       display:block !important;
-      width:100% !important;
+      width:auto !important;
       }
       }
     </style>
