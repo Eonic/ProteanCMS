@@ -2441,7 +2441,7 @@ restart:
                             If oVerId.InnerText = "" Then
                                 oVerId.InnerText = "0"
                             End If
-                            If gbVersionControl Then
+                            If myWeb.gbVersionControl Then
                                 'out to a subroutine for versioning
                                 contentVersioning(oInstance, ObjectType, nKey)
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
@@ -2515,7 +2515,7 @@ restart:
 
                         Case objectTypes.Content
                             'To be readjusted
-                            If gbVersionControl Then
+                            If myWeb.gbVersionControl Then
                                 'out to a subroutine for versioning
                                 contentVersioning(oInstance, ObjectType)
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
@@ -7895,7 +7895,7 @@ restart:
                     ' Set the default filter
                     sFilterSQL = "a.nStatus = 1 "
 
-                    If gbVersionControl _
+                    If myWeb.gbVersionControl _
                         AndAlso Me.mnUserId > 0 Then
                         ' Version control is on
                         ' Check the page permission

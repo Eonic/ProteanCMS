@@ -1505,6 +1505,17 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="escape-json">
+    <xsl:param name="string"/>
+    <!-- replace all characters not matching SingleStringCharacter
+        or DoubleStringCharacter according to ECMA262.  Note: not all
+        characters that should be escaped are legal XML characters:
+        "\a", "\b", "\v", and "\f" are not escaped. -->
+    <xsl:if test="$string!=''">
+      <xsl:value-of select="ew:escapeJson($string)"/>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template name="escape-js-html">
     <xsl:param name="string"/>
     <!-- replace all characters not matching SingleStringCharacter
@@ -6165,7 +6176,7 @@
         <xsl:variable name="image">
           <picture>
             <!--New image tags-->
-            <img itemprop="image">
+            <img>
               <!-- SRC -->
               <xsl:choose>
                 <xsl:when test="$lazy='on'">
@@ -6497,7 +6508,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" itemprop="image">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -6531,7 +6542,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" itemprop="image">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -6553,7 +6564,7 @@
             <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
             <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
             <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}" itemprop="image"/>
+            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>

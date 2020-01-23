@@ -2744,7 +2744,7 @@ Partial Public Class Cms
                     oContentLocations.ProcessSelects()
 
                     ' Version Control: if on, copy the status node for use after submission
-                    If gbVersionControl Then
+                    If myWeb.gbVersionControl Then
                         Dim nCurrentStatus As String = ""
                         If Xml.NodeState(MyBase.Instance, "//nStatus", , , , , , nCurrentStatus) = XmlNodeState.HasContents Then
                             addNewTextNode("currentStatus", MyBase.Instance, nCurrentStatus)

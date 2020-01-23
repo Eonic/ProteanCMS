@@ -101,7 +101,7 @@ Public Class Cms
 
     Public Shared gbClone As Boolean = False
     Public Shared gbMemberCodes As Boolean = False
-    Public Shared gbVersionControl As Boolean = False
+    Public gbVersionControl As Boolean = False
     Public Shared gbIPLogging As Boolean = False
     Public Shared gcGenerator As String = ""
     Public Shared gcCodebase As String = ""
