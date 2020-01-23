@@ -130,7 +130,7 @@ Partial Public Class Cms
                 Dim sSQLArr() As String = Nothing
 
                 Dim nCount As Integer
-
+                Dim dDisountAmount As Double = 0
                 Dim xmlCartItem As XmlElement
 
 
@@ -212,10 +212,13 @@ Partial Public Class Cms
                             If cPromoCodeUserEntered <> "" Then
                                 Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
                                 oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
+
                                 oCartXML.AppendChild(oDiscountMessage)
                             End If
                             Return 0
                         Else
+
+
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns
@@ -354,7 +357,18 @@ Partial Public Class Cms
 
                             Return nTotalSaved
                         End If
+                        ''code to validate exchange functionality
+                    ElseIf (cCartItemIds = "" And cPromoCodeUserEntered <> String.Empty) Then
+
+                        strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+
+
+                            dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                        Return dDisountAmount
                     Else
+
                         Return 0
                     End If
 
@@ -638,7 +652,8 @@ Partial Public Class Cms
                                     oDiscountElmt.SetAttribute("Applied", 1)
 
 
-                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing And oDiscountLoop.SelectSingleNode("ApplyToTotal").Value.ToString() = "True") Then
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
                                         If (AmountToDiscount = 0) Then
                                             bApplyOnTotal = True
                                         Else
@@ -673,11 +688,32 @@ Partial Public Class Cms
                                 oPriceElmt.SetAttribute("TotalSaving", oPriceElmt.GetAttribute("UnitSaving") * oPriceElmt.GetAttribute("Units"))
 
                                 'we will always apply these
-                                'oDiscountLoop.SetAttribute("Applied", 1)
+                                oDiscountLoop.SetAttribute("Applied", 1)
+                                RemainingAmountToDiscount = RemainingAmountToDiscount + oPriceLine.GetAttribute("TotalSaving")
                                 Dim oDiscountElmt As XmlElement
                                 'set the discount remianing if this rule is available on other products..
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
-                                    oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    ''oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+
+
+
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing _
+                                            And oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
+                                        If (AmountToDiscount = 0) Then
+                                            bApplyOnTotal = True
+                                        Else
+
+                                            bApplyOnTotal = False
+                                            oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - RemainingAmountToDiscount)
+                                        End If
+
+
+                                    Else
+
+                                        oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
+                                    End If
+
+
                                 Next
 
                             End If
@@ -1276,7 +1312,7 @@ NoDiscount:
                 Dim DiscountApplyDate As DateTime = Now()
                 Dim oDsDiscounts As DataSet
                 Dim doc As New XmlDocument()
-                Dim oDiscountMessage As String = "The code you have provided is invalid for this transaction"
+                Dim oDiscountMessage As String = "The promo code you have provided is invalid for this transaction"
                 Dim minimumOrderTotal As Double = 0
                 Dim maximumOrderTotal As Double = 0
 
