@@ -2396,7 +2396,7 @@
       <!-- Your customer chat code -->
       <div class="fb-customerchat"
         attribution="ProteanCMS"
-        page_id="{@pageid}">
+        page_id="{@page_id}">
         <xsl:if test="@theme_color!=''">
           <xsl:attribute name="theme_color">
             <xsl:value-of select="@theme_color"/>
