@@ -1039,6 +1039,9 @@
         <xsl:when test="Contents/Content[@type='Module' and @moduleType='FAQList']">
           <xsl:apply-templates select="Contents/Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD"/>
         </xsl:when>
+        <xsl:when test="Contents">
+          <xsl:apply-templates select="Contents" mode="JSONLD"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
