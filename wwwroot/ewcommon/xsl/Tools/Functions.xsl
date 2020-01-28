@@ -1095,6 +1095,7 @@
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
+    
     <xsl:choose>
       <xsl:when test="ContentDetail/Content[@metaKeywords!='']">
         <meta name="keywords" content="{ContentDetail/Content/@metaKeywords}"/>
@@ -1162,6 +1163,10 @@
 
     <xsl:apply-templates select="." mode="dublincore"/>
     <xsl:apply-templates select="." mode="sitemeta"/>
+    
+    <!-- if cart noindex nofollow-->
+    
+    
     
   </xsl:template>
 
