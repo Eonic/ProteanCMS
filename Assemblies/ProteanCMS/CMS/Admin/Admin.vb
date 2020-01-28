@@ -2417,30 +2417,51 @@ AfterProcessFlow:
                         Dim oImportRootElmt As XmlElement = oImportXml.DocumentElement
 
                         If oImportRootElmt.Name = "DatabaseImport" Then
-                            Dim DBConn As String = "Data Source=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
-                    "Initial Catalog=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
-                    "user id=" & oImportRootElmt.GetAttribute("databaseUsername") & "; password=" & oImportRootElmt.GetAttribute("databasePassword")
-
-                            Dim newDb As New dbHelper(DBConn, mnAdminUserId, myWeb.moCtx)
-                            If newDb.ConnectionValid = False Then
-                                moAdXfm.valid = False
-                                sErrorMsg = "Bad DB Connection - " & DBConn
-                            Else
-                                Dim ImportDS As New DataSet
-                                Dim sSql As String = oImportRootElmt.GetAttribute("select")
-                                Dim nTop As Integer = CInt("0" & oImportRootElmt.GetAttribute("top"))
-                                If sSql = "" Then
-                                    If nTop > 0 Then
-                                        sSql = "select TOP " & nTop.ToString() & " * from " & oImportRootElmt.GetAttribute("tableName")
-                                    Else
-                                        sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
-
-                                    End If
-                                End If
-                                ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
-                                oImportXml.LoadXml(ImportDS.GetXml())
+                            Dim DBConn As String
+                            Dim databaseType As String = oImportRootElmt.GetAttribute("databaseType")
+                            If String.IsNullOrWhiteSpace(databaseType) Then
+                                databaseType = "mssql"
                             End If
 
+                            Select Case databaseType
+                                Case "mssql"
+                                    DBConn = "Data Source=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                                           "Initial Catalog=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
+                                           "user id=" & oImportRootElmt.GetAttribute("databaseUsername") & "; password=" & oImportRootElmt.GetAttribute("databasePassword")
+
+                                    Dim newDb As New dbHelper(DBConn, mnAdminUserId, myWeb.moCtx)
+                                    If newDb.ConnectionValid = False Then
+                                        moAdXfm.valid = False
+                                        sErrorMsg = "Bad DB Connection - " & DBConn
+                                    Else
+                                        Dim ImportDS As New DataSet
+                                        Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                        If sSql = "" Then
+                                            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                        End If
+                                        ImportDS = newDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
+                                        oImportXml.LoadXml(ImportDS.GetXml())
+                                    End If
+                                Case "mysql"
+                                    DBConn = "server=" & oImportRootElmt.GetAttribute("databaseServer") & "; " &
+                                            "port=" & oImportRootElmt.GetAttribute("databasePort") & "; " &
+                                            "database=" & oImportRootElmt.GetAttribute("databaseName") & "; " &
+                                            "uid=" & oImportRootElmt.GetAttribute("databaseUsername") & "; pwd=" & oImportRootElmt.GetAttribute("databasePassword")
+
+                                    Dim mysqlDb As New MySqlDatabase(DBConn)
+                                    If mysqlDb.ConnectionValid = False Then
+                                        moAdXfm.valid = False
+                                        sErrorMsg = "Bad DB Connection - " & DBConn
+                                    Else
+                                        Dim ImportDS As New DataSet
+                                        Dim sSql As String = oImportRootElmt.GetAttribute("select")
+                                        If sSql = "" Then
+                                            sSql = "select * from " & oImportRootElmt.GetAttribute("tableName")
+                                        End If
+                                        ImportDS = mysqlDb.GetDataSet(sSql, oImportRootElmt.GetAttribute("tableName"))
+                                        oImportXml.LoadXml(ImportDS.GetXml())
+                                    End If
+                            End Select
                         End If
                     End If
 
