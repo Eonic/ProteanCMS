@@ -68,6 +68,7 @@
 					  <label></label>
 					  <value>true</value>
 				  </item>
+          <alert>Be aware that duplicate content or meta tags can have a negative SEO effect</alert>
 			  </select>
 			  <input bind="cDescription" class="short">
 				  <label>Change Notes</label>

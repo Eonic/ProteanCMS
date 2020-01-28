@@ -197,6 +197,29 @@ Partial Public Module xmlTools
             End Try
         End Function
 
+        Public Function escapeJson(ByVal text As String) As String
+            Try
+
+                Dim orig As String = text
+                If Not (text = "") Then
+                    text = text.Replace("\", "\\")
+                    text = text.Replace("/", "\/")
+                    text = text.Replace("&#8;", "\b")
+                    text = text.Replace("&#13;", "\r")
+                    text = text.Replace("&#10;", "\n")
+                    text = text.Replace("#9;", "\t")
+                    text = text.Replace("""", "\""")
+                End If
+                If orig <> text Then
+                    Return text
+                Else
+                    Return orig
+                End If
+            Catch ex As Exception
+                Return text
+            End Try
+        End Function
+
         Public Function escapeJsHTML(ByVal oContextNode As Object) As Object
             Dim Text As String = ""
             Try

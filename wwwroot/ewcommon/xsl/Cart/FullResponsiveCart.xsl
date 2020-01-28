@@ -1646,7 +1646,9 @@
       <div class="Site">
         <xsl:apply-templates select="Cart/Order" mode="orderProcess"/>
       </div>
+      <xsl:apply-templates select="." mode="footerJs"/>
     </body>
+    
   </xsl:template>
 
   <xsl:template match="Order[@cmd='Redirect3ds']" mode="orderProcessTitle">
@@ -1704,7 +1706,11 @@
       <div class="terminus">&#160;</div>
     </form>
     <iframe name="threeDS" id="threeDS"></iframe>
-    <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
+
+  </xsl:template>
+  
+  <xsl:template match="Content[@name='Secure3D']" mode="contentJS">
+      <script type="text/javascript">$(document).ready(function () {$('#Secure3D .buttons').hide();$('#Secure3D').submit();});</script>
   </xsl:template>
 
   <xsl:template match="Content[@name='Secure3DReturn']" mode="xform">
@@ -1746,9 +1752,12 @@
         </xsl:if>
       </div>
     </form>
+  </xsl:template>
+  
+  <xsl:template match="Content[@name='Secure3DReturn']" mode="contentJS">
     <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn .buttons').hide();$('#Secure3DReturn').submit();});</script>
   </xsl:template>
-
+    
   <xsl:template match="Content[@name='Redirect3ds']" mode="xform">
     <form method="{model/submission/@method}" action="" target="_top">
       <xsl:attribute name="class">
@@ -1799,9 +1808,12 @@
       </xsl:if>
       <div class="terminus">&#160;</div>
     </form>
-    <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn').submit();});</script>
   </xsl:template>
 
+  <xsl:template match="Content[@name='Redirect3ds']" mode="contentJS">
+    <script type="text/javascript">$(document).ready(function () {$('#Secure3DReturn').submit();});</script>
+  </xsl:template>
+  
 
   <xsl:template match="group | repeat" mode="xform2">
     <xsl:param name="class"/>

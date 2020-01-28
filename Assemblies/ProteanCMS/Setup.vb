@@ -2687,6 +2687,8 @@ Public Class ContentMigration
                     End If
 
                     If bForReal Then
+                        'diable version control for this
+                        myWeb.gbVersionControl = False
                         myWeb.moDbHelper.setObjectInstance(Me.nUpdateTableType, oInstance, CLng(cCurrentId))
                         If CLng(cCurrentId) > 0 Then
                             myWeb.moDbHelper.processInstanceExtras(CLng(cCurrentId), oInstance, False, False)

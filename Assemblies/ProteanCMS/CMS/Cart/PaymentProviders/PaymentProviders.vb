@@ -4135,9 +4135,9 @@ Partial Public Class Cms
                     oXform.moPageXML = myWeb.moPageXml
 
                     If moCartConfig("SecureURL").EndsWith("/") Then
-                        RedirectURL = moCartConfig("SecureURL") & "?cartCmd=SubmitPaymentDetails"
+                        RedirectURL = moCartConfig("SecureURL") & "?cartCmd=SubmitPaymentDetails&paymentMethod=" & myWeb.moCart.mcPaymentMethod
                     Else
-                        RedirectURL = moCartConfig("SecureURL") & "/?cartCmd=SubmitPaymentDetails"
+                        RedirectURL = moCartConfig("SecureURL") & "/?cartCmd=SubmitPaymentDetails&paymentMethod=" & myWeb.moCart.mcPaymentMethod
                     End If
 
                     'create the instance

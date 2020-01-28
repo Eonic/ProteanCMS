@@ -202,7 +202,9 @@ Namespace Providers
                         Dim ppRequestDetail As New Protean.PayPalAPI.DoDirectPaymentRequestDetailsType()
                         Dim ppRecuringRequestDetail As New Protean.PayPalAPI.CreateRecurringPaymentsProfileRequestDetailsType()
 
-                        'create the payment request
+
+
+                        'only do this if we are not being redirected back
                         If ccXform.valid Then
 
                             'save some card details in session for later
@@ -370,7 +372,6 @@ Namespace Providers
                                         Else
                                             sRedirectURL = oEwProv.moCartConfig("SecureURL") & "/?cartCmd=Redirect3ds"
                                         End If
-
                                         Xform3dSec = oEwProv.xfrmSecure3D(ACSUrl, CStr(oEwProv.mnCartId), Payload, sRedirectURL)
                                     Else
                                         'Card is not enrolled continue as usual
@@ -388,197 +389,193 @@ Namespace Providers
                                 b3DAuthorised = True
                             End If
 
+                        End If
 
-                            'Revised for SOAP API
-                            If ccXform.valid Then
-                                ''Setup the PayPal Payment Object.
-                                Dim ppBillingAddress As Protean.PayPalAPI.AddressType = New Protean.PayPalAPI.AddressType()
+                        'create the payment request
+                        If ccXform.valid Then
+                            ''Setup the PayPal Payment Object.
+                            Dim ppBillingAddress As Protean.PayPalAPI.AddressType = New Protean.PayPalAPI.AddressType()
 
-                                ppBillingAddress.Street1 = IIf(oCartAdd.SelectSingleNode("Company").InnerText = "", oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText)
-                                If oCartAdd.SelectSingleNode("Company").InnerText = "" Then
-                                    ppBillingAddress.Street2 = oCartAdd.SelectSingleNode("Street").InnerText
-                                End If
-                                ppBillingAddress.CityName = oCartAdd.SelectSingleNode("City").InnerText
-                                ppBillingAddress.StateOrProvince = oCartAdd.SelectSingleNode("State").InnerText
-                                ppBillingAddress.PostalCode = oCartAdd.SelectSingleNode("PostalCode").InnerText
-                                ppBillingAddress.CountryName = oCartAdd.SelectSingleNode("Country").InnerText
+                            ppBillingAddress.Street1 = IIf(oCartAdd.SelectSingleNode("Company").InnerText = "", oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText)
+                            If oCartAdd.SelectSingleNode("Company").InnerText = "" Then
+                                ppBillingAddress.Street2 = oCartAdd.SelectSingleNode("Street").InnerText
+                            End If
+                            ppBillingAddress.CityName = oCartAdd.SelectSingleNode("City").InnerText
+                            ppBillingAddress.StateOrProvince = oCartAdd.SelectSingleNode("State").InnerText
+                            ppBillingAddress.PostalCode = oCartAdd.SelectSingleNode("PostalCode").InnerText
+                            ppBillingAddress.CountryName = oCartAdd.SelectSingleNode("Country").InnerText
 
-                                Dim ppCardOwnerName As Protean.PayPalAPI.PersonNameType = New Protean.PayPalAPI.PersonNameType()
-                                Dim aGivenName() As String = Split(oCartAdd.SelectSingleNode("GivenName").InnerText, " ")
-                                Select Case UBound(aGivenName)
-                                    Case 0
-                                        ppCardOwnerName.LastName = aGivenName(0)
-                                        ppCardOwnerName.FirstName = aGivenName(0)
-                                    Case 1
-                                        ppCardOwnerName.FirstName = aGivenName(0)
-                                        ppCardOwnerName.LastName = aGivenName(1)
-                                    Case 2
-                                        ppCardOwnerName.FirstName = aGivenName(0)
-                                        ppCardOwnerName.MiddleName = aGivenName(1)
-                                        ppCardOwnerName.LastName = aGivenName(2)
-                                    Case 3
-                                        ppCardOwnerName.FirstName = aGivenName(0)
-                                        ppCardOwnerName.MiddleName = aGivenName(1)
-                                        ppCardOwnerName.LastName = aGivenName(2)
-                                        ppCardOwnerName.Suffix = aGivenName(3)
-                                End Select
+                            Dim ppCardOwnerName As Protean.PayPalAPI.PersonNameType = New Protean.PayPalAPI.PersonNameType()
+                            Dim aGivenName() As String = Split(oCartAdd.SelectSingleNode("GivenName").InnerText, " ")
+                            Select Case UBound(aGivenName)
+                                Case 0
+                                    ppCardOwnerName.LastName = aGivenName(0)
+                                    ppCardOwnerName.FirstName = aGivenName(0)
+                                Case 1
+                                    ppCardOwnerName.FirstName = aGivenName(0)
+                                    ppCardOwnerName.LastName = aGivenName(1)
+                                Case 2
+                                    ppCardOwnerName.FirstName = aGivenName(0)
+                                    ppCardOwnerName.MiddleName = aGivenName(1)
+                                    ppCardOwnerName.LastName = aGivenName(2)
+                                Case 3
+                                    ppCardOwnerName.FirstName = aGivenName(0)
+                                    ppCardOwnerName.MiddleName = aGivenName(1)
+                                    ppCardOwnerName.LastName = aGivenName(2)
+                                    ppCardOwnerName.Suffix = aGivenName(3)
+                            End Select
 
-                                Dim ppCardOwner As Protean.PayPalAPI.PayerInfoType = New Protean.PayPalAPI.PayerInfoType()
-                                ppCardOwner.Address = ppBillingAddress
-                                ppCardOwner.PayerName = ppCardOwnerName
+                            Dim ppCardOwner As Protean.PayPalAPI.PayerInfoType = New Protean.PayPalAPI.PayerInfoType()
+                            ppCardOwner.Address = ppBillingAddress
+                            ppCardOwner.PayerName = ppCardOwnerName
 
-                                Dim ppCreditCard As Protean.PayPalAPI.CreditCardDetailsType = New Protean.PayPalAPI.CreditCardDetailsType()
 
-                                ppCreditCard.CardOwner = ppCardOwner
 
-                                ppCreditCard.CVV2 = myWeb.moRequest("creditCard/CV2").Trim
+                            Dim ppCreditCard As Protean.PayPalAPI.CreditCardDetailsType = New Protean.PayPalAPI.CreditCardDetailsType()
 
-                                ppCreditCard.ExpMonth = CInt(Left(myWeb.moRequest("creditCard/expireDate"), 2))
-                                ppCreditCard.ExpYear = CInt(Right(myWeb.moRequest("creditCard/expireDate"), 4))
-                                ppCreditCard.ExpMonthSpecified = True
-                                ppCreditCard.ExpYearSpecified = True
-                                ppCreditCard.CreditCardNumber = myWeb.moRequest("creditCard/number").Trim
+                            ppCreditCard.CardOwner = ppCardOwner
 
-                                Select Case UCase(myWeb.moRequest("creditCard/type"))
-                                    Case "AMEX", "AMERICAN EXPRESS"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Amex
-                                    Case "DISCOVER"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Discover
-                                    Case "MASTERCARD", "MASTER CARD"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.MasterCard
-                                    Case "SOLO"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Solo
-                                    Case "SWITCH",
+                            ppCreditCard.CVV2 = myWeb.moRequest("creditCard/CV2").Trim
+
+                            ppCreditCard.ExpMonth = CInt(Left(myWeb.moRequest("creditCard/expireDate"), 2))
+                            ppCreditCard.ExpYear = CInt(Right(myWeb.moRequest("creditCard/expireDate"), 4))
+                            ppCreditCard.ExpMonthSpecified = True
+                            ppCreditCard.ExpYearSpecified = True
+                            ppCreditCard.CreditCardNumber = myWeb.moRequest("creditCard/number").Trim
+
+                            Select Case UCase(myWeb.moRequest("creditCard/type"))
+                                Case "AMEX", "AMERICAN EXPRESS"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Amex
+                                Case "DISCOVER"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Discover
+                                Case "MASTERCARD", "MASTER CARD"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.MasterCard
+                                Case "SOLO"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Solo
+                                Case "SWITCH",
                                         ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Switch
-                                    Case "MAESTRO"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Maestro
-                                        'For Maestro
-                                        ppCreditCard.StartMonth = CInt(Left(myWeb.moRequest("creditCard/issueDate"), 2))
-                                        ppCreditCard.StartYear = CInt(Right(myWeb.moRequest("creditCard/issueDate"), 4))
-                                        ppCreditCard.IssueNumber = CInt(myWeb.moRequest("creditCard/issueNumber"))
-                                    Case "VISA"
-                                        ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Visa
-                                End Select
+                                Case "MAESTRO"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Maestro
+                                    'For Maestro
+                                    ppCreditCard.StartMonth = CInt(Left(myWeb.moRequest("creditCard/issueDate"), 2))
+                                    ppCreditCard.StartYear = CInt(Right(myWeb.moRequest("creditCard/issueDate"), 4))
+                                    ppCreditCard.IssueNumber = CInt(myWeb.moRequest("creditCard/issueNumber"))
+                                Case "VISA"
+                                    ppCreditCard.CreditCardType = PayPalAPI.CreditCardTypeType.Visa
+                            End Select
 
-                                If b3DSecure Then
-                                    Dim pp3DsecReq As New Protean.PayPalAPI.ThreeDSecureRequestType()
-                                    pp3DsecReq.Xid = Xid
-                                    pp3DsecReq.MpiVendor3ds = Enrolled
-                                    pp3DsecReq.Cavv = CAVV
-                                    pp3DsecReq.Eci3ds = EciFlag
-                                    pp3DsecReq.AuthStatus3ds = PAResStatus
-                                    ppCreditCard.ThreeDSecureRequest = pp3DsecReq
-                                End If
-
-                                '' ###Details
-                                '' Let's you specify details of a payment amount.
-                                Dim ppDetails As New Protean.PayPalAPI.PaymentDetailsType()
-
-                                '' ###Amount
-                                '' Let's you specify a payment amount.
-                                Dim ppAmount As New Protean.PayPalAPI.BasicAmountType()
-                                Select Case UCase(oEwProv.mcCurrency)
-                                    Case "EUR"
-                                        ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
-                                    Case "USD"
-                                        ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
-                                    Case "GBP"
-                                        ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                    Case Else
-                                        ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                End Select
-
-                                ' Total must be equal to sum of shipping, tax and subtotal.
-                                ppAmount.Value = oEwProv.mnPaymentAmount
-
-                                ppDetails.OrderTotal = ppAmount
-                                ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId)
-                                ppDetails.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
-
-                                ppRequestDetail.CreditCard = ppCreditCard
-                                ppRequestDetail.PaymentDetails = ppDetails
-                                ppRequestDetail.IPAddress = IIf(myWeb.moRequest.ServerVariables("REMOTE_ADDR") = "1", "88.97.12.224", myWeb.moRequest.ServerVariables("REMOTE_ADDR"))
-                                ppRequestDetail.MerchantSessionId = myWeb.moSession.SessionID
-                                ppRequestDetail.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
-
-                                If repeatAmt > 0 Then
-                                    Dim ppScheduleDetails As New PayPalAPI.ScheduleDetailsType()
-                                    Dim ppPaymentPeriod As New PayPalAPI.BillingPeriodDetailsType()
-                                    Dim ppRepeatAmount As New Protean.PayPalAPI.BasicAmountType()
-                                    Select Case UCase(oEwProv.mcCurrency)
-                                        Case "EUR"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
-                                        Case "USD"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
-                                        Case "GBP"
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                        Case Else
-                                            ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
-                                    End Select
-
-
-                                    ppRepeatAmount.Value = repeatAmt
-
-
-                                    ppScheduleDetails.AutoBillOutstandingAmount = PayPalAPI.AutoBillType.AddToNextBilling
-                                    ppPaymentPeriod.Amount = ppRepeatAmount
-                                    ppPaymentPeriod.BillingFrequency = repeatFrequency
-                                    Select Case repeatInterval
-                                        Case "day"
-                                            ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Day
-                                        Case "week"
-                                            ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Week
-                                        Case "month"
-                                            ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Month
-                                        Case "year"
-                                            ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Year
-                                    End Select
-                                    ppPaymentPeriod.TotalBillingCyclesSpecified = False
-                                    ppScheduleDetails.PaymentPeriod = ppPaymentPeriod
-                                    ppScheduleDetails.MaxFailedPaymentsSpecified = False
-                                    ppScheduleDetails.Description = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId) & " - " & oCartAdd.SelectSingleNode("GivenName").InnerText
-
-                                    If oEwProv.mnPaymentAmount > 0 Then
-                                        ppScheduleDetails.ActivationDetails = New PayPalAPI.ActivationDetailsType()
-                                        ppScheduleDetails.ActivationDetails.InitialAmount = ppAmount
-                                        ppScheduleDetails.ActivationDetails.FailedInitialAmountAction = PayPalAPI.FailedPaymentActionType.CancelOnFailure
-                                    Else
-                                        bValidateFirst = True
-                                    End If
-
-                                    Dim ppRecuringProfileDetails As New PayPalAPI.RecurringPaymentsProfileDetailsType()
-
-                                    If delayStart Then
-                                        Select Case repeatInterval
-                                            Case "day"
-                                                startDate = DateAdd(DateInterval.Day, repeatFrequency, Now())
-                                            Case "week"
-                                                startDate = DateAdd(DateInterval.WeekOfYear, repeatFrequency, Now())
-                                            Case "month"
-                                                startDate = DateAdd(DateInterval.Month, repeatFrequency, Now())
-                                            Case "year"
-                                                startDate = DateAdd(DateInterval.Year, repeatFrequency, Now())
-                                        End Select
-                                    End If
-
-                                    ppRecuringProfileDetails.BillingStartDate = startDate
-                                    ppRecuringProfileDetails.SubscriberName = ppCardOwnerName.FirstName & " " & ppCardOwnerName.LastName
-                                    ppRecuringProfileDetails.SubscriberShippingAddress = ppBillingAddress
-                                    ppRecuringProfileDetails.ProfileReference = ""
-
-                                    ppRecuringRequestDetail.CreditCard = ppCreditCard
-                                    ppRecuringRequestDetail.ScheduleDetails = ppScheduleDetails
-                                    ppRecuringRequestDetail.RecurringPaymentsProfileDetails = ppRecuringProfileDetails
-
-                                End If
-
-
+                            If b3DSecure Then
+                                Dim pp3DsecReq As New Protean.PayPalAPI.ThreeDSecureRequestType()
+                                pp3DsecReq.Xid = Xid
+                                pp3DsecReq.MpiVendor3ds = Enrolled
+                                pp3DsecReq.Cavv = CAVV
+                                pp3DsecReq.Eci3ds = EciFlag
+                                pp3DsecReq.AuthStatus3ds = PAResStatus
+                                ppCreditCard.ThreeDSecureRequest = pp3DsecReq
                             End If
 
+                            '' ###Details
+                            '' Let's you specify details of a payment amount.
+                            Dim ppDetails As New Protean.PayPalAPI.PaymentDetailsType()
+
+                            '' ###Amount
+                            '' Let's you specify a payment amount.
+                            Dim ppAmount As New Protean.PayPalAPI.BasicAmountType()
+                            Select Case UCase(oEwProv.mcCurrency)
+                                Case "EUR"
+                                    ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
+                                Case "USD"
+                                    ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
+                                Case "GBP"
+                                    ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                                Case Else
+                                    ppAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                            End Select
+
+                            ' Total must be equal to sum of shipping, tax and subtotal.
+                            ppAmount.Value = oEwProv.mnPaymentAmount
+
+                            ppDetails.OrderTotal = ppAmount
+                            ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId)
+                            ppDetails.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
+
+                            ppRequestDetail.CreditCard = ppCreditCard
+                            ppRequestDetail.PaymentDetails = ppDetails
+                            ppRequestDetail.IPAddress = IIf(myWeb.moRequest.ServerVariables("REMOTE_ADDR") = "1", "88.97.12.224", myWeb.moRequest.ServerVariables("REMOTE_ADDR"))
+                            ppRequestDetail.MerchantSessionId = myWeb.moSession.SessionID
+                            ppRequestDetail.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
+
+                            If repeatAmt > 0 Then
+                                Dim ppScheduleDetails As New PayPalAPI.ScheduleDetailsType()
+                                Dim ppPaymentPeriod As New PayPalAPI.BillingPeriodDetailsType()
+                                Dim ppRepeatAmount As New Protean.PayPalAPI.BasicAmountType()
+                                Select Case UCase(oEwProv.mcCurrency)
+                                    Case "EUR"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.EUR
+                                    Case "USD"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.USD
+                                    Case "GBP"
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                                    Case Else
+                                        ppRepeatAmount.currencyID = Protean.PayPalAPI.CurrencyCodeType.GBP
+                                End Select
+
+                                ppRepeatAmount.Value = repeatAmt
+
+                                ppScheduleDetails.AutoBillOutstandingAmount = PayPalAPI.AutoBillType.AddToNextBilling
+                                ppPaymentPeriod.Amount = ppRepeatAmount
+                                ppPaymentPeriod.BillingFrequency = repeatFrequency
+                                Select Case repeatInterval
+                                    Case "day"
+                                        ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Day
+                                    Case "week"
+                                        ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Week
+                                    Case "month"
+                                        ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Month
+                                    Case "year"
+                                        ppPaymentPeriod.BillingPeriod = PayPalAPI.BillingPeriodType.Year
+                                End Select
+                                ppPaymentPeriod.TotalBillingCyclesSpecified = False
+                                ppScheduleDetails.PaymentPeriod = ppPaymentPeriod
+                                ppScheduleDetails.MaxFailedPaymentsSpecified = False
+                                ppScheduleDetails.Description = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId) & " - " & oCartAdd.SelectSingleNode("GivenName").InnerText
+
+                                If oEwProv.mnPaymentAmount > 0 Then
+                                    ppScheduleDetails.ActivationDetails = New PayPalAPI.ActivationDetailsType()
+                                    ppScheduleDetails.ActivationDetails.InitialAmount = ppAmount
+                                    ppScheduleDetails.ActivationDetails.FailedInitialAmountAction = PayPalAPI.FailedPaymentActionType.CancelOnFailure
+                                Else
+                                    bValidateFirst = True
+                                End If
+
+                                Dim ppRecuringProfileDetails As New PayPalAPI.RecurringPaymentsProfileDetailsType()
+
+                                If delayStart Then
+                                    Select Case repeatInterval
+                                        Case "day"
+                                            startDate = DateAdd(DateInterval.Day, repeatFrequency, Now())
+                                        Case "week"
+                                            startDate = DateAdd(DateInterval.WeekOfYear, repeatFrequency, Now())
+                                        Case "month"
+                                            startDate = DateAdd(DateInterval.Month, repeatFrequency, Now())
+                                        Case "year"
+                                            startDate = DateAdd(DateInterval.Year, repeatFrequency, Now())
+                                    End Select
+                                End If
+
+                                ppRecuringProfileDetails.BillingStartDate = startDate
+                                ppRecuringProfileDetails.SubscriberName = ppCardOwnerName.FirstName & " " & ppCardOwnerName.LastName
+                                ppRecuringProfileDetails.SubscriberShippingAddress = ppBillingAddress
+                                ppRecuringProfileDetails.ProfileReference = ""
+
+                                ppRecuringRequestDetail.CreditCard = ppCreditCard
+                                ppRecuringRequestDetail.ScheduleDetails = ppScheduleDetails
+                                ppRecuringRequestDetail.RecurringPaymentsProfileDetails = ppRecuringProfileDetails
+
+                            End If
                         End If
 
                         If b3DSecure Then
-
                             'check for return from aquiring bank
                             If myWeb.moRequest("MD") <> "" Then
                                 b3DAuthorised = True

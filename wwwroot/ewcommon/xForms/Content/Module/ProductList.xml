@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="ProductList" contentType="Product" box="" title="" link="" linkType="internal" linkText="More products" height="" sortBy="Position" order="" cols="1" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000"/> 
+          <Content moduleType="ProductList" contentType="Product" box="" title="" link="" linkType="internal" linkText="More products" height="" sortBy="Position" order="" cols="4" mdCol="3" smCol="2" xsCol="1" stepBy="" stepCount="0" display="all" rss="false" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000"/> 
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

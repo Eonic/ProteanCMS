@@ -566,17 +566,7 @@
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
-    <!--  Google analytics javascript  -->
-    <xsl:choose>
-      <xsl:when test="$GoogleAnalyticsUniversalID!=''">
-        <xsl:apply-templates select="." mode="googleUniversalAnalyticsCode"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
+  
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -626,6 +616,12 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>~/ewcommon/js/common.js</xsl:text>
+
+    <xsl:if test="//Content[@type='CookiePolicy']">
+      <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
+      <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
+    </xsl:if>
+    
   </xsl:template>
 
   <!-- template to bring in all the jQuery and plugins that are as standard on each page -->
@@ -690,8 +686,10 @@
     </xsl:if>
 
     <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
+      <!-- MOVED to commonJsFiles
       <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
       <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
+      -->
       <script type="text/javascript">
         <xsl:text>$(document).ready(function () {</xsl:text>
         <xsl:text>$.cookieCuttr(</xsl:text>
@@ -1000,6 +998,20 @@
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
     <xsl:apply-templates select="/Page" mode="JSONLD"/>
+    
+    <!--  Google analytics javascript  -->
+    <xsl:choose>
+      <xsl:when test="$GoogleAnalyticsUniversalID!=''">
+        <xsl:apply-templates select="." mode="googleUniversalAnalyticsCode"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleAnalyticsID']" mode="googleAnalyticsCode"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
+    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>  
+    
+  
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
 
@@ -1026,6 +1038,9 @@
         </xsl:when>
         <xsl:when test="Contents/Content[@type='Module' and @moduleType='FAQList']">
           <xsl:apply-templates select="Contents/Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD"/>
+        </xsl:when>
+        <xsl:when test="Contents">
+          <xsl:apply-templates select="Contents" mode="JSONLD"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
@@ -1490,6 +1505,17 @@
         "\a", "\b", "\v", and "\f" are not escaped. -->
     <xsl:if test="$string!=''">
       <xsl:value-of select="ew:escapeJs($string)"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="escape-json">
+    <xsl:param name="string"/>
+    <!-- replace all characters not matching SingleStringCharacter
+        or DoubleStringCharacter according to ECMA262.  Note: not all
+        characters that should be escaped are legal XML characters:
+        "\a", "\b", "\v", and "\f" are not escaped. -->
+    <xsl:if test="$string!=''">
+      <xsl:value-of select="ew:escapeJson($string)"/>
     </xsl:if>
   </xsl:template>
 
@@ -2373,7 +2399,7 @@
       <!-- Your customer chat code -->
       <div class="fb-customerchat"
         attribution="ProteanCMS"
-        page_id="{@pageid}">
+        page_id="{@page_id}">
         <xsl:if test="@theme_color!=''">
           <xsl:attribute name="theme_color">
             <xsl:value-of select="@theme_color"/>
@@ -6153,7 +6179,7 @@
         <xsl:variable name="image">
           <picture>
             <!--New image tags-->
-            <img itemprop="image">
+            <img>
               <!-- SRC -->
               <xsl:choose>
                 <xsl:when test="$lazy='on'">
@@ -6485,7 +6511,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" itemprop="image">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -6519,7 +6545,7 @@
                     <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
                     <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
                     <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" itemprop="image">
+                    <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo">
                       <xsl:if test="$imgId != ''">
                         <xsl:attribute name="id">
                           <xsl:value-of select="$imgId"/>
@@ -6541,7 +6567,7 @@
             <xsl:variable name="newimageSize" select="ew:ImageSize($displaySrc)"/>
             <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
             <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}" itemprop="image"/>
+            <img src="{$displaySrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="detail photo" id="{$imgId}"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -8634,21 +8660,30 @@
   <xsl:template name="bundle-js">
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
+    <xsl:param name="async"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
+      <xsl:with-param name="async" select="$async"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="render-js-files">
     <xsl:param name="list" />
+    <xsl:param name="async" />
     <xsl:variable name="seperator" select="','"/>
     <xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
     <xsl:variable name="remaining" select="substring-after($newlist, $seperator)" />
     <xsl:if test="$first!=''">
-      <script type="text/javascript" src="{$first}{$bundleVersion}">/* */</script>
+      <script type="text/javascript" src="{$first}{$bundleVersion}">
+        <xsl:if test="$async!=''">
+          <xsl:attribute name="async">async</xsl:attribute>
+        </xsl:if>
+        <xsl:text>/* */</xsl:text>
+      </script>
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
+        <xsl:with-param name="async" select="$async"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>

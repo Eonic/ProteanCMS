@@ -1664,6 +1664,18 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
+
+                                'Insert code to create redirects if required.
+
+                                'Options to be 
+
+                                '301 perminent
+                                '302 tempory
+                                '404 page not found (do not add redirect)
+
+                                'if the page has child pages we should also create a redirect rule for all children.
+
+
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
@@ -2744,7 +2756,7 @@ Partial Public Class Cms
                     oContentLocations.ProcessSelects()
 
                     ' Version Control: if on, copy the status node for use after submission
-                    If gbVersionControl Then
+                    If myWeb.gbVersionControl Then
                         Dim nCurrentStatus As String = ""
                         If Xml.NodeState(MyBase.Instance, "//nStatus", , , , , , nCurrentStatus) = XmlNodeState.HasContents Then
                             addNewTextNode("currentStatus", MyBase.Instance, nCurrentStatus)

@@ -563,7 +563,7 @@ Public Class Services
             CreateResponse()
             If CheckUserIP() Then
 
-                If Protean.Cms.gbVersionControl Then
+                If myWeb.gbVersionControl Then
 
                     Dim oResponse As XmlElement = myWeb.moDbHelper.getPendingContent(True)
                     If oResponse Is Nothing Then
