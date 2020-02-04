@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="EditContent">
-	<model>
-		<instance>
+  <model>
+    <instance>
       <tblCartDiscountRules>
         <nDiscountKey/>
         <cDiscountForeignRef/>
@@ -21,12 +21,17 @@
             <img class="display"/>
             <img class="detail"/>
           </Images>
+          <cPromotionalCode/>
+          <cPromotionalCodeType/>
+          <bApplyToOrder></bApplyToOrder>
+          <nProductGroups></nProductGroups>
+          <cFreeShippingMethods />
+          <nMinimumOrderValue/>
+          <nMaximumOrderValue/>
         </cAdditionalXML>
         <cDiscountUserCode />
         <nDiscountCodeType />
         <nDiscountCodeBank />
-        <bApplyToOrder />
-        <cFreeShippingMethods />
         <nAuditId/>
         <nAuditKey/>
         <dPublishDate/>
@@ -38,8 +43,8 @@
         <nStatus>1</nStatus>
         <cDescription/>
       </tblCartDiscountRules>
-		</instance>
-		<submission id="EditDiscount" action="" method="post" event="return form_check(this)"/>
+    </instance>
+    <submission id="EditDiscount" action="" method="post" event="return form_check(this)"/>
     <bind nodeset="tblCartDiscountRules">
       <bind id="cDiscountName" nodeset="cDiscountName" required="true()" type="string"/>
       <bind id="cDiscountCode" nodeset="cDiscountCode" required="true()" type="string"/>
@@ -48,6 +53,8 @@
       <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
       <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
       <bind id="nDiscountValue" nodeset="nDiscountValue" required="true()" type="string"/>
+      <bind id="nDiscountMinPrice" nodeset="nDiscountMinPrice" required="false()" type="string"/>
+      <bind id="nDiscountMinQuantity" nodeset="nDiscountMinQuantity" required="false()" type="string"/>
       <bind id="nDiscountCat" nodeset="nDiscountCat" required="true()" type="number"/>
       <bind nodeset="cAdditionalXML">
         <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
@@ -55,6 +62,11 @@
         <bind id="cDiscountThumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
         <bind id="cDiscountPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
         <bind id="cDiscountFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
+        <bind id="bApplyToOrder" nodeset="bApplyToOrder" required="false()" type="string"/>
+        <bind id="nProductGroups" nodeset="nProductGroups" required="false()" type="string"/>
+        <bind id="cFreeShippingMethods" nodeset="cFreeShippingMethods" required="false()" type="string"/>
+        <bind id="nMinimumOrderValue" nodeset="nMinimumOrderValue" required="false()" type="string"/>
+        <bind id="nMaximumOrderValue" nodeset="nMaximumOrderValue" required="false()" type="string"/>
       </bind>
       <bind id="nDiscountCodeType" nodeset="nDiscountCodeType" required="true()" type="string"/>
       <bind id="cDiscountUserCode" nodeset="cDiscountUserCode" required="false()" constraint="(//nDiscountCodeType!='0' and //cDiscountUserCode!='') or (//nDiscountCodeType='3' and //cDiscountUserCode='') or (//nDiscountCodeType='0' and //cDiscountUserCode='')" type="string">
@@ -68,20 +80,20 @@
       </bind>-->
     </bind>
   </model>
-	<group ref="EditDiscount" class="2col">
-		<label>Edit Discount (Basic)</label>
+  <group ref="EditDiscount" class="2col">
+    <label>Edit Discount (Basic)</label>
 
     <group class="xFormContainer">
-        <input bind="nDiscountKey" class="hidden">
-          <label>nDiscountKey</label>
-        </input>
-        <label>General</label>
-        <input bind="cDiscountName" class="required long">
-          <label>Name</label>
-        </input>
-        <input bind="cDiscountCode" class="required short">
-          <label>Accounting Reference Code</label>
-        </input>
+      <input bind="nDiscountKey" class="hidden">
+        <label>nDiscountKey</label>
+      </input>
+      <label>General</label>
+      <input bind="cDiscountName" class="required long">
+        <label>Name</label>
+      </input>
+      <input bind="cDiscountCode" class="required short">
+        <label>Accounting Reference Code</label>
+      </input>
       <group>
         <label>Settings</label>
         <input bind="nDiscountCat" class="hidden"/>
@@ -100,7 +112,18 @@
         <input bind="nDiscountValue" class="required short">
           <label>Value</label>
         </input>
-        <label>Promotional code</label>
+        <input bind="nDiscountMinPrice" class="short">
+          <label>Minimum Price</label>
+        </input>
+        <input bind="nDiscountMinQuantity" class="short">
+          <label>Minimum Quantity</label>
+        </input>
+        <input bind="nMinimumOrderValue" class="short">
+          <label>Minimum Order Value</label>
+        </input>
+        <input bind="nMaximumOrderValue" class="short">
+          <label>Maximum Order Value</label>
+        </input>
         <select1 bind="nDiscountCodeType" appearance="full" class=" vshort">
           <label>Promotional Type</label>
           <item>
@@ -144,12 +167,22 @@
         </switch>
         <select bind="bApplyToOrder" appearance="full" class="required vshort">
           <hint>This discount will be applied to the entire order and not Not Products in a Product Group, therefore you will not need to select a product group for this discount.</hint>
-
           <item>
             <label>Apply to Entire order</label>
-             <value>1</value>
+            <value>True</value>
           </item>
         </select>
+        <select1 bind="nProductGroups" appearance="full" class="vshort">
+          <label>APPLY TO</label>
+          <item>
+            <label>Selected Product groups</label>
+            <value>1</value>
+          </item>
+          <item>
+            <label>ALL Products/SKUS - Excluding Linked Product Groups</label>
+            <value>0</value>
+          </item>
+        </select1>
         <select bind="cFreeShippingMethods" appearance="minimal" class="ewQuery scroll_10" query="ShippingMethods">
           <label>Free Shipping for These Methods</label>
         </select>
@@ -164,7 +197,7 @@
         </input>
         <select1 bind="nStatus" appearance="full" class="required vshort">
           <label>Status</label>
-           <choices/>
+          <choices/>
           <item>
             <label>Live</label>
             <value>1</value>
@@ -175,38 +208,38 @@
           </item>
         </select1>
       </group>
-      </group>
+    </group>
 
     <group class="xFormContainer">
       <group>
         <group>
-        <label>Discount Description</label>
-        <textarea bind="cDescription" class="TextArea xhtml" rows="15"/>
+          <label>Discount Description</label>
+          <textarea bind="cDescription" class="TextArea xhtml" rows="15"/>
         </group>
         <group>
-        <label>Discount Terms and Conditions</label>
-        <textarea bind="cTerms" class="TextArea xhtml" rows="15"/>
+          <label>Discount Terms and Conditions</label>
+          <textarea bind="cTerms" class="TextArea xhtml" rows="15"/>
         </group>
         <group>
-        <label>Images</label>
-        <input bind="cDiscountThumbnail" class="short pickImage">
-          <label>Thumbnail</label>
-        </input>
-        <input bind="cDiscountPicture" class="short pickImage">
-          <label>Picture</label>
-        </input>
-        <input bind="cDiscountFullSizePicture" class="short pickImage">
-          <label>Full Size</label>
-        </input>
+          <label>Images</label>
+          <input bind="cDiscountThumbnail" class="short pickImage">
+            <label>Thumbnail</label>
+          </input>
+          <input bind="cDiscountPicture" class="short pickImage">
+            <label>Picture</label>
+          </input>
+          <input bind="cDiscountFullSizePicture" class="short pickImage">
+            <label>Full Size</label>
+          </input>
         </group>
       </group>
-     </group>
     </group>
+  </group>
 
-	
-	<group ref="submit" class="discountSubmit">
-		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Discount</label>
-		</submit>
-	</group>
+
+  <group ref="submit" class="discountSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Discount</label>
+    </submit>
+  </group>
 </Content>
