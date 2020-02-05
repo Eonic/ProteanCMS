@@ -2130,7 +2130,7 @@ Check:
                             Dim fs As fsHelper = New fsHelper()
                             Dim path As String = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders)
 
-                            sReturnValue = oMessage.emailer(oEmailDoc.DocumentElement, path, "", myWeb.moConfig("SiteAdminEmail"), userEmail, "Account Reset ")
+                            sReturnValue = oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig("SiteAdminName"), myWeb.moConfig("SiteAdminEmail"), userEmail, "Account Reset ")
                             sReturnValue = IIf(sReturnValue = "Message Sent", "<span class=""msg-1035"">" & sReturnValue & " to </span>" & userEmail, "")
 
                         End If 'endif oUserXml Is Nothing

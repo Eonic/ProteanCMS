@@ -1405,6 +1405,17 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="term2083">
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">
+        <xsl:text>Brand</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>Brand</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!--  ==  Job Vacancies =============================================================================  -->
  
   <xsl:template name="term2084">

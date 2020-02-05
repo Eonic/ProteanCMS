@@ -7639,7 +7639,7 @@
     <!-- RRP and standard prices must remain within the #price_{$id} -->
     <span class="prices" id="price_{$id}">
       <!-- RRP First -->
-      <xsl:if test="$rrpPrice!='' and $rrpPrice &gt; 0">
+      <xsl:if test="$rrpPrice!='' and $rrpPrice &gt; 0 and $rrpPrice &lt; $price">
         <span class="rrpLabel">RRP: </span>
         <span class="rrpPrice">
           <xsl:apply-templates select="$page" mode="formatPrice">

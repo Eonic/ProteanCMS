@@ -66,6 +66,8 @@ Partial Public Class Cms
 
         Private moMessaging As Protean.Providers.Messaging.BaseProvider
 
+        Private gbVersionControl As Boolean = False
+
 #End Region
 #Region "Initialisation"
 
@@ -93,6 +95,10 @@ Partial Public Class Cms
                 myWeb = aWeb
                 moPageXml = myWeb.moPageXml
                 mnUserId = myWeb.mnUserId
+
+                If Not myWeb Is Nothing Then
+                    gbVersionControl = myWeb.gbVersionControl
+                End If
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""))
@@ -2441,7 +2447,7 @@ restart:
                             If oVerId.InnerText = "" Then
                                 oVerId.InnerText = "0"
                             End If
-                            If myWeb.gbVersionControl Then
+                            If gbVersionControl Then
                                 'out to a subroutine for versioning
                                 contentVersioning(oInstance, ObjectType, nKey)
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
@@ -2515,7 +2521,7 @@ restart:
 
                         Case objectTypes.Content
                             'To be readjusted
-                            If myWeb.gbVersionControl Then
+                            If gbVersionControl Then
                                 'out to a subroutine for versioning
                                 contentVersioning(oInstance, ObjectType)
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
@@ -7895,7 +7901,7 @@ restart:
                     ' Set the default filter
                     sFilterSQL = "a.nStatus = 1 "
 
-                    If myWeb.gbVersionControl _
+                    If gbVersionControl _
                         AndAlso Me.mnUserId > 0 Then
                         ' Version control is on
                         ' Check the page permission

@@ -2511,6 +2511,32 @@
     </xsl:choose>
   </xsl:template>
   <!-- -->
+  <!-- SKU node -->
+  <xsl:template match="Content" mode="skuOptions">
+    <option>
+      <xsl:attribute name="value">
+        <xsl:value-of select="@id"/>
+        <xsl:text>_</xsl:text>
+        <xsl:choose>
+          <xsl:when test="Prices/Price[@currency = $page/Cart/@currency and @type = 'rrp']!=''">
+            <xsl:call-template name="formatPrice">
+              <xsl:with-param name="price" select="Prices/Price[@currency = $page/Cart/@currency and @type = 'rrp']"/>
+              <xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>na</xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>_</xsl:text>
+        <xsl:call-template name="formatPrice">
+          <xsl:with-param name="price" select="Prices/Price[@currency = $page/Cart/@currency and @type='sale']"/>
+          <xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
+        </xsl:call-template>
+        <xsl:text>_</xsl:text>
+        <xsl:value-of select="parent::Content/@id "/>
+      </xsl:attribute>
+      <xsl:value-of select="Name"/>
+    </option>
+  </xsl:template>
   <!-- -->
   <xsl:template match="option" mode="List_Options_Radio">
     <xsl:param name="grpIdx"/>
