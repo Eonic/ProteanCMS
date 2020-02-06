@@ -63,6 +63,9 @@
         <add key="Scheduler" value="off" />
         <add key="ExpireAtEndOfDay" value="off" />
         <add key="GoogleAnalyticsUniversalID" value="" />
+         <add key="GoogleTagManagerID" value="" />
+         <add key="ReCaptchaKey" value="" />
+         <add key="ReCaptchaKeySecret" value="" />
         <add key="XmlSettings" value="" />
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />
@@ -119,6 +122,9 @@
 	   <bind id="ewStatsUser" nodeset="web/add[@key='StatsUser']/@value" required="false()" type="string" />
 	   <bind id="ewStatsPassword" nodeset="web/add[@key='StatsPassword']/@value" required="false()" type="string" />
      <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
+     <bind id="ewGoogleTagManagerID" nodeset="web/add[@key='GoogleTagManagerID']/@value" required="false()" type="string" />
+     <bind id="ewReCaptchaKey" nodeset="web/add[@key='ReCaptchaKey']/@value" required="false()" type="string" />
+     <bind id="ewReCaptchaKeySecret" nodeset="web/add[@key='ReCaptchaKeySecret']/@value" required="false()" type="string" />
      <bind id="ewXslTimeout" nodeset="web/add[@key='XslTimeout']/@value" required="false()" type="string" />
      <bind id="ewScheduler" nodeset="web/add[@key='Scheduler']/@value" required="false()" type="string" />
      <bind id="ewExpireAtEndOfDay" nodeset="web/add[@key='ExpireAtEndOfDay']/@value" required="false()" type="string" />
@@ -249,6 +255,15 @@
        <div class="long">Settings Google Analytics</div>
        <input bind="ewGoogleAnalyticsUniversalID">
          <label>Google Site ID</label>
+       </input>
+       <input bind="ewGoogleTagManagerID">
+         <label>Google Tag Manager ID</label>
+       </input>
+       <input bind="ewReCaptchaKey">
+         <label>Google ReCaptcha Key</label>
+       </input>
+       <input bind="ewReCaptchaKeySecret">
+         <label>Google ReCaptcha Key Secret</label>
        </input>
 	   </group>
 	   <group ref="Paths" class="inline">
