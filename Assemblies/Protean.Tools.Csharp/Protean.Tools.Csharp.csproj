@@ -136,6 +136,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RecaptchaHelper.cs" />
     <Compile Include="Text.cs" />
     <Compile Include="Xml.cs" />
     <Compile Include="Xslt.cs" />

@@ -356,6 +356,21 @@
       <xsl:otherwise>This email address already has an account, please use password reminder facility</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <!-- 1007 This must be completed -->
+  <xsl:template match="span[@class='msg-1032']" mode="term">
+    <xsl:choose>
+      <xsl:when test="$lang='de'">Bitte vervollständigen</xsl:when>
+      <xsl:when test="$lang='en-pr'">Ya must fill this out</xsl:when>
+      <xsl:when test="$lang='es'">Debe completar esta sección</xsl:when>
+      <xsl:when test="$lang='fi'">Tämä täytyy täyttää</xsl:when>
+      <xsl:when test="$lang='fr'">Saisie obligatoire</xsl:when>
+      <xsl:when test="$lang='it'">Da completare</xsl:when>
+      <xsl:when test="$lang='nl'">Invullen verplicht</xsl:when>
+      <xsl:otherwise>Please confirm you are not a robot</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   
   <!-- 1021 This username already exists in <membership>. Please select another. -->
   <xsl:template name="term1021">

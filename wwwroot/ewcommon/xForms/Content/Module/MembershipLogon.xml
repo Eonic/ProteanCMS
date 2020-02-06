@@ -41,7 +41,7 @@
       <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
-    <label>Add/Edit Login Form Module!!</label>
+    <label>Add/Edit Login Form Module</label>
     <group>
       <group>
       <!-- These hidden fields and bindings are required for the component-->

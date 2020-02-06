@@ -1207,7 +1207,7 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
-    <div class="bfh-selectbox boxStyle test" data-name="{$ref}" data-value="{value/node()}">
+    <div class="bfh-selectbox boxStyle" data-name="{$ref}" data-value="{value/node()}">
       <xsl:apply-templates select="item" mode="xform_BoxStyles"/>
       <xsl:apply-templates select="." mode="mailBoxStyles">
         <xsl:with-param name="value" select="value/node()" />
@@ -1371,9 +1371,28 @@
   </xsl:template>
 
   <!-- -->
+  <xsl:template match="/" mode="mailBoxStyles">
+    <xsl:param name="value" />
+
+    <option value="bespokeBox">
+      <xsl:if test="$value='bespokeBox'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>site's bespoke box</xsl:text>
+    </option>
+
+  </xsl:template>
   
   <xsl:template match="*" mode="mailBoxStyles">
     <xsl:param name="value" />
+
+    <option value="bespokeBox">
+      <xsl:if test="$value='bespokeBox'">
+        <xsl:attribute name="selected">selected</xsl:attribute>
+      </xsl:if>
+      <xsl:text>site's bespoke box</xsl:text>
+    </option>
+
   </xsl:template>
 
 
