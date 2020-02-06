@@ -597,6 +597,30 @@ Public Class xForm
             'get our bind node
             Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
+            ''' HANDLING FOR GOOGLE ReCAPTCHA
+            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") Is Nothing Then
+                cValidationError = "<span class=""msg-1032"">Please confirm you are not a robot</span>"
+                bIsValid = False
+                missedError = True
+            End If
+
+            If goRequest("g-recaptcha-response") <> "" Then
+
+                Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                Dim recap As New Protean.Tools.RecaptchaV2.Recaptcha()
+                Dim recapResult As Protean.Tools.RecaptchaV2.RecaptchaValidationResult = recap.Validate(goRequest("g-recaptcha-response"), moConfig("ReCaptchaKeySecret"))
+
+                If recapResult.Succeeded Then
+                    cValidationError = ""
+                    bIsValid = True
+                    missedError = False
+                End If
+
+            End If
+            ''' END HANDLING FOR GOOGLE ReCAPTCHA
+            ''' 
+
+
             'lets get all the binds but check that they don't occur in the instance
             For Each oBindNode In model.SelectNodes("descendant-or-self::bind[not(ancestor::instance)]")
                 oBindElmt = oBindNode
@@ -713,7 +737,7 @@ Public Class xForm
                             End If
                             cValidationError += oBindElmt.GetAttribute("id") & " - This must be completed"
                         End If
-                        End If
+                    End If
                 End If
 
                 'case for constraint
@@ -798,7 +822,11 @@ Public Class xForm
                 Dim lastGroup As XmlElement = moXformElmt.SelectSingleNode("*[2]/*[last()]")
 
                 If Not lastGroup Is Nothing Then
-                    addNote(lastGroup, noteTypes.Alert, cValidationError)
+                    If lastGroup.Name = "submit" Then
+                        addNote(lastGroup.ParentNode, noteTypes.Alert, cValidationError)
+                    Else
+                        addNote(lastGroup, noteTypes.Alert, cValidationError)
+                    End If
                 End If
 
             End If

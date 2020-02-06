@@ -43,7 +43,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dl
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.SqlServer.ConnectionInfo.dll
@@ -69,7 +68,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Cs
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\System.Diagnostics.DiagnosticSource.xml
@@ -79,3 +77,12 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\MySql.Data.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\BouncyCastle.Crypto.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\MySql.Data.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.xml
