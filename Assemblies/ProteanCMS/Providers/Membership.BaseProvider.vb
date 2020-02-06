@@ -1593,24 +1593,68 @@ Check:
                             myWeb.AddContentXml(oXfmElmt)
 
                         End If
+                        Dim sharedKey As String = moConfig("SharedKey")
+                        If sharedKey <> "" Then
+                            Dim loginKey As String = moRequest("userkey")
+                            If loginKey <> "" Then
 
+                                'decrpyts using shared key using 
 
+                                'UserEmail / Timestamp / Sharekey / User-Preview-admin / redirect path
 
+                                'timestamp with 60 mins.
+
+                                'only if the sharedkey is in config.
+                                Dim duration As Long
+                                Dim AuthenticationDuration As Int32 = 60
+                                If moConfig("AuthenticationDuration") <> "" Then
+                                    AuthenticationDuration = Convert.ToInt32(moConfig("AuthenticationDuration"))
+                                End If
+                                Dim decryptedString As String
+                                Dim timestamp As String
+                                Dim userEmail As String
+                                Dim userMode As String = "user" 'other values preview and admin
+                                Dim userDetails As String()
+
+                                If (sharedKey IsNot Nothing And loginKey IsNot Nothing) Then
+                                    decryptedString = Protean.Tools.Encryption.RC4.Decrypt(loginKey, sharedKey)
+                                    userDetails = decryptedString.Split("-")
+                                    userEmail = userDetails(0).ToString()
+                                    timestamp = userDetails(1).ToString()
+                                    If userDetails.Length = 3 Then
+                                        userMode = userDetails(2).ToString()
+                                    End If
+                                    duration = DateDiff(DateInterval.Minute, Convert.ToDateTime(timestamp), DateTime.Now)
+                                    If (duration < AuthenticationDuration) Then '' greater than 60
+
+                                        mnUserId = myWeb.moDbHelper.GetUserIDFromEmail(userEmail)
+                                        myWeb.mnUserId = mnUserId
+                                        Select Case userMode
+                                            Case "preview"
+                                                myWeb.moSession("nUserId") = myWeb.mnUserId
+                                                myWeb.moSession("PreviewDate") = Now.Date
+                                                myWeb.moSession("PreviewUser") = 0
+                                                myWeb.moSession("adminMode") = "true"
+                                                myWeb.mbAdminMode = True
+                                                myWeb.mbPreview = True
+                                                myWeb.msRedirectOnEnd = "/"
+                                            Case "admin"
+                                                myWeb.moSession("nUserId") = myWeb.mnUserId
+                                                myWeb.moSession("PreviewDate") = Nothing
+                                                myWeb.moSession("PreviewUser") = Nothing
+                                                myWeb.moSession("adminMode") = "true"
+                                                myWeb.mbAdminMode = True
+                                                myWeb.msRedirectOnEnd = "/admin"
+                                            Case "user"
+                                                myWeb.moSession("nUserId") = myWeb.mnUserId
+                                        End Select
+                                    End If
+                                End If
+                            End If
+                        End If
 
                         Select Case moRequest("ewCmd")
-                                Case "EncruptedLogin"
-                                If moRequest("userkey") <> "" Then
 
-                                    'decrpyts using shared key using 
-
-                                    'UserEmail / Timestamp / Sharekey / User-Preview-admin / redirect path
-
-                                    'timestamp with 60 mins.
-
-                                    'only if the sharedkey is in config.
-
-
-                                End If
                             Case "UserIntegrations"
                                     myWeb.AddContentXml(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
                                     ' moContentDetail.AppendChild(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
