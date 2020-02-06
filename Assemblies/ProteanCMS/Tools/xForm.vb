@@ -598,7 +598,7 @@ Public Class xForm
             Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
             ''' HANDLING FOR GOOGLE ReCAPTCHA
-            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha')]") Is Nothing Then
+            If Not moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") Is Nothing Then
                 cValidationError = "<span class=""msg-1032"">Please confirm you are not a robot</span>"
                 bIsValid = False
                 missedError = True
