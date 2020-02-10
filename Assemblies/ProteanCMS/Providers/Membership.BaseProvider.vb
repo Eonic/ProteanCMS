@@ -1632,6 +1632,7 @@ Check:
                                         Select Case userMode
                                             Case "preview"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
+                                                myWeb.moSession("ewCmd") = "PreviewOn"
                                                 myWeb.moSession("PreviewDate") = Now.Date
                                                 myWeb.moSession("PreviewUser") = 0
                                                 myWeb.moSession("adminMode") = "true"
