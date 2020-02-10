@@ -572,6 +572,9 @@
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
 
+  <xsl:template match="Cart" mode="cartJS">
+  </xsl:template>
+
   <xsl:template match="Content" mode="contentDetailJS">
   </xsl:template>
 
@@ -944,6 +947,9 @@
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
+
+    <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
+    
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
     <!-- Includes initialisation template if at least one method is in use: -->

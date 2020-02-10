@@ -642,7 +642,11 @@
       <xsl:with-param name="spacers" select="$level"/>
     </xsl:call-template>
     <xsl:text>&#160;</xsl:text>
-    <xsl:value-of select="@name"/>
+    <xsl:call-template name="escape-js">
+      <xsl:with-param name="string">
+        <xsl:value-of select="@name"/>
+      </xsl:with-param>
+    </xsl:call-template>
     <xsl:text>', value: '</xsl:text>
     <xsl:choose>
       <xsl:when test="contains(@url,'?pgid')">

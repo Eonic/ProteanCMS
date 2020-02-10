@@ -7450,26 +7450,26 @@ restart:
                                         AndAlso Tools.Number.IsReallyNumeric(oRelation.GetAttribute("relatedContentId")) _
                                         AndAlso Convert.ToInt32(oRelation.GetAttribute("relatedContentId")) > 0 _
                                         AndAlso oRelation.GetAttribute("direction") = "" Then
-                                    myWeb.moDbHelper.insertContentRelation(savedId, Convert.ToInt32(oRelation.GetAttribute("relatedContentId")), True, oRelation.GetAttribute("type"), True)
+                                    insertContentRelation(savedId, Convert.ToInt32(oRelation.GetAttribute("relatedContentId")), True, oRelation.GetAttribute("type"), True)
 
                                 ElseIf oRelation.GetAttribute("relatedContentId").Contains(",") Or oRelation.GetAttribute("direction") <> "" Then
                                     Dim relContId As String
                                     'remove existing content relations of type
-                                    myWeb.moDbHelper.RemoveContentRelationByType(savedId, oRelation.GetAttribute("type"), oRelation.GetAttribute("direction"))
+                                    RemoveContentRelationByType(savedId, oRelation.GetAttribute("type"), oRelation.GetAttribute("direction"))
 
                                     For Each relContId In oRelation.GetAttribute("relatedContentId").Split(",")
                                         If IsNumeric(relContId) Then
                                             If LCase(oRelation.GetAttribute("direction")) = "child" Then
-                                                myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(Convert.ToInt32(relContId), savedId, True, oRelation.GetAttribute("type"), True)
                                             Else
-                                                myWeb.moDbHelper.insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
+                                                insertContentRelation(savedId, Convert.ToInt32(relContId), True, oRelation.GetAttribute("type"), True)
                                             End If
                                         End If
                                     Next
                                 End If
                             Next
                             For Each oRelation In oInstance.SelectNodes("ProductGroups")
-                                myWeb.moDbHelper.insertProductGroupRelation(savedId, oRelation.GetAttribute("ids"))
+                                insertProductGroupRelation(savedId, oRelation.GetAttribute("ids"))
                             Next
                         Case objectTypes.Directory
 

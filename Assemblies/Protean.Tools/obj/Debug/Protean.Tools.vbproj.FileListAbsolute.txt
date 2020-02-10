@@ -128,8 +128,6 @@ D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.
 D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb
