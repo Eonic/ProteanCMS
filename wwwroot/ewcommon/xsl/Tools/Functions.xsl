@@ -354,7 +354,6 @@
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
-        <xsl:apply-templates select="/Page/Contents/Content[@type='PlainText' and @name='jsonld']" mode="JSONLD"/>
       </head>
 
       <!-- Go build the Body of the HTML doc -->
@@ -594,6 +593,7 @@
       <xsl:when test="$jqueryVer='3.4'">
         <xsl:text>~/ewcommon/js/jquery/jquery-3.4.1.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery.browser.js,</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>~/ewcommon/js/jquery/jquery-1.11.1.min.js,</xsl:text>
@@ -1003,7 +1003,8 @@
       <!-- End Facebook Pixel Code -->
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
-    <xsl:apply-templates select="/Page" mode="JSONLD"/>
+    
+    <xsl:apply-templates select="." mode="JSONLD"/>
     
     <!--  Google analytics javascript  -->
     <xsl:choose>
@@ -1042,12 +1043,6 @@
         <xsl:when test="ContentDetail/Content">
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
-        <xsl:when test="Contents/Content[@type='Module' and @moduleType='FAQList']">
-          <xsl:apply-templates select="Contents/Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD"/>
-        </xsl:when>
-        <xsl:when test="Contents">
-          <xsl:apply-templates select="Contents" mode="JSONLD"/>
-        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
@@ -1061,6 +1056,13 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="JSONLD"></xsl:template>
+
+  <xsl:template match="Content[@type='PlainText' and @name='jsonld']" mode="JSONLD">
+    <xsl:if test="node()!=''">
+      <xsl:value-of select="node()"/>
+    </xsl:if>
+  </xsl:template>
+
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
                 
@@ -2428,12 +2430,6 @@
         </xsl:if>
       </div>
 
-    </xsl:if>
-  </xsl:template>
-
-  <xsl:template match="Content[@type='plaintext']" mode="JSONLD">
-    <xsl:if test="node()!=''">
-        <xsl:value-of select="node()"/>
     </xsl:if>
   </xsl:template>
 

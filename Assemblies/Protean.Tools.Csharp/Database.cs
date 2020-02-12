@@ -1208,6 +1208,7 @@ namespace Protean.Tools
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getIdInsertSql", ex, cProcessInfo));
                 nInsertId = default(int);
+                oConn.Close();
             }
             finally
             {
