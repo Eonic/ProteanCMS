@@ -102,7 +102,7 @@
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:template name="getSiteURL">
+  <!--xsl:template name="getSiteURL">
     <xsl:choose>
       <xsl:when test="/Page/Cart/@siteURL!=''">
         <xsl:value-of select="/Page/Cart/@siteURL"/>
@@ -114,7 +114,7 @@
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
+  </xsl:template-->
 
   <xsl:template match="Page[@adminMode='false']" mode="adminStyle">
     <xsl:if test="@cssFramework!='bs3'">

@@ -45,13 +45,8 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
   <xsl:variable name="href">
-    <xsl:if test="$siteURL=''">
-      <xsl:text>http</xsl:text>
-      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-      <xsl:text>://</xsl:text>
-      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-    </xsl:if>
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
@@ -61,6 +56,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
   <xsl:variable name="scriptVersion" select="'2'"/>
   <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
 
@@ -1102,7 +1098,7 @@
     </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
-    <meta property="og:url" content="{$href}" />
+    <meta property="og:url" content="{$href}"/>
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
@@ -1397,24 +1393,7 @@
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
 
-          <xsl:variable name="href">
-            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
-              <xsl:if test="$siteURL=''">
-                <xsl:text>http</xsl:text>
-                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-                <xsl:text>://</xsl:text>
-                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-              </xsl:if>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="/Page/ContentDetail">
-                <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="$currentPage" mode="getHref"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
+
           <xsl:if test="$href!=''">
             <link rel="canonical" href="{$href}"/>
           </xsl:if>
@@ -3411,6 +3390,7 @@
       <xsl:when test="@url!=''">
         <xsl:choose>
           <xsl:when test="format-number(@url,'0')!='NaN'">
+            <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
@@ -3428,6 +3408,7 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:value-of select="$siteURL"/>
         <xsl:text>/</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -4700,16 +4681,29 @@
   </xsl:template>
 
   <xsl:template name="getSiteURL">
-    <xsl:choose>
-      <xsl:when test="/Page/Cart/@siteURL!=''">
-        <xsl:value-of select="/Page/Cart/@siteURL"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="getXmlSettings">
-          <xsl:with-param name="sectionName" select="'web'"/>
-          <xsl:with-param name="valueName" select="'BaseUrl'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
+    <xsl:variable name="thisPageUrl">
+      <xsl:choose>
+        <xsl:when test="/Page/Cart/@siteURL!=''">
+          <xsl:value-of select="/Page/Cart/@siteURL"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="getXmlSettings">
+            <xsl:with-param name="sectionName" select="'web'"/>
+            <xsl:with-param name="valueName" select="'BaseUrl'"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>      
+    <xsl:when test="$thisPageUrl=''">
+      <xsl:text>http</xsl:text>
+      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+      <xsl:text>://</xsl:text>
+      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$thisPageUrl"/>
+    </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
