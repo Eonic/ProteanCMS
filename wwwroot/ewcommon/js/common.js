@@ -7,6 +7,7 @@ var oQueryParams = {};
 
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
+
     oQueryParams = $.getURLParams();
     cleanDatepicker();
     initialiseXforms();
@@ -343,7 +344,7 @@ $(window).resize(function () {
     }
 
     /*Change Price on Selected SKU Option - this function uses 'Live' to cater for content inserted via ajax*/
-    function initialiseProductSKUs() {
+function initialiseProductSKUs() {
 
         //    $('.skuOptions').each(function () {
         //        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
@@ -352,6 +353,7 @@ $(window).resize(function () {
         //            addButton.hide();
         //        }
         //    });
+
 
         $('.skuOptions').change(function () {
             obj = this;
@@ -371,8 +373,7 @@ $(window).resize(function () {
             var productGroup = $('.ProductListGroup').exists();
 
             if (skuName != '') {
-                $(skuId)
-                .attr('name', skuName);
+                $('.qtybox').attr('name', skuName);
                 //.attr('id', skuId)
 
             }

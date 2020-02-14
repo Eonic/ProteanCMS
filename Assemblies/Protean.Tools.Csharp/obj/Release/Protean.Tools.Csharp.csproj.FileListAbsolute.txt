@@ -31,3 +31,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.Ssh
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.SshNet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csprojAssemblyReference.cache

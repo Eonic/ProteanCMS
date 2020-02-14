@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="5.0.159.0">
+<DatabaseUpgrade LatestVersion="6.0.34.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -373,6 +373,17 @@
         </Sub3>
       </Sub2>
       
+    </Sub1>
+  </Version>
+  <Version Number="6">
+    <Sub1 Number="0">
+      <Sub2 Number="34">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.34.0/tblCartDiscountRules.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.5.0/tblCartContact.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.0/spSearchDirectory.sql"/>
+        </Sub3>
+      </Sub2>      
     </Sub1>
   </Version>
 </DatabaseUpgrade>

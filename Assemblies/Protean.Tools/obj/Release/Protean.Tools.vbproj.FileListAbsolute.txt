@@ -36,8 +36,6 @@ D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Protean.Tools.Csharp.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.pdb
 D:\HostingSpaces\_objSource\Protean.Tools\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Protean.Tools.pdb

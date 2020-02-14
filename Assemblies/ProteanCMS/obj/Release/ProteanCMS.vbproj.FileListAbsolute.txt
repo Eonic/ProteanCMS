@@ -114,3 +114,8 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.G
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.xml
