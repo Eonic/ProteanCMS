@@ -38,7 +38,7 @@
 
 	<xsl:template match="MenuItem" mode="listPages">
 		<xsl:param name="level"/>
-		<xsl:if test="not(contains(@url, 'http')) and not(DisplayName/@noindex='true')">
+		<xsl:if test="not(DisplayName/@noindex='true')">
       <url xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 				<loc>
           <xsl:apply-templates select="." mode="getHref">
@@ -70,7 +70,7 @@
       
 		</xsl:if>
 		<xsl:if test="count(child::MenuItem)&gt;0">
-			<xsl:apply-templates select="MenuItem" mode="listPages">
+			<xsl:apply-templates select="MenuItem[not(contains(@url, 'http'))]" mode="listPages">
 				<xsl:with-param name="level">
           <xsl:choose>
             <!-- if no index, don't reduce priority for children -->

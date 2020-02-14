@@ -1511,7 +1511,10 @@ NoDiscount:
 
 
                         PerfMon.Log("Discount", "getAvailableDiscounts-startGetDataset")
-                        oDS = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+
+                        Dim sSql As String = strSQL.ToString
+
+                        oDS = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
                         PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
 
                         If oDS.Tables.Count = 0 Then Exit Sub
@@ -1562,7 +1565,7 @@ NoDiscount:
 
                         PerfMon.Log("Discount", "getAvailableDiscounts-startCalculateDiscounts")
                         'For Each oContentElmt In oRootElmt.SelectNodes("/Page/Contents/descendant-or-self::Content")
-                        For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[not(ancestor::Discounts)]")
+                        For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[Prices/Price[@currency='" & mcCurrency & "' and node()!=''] and Discount]")
 
                             Dim nContentId As String = oContentElmt.GetAttribute("id")
                             If nContentId = "" Then nContentId = 0
@@ -1867,8 +1870,10 @@ NoDiscount:
                     cGroupsXp = " and ( contains(@validGroup,'" & Replace(cGroups, ",", "') or contains(@validGroup,'")
                     cGroupsXp &= "') or not(@validGroup) or @validGroup='')"
 
-                    Dim cxpath As String = "Prices/Price[(@currency='" & mcCurrency & "') and (node()!=0) " & cGroupsXp & " ] "
-                    'Dim cxpath As String = "Prices/Price[(@currency='" & mcCurrency & "') " & cGroupsXp & " ]"
+                    cGroupsXp = ""
+
+                    Dim cxpath As String = "Prices/Price[@currency='" & mcCurrency & "' and node()!='' " & cGroupsXp & " ]"
+                    ' Dim cxpath As String = "Prices/Price[@currency='" & mcCurrency & "' " & cGroupsXp & " ]"
 
                     Dim oPNode As XmlElement
 
