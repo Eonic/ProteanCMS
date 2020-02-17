@@ -4978,7 +4978,7 @@ Public Class Cms
             Dim oPageVerElmts As XmlElement
 
             Dim DomainURL As String = moRequest.ServerVariables("HTTP_HOST")
-            If moRequest.ServerVariables("SERVER_PROTOCOL").Contains("HTTPS") Then
+            If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
                 DomainURL = "https://" & DomainURL
             Else
                 DomainURL = "http://" & DomainURL

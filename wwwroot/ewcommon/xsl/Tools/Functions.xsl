@@ -32,6 +32,7 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
+
   <xsl:variable name="sitename">
     <xsl:choose>
       <xsl:when test="$siteURL=''">
@@ -157,17 +158,26 @@
       <xsl:with-param name="valueName" select="'DescriptiveContentURLs'"/>
     </xsl:call-template>
   </xsl:variable>
+  
+  <xsl:variable name="siteName">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'SiteName'"/>
+      </xsl:call-template>
+  </xsl:variable>
+  
+  <xsl:variable name="siteLogo">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'SiteLogo'"/>
+      </xsl:call-template>
+  </xsl:variable>
+    
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
       <xsl:call-template name="getXmlSettings">
         <xsl:with-param name="sectionName" select="'web'"/>
         <xsl:with-param name="valueName" select="'BaseUrl'"/>
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="siteName">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'SiteName'"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="cartSiteUrl">
@@ -3394,7 +3404,7 @@
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
-            <xsl:value-of select="@url"/>
+            <xsl:value-of select="@url"/><xsl:value-of select="@url"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$siteURL"/>

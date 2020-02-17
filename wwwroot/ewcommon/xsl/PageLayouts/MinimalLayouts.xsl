@@ -4028,7 +4028,7 @@
         <xsl:with-param name="valueName">debug</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
-    <div class="detail newsarticle" itemscope="" itemtype="http://schema.org/Blog">
+    <div class="detail newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'detail newsarticle'"/>
       </xsl:apply-templates>
@@ -4050,6 +4050,17 @@
       <div class="description entry-content" itemprop="text">
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
+      <xsl:if test="Content[@type='FAQ']">
+      <div class="faq-list">
+        <h3>Question and Answer</h3>
+        <ul>
+          <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
+        </ul>
+        <xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+        </xsl:apply-templates>
+      </div>
+      </xsl:if>
       <!-- Terminus class fix to floating content -->
       <div class="terminus">&#160;</div>
       <div class="entryFooter">
@@ -4070,6 +4081,84 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="Content[@type='NewsArticle' and ancestor::ContentDetail]" mode="JSONLD">
+    { "@context": "https://schema.org",
+    "@type": "BlogPosting",  
+  	"mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "<xsl:value-of select="$href"/>"
+      },
+    "headline": "<xsl:apply-templates select="." mode="getDisplayName" />",
+    "alternativeHeadline": "<xsl:call-template name="escape-json">
+    <xsl:with-param name="string">
+      <xsl:apply-templates select="Strapline" mode="flattenXhtml"/>
+    </xsl:with-param>
+  </xsl:call-template>",
+    "image": "<xsl:value-of select="Images/img[@class='detail']/@src"/>",
+    <xsl:if test="Content[@type='Tag']">
+      <xsl:for-each select="Content[@type='Tag'][1]">
+        <xsl:text>"genre": "</xsl:text>
+        <xsl:value-of select="Name"/>
+        <xsl:text>",
+        </xsl:text>
+      </xsl:for-each>
+    </xsl:if>
+    <xsl:if test="@metaKeywords!=''">
+    "keywords": "<xsl:value-of select="@metaKeywords"/>",
+    </xsl:if>
+    "publisher": {
+    "@type": "Organization",
+    "name": "<xsl:value-of select="$siteName"/>",
+    "logo": "<xsl:value-of select="$siteURL"/><xsl:value-of select="$siteLogo"/>"},
+    "url": "<xsl:value-of select="$href"/>",
+    "datePublished": "<xsl:value-of select="@publish"/>",
+    "dateCreated": "<xsl:value-of select="@publish"/>",
+    "dateModified": "<xsl:value-of select="@update"/>",
+    <xsl:if test="@metaDescription!=''">
+    "description": "<xsl:value-of select="@metaDescription"/>",
+    </xsl:if>
+    "articleBody": "<xsl:call-template name="escape-json">
+    <xsl:with-param name="string">
+      <xsl:apply-templates select="Body/*" mode="flattenXhtml"/>
+    </xsl:with-param>
+  </xsl:call-template>"
+  <xsl:if test="Content[@type='Contact' and @rtype='Author']">
+    ,
+    <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author']" mode="JSONLD"/>
+  </xsl:if>
+  <!--xsl:if test="Content[@type='FAQ']">
+    , "@type": "FAQPage",
+    "mainEntity": [
+    <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+    ]
+    }
+  </xsl:if-->
+    }
+  </xsl:template>
+
+  <xsl:template match="Content[@type='Contact' and ancestor::Content[@type='NewsArticle']]" mode="JSONLD">
+    "author": {
+    "@type": "Person",
+    "name": "<xsl:value-of select="GivenName"/> <xsl:value-of select="Surname"/>",
+    "jobTitle": "<xsl:value-of select="Title"/>",
+    "image": "<xsl:value-of select="Images/img[@class='detail']/@src"/>",
+    "url": "http://www.example.com",
+    "sameAs" : [ 
+    <xsl:if test="@facebookURL!=''">
+      "<xsl:value-of select="@facebookURL"/>"
+    </xsl:if>
+      <xsl:if test="@linkedInURL!=''">
+      "<xsl:value-of select="@linkedInURL"/>"
+    </xsl:if>
+        <xsl:if test="@twitterURL!=''">
+      "<xsl:value-of select="@twitterURL"/>"
+    </xsl:if>
+     <xsl:if test="@instagramURL!=''">
+      "<xsl:value-of select="@instagramURL"/>"
+    </xsl:if>]
+    }
+  </xsl:template>
+  
   <xsl:template match="Content" mode="ContentDetailCommenting">
     <xsl:param name="commentPlatform"/>
     <xsl:variable name="debugMode">
@@ -10011,8 +10100,29 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@type='FAQ']" mode="JSONLD">
-    
+
+  <xsl:template match="Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD">
+    <xsl:if test="Content[@type='FAQ']&gt;0">
+      {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+          <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+        ]
+      }
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Content[@type='FAQ']" mode="JSONLD-list">
+    {
+    "@type": "Question",
+    "name": "<xsl:value-of select="DisplayName/node()"/>",
+    "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "<xsl:value-of select="Body"/>"
+    }
+    }
+    <xsl:if test="position()!=last()">,</xsl:if>
   </xsl:template>
 
   <!-- FAQ Module Accordian -->
