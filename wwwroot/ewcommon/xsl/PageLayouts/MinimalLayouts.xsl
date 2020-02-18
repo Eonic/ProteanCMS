@@ -3864,7 +3864,7 @@
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
-    <div class="listItem list-group-item newsarticle" itemscope="" itemtype="http://schema.org/Blog">
+    <div class="listItem list-group-item newsarticle">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem list-group-item NewsArticle'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
@@ -4082,7 +4082,7 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='NewsArticle' and ancestor::ContentDetail]" mode="JSONLD">
-    { "@context": "https://schema.org",
+   [ { "@context": "https://schema.org",
     "@type": "BlogPosting",  
   	"mainEntityOfPage": {
          "@type": "WebPage",
@@ -4103,13 +4103,15 @@
         </xsl:text>
       </xsl:for-each>
     </xsl:if>
-    <xsl:if test="@metaKeywords!=''">
-    "keywords": "<xsl:value-of select="@metaKeywords"/>",
-    </xsl:if>
+    <xsl:if test="@metaKeywords!=''">"keywords": "<xsl:value-of select="@metaKeywords"/>",</xsl:if>
     "publisher": {
     "@type": "Organization",
     "name": "<xsl:value-of select="$siteName"/>",
-    "logo": "<xsl:value-of select="$siteURL"/><xsl:value-of select="$siteLogo"/>"},
+    "logo":{
+      "@type": "ImageObject",
+      "name": "<xsl:value-of select="$siteName"/> Logo",
+      "url": "<xsl:value-of select="$siteURL"/><xsl:value-of select="$siteLogo"/>"
+    }},
     "url": "<xsl:value-of select="$href"/>",
     "datePublished": "<xsl:value-of select="@publish"/>",
     "dateCreated": "<xsl:value-of select="@publish"/>",
@@ -4125,24 +4127,30 @@
   <xsl:if test="Content[@type='Contact' and @rtype='Author']">
     ,
     <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author']" mode="JSONLD"/>
-  </xsl:if>
-  <!--xsl:if test="Content[@type='FAQ']">
-    , "@type": "FAQPage",
-    "mainEntity": [
-    <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
-    ]
-    }
-  </xsl:if-->
-    }
+  </xsl:if>}
+    <xsl:if test="Content[@type='FAQ']">
+    ,  { "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+      <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+      ]
+      }
+    </xsl:if>
+]
   </xsl:template>
 
   <xsl:template match="Content[@type='Contact' and ancestor::Content[@type='NewsArticle']]" mode="JSONLD">
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="self::Content" mode="getHref">
+        <xsl:with-param name="parId" select="@parId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     "author": {
     "@type": "Person",
-    "name": "<xsl:value-of select="GivenName"/> <xsl:value-of select="Surname"/>",
+    "name": "<xsl:value-of select="GivenName"/><xsl:text> </xsl:text><xsl:value-of select="Surname"/>",
     "jobTitle": "<xsl:value-of select="Title"/>",
-    "image": "<xsl:value-of select="Images/img[@class='detail']/@src"/>",
-    "url": "http://www.example.com",
+    "image": "<xsl:value-of select="$siteURL"/><xsl:value-of select="Images/img[@class='detail']/@src"/>",
+    "url": "<xsl:value-of select="$parentURL"/>",
     "sameAs" : [ 
     <xsl:if test="@facebookURL!=''">
       "<xsl:value-of select="@facebookURL"/>"
