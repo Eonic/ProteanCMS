@@ -426,7 +426,7 @@ Public Class CustomActions
                 'create runtime
                 oSectXml.LoadXml("<runtime><assemblyBinding/></runtime>")
             Else
-                oSectXml.LoadXml(oCgfRuntimeSect.SectionInformation.GetRawXml.Replace("xmlns=""urn:schemas-microsoft-com:asm.v1""", ""))
+                oSectXml.LoadXml(oCgfRuntimeSect64.SectionInformation.GetRawXml.Replace("xmlns=""urn:schemas-microsoft-com:asm.v1""", ""))
                 Dim testString As String = oCgfRuntimeSect64.SectionInformation.GetRawXml
             End If
 
