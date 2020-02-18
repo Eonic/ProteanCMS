@@ -3404,7 +3404,7 @@
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
-            <xsl:value-of select="@url"/><xsl:value-of select="@url"/>
+            <xsl:value-of select="@url"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$siteURL"/>
