@@ -1249,47 +1249,47 @@ function initialiseProductSKUs() {
 
                     case 1:
                         if (form_check_value(oElem.value)) {
-                            form_alert("required", oElem)
-                            bValid = false
+                            form_alert("required", oElem);
+                            bValid = false;
                         }
                         break;
                     case 2:
                         if (oElem.selectedIndex < 0) {
-                            form_alert("required", oElem)
-                            bValid = false
+                            form_alert("required", oElem);
+                            bValid = false;
                         }
                         else if (form_check_value(oElem.options[oElem.selectedIndex].text)) {
-                            form_alert("required", oElem)
-                            bValid = false
+                            form_alert("required", oElem);
+                            bValid = false;
                         }
                         break;
                     case 3:
                         // Check if the checkbox group has already been checked through
-                        cCheckRadio = "," + aRadioCheck.join(",") + ","
-                        cTestName = "," + oElem.name + ","
+                        cCheckRadio = "," + aRadioCheck.join(",") + ",";
+                        cTestName = "," + oElem.name + ",";
                         if (cCheckRadio.indexOf(cTestName) < 0) {
 
                             // Not found - let's do the checks
-                            aRadioCheck.push(oElem.name)
-                            oOptions = document.getElementsByName(oElem.name)
+                            aRadioCheck.push(oElem.name);
+                            oOptions = document.getElementsByName(oElem.name);
                             bSelected = false;
                             if (oOptions.length > 1) {
                                 for (i = 0; i < oOptions.length; i++) { if (oOptions[i].checked) { bSelected = true; break } }
                             }
                             if (!bSelected && oOptions.length > 1) {
-                                form_alert("required", oElem)
-                                bValid = false
+                                form_alert("required", oElem);
+                                bValid = false;
                             }
                         }
                         break;
                 }
-                if (!bValid) { break }
+                if (!bValid) { break; }
             }
         }
 
         if (bValid) {
             for (i = 0; i < oForm.length; i++) {
-                oElem = oForm.elements[i]
+                oElem = oForm.elements[i];
                 if (oElem.type == 'text' || oElem.type == 'textarea') {
                     if (form_check_value(oElem.value)) { oElem.value = ''; }
                 }
@@ -1325,18 +1325,19 @@ function initialiseProductSKUs() {
 
         var cLabel
         // Get the label	
-        cLabel = form_get_label(oElem)
+        cLabel = form_get_label(oElem);
         switch (cAlertType) {
 
             case "required":
                 if (cLabel == "") {
-                    alert("You must complete all the required information")
+                    alert("You must complete all the required information");
                 }
                 else {
                     // $(oElem).insertAfter("<div>This must be completed</div>")
-                    alert("You have not entered any information in the field : " + cLabel)
+                    alert("You have not entered any information in the field : " + cLabel + " - " + $(oElem).attr("id") + ' - ' + oElem.selectedIndex );
+
                 }
-                oElem.focus()
+                oElem.focus();
                 break;
         }
     }
@@ -1344,10 +1345,10 @@ function initialiseProductSKUs() {
 
     function form_get_label(oElem) {
 
-        var cLabel, oLabels, i
+        var cLabel, oLabels, i;
 
-        cLabel = ""
-        oLabels = document.getElementsByTagName("label")
+        cLabel = "";
+        oLabels = document.getElementsByTagName("label");
 
         for (i = 0; i < oLabels.length; i++) {
             if (oLabels[i].htmlFor == oElem.name) { cLabel = oLabels[i].firstChild.nodeValue; break; }

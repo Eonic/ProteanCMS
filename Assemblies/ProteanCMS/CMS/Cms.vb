@@ -7494,15 +7494,24 @@ Public Class Cms
         Dim cProcessInfo As String = ""
         Dim oElmt As XmlElement
         Dim sCurrency As String = ""
+        Dim httpPrefix As String = "http://"
+
 
         Try
+
+
             If Not goLangConfig Is Nothing Then
+
+                If moRequest.ServerVariables("SERVER_PORT_SECURE") = "1" Then
+                    httpPrefix = "https://"
+                End If
+
                 For Each oElmt In goLangConfig.ChildNodes
                     Select Case LCase(oElmt.GetAttribute("identMethod"))
                         Case "domain"
                             If oElmt.GetAttribute("identifier") = moRequest.ServerVariables("HTTP_HOST") Then
                                 mcPageLanguage = oElmt.GetAttribute("code")
-                                mcPageLanguageUrlPrefix = "http://" & oElmt.GetAttribute("identifier")
+                                mcPageLanguageUrlPrefix = httpPrefix & oElmt.GetAttribute("identifier")
                                 sCurrency = oElmt.GetAttribute("currency")
                             End If
                         Case "path"
@@ -7511,7 +7520,7 @@ Public Class Cms
                                 Or moRequest.ServerVariables("HTTP_X_ORIGINAL_URL") = "/" & oElmt.GetAttribute("identifier") _
                                 Or moRequest.ServerVariables("HTTP_X_ORIGINAL_URL").StartsWith("/" & oElmt.GetAttribute("identifier") & "?") Then
                                     mcPageLanguage = oElmt.GetAttribute("code")
-                                    mcPageLanguageUrlPrefix = "http://" & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
+                                    mcPageLanguageUrlPrefix = httpPrefix & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
                                     sCurrency = oElmt.GetAttribute("currency")
                                 End If
                             End If
@@ -7525,7 +7534,7 @@ Public Class Cms
                     mcPageLanguage = goLangConfig.GetAttribute("code")
                     sCurrency = goLangConfig.GetAttribute("currency")
                     Me.mcPreferredLanguage = mcPageLanguage
-                    mcPageDefaultDomain = "http://" & goLangConfig.GetAttribute("defaultDomain")
+                    mcPageDefaultDomain = httpPrefix & goLangConfig.GetAttribute("defaultDomain")
                 End If
 
                 If Not moSession Is Nothing Then
