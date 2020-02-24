@@ -5656,8 +5656,8 @@ processFlow:
 
                                 For Each oRow In ods.Tables("Order").Rows
                                     cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
-                                    nShippingCost = oRow("nShipOptCost")
-                                    cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
+                                nShippingCost = CDbl("0" & oRow("nShipOptCost"))
+                                cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
                                     moDBHelper.ExeProcessSql(cSqlUpdate)
                                 Next
 

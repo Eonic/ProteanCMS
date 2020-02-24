@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Eonic Associates LLP.")]
 [assembly: AssemblyProduct("Protean.Tools.Csharp")]
-[assembly: AssemblyCopyright("Copyright © 2019")]
+[assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.0.33.98")]
-[assembly: AssemblyFileVersion("6.0.33.95")]
+[assembly: AssemblyVersion("6.0.35.5")]
+[assembly: AssemblyFileVersion("6.0.35.5")]

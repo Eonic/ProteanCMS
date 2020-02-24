@@ -338,7 +338,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.dll
@@ -388,3 +387,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll

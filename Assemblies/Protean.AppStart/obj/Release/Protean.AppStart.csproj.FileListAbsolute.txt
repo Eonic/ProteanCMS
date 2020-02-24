@@ -9,6 +9,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\JavaScriptEng
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\JavaScriptEngineSwitcher.V8.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb

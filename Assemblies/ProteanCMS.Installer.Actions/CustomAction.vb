@@ -10,7 +10,7 @@ Imports System.windows.forms
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.0.33.0"
+    Public Shared ewAssemblyVersion As String = "6.0.35.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.0.0.0"
     Public Shared bundleAssemblyVersion As String = "1.10.0.0"
     Public Shared bundleLessAssemblyVersion As String = "1.10.4.0"
@@ -33,7 +33,7 @@ Public Class CustomActions
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "7.14.5.0"
+    Public Shared MagickNETAssemblyVersion As String = "7.15.1.0"
 
     <CustomAction()> _
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -426,7 +426,7 @@ Public Class CustomActions
                 'create runtime
                 oSectXml.LoadXml("<runtime><assemblyBinding/></runtime>")
             Else
-                oSectXml.LoadXml(oCgfRuntimeSect.SectionInformation.GetRawXml.Replace("xmlns=""urn:schemas-microsoft-com:asm.v1""", ""))
+                oSectXml.LoadXml(oCgfRuntimeSect64.SectionInformation.GetRawXml.Replace("xmlns=""urn:schemas-microsoft-com:asm.v1""", ""))
                 Dim testString As String = oCgfRuntimeSect64.SectionInformation.GetRawXml
             End If
 

@@ -626,39 +626,61 @@ Public Class Conversion
                 If Not rowcollection.Count() = 0 Then
                     'TS - First row on second worksheet is empty so stepping on one
                     'For Each cell As Cell In rowcollection.ElementAt(0)
-                    For Each cell As Cell In rowcollection.ElementAt(sheetCount)
-                        dt.Columns.Add(GetValueOfCell(spreadsheetDocument, cell))
-                    Next
+                    Dim colCount As Long = 1
+                    'create rows using first line
+                    If sheetCount > 0 Then
+                        dt.Columns.Add("column" & colCount)
+                    End If
 
-                    For Each row As Row In rowcollection
-                        Dim temprow As DataRow = dt.NewRow()
-                        Dim columnIndex As Integer = 0
-                        For Each cell As Cell In row.Descendants(Of Cell)()
-                            Dim cellColumnIndex As Integer = GetColumnIndex(GetColumnName(cell.CellReference))
-                            If columnIndex < cellColumnIndex Then
-                                Do
-                                    temprow(columnIndex) = String.Empty
-                                    columnIndex += 1
-                                Loop While columnIndex < cellColumnIndex
+                    For Each cell As Cell In rowcollection.ElementAt(0) 'rowcollection.ElementAt(sheetCount)
+                            Dim rowName As String = GetValueOfCell(spreadsheetDocument, cell)
+                            If rowName = String.Empty Then
+                                dt.Columns.Add("column" & colCount)
+                            Else
+                                dt.Columns.Add(rowName)
                             End If
-                            Dim cellVal As String = GetValueOfCell(spreadsheetDocument, cell)
-                            Try
-                                temprow(columnIndex) = cellVal
-                            Catch ex As Exception
-                                cProcessInfo = "Not found " & columnIndex
-                            End Try
-                            columnIndex += 1
+                            colCount = colCount + 1
                         Next
+                        'add some spare columns incase not all are titled.
+                        dt.Columns.Add("spare" & CStr(colCount + 1))
+                        dt.Columns.Add("spare" & CStr(colCount + 2))
+                        dt.Columns.Add("spare" & CStr(colCount + 3))
+                        dt.Columns.Add("spare" & CStr(colCount + 4))
+                        dt.Columns.Add("spare" & CStr(colCount + 5))
 
-                        dt.Rows.Add(temprow)
+                        For Each row As Row In rowcollection
+                            Dim temprow As DataRow = dt.NewRow()
+                            Dim columnIndex As Integer = 0
+                            For Each cell As Cell In row.Descendants(Of Cell)()
+                                Dim cellColumnIndex As Integer = GetColumnIndex(GetColumnName(cell.CellReference))
+                                If columnIndex < cellColumnIndex Then
+                                    Do
+                                        Try
+                                            temprow(columnIndex) = String.Empty
+                                        Catch ex As Exception
+                                            cProcessInfo = "Not found " & columnIndex
+                                        End Try
+                                        columnIndex += 1
+                                    Loop While columnIndex < cellColumnIndex
+                                End If
+                                Dim cellVal As String = GetValueOfCell(spreadsheetDocument, cell)
+                                Try
+                                    temprow(columnIndex) = cellVal
+                                Catch ex As Exception
+                                    cProcessInfo = "Not found " & columnIndex
+                                End Try
+                                columnIndex += 1
+                            Next
 
-                    Next
-                    ' Here remove header row
-                    dt.Rows.RemoveAt(0)
-                    ds.Tables.Add(dt)
+                            dt.Rows.Add(temprow)
 
-                End If
-                sheetCount = sheetCount + 1
+                        Next
+                        ' Here remove header row
+                        dt.Rows.RemoveAt(0)
+                        ds.Tables.Add(dt)
+
+                    End If
+                    sheetCount = sheetCount + 1
             Next
             'End Using
             spreadsheetDocument.Close()

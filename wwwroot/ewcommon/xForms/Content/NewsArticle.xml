@@ -61,6 +61,8 @@
         <bind id="cContentFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
       </bind>
       <bind nodeset="cContentXmlDetail/Content">
+        <bind id="cMetaTitle" nodeset="@metaTitle" required="false()" type="string"/>
+        <bind id="cMetaDescription" nodeset="@metaDescription" required="false()" type="string"/>
         <bind id="cContentHeadline" nodeset="Headline" required="true()" type="string"/>
         <bind id="dPublishDate" nodeset="PublishDate" required="false()" type="string"/>
         <bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
@@ -124,6 +126,16 @@
           <label>Alternative Picture</label>
         </input>
       </group>
+      <group>
+        <input bind="cMetaTitle" class="short">
+          <label>Meta Title</label>
+          <hint>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</hint>
+        </input>
+        <input bind="cMetaDescripton" class="short">
+          <label>Meta Description</label>
+          <hint>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</hint>
+        </input>
+      </group>
     </group>
     <group class="ContentColumn2">
       <group ref="Content" class="Content">
@@ -137,6 +149,9 @@
         <label class="no-margin">Main Article</label>
         <textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
         </textarea>
+        <relatedContent search="find add" type="FAQ" relationType="" direction="1way">
+          <label>FAQ's</label>
+        </relatedContent>
         <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" class="form-border-bottom" maxRelationNo="1">
           <label>Related Author</label>
         </relatedContent>

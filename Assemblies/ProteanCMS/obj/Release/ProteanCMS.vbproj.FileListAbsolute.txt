@@ -44,6 +44,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AjaxMin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AlphaFS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AngleSharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Antlr3.Runtime.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BouncyCastle.Crypto.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Less.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.dll
@@ -52,6 +53,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\CMPCDotNet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\EcmaScript.NET.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Facebook.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Fonet.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.dll
@@ -70,6 +72,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.dll
@@ -83,6 +86,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.Less.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Facebook.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.ChakraCore.xml
@@ -98,6 +102,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\MsieJavaScriptEngine.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Web.Optimization.xml

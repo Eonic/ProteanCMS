@@ -32,6 +32,7 @@
   <xsl:variable name="subSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
+
   <xsl:variable name="sitename">
     <xsl:choose>
       <xsl:when test="$siteURL=''">
@@ -45,13 +46,8 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
   <xsl:variable name="href">
-    <xsl:if test="$siteURL=''">
-      <xsl:text>http</xsl:text>
-      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-      <xsl:text>://</xsl:text>
-      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-    </xsl:if>
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
@@ -61,6 +57,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+  
   <xsl:variable name="scriptVersion" select="'2'"/>
   <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
 
@@ -161,17 +158,26 @@
       <xsl:with-param name="valueName" select="'DescriptiveContentURLs'"/>
     </xsl:call-template>
   </xsl:variable>
+  
+  <xsl:variable name="siteName">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'SiteName'"/>
+      </xsl:call-template>
+  </xsl:variable>
+  
+  <xsl:variable name="siteLogo">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'SiteLogo'"/>
+      </xsl:call-template>
+  </xsl:variable>
+    
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
       <xsl:call-template name="getXmlSettings">
         <xsl:with-param name="sectionName" select="'web'"/>
         <xsl:with-param name="valueName" select="'BaseUrl'"/>
-      </xsl:call-template>
-    </xsl:variable>
-    <xsl:variable name="siteName">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'SiteName'"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="cartSiteUrl">
@@ -354,7 +360,6 @@
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         
-        <xsl:apply-templates select="/Page/Contents/Content[@type='PlainText' and @name='jsonld']" mode="JSONLD"/>
       </head>
 
       <!-- Go build the Body of the HTML doc -->
@@ -597,6 +602,7 @@
       <xsl:when test="$jqueryVer='3.4'">
         <xsl:text>~/ewcommon/js/jquery/jquery-3.4.1.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery.browser.js,</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>~/ewcommon/js/jquery/jquery-1.11.1.min.js,</xsl:text>
@@ -1006,7 +1012,8 @@
       <!-- End Facebook Pixel Code -->
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
-    <xsl:apply-templates select="/Page" mode="JSONLD"/>
+    
+    <xsl:apply-templates select="." mode="JSONLD"/>
     
     <!--  Google analytics javascript  -->
     <xsl:choose>
@@ -1045,12 +1052,6 @@
         <xsl:when test="ContentDetail/Content">
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
-        <xsl:when test="Contents/Content[@type='Module' and @moduleType='FAQList']">
-          <xsl:apply-templates select="Contents/Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD"/>
-        </xsl:when>
-        <xsl:when test="Contents">
-          <xsl:apply-templates select="Contents" mode="JSONLD"/>
-        </xsl:when>
         <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
@@ -1064,6 +1065,13 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="JSONLD"></xsl:template>
+
+  <xsl:template match="Content[@type='PlainText' and @name='jsonld']" mode="JSONLD">
+    <xsl:if test="node()!=''">
+      <xsl:value-of select="node()"/>
+    </xsl:if>
+  </xsl:template>
+
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
                 
@@ -1103,7 +1111,7 @@
     </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
-    <meta property="og:url" content="{$href}" />
+    <meta property="og:url" content="{$href}"/>
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
@@ -1401,24 +1409,7 @@
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
 
-          <xsl:variable name="href">
-            <xsl:if test="not(starts-with($currentPage/@url,'http'))">
-              <xsl:if test="$siteURL=''">
-                <xsl:text>http</xsl:text>
-                <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-                <xsl:text>://</xsl:text>
-                <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-              </xsl:if>
-            </xsl:if>
-            <xsl:choose>
-              <xsl:when test="/Page/ContentDetail">
-                <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:apply-templates select="$currentPage" mode="getHref"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
+
           <xsl:if test="$href!=''">
             <link rel="canonical" href="{$href}"/>
           </xsl:if>
@@ -2437,12 +2428,6 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="Content[@type='plaintext']" mode="JSONLD">
-    <xsl:if test="node()!=''">
-        <xsl:value-of select="node()"/>
-    </xsl:if>
-  </xsl:template>
-
 
   <xsl:template match="Content" mode="MetaLeadForensicsCode">
     <xsl:variable name="lfid">
@@ -3421,6 +3406,7 @@
       <xsl:when test="@url!=''">
         <xsl:choose>
           <xsl:when test="format-number(@url,'0')!='NaN'">
+            <xsl:value-of select="$siteURL"/>
             <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
           </xsl:when>
           <xsl:when test="contains(@url,'http')">
@@ -3438,6 +3424,7 @@
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:value-of select="$siteURL"/>
         <xsl:text>/</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
@@ -4710,16 +4697,29 @@
   </xsl:template>
 
   <xsl:template name="getSiteURL">
-    <xsl:choose>
-      <xsl:when test="/Page/Cart/@siteURL!=''">
-        <xsl:value-of select="/Page/Cart/@siteURL"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="getXmlSettings">
-          <xsl:with-param name="sectionName" select="'web'"/>
-          <xsl:with-param name="valueName" select="'BaseUrl'"/>
-        </xsl:call-template>
-      </xsl:otherwise>
+    <xsl:variable name="thisPageUrl">
+      <xsl:choose>
+        <xsl:when test="/Page/Cart/@siteURL!=''">
+          <xsl:value-of select="/Page/Cart/@siteURL"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="getXmlSettings">
+            <xsl:with-param name="sectionName" select="'web'"/>
+            <xsl:with-param name="valueName" select="'BaseUrl'"/>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>      
+    <xsl:when test="$thisPageUrl=''">
+      <xsl:text>http</xsl:text>
+      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+      <xsl:text>://</xsl:text>
+      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$thisPageUrl"/>
+    </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 

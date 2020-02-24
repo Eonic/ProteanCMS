@@ -9018,6 +9018,7 @@ restart:
 
         Public Function insertProductGroupRelation(ByVal nProductId As Integer, ByVal sGroupIds As String) As String
             PerfMon.Log("DBHelper", "insertProductGroupRelation")
+            Dim cProcessInfo As String
             Try
                 Dim oGroupArr() As String = Split(sGroupIds, ",")
                 Dim cCount As Integer
@@ -9042,10 +9043,10 @@ restart:
                         Else
                             savedId = nCatProductRelKey
                         End If
-
-                        strReturn.Append(savedId)
-                        strReturn.Append(",")
-
+                        If savedId > 0 Then
+                            strReturn.Append(savedId)
+                            strReturn.Append(",")
+                        End If
                     Next
 
                     Dim s As String = strReturn.ToString
@@ -9054,9 +9055,15 @@ restart:
                     'delete any new ones
                     Dim delSql As String = "Select nCatProductRelKey from tblCartCatProductRelations where nContentId = " & nProductId & " and nCatProductRelKey not in (" & s & ")"
                     Dim oDr As SqlDataReader = getDataReader(delSql)
-                    Do While oDr.Read
-                        Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
-                    Loop
+                    If Not oDr Is Nothing Then
+                        Do While oDr.Read
+                            Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
+                        Loop
+                    Else
+                        cProcessInfo = nProductId & " Not Found in " & s
+                    End If
+                    oDr.Close()
+                    oDr = Nothing
                     Return s
                 Else
                     'if GroupIds is empty then delete all
@@ -9065,12 +9072,16 @@ restart:
                     Do While oDr.Read
                         Me.DeleteObject(objectTypes.CartCatProductRelations, oDr(0))
                     Loop
+                    oDr.Close()
+                    oDr = Nothing
                     Return ""
                 End If
 
             Catch ex As Exception
-                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "insertProductGroupRelation", ex, ""))
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "insertProductGroupRelation", ex, cProcessInfo))
                 Return "0"
+            Finally
+                CloseConnection()
             End Try
 
 
@@ -9979,7 +9990,7 @@ ReturnMe:
             Dim oRow As DataRow
             Dim column As DataColumn
             Dim oDs As New DataSet
-
+            Dim oDataAdpt As SqlDataAdapter
             Try
                 If oConn.State = ConnectionState.Closed Then oConn.Open()
 
@@ -9998,7 +10009,8 @@ ReturnMe:
 
                 cProcessInfo = "error running SQL: " & sSql
 
-                Dim oDataAdpt As New SqlDataAdapter(sSql, oConn)
+                oDataAdpt = New SqlDataAdapter(sSql, oConn)
+
                 'autogenerate commands
                 Dim cmdBuilder As SqlCommandBuilder = New SqlCommandBuilder(oDataAdpt)
                 oDataAdpt.Fill(oDs, targetTable)
@@ -10052,16 +10064,20 @@ ReturnMe:
                     Err.Raise(1000, mcModuleName, "No Update")
                 End If
 
-                oDs.Dispose()
-                oDs = Nothing
 
-                oDataAdpt.Dispose()
-                oDataAdpt = Nothing
                 PerfMon.Log("dbTools", "saveInstance-End", cProcessInfo)
                 Return keyValue
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "saveInstance", ex, cProcessInfo))
+            Finally
+                oDs.Dispose()
+                oDs = Nothing
+                If Not oDataAdpt Is Nothing Then
+                    oDataAdpt.Dispose()
+                End If
+                oDataAdpt = Nothing
+                oConn.Close()
             End Try
 
         End Function
@@ -11207,27 +11223,28 @@ ReturnMe:
 
                     If ImportStateObj.bDeleteNonEntries Then
 
-                            Dim cSQL As String = "INSERT INTO dbo." & ImportStateObj.cDeleteTempTableName & " (cImportID , cTableName) VALUES ('" & SqlFmt(fRef) & "','" & SqlFmt(cTableName) & "')"
-                            modbhelper.ResetConnection(oConnString)
-                            modbhelper.ExeProcessSql(cSQL)
-
-                        End If
-                        ErrorId = nId
+                        Dim cSQL As String = "INSERT INTO dbo." & ImportStateObj.cDeleteTempTableName & " (cImportID , cTableName) VALUES ('" & SqlFmt(fRef) & "','" & SqlFmt(cTableName) & "')"
+                        modbhelper.ResetConnection(oConnString)
+                        modbhelper.ExeProcessSql(cSQL)
 
                     End If
+                    ErrorId = nId
 
-                    'update every 10 records
-                    If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
+                End If
+
+                'update every 10 records
+                If ImportStateObj.totalInstances = ImportStateObj.CompleteCount Then
                     modbhelper.updateActivity(ImportStateObj.LogId, ImportStateObj.cDeleteTempTableName & " Imported " & ImportStateObj.totalInstances & " Objects, " & ImportStateObj.CompleteCount & " Completed")
                 End If
 
                 fRefNode = Nothing
-                modbhelper.CloseConnection()
-                modbhelper = Nothing
 
             Catch ex As Exception
                 modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0, 0, ErrorId, Right(ex.Message & " - " & ex.StackTrace, 700), fRef)
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""))
+            Finally
+                modbhelper.CloseConnection()
+                modbhelper = Nothing
             End Try
         End Sub
     End Class

@@ -38,7 +38,7 @@ Installer_Logo.jpg
 ..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\runtimes\win-x64\native\ClearScript.dll
 ..\packages\JavaScriptEngineSwitcher.V8.Native.win-x86.3.1.0\runtimes\win-x86\native\ClearScriptV8-32.dll
 ..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\runtimes\win-x64\native\ClearScriptV8-64.dll
-..\packages\Magick.NET-Q8-AnyCPU.7.13.1\lib\net40\Magick.NET-Q8-AnyCPU.dll
+..\packages\Magick.NET-Q8-AnyCPU.7.15.1\lib\net40\Magick.NET-Q8-AnyCPU.dll
 ..\packages\BundleTransformer.MicrosoftAjax.1.10.0\lib\net40\BundleTransformer.MicrosoftAjax.dll
 ..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll
 ..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll

@@ -180,7 +180,11 @@ Partial Public Class Cms
                                              " AND  dr2.nPermLevel = 0 ) = 0 ")
                         End If
 
-                        strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
+                        If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
+                            ' strSQL.Append("AND ((tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ") AND tblCartDiscountRules.bAllProductExcludeGroups = false) OR (tblCartCatProductRelations.nContentId NOT IN (" & cCartItemIds & ") AND tblCartDiscountRules.bAllProductExcludeGroups = true))")
+                            ' Else
+                            strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
+                        End If
 
                         If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
                             'return all

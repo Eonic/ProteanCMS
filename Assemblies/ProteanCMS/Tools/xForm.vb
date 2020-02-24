@@ -595,6 +595,9 @@ Public Class xForm
             ' validates an html form submission against a bind requirements
             ' updates xform or loads result.
             'get our bind node
+
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+
             Dim nsMgr As XmlNamespaceManager = Protean.Tools.Xml.getNsMgrRecursive(oInstance.SelectSingleNode("*[1]"), moPageXML)
 
             ''' HANDLING FOR GOOGLE ReCAPTCHA
