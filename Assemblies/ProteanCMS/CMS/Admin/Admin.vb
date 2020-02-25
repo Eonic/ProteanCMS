@@ -163,7 +163,7 @@ Partial Public Class Cms
             Dim sProcessInfo As String = ""
             Dim oPageDetail As XmlElement = moPageXML.CreateElement("ContentDetail")
             Dim bAdminMode As Boolean = True
-            Dim sPageTitle As String = "EonicWeb: "
+            Dim sPageTitle As String = "ProteanCMS: "
             Dim bLoadStructure As Boolean = False
             Dim nParId As Long = 0
             Dim bResetParId As Boolean = False
@@ -2049,6 +2049,27 @@ AfterProcessFlow:
                     oWeb.mnSystemPagesId = myWeb.moDbHelper.getPageIdFromPath("System+Pages", False, False)
                 End If
 
+                If oWeb.moPageXml.DocumentElement Is Nothing Then
+                    Dim oPageElmt As XmlElement
+                    oWeb.moPageXml.CreateXmlDeclaration("1.0", "UTF-8", "yes")
+                    oPageElmt = oWeb.moPageXml.CreateElement("Page")
+                    oWeb.moPageXml.AppendChild(oPageElmt)
+                    moPageXML = oWeb.moPageXml
+                    moPageXML.DocumentElement.SetAttribute("title", sPageTitle)
+                End If
+
+                If mbPreviewMode Then
+                    moPageXML.DocumentElement.SetAttribute("previewMode", LCase(mbPreviewMode.ToString))
+                    If Not moPageXML.SelectSingleNode("AdminMenu") Is Nothing Then
+                        moPageXML.RemoveChild(moPageXML.SelectSingleNode("AdminMenu"))
+                    End If
+                    If mcEwCmd <> "MailPreviewOn" Then
+                        GetPreviewMenu()
+                    End If
+                Else
+                    moPageXML.DocumentElement.SetAttribute("adminMode", LCase(bAdminMode.ToString))
+                End If
+
 
                 'We have done all our updating lets get new pagexml
                 If mcEwCmd = "Normal" Or mcEwCmd = "Advanced" Or mcEwCmd = "PreviewOn" Or mcEwCmd = "MailPreviewOn" Or mcEwCmd = "EditXForm" Or mcEwCmd = "EditPage" Or mcEwCmd = "EditPageSEO" _
@@ -2067,12 +2088,8 @@ AfterProcessFlow:
                         oWeb.GetPageXML()
                     End If
                 Else
-
                     getAdminXML(oWeb, bLoadStructure)
                 End If
-
-                moPageXML = oWeb.moPageXml
-                moPageXML.DocumentElement.SetAttribute("title", sPageTitle)
 
                 If Not oPageDetail Is Nothing Then
                     If moPageXML.DocumentElement.SelectSingleNode("ContentDetail") Is Nothing Then
@@ -2100,23 +2117,7 @@ AfterProcessFlow:
                     myWeb.moSession("editContext") = EditContext
                 End If
 
-                If mbPreviewMode Then
-                    moPageXML.DocumentElement.SetAttribute("previewMode", LCase(mbPreviewMode.ToString))
-                    If Not moPageXML.SelectSingleNode("AdminMenu") Is Nothing Then
-                        moPageXML.RemoveChild(moPageXML.SelectSingleNode("AdminMenu"))
-                    End If
 
-                    If mcEwCmd <> "MailPreviewOn" Then
-                        GetPreviewMenu()
-                    End If
-                Else
-                    moPageXML.DocumentElement.SetAttribute("adminMode", LCase(bAdminMode.ToString))
-                    If bAdminMode Then
-                        '    moPageXML.DocumentElement.SetAttribute("cssFramework", "bs3")
-                    End If
-                    ' TS perhaps we should Strip out cms with no rights here
-                    ' GetAdminMenu()
-                End If
 
                 moPageXML.DocumentElement.SetAttribute("ewCmd", mcEwCmd)
                 If Not String.IsNullOrEmpty(mcEwCmd2) Then moPageXML.DocumentElement.SetAttribute("ewCmd2", mcEwCmd2)
