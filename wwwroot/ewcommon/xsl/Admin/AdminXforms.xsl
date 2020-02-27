@@ -2492,14 +2492,14 @@
   </xsl:template>
 
 
-  <xsl:template match="group[@class='hidden-modal']" mode="xform_control_script">
+  <xsl:template match="group[@class='modal-confirm']" mode="xform_control_script">
     <script>
       <!-- if  @showonchange id changes then we show on form submit-->
     </script>    
   </xsl:template>
   
   
-  <xsl:template match="group[@class='hidden-modal']" mode="xform">
+  <xsl:template match="group[@class='modal-confirm']" mode="xform">
     <xsl:param name="class"/>
     <div class="modal hidden">
       <xsl:if test=" @id!='' ">
