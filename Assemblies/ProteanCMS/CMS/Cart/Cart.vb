@@ -6806,6 +6806,20 @@ processFlow:
                     End If
                 Next
 
+
+                dir = New DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"))
+                files = dir.GetFiles()
+
+                For Each fi In files
+                    If fi.Extension = ".xml" Then
+                        ProviderName = Replace(fi.Name, fi.Extension, "")
+                        oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                        If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                            oElmt2.SetAttribute("active", "true")
+                        End If
+                    End If
+                Next
+
                 oContentsXML.AppendChild(oElmt)
 
             Catch ex As Exception

@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-          <Content adName="" adPlacement="" position="" moduleType="GoogleAd" box=""/>
+          <Content adName="" adPlacement="" adWidth="" adHeight="" position="" moduleType="GoogleAd" box=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -34,6 +34,8 @@
 			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
       <bind id="cContentAdName" nodeset="@adName" required="true()" type="string"/>
       <bind id="cContentAdPlacement" nodeset="@adPlacement" required="true()" type="string"/>
+      <bind id="cContentAdWidth" nodeset="@adWidth" required="true()" type="string"/>
+      <bind id="cContentAdHeight" nodeset="@adHeight" required="true()" type="string"/>
 		</bind>
 		<bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
@@ -100,16 +102,22 @@
       <group>
         <label>Advert Details</label>
         <input bind="cContentAdName" class="long required">
-          <label>Ad name</label>
+          <label>Slot name</label>
           <help class="inline">
-            <p>EonicWeb reference name</p>
+            <p>Google DFP slot name</p>
           </help>
         </input>
         <input bind="cContentAdPlacement" class="long required">
-          <label>Ad-Manager ad unit name</label>
+          <label>Slot ID</label>
           <help class="inline">
-            <p>Google DFP ad unit/placement name</p>
+            <p>Google DFP ad id</p>
           </help>
+        </input>
+        <input bind="cContentAdWidth" class="long required" suffix="px">
+          <label>Width</label>
+        </input>
+        <input bind="cContentAdHeight" class="long required" suffix="px">
+          <label>Height</label>
         </input>
   		</group>
     </group>
