@@ -4,6 +4,7 @@
   <xsl:template match="Page" mode="xform_control_scripts">
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>

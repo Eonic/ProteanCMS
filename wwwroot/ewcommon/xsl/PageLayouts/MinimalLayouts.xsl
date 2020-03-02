@@ -2642,6 +2642,33 @@
   </xsl:template>
 
   <!-- ## Google Ad Module ###########################################################################   -->
+
+  <xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="contentJS">
+    <script async="" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    <script>
+      <xsl:text>window.googletag = window.googletag || {cmd: []};
+      googletag.cmd.push(function() {
+      googletag.defineSlot('</xsl:text>
+      <xsl:value-of select="@adName"/>
+      <xsl:text>', [</xsl:text>
+      <xsl:value-of select="@adWidth"/>
+      <xsl:text>, </xsl:text>
+      <xsl:value-of select="@adHeight"/>
+      <xsl:text>], '</xsl:text>
+      <xsl:value-of select="@adPlacement"/>
+      <xsl:text>').addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
+      });</xsl:text>
+    </script>
+    <script>
+      <xsl:text>googletag.cmd.push(function() { googletag.display("</xsl:text>
+      <xsl:value-of select="@adPlacement"/>
+      <xsl:text>"); });</xsl:text>
+    </script>
+  </xsl:template>
+
+
   <xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="displayBrief">
     <xsl:variable name="GoogleAdManagerId" select="/Page/Contents/Content[@name='GoogleAdManagerId']/node()" />
     <div class="googleadvert singleAd">
@@ -2656,42 +2683,7 @@
         </xsl:when>
         <!-- WHEN ID AND ADVERTS - INITIALISE and DISPLAY -->
         <xsl:otherwise>
-          <script type='text/javascript' src='https://partner.googleadservices.com/gampad/google_service.js'>&#160;</script>
-          <script type='text/javascript'>
-            <xsl:text>GS_googleAddAdSenseService("</xsl:text>
-            <xsl:value-of select="$GoogleAdManagerId"/>
-            <xsl:text>");</xsl:text>
-            <xsl:text>GS_googleEnableAllServices();</xsl:text>
-          </script>
-          <script type='text/javascript'>
-            <xsl:text>GA_googleAddSlot("</xsl:text>
-            <xsl:value-of select="$GoogleAdManagerId"/>
-            <xsl:text>", "</xsl:text>
-            <xsl:value-of select="@adPlacement"/>
-            <xsl:text>");</xsl:text>
-          </script>
-          <xsl:if test="/Page/Request/Form/Item[@name='searchString']/node()!=''">
-            <script type='text/javascript'>
-              <xsl:text>GA_googleAddAttr("search", "</xsl:text>
-              <xsl:value-of select="/Page/Request/Form/Item[@name='searchString']/node()"/>
-              <xsl:text>");</xsl:text>
-            </script>
-          </xsl:if>
-          <xsl:if test="/Page/ContentDetail/Content[@type='Category']">
-            <script type='text/javascript'>
-              <xsl:text>GA_googleAddAttr("category", "</xsl:text>
-              <xsl:value-of select="/Page/ContentDetail/Content[@type='Category']/@name"/>
-              <xsl:text>");</xsl:text>
-            </script>
-          </xsl:if>
-          <script type='text/javascript'>GA_googleFetchAds();</script>
-          <xsl:comment>
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="$GoogleAdManagerId"/>
-            <xsl:text>/</xsl:text>
-            <xsl:value-of select="@adName"/>
-            <xsl:text> </xsl:text>
-          </xsl:comment>
+
           <xsl:choose>
             <xsl:when test="$page/@adminMode">
               <p>
@@ -2709,13 +2701,10 @@
               </p>
             </xsl:when>
             <xsl:otherwise>
-              <span class="adContainer" title="{@adPlacement}">
-                <script type='text/javascript'>
-                  <xsl:text>GA_googleFillSlot("</xsl:text>
-                  <xsl:value-of select="@adPlacement"/>
-                  <xsl:text>");</xsl:text>
-                </script>
-              </span>
+              <!-- /43122906/Food_Analysis_300x600 -->
+              <div id="{@adPlacement}" style="width: {@adWidth}px; height: {@adHeight}px;">
+                <xsl:text> </xsl:text>
+              </div>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>

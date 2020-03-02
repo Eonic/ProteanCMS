@@ -1657,19 +1657,20 @@ Check:
                         Select Case moRequest("ewCmd")
 
                             Case "UserIntegrations"
-                                    myWeb.AddContentXml(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
-                                    ' moContentDetail.AppendChild(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
-                                    If adXfm.valid Then
-                                        ' moContentDetail.RemoveAll()
-                                        'clear the listDirectory cache
-                                        myWeb.moDbHelper.clearDirectoryCache()
-                                        'return to process flow
-                                    End If
-                            End Select
+                                myWeb.AddContentXml(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
+                                ' moContentDetail.AppendChild(adXfm.xFrmUserIntegrations(mnUserId, moRequest("ewCmd2")))
+                                If adXfm.valid Then
+                                    ' moContentDetail.RemoveAll()
+                                    'clear the listDirectory cache
+                                    myWeb.moDbHelper.clearDirectoryCache()
+                                    'return to process flow
+                                End If
+                        End Select
 
 
-                            'add the user logon details to the page xml.
-                            If mnUserId <> 0 Then
+
+                        'add the user logon details to the page xml.
+                        If mnUserId <> 0 Then
 
                             myWeb.RefreshUserXML()
 

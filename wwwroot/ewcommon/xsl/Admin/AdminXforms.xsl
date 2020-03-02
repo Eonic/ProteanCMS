@@ -2491,4 +2491,43 @@
     <xsl:value-of select="Content/@name"/>&#160;<small>[<xsl:value-of select="Content/@type"/>]</small>
   </xsl:template>
 
+
+  <xsl:template match="group[@class='modal-confirm']" mode="xform_control_script">
+    <script>
+      <!-- if  @showonchange id changes then we show on form submit-->
+    </script>    
+  </xsl:template>
+  
+  
+  <xsl:template match="group[@class='modal-confirm']" mode="xform">
+    <xsl:param name="class"/>
+    <div class="modal hidden">
+      <xsl:if test=" @id!='' ">
+        <xsl:attribute name="id">
+          <xsl:value-of select="@id"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$class!='' or @class!='' ">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$class"/>
+          <xsl:if test="@class!=''">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@class"/>
+          </xsl:if>
+          <xsl:for-each select="group">
+            <xsl:text> form-group li-</xsl:text>
+            <xsl:value-of select="./@class"/>
+          </xsl:for-each>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+      <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+
+      <button submits="the entire form"/>
+      
+    </div>
+  </xsl:template>
+  
+  
+  
 </xsl:stylesheet>

@@ -416,9 +416,6 @@
       </xsl:when>
       <xsl:when test="/Page/ContentDetail">
         <xsl:choose>
-          <xsl:when test="/Page/ContentDetail/Content/MetaTitle">
-            <xsl:value-of select="/Page/ContentDetail/Content/MetaTitle"/>
-          </xsl:when>
           <xsl:when test="/Page/ContentDetail/Content/@metaTitle!=''">
             <xsl:value-of select="/Page/ContentDetail/Content/@metaTitle"/>
           </xsl:when>
@@ -1106,7 +1103,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </xsl:if>
 
-    <xsl:if test="ContentDetail/Content/MetaDescription!='' or Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
+    <xsl:if test="Contents/Content[@name='MetaDescription' or @name='metaDescription'] or ContentDetail">
       <xsl:apply-templates select="." mode="getMetaDescription"/>
     </xsl:if>
     <!--New OG Tags for Facebook-->
@@ -1349,9 +1346,6 @@
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail">
         <xsl:choose>
-          <xsl:when test="/Page/ContentDetail/Content/MetaDescription!=''">
-            <meta name="description" content="{/Page/ContentDetail/Content/MetaDescription}"/>
-          </xsl:when>
           <xsl:when test="/Page/ContentDetail/Content/@metaDescription!=''">
             <meta name="description" content="{/Page/ContentDetail/Content/@metaDescription}"/>
           </xsl:when>
