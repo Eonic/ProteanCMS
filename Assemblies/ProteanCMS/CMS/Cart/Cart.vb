@@ -7046,7 +7046,38 @@ processFlow:
                     cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")
                     Dim oPDF As New Protean.Tools.PDF
-                    oMsg.addAttachment(oPDF.GetPDFstream(oCartXML, cCustomerAttachementTemplatePath, cFontPath), "Attachment.pdf")
+
+                    'create the xmlFO document
+                    Dim oTransform As Protean.XmlHelper.Transform
+
+                    Dim styleFile As String = CType(cCustomerAttachementTemplatePath, String)
+                    PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
+                    oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
+
+                    msException = ""
+
+                    oTransform.mbDebug = gbDebug
+                    Dim icPageWriter = New IO.StringWriter
+                    Dim OrderDoc As New XmlDocument
+                    OrderDoc.LoadXml(oCartXML.OuterXml)
+
+                    oTransform.ProcessTimed(OrderDoc, icPageWriter)
+                    OrderDoc = Nothing
+
+                    Dim foNetXml As String = icPageWriter.ToString
+
+                    Dim FileName As String = "Attachment.pdf"
+
+                    Dim FoDoc As New XmlDocument
+                    FoDoc.LoadXml(foNetXml)
+                    Dim nsMgr As XmlNamespaceManager = New XmlNamespaceManager(FoDoc.NameTable)
+                    nsMgr.AddNamespace("fo", "http://www.w3.org/1999/XSL/Format")
+                    If Not FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr) Is Nothing Then
+                        FileName = FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr).InnerText.Replace(" ", "-") & ".pdf"
+                    End If
+                    FoDoc = Nothing
+
+                    oMsg.addAttachment(oPDF.GetPDFstream(foNetXml, cFontPath), FileName)
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
 
                 End If
