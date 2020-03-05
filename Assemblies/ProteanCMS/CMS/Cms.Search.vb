@@ -969,6 +969,7 @@ Partial Public Class Cms
 
             Dim cIDs As String = ""
             Dim cSearchWhereCONTENT As String = ""
+            Dim cSearchWhereCONTENTforCode As String = ""
             Dim cSearchWhereUSER As String = ""
             Dim cRegEx As String = ""
             Dim cRegExPattern As String = ""
@@ -998,16 +999,42 @@ Partial Public Class Cms
                             cSearchWhereUSER = cSearchWhereUSER & " AND "
                         End If
                         cRegEx = cSearchTerm
-                        cSearchWhereCONTENT = cSearchWhereCONTENT & " (CONTAINS(cContentXmlDetail, '" & cSearchTerm & "') OR CONTAINS(cContentXmlBrief, '" & cSearchTerm & "'))"
+                        cSearchWhereCONTENT = cSearchWhereCONTENT & " (CONTAINS(parentContent.cContentXmlDetail, '" & cSearchTerm & "') OR CONTAINS(parentContent.cContentXmlBrief, '" & cSearchTerm & "'))"
                     End If
                 Next
+
+                If cSearchWhereCONTENT <> "" Then
+                    cSearchWhereCONTENT = " ( " & cSearchWhereCONTENT & " ) "
+                    bFirst = True
+                End If
+
+                For i = 0 To UBound(aSearchWords)
+                    cSearchTerm = aSearchWords(i)
+                    If Trim(cSearchTerm) <> "" Then
+
+                        If bFirst Then
+                            bFirst = Not (bFirst)
+                        Else
+                            cSearchWhereCONTENTforCode = cSearchWhereCONTENTforCode & " AND "
+                            cSearchWhereUSER = cSearchWhereUSER & " AND "
+                        End If
+                        cRegEx = cSearchTerm
+                        cSearchWhereCONTENTforCode = cSearchWhereCONTENTforCode & " (CONTAINS(childContent.cContentXmlDetail, '" & cSearchTerm & "') OR CONTAINS(childContent.cContentXmlBrief, '" & cSearchTerm & "'))"
+                    End If
+                Next
+
+                If cSearchWhereCONTENTforCode <> "" Then
+                    cSearchWhereCONTENT = cSearchWhereCONTENT & " OR ( " & cSearchWhereCONTENTforCode & " ) "
+                End If
 
                 If cSearchWhereCONTENT <> "" Or bUserQuery Then
                     Dim oDr As SqlClient.SqlDataReader
 
-                    cSql = "SELECT nContentKey, cContentXmlBrief,  cContentXmlDetail, nContentPrimaryId, cContentName, cContentSchemaName " _
-                        & " FROM tblContent " _
-                        & " WHERE (" & cSearchWhereCONTENT & ")" & IIf(cContentType = "", "", " AND (cContentSchemaName IN (" & cContentType & "))")
+                    cSql = "SELECT distinct  parentContent.nContentKey, Cast(parentContent.cContentXmlBrief as NVarchar(Max)) as cContentXmlBrief,  Cast(parentContent.cContentXmlDetail as NVarchar(Max)) as cContentXmlDetail, parentContent.nContentPrimaryId, parentContent.cContentName, parentContent.cContentSchemaName " _
+                        & " FROM tblContentRelation r  
+inner join tblContent parentContent on (r.nContentParentId = parentContent.nContentKey) " _
+                        & "inner join tblContent childContent on (r.nContentChildId = childContent.nContentKey) " _
+                        & " WHERE (" & cSearchWhereCONTENT & ")" & IIf(cContentType = "", "", " AND (parentContent.cContentSchemaName IN (" & cContentType & "))")
 
                     Dim cResultIDsCSV As String = ""
                     If Not bUserQuery Then

@@ -146,67 +146,91 @@ Partial Public Class Cms
                     Next
                     Dim cCartItemIds As String = strItemIds.ToString
 
+
                     If cCartItemIds <> "" Then
+                        ''comment----------
+                        '' we selecting all discounts applicable to all Items of the cart.
+                        '' we passing through the cart item ids at any promocode that has been entered
+                        '' we need to include all discount rules applicable to products by virtue of ther group memebership
+                        '' we also needs to include all discount rules that applied to all products after checking they are not in a excluded group
+                        '' we return the cart item id and discount that applied to it.
+                        '' we may have multiple discount per product 
+                        '' In future we may have multiple discount code , right now we can apply one per order.
+                        ''
+
+
                         cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1)
-                        'get the SQL together
-                        strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName, ")
-                        strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue, ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity, ")
-                        strSQL.Append(" tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId, ")
-                        strSQL.Append("tblCartCatProductRelations.nContentId, ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountCodeType, ")
-                        strSQL.Append("tblCartDiscountRules.cDiscountUserCode, ")
-                        strSQL.Append("ci.nCartItemKey ")
-                        If cPromoCodeUserEntered <> "" Then
-                            strSQL.Append(", dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') as [CodeUsedId] ")
-                        End If
-                        strSQL.Append("FROM tblCartCatProductRelations ")
-                        strSQL.Append("INNER JOIN tblCartDiscountProdCatRelations ON tblCartCatProductRelations.nCatId = tblCartDiscountProdCatRelations.nProductCatId ")
-                        strSQL.Append("INNER JOIN tblCartDiscountRules ")
-                        strSQL.Append("INNER JOIN tblCartDiscountDirRelations ON tblCartDiscountRules.nDiscountKey = tblCartDiscountDirRelations.nDiscountId ")
-                        strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ")
-                        strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " & myCart.mnCartId)
-                        strSQL.Append("WHERE (tblAudit.nStatus = 1) ")
-                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
-                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
-                        strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" & cUserGroupIds & ")) ")
-
-                        If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel") Then
-                            'code to exclude denied discounts
-                            strSQL.Append("AND (SELECT COUNT(dr2.nDiscountDirRelationKey) from tblCartDiscountDirRelations dr2" &
-                                            " WHERE dr2.nDirId IN (" & cUserGroupIds & ")" &
-                                             " AND nDiscountKey = dr2.nDiscountId" &
-                                             " AND  dr2.nPermLevel = 0 ) = 0 ")
-                        End If
-
                         If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
-                            ' strSQL.Append("AND ((tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ") AND tblCartDiscountRules.bAllProductExcludeGroups = false) OR (tblCartCatProductRelations.nContentId NOT IN (" & cCartItemIds & ") AND tblCartDiscountRules.bAllProductExcludeGroups = true))")
-                            ' Else
-                            strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
-                        End If
-
-                        If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
-                            'return all
-                            If cPromoCodeUserEntered <> "" Then
-                                strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                                strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
-                            End If
+                            '' call stored procedure else existing code.
+                            '' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                            Dim param As New Hashtable
+                            param.Add("PromoCodeEntered", cPromoCodeUserEntered)
+                            param.Add("UserGroupIds", cUserGroupIds)
+                            param.Add("CartOrderId", myCart.mnCartId)
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet("csp_CheckDiscounts", "Discount", "Discounts", False, param, CommandType.StoredProcedure)
 
                         Else
-                            strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
+
+                            'get the SQL together
+                            strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName, ")
+                            strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity, ")
+                            strSQL.Append(" tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId, ")
+                            strSQL.Append("tblCartCatProductRelations.nContentId, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCodeType, ")
+                            strSQL.Append("tblCartDiscountRules.cDiscountUserCode, ")
+                            strSQL.Append("ci.nCartItemKey ")
                             If cPromoCodeUserEntered <> "" Then
-                                strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                                strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
+                                strSQL.Append(", dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') as [CodeUsedId] ")
                             End If
-                            strSQL.Append(")")
+                            strSQL.Append("FROM tblCartCatProductRelations ")
+                            strSQL.Append("INNER JOIN tblCartDiscountProdCatRelations ON tblCartCatProductRelations.nCatId = tblCartDiscountProdCatRelations.nProductCatId ")
+                            strSQL.Append("INNER JOIN tblCartDiscountRules ")
+                            strSQL.Append("INNER JOIN tblCartDiscountDirRelations ON tblCartDiscountRules.nDiscountKey = tblCartDiscountDirRelations.nDiscountId ")
+                            strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ")
+                            strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " & myCart.mnCartId)
+                            strSQL.Append("WHERE (tblAudit.nStatus = 1) ")
+                            strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & sqlDate(DiscountApplyDate) & ")  ")
+                            strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
+                            strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" & cUserGroupIds & ")) ")
+
+                            If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel") Then
+                                'code to exclude denied discounts
+                                strSQL.Append("AND (SELECT COUNT(dr2.nDiscountDirRelationKey) from tblCartDiscountDirRelations dr2" &
+                                                " WHERE dr2.nDirId IN (" & cUserGroupIds & ")" &
+                                                 " AND nDiscountKey = dr2.nDiscountId" &
+                                                 " AND  dr2.nPermLevel = 0 ) = 0 ")
+                            End If
+
+
+                            strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
+
+
+                            If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
+                                'return all
+                                If cPromoCodeUserEntered <> "" Then
+                                    strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
+                                    strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
+                                End If
+
+                            Else
+                                strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
+                                If cPromoCodeUserEntered <> "" Then
+                                    strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
+                                    strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
+                                End If
+                                strSQL.Append(")")
+                            End If
+
+                            PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                            PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
 
-                        PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
-                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-                        PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
+
 
                         If oDsDiscounts Is Nothing Then
                             If cPromoCodeUserEntered <> "" Then
