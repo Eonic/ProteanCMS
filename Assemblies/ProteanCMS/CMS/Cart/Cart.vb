@@ -7343,7 +7343,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 oContent.SetAttribute("type", mcOrderType)
                                 oContent.SetAttribute("id", oDR("nCartOrderKey"))
                                 oContent.SetAttribute("statusId", oDR("nCartStatus"))
-
+                                oContent.SetAttribute("cartForiegnRef", oDR("cCartForiegnRef"))
                                 'Get Date
                                 cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
                                 Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)
