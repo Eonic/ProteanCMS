@@ -354,16 +354,38 @@ Partial Public Class Cms
 
                             'Price Modifiers
                             Dim cPriceModifiers() As String = {"Basic_Money", "Basic_Percent", "Break_Product"}
+
                             If Not mcPriceModOrder = "" Then cPriceModifiers = Split(mcPriceModOrder, ",")
+                            Dim strcFreeShippingMethods As String = ""
+                            If Not (oDsDiscounts) Is Nothing Then
+                                strcFreeShippingMethods = ""
+                                Dim doc As New XmlDocument()
+                                Dim ProductGroups As Boolean = 1
+
+                                If (cPromoCodeUserEntered <> "") Then
+                                    'getting productgroups value
+                                    strSQL.Clear()
+                                    strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountCode = '" & cPromoCodeUserEntered & "'")
+
+                                    oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                                    Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                                    doc.LoadXml(additionalInfo)
+
+                                    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                    End If
+                                End If
+
+                            End If
 
 
                             Dim nPriceCount As Integer = 0 'this counts where we are on the prices, shows the order we done them in
                             For nCount = 0 To UBound(cPriceModifiers)
                                 Select Case cPriceModifiers(nCount)
                                     Case "Basic_Money"
-                                        Discount_Basic_Money(oDXML, nPriceCount)
+                                        Discount_Basic_Money(oDXML, nPriceCount, strcFreeShippingMethods)
                                     Case "Basic_Percent"
-                                        Discount_Basic_Percent(oDXML, nPriceCount)
+                                        Discount_Basic_Percent(oDXML, nPriceCount, strcFreeShippingMethods)
                                     Case "Break_Product"
                                         Discount_Break_Product(oDXML, nPriceCount)
                                 End Select
@@ -602,7 +624,7 @@ Partial Public Class Cms
 
 #Region "Discount Rule Application"
 
-            Private Sub Discount_Basic_Money(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
+            Private Sub Discount_Basic_Money(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String)
                 PerfMon.Log("Discount", "Discount_Basic_Money")
                 'this will work basic monetary discounts
                 Dim oItemLoop As XmlElement
@@ -672,7 +694,8 @@ Partial Public Class Cms
                                 Dim oDiscountElmt As XmlElement
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
                                     oDiscountElmt.SetAttribute("Applied", 1)
-
+                                    'set shipping option after applied promocode
+                                    myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
 
                                     If (oDiscountLoop.SelectSingleNode("bApplyToOrder") IsNot Nothing) Then
                                         If (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() = "1") Then
@@ -875,12 +898,13 @@ NoDiscount:
                 End Try
             End Sub
 
-            Private Sub Discount_Basic_Percent(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer)
+            Private Sub Discount_Basic_Percent(ByRef oDiscountXML As XmlDocument, ByRef nPriceCount As Integer, ByRef cFreeShippingMethods As String)
                 PerfMon.Log("Discount", "Discount_Basic_Percent")
                 'this will work basic discount discounts
                 Dim oItemLoop As XmlElement
                 Dim oDiscountLoop As XmlElement
                 Dim oPriceElmt As XmlElement
+                Dim nPromocodeApplyFlag As Integer = 0
                 Try
                     For Each oItemLoop In oDiscountXML.SelectNodes("Discounts/Item")
 
@@ -926,11 +950,14 @@ NoDiscount:
                             oPriceElmt.SetAttribute("UnitSaving", oPriceElmt.GetAttribute("OriginalUnitPrice") - nNewPrice)
                             oPriceElmt.SetAttribute("TotalSaving", oPriceElmt.GetAttribute("UnitSaving") * oPriceElmt.GetAttribute("Units"))
 
-
-
                             oDiscountLoop.SetAttribute("Applied", 1)
+                            nPromocodeApplyFlag = 1
                         Next
                     Next
+                    'set shipping option after applying promocode
+                    If (cFreeShippingMethods <> "" And nPromocodeApplyFlag = 1) Then
+                        myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
+                    End If
 
                 Catch ex As Exception
                     returnException(mcModuleName, "Discount_Basic_Percent", ex, "", "", gbDebug)
