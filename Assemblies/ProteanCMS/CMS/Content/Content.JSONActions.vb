@@ -146,6 +146,27 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function SearchIndex(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim SearchString As String = ""
+                    If Not searchFilter Is Nothing Then
+                        SearchString = searchFilter("query")
+                    End If
+                    Dim oSrch As New Protean.Cms.Search(myApi)
+                    Dim oResultsXml As New XmlDocument()
+                    oResultsXml.AppendChild(oResultsXml.CreateElement("Results"))
+                    oSrch.moContextNode = oResultsXml.FirstChild
+                    oSrch.IndexQuery(myApi, SearchString)
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(oResultsXml, Newtonsoft.Json.Formatting.Indented)
+                    Return jsonString.Replace("""@", """_")
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
+
         End Class
 
 #End Region

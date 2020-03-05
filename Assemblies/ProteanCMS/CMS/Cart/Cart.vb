@@ -5603,14 +5603,14 @@ processFlow:
 
                         oOptXform.addSubmit(oGrpElmt, "optionsForm", "Make Secure Payment")
 
-                        If bPaymentTypeButtons Then
-                            oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), 0)
-                            Dim oSubmitBtn As XmlElement
-                            For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
-                                AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
-                            Next
-                        End If
+                    If bPaymentTypeButtons Then
+                        oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), nAmount)
+                        Dim oSubmitBtn As XmlElement
+                        For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
+                            AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
+                        Next
                     End If
+                End If
 
                     oOptXform.valid = False
 
