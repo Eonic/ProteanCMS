@@ -5603,14 +5603,14 @@ processFlow:
 
                         oOptXform.addSubmit(oGrpElmt, "optionsForm", "Make Secure Payment")
 
-                        If bPaymentTypeButtons Then
-                            oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), 0)
-                            Dim oSubmitBtn As XmlElement
-                            For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
-                                AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
-                            Next
-                        End If
+                    If bPaymentTypeButtons Then
+                        oPay.getPaymentMethodButtons(oOptXform, oOptXform.moXformElmt.SelectSingleNode("group"), nAmount)
+                        Dim oSubmitBtn As XmlElement
+                        For Each oSubmitBtn In oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit")
+                            AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"))
+                        Next
                     End If
+                End If
 
                     oOptXform.valid = False
 
@@ -7046,7 +7046,38 @@ processFlow:
                     cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")
                     Dim oPDF As New Protean.Tools.PDF
-                    oMsg.addAttachment(oPDF.GetPDFstream(oCartXML, cCustomerAttachementTemplatePath, cFontPath), "Attachment.pdf")
+
+                    'create the xmlFO document
+                    Dim oTransform As Protean.XmlHelper.Transform
+
+                    Dim styleFile As String = CType(cCustomerAttachementTemplatePath, String)
+                    PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
+                    oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
+
+                    msException = ""
+
+                    oTransform.mbDebug = gbDebug
+                    Dim icPageWriter = New IO.StringWriter
+                    Dim OrderDoc As New XmlDocument
+                    OrderDoc.LoadXml(oCartXML.OuterXml)
+
+                    oTransform.ProcessTimed(OrderDoc, icPageWriter)
+                    OrderDoc = Nothing
+
+                    Dim foNetXml As String = icPageWriter.ToString
+
+                    Dim FileName As String = "Attachment.pdf"
+
+                    Dim FoDoc As New XmlDocument
+                    FoDoc.LoadXml(foNetXml)
+                    Dim nsMgr As XmlNamespaceManager = New XmlNamespaceManager(FoDoc.NameTable)
+                    nsMgr.AddNamespace("fo", "http://www.w3.org/1999/XSL/Format")
+                    If Not FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr) Is Nothing Then
+                        FileName = FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr).InnerText.Replace(" ", "-") & ".pdf"
+                    End If
+                    FoDoc = Nothing
+
+                    oMsg.addAttachment(oPDF.GetPDFstream(foNetXml, cFontPath), FileName)
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
 
                 End If
@@ -7312,7 +7343,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                                 oContent.SetAttribute("type", mcOrderType)
                                 oContent.SetAttribute("id", oDR("nCartOrderKey"))
                                 oContent.SetAttribute("statusId", oDR("nCartStatus"))
-
+                                oContent.SetAttribute("cartForiegnRef", oDR("cCartForiegnRef"))
                                 'Get Date
                                 cSQL = "Select dInsertDate from tblAudit where nAuditKey =" & oDR("nAuditId")
                                 Dim oDRe As SqlDataReader = moDBHelper.getDataReader(cSQL)

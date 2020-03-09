@@ -72,6 +72,11 @@ Public Class API
         Try
 
             Dim path As String = moRequest.ServerVariables("HTTP_X_ORIGINAL_URL")
+
+            If path.Contains("?") Then
+                path = path.Substring(0, path.IndexOf("?"))
+            End If
+
             Dim pathsplit() As String = Split(path, "/")
             'URL = /API/ProviderName/methodName
 
@@ -83,6 +88,10 @@ Public Class API
             Dim s As Stream = moRequest.InputStream
             Dim sr As New StreamReader(s)
             Dim jsonString As String = sr.ReadLine()
+            If jsonString = Nothing Then
+                jsonString = moRequest("data")
+            End If
+
             Dim jObj As Newtonsoft.Json.Linq.JObject = Nothing
             If Not jsonString Is Nothing Then
                 jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)

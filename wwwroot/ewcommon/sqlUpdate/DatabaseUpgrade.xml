@@ -379,11 +379,16 @@
     <Sub1 Number="0">
       <Sub2 Number="34">
         <Sub3 Number="0">
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.34.0/tblCartDiscountRules.sql"/>
-          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.5.0/tblCartContact.sql"/>
-          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/5.0.6.0/spSearchDirectory.sql"/>
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.34.0/tblCartDiscountRules.sql"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.5.0/tblCartContact.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.6.0/spSearchDirectory.sql"/>
         </Sub3>
-      </Sub2>      
+      </Sub2>
+      <Sub2 Number="35">
+        <Sub3 Number="0">
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.35.0/csp_CheckDiscounts.sql"/>
+        </Sub3>
+      </Sub2>
     </Sub1>
   </Version>
 </DatabaseUpgrade>
