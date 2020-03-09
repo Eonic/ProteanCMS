@@ -1085,7 +1085,18 @@ Partial Public Class Cms
                             End If
                         End If
 
-                        If nArtId <> Nothing And Not gbAdminMode Then
+                        Dim checkRedirect As Boolean = False
+
+                        If myWeb.moConfig("DetailPathTrailingSlash") = "on" Then
+                            For i = 0 To prefixs.Length - 1
+                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                If sFullPath.StartsWith("/" & thisPrefix) And Not sFullPath.EndsWith("/") Then
+                                    checkRedirect = True
+                                End If
+                            Next
+                        End If
+
+                        If nArtId > 0 And Not gbAdminMode Then
                             'article id was passed in the url so we may need to redirect
 
                             sSql = "select cContentSchemaName, cContentName from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where nContentKey = " & nArtId
@@ -1105,6 +1116,9 @@ Partial Public Class Cms
                                 thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                 If contentType = thisContentType Then
                                     redirectUrl &= "/" & thisPrefix & "/" & contentName.ToString.Replace(" ", "-").Trim("-")
+                                    If myWeb.moConfig("DetailPathTrailingSlash") = "on" Then
+                                        redirectUrl = redirectUrl + "/"
+                                    End If
                                 End If
                             Next
 
@@ -1149,6 +1163,17 @@ Partial Public Class Cms
                                     nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
                                 End If
                                 nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
+
+
+                                If checkRedirect Then
+                                    Dim redirectUrl As String
+                                    redirectUrl = "/" & thisPrefix & "/" & sPath.ToString.Replace(" ", "-").Trim("-") & "/"
+                                    If sFullPath <> redirectUrl Then
+                                        myWeb.msRedirectOnEnd = redirectUrl
+                                    End If
+                                End If
+
+
                             Else
                                 'handling for multiple parents versions ?
                             End If
