@@ -23,8 +23,7 @@
           </Images>
           <cPromotionalCode/>
           <cPromotionalCodeType/>
-          <bApplyToOrder></bApplyToOrder>
-          <nProductGroups></nProductGroups>
+          <bApplyToOrder/>
           <cFreeShippingMethods />
           <nMinimumOrderValue/>
           <nMaximumOrderValue/>
@@ -42,6 +41,7 @@
         <nUpdateDirId/>
         <nStatus>1</nStatus>
         <cDescription/>
+        <bAllProductExcludeGroups/>
       </tblCartDiscountRules>
     </instance>
     <submission id="EditDiscount" action="" method="post" event="return form_check(this)"/>
@@ -63,7 +63,6 @@
         <bind id="cDiscountPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
         <bind id="cDiscountFullSizePicture" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
         <bind id="bApplyToOrder" nodeset="bApplyToOrder" required="false()" type="string"/>
-        <bind id="nProductGroups" nodeset="nProductGroups" required="false()" type="string"/>
         <bind id="cFreeShippingMethods" nodeset="cFreeShippingMethods" required="false()" type="string"/>
         <bind id="nMinimumOrderValue" nodeset="nMinimumOrderValue" required="false()" type="string"/>
         <bind id="nMaximumOrderValue" nodeset="nMaximumOrderValue" required="false()" type="string"/>
@@ -75,6 +74,7 @@
       <bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>
+      <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="true()" type="number"/>
       <!--<bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" constraint="(//nDiscountCodeType='3' and //nDiscountCodeBank!='')" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>-->
@@ -172,15 +172,17 @@
             <value>True</value>
           </item>
         </select>
-        <select1 bind="nProductGroups" appearance="full" class="vshort">
+       
+        <select1 bind="bAllProductExcludeGroups"  required="true()" appearance="full" class="vshort">
           <label>APPLY TO</label>
+           <choices/> 
           <item>
             <label>Selected Product groups</label>
-            <value>1</value>
+            <value>0</value>
           </item>
           <item>
             <label>ALL Products/SKUS - Excluding Linked Product Groups</label>
-            <value>0</value>
+            <value>1</value>
           </item>
         </select1>
         <select bind="cFreeShippingMethods" appearance="minimal" class="ewQuery scroll_10" query="ShippingMethods">

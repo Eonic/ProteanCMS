@@ -157,263 +157,273 @@ Partial Public Class Cms
                         '' we may have multiple discount per product 
                         '' In future we may have multiple discount code , right now we can apply one per order.
                         ''
+                        If Not (oCartXML.Attributes("InvoiceDateTime") Is Nothing) Then
+                            DiscountApplyDate = oCartXML.Attributes("InvoiceDateTime").Value
+                        End If
+
+
+
+
 
 
                         cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1)
-                        If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
-                            '' call stored procedure else existing code.
-                            '' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
-                            Dim param As New Hashtable
-                            param.Add("PromoCodeEntered", cPromoCodeUserEntered)
-                            param.Add("UserGroupIds", cUserGroupIds)
-                            param.Add("CartOrderId", myCart.mnCartId)
-                            oDsDiscounts = myWeb.moDbHelper.GetDataSet("csp_CheckDiscounts", "Discount", "Discounts", False, param, CommandType.StoredProcedure)
+                            If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
+                                '' call stored procedure else existing code.
+                                '' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                                Dim param As New Hashtable
+                                param.Add("PromoCodeEntered", cPromoCodeUserEntered)
+                                param.Add("UserGroupIds", cUserGroupIds)
+                                param.Add("CartOrderId", myCart.mnCartId)
+                                param.Add("CartOrderDate", DiscountApplyDate)
 
-                        Else
 
-                            'get the SQL together
-                            strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName, ")
-                            strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
-                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue, ")
-                            strSQL.Append("tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity, ")
-                            strSQL.Append(" tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId, ")
-                            strSQL.Append("tblCartCatProductRelations.nContentId, ")
-                            strSQL.Append("tblCartDiscountRules.nDiscountCodeType, ")
-                            strSQL.Append("tblCartDiscountRules.cDiscountUserCode, ")
-                            strSQL.Append("ci.nCartItemKey ")
-                            If cPromoCodeUserEntered <> "" Then
-                                strSQL.Append(", dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') as [CodeUsedId] ")
-                            End If
-                            strSQL.Append("FROM tblCartCatProductRelations ")
-                            strSQL.Append("INNER JOIN tblCartDiscountProdCatRelations ON tblCartCatProductRelations.nCatId = tblCartDiscountProdCatRelations.nProductCatId ")
-                            strSQL.Append("INNER JOIN tblCartDiscountRules ")
-                            strSQL.Append("INNER JOIN tblCartDiscountDirRelations ON tblCartDiscountRules.nDiscountKey = tblCartDiscountDirRelations.nDiscountId ")
-                            strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ")
-                            strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " & myCart.mnCartId)
-                            strSQL.Append("WHERE (tblAudit.nStatus = 1) ")
-                            strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & sqlDate(DiscountApplyDate) & ")  ")
-                            strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
-                            strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" & cUserGroupIds & ")) ")
+                                oDsDiscounts = myWeb.moDbHelper.GetDataSet("csp_CheckDiscounts", "Discount", "Discounts", False, param, CommandType.StoredProcedure)
 
-                            If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel") Then
-                                'code to exclude denied discounts
-                                strSQL.Append("AND (SELECT COUNT(dr2.nDiscountDirRelationKey) from tblCartDiscountDirRelations dr2" &
+                            Else
+
+                                'get the SQL together
+                                strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName, ")
+                                strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                                strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue, ")
+                                strSQL.Append("tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity, ")
+                                strSQL.Append(" tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId, ")
+                                strSQL.Append("tblCartCatProductRelations.nContentId, ")
+                                strSQL.Append("tblCartDiscountRules.nDiscountCodeType, ")
+                                strSQL.Append("tblCartDiscountRules.cDiscountUserCode, ")
+                                strSQL.Append("ci.nCartItemKey ")
+                                If cPromoCodeUserEntered <> "" Then
+                                    strSQL.Append(", dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') as [CodeUsedId] ")
+                                End If
+                                strSQL.Append("FROM tblCartCatProductRelations ")
+                                strSQL.Append("INNER JOIN tblCartDiscountProdCatRelations ON tblCartCatProductRelations.nCatId = tblCartDiscountProdCatRelations.nProductCatId ")
+                                strSQL.Append("INNER JOIN tblCartDiscountRules ")
+                                strSQL.Append("INNER JOIN tblCartDiscountDirRelations ON tblCartDiscountRules.nDiscountKey = tblCartDiscountDirRelations.nDiscountId ")
+                                strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ")
+                                strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " & myCart.mnCartId)
+                                strSQL.Append("WHERE (tblAudit.nStatus = 1) ")
+                                strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " & sqlDate(DiscountApplyDate) & ")  ")
+                                strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
+                                strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" & cUserGroupIds & ")) ")
+
+                                If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel") Then
+                                    'code to exclude denied discounts
+                                    strSQL.Append("AND (SELECT COUNT(dr2.nDiscountDirRelationKey) from tblCartDiscountDirRelations dr2" &
                                                 " WHERE dr2.nDirId IN (" & cUserGroupIds & ")" &
                                                  " AND nDiscountKey = dr2.nDiscountId" &
                                                  " AND  dr2.nPermLevel = 0 ) = 0 ")
-                            End If
-
-
-                            strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
-
-
-                            If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
-                                'return all
-                                If cPromoCodeUserEntered <> "" Then
-                                    strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                                    strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
                                 End If
 
-                            Else
-                                strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
-                                If cPromoCodeUserEntered <> "" Then
-                                    strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
-                                    strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
-                                End If
-                                strSQL.Append(")")
-                            End If
 
-                            PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
-                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-                            PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
-                        End If
-
-                        'TS: Add a union in here to add discount rule applied at an order level.
+                                strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" & cCartItemIds & ")) ")
 
 
-
-                        If oDsDiscounts Is Nothing Then
-                            If cPromoCodeUserEntered <> "" Then
-                                Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
-                                oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
-
-                                oCartXML.AppendChild(oDiscountMessage)
-                            End If
-                            Return 0
-                        Else
-
-                            Dim oDc As DataColumn
-                            For Each oDc In oDsDiscounts.Tables("Discount").Columns
-                                If Not oDc.ColumnName = "cAdditionalXML" Then oDc.ColumnMapping = MappingType.Attribute
-                            Next
-                            oDsDiscounts.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
-                            'add a copy of the cart items table
-                            '------------------------------------------------------------------------------------
-                            If Not bFullCart Then
-                                'If just a summary then cart xml does not have the items
-                                '   add to Cart XML
-                                If oDsCart.Tables("Item").Rows.Count > 0 Then
-                                    'cart items
-                                    oDsCart.Tables(0).Columns("nDiscountKey").ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns("nDiscountForeignRef").ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
-                                    'oDsCart.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(4).ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(5).ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(6).ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(7).ColumnMapping = Data.MappingType.Attribute
-                                    oDsCart.Tables(0).Columns(8).ColumnMapping = Data.MappingType.Attribute
-
-                                    If Not (oDsCart.Tables(0).Columns("CodeUsedId") Is Nothing) Then
-                                        oDsCart.Tables(0).Columns("CodeUsedId").ColumnMapping = Data.MappingType.Attribute
+                                If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
+                                    'return all
+                                    If cPromoCodeUserEntered <> "" Then
+                                        strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
+                                        strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0))")
                                     End If
 
-                                    'cart contacts
-
-                                    Dim oXml As XmlDataDocument
-                                    oXml = New XmlDataDocument(oDsCart)
-                                    oDsCart.EnforceConstraints = False
-
-                                    oCartXML.InnerXml = oXml.FirstChild.InnerXml
-                                End If
-                            End If
-                            '------------------------------------------------------------------------------------
-                            oDsDiscounts.Tables.Add(oDsCart.Tables("Item").Copy())
-
-                            'remove product's children as they mess with the discounts
-                            Dim drItem As DataRow
-                            Dim bDataTableChanged As Boolean = False
-                            For Each drItem In oDsDiscounts.Tables("Item").Rows
-                                If drItem.Item("nParentId") > 0 Then
-                                    drItem.Delete()
-                                    bDataTableChanged = True
-                                End If
-                            Next
-                            If bDataTableChanged Then
-                                oDsDiscounts.Tables("Item").AcceptChanges()
-                            End If
-
-                            'relate them
-                            oDsDiscounts.Relations.Add("ItemDiscount", oDsDiscounts.Tables("Item").Columns("id"), oDsDiscounts.Tables("Discount").Columns("nCartItemKey"), False)
-                            oDsDiscounts.Relations("ItemDiscount").Nested = True
-                            'now make it into an xml document
-                            Dim oDXML As New XmlDocument
-                            Dim cXML As String = Replace(Replace(oDsDiscounts.GetXml, "&gt;", ">"), "&lt;", "<")
-                            oDXML.InnerXml = cXML
-                            oDXML.PreserveWhitespace = False
-
-                            'now need to make sure there are no duplicates where multi groups exists
-                            Dim oItemElmt As XmlElement
-                            For Each oItemElmt In oDXML.SelectNodes("Discounts/Item")
-                                Dim oDupElmt As XmlElement
-                                Dim nDiscConts() As Integer = {0}
-                                Dim cDiscConts As String = ","
-                                For Each oDupElmt In oItemElmt.SelectNodes("Discount")
-
-                                    If cDiscConts.Contains("," & oDupElmt.GetAttribute("nDiscountKey") & ",") Then
-                                        oItemElmt.RemoveChild(oDupElmt)
-                                    Else
-                                        cDiscConts &= oDupElmt.GetAttribute("nDiscountKey") & ","
-                                    End If
-
-                                Next
-                            Next
-
-                            'Itterate through those that have a cDiscountUserCode
-                            For Each oItemElmt In oDXML.SelectNodes("Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']")
-                                bHasPromotionalDiscounts = True
-
-                                Dim cDiscountUserCode As String = oItemElmt.GetAttribute("cDiscountUserCode").ToLower
-                                Dim nDiscountCodeType As promoCodeType = oItemElmt.GetAttribute("nDiscountCodeType").ToLower
-
-                                If nDiscountCodeType = promoCodeType.MultiCode Then
-                                    If cPromoCodeUserEntered = "" Then
-                                        oItemElmt.ParentNode.RemoveChild(oItemElmt)
-                                    Else
-                                        'do nothing we will process this rule because it matches the incoming query which contains the code.
-                                    End If
                                 Else
-                                    If Not cDiscountUserCode = cPromoCodeUserEntered.ToLower Then
-                                        oItemElmt.ParentNode.RemoveChild(oItemElmt)
+                                    strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '' AND  tblCartDiscountRules.nDiscountCodeType = 0) ")
+                                    If cPromoCodeUserEntered <> "" Then
+                                        strSQL.Append("OR (tblCartDiscountRules.cDiscountUserCode = '" & cPromoCodeUserEntered & "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))")
+                                        strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" & cPromoCodeUserEntered & "') > 0)")
+                                    End If
+                                    strSQL.Append(")")
+                                End If
+
+                                PerfMon.Log("Discount", "CheckDiscounts - StartQuery")
+                                oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                                PerfMon.Log("Discount", "CheckDiscounts - EndQuery")
+                            End If
+
+                            'TS: Add a union in here to add discount rule applied at an order level.
+
+
+
+                            If oDsDiscounts Is Nothing Then
+                                If cPromoCodeUserEntered <> "" Then
+                                    Dim oDiscountMessage As XmlElement = oCartXML.OwnerDocument.CreateElement("DiscountMessage")
+                                    oDiscountMessage.InnerXml = "<span class=""msg-1030"">The code you have provided is invalid for this transaction</span>"
+
+                                    oCartXML.AppendChild(oDiscountMessage)
+                                End If
+                                Return 0
+                            Else
+
+                                Dim oDc As DataColumn
+                                For Each oDc In oDsDiscounts.Tables("Discount").Columns
+                                    If Not oDc.ColumnName = "cAdditionalXML" Then oDc.ColumnMapping = MappingType.Attribute
+                                Next
+                                oDsDiscounts.Tables("Discount").Columns("cAdditionalXML").ColumnMapping = MappingType.SimpleContent
+                                'add a copy of the cart items table
+                                '------------------------------------------------------------------------------------
+                                If Not bFullCart Then
+                                    'If just a summary then cart xml does not have the items
+                                    '   add to Cart XML
+                                    If oDsCart.Tables("Item").Rows.Count > 0 Then
+                                        'cart items
+                                        oDsCart.Tables(0).Columns("nDiscountKey").ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns("nDiscountForeignRef").ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(2).ColumnMapping = Data.MappingType.Attribute
+                                        'oDsCart.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(4).ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(5).ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(6).ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(7).ColumnMapping = Data.MappingType.Attribute
+                                        oDsCart.Tables(0).Columns(8).ColumnMapping = Data.MappingType.Attribute
+
+                                        If Not (oDsCart.Tables(0).Columns("CodeUsedId") Is Nothing) Then
+                                            oDsCart.Tables(0).Columns("CodeUsedId").ColumnMapping = Data.MappingType.Attribute
+                                        End If
+
+                                        'cart contacts
+
+                                        Dim oXml As XmlDataDocument
+                                        oXml = New XmlDataDocument(oDsCart)
+                                        oDsCart.EnforceConstraints = False
+
+                                        oCartXML.InnerXml = oXml.FirstChild.InnerXml
+                                    End If
+                                End If
+                                '------------------------------------------------------------------------------------
+                                oDsDiscounts.Tables.Add(oDsCart.Tables("Item").Copy())
+
+                                'remove product's children as they mess with the discounts
+                                Dim drItem As DataRow
+                                Dim bDataTableChanged As Boolean = False
+                                For Each drItem In oDsDiscounts.Tables("Item").Rows
+                                    If drItem.Item("nParentId") > 0 Then
+                                        drItem.Delete()
+                                        bDataTableChanged = True
+                                    End If
+                                Next
+                                If bDataTableChanged Then
+                                    oDsDiscounts.Tables("Item").AcceptChanges()
+                                End If
+
+                                'relate them
+                                oDsDiscounts.Relations.Add("ItemDiscount", oDsDiscounts.Tables("Item").Columns("id"), oDsDiscounts.Tables("Discount").Columns("nCartItemKey"), False)
+                                oDsDiscounts.Relations("ItemDiscount").Nested = True
+                                'now make it into an xml document
+                                Dim oDXML As New XmlDocument
+                                Dim cXML As String = Replace(Replace(oDsDiscounts.GetXml, "&gt;", ">"), "&lt;", "<")
+                                oDXML.InnerXml = cXML
+                                oDXML.PreserveWhitespace = False
+
+                                'now need to make sure there are no duplicates where multi groups exists
+                                Dim oItemElmt As XmlElement
+                                For Each oItemElmt In oDXML.SelectNodes("Discounts/Item")
+                                    Dim oDupElmt As XmlElement
+                                    Dim nDiscConts() As Integer = {0}
+                                    Dim cDiscConts As String = ","
+                                    For Each oDupElmt In oItemElmt.SelectNodes("Discount")
+
+                                        If cDiscConts.Contains("," & oDupElmt.GetAttribute("nDiscountKey") & ",") Then
+                                            oItemElmt.RemoveChild(oDupElmt)
+                                        Else
+                                            cDiscConts &= oDupElmt.GetAttribute("nDiscountKey") & ","
+                                        End If
+
+                                    Next
+                                Next
+
+                                'Itterate through those that have a cDiscountUserCode
+                                For Each oItemElmt In oDXML.SelectNodes("Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']")
+                                    bHasPromotionalDiscounts = True
+
+                                    Dim cDiscountUserCode As String = oItemElmt.GetAttribute("cDiscountUserCode").ToLower
+                                    Dim nDiscountCodeType As promoCodeType = oItemElmt.GetAttribute("nDiscountCodeType").ToLower
+
+                                    If nDiscountCodeType = promoCodeType.MultiCode Then
+                                        If cPromoCodeUserEntered = "" Then
+                                            oItemElmt.ParentNode.RemoveChild(oItemElmt)
+                                        Else
+                                            'do nothing we will process this rule because it matches the incoming query which contains the code.
+                                        End If
                                     Else
-                                        If nDiscountCodeType = promoCodeType.UseOnce Then
-                                            If Not cPromotionalDiscounts.Contains("," & oItemElmt.GetAttribute("nDiscountKey") & ",") Then
-                                                cPromotionalDiscounts &= oItemElmt.GetAttribute("nDiscountKey") & ","
+                                        If Not cDiscountUserCode = cPromoCodeUserEntered.ToLower Then
+                                            oItemElmt.ParentNode.RemoveChild(oItemElmt)
+                                        Else
+                                            If nDiscountCodeType = promoCodeType.UseOnce Then
+                                                If Not cPromotionalDiscounts.Contains("," & oItemElmt.GetAttribute("nDiscountKey") & ",") Then
+                                                    cPromotionalDiscounts &= oItemElmt.GetAttribute("nDiscountKey") & ","
+                                                End If
                                             End If
                                         End If
                                     End If
-                                End If
 
-                            Next
+                                Next
 
-                            For Each oItemElmt In oDXML.SelectNodes("Discounts/Item/Discount[@CodeUsedId!='']")
+                                For Each oItemElmt In oDXML.SelectNodes("Discounts/Item/Discount[@CodeUsedId!='']")
 
-                                cVouchersUsed &= oItemElmt.GetAttribute("CodeUsedId") & ","
+                                    cVouchersUsed &= oItemElmt.GetAttribute("CodeUsedId") & ","
 
-                            Next
+                                Next
 
-                            'Price Modifiers
-                            Dim cPriceModifiers() As String = {"Basic_Money", "Basic_Percent", "Break_Product"}
+                                'Price Modifiers
+                                Dim cPriceModifiers() As String = {"Basic_Money", "Basic_Percent", "Break_Product"}
 
-                            If Not mcPriceModOrder = "" Then cPriceModifiers = Split(mcPriceModOrder, ",")
-                            Dim strcFreeShippingMethods As String = ""
-                            If Not (oDsDiscounts) Is Nothing Then
-                                strcFreeShippingMethods = ""
-                                Dim doc As New XmlDocument()
-                                Dim ProductGroups As Boolean = 1
+                                If Not mcPriceModOrder = "" Then cPriceModifiers = Split(mcPriceModOrder, ",")
+                                Dim strcFreeShippingMethods As String = ""
+                                If Not (oDsDiscounts) Is Nothing Then
+                                    strcFreeShippingMethods = ""
+                                    Dim doc As New XmlDocument()
+                                    Dim ProductGroups As Boolean = 1
 
-                                If (cPromoCodeUserEntered <> "") Then
-                                    'getting productgroups value
-                                    strSQL.Clear()
-                                    strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountCode = '" & cPromoCodeUserEntered & "'")
+                                    If (cPromoCodeUserEntered <> "") Then
+                                        'getting productgroups value
+                                        strSQL.Clear()
+                                        strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountCode = '" & cPromoCodeUserEntered & "'")
 
-                                    oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-                                    Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
-                                    doc.LoadXml(additionalInfo)
+                                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                                        Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                                        doc.LoadXml(additionalInfo)
 
-                                    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                        If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                                            strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                        End If
                                     End If
+
                                 End If
 
+
+                                Dim nPriceCount As Integer = 0 'this counts where we are on the prices, shows the order we done them in
+                                For nCount = 0 To UBound(cPriceModifiers)
+                                    Select Case cPriceModifiers(nCount)
+                                        Case "Basic_Money"
+                                            Discount_Basic_Money(oDXML, nPriceCount, strcFreeShippingMethods)
+                                        Case "Basic_Percent"
+                                            Discount_Basic_Percent(oDXML, nPriceCount, strcFreeShippingMethods)
+                                        Case "Break_Product"
+                                            Discount_Break_Product(oDXML, nPriceCount)
+                                    End Select
+                                Next
+                                'these  need to be ordered since they are dependant
+                                'on each other
+                                Discount_XForPriceY(oDXML, nPriceCount)
+                                Discount_CheapestDiscount(oDXML, nPriceCount)
+                                Discount_Break_Group(oDXML, nPriceCount)
+                                Dim nTotalSaved As Decimal = Discount_ApplyToCart(oCartXML, oDXML)
+
+                                If Not bFullCart Then oCartXML.InnerXml = ""
+
+                                Return nTotalSaved
                             End If
+                            ''code to validate exchange functionality
+                        ElseIf (cCartItemIds = "" And cPromoCodeUserEntered <> String.Empty) Then
+
+                            strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
 
 
-                            Dim nPriceCount As Integer = 0 'this counts where we are on the prices, shows the order we done them in
-                            For nCount = 0 To UBound(cPriceModifiers)
-                                Select Case cPriceModifiers(nCount)
-                                    Case "Basic_Money"
-                                        Discount_Basic_Money(oDXML, nPriceCount, strcFreeShippingMethods)
-                                    Case "Basic_Percent"
-                                        Discount_Basic_Percent(oDXML, nPriceCount, strcFreeShippingMethods)
-                                    Case "Break_Product"
-                                        Discount_Break_Product(oDXML, nPriceCount)
-                                End Select
-                            Next
-                            'these  need to be ordered since they are dependant
-                            'on each other
-                            Discount_XForPriceY(oDXML, nPriceCount)
-                            Discount_CheapestDiscount(oDXML, nPriceCount)
-                            Discount_Break_Group(oDXML, nPriceCount)
-                            Dim nTotalSaved As Decimal = Discount_ApplyToCart(oCartXML, oDXML)
+                            dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
+                            Return dDisountAmount
+                        Else
 
-                            If Not bFullCart Then oCartXML.InnerXml = ""
-
-                            Return nTotalSaved
-                        End If
-                        ''code to validate exchange functionality
-                    ElseIf (cCartItemIds = "" And cPromoCodeUserEntered <> String.Empty) Then
-
-                        strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'")
-                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
-
-
-                        dDisountAmount = oDsDiscounts.Tables("Discount").Rows(0)("nDiscountValue")
-                        Return dDisountAmount
-                    Else
-
-                        Return 0
+                            Return 0
                     End If
 
                 Catch ex As Exception
