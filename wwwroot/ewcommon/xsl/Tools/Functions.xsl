@@ -361,7 +361,6 @@
         </xsl:if>
         
       </head>
-
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
       <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">

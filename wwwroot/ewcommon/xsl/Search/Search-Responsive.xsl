@@ -161,11 +161,11 @@
     <xsl:param name="searchResults"/>
     <xsl:variable name="contentType" select="SearchResult" />
     <xsl:variable name="startPos" select="0" />
-      <div class="cols{@cols} list-group">
+ <div class="list-group search-results">
         <xsl:apply-templates select="ms:node-set($searchResults)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
         </xsl:apply-templates>
-      </div>
+</div>
   </xsl:template>
   
   <!-- -->
