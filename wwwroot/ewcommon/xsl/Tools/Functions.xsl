@@ -2742,7 +2742,7 @@
     </xsl:variable>
     <div id="developerLink">
       <xsl:if test="$page/Settings/add[@key='web.websitecreditURL']/@value!='' or $page/@id = $page/Menu/MenuItem/@id">
-        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="external">
+        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
           <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
             <xsl:attribute name="class">devText</xsl:attribute>
           </xsl:if>
