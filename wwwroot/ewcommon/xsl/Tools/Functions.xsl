@@ -361,7 +361,6 @@
         </xsl:if>
         
       </head>
-
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
       <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
@@ -1078,7 +1077,7 @@
     <style>
       <xsl:text>.preloader{position: fixed;left:0;top:0;width: 100%;height: 100%;z-index: 10000;background:</xsl:text>
       <xsl:value-of select="$preloader-background"/>
-      <xsl:text>;}#preloader-1:before, #loader-1:after{content: "";position: absolute;top: 45%;left: 45%;width: 100px;height: 100px;border-radius: 100%;border: 10px solid transparent;border-top-color:</xsl:text>
+      <xsl:text>;}#preloader-1:before, #loader-1:after{content: "";position: absolute;top: 50%;left: 50%;margin-top: -45px;margin-left: -45px;width: 100px;height: 100px;border-radius: 100%;border: 10px solid transparent;border-top-color:</xsl:text>
       <xsl:value-of select="$preloader-color"/>
       <xsl:text>;}#preloader-1:before{z-index: 100;animation: spin 1s infinite;}#loader-1:after{border: 10px solid #ccc;}@keyframes spin{0%{-webkit-transform: rotate(0deg);-ms-transform: rotate(0deg);-o-transform: rotate(0deg);transform: rotate(0deg);}100%{-webkit-transform: rotate(360deg);-ms-transform: rotate(360deg);-o-transform: rotate(360deg);transform: rotate(360deg);}}</xsl:text>
     </style>
@@ -2743,7 +2742,7 @@
     </xsl:variable>
     <div id="developerLink">
       <xsl:if test="$page/Settings/add[@key='web.websitecreditURL']/@value!='' or $page/@id = $page/Menu/MenuItem/@id">
-        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="external">
+        <a href="{$websitecreditURL}" title="{$websitecreditText}" rel="nofollow external">
           <xsl:if test="$page/Settings/add[@key='web.websitecreditLogo']/@value=''">
             <xsl:attribute name="class">devText</xsl:attribute>
           </xsl:if>

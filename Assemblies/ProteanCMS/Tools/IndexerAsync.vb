@@ -297,15 +297,15 @@ Public Class IndexerAsync
                 Dim serverSenderEmail As String = moConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = moConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
-                    serverSenderEmail = "emailsender@eonichost.co.uk"
-                    serverSenderEmailName = "eonicweb Email Sender"
+                    serverSenderEmail = "emailsender@protean.site"
+                    serverSenderEmailName = "ProteanCMS Emailer"
                 End If
                 Dim recipientEmail As String = moConfig("SiteAdminEmail")
                 If moConfig("IndexAlertEmail") <> "" Then
                     recipientEmail = moConfig("IndexAlertEmail")
                 End If
 
-                msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "EonicWebIndexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables("SERVER_NAME") & " Indexer Report")
+                msg.emailer(oInfoElmt, "/ewcommon/xsl/Email/IndexerAlert.xsl", "ProteanCMS Indexer", serverSenderEmail, recipientEmail, myWeb.moRequest.ServerVariables("SERVER_NAME") & " Indexer Report")
                 msg = Nothing
 
                 Return "Index Complete"
@@ -764,6 +764,7 @@ Public Class IndexerAsync
 
                                 If cPageHtml = "" Then
                                     'we have an error to handle
+                                    If msException = "" Then msException = Nothing
                                     If Not msException Is Nothing Then
                                         Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
                                         errorElmt.InnerXml = msException

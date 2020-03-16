@@ -5493,6 +5493,10 @@ Public Class Cms
                                 thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                 If thisContentType = oDR(5).ToString() Then
                                     cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                    If moConfig("DetailPathTrailingSlash") = "on" Then
+                                        cURL = cURL + "/"
+                                    End If
+
                                 End If
                             Next
                         Case Else
