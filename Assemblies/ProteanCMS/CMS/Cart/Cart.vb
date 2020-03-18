@@ -1707,12 +1707,22 @@ processFlow:
                     Dim args(0) As Object
                     args(0) = oCartElmt
 
+
+                    'If Not oCartElmt.SelectSingleNode("Cart/Order/Notes/@PromotionalCode").InnerText Is Nothing Then
+
+                    '    Dim node As XmlNode = oCartElmt.SelectSingleNode("Cart/Order/Notes/@PromotionalCode")
+                    '    Dim sDiscoutCode As String = node.SelectSingleNode("PromotionalCode").InnerText
+
+                    '    Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (" + sDiscoutCode + "," + mnCartId + ") "
+                    '    moDBHelper.ExeProcessSql(sSql)
+
+                    'End If
                     calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
 
-                End If
+                    End If
 
 
-                For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
+                    For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
                     Dim classPath As String = ocNode.GetAttribute("purchaseAction")
                     Dim assemblyName As String = ocNode.GetAttribute("assembly")
                     Dim providerName As String = ocNode.GetAttribute("providerName")
