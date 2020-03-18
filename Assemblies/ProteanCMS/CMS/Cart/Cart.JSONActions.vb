@@ -252,11 +252,37 @@ Partial Public Class Cms
                     Dim cProcessInfo As String = ""
                     Dim dsShippingOption As DataSet
 
-                    Dim cDestinationCountry As String = myCart.moCartConfig("DefaultDeliveryCountry")
+                    Dim cDestinationCountry As String = ""
                     ' call it from cart
                     Dim nAmount As Long
                     Dim nQuantity As Long
                     Dim nWeight As Long
+                    If (jObj IsNot Nothing) Then
+                        If jObj("country") <> "" Then
+                            cDestinationCountry = jObj("country")
+                        Else
+                            cDestinationCountry = myCart.moCartConfig("DefaultDeliveryCountry")
+                            End If
+
+                        If jObj("qty") = "0" Then
+                            nQuantity = jObj("qty")
+                        Else
+                            nQuantity = 0
+                        End If
+
+                        If jObj("amount") = "0" Then
+                            nAmount = jObj("amount")
+                        Else
+                            nAmount = 0
+                        End If
+
+                        If jObj("Weight") = "0" Then
+                            nWeight = jObj("Weight")
+                        Else
+                            nWeight = 0
+                        End If
+
+                    End If
 
                     dsShippingOption = myCart.getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
@@ -302,9 +328,12 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
 
-
-
             End Function
+
+            Public Sub SetDeliveryOptionByCountry(ByRef myApi As Protean.API)
+                Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                myCart.setDeliveryOptionByCountry(CartXml.FirstChild)
+            End Sub
 
             Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try

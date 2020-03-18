@@ -2715,6 +2715,10 @@ processFlow:
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")
+                            cDestinationCountry = moCartConfig("DefaultCountry")
+                            If oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") IsNot Nothing Then
+                                cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
+                            End If
                             If cDestinationCountry <> "" Then
                                 'Go and collect the valid shipping options available for this order
                                 Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
@@ -8402,7 +8406,158 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
 
+        Public Sub setDeliveryOptionByCountry(ByRef oCartElmt As XmlElement)
+            Try
+                ''check if country is not default country
+                Dim quant As Long
+                 Dim oItemList As New Hashtable
+                Dim weight As Double
+                Dim total As Double
+                Dim oDs As DataSet
+                Dim cDestinationCountry As String
+                Dim bChangedDelivery As Boolean = True
+                Dim sSql As String
+                Dim oRow As DataRow
+                Dim cProcessInfo As String
+                Dim nCheckPrice As Double
+                Dim oCheckPrice As XmlElement
 
+                Dim nCartIdUse As Integer
+                nCartIdUse = mnCartId
+
+                If moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml") Then
+                    sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, i.xItemXml as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, i.xItemXml.value('Content[1]/@type','nvarchar(50)') AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                Else
+                    sSql = "select i.nCartItemKey as id, i.nItemId as contentId, i.cItemRef as ref, i.cItemURL as url, i.cItemName as Name, i.cItemUnit as unit, i.nPrice as price, i.nTaxRate as taxRate, i.nQuantity as quantity, i.nShpCat as shippingLevel, i.nDiscountValue as discount,i.nWeight as weight, p.cContentXmlDetail as productDetail, i.nItemOptGrpIdx, i.nItemOptIdx, i.nParentId, p.cContentSchemaName AS contentType, dbo.fxn_getContentParents(i.nItemId) as parId  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey where nCartOrderId=" & nCartIdUse
+                End If
+
+                oDs = moDBHelper.getDataSetForUpdate(sSql, "Item", "Cart")
+                'add relationship for options
+                oDs.Relations.Add("Rel1", oDs.Tables("Item").Columns("id"), oDs.Tables("Item").Columns("nParentId"), False)
+                oDs.Relations("Rel1").Nested = True
+                '
+                For Each oRow In oDs.Tables("Item").Rows
+
+                    Dim Discount As Double = 0
+
+                    If Not oItemList.ContainsValue(oRow("contentId")) Then
+                        oItemList.Add(oItemList.Count, oRow("contentId"))
+                    End If
+
+                    If moDBHelper.DBN2int(oRow("nParentId")) = 0 Then
+                        Dim nTaxRate As Long = 0
+                        Dim bOverridePrice As Boolean = False
+                        If Not mbOveridePrice Then ' for openquote
+                            ' Go get the lowest price based on user and group
+                            If Not IsDBNull(oRow("productDetail")) Then
+
+                                Dim oProd As XmlElement = moPageXml.CreateElement("product")
+                                oProd.InnerXml = oRow("productDetail")
+                                If oProd.SelectSingleNode("Content[@overridePrice='true']") Is Nothing Then
+                                    oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"))
+                                    cProcessInfo = "Error getting price for unit:" & oRow("unit") & " and Quantity:" & oRow("quantity") & " and Currency " & mcCurrencyRef & " Check that a price is available for this quantity and a group for this current user."
+                                    If Not oCheckPrice Is Nothing Then
+                                        nCheckPrice = oCheckPrice.InnerText
+                                        nTaxRate = getProductTaxRate(oCheckPrice)
+                                    End If
+                                    'nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
+
+                                    If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
+
+                                        Dim revisedPrice As Double
+                                        If oRow("contentId") > 0 Then
+                                            revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                        Else
+                                            oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
+                                            nCheckPrice = oCheckPrice.InnerText
+                                            nTaxRate = getProductTaxRate(oCheckPrice)
+                                        End If
+                                        If revisedPrice < nCheckPrice Then
+                                            'nCheckPrice = revisedPrice
+                                            Discount = nCheckPrice - revisedPrice
+                                            nCheckPrice = revisedPrice
+                                        End If
+
+                                    End If
+                                Else
+                                    bOverridePrice = True
+                                End If
+
+                            End If
+                            If Not bOverridePrice Then
+                                If nCheckPrice > 0 And nCheckPrice <> oRow("price") Then
+                                    ' If price is lower, then update the item price field
+                                    'oRow.BeginEdit()
+                                    oRow("price") = nCheckPrice
+                                    'oRow("taxRate") = nTaxRate
+                                    'oRow.EndEdit()
+                                End If
+
+                                If oRow("taxRate") <> nTaxRate Then
+                                    oRow("taxRate") = nTaxRate
+                                End If
+                            End If
+                        End If
+
+                        'option prices
+                        Dim oOpRow As DataRow
+                        Dim nOpPrices As Decimal = 0
+                        For Each oOpRow In oRow.GetChildRows("Rel1")
+                            If Not mbOveridePrice Then ' for openquote
+                                Dim nNPrice As Decimal = getOptionPricesByXml(oRow("productDetail"), oRow("nItemOptGrpIdx"), oRow("nItemOptIdx"))
+                                If nNPrice > 0 And nNPrice <> oOpRow("price") Then
+                                    nOpPrices += nNPrice
+                                    'oOpRow.BeginEdit()
+                                    oOpRow("price") = nNPrice
+
+                                    'oOpRow.EndEdit()
+                                Else
+                                    nOpPrices += oOpRow("price")
+                                End If
+                            End If
+                        Next
+
+                        ' Apply stock control
+                        If mbStockControl Then CheckStock(oCartElmt, oRow("productDetail"), oRow("quantity"))
+                        ' Apply quantity control
+                        If Not IsDBNull(oRow("productDetail")) Then
+                            'not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
+                            CheckQuantities(oCartElmt, oRow("productDetail") & "", CLng("0" & oRow("quantity")))
+                        End If
+
+                        weight = weight + (oRow("weight") * oRow("quantity"))
+                        quant = quant + oRow("quantity")
+
+                        total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
+                    End If
+                Next
+
+                If oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") IsNot Nothing Then
+                    cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
+                    '' pass other parameters as well-
+                    ''get it from cart
+                    Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
+                    Dim oRowSO As DataRow
+
+                    For Each oRowSO In oDsShipOptions.Tables(0).Rows
+                        If bChangedDelivery Then
+                            updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
+                            'shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                            'oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                            'oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                            'oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                            'oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                            'oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                            bChangedDelivery = False
+                        End If
+                    Next
+                End If
+            Catch ex As Exception
+                returnException(mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug)
+            End Try
+
+
+        End Sub
     End Class
 
 

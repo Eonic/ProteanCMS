@@ -1716,7 +1716,8 @@ ProcessFlow:
                         'placeholder for ecommerce dashboard
                     Case "CartActivity", "CartReports", "CartActivityDrilldown", "CartActivityPeriod", "CartDownload"
                         OrderProcess(oPageDetail, sAdminLayout, "")
-                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment"
+                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved"
+
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
                         OrderProcess(oPageDetail, sAdminLayout, "Quote")
@@ -3139,6 +3140,8 @@ AfterProcessFlow:
                             Select Case myWeb.moRequest("ewCmd")
                                 Case "Orders"
                                     oCart.ListOrders(0, True, Cart.cartProcess.Complete, oPageDetail)
+                                Case "OrdersSaved"
+                                    oCart.ListOrders(0, True, Cart.cartProcess.Confirmed, oPageDetail)
                                 Case "OrdersAwaitingPayment"
                                     oCart.ListOrders(0, True, Cart.cartProcess.AwaitingPayment, oPageDetail)
                                 Case "OrdersShipped"

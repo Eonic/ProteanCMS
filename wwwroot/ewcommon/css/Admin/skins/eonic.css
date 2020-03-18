@@ -10,14 +10,18 @@ THIS FILE CONTAINS THE PRE BOOTSTRAP HEADER STYLING
 }
 .ewAdmin #adminHeader #previewBack
 {
-    border-radius:4px; 
-    color: #ffffff;
+
     background-color: #18bc9c;
-    border: 1px solid #128f76;
-    padding: 8px 12px;
-    text-decoration:none;
-    background-image:none!important;
+
 }
+
+    .ewAdmin #adminHeader .btn {
+        border-radius: 4px;
+        color: #ffffff;
+        padding: 8px 12px;
+        text-decoration: none;
+        background-image: none !important;
+    }
 .ewAdmin #adminHeader #adminLogo
 {
 	/*background: url(/ewcommon/images/admin/skin/eonic_web4.png) top left no-repeat;
