@@ -3449,10 +3449,10 @@
             <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0" class="btn">
               <xsl:text> InActive Code</xsl:text>
             </a>
-         <xsl:text> </xsl:text>
+         <!--<xsl:text> </xsl:text>
             <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=singleUse" class="btn">
               <xsl:text> Single use code</xsl:text>
-            </a>
+            </a>-->
 	  </div>
         </form>
         <div class="panel panel-default">
