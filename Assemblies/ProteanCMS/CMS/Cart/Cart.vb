@@ -1708,18 +1708,21 @@ processFlow:
                     args(0) = oCartElmt
 
 
-                    'If Not oCartElmt.SelectSingleNode("Cart/Order/Notes/@PromotionalCode").InnerText Is Nothing Then
+                    If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText Is Nothing Then
 
-                    '    Dim node As XmlNode = oCartElmt.SelectSingleNode("Cart/Order/Notes/@PromotionalCode")
-                    '    Dim sDiscoutCode As String = node.SelectSingleNode("PromotionalCode").InnerText
+                        Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
+                        If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
+                            Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values ("
+                            sSql &= mnCartId & ",'"
+                            sSql &= sDiscoutCode & "')"
 
-                    '    Dim sSql As String = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (" + sDiscoutCode + "," + mnCartId + ") "
-                    '    moDBHelper.ExeProcessSql(sSql)
 
-                    'End If
+                            moDBHelper.ExeProcessSql(sSql)
+                        End If
+                    End If
                     calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
 
-                    End If
+                End If
 
 
                     For Each ocNode In oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']")
