@@ -1708,7 +1708,7 @@ processFlow:
                     args(0) = oCartElmt
 
 
-                    If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText Is Nothing Then
+                    If Not oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
 
                         Dim sDiscoutCode As String = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText
                         If myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode") Then
