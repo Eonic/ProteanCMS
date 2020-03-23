@@ -3688,7 +3688,19 @@ listItems:
             Dim cSql As String
             Dim oDS As DataSet
             Try
-                cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey"
+                Dim status As String = (myWeb.moRequest("isActive"))
+                If status = "1" Then
+                    cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.dExpireDate >= getdate()  and a.nStatus=1"
+                ElseIf status = "0" Then
+
+                    cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where  a.dExpireDate <= getdate() and a.nStatus=0"
+                    'ElseIf status = "singleUse" Then
+                    '  cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where dr.cDiscountCode like '%VOUCHER'"
+                Else
+                    cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.dExpireDate >= getdate()  and a.nStatus=1"
+                End If
+
+
                 oDS = myWeb.moDbHelper.GetDataSet(cSql, "DiscountRule", "DiscountRules")
                 If oDS.Tables.Count = 1 Then
                     oDS.Tables(0).Columns("nDiscountKey").ColumnMapping = MappingType.Attribute
