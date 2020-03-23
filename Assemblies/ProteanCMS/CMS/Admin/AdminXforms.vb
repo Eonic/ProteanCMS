@@ -2877,8 +2877,12 @@ Partial Public Class Cms
                                 Else
                                     cQueryString = "?" & Replace(goRequest.QueryString.ToString, "path=", "")
                                 End If
-
-                                cQueryString = cQueryString.Substring(cQueryString.IndexOf("ewCmd="))
+                                If cQueryString.IndexOf("ewCmd=") <> -1 Then
+                                    cQueryString = cQueryString.Substring(cQueryString.IndexOf("ewCmd="))
+                                End If
+                                If cQueryString.IndexOf("ajaxCmd=") <> -1 Then
+                                    cQueryString = cQueryString.Substring(cQueryString.IndexOf("ajaxCmd="))
+                                End If
                                 mcRelRedirectString = mcRelRedirectString.Substring(mcRelRedirectString.IndexOf("ewCmd="))
 
                                 If mcRelRedirectString.ToLower() = cQueryString.ToLower() Then

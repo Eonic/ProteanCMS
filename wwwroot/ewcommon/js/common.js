@@ -533,7 +533,7 @@ function initialiseProductSKUs() {
                     yearRange: '-95:+0'
                 });
             });
-        };
+        }
 
         //    var datePickerSettings = ;
 
@@ -551,7 +551,7 @@ function initialiseProductSKUs() {
                     mandatory: $(this).hasClass('required')
                 });
             });
-        };
+        }
 
         if ($(this).find('.btn-file').exists()) {
 
@@ -576,7 +576,7 @@ function initialiseProductSKUs() {
 
                 });
             });
-        };
+        }
 
         //---------------------- Slider ----------------------------
 

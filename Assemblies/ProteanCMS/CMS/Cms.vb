@@ -2023,7 +2023,21 @@ Public Class Cms
             If sAjaxCmd = "" Then
                 sAjaxCmd = moRequest("AjaxCmd")
             End If
+
             GetAjaxXML(sAjaxCmd)
+
+
+            Dim moAdmin As Protean.Cms.Admin = New Admin(Me)
+            'Dim oAdmin As Admin = New Admin(Me)
+            'Dim oAdmin As Protean.Cms.Admin = New Protean.Cms.Admin(Me)
+            moAdmin.open(moPageXml)
+            If CInt("0" & moSession("nUserId")) > 0 Then
+                moAdmin.GetPreviewMenu()
+            End If
+
+            moAdmin.close()
+            moAdmin = Nothing
+
 
             sProcessInfo = "Transform PageXML using XSLT"
 
@@ -2160,6 +2174,10 @@ Public Class Cms
                     Dim nContentPermissionCheck As Long = nContentId
                     Dim bResetUser As Boolean = False
 
+                    If mbPreview Then
+                        mnUserId = moSession("nUserId")
+                    End If
+
                     If mnUserId = 0 Then
                         mnUserId = moConfig("NonAuthUserID")
                         moDbHelper.mnUserId = mnUserId
@@ -2167,6 +2185,7 @@ Public Class Cms
                     End If
 
                     moAdXfm.mnUserId = mnUserId
+                    moDbHelper.mnUserId = mnUserId
 
                     ' Let's check permissions - but first let's accomodate orphan content
                     ' Orhpan content has a page id of 0, but is related to another piece of content.
@@ -2209,12 +2228,18 @@ Public Class Cms
                                     '  However if it's related content the page id may not be coming through (it's orphaned)
                                     '  sooo... we may need to bodge the permissions if version control is on
                                     If gbVersionControl Then Me.mnUserPagePermission = dbHelper.PermissionLevel.AddUpdateOwn
-                                    GetContentDetailXml(oPageElmt, nContentId)
+
+                                    If moRequest("showParent") <> "" Then
+                                        GetContentDetailXml(oPageElmt, moRequest("contentParId"))
+                                    Else
+                                        GetContentDetailXml(oPageElmt, nContentId)
+                                    End If
+
                                     ClearPageCache()
 
-                                Else
-                                    'lets add the form to Content Detail
-                                    Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
+                                    Else
+                                        'lets add the form to Content Detail
+                                        Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                                     oPageElmt.AppendChild(oPageDetail)
                                     oPageDetail.AppendChild(xFrmContent)
 

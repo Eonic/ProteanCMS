@@ -1733,6 +1733,11 @@ Partial Public Class Cms
                     End If
                 Next
 
+                'if the content is orphan then get permission from homepage
+                If oElmt.SelectNodes("Location").Count = 0 Then
+                    oPerm = getPagePermissionLevel(myWeb.moConfig("RootPageId"))
+                End If
+
                 Return oPerm
 
             Catch ex As Exception

@@ -909,7 +909,7 @@ ProcessFlow:
                             Else
                                 myWeb.mnArtId = 0
                                 oPageDetail.RemoveAll()
-
+                                myWeb.moSession("ContentEdit") = ""
                                 ' Check for an optional command to redireect to
                                 If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
 
@@ -925,10 +925,18 @@ ProcessFlow:
                                 End If
                             End If
                         Else
+
+                            If myWeb.moRequest("id") <> "" Then
+                                myWeb.moSession("ContentEdit") = mcPagePath & "ewCmd=EditContent&id=" & myWeb.moRequest("id")
+                            End If
+
                             sAdminLayout = "AdminXForm"
+
                         End If
 
                     Case "RollbackContent"
+
+
                         bLoadStructure = True
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", CLng(myWeb.moRequest("pgid")), , , , , , myWeb.moRequest("verId")))
                         If moAdXfm.valid Then
@@ -1062,8 +1070,10 @@ ProcessFlow:
 
                         mcEwCmd = myWeb.moSession("ewCmd")
                         'lest just try this redirecting to last page
-
-                        If myWeb.moSession("lastPage") <> "" Then
+                        If myWeb.moSession("ContentEdit") <> "" Then
+                            myWeb.msRedirectOnEnd = myWeb.moSession("ContentEdit")
+                            myWeb.moSession("ContentEdit") = ""
+                        ElseIf myWeb.moSession("lastPage") <> "" Then
                             myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                             myWeb.moSession("lastPage") = ""
                         Else
@@ -1090,7 +1100,10 @@ ProcessFlow:
                         End If
                         mcEwCmd = myWeb.moSession("ewCmd")
                         'lest just try this redirecting to last page
-                        If myWeb.moSession("lastPage") <> "" Then
+                        If myWeb.moSession("ContentEdit") <> "" Then
+                            myWeb.msRedirectOnEnd = myWeb.moSession("ContentEdit")
+                            myWeb.moSession("ContentEdit") = ""
+                        ElseIf myWeb.moSession("lastPage") <> "" Then
                             myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                             myWeb.moSession("lastPage") = ""
                         Else
@@ -1111,7 +1124,10 @@ ProcessFlow:
                             mcEwCmd = myWeb.moSession("ewCmd")
                             'lest just try this redirecting to last page
                             myWeb.ClearPageCache()
-                            If myWeb.moSession("lastPage") <> "" Then
+                            If myWeb.moSession("ContentEdit") <> "" Then
+                                myWeb.msRedirectOnEnd = myWeb.moSession("ContentEdit")
+                                myWeb.moSession("ContentEdit") = ""
+                            ElseIf myWeb.moSession("lastPage") <> "" Then
                                 myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                 myWeb.moSession("lastPage") = ""
                             Else
@@ -2933,7 +2949,7 @@ AfterProcessFlow:
 
         End Function
 
-        Private Sub GetPreviewMenu()
+        Public Sub GetPreviewMenu()
             Dim oElmt As XmlElement
             Dim oElmt1 As XmlElement
             Dim oElmt2 As XmlElement

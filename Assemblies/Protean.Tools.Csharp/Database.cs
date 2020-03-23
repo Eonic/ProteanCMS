@@ -966,15 +966,22 @@ namespace Protean.Tools
             {
                 CloseConnection();
             }
-            if (oScalarValue.GetType() != typeof(DBNull))
+            if (oScalarValue != nullreturnvalue)
             {
-                return oScalarValue;
+                if (oScalarValue.GetType() != typeof(DBNull))
+                {
+                    return oScalarValue;
+                }
+                else
+                {
+                    return nullreturnvalue;
+                };
+
             }
             else
             {
                 return nullreturnvalue;
             };
-
         }
 
         public object GetXmlValue(string sql, CommandType commandtype = CommandType.Text, Hashtable parameters = null/* TODO Change to default(_) if this is not a reference type */, object nullreturnvalue = null)

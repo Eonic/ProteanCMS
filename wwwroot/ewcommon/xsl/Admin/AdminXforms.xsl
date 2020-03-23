@@ -1699,7 +1699,6 @@
                       </button>
                     </span>
                   </xsl:if>
-               
               </xsl:if>
               <xsl:if test="not(@maxRelationNo) or @maxRelationNo='' or (@maxRelationNo &gt; $contentCount)">
                 <xsl:if test="contains(@search,'find')">
@@ -1721,13 +1720,15 @@
           </xsl:choose>
 
       <xsl:if test="not(contains(@search,'pick'))">
+        
         <xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
-          <xsl:sort select="@status" data-type="number" order="ascending"/>
+          <xsl:sort select="@status" data-type="number" order="descending"/>
           <xsl:sort select="@displayorder" data-type="number" order="ascending"/>
           <xsl:with-param name="formName" select="$formName" />
           <xsl:with-param name="relationType" select="$relationType" />
           <xsl:with-param name="relationDirection" select="$RelType" />
         </xsl:apply-templates>
+        
       </xsl:if>
   </xsl:template>
 
@@ -1785,24 +1786,21 @@
               </button>
               <xsl:if test="@status='1'">
                 <a href="?ewCmd=HideContent&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
-                  <i class="fa fa-ban-circle fa-white">
+                  <i class="fa fa fa-eye-slash fa-white">
                     <xsl:text> </xsl:text>
                   </i>
-                  <xsl:text> </xsl:text>Hide
                 </a>
               </xsl:if>
               <xsl:if test="@status='0'">
                 <a href="?ewCmd=ShowContent&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-success">
-                  <i class="fa fa-ok-circle fa-white">
+                  <i class="fa fa-eye fa-white">
                     <xsl:text> </xsl:text>
                   </i>
-                  <xsl:text> </xsl:text>Show
                 </a>
                 <a href="?ewCmd=DeleteContent&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
-                  <i class="fa fa-remove-circle fa-white">
+                  <i class="fa fa-trash-o fa-white">
                     <xsl:text> </xsl:text>
                   </i>
-                  <xsl:text> </xsl:text>Delete
                 </a>
               </xsl:if>
             </div>

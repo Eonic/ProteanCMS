@@ -1437,6 +1437,75 @@
 
   </xsl:template>
 
+   <xsl:template match="input[contains(@class,'calendar') and contains(@class,'readonly')]" mode="xform_control">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="formName">
+      <xsl:value-of select="ancestor::Content/model/submission/@id"/>
+    </xsl:variable>
+    <xsl:variable name="displayDate">
+      <xsl:if test="value/node()!=''">
+        <xsl:call-template name="DD_Mon_YYYY">
+          <xsl:with-param name="date">
+            <xsl:value-of select="value/node()"/>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="inlineHint">
+      <xsl:apply-templates select="." mode="getInlineHint"/>
+    </xsl:variable>
+    <div class="controls">
+      <div class="input-group">
+        <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  disabled="disabled"/>
+        <span class="input-group-btn">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-default"  disabled="disabled">
+            <i class="fa fa-calendar">
+              <xsl:text> </xsl:text>
+            </i>
+          </label>
+        </span>
+      </div>
+    </div>
+
+  </xsl:template>
+
+
+  <xsl:template match="input[contains(@class,'userdetails') and contains(@class,'readonly')]" mode="xform_control">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="formName">
+      <xsl:value-of select="ancestor::Content/model/submission/@id"/>
+    </xsl:variable>
+    <xsl:variable name="userXml">
+      <xsl:choose>
+        <xsl:when test="value/node() &gt; 0">
+          <xsl:call-template name="getUserXML">
+            <xsl:with-param select="value/node()" name="id"/>
+          </xsl:call-template>        
+        </xsl:when>
+        <xsl:otherwise>
+          <User>
+            <FirstName>Unspecified</FirstName>    
+            <LastName>User</LastName>    
+          </User>
+        </xsl:otherwise>
+      </xsl:choose>
+ 
+    </xsl:variable>  
+  
+    <xsl:variable name="inlineHint">
+      <xsl:apply-templates select="." mode="getInlineHint"/>
+    </xsl:variable>
+    <div class="controls">
+      <div class="input-group">
+        <input type="text" name="{$ref}" id="{$ref}" value="{ms:node-set($userXml)/User/FirstName/node()} {ms:node-set($userXml)/User/LastName/node()}" class="input-small form-control"  disabled="disabled"/>
+      </div>
+    </div>
+
+  </xsl:template>
 
   <!-- ========================== CONTROL :  DOB Calendar ========================== -->
   <!-- -->
