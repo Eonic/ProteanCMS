@@ -1872,6 +1872,7 @@
       </th>
     </tr>
   </xsl:template>
+  
 
 
   <xsl:template match="Content" mode="AdvancedMode">
@@ -2100,6 +2101,150 @@
           </label>
         </div>
       </td>
+    </tr>
+  </xsl:template>
+
+
+  <xsl:template match="Content[@type='FAQ']" mode="AdvancedModeHeader">
+    <xsl:param name="contentType"/>
+    <tr>
+      <th>
+        Status
+      </th>
+      <th>
+        Experience
+      </th>
+      <th>
+        Answer
+      </th>
+      <th style="width:400px">
+        Options
+      </th>
+    </tr>
+  </xsl:template>
+
+  <xsl:template match="Content[@type='FAQ']" mode="AdvancedMode">
+    <xsl:param name="contentType"/>
+    <xsl:param name="parId"/>
+    <tr id="hide-{@id}">
+      <td class="status">
+        <xsl:apply-templates select="." mode="status_legend"/>
+      </td>
+      <td class="name">
+        <xsl:choose>
+          <xsl:when test="$contentType='Module'">
+            <b>
+              <xsl:value-of select="@title" />
+              <xsl:if test="@title=''">No Title</xsl:if>
+            </b>
+            &#160;-&#160;<xsl:value-of select="@moduleType" />&#160;-&#160;<xsl:value-of select="@position" />
+          </xsl:when>
+          <xsl:when test="$contentType='FlashMovie' and object/@title!=''">
+            <b>
+              <xsl:value-of select="object/@title" />
+            </b>
+          </xsl:when>
+          <xsl:when test="@name!=''">
+            <b>
+              <xsl:value-of select="@name" />
+            </b>
+          </xsl:when>
+          <xsl:when test="@type='Module'">
+            <p>
+              <xsl:apply-templates select="." mode="getSynopsis" />
+            </p>
+          </xsl:when>
+        </xsl:choose>
+        
+      </td>
+      <td class="body">
+        <strong>
+        <xsl:apply-templates select="DisplayName" mode="cleanXhtml"/></strong><br/>
+        <xsl:apply-templates select="Body" mode="cleanXhtml"/>
+        <br/>
+        <small>
+          <xsl:if test="@publish!=''">
+            <span class="publishedOn">
+              <b>Created: </b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@publish"/>
+              </xsl:call-template>
+            </span>&#160;
+          </xsl:if>
+          <xsl:if test="@expire!=''">
+            <span class="expiresOn">
+              <xsl:text> / </xsl:text>
+              <b>Expires:</b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@expire"/>
+              </xsl:call-template>
+            </span>&#160;
+          </xsl:if>
+          <xsl:if test="@update!=''">
+            <span class="update">
+              <b>Last Updated: </b>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date" select="@update"/>
+              </xsl:call-template>
+            </span>
+          </xsl:if>
+        </small>
+      </td>
+      <td class="optionsButton">
+        <a href="javascript:markAsRead('{/Page/User/@id}','{@id}')" class="btn btn-xs btn-default" title="Mark as read">
+          <i class="fa fa-eye fa-white">
+            <xsl:text> </xsl:text>
+          </i><xsl:text> </xsl:text>Mark as read
+        </a>
+        <xsl:choose>
+          <xsl:when test="$parId!=''">
+            <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+              <i class="fa fa-edit fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Edit
+            </a>
+          </xsl:when>
+          <xsl:when test="/Page/@id=@parId">
+            <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+              <i class="fa fa-edit fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Edit
+            </a>
+          </xsl:when>
+          <xsl:otherwise>
+            <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+              <i class="fa fa-edit fa-white">
+                <xsl:text> </xsl:text>
+              </i><xsl:text> </xsl:text>Edit
+            </a>
+
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="@status='1'">
+   
+            <a href="{$appPath}?ewCmd=HideContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to hide this item" class="btn btn-xs btn-primary">
+              <i class="fa fa-eye-slash">&#160;</i>&#160;Hide
+            </a>
+   
+        </xsl:if>
+        <xsl:if test="@status='0'">
+
+            <a href="{$appPath}?ewCmd=ShowContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to show this item" class="btn btn-xs btn-success">
+              <i class="fa fa-eye">&#160;</i>&#160;Show
+            </a>
+        </xsl:if>
+        <xsl:if test="@status='0'">
+
+            <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" title="Click here to delete this item" class="btn btn-xs btn-danger">
+              <i class="fa fa-trash-o">&#160;</i>
+            </a>
+
+        </xsl:if>
+      
+
+        <xsl:text> </xsl:text>
+      </td>
+      
     </tr>
   </xsl:template>
 
@@ -2430,9 +2575,63 @@
    </div>
     </form>
   </xsl:template>
-  
-  
 
+  <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
+    <div id="tpltAdvancedMode">
+      <xsl:apply-templates select="/" mode="ListByFAQViewed">
+        <xsl:with-param name="contentType" select="@ewCmd2"/>
+      </xsl:apply-templates>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Page[@editContext='ByType.FAQ.UserRead']" mode="Admin">
+    <div id="tpltAdvancedMode">
+      <xsl:apply-templates select="/" mode="ListByFAQViewed">
+        <xsl:with-param name="contentType" select="@ewCmd2"/>
+      </xsl:apply-templates>
+    </div>
+  </xsl:template>
+
+
+  <!-- -->
+  <xsl:template match="/" mode="ListByFAQViewed">
+    <xsl:param name="contentType"/>
+    <xsl:variable name="pgid">
+      <xsl:choose>
+        <xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
+          <xsl:value-of select="$page/ContentDetail/Content/select1[@ref='Location']/value/node()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$page/@pgid"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+
+          <h6 class="panel-title">
+            <i class="fa fa-chevron-down">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>
+            <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+          </h6>
+        </div>
+        <table class="table table-striped-2">
+          <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
+            <tr>
+              <td colspan="3">
+                <xsl:text>No </xsl:text>
+                <xsl:value-of select="$contentType"/>
+                <xsl:text> on this page</xsl:text>
+              </td>
+            </tr>
+          </xsl:if>
+          <xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
+          <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+        </table>
+      </div>
+
+  </xsl:template>
 
   <xsl:template match="Page[@layout='EditStructure']" mode="Admin">
     <div id="tpltEditStructure">

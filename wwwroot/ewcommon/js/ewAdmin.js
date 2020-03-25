@@ -89,6 +89,8 @@ $(document).ready(function () {
         });
     }
 
+
+
     $('#mainMenuButton').click(function () {
 
         //$('#adminOptions').dialog('open');
@@ -722,6 +724,23 @@ function updatePreviewImage(formRef, fieldRef) {
     imgtag = document.forms[formRef].elements[fieldRef].value;
     previewDiv = document.getElementById('previewImage_' + fieldRef);
     previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + fieldRef + '();return false" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="fa-picture-o fa-white"> </i> Edit</a>' + imgtag;
+}
+
+
+function markAsRead(userId,artId) {
+    var logActivityAPIUrl = "/ewapi/Cms.Content/LogActivity";
+
+    var jsObj = { 'type': 'PageViewed', 'userId': userId, 'pageId': '', 'artId': artId };
+
+    $.ajax(logActivityAPIUrl, {
+        data: JSON.stringify(jsObj),
+        contentType: 'application/json',
+        type: 'POST'
+    }).done(function () {
+        $('#hide-' + artId).remove();
+
+    });
+    
 }
 
 /*

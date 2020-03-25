@@ -167,6 +167,29 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function LogActivity(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oActivityType As dbHelper.ActivityType
+                    Select Case jObj("type").ToString()
+                        Case "PageViewed"
+                            oActivityType = dbHelper.ActivityType.PageViewed
+                    End Select
+                    Dim nUserDirId As Long = CLng("0" + jObj("userId").ToString())
+                    Dim nPageId As Long = CLng("0" & jObj("pageId").ToString())
+                    Dim nArtId As Long = CLng("0" & jObj("artId").ToString())
+
+                    If myApi.mnUserId > 0 Then
+                        myWeb.moDbHelper.logActivity(oActivityType, nUserDirId, nPageId, nArtId)
+                    End If
+
+                    Return True
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 
 #End Region

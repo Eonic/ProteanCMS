@@ -6248,7 +6248,7 @@ Public Class Cms
 
     End Sub
 
-    Public Sub GetContentXMLByType(ByRef oPageElmt As XmlElement, ByVal cContentType As String, Optional sqlFilter As String = "")
+    Public Sub GetContentXMLByType(ByRef oPageElmt As XmlElement, ByVal cContentType As String, Optional sqlFilter As String = "", Optional fullSQL As String = "")
         PerfMon.Log("Web", "GetContentXMLByType")
         '<add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
         Try
@@ -6278,13 +6278,18 @@ Public Class Cms
             Dim cSQL As String = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" &
             " where (cContentSchemaName = '" & strContentType & "') "
             If sqlFilter <> "" Then
-                cSQL &= "and (" & sqlFilter & ")"
+                cSQL &= sqlFilter
             End If
             cSQL &= GetStandardFilterSQLForContent()
 
             If Not oOrderField = "" Then
                 cSQL &= " ORDER BY " & oOrderField & " " & cOrderDirection
             End If
+
+            If fullSQL <> "" Then
+                cSQL = fullSQL
+            End If
+
             Dim oDS As DataSet = moDbHelper.GetDataSet(cSQL, "Content1", "Contents")
             Dim oDT As New DataTable
             oDT = oDS.Tables("Content1").Copy()
@@ -6323,6 +6328,7 @@ Public Class Cms
                 moPageXml.DocumentElement.AppendChild(oRoot)
             End If
             moDbHelper.AddDataSetToContent(oDS, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
+
         Catch ex As Exception
             'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByType", ex, ""))
