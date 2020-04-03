@@ -74,7 +74,7 @@
       <bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>
-      <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="true()" type="number"/>
+      <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="false()" type="number"/>
       <!--<bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" constraint="(//nDiscountCodeType='3' and //nDiscountCodeBank!='')" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>-->
@@ -165,15 +165,8 @@
             </select1>
           </case>
         </switch>
-        <select bind="bApplyToOrder" appearance="full" class="required vshort">
-          <hint>This discount will be applied to the entire order and not Not Products in a Product Group, therefore you will not need to select a product group for this discount.</hint>
-          <item>
-            <label>Apply to Entire order</label>
-            <value>True</value>
-          </item>
-        </select>
-       
-        <select1 bind="bAllProductExcludeGroups"  required="true()" appearance="full" class="vshort">
+
+        <select1 bind="bAllProductExcludeGroups"  required="false()" appearance="full" class="vshort">
           <label>APPLY TO</label>
            <choices/> 
           <item>
@@ -185,6 +178,14 @@
             <value>1</value>
           </item>
         </select1>
+        <select bind="bApplyToOrder" appearance="full" class="required vshort">
+          <hint>This discount will be applied to the entire order and not Not Products in a Product Group, therefore you will not need to select a product group for this discount.</hint>
+          <item>
+            <label>Apply to Entire order</label>
+            <value>True</value>
+          </item>
+        </select>
+
         <select bind="cFreeShippingMethods" appearance="minimal" class="ewQuery scroll_10" query="ShippingMethods">
           <label>Free Shipping for These Methods</label>
         </select>

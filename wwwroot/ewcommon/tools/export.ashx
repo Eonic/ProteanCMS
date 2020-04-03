@@ -74,8 +74,8 @@ Public Class eonicWebExportAsFile : Implements IHttpHandler, IRequiresSessionSta
         Else
             ' Set the response headers
             oEw.mcContentType = contentType
-            '   oEw.mcContentDisposition = "attachment;filename=" & filename & "." & fileExtension
-
+            oEw.mcContentDisposition = "attachment;filename=" & filename & "." & fileExtension
+            '  oEw.mcContentType = "application/xml"
         End If
 
         ' Get the output

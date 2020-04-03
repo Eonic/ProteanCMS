@@ -237,6 +237,7 @@ Public Class FeedHandler
                                     stateObj.totalInstances = 0
                                     stateObj.bSkipExisting = False
                                     stateObj.bResetLocations = True
+                                    stateObj.nResetLocationIfHere = 0
                                     stateObj.bOrphan = False
                                     stateObj.bDeleteNonEntries = False
                                     stateObj.cDeleteTempTableName = cDeleteTempTableName

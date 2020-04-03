@@ -934,7 +934,7 @@ Check:
                                 End If
 
                                 'lets add the user to any groups
-                                If cDirectorySchemaName = "User" And maintainMembershipsOnAdd Then
+                                If (cDirectorySchemaName = "User" Or cDirectorySchemaName = "Company") And maintainMembershipsOnAdd Then
                                     maintainMembershipsFromXForm(id)
 
                                     'we want to ad the user to a specified group from a pick list of groups.

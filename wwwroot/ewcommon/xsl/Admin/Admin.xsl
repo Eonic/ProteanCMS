@@ -3592,6 +3592,7 @@
       <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
+  
   <xsl:template match="Page[@layout='DiscountRules']" mode="Admin">
     <div class="row" id="tpltDiscountRules">
       <div class="col-md-3">
@@ -3641,19 +3642,31 @@
 	  </span>
         
         <xsl:text> </xsl:text>
-            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=1" class="btn" >
-              <xsl:text> Active Code </xsl:text>
-            </a>
-            <xsl:text> </xsl:text>
-            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0" class="btn">
-              <xsl:text> InActive Code</xsl:text>
-            </a>
-         <!--<xsl:text> </xsl:text>
-            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=singleUse" class="btn">
-              <xsl:text> Single use code</xsl:text>
-            </a>-->
+       
 	  </div>
         </form>
+
+        <xsl:text> </xsl:text>
+
+
+        <ul class="nav nav-tabs">
+          <li role="presentation">
+            <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()!=0">
+              <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=1"  >
+              <xsl:text> Active Codes</xsl:text>
+            </a>
+          </li>
+          <li role="presentation">
+            <xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()=0">
+              <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
+            <a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0" >
+              <xsl:text> InActive Codes</xsl:text>
+            </a>
+          </li>
+        </ul>
         <div class="panel panel-default">
  
         <table cellpadding="0" cellspacing="1" class="table">
@@ -3791,12 +3804,19 @@
                     <td colspan="3">
                       <strong>Expire Date:</strong>
 		      &#160;
+                      <xsl:choose>
+                      <xsl:when test="@expireDate!=''">
                         <xsl:call-template name="DD_Mon_YYYY">
                           <xsl:with-param name="date">
                             <xsl:value-of select="@expireDate"/>
                           </xsl:with-param>
                           <xsl:with-param name="showTime">true</xsl:with-param>
                         </xsl:call-template>
+                      </xsl:when>
+                        <xsl:otherwise>
+                          ongoing
+                        </xsl:otherwise>
+                      </xsl:choose>
                   </td>
               </tr>
           </xsl:for-each>

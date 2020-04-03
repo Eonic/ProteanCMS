@@ -198,6 +198,7 @@ Partial Public Class Cms
             AwaitingPayment = 13
             SettlementInitiated = 14
             SkipAddress = 15
+            Archived = 16
 
         End Enum
 #End Region
@@ -393,8 +394,7 @@ Partial Public Class Cms
 
         Private Function getProcessName(ByVal cp As cartProcess) As String
             Select Case cp
-                Case cartProcess.Abandoned
-                    Return "Abandoned"
+
                 Case cartProcess.AwaitingPayment
                     Return "Awaiting Payment"
                 Case cartProcess.SkipAddress
@@ -421,6 +421,8 @@ Partial Public Class Cms
                     Return "Refunded"
                 Case cartProcess.Shipped
                     Return "Shipped"
+                Case cartProcess.Archived
+                    Return "Archived"
                 Case Else
                     Return "Unknown Process ID"
             End Select
@@ -1108,6 +1110,7 @@ processFlow:
                 End If
 
                 Select Case mcCartCmd
+
                     Case "Update"
                         mcCartCmd = updateCart("Currency")
                         GoTo processFlow
@@ -1270,6 +1273,17 @@ processFlow:
                         myWeb.msRedirectOnEnd = mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode
 
                         ' myWeb.moResponse.Redirect(mcPagePath & "cartCmd=" & cRedirectCommand & "&refSessionId=" & mcSessionId & cGoogleTrackingCode)
+                    Case "Archive"
+                        mnProcessId = cartProcess.Archived
+                        moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" & mnProcessId & "' where nCartOrderKey = " & mnCartId)
+
+                        clearSessionCookie()
+                        QuitCart()
+                        EndSession()
+
+                        If mcReturnPage Is Nothing Then mcReturnPage = ""
+
+                        myWeb.msRedirectOnEnd = mcSiteURL & mcReturnPage & IIf((mcSiteURL & mcReturnPage).Contains("?"), "&", "?") & "cartCmd=finish"
 
                     Case "Logon", "LogonSubs" ' offer the user the ability to logon / register
 
@@ -1666,7 +1680,7 @@ processFlow:
                     sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
 
                     'Send to merchant
-                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject)
+                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, "", moCartConfig("MerchantEmailBcc"))
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
@@ -7041,7 +7055,7 @@ processFlow:
             End Try
         End Sub
 
-        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cCustomerAttachementTemplatePath As String = "") As Object
+        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cCustomerAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
             PerfMon.Log("Cart", "emailCart")
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = "emailCart"
@@ -7058,7 +7072,7 @@ processFlow:
                 Dim oMsg As Messaging = New Messaging
                 If cCustomerAttachementTemplatePath = "" Then
 
-                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
+                    cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
                 Else
                     cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")

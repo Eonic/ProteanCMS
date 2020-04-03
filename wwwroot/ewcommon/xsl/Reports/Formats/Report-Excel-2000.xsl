@@ -4,15 +4,19 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 xmlns="urn:schemas-microsoft-com:office:spreadsheet"
 xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
 xmlns:x="urn:schemas-microsoft-com:office:excel">
+
+
+  <xsl:import href="../Report-Base.xsl"/>
+  
+  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+  
   <xsl:template match="Page">
     <xsl:processing-instruction name="mso-application">
       <xsl:text>progid="Excel.Sheet"</xsl:text>
     </xsl:processing-instruction>
-    <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">
-        <Styles>
-        </Styles>
+    <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:x="urn:schemas-microsoft-com:office:excel"  xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40">
         <Worksheet ss:Name="Page 1">
-          <xsl:for-each select="ContentDetail/Report">
+          <xsl:for-each select="ContentDetail/Report | ContentDetail/Content[@type='Report']/Report">
           <Table x:FullColumns="1" x:FullRows="1">
             <xsl:apply-templates select="*[position()=1]" mode="reportTitle"/>
             <xsl:apply-templates select="*" mode="reportRow"/>
@@ -40,14 +44,66 @@ xmlns:x="urn:schemas-microsoft-com:office:excel">
       </Row>
     </xsl:template>
 
-	<!-- ROW BUILDER -->
+
+  <xsl:template match="Item[cCartXml]" mode="reportTitle">
+    <Row ss:AutoFitHeight="1">
+        <Cell>
+          <Data ss:Type="String">
+            Order Number
+          </Data>
+        </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Customer Name
+        </Data>
+      </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Customer Email
+        </Data>
+      </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Order Date
+        </Data>
+      </Cell>
+    </Row>
+  </xsl:template>
+
+
+  <!-- ROW BUILDER -->
 	<xsl:template match="*" mode="reportRow">
     <Row>
       <xsl:apply-templates select=".//*[not(*)]" mode="reportCell"/>
 		</Row>	
   </xsl:template>
 
-
+  <xsl:template match="Item[cCartXml]" mode="reportRow">
+    <!--<Row>
+      <Cell>
+        <Data ss:Type="String">
+          Order Number
+        </Data>
+      </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Customer Name
+        </Data>
+      </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Customer Email
+        </Data>
+      </Cell>
+      <Cell>
+        <Data ss:Type="String">
+          Order Date
+        </Data>
+      </Cell>
+    </Row>-->
+  </xsl:template>
+  
+  
 	<!-- CELL BUILDER -->
 	<xsl:template match="*[not(*)]" mode="reportCell">
 		<xsl:variable name="name" select="local-name()"/>

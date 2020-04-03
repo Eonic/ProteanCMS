@@ -7075,6 +7075,7 @@ restart:
             Dim cDefiningWhereStmt As String = ""
             Dim bSkipExisting As Boolean = False
             Dim bResetLocations As Boolean = True
+            Dim nResetLocationIfHere As Long = 0
             Dim ProcessedQty As Long = 0
             Dim completeCount As Long = 0
             Dim startNo As Long = 0
@@ -7184,7 +7185,14 @@ restart:
 
                     If Not ObjectsXml.SelectSingleNode("ResetLocations[@enabled='false']") Is Nothing Then
                         bResetLocations = False
+                    Else
+                        bResetLocations = True
+                        Dim resetNode As XmlElement = ObjectsXml.SelectSingleNode("ResetLocations")
+                        If IsNumeric(resetNode.GetAttribute("enabled")) Then
+                            nResetLocationIfHere = CLng(resetNode.GetAttribute("enabled"))
+                        End If
                     End If
+
                     Dim totalInstances As Long = ObjectsXml.SelectNodes("Instance | instance").Count
 
                     Dim ReturnMessage As String = FeedRef & " Importing " & totalInstances & " Objects"
@@ -7218,6 +7226,7 @@ restart:
                             stateObj.totalInstances = totalInstances
                             stateObj.bSkipExisting = bSkipExisting
                             stateObj.bResetLocations = bResetLocations
+                            stateObj.nResetLocationIfHere = nResetLocationIfHere
                             stateObj.bOrphan = bOrphan
                             stateObj.bDeleteNonEntries = bDeleteNonEntries
                             stateObj.cDeleteTempTableName = cDeleteTempTableName
@@ -11062,6 +11071,7 @@ ReturnMe:
             Public totalInstances As Long
             Public bSkipExisting As Boolean
             Public bResetLocations As Boolean
+            Public nResetLocationIfHere As Long
             Public bOrphan As Boolean
             Public bDeleteNonEntries As Boolean
             Public cDeleteTempTableName As String
@@ -11181,6 +11191,25 @@ ReturnMe:
                                     bResetLocations = False
                                 End If
 
+                                Dim xmlDoc As New XmlDocument
+                                modbhelper.moPageXml = xmlDoc
+                                modbhelper.ResetConnection(oConnString)
+                                Dim PrimaryLocation As Long = CLng("0" & modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " & nId))
+
+                                If PrimaryLocation = 0 Then
+                                    bResetLocations = True
+                                Else
+                                    Dim resetIfHere As Long = CLng("0" & ImportStateObj.oInstance.getAttribute("resetifhere"))
+                                    If ImportStateObj.nResetLocationIfHere > 0 Then
+                                        resetIfHere = ImportStateObj.nResetLocationIfHere
+                                    End If
+                                    If resetIfHere > 0 Then
+                                        If PrimaryLocation = resetIfHere Then
+                                            bResetLocations = True
+                                        End If
+                                    End If
+
+                                End If
                                 modbhelper.processInstanceExtras(nId, ImportStateObj.oInstance, bResetLocations, ImportStateObj.bOrphan)
                             End If
                         Else

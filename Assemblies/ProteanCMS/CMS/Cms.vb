@@ -15,6 +15,7 @@ Imports System.Text.RegularExpressions
 Imports System.Collections.Specialized
 Imports VB = Microsoft.VisualBasic
 Imports System
+Imports System.Collections.Generic
 
 
 
@@ -5467,6 +5468,7 @@ Public Class Cms
     End Sub
 
     Public Sub addPageDetailLinksToStructure(ByVal cContentTypes As String)
+        Dim cProcessInfo As String
         Try
             Dim oMenuElmt As XmlElement = moPageXml.DocumentElement.SelectSingleNode("Menu")
             If oMenuElmt Is Nothing Then Exit Sub
@@ -5478,6 +5480,14 @@ Public Class Cms
             Next
 
             cContentTypes = cContentTypes.TrimEnd(",")
+
+            Dim MenuItem As XmlElement
+            Dim pageDict As New SortedDictionary(Of Long, String)
+            For Each MenuItem In oMenuElmt.SelectNodes("descendant-or-self::MenuItem")
+                pageDict.Add(MenuItem.GetAttribute("id"), MenuItem.GetAttribute("url"))
+            Next
+            'Dim keys As List(Of Long) = pageDict.KeyCollection
+            ' keys.Sort()
 
             'AG 19-Jan-2010 - Replaced with above code to add protection against SQL Injections
             'cContentTypes = cContentTypes.Replace(",", "','")
@@ -5495,55 +5505,57 @@ Public Class Cms
 
 
             Dim oDR As Data.SqlClient.SqlDataReader = moDbHelper.getDataReader(cSQL)
-            Dim cURL As String = ""
+
             Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
 
-
             Do While oDR.Read
-                Dim oMenuItem As XmlElement = oMenuElmt.SelectSingleNode("descendant-or-self::MenuItem[@id=" & oDR(2) & "]")
-                If Not oMenuItem Is Nothing Then
-                    Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
-                    ' If legacyRdirection is on, this means that we need to use the new format SEO friendly URLs
-                    cURL = oMenuItem.GetAttribute("url")
+                Dim cURL As String = ""
+                Dim oContElmt As XmlElement = moPageXml.CreateElement("MenuItem")
 
-
-                    Select Case moConfig("DetailPathType")
-                        Case "ContentType/ContentName"
-                            Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-                            Dim thisPrefix As String = ""
-                            Dim thisContentType As String = ""
-                            Dim i As Integer
-                            For i = 0 To prefixs.Length - 1
-                                thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                                thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                                If thisContentType = oDR(5).ToString() Then
-                                    cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                                    If moConfig("DetailPathTrailingSlash") = "on" Then
-                                        cURL = cURL + "/"
-                                    End If
-
+                Select Case moConfig("DetailPathType")
+                    Case "ContentType/ContentName"
+                        Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+                        Dim thisPrefix As String = ""
+                        Dim thisContentType As String = ""
+                        Dim i As Integer
+                        For i = 0 To prefixs.Length - 1
+                            thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                            thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                            If thisContentType = oDR(5).ToString() Then
+                                cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                If moConfig("DetailPathTrailingSlash") = "on" Then
+                                    cURL = cURL + "/"
                                 End If
-                            Next
-                        Case Else
+
+                            End If
+                        Next
+                    Case Else
+                        If pageDict.ContainsKey(oDR(2)) Then
+                            cURL = pageDict.Item(oDR(2))
                             'If moConfig("LegacyRedirect") = "on" Then
                             cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
                             ' Else
                             '     cURL &= "/Item" & oDR(0).ToString
                             ' End If
-                    End Select
+                        Else
+                            cProcessInfo = "orphan Content"
+                        End If
+                End Select
+                If cURL <> "" Then
                     oContElmt.SetAttribute("url", cURL)
                     oContElmt.SetAttribute("name", oDR(1).ToString)
                     oContElmt.SetAttribute("publish", Protean.Tools.Xml.XmlDate(oDR(3).ToString, False))
                     oContElmt.SetAttribute("update", Protean.Tools.Xml.XmlDate(oDR(4).ToString, False))
-                    oMenuItem.AppendChild(oContElmt)
+                    oMenuElmt.AppendChild(oContElmt)
                 End If
+
             Loop
             oDR.Close()
             oDR = Nothing
 
         Catch ex As Exception
             'returnException(mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
-            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addPageDetailLinksToStructure", ex, ""))
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addPageDetailLinksToStructure", ex, cProcessInfo))
         End Try
     End Sub
 
