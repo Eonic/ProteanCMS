@@ -4343,10 +4343,10 @@ processFlow:
                         oXform.addDiv(oAddressGrp, moDBHelper.getObjectInstance(dbHelper.objectTypes.CartContact, oDr.Item("nContactKey")), "pickAddress")
 
                         If billingAddId <> oDr.Item("nContactKey") Then
-                            oXform.addSubmit(oAddressGrp, "editAddress", "Edit", "cartDeleditAddress" & oDr.Item("nContactKey"), "edit", "fa-pencil")
-                            oXform.addSubmit(oAddressGrp, "removeAddress", "Del", submitPrefix & "deleteAddress" & oDr.Item("nContactKey"), "delete", "fa-trash-o")
+                            oXform.addSubmit(oAddressGrp, "editAddress", "Edit", "cartDeleditAddress" & oDr.Item("nContactKey"), "btn-default edit", "fa-pencil")
+                            oXform.addSubmit(oAddressGrp, "removeAddress", "Del", submitPrefix & "deleteAddress" & oDr.Item("nContactKey"), "btn-default delete", "fa-trash-o")
                         Else
-                            oXform.addSubmit(oAddressGrp, "editAddress", "Edit", submitPrefix & "editAddress" & oDr.Item("nContactKey"), "edit", "fa-pencil")
+                            oXform.addSubmit(oAddressGrp, "editAddress", "Edit", submitPrefix & "editAddress" & oDr.Item("nContactKey"), "btn-default edit", "fa-pencil")
                             ' oXform.addSubmit(oAddressGrp, "removeAddress", "Delete", submitPrefix & "deleteAddress" & oDr.Item("nContactKey"), "delete")
                         End If
 
@@ -4355,9 +4355,9 @@ processFlow:
                         Else
 
                             If LCase(moCartConfig("NoDeliveryAddress")) = "on" Then
-                                oXform.addSubmit(oAddressGrp, "addNewAddress", "Add New Address", submitPrefix & "addNewAddress", "addnew", "fa-plus")
+                                oXform.addSubmit(oAddressGrp, "addNewAddress", "Add New Address", submitPrefix & "addNewAddress", "btn-default addnew", "fa-plus")
                             Else
-                                oXform.addSubmit(oAddressGrp, "addNewAddress", "Add New Billing Address", submitPrefix & "addNewAddress", "addnew", "fa-plus")
+                                oXform.addSubmit(oAddressGrp, "addNewAddress", "Add New Billing Address", submitPrefix & "addNewAddress", "btn-default addnew", "fa-plus")
                             End If
 
                             If Not (LCase(moCartConfig("NoDeliveryAddress"))) = "on" Then
@@ -4367,9 +4367,9 @@ processFlow:
                         End If
 
                         If LCase(moCartConfig("NoDeliveryAddress")) = "on" Then
-                            oXform.addSubmit(oAddressGrp, oDr.Item("nContactKey"), "Use This Address", submitPrefix & "contact" & oDr.Item("nContactKey"))
+                            oXform.addSubmit(oAddressGrp, oDr.Item("nContactKey"), "Use This Address", submitPrefix & "contact" & oDr.Item("nContactKey"), "deliver-here principle", "fas fa-truck")
                         Else
-                            oXform.addSubmit(oAddressGrp, oDr.Item("nContactKey"), "Deliver To This Address", submitPrefix & "contact" & oDr.Item("nContactKey"))
+                            oXform.addSubmit(oAddressGrp, oDr.Item("nContactKey"), "Deliver To This Address", submitPrefix & "contact" & oDr.Item("nContactKey"), "deliver-here principle", "fas fa-truck")
                         End If
 
 

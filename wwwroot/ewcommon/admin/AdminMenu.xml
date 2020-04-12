@@ -61,6 +61,7 @@
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Activity Reporting" cmd="MemberActivity" display="true" feature="Membership" icon="fa-bar-chart-o"/>
       <MenuItem name="Member Codes" cmd="MemberCodes" display="true" feature="MemberCodes" icon="fa-certificate"/>
+      <MenuItem name="Profile" cmd="Profile" display="False"/>
       <MenuItem name="Subscriptions" cmd="Subscriptions" display="true" feature="Subscriptions" icon="fa fa-calendar-o">
         <MenuItem name="ListSubscribers" cmd="ListSubscribers" display="false" icon="fa-certificate"/>
         <MenuItem name="List Subscriptions" cmd="Subscriptions" display="true" icon="fa fa-calendar-o"/>

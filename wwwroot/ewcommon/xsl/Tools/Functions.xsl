@@ -1933,10 +1933,7 @@
         <xsl:otherwise>0</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:apply-templates select="/Page" mode="formatPrice">
-      <xsl:with-param name="price" select="number($itemPrice) + number($optionsPrice)"/>
-      <xsl:with-param name="currency" select="''"/>
-    </xsl:apply-templates>
+    <xsl:value-of select="number($itemPrice) + number($optionsPrice)"/>
   </xsl:template>
 
   <!-- UNIVERSAL ANALYTICS CODE -->
@@ -2387,6 +2384,37 @@
   <xsl:template match="Content" mode="FacebookChatCode">
     <xsl:if test="not(/Page/@adminMode)">
       <!-- Load Facebook SDK for JavaScript -->
+
+      <!-- Load Facebook SDK for JavaScript -->
+      <div id="fb-root">
+        <xsl:text> </xsl:text>
+      </div>
+      <script>
+        window.fbAsyncInit = function() {
+        FB.init({
+        xfbml            : true,
+        version          : 'v6.0'
+        });
+        };
+
+        (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_GB/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+      <!-- Your customer chat code -->
+      <div class="fb-customerchat"
+        attribution="setup_tool"
+        page_id="{@page_id}">
+      </div>
+
+
+
+      <!-- Your customer chat code 
       <div id="fb-root"></div>
       <script>
         (function(d, s, id) {
@@ -2397,7 +2425,7 @@
         fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
       </script>
-      <!-- Your customer chat code -->
+   
       <div class="fb-customerchat"
         attribution="ProteanCMS"
         page_id="{@page_id}">
@@ -2417,7 +2445,7 @@
           </xsl:attribute>
         </xsl:if>
       </div>
-
+      -->
     </xsl:if>
   </xsl:template>
 

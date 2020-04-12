@@ -7515,6 +7515,7 @@ restart:
                             Dim oRelation As XmlElement
                             For Each oRelation In oInstance.SelectNodes("Relation")
                                 Dim nloc As Long
+
                                 If oRelation.GetAttribute("foriegnRef") <> "" Then
                                     nloc = getObjectByRef(objectTypes.Directory, oRelation.GetAttribute("foriegnRef"), oRelation.GetAttribute("type"))
                                 Else
@@ -7522,8 +7523,13 @@ restart:
                                 End If
 
                                 If nloc > 0 Then
-                                    maintainDirectoryRelation(nloc, savedId)
+                                    Dim bRemove As Boolean = False
+                                    If oRelation.GetAttribute("remove") = "true" Then
+                                        bRemove = True
+                                    End If
+                                    maintainDirectoryRelation(nloc, savedId, bRemove)
                                 End If
+
                             Next
 
                         Case objectTypes.ContentStructure

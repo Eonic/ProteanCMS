@@ -5188,6 +5188,13 @@
   <!-- -->
   <!--   ##################  Generic Display Form  ##############################   -->
 
+  <xsl:template match="Page[@layout='Profile']" mode="adminPageHeader">
+    <h1 class="page-header">
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="ContentDetail/*/Name/node()"/> - Profile
+    </h1>
+  </xsl:template>
+
   <xsl:template match="Page[@layout='Profile']" mode="Admin">
                 <xsl:for-each select="ContentDetail/User">
     <div id="template_ListDirectory" class="panel panel-default">
@@ -5242,7 +5249,7 @@
               <xsl:text> </xsl:text>Integrations</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditUserContact']">
-            <a href="{$appPath}?ewCmd=ListUserContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
+            <a href="{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-map-marker fa-white">
                 <xsl:text> </xsl:text>
               </i>
@@ -5497,7 +5504,7 @@
               <xsl:text> </xsl:text>Permissions</a>
           </xsl:if>
           <xsl:if test="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd='ListUserContacts']">
-            <a href="{$appPath}?ewCmd=ListDirContacts&amp;parid={@id}" class="btn btn-xs btn-primary">
+            <a href="{$appPath}?ewCmd=Profile&amp;DirType=Company&amp;parid={@id}" class="btn btn-xs btn-primary">
               <i class="fa fa-map-marker fa-white">
                 <xsl:text> </xsl:text>
               </i>
@@ -6288,13 +6295,19 @@
   </xsl:template>
   <!--BJR EditContacts-->
 
-  <xsl:template match="Page[@layout='ListUserContacts' or @layout='ListDirContacts' ]" mode="Admin">
+  <xsl:template match="Page[@layout='ListUserContacts' or @layout='ListDirContacts']" mode="adminPageHeader">
+    <h1 class="page-header">
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="ContentDetail/*/Name/node()"/> - Addresses
+    </h1>
+  </xsl:template>
+
+  <xsl:template match="Page[@layout='ListUserContacts' or @layout='ListDirContacts']" mode="Admin">
     <xsl:variable name="dirType">
       <xsl:choose>
         <xsl:when test="@layout='ListDirContacts'">Dir</xsl:when>
         <xsl:otherwise>User</xsl:otherwise>
-      </xsl:choose>
-    
+      </xsl:choose>    
       </xsl:variable >
     
 
@@ -6303,9 +6316,9 @@
         <div class="row" id="template_ListUsersContacts">
           <div class="headerButtons col-md-12 clearfix">
             <a href="{$appPath}?ewCmd=Add{$dirType}Contact&amp;parid={/Page/Request/QueryString/Item[@name='parid']}" class="btn btn-success btn-sm pull-right">
-              <i class="fa fa-plus">&#160;</i>&#160;Add New</a>
+              <i class="fa fa-plus">&#160;</i>&#160;Add New Address</a>
           </div>
-          <xsl:apply-templates select="/Page/ContentDetail/Contacts/Contact" mode="AdminListContact">
+          <xsl:apply-templates select="/Page/ContentDetail/*/Contacts/Contact" mode="AdminListContact">
             <xsl:sort select="cContactType" data-type="text" order="ascending"/>
           </xsl:apply-templates>
         </div>

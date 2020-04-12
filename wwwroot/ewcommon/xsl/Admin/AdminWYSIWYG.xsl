@@ -542,7 +542,7 @@
         <ul class="nav navbar-nav navbar-right">
           <li>
             <!--<span class="glyphicon glyphicon-eye-open"></span>-->
-            <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
+            <xsl:apply-templates select="MenuItem/MenuItem/MenuItem/MenuItem[@cmd='PreviewOn']" mode="previewLink">
               <xsl:with-param name="level">1</xsl:with-param>
             </xsl:apply-templates>
             <xsl:text> </xsl:text>

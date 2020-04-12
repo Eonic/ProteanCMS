@@ -2242,7 +2242,7 @@
       <div id="cartListing" class="responsive-cart">
         <div class="cart-headings hidden-xs">
           <div class="description">
-            <!--<xsl:call-template name="term3040" />-->
+            <xsl:call-template name="term3040" />
             &#160;
           </div>
           <!--<div class="ref">

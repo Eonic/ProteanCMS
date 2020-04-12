@@ -431,27 +431,27 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-      <h3>
+      
         <xsl:choose>
           <xsl:when test="$classVal='alert-success'">
-            <i class="fa fa-check pull-left">
+            <i class="fa fa-check fa-2x pull-left">
               <xsl:text> </xsl:text>
             </i>
           </xsl:when>
           <xsl:when test="$classVal!=''">
-            <i class="fa fa-exclamation-triangle pull-left">
+            <i class="fa fa-exclamation-triangle fa-2x pull-left">
               <xsl:text> </xsl:text>
             </i>
           </xsl:when>
           <xsl:otherwise>
-            <i class="fa fa-exclamation-circle pull-left">
+            <i class="fa fa-exclamation-circle fa-2x pull-left">
               <xsl:text> </xsl:text>
             </i>
           </xsl:otherwise>
         </xsl:choose>
-
+      <xsl:text>&#160;&#160;</xsl:text>
+      <span class="alert-msg">
         <xsl:choose>
-
           <xsl:when test="span[contains(@class,'msg-')]">
             <!-- Send to system translations templates -->
             <xsl:apply-templates select="span" mode="term"/>
@@ -460,7 +460,7 @@
             <xsl:apply-templates select="node()" mode="cleanXhtml"/>
           </xsl:otherwise>
         </xsl:choose>
-      </h3>
+      </span>
     </div>
   </xsl:template>
   <!-- -->
@@ -2746,6 +2746,16 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="input-group">
+          <input type="text" class="form-control" readonly="">
+            <xsl:for-each select="@*">
+              <xsl:variable name="nodename" select="name()"/>
+              <xsl:if test="starts-with($nodename,'data-fv')">
+                <xsl:attribute name="{name()}">
+                  <xsl:value-of select="." />
+                </xsl:attribute>
+              </xsl:if>
+            </xsl:for-each>
+          </input>
           <span class="input-group-btn">
             <span class="btn btn-primary btn-file">
               <input type="file" name="{$ref}" id="{$ref}">
@@ -2772,19 +2782,8 @@
                   <xsl:call-template name="term5006"/>
                 </xsl:otherwise>
               </xsl:choose>
-
             </span>
           </span>
-          <input type="text" class="form-control" readonly="">
-            <xsl:for-each select="@*">
-              <xsl:variable name="nodename" select="name()"/>
-              <xsl:if test="starts-with($nodename,'data-fv')">
-                <xsl:attribute name="{name()}">
-                  <xsl:value-of select="." />
-                </xsl:attribute>
-              </xsl:if>
-            </xsl:for-each>
-          </input>
         </div>
       </xsl:otherwise>
     </xsl:choose>

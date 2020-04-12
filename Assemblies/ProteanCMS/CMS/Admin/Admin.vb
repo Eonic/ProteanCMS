@@ -1519,7 +1519,7 @@ ProcessFlow:
                     Case "ListUserContacts", "ListContacts", "ListDirContacts"
 
                         sAdminLayout = "ListUserContacts"
-                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContactsXml(CInt("0" & myWeb.moRequest("parid"))))
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(CInt("0" & myWeb.moRequest("parid")), True))
 
                     Case "EditUserContact", "EditContact"
 
@@ -3074,6 +3074,14 @@ AfterProcessFlow:
 
                 Dim bShowTree As Boolean = False
                 Dim sFolder As String = myWeb.goServer.UrlDecode(myWeb.moRequest("fld"))
+                If sFolder = Nothing Then
+                    If myWeb.moSession(LibType & "-path") <> "" Then
+                        sFolder = myWeb.moSession(LibType & "-path")
+                    End If
+                Else
+                    myWeb.moSession(LibType & "-path") = sFolder
+                End If
+
                 Dim sFile As String = myWeb.moRequest("file")
 
                 Select Case myWeb.moRequest("ewCmd2")

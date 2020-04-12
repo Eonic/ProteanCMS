@@ -1317,7 +1317,11 @@ Public Class Cms
                     End If
 
                     If sServeFile <> "" Then
-                        moResponse.AddHeader("X-Frame-Options", "DENY")
+                        If moConfig("xframeoptions") <> "" Then
+                            moResponse.AddHeader("X-Frame-Options", moConfig("xframeoptions"))
+                        Else
+                            moResponse.AddHeader("X-Frame-Options", "DENY")
+                        End If
                         Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
                         If filelen > 260 Then
