@@ -2724,11 +2724,16 @@ processFlow:
                         oCartElmt.SetAttribute("shippingCost", shipCost & "")
                         oCartElmt.SetAttribute("shippingDesc", oRow("cShippingDesc") & "")
                         If moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType") Then
-                            ReceiptDeliveryType = oRow("nReceiptType")
+                            If IsDBNull(oRow("nReceiptType")) Then
+                                ReceiptDeliveryType = 1
+                            Else
+                                ReceiptDeliveryType = oRow("nReceiptType")
+                            End If
                             oCartElmt.SetAttribute("ReceiptType", ReceiptDeliveryType)
-                        End If
 
-                        If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
+                            End If
+
+                            If oRow("nShippingMethodId") = 0 And oRow("nCartStatus") < 4 Then
                             shipCost = -1
                             'Default Shipping Country.
                             Dim cDestinationCountry As String = moCartConfig("DefaultCountry")

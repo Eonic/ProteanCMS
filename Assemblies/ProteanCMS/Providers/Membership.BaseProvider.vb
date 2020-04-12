@@ -1605,6 +1605,11 @@ Check:
                                 'timestamp with 60 mins.
 
                                 'only if the sharedkey is in config.
+                                Dim ewCmd As String = String.Empty
+                                If (moRequest("ewCmd") IsNot Nothing) Then
+                                    ewCmd = moRequest("ewCmd")
+                                End If
+
                                 Dim duration As Long
                                 Dim AuthenticationDuration As Int32 = 60
                                 If moConfig("AuthenticationDuration") <> "" Then
@@ -1632,13 +1637,20 @@ Check:
                                         Select Case userMode
                                             Case "preview"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
-                                                myWeb.moSession("ewCmd") = "PreviewOn"
-                                                myWeb.moSession("PreviewDate") = Now.Date
-                                                myWeb.moSession("PreviewUser") = 0
                                                 myWeb.moSession("adminMode") = "true"
                                                 myWeb.mbAdminMode = True
-                                                myWeb.mbPreview = True
-                                                myWeb.msRedirectOnEnd = "/"
+                                                If (ewCmd = "") Then
+                                                    myWeb.moSession("ewCmd") = "PreviewOn"
+                                                    myWeb.moSession("PreviewDate") = Now.Date
+                                                    myWeb.moSession("PreviewUser") = 0
+                                                    myWeb.mbPreview = True
+                                                    myWeb.msRedirectOnEnd = "/"
+                                                Else
+                                                    myWeb.moSession("ewCmd") = Nothing
+                                                    myWeb.moSession("PreviewDate") = Nothing
+                                                    myWeb.moSession("PreviewUser") = Nothing
+                                                    myWeb.msRedirectOnEnd = "/?ewCmd=" & ewCmd
+                                                End If
                                             Case "admin"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
                                                 myWeb.moSession("PreviewDate") = Nothing
