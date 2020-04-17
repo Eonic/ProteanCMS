@@ -1413,10 +1413,10 @@ NoDiscount:
                             doc.LoadXml(additionalInfo)
 
                             If (doc.InnerXml.Contains("nMinimumOrderValue")) Then
-                                minimumOrderTotal = doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText
+                                minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText)
                             End If
                             If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
-                                maximumOrderTotal = doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText
+                                maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                             End If
 
                             If (doc.InnerXml.Contains("bApplyToOrder")) Then
