@@ -33,11 +33,11 @@ Imports System.Runtime.InteropServices
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("6.0.35.228")>
+<Assembly: AssemblyVersion("6.0.35.247")>
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.35.227")>
+<Assembly: AssemblyFileVersion("6.0.35.246")>
 <Assembly: NeutralResourcesLanguageAttribute("en")> 
 

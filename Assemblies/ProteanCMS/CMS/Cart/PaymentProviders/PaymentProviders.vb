@@ -261,6 +261,30 @@ Partial Public Class Cms
                             Next
                         End If
 
+                        'Allow preview users to use additional payment methods
+                        If CLng("0" & myWeb.moSession("nUserId")) > 0 Then
+                            Dim aGroups() As String = Split(oElmt.GetAttribute("validGroups"), ",")
+                            Dim aInvalidGroups() As String = Split(oElmt.GetAttribute("invalidGroups"), ",")
+                            Dim i As Integer
+                            Dim i2 As Integer
+                            For i = 0 To UBound(aGroups)
+                                If modbHelper.checkUserRole(aGroups(i), "Group", CLng(myWeb.moSession("nUserId"))) Then
+                                    bAllowUser = True
+                                End If
+                                If modbHelper.checkUserRole(aGroups(i), "Role", CLng(myWeb.moSession("nUserId"))) Then
+                                    bAllowUser = True
+                                End If
+                            Next
+                            For i2 = 0 To UBound(aInvalidGroups)
+                                If modbHelper.checkUserRole(aInvalidGroups(i2), "Group", CLng(myWeb.moSession("nUserId"))) Then
+                                    bAllowUser = False
+                                End If
+                                If modbHelper.checkUserRole(aInvalidGroups(i2), "Role", CLng(myWeb.moSession("nUserId"))) Then
+                                    bAllowUser = False
+                                End If
+                            Next
+                        End If
+
                         If oElmt.GetAttribute("invalidGroups") <> "" Then
                             Dim aInvalidGroups() As String = Split(oElmt.GetAttribute("invalidGroups"), ",")
                             Dim i2 As Integer
@@ -3331,6 +3355,125 @@ Partial Public Class Cms
 
                 Catch ex As Exception
                     returnException(mcModuleName, "payByCash", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
+
+            Public Overridable Function saveOrder(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
+                PerfMon.Log("PaymentProviders", "SaveOrder")
+                Dim sSql As String
+                Dim ccXform As Protean.Cms.xForm = New xForm(myWeb)
+                Dim sProcessInfo As String = ""
+                Dim bCv2 As Boolean = False
+                Dim bEncrypt As Boolean = False
+
+                Dim formname As String = "PayForm"
+                Dim action As String = sSubmitPath
+                Dim oFrmInstance As XmlElement
+                Dim oFrmGroup As XmlElement
+
+                Dim cPaymentDetails As String = ""
+                Dim oElmt As XmlElement
+
+                Dim mcAccountXForm As String = ""
+
+                'Get the payment options into a hashtable
+                Dim oAccountCfg As XmlNode
+                Dim oDs As DataSet
+                Dim oRow As DataRow
+
+                Dim cProcessInfo As String = "SaveOrder"
+                Try
+                    'Get the payment options into a hashtable
+                    oAccountCfg = moPaymentCfg.SelectSingleNode("provider[@name='Save Order' or @name='SaveOrder']")
+                    If oAccountCfg Is Nothing Then
+                        Err.Raise(1003, "saveOrder", "The Save Order provider section is yet to be added to the Protean.Config")
+                    End If
+                    If Not oAccountCfg.SelectSingleNode("AccountXform/@value") Is Nothing Then
+                        mcAccountXForm = oAccountCfg.SelectSingleNode("AccountXform/@value").InnerText()
+                    End If
+
+                    'Reference together the root Xml from objects
+                    ccXform.moPageXML = Me.moPageXml
+
+                    If mcAccountXForm <> "" Then
+                        If Not ccXform.load(mcAccountXForm) Then
+                            ccXform.NewFrm(formname)
+                            oFrmGroup = ccXform.addGroup(ccXform.moXformElmt, "notes", , "Missing File: " & mcAccountXForm)
+                        Else
+                            'add missing submission or submit buttons
+                            If ccXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
+                                ccXform.submission(formname, action, "POST", "return form_check(this);")
+                            End If
+                            If ccXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") Is Nothing Then
+                                ccXform.addSubmit(ccXform.moXformElmt, formname, "Place Order", "placeOrder")
+                            End If
+                        End If
+                    Else
+                        'First Define the xform
+                        ccXform.NewFrm(formname)
+                        ccXform.submission(formname, action, "POST", "")
+                        'ccXform.submission(formname, action, "POST", "return form_check(this);")
+                        'create the instance
+                        oFrmInstance = ccXform.moPageXML.CreateElement("PaymentDetails")
+                        ccXform.Instance.AppendChild(oFrmInstance)
+                        ccXform.Instance.FirstChild.AppendChild(ccXform.moPageXML.CreateElement("accountID"))
+                        ccXform.Instance.FirstChild.AppendChild(ccXform.moPageXML.CreateElement("accountComments"))
+                        ' create the UI
+                        oFrmGroup = ccXform.addGroup(ccXform.moXformElmt, "creditCard", "creditCard", "Pay On Account - Enter Your Details")
+                        ccXform.addInput(oFrmGroup, "PaymentDetails/accountID", False, "Account ID", "textbox required")
+                        ccXform.addNote("PaymentDetails/accountID", noteTypes.Hint, "If you do not have an Account, please call for assistance.")
+                        ccXform.addTextArea(oFrmGroup, "PaymentDetails/accountComments", False, "Comments:", "", 6, 30)
+                        ccXform.addSubmit(oFrmGroup, formname, "Submit", "placeOrder")
+                    End If
+
+                    'validate the Xform if it has been submitted.
+
+                    If ccXform.getSubmitted = "Submit" Then
+                        ccXform.updateInstanceFromRequest()
+                        ccXform.validate()
+                        If mcAccountXForm = "" Then
+                            If ccXform.Instance.SelectSingleNode("PaymentDetails/accountID").InnerText = "" Then
+                                ccXform.addNote("PaymentDetails/accountID", noteTypes.Alert, "You must enter an Account ID")
+                                ccXform.valid = False
+                            End If
+                        End If
+                    End If
+
+                    ccXform.addValues()
+
+                    If ccXform.valid = True Then
+
+                        bEncrypt = False
+
+                        ' Temporarily add the payment details to the cart so we can email them and show them
+                        Dim oPayElmt As XmlElement
+                        oPayElmt = moPageXml.CreateElement("PaymentDetails")
+                        oPayElmt.InnerXml = ccXform.Instance.SelectSingleNode("PaymentDetails").InnerXml
+                        For Each oElmt In ccXform.Instance.SelectNodes("PaymentDetails/*")
+                            cPaymentDetails = cPaymentDetails & oElmt.Name & ": " & oElmt.InnerText
+                        Next
+
+                        'Update Seller Notes:
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
+                        oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                        For Each oRow In oDs.Tables("Order").Rows
+                            oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today _
+                            & " " & TimeOfDay & ": changed to: (Order Saved)" & vbLf _
+                            & vbLf & cPaymentDetails
+                            oRow("nCartStatus") = cartProcess.AwaitingPayment
+                        Next
+                        modbHelper.updateDataset(oDs, "Order")
+                        ' savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
+                    Else
+                        ccXform.valid = False
+                    End If
+
+                    Return ccXform
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "payOnAccount", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function

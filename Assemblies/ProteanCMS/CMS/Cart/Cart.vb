@@ -2712,6 +2712,11 @@ processFlow:
                     oXml = Nothing
                     oDs = Nothing
 
+                    If moDiscount.bHasPromotionalDiscounts Then
+                        oCartElmt.SetAttribute("showDiscountCodeBox", "true")
+                    End If
+
+
                     If mbNoDeliveryAddress Then oCartElmt.SetAttribute("hideDeliveryAddress", "True")
                     If mnGiftListId > 0 Then oCartElmt.SetAttribute("giftListId", mnGiftListId)
 
@@ -2901,6 +2906,7 @@ processFlow:
                 If bCheckSubscriptions Then
                     moSubscription.UpdateSubscriptionsTotals(oCartElmt)
                 End If
+
 
                 mnCartId = oldCartId
                 SaveCartXML(oCartElmt)

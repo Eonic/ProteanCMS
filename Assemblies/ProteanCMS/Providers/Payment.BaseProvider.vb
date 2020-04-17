@@ -263,6 +263,8 @@ Namespace Providers
                                 ccPaymentXform = oEwProv.paySecureEmail(oOrder, oCart.mcPagePath & returnCmd)
                             Case "Pay On Account", "PayOnAccount"
                                 ccPaymentXform = oEwProv.payOnAccount(oOrder, oCart.mcPagePath & returnCmd)
+                            Case "Save Order", "SaveOrder"
+                                ccPaymentXform = oEwProv.saveOrder(oOrder, oCart.mcPagePath & returnCmd)
                             Case "Pay By Cash", "PayByCash"
                                 ccPaymentXform = oEwProv.payByCash(oOrder, oCart.mcPagePath & returnCmd)
                             Case "AuthorizeNet"
@@ -315,12 +317,19 @@ Namespace Providers
                             oOrder.SelectSingleNode("error").FirstChild.InnerXml = "<strong>PAYMENT CANNOT PROCEED UNTIL QUANTITIES ARE ADJUSTED</strong>"
                         ElseIf ccPaymentXform.valid = True Then
                             'added ability to change the success ID in payment providers
-                            oCart.mnProcessId = oEwProv.mnProcessIdOnComplete
-                            If oCart.mcDeposit = "On" Then
-                                oCart.UpdateCartDeposit(oOrder, oEwProv.mnPaymentAmount, oEwProv.mcPaymentType)
-                                If oEwProv.mcPaymentType = "deposit" Then oCart.mnProcessId = 10
+
+                            If mcPaymentMethod = "SaveOrder" Then
+                                oCart.mnProcessId = 14
+                            Else
+
+                                oCart.mnProcessId = oEwProv.mnProcessIdOnComplete
+                                If oCart.mcDeposit = "On" Then
+                                    oCart.UpdateCartDeposit(oOrder, oEwProv.mnPaymentAmount, oEwProv.mcPaymentType)
+                                    If oEwProv.mcPaymentType = "deposit" Then oCart.mnProcessId = 10
+                                End If
+                                oEwProv.ValidatePaymentByCart(oCart.mnCartId, True)
                             End If
-                            oEwProv.ValidatePaymentByCart(oCart.mnCartId, True)
+
                         End If
 
                         Return ccPaymentXform
