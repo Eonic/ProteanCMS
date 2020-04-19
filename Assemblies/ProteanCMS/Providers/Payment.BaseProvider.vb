@@ -319,7 +319,7 @@ Namespace Providers
                             'added ability to change the success ID in payment providers
 
                             If mcPaymentMethod = "SaveOrder" Then
-                                oCart.mnProcessId = 14
+                                oCart.mnProcessId = Cart.cartProcess.AwaitingPayment
                             Else
 
                                 oCart.mnProcessId = oEwProv.mnProcessIdOnComplete

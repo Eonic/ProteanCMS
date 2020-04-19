@@ -634,7 +634,7 @@ Partial Public Class Cms
                         If mcReEstablishSession <> "" Then
                             sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " & mnCartId
                         Else
-                            sSql = "select * from tblCartOrder where (nCartStatus < 7 or nCartStatus IN (10,14)) and nCartOrderKey = " & mnCartId & " and not(cCartSessionId like 'OLD_%')"
+                            sSql = "select * from tblCartOrder where ((nCartStatus < 7 and not(cCartSessionId like 'OLD_%')) or nCartStatus IN (10,13,14)) and nCartOrderKey = " & mnCartId 
                         End If
                         oDr = moDBHelper.getDataReader(sSql)
                         If oDr.HasRows Then
@@ -1499,36 +1499,42 @@ processFlow:
                             If oElmt.FirstChild Is Nothing Then
                                 GetCart(oElmt)
                             End If
-                            If moCartConfig("StockControl") = "on" Then
-                                UpdateStockLevels(oElmt)
-                            End If
-                            UpdateGiftListLevels()
 
-                            addDateAndRef(oElmt)
+                            If mnProcessId = Cart.cartProcess.Complete Then
 
-                            If myWeb.mnUserId > 0 Then
-                                Dim userXml As XmlElement = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId, False)
-                                If userXml IsNot Nothing Then
-                                    Dim cartElement As XmlElement = oContentElmt.SelectSingleNode("Cart")
-                                    If cartElement IsNot Nothing Then
-                                        cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, True))
+                                If moCartConfig("StockControl") = "on" Then
+                                    UpdateStockLevels(oElmt)
+                                End If
+                                UpdateGiftListLevels()
+                                addDateAndRef(oElmt)
+
+                                If myWeb.mnUserId > 0 Then
+                                    Dim userXml As XmlElement = myWeb.moDbHelper.GetUserXML(myWeb.mnUserId, False)
+                                    If userXml IsNot Nothing Then
+                                        Dim cartElement As XmlElement = oContentElmt.SelectSingleNode("Cart")
+                                        If cartElement IsNot Nothing Then
+                                            cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, True))
+                                        End If
                                     End If
                                 End If
-                            End If
 
-                            purchaseActions(oContentElmt)
-                            AddToLists("Invoice", oContentElmt)
+                                purchaseActions(oContentElmt)
+                                AddToLists("Invoice", oContentElmt)
 
-                            If myWeb.mnUserId > 0 Then
-                                If Not moSubscription Is Nothing Then
-                                    moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId)
+                                If myWeb.mnUserId > 0 Then
+                                    If Not moSubscription Is Nothing Then
+                                        moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId)
+                                    End If
                                 End If
+
+                                emailReceipts(oContentElmt)
+
+                                moDiscount.DisablePromotionalDiscounts()
+
                             End If
 
-                            emailReceipts(oContentElmt)
 
 
-                            moDiscount.DisablePromotionalDiscounts()
 
                             If mbQuitOnShowInvoice Then
                                 EndSession()
@@ -2356,7 +2362,11 @@ processFlow:
         End Sub
 
         Public Sub GetCart()
-            GetCart(moCartXml.FirstChild)
+            Try
+                GetCart(moCartXml.FirstChild)
+            Catch ex As Exception
+                returnException(mcModuleName, "GetCart", ex, "", "", gbDebug)
+            End Try
         End Sub
 
         Public Sub GetCart(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)

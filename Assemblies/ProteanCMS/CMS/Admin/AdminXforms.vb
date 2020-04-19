@@ -5662,6 +5662,7 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Completed" & completedMsg, 6)
                             MyBase.addOption(oSelElmt, "Refunded", 7)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
+                            MyBase.addOption(oSelElmt, "Delete", 12)
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")

@@ -1116,6 +1116,67 @@
     <input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
   </xsl:template>
 
+
+
+  <!-- Input xForm control -->
+  <xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
+    <xsl:variable name="inlineHint">
+      <xsl:apply-templates select="." mode="getInlineHint"/>
+    </xsl:variable>
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="value">
+      <xsl:apply-templates select="." mode="xform_value"/>
+    </xsl:variable>
+    <input type="tel" name="{$ref}" id="{$ref}">
+      <xsl:if test="contains(@class,'readonly') or contains(@class,'displayOnly') ">
+        <xsl:attribute name="readonly">readonly</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="contains(@autofocus,'autofocus')">
+        <xsl:attribute name="autofocus">autofocus</xsl:attribute>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="@class!=''">
+          <xsl:attribute name="class">
+            <xsl:value-of select="@class"/>
+            <xsl:text> telephone form-control</xsl:text>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="class">telephone form-control</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:for-each select="@*">
+        <xsl:variable name="nodename" select="name()"/>
+        <xsl:if test="starts-with($nodename,'data-fv')">
+          <xsl:attribute name="{name()}">
+            <xsl:value-of select="." />
+          </xsl:attribute>
+        </xsl:if>
+      </xsl:for-each>
+      <xsl:choose>
+        <xsl:when test="$value!=''">
+          <xsl:attribute name="value">
+            <xsl:value-of select="$value"/>
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="$inlineHint!=''">
+            <xsl:attribute name="placeholder">
+              <xsl:value-of select="$inlineHint"/>
+            </xsl:attribute>
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:if test="@autocomplete!=''">
+        <xsl:attribute name="autocomplete">
+          <xsl:value-of select="@autocomplete"/>
+        </xsl:attribute>
+      </xsl:if>
+    </input>
+  </xsl:template>
+
   <xsl:template match="label[parent::input[contains(@type,'button') or contains(@class,'button')]]">
 
   </xsl:template>

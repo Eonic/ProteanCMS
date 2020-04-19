@@ -205,6 +205,7 @@ Partial Public Class Cms
                 If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) <> "normal" Then
                     'case to cater for logoff in preview mode
                     mcEwCmd = "PreviewOn"
+                    myWeb.mbPreview = True
                 ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
                 ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And LCase(mcEwCmd) = "normal" Then
@@ -1849,6 +1850,12 @@ ProcessFlow:
 
                         If CInt("0" & myWeb.moRequest("CartId")) > 0 Then
                             myWeb.moSession("CartId") = myWeb.moRequest("CartId")
+
+                            'reset cart processId
+                            Dim sSql As String = "update tblCartOrder set nCartStatus = 5, cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & myWeb.moRequest("CartId")
+                            myWeb.moDbHelper.ExeProcessSql(sSql)
+
+
                         End If
 
                     Case "RelateSearch"
@@ -2212,8 +2219,10 @@ AfterProcessFlow:
                     oUserXml = moPageXML.SelectSingleNode("/Page/User")
                 End If
 
+                If Not oUserXml Is Nothing Then
+                    pagePermLevel = oUserXml.GetAttribute("pagePermission")
+                End If
 
-                pagePermLevel = oUserXml.GetAttribute("pagePermission")
                 'Are you a domain user if so you are god !
 
                 'RJP 7 Nov 2012. Added LCase to MembershipEncryption.
