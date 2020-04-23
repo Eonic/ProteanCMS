@@ -977,6 +977,7 @@ Partial Public Class Cms
 
         End Function
 
+
         ''' <summary>
         ''' Assess an audit id, it's previous and new status and if changed logs the appropriate change
         ''' </summary>
@@ -6461,17 +6462,20 @@ restart:
             End Try
         End Function
 
-        Public Function checkUserRole(ByVal cRoleName As String, Optional ByVal cSchemaName As String = "Role") As Boolean
+        Public Function checkUserRole(ByVal cRoleName As String, Optional ByVal cSchemaName As String = "Role", Optional userId As Long = 0) As Boolean
             PerfMon.Log("DBHelper", "checkUserRole")
             Dim sSql As String
             Dim oDr As SqlDataReader
             Dim cProcessInfo As String = ""
             Dim bValid As Boolean
+            If userId = 0 Then userId = mnUserId
+
+
             Try
                 'get group memberships
                 sSql = "SELECT d.* FROM tblDirectory d " &
                 "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " &
-                "where r.nDirChildId = " & mnUserId & " and d.cDirSchema='" & cSchemaName & "'"
+                "where r.nDirChildId = " & userId & " and d.cDirSchema='" & cSchemaName & "'"
 
                 oDr = getDataReader(sSql)
                 While oDr.Read

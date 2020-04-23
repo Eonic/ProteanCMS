@@ -6606,7 +6606,7 @@
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>view order</a>
-        <xsl:if test="@statusId&lt;6">
+        <xsl:if test="@statusId&lt;6 or @statusId=13">
           <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@userId}&amp;CartId={@id}&amp;cartCmd=Cart" class="btn btn-xs btn-primary">
             <i class="fa fa-cart-plus">
               <xsl:text> </xsl:text>
