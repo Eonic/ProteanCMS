@@ -10015,7 +10015,7 @@
         </ul>
         <div class="terminus">&#160;</div>
       </div>
-      <div class="cols{@cols}">
+      <div class="cols cols{@cols}">
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="articleList" select="$contentList"/>
@@ -10069,6 +10069,8 @@
       </xsl:apply-templates>
       <div class="lIinner">
         <a name="{@id}">
+          &#160;
+        </a>
           <h3>
             <xsl:choose>
               <!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
@@ -10080,7 +10082,6 @@
               </xsl:otherwise>
             </xsl:choose>
           </h3>
-        </a>
         <xsl:if test="Images/img[@class='thumbnail']/@src!=''">
           <img src="{Images/img[@class='thumbnail']/@src}" width="{Images/img[@class='thumbnail']/@width}" height="{Images/img[@class='thumbnail']/@height}" alt="{Images/img[@class='thumbnail']/@alt}" class="thumbnail"/>
         </xsl:if>
