@@ -706,8 +706,8 @@ Partial Public Class Cms
                                     'set shipping option after applied promocode
                                     myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
 
-                                    If (oDiscountLoop.SelectSingleNode("bApplyToOrder") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() = "1") Then
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "1") Then
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
@@ -752,8 +752,8 @@ Partial Public Class Cms
 
 
 
-                                    If (oDiscountLoop.SelectSingleNode("bApplyToOrder") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() = "True") Then
+                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
@@ -1412,26 +1412,29 @@ NoDiscount:
                             Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                             doc.LoadXml(additionalInfo)
 
-                            If (doc.InnerXml.Contains("nMinimumOrderValue")) Then
-                                minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText)
+                            If (doc.InnerXml.Contains("MinimumOrderValue")) Then
+                                minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("MinimumOrderValue").InnerText)
                             End If
-                            If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
-                                maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
+                            If (doc.InnerXml.Contains("MaximumOrderValue")) Then
+                                maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("MaximumOrderValue").InnerText)
                             End If
 
-                            If (doc.InnerXml.Contains("bApplyToOrder")) Then
-                                If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                            If (doc.InnerXml.Contains("ApplyToTotal")) Then
+                                If (doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText = "") Then
                                     applyToTotal = False
                                 Else
-                                    applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
-                            End If
+                                    applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText)
+                                End If
                                 If (applyToTotal) Then
-                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
-                                        oDsDiscounts.Clear()
-                                        oDsDiscounts = Nothing
-                                        Return oDiscountMessage
+                                    If (maximumOrderTotal <> 0) Then
+                                        If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                            oDsDiscounts.Clear()
+                                            oDsDiscounts = Nothing
+                                            Return oDiscountMessage
+                                        End If
                                     End If
                                 End If
+
                             End If
                             oDsDiscounts.Clear()
                             oDsDiscounts = Nothing
