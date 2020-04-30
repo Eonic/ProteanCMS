@@ -380,10 +380,10 @@ Partial Public Class Cms
                                         Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                         doc.LoadXml(additionalInfo)
 
-                                        If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
-                                            strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
-                                        End If
+                                    If (doc.InnerXml.Contains("FreeShippingMethods")) Then
+                                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("FreeShippingMethods").InnerText
                                     End If
+                                End If
 
                                 End If
 
@@ -704,8 +704,9 @@ Partial Public Class Cms
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
                                     oDiscountElmt.SetAttribute("Applied", 1)
                                     'set shipping option after applied promocode
-                                    myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
-
+                                    If (cFreeShippingMethods <> "") Then
+                                        myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
+                                    End If
                                     If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing) Then
                                         If (oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "1") Then
                                             If (AmountToDiscount = 0) Then
