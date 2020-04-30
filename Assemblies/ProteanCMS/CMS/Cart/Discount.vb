@@ -374,9 +374,10 @@ Partial Public Class Cms
                                     If (cPromoCodeUserEntered <> "") Then
                                         'getting productgroups value
                                         strSQL.Clear()
-                                        strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountCode = '" & cPromoCodeUserEntered & "'")
+                                    strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountUserCode = '" & cPromoCodeUserEntered & "'")
 
-                                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                                    oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
+                                    If oDsDiscounts.Tables("Discount").Rows.Count > 0 Then
                                         Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                         doc.LoadXml(additionalInfo)
 
@@ -384,6 +385,8 @@ Partial Public Class Cms
                                             strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
                                         End If
                                     End If
+
+                                End If
 
                                 End If
 

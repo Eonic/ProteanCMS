@@ -1576,11 +1576,19 @@ Public Class Cms
                     mnPageId = gnPageAccessDeniedId Or
                     mnPageId = gnPageLoginRequiredId Or
                     mnPageId = gnPageErrorId) Then
-                        If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
-                            moContentDetail = GetContentDetailXml(oPageElmt)
+
+                        If mbPreview And moRequest("verId") <> "" Then
+                            moContentDetail = GetContentDetailXml(oPageElmt, , , True, moRequest("verId"))
                         Else
-                            moContentDetail = GetContentDetailXml(oPageElmt, , , True)
+                            If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
+                                moContentDetail = GetContentDetailXml(oPageElmt)
+                            Else
+                                moContentDetail = GetContentDetailXml(oPageElmt, , , True)
+                            End If
                         End If
+
+
+
                     End If
 
                     If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
@@ -6351,7 +6359,7 @@ Public Class Cms
         End Try
     End Sub
 
-    Public Function GetContentDetailXml(Optional ByVal oPageElmt As XmlElement = Nothing, Optional ByVal nArtId As Long = 0, Optional ByVal disableRedirect As Boolean = False, Optional ByVal bCheckAccessToContentLocation As Boolean = False) As XmlElement
+    Public Function GetContentDetailXml(Optional ByVal oPageElmt As XmlElement = Nothing, Optional ByVal nArtId As Long = 0, Optional ByVal disableRedirect As Boolean = False, Optional ByVal bCheckAccessToContentLocation As Boolean = False, Optional ByVal nVersionId As Long = 0) As XmlElement
         PerfMon.Log("Web", "GetContentDetailXml")
         Dim oRoot As XmlElement
         Dim oNode As XmlNode
@@ -6395,11 +6403,16 @@ Public Class Cms
                     Else
                         sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
                     End If
-
                     sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
                     'sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
                     sSql &= "where c.nContentKey = " & mnArtId & sFilterSql & " "
                     'sSql &= "and CL.nStructId = " & mnPageId
+
+                    If nVersionId > 0 Then
+                        sSql = "select c.nContentPrimaryId as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                        sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
+                        sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
+                    End If
 
                     oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
 

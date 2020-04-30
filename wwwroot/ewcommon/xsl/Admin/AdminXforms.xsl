@@ -33,7 +33,7 @@
         <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*) = 1 ">
+        <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
           <xsl:for-each select="group[1]">
             <xsl:if test="label[position()=1]">
               <div class="panel-heading">
