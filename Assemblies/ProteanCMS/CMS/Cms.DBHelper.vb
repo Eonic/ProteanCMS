@@ -324,7 +324,7 @@ Partial Public Class Cms
             Live = 1
             Superceded = 2
             Pending = 3
-            InProgress = 4
+            InProgress = 4 ' preview
             Rejected = 5
             DraftSuperceded = 6
             Lead_AwaitingAuditBooking = 7
@@ -2763,6 +2763,8 @@ restart:
                                 End If
 
                             End If
+
+                        Case Status.InProgress 'PREVIEW
 
 
                         Case Status.Pending

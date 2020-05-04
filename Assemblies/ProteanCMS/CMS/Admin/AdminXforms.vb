@@ -2767,8 +2767,28 @@ Partial Public Class Cms
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
                     If MyBase.isSubmitted Then
-                        ' Additional Processing : Pre Submission 
-                        xFrmEditContentSubmissionPreProcessing()
+                        If goRequest("ptn-preview") <> "" Then
+                            If myWeb.gbVersionControl Then
+                                cProcessInfo = goRequest("ptn-preview")
+                                'Leave the current version unchanged and live
+
+                                'create a new version of the content as pending
+
+                                MyBase.Instance.SelectSingleNode("tblContent/nStatus").InnerText() = dbHelper.Status.InProgress
+
+                                'redirect to preview version in preview mode
+
+                                myWeb.msRedirectOnEnd = ""
+
+
+                            End If
+
+
+                        End If
+
+
+                            ' Additional Processing : Pre Submission 
+                            xFrmEditContentSubmissionPreProcessing()
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()

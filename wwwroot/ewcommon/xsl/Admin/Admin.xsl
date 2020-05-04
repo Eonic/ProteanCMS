@@ -662,10 +662,12 @@
           </xsl:if>
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <xsl:if test="$page/@ewCmd='Normal'">
                 <!--<span class="glyphicon glyphicon-eye-open"></span>-->
                 <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
                   <xsl:with-param name="level">1</xsl:with-param>
                 </xsl:apply-templates>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </li>
           </ul>
@@ -10390,14 +10392,17 @@
                 </xsl:choose>
               </td>
               <td>
+                
                 <xsl:choose>
                   <xsl:when test="@primaryId='0' or @primaryId = @id">
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}" class="btn btn-xs btn-primary">View</a>
                     <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit</a>
                   </xsl:when>
                   <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary">Preview</a>
                     <a href="{$appPath}?ewCmd=RollbackContent&amp;pgid={/Page/@id}&amp;id={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary" title="Click here to rollback to this version">
                       <i class="fa fa-go-back fa-white">
                         <xsl:text> </xsl:text>
@@ -10425,8 +10430,7 @@
       <div class="col-md-9">
         <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
       </div>
-<div  class="col-md-3">
-        
+  <div class="col-md-3">
   <div class="panel">
     <div class="panel-body">
               <p>This lists all content that is awaiting approval from an administrator.</p>
@@ -10469,6 +10473,14 @@
         <xsl:apply-templates select="Name" mode="Pending"/>
       </tr>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Name[ancestor::*[name()='Pending']]" mode="reportCell">
+    <td>
+      <a href="/?ewCmd=Normal&amp;pgid={parent::Pending/Metadata/Locations/Location/@pageid}&amp;artid={parent::Pending/@id}">
+        <xsl:value-of select="node()"/>
+      </a>
+    </td>
   </xsl:template>
 
   <!-- -->
@@ -10536,6 +10548,14 @@
           </i>
           <xsl:text> </xsl:text>Delete</a>
       </xsl:if>
+
+      <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+        <i class="fa fa-history">
+          <xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>History
+      </a>
+      
       <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-pencil fa-white">
           <xsl:text> </xsl:text>
@@ -11818,6 +11838,11 @@
           <i class="fa fa-exclamation text-warning" alt="live">&#160;</i>
         </a>
       </xsl:when>
+      <xsl:when test="$status='3'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Pending">
+          <i class="far fa-pause-circle" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
       <xsl:when test="$status='7'">
         <a href="#" data-toggle="tooltip" data-placement="right" title="Expired" data-original-title="Expired">
           <i class="fa fa-clock-o text-danger">&#160;</i>
@@ -11838,14 +11863,6 @@
         <xsl:value-of select="parent::node()/@currentLiveVersion"/>
         <xsl:text>]</xsl:text>
       </xsl:if>
-    </td>
-  </xsl:template>
-  <!-- -->
-  <xsl:template match="Name[parent::Pending]" mode="reportCell">
-    <td>
-      <strong>
-        <xsl:value-of select="."/>
-      </strong>
     </td>
   </xsl:template>
   <!-- -->

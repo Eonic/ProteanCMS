@@ -620,7 +620,7 @@ Partial Public Class fsHelper
                     Try
                         img = System.Drawing.Image.FromStream(remoteStream)
                     Catch ex2 As Exception
-                        Dim test As String = ex2.Message
+                        Dim test As String = "Error downloading " & httpURL & " - " & ex2.Message
 
                     End Try
 
