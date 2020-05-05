@@ -1607,6 +1607,7 @@ ProcessFlow:
                             'return to process flow
                             mcEwCmd = myWeb.moSession("ewCmd")
                             mcEwCmd2 = myWeb.moSession("ewCmd2")
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies&pgid=1"
                             GoTo ProcessFlow
 
                         Else
