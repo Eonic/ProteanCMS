@@ -1008,7 +1008,7 @@
       <!-- End Facebook Pixel Code -->
     </xsl:if>
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
-    
+
     <xsl:apply-templates select="." mode="JSONLD"/>
     
     <!--  Google analytics javascript  -->
@@ -1045,15 +1045,17 @@
   <xsl:template match="Page" mode="JSONLD">
     <xsl:variable name="jsonld">
       <xsl:choose>
-        <xsl:when test="ContentDetail/Content">
+        <xsl:when test="ContentDetail/Content">1
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
-        <xsl:otherwise>
+        <xsl:otherwise>2
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+
     <xsl:if test ="$jsonld!=''">
+      
       <script type="application/ld+json">
         <xsl:value-of select="$jsonld"/>
       </script>
