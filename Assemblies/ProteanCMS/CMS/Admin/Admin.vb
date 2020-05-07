@@ -202,13 +202,13 @@ Partial Public Class Cms
                 End If
 
 
-                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) <> "normal" Then
+                If myWeb.moSession("ewCmd") = "PreviewOn" And (LCase(myWeb.moRequest("ewCmd")) <> "normal" And LCase(myWeb.moRequest("ewCmd")) <> "editcontent" And LCase(myWeb.moRequest("ewCmd")) <> "publishcontent") Then
                     'case to cater for logoff in preview mode
                     mcEwCmd = "PreviewOn"
                     myWeb.mbPreview = True
                 ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
-                ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And LCase(mcEwCmd) = "normal" Then
+                ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And (LCase(mcEwCmd) = "normal" Or LCase(mcEwCmd) = "editcontent" Or LCase(mcEwCmd) = "publishcontent") Then
                     myWeb.moSession("ewCmd") = ""
                     mnAdminUserId = myWeb.mnUserId
                 End If
@@ -972,6 +972,11 @@ ProcessFlow:
 
                         End If
 
+                    Case "PublishContent"
+
+                        myWeb.moDbHelper.contentStatus(myWeb.moRequest("id"), myWeb.moRequest("verId"), dbHelper.Status.Live)
+
+
                     Case "RollbackContent"
 
 
@@ -1519,7 +1524,7 @@ ProcessFlow:
 
                     Case "ListUserContacts", "ListContacts", "ListDirContacts"
 
-                        sAdminLayout = "ListUserContacts"
+                        sAdminLayout = "Profile"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(CInt("0" & myWeb.moRequest("parid")), True))
 
                     Case "EditUserContact", "EditContact"

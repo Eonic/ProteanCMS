@@ -6409,7 +6409,7 @@ Public Class Cms
                     'sSql &= "and CL.nStructId = " & mnPageId
 
                     If nVersionId > 0 Then
-                        sSql = "select c.nContentPrimaryId as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                        sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
                         sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
                         sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
                     End If
@@ -6424,156 +6424,160 @@ Public Class Cms
                     oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
                     oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
-                    If bContLoc Then
-                        oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
+
+                    If nVersionId > 0 Then
+                        oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
                     End If
-                    oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
+                    If bContLoc Then
+                            oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
+                        End If
+                        oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
 
-                    'Need to check the content is found on the current page.
-
-
-                    If oDs.Tables(0).Rows.Count > 0 Then
-
-                        oRoot.InnerXml = Replace(oDs.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
-                        For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
-                            oElmt = oNode
-                            sContent = oElmt.InnerText
-
-                            If IsDate(oElmt.GetAttribute("update")) Then mdPageUpdateDate = CDate(oElmt.GetAttribute("update"))
+                        'Need to check the content is found on the current page.
 
 
-                            '  Try to convert the InnerText to InnerXml
-                            '  Also if the innerxml has Content as a first node, then get the innerxml of the content node.
-                            Try
-                                oElmt.InnerXml = sContent
-                                bLoadAsXml = True
+                        If oDs.Tables(0).Rows.Count > 0 Then
 
-                            Catch ex As Exception
-                                ' If the load failed, then flag it in the Content node and return the InnerText as a Comment
-                                oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText)
-                                oElmt.SetAttribute("xmlerror", "getContentBriefXml")
-                                oElmt.InnerXml = ""
-                                oElmt.AppendChild(oComment)
-                                oComment = Nothing
-                                bLoadAsXml = False
-                            End Try
+                            oRoot.InnerXml = Replace(oDs.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                            For Each oNode In oRoot.SelectNodes("/ContentDetail/Content")
+                                oElmt = oNode
+                                sContent = oElmt.InnerText
 
-                            If bLoadAsXml Then
+                                If IsDate(oElmt.GetAttribute("update")) Then mdPageUpdateDate = CDate(oElmt.GetAttribute("update"))
 
-                                ' Successfully converted to XML.
-                                ' Now check if the node imported is a Content node - if so get rid of the Content node
-                                Dim oFirst As XmlElement = Tools.Xml.firstElement(oElmt)
-                                'NB 19-02-2010 Added to stop unsupported types falling over
-                                If Not oFirst Is Nothing Then
-                                    If oFirst.LocalName = "Content" Then
-                                        Dim oAttr As XmlAttribute
-                                        For Each oAttr In oElmt.SelectNodes("Content/@*")
-                                            If oElmt.GetAttribute(oAttr.Name) = "" Then
-                                                oElmt.SetAttribute(oAttr.Name, oAttr.InnerText)
-                                            End If
-                                        Next
 
-                                        oElmt.InnerXml = oFirst.InnerXml
+                                '  Try to convert the InnerText to InnerXml
+                                '  Also if the innerxml has Content as a first node, then get the innerxml of the content node.
+                                Try
+                                    oElmt.InnerXml = sContent
+                                    bLoadAsXml = True
+
+                                Catch ex As Exception
+                                    ' If the load failed, then flag it in the Content node and return the InnerText as a Comment
+                                    oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText)
+                                    oElmt.SetAttribute("xmlerror", "getContentBriefXml")
+                                    oElmt.InnerXml = ""
+                                    oElmt.AppendChild(oComment)
+                                    oComment = Nothing
+                                    bLoadAsXml = False
+                                End Try
+
+                                If bLoadAsXml Then
+
+                                    ' Successfully converted to XML.
+                                    ' Now check if the node imported is a Content node - if so get rid of the Content node
+                                    Dim oFirst As XmlElement = Tools.Xml.firstElement(oElmt)
+                                    'NB 19-02-2010 Added to stop unsupported types falling over
+                                    If Not oFirst Is Nothing Then
+                                        If oFirst.LocalName = "Content" Then
+                                            Dim oAttr As XmlAttribute
+                                            For Each oAttr In oElmt.SelectNodes("Content/@*")
+                                                If oElmt.GetAttribute(oAttr.Name) = "" Then
+                                                    oElmt.SetAttribute(oAttr.Name, oAttr.InnerText)
+                                                End If
+                                            Next
+
+                                            oElmt.InnerXml = oFirst.InnerXml
+                                        End If
                                     End If
-                                End If
 
 
 
-                                moDbHelper.addRelatedContent(oNode, mnArtId, mbAdminMode)
-                                If moConfig("ShowOwnerOnDetail") <> "" Then
-                                    Dim cContentType As String = oElmt.GetAttribute("type")
-                                    If moConfig("ShowOwnerOnDetail").Contains(cContentType) Then
-                                        Dim nOwner As Long = CLng("0" & oElmt.GetAttribute("owner"))
-                                        If nOwner > 0 Then
-                                            oElmt.AppendChild(GetUserXML(nOwner))
+                                    moDbHelper.addRelatedContent(oNode, mnArtId, mbAdminMode)
+                                    If moConfig("ShowOwnerOnDetail") <> "" Then
+                                        Dim cContentType As String = oElmt.GetAttribute("type")
+                                        If moConfig("ShowOwnerOnDetail").Contains(cContentType) Then
+                                            Dim nOwner As Long = CLng("0" & oElmt.GetAttribute("owner"))
+                                            If nOwner > 0 Then
+                                                oElmt.AppendChild(GetUserXML(nOwner))
+                                            End If
                                         End If
                                     End If
                                 End If
-                            End If
 
-                        Next
+                            Next
 
-                        'If gbCart Or gbQuote Then
-                        '    moDiscount.getAvailableDiscounts(oRoot)
-                        'End If
+                            'If gbCart Or gbQuote Then
+                            '    moDiscount.getAvailableDiscounts(oRoot)
+                            'End If
 
-                        Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
-                        Dim getSafeURLName As String = contentElmt.GetAttribute("name")
+                            Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
+                            Dim getSafeURLName As String = contentElmt.GetAttribute("name")
 
-                        AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
+                            AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
 
-                        If Not oPageElmt Is Nothing Then
-                            Dim oContentDetail As XmlElement = contentElmt
-                            If Not (oContentDetail Is Nothing) _
+                            If Not oPageElmt Is Nothing Then
+                                Dim oContentDetail As XmlElement = contentElmt
+                                If Not (oContentDetail Is Nothing) _
                                 AndAlso oContentDetail.InnerXml.Trim() <> "" Then
 
-                                ' If we can find a content detail Content node, 
-                                ' AND it contains some InnerXml, then YAY.
-                                oPageElmt.AppendChild(oRoot.FirstChild)
-                            Else
+                                    ' If we can find a content detail Content node, 
+                                    ' AND it contains some InnerXml, then YAY.
+                                    oPageElmt.AppendChild(oRoot.FirstChild)
+                                Else
 
-                                'OTHERWISE if there is nothing in the detail we get the brief instead.
-                                GetContentBriefXml(oPageElmt, nArtId)
+                                    'OTHERWISE if there is nothing in the detail we get the brief instead.
+                                    GetContentBriefXml(oPageElmt, nArtId)
+                                End If
                             End If
+                            retElmt = oRoot.FirstChild
+
+                            If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
+
+                                'get SAFE URL NAME
+                                'getSafeURLName
+                                ' <xsl:variable name="illegalString">
+                                '  <xsl:text> /\.:£%&#34;&#147;&#148;&#39;&#8220;&#8221;&#8216;&#8217;</xsl:text>
+                                '   </xsl:variable>
+                                '<xsl:value-of select="translate(@name,$illegalString,'----')"/>
+
+                                getSafeURLName = getSafeURLName.Replace(" ", "-")
+                                getSafeURLName = getSafeURLName.Replace("/", "-")
+                                getSafeURLName = getSafeURLName.Replace("\", "-")
+                                getSafeURLName = getSafeURLName.Replace(".", "-")
+
+                                getSafeURLName = getSafeURLName.Replace("+", "-")
+                                getSafeURLName = getSafeURLName.Replace("""", "")
+                                getSafeURLName = getSafeURLName.Replace("'", "")
+
+                                Dim myOrigURL As String
+                                Dim myQueryString As String = ""
+
+                                If mcOriginalURL.Contains("?") Then
+                                    myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
+                                    myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
+                                Else
+                                    myOrigURL = mcOriginalURL
+                                End If
+
+                                If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
+                                    'we redirect perminently
+                                    mbRedirectPerm = True
+                                    msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName & myQueryString
+                                End If
+                            End If
+                            moContentDetail = oRoot.FirstChild
+                            Return moContentDetail
+                        Else
+                            sProcessInfo = "no content to add - we redirect"
+                            'this content is not found either page not found or re-direct home.
+                            If Not disableRedirect Then
+                                'put this in to prevent a redirect if we are calling this from somewhere strange.
+                                If gnPageNotFoundId > 1 Then
+                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    moResponse.StatusCode = 404
+                                Else
+                                    msRedirectOnEnd = moConfig("BaseUrl")
+                                    moResponse.StatusCode = 404
+                                End If
+                            End If
+                            Return Nothing
                         End If
-                        retElmt = oRoot.FirstChild
-
-                        If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
-
-                            'get SAFE URL NAME
-                            'getSafeURLName
-                            ' <xsl:variable name="illegalString">
-                            '  <xsl:text> /\.:£%&#34;&#147;&#148;&#39;&#8220;&#8221;&#8216;&#8217;</xsl:text>
-                            '   </xsl:variable>
-                            '<xsl:value-of select="translate(@name,$illegalString,'----')"/>
-
-                            getSafeURLName = getSafeURLName.Replace(" ", "-")
-                            getSafeURLName = getSafeURLName.Replace("/", "-")
-                            getSafeURLName = getSafeURLName.Replace("\", "-")
-                            getSafeURLName = getSafeURLName.Replace(".", "-")
-
-                            getSafeURLName = getSafeURLName.Replace("+", "-")
-                            getSafeURLName = getSafeURLName.Replace("""", "")
-                            getSafeURLName = getSafeURLName.Replace("'", "")
-
-                            Dim myOrigURL As String
-                            Dim myQueryString As String = ""
-
-                            If mcOriginalURL.Contains("?") Then
-                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"))
-                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"))
-                            Else
-                                myOrigURL = mcOriginalURL
-                            End If
-
-                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
-                                'we redirect perminently
-                                mbRedirectPerm = True
-                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName & myQueryString
-                            End If
-                        End If
-                        moContentDetail = oRoot.FirstChild
-                        Return moContentDetail
                     Else
-                        sProcessInfo = "no content to add - we redirect"
-                        'this content is not found either page not found or re-direct home.
-                        If Not disableRedirect Then
-                            'put this in to prevent a redirect if we are calling this from somewhere strange.
-                            If gnPageNotFoundId > 1 Then
-                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                moResponse.StatusCode = 404
-                            Else
-                                msRedirectOnEnd = moConfig("BaseUrl")
-                                moResponse.StatusCode = 404
-                            End If
-                        End If
+                        'Just a page no detail requested
                         Return Nothing
-                    End If
-                Else
-                    'Just a page no detail requested
-                    Return Nothing
                 End If
             Else
                 sProcessInfo = "content exists adding content"

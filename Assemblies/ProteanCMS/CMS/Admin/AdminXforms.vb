@@ -2767,32 +2767,28 @@ Partial Public Class Cms
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
                     If MyBase.isSubmitted Then
-                        If goRequest("ptn-preview") <> "" Then
-                            If myWeb.gbVersionControl Then
-                                cProcessInfo = goRequest("ptn-preview")
-                                'Leave the current version unchanged and live
 
-                                'create a new version of the content as pending
-
-                                MyBase.Instance.SelectSingleNode("tblContent/nStatus").InnerText() = dbHelper.Status.InProgress
-
-                                'redirect to preview version in preview mode
-
-                                myWeb.msRedirectOnEnd = ""
-
-
-                            End If
-
-
-                        End If
-
-
-                            ' Additional Processing : Pre Submission 
-                            xFrmEditContentSubmissionPreProcessing()
+                        ' Additional Processing : Pre Submission 
+                        xFrmEditContentSubmissionPreProcessing()
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
+
                         If MyBase.valid Then
+
+                            Dim bPreviewRedirect As Boolean = False
+
+                            If goRequest("ptn-preview") <> "" Then
+                                If myWeb.gbVersionControl Then
+                                    'Leave the current version unchanged and live
+
+                                    'create a new version of the content as pending
+                                    MyBase.Instance.SelectSingleNode("tblContent/nStatus").InnerText() = dbHelper.Status.InProgress
+
+                                    'redirect to preview version in preview mode
+                                    bPreviewRedirect = True
+                                End If
+                            End If
 
                             Dim editResult As dbHelper.ActivityType = Nothing
 
@@ -3038,7 +3034,17 @@ Partial Public Class Cms
                                     End Try
                                 End If
                             Next
+
+                            If bPreviewRedirect Then
+                                Dim VerId As Long = 0
+                                myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" & pgid & "&artid=" & id & "&verId=" & nReturnId
+                            End If
+
                         End If
+
+
+
+
                     ElseIf isSubmittedOther(pgid) Then ' has another specific submit button been pressed?
                         'This should really be taken over using  xForms Triggers
                         MyBase.updateInstanceFromRequest()

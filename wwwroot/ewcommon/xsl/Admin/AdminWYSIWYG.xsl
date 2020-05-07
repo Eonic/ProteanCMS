@@ -2076,7 +2076,13 @@
             <!--<xsl:text>Edit </xsl:text>-->
             <xsl:value-of select="$editLabel"/>
             <xsl:if test="@status=0">
-              <xsl:text>&#160;[hidden]</xsl:text>
+              <xsl:text>&#160;[hidden]...</xsl:text>
+            </xsl:if>
+            <xsl:if test="@status=2">
+              <xsl:text>&#160;[superceeded]</xsl:text>
+            </xsl:if>
+            <xsl:if test="@status=4">
+              <xsl:text>&#160;[preview]</xsl:text>
             </xsl:if>
             <i class="fa fa-caret-down">&#160;</i>
           </a>
