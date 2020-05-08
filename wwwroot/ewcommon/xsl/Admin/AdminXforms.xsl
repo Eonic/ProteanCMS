@@ -49,7 +49,7 @@
           </xsl:for-each>
           <xsl:for-each select="group[2]">
             <xsl:if test="count(submit) &gt; 0">
-              <div class="panel-footer clearfix">
+              <div class="panel-footer navbar-fixed-bottom">
                 <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                   <span class="required">
                     <span class="req">*</span>

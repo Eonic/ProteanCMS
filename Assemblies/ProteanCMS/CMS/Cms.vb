@@ -6409,7 +6409,7 @@ Public Class Cms
                     'sSql &= "and CL.nStructId = " & mnPageId
 
                     If nVersionId > 0 Then
-                        sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                        sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
                         sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
                         sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
                     End If
@@ -6427,6 +6427,7 @@ Public Class Cms
 
                     If nVersionId > 0 Then
                         oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
                     End If
                     If bContLoc Then
                             oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute

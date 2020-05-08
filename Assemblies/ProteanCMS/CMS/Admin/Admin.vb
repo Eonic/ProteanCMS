@@ -950,9 +950,10 @@ ProcessFlow:
                                 myWeb.moSession("ContentEdit") = ""
                                 ' Check for an optional command to redireect to
                                 If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
-
                                     myWeb.msRedirectOnEnd = gcProjectPath & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
-
+                                ElseIf myWeb.msRedirectOnEnd.Contains("?ewCmd=PreviewOn") Then
+                                    'skip if already defined in Xform.
+                                    myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                     myWeb.moSession("lastPage") = ""
@@ -975,7 +976,7 @@ ProcessFlow:
                     Case "PublishContent"
 
                         myWeb.moDbHelper.contentStatus(myWeb.moRequest("id"), myWeb.moRequest("verId"), dbHelper.Status.Live)
-
+                        myWeb.msRedirectOnEnd = "?ewCmd=PreviewOn&pgid=" & myWeb.moRequest("pgid") & "&artid=" & myWeb.moRequest("id")
 
                     Case "RollbackContent"
 

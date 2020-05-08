@@ -129,8 +129,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="adminStyle">
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.css?v={$scriptVersion}"/>
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/skins/eonic.css?v={$scriptVersion}"/>
+    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/preview.less?v={$scriptVersion}"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="adminJs">

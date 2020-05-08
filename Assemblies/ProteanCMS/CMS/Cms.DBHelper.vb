@@ -2766,9 +2766,9 @@ restart:
                                 ' If this was a pending item, supercede the copy in the version table (ie superceded anything that's pending)
                                 Dim cPreviousStatus As String = ""
                                 If NodeState(oInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
-                                    If cPreviousStatus = "3" Then
+                                    If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                                         ' Update everything with a status of Pending to be DraftSuperceded
-                                        ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND a.nStatus = " & Status.Pending)
+                                        ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
                                     End If
                                 End If
 
@@ -2815,7 +2815,7 @@ restart:
                                 End Select
 
                                 ' Update everything with a status of Pending to be DraftSuperceded
-                                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.DraftSuperceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & cParentId & " AND a.nStatus = " & Status.Pending)
+                                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.DraftSuperceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & cParentId & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
 
                             Else
 
@@ -2890,22 +2890,63 @@ restart:
 
         End Function
 
+        Public Function GetVersionInstance(ByVal nContentPrimaryId As Long, ByVal nContentVersionId As Long) As XmlElement
+
+            Dim cProcessInfo As String = "ContentParId = " & nContentPrimaryId
+            Dim oTempInstance As XmlElement = moPageXml.CreateElement("instance")
+            Try
+                'grab some values from the live version
+                oTempInstance.InnerXml = getObjectInstance(dbHelper.objectTypes.Content, nContentPrimaryId)
+                Dim nAuditId As Long = oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText
+                Dim nVersion As Long = oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText
+                Dim nStatus As Long = oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText
+                Dim sInsertDate As String = oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText
+                Dim sInsertUser As String = oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText
+
+                'pull the content in from the versions table
+                oTempInstance.InnerXml = getObjectInstance(dbHelper.objectTypes.ContentVersion, nContentVersionId)
+                'change to match
+                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContentVersions"), "tblContent")
+                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContent/nContentVersionKey"), "nContentKey")
+                'update some of the values
+                oTempInstance.SelectSingleNode("tblContent/nContentKey").InnerText = nContentPrimaryId
+                oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText = nAuditId
+                oTempInstance.SelectSingleNode("tblContent/nAuditId").InnerText = nAuditId
+                oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText = nVersion
+                oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText = sInsertDate
+                oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText = sInsertUser
+                oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
+
+                Return oTempInstance
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetVersionInstance", ex, cProcessInfo))
+                Return Nothing
+            End Try
+
+        End Function
 
         Public Function contentStatus(ByVal nContentPrimaryId As Long, ByVal nContentVersionId As Long, Optional ByVal nStatus As Status = Status.Live) As Long
             PerfMon.Log("DBHelper", "setNewContentVersionInstance")
             Dim cProcessInfo As String = "ContentParId = " & nContentPrimaryId
             Dim nVersionId As Long = 0
-            Dim oInstance As XmlElement
             Try
 
-                oInstance = moPageXml.CreateElement("instance")
-                oInstance.InnerXml = getObjectInstance(objectTypes.ContentVersion, nContentVersionId)
+                Dim oTempInstance As XmlElement = GetVersionInstance(nContentPrimaryId, nContentVersionId)
 
-                ' Prepare the instance
-                prepareContentVersionInstance(oInstance, nContentPrimaryId, nStatus)
+                oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
 
                 ' Save the intance
-                nVersionId = Me.setObjectInstance(objectTypes.Content, oInstance, 0)
+                nVersionId = Me.setObjectInstance(objectTypes.Content, oTempInstance, 0)
+
+                'Superceed previous versions
+                Dim cPreviousStatus As String = ""
+                '  If NodeState(oTempInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
+                '     If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
+                ' Update everything with a status of Pending to be DraftSuperceded
+                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nContentPrimaryId & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
+                ' End If
+                ' End If
 
                 Return nVersionId
 

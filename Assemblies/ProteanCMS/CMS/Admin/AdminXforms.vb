@@ -2528,32 +2528,13 @@ Partial Public Class Cms
                         'we may be halfway through a trigger so lets rescue the instance from the session
                         If goSession("oContentInstance") Is Nothing Then
                             If nVersionId > 0 Then
-                                'grab some values from the live version
-                                oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, id)
-                                Dim nAuditId As Long = oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText
-                                Dim nVersion As Long = oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText
-                                Dim nStatus As Long = oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText
-                                Dim sInsertDate As String = oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText
-                                Dim sInsertUser As String = oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText
 
-                                'pull the content in from the versions table
-                                oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.ContentVersion, nVersionId)
-                                'change to match
-                                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContentVersions"), "tblContent")
-                                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContent/nContentVersionKey"), "nContentKey")
-                                'update some of the values
-                                oTempInstance.SelectSingleNode("tblContent/nContentKey").InnerText = id
-                                oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText = nAuditId
-                                oTempInstance.SelectSingleNode("tblContent/nAuditId").InnerText = nAuditId
-                                oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText = nVersion
-
+                                oTempInstance = moDbHelper.GetVersionInstance(id, nVersionId)
                                 ' Only Update the status if the cmd is ewcmd is RollbackContent
                                 If Me.myWeb.moRequest("ewCmd") = "RollbackContent" Then
-                                    oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
+                                    oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = dbHelper.Status.Live
                                 End If
 
-                                oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText = sInsertDate
-                                oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText = sInsertUser
                             Else
                                 oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, id)
                             End If
@@ -2666,7 +2647,7 @@ Partial Public Class Cms
                                 If NonTableInstanceElements.Name = "Relation" Then
                                     Dim sSql As String
                                     If LCase(NonTableInstanceElements.GetAttribute("direction")) = "child" Then
-                                        sSql = "Select nContentParentId from tblContentRelation where nContentChildId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
+                                        sSql = "Select nContentParentId from tblContentRelation where nContentChildId = " & id & " And cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     Else
                                         sSql = "Select nContentChildId from tblContentRelation where nContentParentId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     End If
