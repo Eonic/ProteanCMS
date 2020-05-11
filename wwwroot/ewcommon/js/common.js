@@ -344,7 +344,7 @@ $(window).resize(function () {
     }
 
     /*Change Price on Selected SKU Option - this function uses 'Live' to cater for content inserted via ajax*/
-function initialiseProductSKUs() {
+    function initialiseProductSKUs() {
 
         //    $('.skuOptions').each(function () {
         //        var addButton = $(this).parents('form').find('.button[name="cartAdd"]');
@@ -353,7 +353,6 @@ function initialiseProductSKUs() {
         //            addButton.hide();
         //        }
         //    });
-
 
         $('.skuOptions').change(function () {
             obj = this;
@@ -533,7 +532,7 @@ function initialiseProductSKUs() {
                     yearRange: '-95:+0'
                 });
             });
-        }
+        };
 
         //    var datePickerSettings = ;
 
@@ -551,7 +550,7 @@ function initialiseProductSKUs() {
                     mandatory: $(this).hasClass('required')
                 });
             });
-        }
+        };
 
         if ($(this).find('.btn-file').exists()) {
 
@@ -576,7 +575,7 @@ function initialiseProductSKUs() {
 
                 });
             });
-        }
+        };
 
         //---------------------- Slider ----------------------------
 

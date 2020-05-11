@@ -1045,10 +1045,10 @@
   <xsl:template match="Page" mode="JSONLD">
     <xsl:variable name="jsonld">
       <xsl:choose>
-        <xsl:when test="ContentDetail/Content">1
+        <xsl:when test="ContentDetail/Content">
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
-        <xsl:otherwise>2
+        <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
       </xsl:choose>
