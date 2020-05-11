@@ -1836,6 +1836,12 @@ processFlow:
                                 valDict.Add(Attribute.Name, Attribute.Value)
                             End If
                         Next
+                        'valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Street").InnerText)
+                        'valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Telephone").InnerText)
+                        'valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/City").InnerText)
+                        'valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/State").InnerText)
+                        'valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/PostalCode").InnerText)
+
                         Dim ListId As String = ""
                         Select Case StepName
                             Case "Invoice"
