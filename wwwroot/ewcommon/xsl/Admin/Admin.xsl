@@ -5553,7 +5553,7 @@
             </xsl:for-each>
           </div>
           <div class="col-md-8">
-            <a href="{$appPath}?ewCmd=AddDirContact&amp;parid={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm pull-right">
+            <a href="{$appPath}?ewCmd=AddUserContact&amp;parid=0&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm pull-right">
               <i class="fa fa-plus">&#160;</i>&#160;Add New Address
             </a>
             <xsl:for-each select="Contacts/Contact">
@@ -6335,13 +6335,14 @@
     <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-      
-        <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">
+
+        <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">-->
+          <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm pull-right">
           <i class="fa fa-edit">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>
           Edit</a>
-        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-danger btn-sm pull-right">
+        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm pull-right">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete</a>

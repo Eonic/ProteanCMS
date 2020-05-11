@@ -1528,7 +1528,7 @@ ProcessFlow:
                         sAdminLayout = "Profile"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(CInt("0" & myWeb.moRequest("parid")), True))
 
-                    Case "EditUserContact", "EditContact"
+                    Case "EditContact"
 
                         sAdminLayout = "EditUserContact"
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1537,7 +1537,28 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "AddUserContact", "AddContact", "AddDirContact"
+                    Case "EditUserContact"
+
+                        sAdminLayout = "EditUserContact"
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("parid")), CInt("0" & myWeb.moRequest("id"))))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUserContacts"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                            GoTo ProcessFlow
+                        End If
+                    Case "AddUserContact"
+
+                        sAdminLayout = mcEwCmd
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("parid")), CInt("0" & myWeb.moRequest("id"))))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUserContacts"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                            GoTo ProcessFlow
+                        End If
+
+                    Case "AddContact", "AddDirContact"
 
                         sAdminLayout = mcEwCmd
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1547,7 +1568,13 @@ ProcessFlow:
                             GoTo ProcessFlow
                         End If
 
-                    Case "DeleteUserContact", "DeleteContact"
+                    Case "DeleteUserContact"
+
+                        myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, CInt("0" & myWeb.moRequest("parid")))
+                        mcEwCmd = "ListUserContacts"
+                        myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                        GoTo ProcessFlow
+                    Case "DeleteContact"
 
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, CInt("0" & myWeb.moRequest("id")))
                         mcEwCmd = "ListUserContacts"
