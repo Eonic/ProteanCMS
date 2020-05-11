@@ -4,7 +4,6 @@ Imports System.Xml
 Imports System.Web.HttpUtility
 Imports VB = Microsoft.VisualBasic
 
-Imports Eonic
 Imports Protean.xForm
 Imports System.Web.Mail
 Imports System.Web.Configuration
@@ -70,7 +69,7 @@ Partial Public Class Cms
 
             Protected moPaymentCfg As XmlNode
 
-            Public myWeb As Cms
+            Shadows myWeb As Cms
 
             Private nTransactionMode As TransactionMode
 

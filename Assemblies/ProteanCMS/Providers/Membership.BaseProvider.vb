@@ -1343,12 +1343,12 @@ Check:
 
                                     'lets finally set the user Id from the session
                                     If IsNumeric(moSession("PreviewUser")) Then
-                                            If myWeb.moRequest("ewCmd") = "Normal" Or myWeb.moRequest("ewCmd") = "ExitPreview" Then
-                                                'jump out of admin mode...
-                                                myWeb.moSession("PreviewUser") = Nothing
-                                                myWeb.mbPreview = False
-                                            Else
-                                                mnUserId = moSession("PreviewUser")
+                                        If myWeb.moRequest("ewCmd") = "Normal" Or myWeb.moRequest("ewCmd") = "ExitPreview" Or myWeb.moRequest("ewCmd") = "EditContent" Or myWeb.moRequest("ewCmd") = "PublishContent" Then
+                                            'jump out of admin mode...
+                                            myWeb.moSession("PreviewUser") = Nothing
+                                            myWeb.mbPreview = False
+                                        Else
+                                            mnUserId = moSession("PreviewUser")
                                                 myWeb.mbPreview = True
                                             End If
                                         Else

@@ -5553,7 +5553,9 @@
             </xsl:for-each>
           </div>
           <div class="col-md-8">
-
+            <a href="{$appPath}?ewCmd=AddUserContact&amp;parid=0&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm pull-right">
+              <i class="fa fa-plus">&#160;</i>&#160;Add New Address
+            </a>
             <xsl:for-each select="Contacts/Contact">
               
               <xsl:apply-templates select="." mode="AdminListContact"/>
@@ -6329,17 +6331,18 @@
   </xsl:template>
 
   <xsl:template match="Contact" mode="AdminListContact">
-    <xsl:variable name="userid" select="/Page/Request/QueryString/Item[@name='parid']"/>
+    <xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
     <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-      
-        <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">
+
+        <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">-->
+          <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm pull-right">
           <i class="fa fa-edit">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>
           Edit</a>
-        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-danger btn-sm pull-right">
+        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm pull-right">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete</a>
@@ -10395,19 +10398,22 @@
                 
                 <xsl:choose>
                   <xsl:when test="@primaryId='0' or @primaryId = @id">
-                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}" class="btn btn-xs btn-primary">View</a>
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}" class="btn btn-xs btn-primary">
+                     <i class="fa fa-eye fa-white"><xsl:text> </xsl:text>
+                      </i> View</a>
                     <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit</a>
                   </xsl:when>
                   <xsl:otherwise>
-                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary">Preview</a>
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary"><i class="fa fa-eye fa-white"><xsl:text> </xsl:text>
+                      </i>             Preview</a>
                     <a href="{$appPath}?ewCmd=RollbackContent&amp;pgid={/Page/@id}&amp;id={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary" title="Click here to rollback to this version">
-                      <i class="fa fa-go-back fa-white">
+                      <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>
-                      View Rollback</a>
+                      Edit &amp; Revert</a>
                   </xsl:otherwise>
                 </xsl:choose>
               </td>
@@ -10415,13 +10421,6 @@
           </xsl:for-each>
         </table>
       </div>
-      <div id="column1">
-        <h3>About Version History</h3>
-        <p>Version history allows you to view all of the changes that have been made to this specific item of content.</p>
-        <p>To view an old item hit the 'view rollback' button, if submit you will overright the current live version with the old one.</p>
-        <p>Note: this does not track the location of the content or any changes to related items.</p>
-      </div>
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- -->
@@ -10549,6 +10548,13 @@
           <xsl:text> </xsl:text>Delete</a>
       </xsl:if>
 
+      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+        <i class="fa fa-eye">
+          <xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>Preview
+      </a>
+        
       <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
         <i class="fa fa-history">
           <xsl:text> </xsl:text>
@@ -11835,12 +11841,17 @@
       </xsl:when>
       <xsl:when test="$status='2'">
         <a href="#" data-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
-          <i class="fa fa-exclamation text-warning" alt="live">&#160;</i>
+            <i class="fas fa-history text-default" alt="Superceeded">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='3'">
         <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Pending">
           <i class="far fa-pause-circle" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='4'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Preview">
+          <i class="far fa-pause-circle" alt="Preview">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='7'">

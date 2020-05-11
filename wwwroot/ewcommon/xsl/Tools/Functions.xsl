@@ -4940,7 +4940,7 @@
       </xsl:when>
       <xsl:when test="$status='2'">
         <a href="#" data-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
-          <i class="fa fa-exclamation text-warning" alt="live">&#160;</i>
+          <i class="fas fa-history text-default" alt="live">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='7'">

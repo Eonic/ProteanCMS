@@ -129,8 +129,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="adminStyle">
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/admin.css?v={$scriptVersion}"/>
-    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/skins/eonic.css?v={$scriptVersion}"/>
+    <link type="text/css" rel="stylesheet" href="/ewcommon/css/admin/preview.less?v={$scriptVersion}"/>
   </xsl:template>
 
   <xsl:template match="Page" mode="adminJs">
@@ -2076,7 +2075,13 @@
             <!--<xsl:text>Edit </xsl:text>-->
             <xsl:value-of select="$editLabel"/>
             <xsl:if test="@status=0">
-              <xsl:text>&#160;[hidden]</xsl:text>
+              <xsl:text>&#160;[hidden]...</xsl:text>
+            </xsl:if>
+            <xsl:if test="@status=2">
+              <xsl:text>&#160;[superceeded]</xsl:text>
+            </xsl:if>
+            <xsl:if test="@status=4">
+              <xsl:text>&#160;[preview]</xsl:text>
             </xsl:if>
             <i class="fa fa-caret-down">&#160;</i>
           </a>
