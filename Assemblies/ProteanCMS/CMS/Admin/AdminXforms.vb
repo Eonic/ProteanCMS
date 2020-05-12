@@ -2790,7 +2790,9 @@ Partial Public Class Cms
                             End If
 
                             If id > 0 Then
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+
+                                Dim updatedVersionId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
 
                                 ' Individual content location set
@@ -2812,10 +2814,11 @@ Partial Public Class Cms
 
                                 editResult = dbHelper.ActivityType.ContentEdited
 
-                                nReturnId = id
-
-
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
+                                Else
+                                    nReturnId = id
+                                End If
 
                             Else
                                 Dim nContentId As Long
