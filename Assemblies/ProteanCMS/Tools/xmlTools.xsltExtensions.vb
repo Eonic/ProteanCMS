@@ -20,6 +20,9 @@ Imports BundleTransformer.Core.Transformers
 Imports System.Linq
 Imports System.Collections.Generic
 
+Imports Imazen.WebP
+Imports System.Drawing
+
 
 Partial Public Module xmlTools
 
@@ -1163,10 +1166,13 @@ Partial Public Module xmlTools
 
                                     oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath)
 
-                                    'create a WEBP version of the image.
+
 
                                     oImage.Close()
                                     oImage = Nothing
+
+
+
 
                             End Select
 
@@ -1184,6 +1190,23 @@ Partial Public Module xmlTools
                     End If
 
                 End If
+
+                Select Case filetype
+                    Case "jpg", "png", "gif"
+
+                        Dim webpFileName As String = Replace(cVirtualPath2, "." & filetype, sSuffix & ".webp")
+
+                        'create a WEBP version of the image.
+                        If VirtualFileExists(webpFileName) > 0 Then
+                            Using bitMap As New Bitmap(goServer.MapPath(newFilepath))
+                                Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
+                                    Dim encoder As New SimpleEncoder
+                                    encoder.Encode(bitMap, saveImageStream, 100)
+                                End Using
+                            End Using
+                        End If
+
+                End Select
 
 
             Catch ex As Exception

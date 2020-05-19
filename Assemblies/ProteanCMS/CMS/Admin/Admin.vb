@@ -975,7 +975,7 @@ ProcessFlow:
 
                     Case "PublishContent"
 
-                        myWeb.moDbHelper.contentStatus(myWeb.moRequest("id"), myWeb.moRequest("verId"), dbHelper.Status.Live)
+                        myWeb.moDbHelper.contentStatus(myWeb.moRequest("id"), CLng("0" & myWeb.moRequest("verId")), dbHelper.Status.Live)
                         myWeb.msRedirectOnEnd = "?ewCmd=PreviewOn&pgid=" & myWeb.moRequest("pgid") & "&artid=" & myWeb.moRequest("id")
 
                     Case "RollbackContent"

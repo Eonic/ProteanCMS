@@ -543,8 +543,8 @@ public static class Text
         }
         catch (Exception ex)
         {
-            // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
-            return crResult + " - " + ex.Message;
+                // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+                return crResult + " - " + ex.Message + ex.StackTrace;
         }
         // Return Nothing
         finally

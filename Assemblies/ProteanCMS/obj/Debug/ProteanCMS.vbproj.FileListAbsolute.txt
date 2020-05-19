@@ -323,6 +323,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Facebook.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Fonet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Google.Protobuf.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ICSharpCode.SharpZipLib.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Imazen.WebP.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.ChakraCore.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JavaScriptEngineSwitcher.Msie.dll

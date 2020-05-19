@@ -1,7 +1,7 @@
 USE [ptn_intotheblue_co_uk]
 GO
 
-/****** Object:  View [dbo].[vw_VersionControl_GetPendingContent]    Script Date: 08/05/2020 11:31:25 ******/
+/****** Object:  View [dbo].[vw_VersionControl_GetPendingContent]    Script Date: 16/05/2020 11:04:18 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -28,7 +28,7 @@ FROM            (SELECT        c.nContentKey, c.nVersion, c.cContentName, c.nAud
                          dbo.tblContent AS c ON list.nContentKey = c.nContentKey INNER JOIN
                          dbo.tblAudit AS a ON list.nAuditId = a.nAuditKey INNER JOIN
                          dbo.tblDirectory AS d ON a.nUpdateDirId = d.nDirKey INNER JOIN
-                         dbo.tblContentLocation ON c.nContentPrimaryId = dbo.tblContentLocation.nContentId AND dbo.tblContentLocation.bPrimary = 1 INNER JOIN
+                         dbo.tblContentLocation ON list.nContentKey = dbo.tblContentLocation.nContentId AND dbo.tblContentLocation.bPrimary = 1 INNER JOIN
                          dbo.tblContentStructure ON dbo.tblContentLocation.nStructId = dbo.tblContentStructure.nStructKey
 GO
 
