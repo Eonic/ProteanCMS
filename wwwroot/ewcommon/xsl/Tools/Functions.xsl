@@ -511,9 +511,13 @@
           <xsl:value-of select="Contents/Content[@name='inlineCSS' and @type='PlainText']/node()"/>
         </style>
       </xsl:if>
-      <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
-        <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
+
+      <xsl:if test="@previewMode!='true'">
+        <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
+          <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
+        </xsl:if>
       </xsl:if>
+      
       <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
         <link rel="stylesheet" href="/ewcommon/js/jquery/SlideCarousel/SlideCarousel.css"/>
       </xsl:if>
@@ -626,8 +630,10 @@
     <xsl:text>~/ewcommon/js/common.js</xsl:text>
 
     <xsl:if test="//Content[@type='CookiePolicy']">
-      <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
-      <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
+      <xsl:if test="@previewMode!='true'">
+        <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
+      </xsl:if>
     </xsl:if>
     
   </xsl:template>
@@ -692,19 +698,20 @@
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
     </xsl:if>
-
-    <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
-      <!-- MOVED to commonJsFiles
-      <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
-      <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
-      -->
-      <script type="text/javascript">
-        <xsl:text>$(document).ready(function () {</xsl:text>
-        <xsl:text>$.cookieCuttr(</xsl:text>
-        <xsl:apply-templates select="//Content[@type='CookiePolicy']" mode="cookiePolicy"/>
-        <xsl:text>);</xsl:text>
-        <xsl:text>});</xsl:text>
-      </script>
+    <xsl:if test="@previewMode!='true'">
+      <xsl:if test="//Content[@type='CookiePolicy'] and not(/Page/@adminMode)">
+        <!-- MOVED to commonJsFiles
+        <script src="/ewcommon/js/jquery/jquery.cookie.js">/* */</script>
+        <script src="/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js">/* */</script>
+        -->
+        <script type="text/javascript">
+          <xsl:text>$(document).ready(function () {</xsl:text>
+          <xsl:text>$.cookieCuttr(</xsl:text>
+          <xsl:apply-templates select="//Content[@type='CookiePolicy']" mode="cookiePolicy"/>
+          <xsl:text>);</xsl:text>
+          <xsl:text>});</xsl:text>
+        </script>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

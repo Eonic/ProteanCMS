@@ -1577,7 +1577,23 @@ Public Class Cms
                     mnPageId = gnPageLoginRequiredId Or
                     mnPageId = gnPageErrorId) Then
 
+
+                        Dim validatedVersion As Long = 0
+
                         If mbPreview And moRequest("verId") <> "" Then
+                            validatedVersion = moRequest("verId")
+                        End If
+
+                        If mbPreview = False And moRequest("verId") <> "" Then
+                            If Tools.Encryption.RC4.Decrypt(moRequest("previewKey"), moConfig("SharedKey")) = moRequest("verId") Then
+
+                                validatedVersion = moRequest("verId")
+
+                            End If
+                        End If
+
+
+                        If validatedVersion Then
                             moContentDetail = GetContentDetailXml(oPageElmt, , , True, moRequest("verId"))
                         Else
                             If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
@@ -1586,9 +1602,6 @@ Public Class Cms
                                 moContentDetail = GetContentDetailXml(oPageElmt, , , True)
                             End If
                         End If
-
-
-
                     End If
 
                     If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
@@ -6396,42 +6409,43 @@ Public Class Cms
 
                     oRoot = moPageXml.CreateElement("ContentDetail")
 
-                    'check if new function exists in DB, this logic can be later deprecated when all db are inline.
-                    Dim bContLoc As Boolean = moDbHelper.checkDBObjectExists("fxn_getContentLocations", Tools.Database.objectTypes.UserFunction)
-                    If bContLoc Then
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, dbo.fxn_getContentLocations(c.nContentKey) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
-                    Else
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
-                    End If
-                    sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
-                    'sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
-                    sSql &= "where c.nContentKey = " & mnArtId & sFilterSql & " "
-                    'sSql &= "and CL.nStructId = " & mnPageId
-
-                    If nVersionId > 0 Then
-                        sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                        'check if new function exists in DB, this logic can be later deprecated when all db are inline.
+                        Dim bContLoc As Boolean = moDbHelper.checkDBObjectExists("fxn_getContentLocations", Tools.Database.objectTypes.UserFunction)
+                        If bContLoc Then
+                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, dbo.fxn_getContentLocations(c.nContentKey) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
+                        Else
+                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c "
+                        End If
                         sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
-                        sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
-                    End If
+                        'sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
+                        sSql &= "where c.nContentKey = " & mnArtId & sFilterSql & " "
+                        'sSql &= "and CL.nStructId = " & mnPageId
 
-                    oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
+                        If nVersionId > 0 Then
+                            sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c "
+                            sSql &= "inner join tblAudit a on c.nAuditId = a.nAuditKey  "
+                            sSql &= "where c.nContentPrimaryId = " & mnArtId & " and nContentVersionKey=" & nVersionId & " "
+                        End If
 
-                    oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
-                    oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+                        oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail")
 
-                    If nVersionId > 0 Then
-                        oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
-                        oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
-                    End If
-                    If bContLoc Then
+                        oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("update").ColumnMapping = Data.MappingType.Attribute
+                        oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+
+                        If nVersionId > 0 Then
+                            oDs.Tables(0).Columns("verid").ColumnMapping = Data.MappingType.Attribute
+                            oDs.Tables(0).Columns("verno").ColumnMapping = Data.MappingType.Attribute
+                        End If
+                        If bContLoc Then
                             oDs.Tables(0).Columns("locations").ColumnMapping = Data.MappingType.Attribute
                         End If
+
                         oDs.Tables(0).Columns("owner").ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
                         oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
@@ -6505,6 +6519,11 @@ Public Class Cms
                             'End If
 
                             Dim contentElmt As XmlElement = oRoot.SelectSingleNode("/ContentDetail/Content")
+
+                            If nVersionId > 0 Then
+                                contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
+                            End If
+
                             Dim getSafeURLName As String = contentElmt.GetAttribute("name")
 
                             AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
@@ -6512,8 +6531,7 @@ Public Class Cms
                             If Not oPageElmt Is Nothing Then
                                 Dim oContentDetail As XmlElement = contentElmt
                                 If Not (oContentDetail Is Nothing) _
-                                AndAlso oContentDetail.InnerXml.Trim() <> "" Then
-
+                            AndAlso oContentDetail.InnerXml.Trim() <> "" Then
                                     ' If we can find a content detail Content node, 
                                     ' AND it contains some InnerXml, then YAY.
                                     oPageElmt.AppendChild(oRoot.FirstChild)
@@ -6560,7 +6578,11 @@ Public Class Cms
                                 End If
                             End If
                             moContentDetail = oRoot.FirstChild
+
+
+
                             Return moContentDetail
+
                         Else
                             sProcessInfo = "no content to add - we redirect"
                             'this content is not found either page not found or re-direct home.
@@ -6580,6 +6602,7 @@ Public Class Cms
                         'Just a page no detail requested
                         Return Nothing
                 End If
+
             Else
                 sProcessInfo = "content exists adding content"
                 oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail")
@@ -6739,7 +6762,9 @@ Public Class Cms
             If Not Me.mbAdminMode Then
 
                 ' Set the default filter
-                sFilterSQL = "a.nStatus = 1 "
+                If mbPreview = False Then
+                    sFilterSQL = "a.nStatus = 1 "
+                End If
 
                 If gbVersionControl _
                     AndAlso Me.mnUserId > 0 Then
@@ -6764,7 +6789,10 @@ Public Class Cms
                     End If
                 End If
 
-                If bPrecedingAND Then sFilterSQL = " AND " & sFilterSQL
+                If bPrecedingAND And sFilterSQL <> "" Then
+                    sFilterSQL = " AND " & sFilterSQL
+                End If
+
 
                 Dim ExpireLogic As String = ">= "
                 If LCase(moConfig("ExpireAtEndOfDay")) = "on" Then

@@ -755,6 +755,7 @@ namespace Protean.Tools
                     sString = Strings.Replace(sString, "Xmlns=\"\"", "");
 
                     // sString = Strings.Replace(sString, "& ", "&amp; ")
+                    sString = Strings.Replace(sString, "’", "'");
 
                     // strip out any empty tags left by tinyMCE as the complier converts the to <h1/>
                     sString = Strings.Replace(sString, "<h1></h1>", "");
