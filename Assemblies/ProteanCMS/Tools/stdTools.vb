@@ -458,7 +458,7 @@ Public Module stdTools
     End Sub
 
 
-    Private Function exceptionReport(ByVal oException As Exception, ByVal sComponent As String, ByVal sInfo As String) As String
+    Public Function exceptionReport(ByVal oException As Exception, ByVal sComponent As String, ByVal sInfo As String) As String
 
         Dim cReport As String
         Dim cSV As String
@@ -473,7 +473,7 @@ Public Module stdTools
             System.Web.HttpContext.Current.Server.MapPath("")
         End If
 
-        cReport = "<div style=""font: normal .75em/1.5 Verdana, Tahoma, sans-serif;"">ProteanCMS has returned the following Error</h2>" &
+        cReport = "<div style=""font: normal .75em/1.5 Verdana, Tahoma, sans-serif;""><h2>ProteanCMS has returned the following Error</h2>" &
                   "<table cellpadding=""1"" cellspacing=""0"" border=""0"">"
 
         ' Report Information

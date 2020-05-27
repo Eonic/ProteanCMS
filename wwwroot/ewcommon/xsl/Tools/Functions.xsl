@@ -6123,6 +6123,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      
       <xsl:variable name="max-width">
         <xsl:choose>
           <xsl:when test="$width!=''">
@@ -6133,6 +6134,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+      
       <xsl:variable name="max-height">
         <xsl:choose>
           <xsl:when test="$height!=''">
@@ -6147,11 +6149,35 @@
        <xsl:variable name="max-width-xs">
             <xsl:apply-templates select="." mode="getThWidth-xs"/>
       </xsl:variable>
+      
       <xsl:variable name="max-height-xs">
             <xsl:apply-templates select="." mode="getThHeight-xs"/>
       </xsl:variable>
-        
-          
+
+      <xsl:variable name="max-width-sm">
+        <xsl:apply-templates select="." mode="getThWidth-sm"/>
+      </xsl:variable>
+
+      <xsl:variable name="max-height-sm">
+        <xsl:apply-templates select="." mode="getThHeight-sm"/>
+      </xsl:variable>
+
+      <xsl:variable name="max-width-md">
+        <xsl:apply-templates select="." mode="getThWidth-md"/>
+      </xsl:variable>
+
+      <xsl:variable name="max-height-md">
+        <xsl:apply-templates select="." mode="getThHeight-md"/>
+      </xsl:variable>
+
+      <xsl:variable name="max-width-lg">
+        <xsl:apply-templates select="." mode="getThWidth-lg"/>
+      </xsl:variable>
+
+      <xsl:variable name="max-height-lg">
+        <xsl:apply-templates select="." mode="getThHeight-lg"/>
+      </xsl:variable>
+
       <xsl:variable name="cropvar">
         <xsl:choose>
           <xsl:when test="$crop='true'">
@@ -6164,6 +6190,20 @@
 
       </xsl:variable>
 
+
+      <xsl:variable name="imageType">
+        <xsl:choose>
+          <xsl:when test="contains($src, '.jpg') and normalize-space(substring-after($src, '.jpg')) = ''">
+            <xsl:text>image/jpeg</xsl:text>
+          </xsl:when>
+          <xsl:when test="contains($src, '.png') and normalize-space(substring-after($src, '.png')) = ''">
+            <xsl:text>image/png</xsl:text>
+          </xsl:when>
+          <xsl:when test="contains($src, '.gif') and normalize-space(substring-after($src, '.gif')) = ''">
+            <xsl:text>image/gif</xsl:text>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:variable>
 
       <!-- IF Image to resize -->
       <xsl:if test="$src!=''">
@@ -6191,9 +6231,7 @@
             <xsl:with-param name="no-stretch" select="$no-stretch" />
             <xsl:with-param name="forceResize" select="$forceResize" />
           </xsl:call-template>
-        </xsl:variable>
-        
-        
+        </xsl:variable>      
           
         <xsl:variable name="newSrc-xs">
           <xsl:call-template name="resize-image">
@@ -6220,12 +6258,101 @@
             <xsl:with-param name="forceResize" select="$forceResize" />
           </xsl:call-template>
         </xsl:variable>
+
+        <xsl:variable name="newSrc-xs-x2">
+          <xsl:call-template name="resize-image">
+            <xsl:with-param name="path" select="$src"/>
+            <xsl:with-param name="max-width" select="($max-width-xs * 2)"/>
+            <xsl:with-param name="max-height" select="($max-height-xs * 2)"/>
+            <xsl:with-param name="file-prefix">
+              <xsl:text>~th-xs-</xsl:text>
+              <xsl:value-of select="$max-width"/>
+              <xsl:text>x</xsl:text>
+              <xsl:value-of select="$max-height"/>
+              <xsl:text>-x2/~th-</xsl:text>
+              <xsl:if test="$cropvar='true'">
+                <xsl:text>crop-</xsl:text>
+              </xsl:if>
+              <xsl:if test="not($no-stretch)">
+                <xsl:text>strch-</xsl:text>
+              </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="file-suffix" select="''"/>
+            <xsl:with-param name="quality" select="100"/>
+            <xsl:with-param name="crop" select="$cropvar" />
+            <xsl:with-param name="no-stretch" select="$no-stretch" />
+            <xsl:with-param name="forceResize" select="$forceResize" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:variable name="newSrc-lg">
+          <xsl:call-template name="resize-image">
+            <xsl:with-param name="path" select="$src"/>
+            <xsl:with-param name="max-width" select="$max-width-lg"/>
+            <xsl:with-param name="max-height" select="$max-height-lg"/>
+            <xsl:with-param name="file-prefix">
+              <xsl:text>~th-lg-</xsl:text>
+              <xsl:value-of select="$max-width-lg"/>
+              <xsl:text>x</xsl:text>
+              <xsl:value-of select="$max-height-lg"/>
+              <xsl:text>/~th-</xsl:text>
+              <xsl:if test="$cropvar='true'">
+                <xsl:text>crop-</xsl:text>
+              </xsl:if>
+              <xsl:if test="not($no-stretch)">
+                <xsl:text>strch-</xsl:text>
+              </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="file-suffix" select="''"/>
+            <xsl:with-param name="quality" select="100"/>
+            <xsl:with-param name="crop" select="$cropvar" />
+            <xsl:with-param name="no-stretch" select="$no-stretch" />
+            <xsl:with-param name="forceResize" select="$forceResize" />
+          </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:variable name="newSrc-lg-x2">
+          <xsl:call-template name="resize-image">
+            <xsl:with-param name="path" select="$src"/>
+            <xsl:with-param name="max-width" select="($max-width-lg * 2)"/>
+            <xsl:with-param name="max-height" select="($max-height-lg * 2)"/>
+            <xsl:with-param name="file-prefix">
+              <xsl:text>~th-xs-</xsl:text>
+              <xsl:value-of select="$max-width-lg"/>
+              <xsl:text>x</xsl:text>
+              <xsl:value-of select="$max-height-lg"/>
+              <xsl:text>-x2/~th-</xsl:text>
+              <xsl:if test="$cropvar='true'">
+                <xsl:text>crop-</xsl:text>
+              </xsl:if>
+              <xsl:if test="not($no-stretch)">
+                <xsl:text>strch-</xsl:text>
+              </xsl:if>
+            </xsl:with-param>
+            <xsl:with-param name="file-suffix" select="''"/>
+            <xsl:with-param name="quality" select="100"/>
+            <xsl:with-param name="crop" select="$cropvar" />
+            <xsl:with-param name="no-stretch" select="$no-stretch" />
+            <xsl:with-param name="forceResize" select="$forceResize" />
+          </xsl:call-template>
+        </xsl:variable>
+        
         
         <xsl:variable name="imageSize" select="ew:ImageSize($newSrc)"/>
         
         <xsl:variable name="image">
           <picture>
+            
             <!--New image tags-->
+            <!--source type="image/webp" media="(min-width: 1200px)" srcset="/img/blog/responsive-images-lg.webp 1x, /img/blog/responsive-images-lg@2x.webp 2x"/>
+            <source type="image/webp" media="(max-width: 1199px)" srcset="/img/blog/responsive-images-md.webp 1x, /img/blog/responsive-images-md@2x.webp 2x"/>
+            <source type="image/webp" media="(max-width: 380px)" srcset="/img/blog/responsive-images-sm.webp 1x, /img/blog/responsive-images-sm@2x.webp 2x"/>
+            <source type="image/png" media="(min-width: 1200px)" srcset="/img/blog/responsive-images-lg.png 1x, /img/blog/responsive-images-lg@2x.png 2x"/>
+            <source type="image/png" media="(max-width: 1199px)" srcset="/img/blog/responsive-images-md.png 1x, /img/blog/responsive-images-md@2x.png 2x"/-->
+            <source type="{$imageType}" media="(min-width: 1200px)" srcset="{$newSrc-lg} 1x, {$newSrc-lg-x2} 2x"/>
+            <source type="{$imageType}" media="(max-width: 380px)" srcset="{$newSrc-xs} 1x, {$newSrc-xs-x2} 2x"/>
+
+         
             <img>
               <!-- SRC -->
               <xsl:choose>
@@ -7000,7 +7127,11 @@
   
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
-  
+
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-lg">496</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-lg">496</xsl:template>
+
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-md">
     <xsl:apply-templates select="." mode="getThWidth"/>  
   </xsl:template>

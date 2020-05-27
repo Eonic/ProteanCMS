@@ -1686,7 +1686,7 @@ processFlow:
                     sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
 
                     'Send to merchant
-                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, "", moCartConfig("MerchantEmailBcc"))
+                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, moCartConfig("MerchantAttachmentTemplatePath"), moCartConfig("MerchantEmailBcc"))
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
@@ -7082,7 +7082,7 @@ processFlow:
             End Try
         End Sub
 
-        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cCustomerAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
+        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
             PerfMon.Log("Cart", "emailCart")
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = "emailCart"
@@ -7097,18 +7097,18 @@ processFlow:
                 oCartXML.SetAttribute("lang", myWeb.mcPageLanguage)
 
                 Dim oMsg As Messaging = New Messaging
-                If cCustomerAttachementTemplatePath = "" Then
+                If cAttachementTemplatePath = "" Then
 
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
                 Else
-                    cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
+                    cAttachementTemplatePath = moServer.MapPath(cAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")
                     Dim oPDF As New Protean.Tools.PDF
 
                     'create the xmlFO document
                     Dim oTransform As Protean.XmlHelper.Transform
 
-                    Dim styleFile As String = CType(cCustomerAttachementTemplatePath, String)
+                    Dim styleFile As String = CType(cAttachementTemplatePath, String)
                     PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
 
