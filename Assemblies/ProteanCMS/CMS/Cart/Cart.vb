@@ -1836,35 +1836,46 @@ processFlow:
                                 valDict.Add(Attribute.Name, Attribute.Value)
                             End If
                         Next
-                        'valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Street").InnerText)
-                        'valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Telephone").InnerText)
-                        'valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/City").InnerText)
-                        'valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/State").InnerText)
-                        'valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/PostalCode").InnerText)
+                        Dim fullName() As String = Name.Split(" ")
+                        Dim firstName As String = ""
+                        Dim lastName As String = ""
+                        If (fullName.Length >= 3) Then
+                            firstName = fullName(1)
+                            lastName = fullName(2)
+                        End If
 
-                        Dim ListId As String = ""
-                        Select Case StepName
-                            Case "Invoice"
-                                ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                End If
-                            Case "Quote"
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                End If
-                                ListId = moMailConfig("QuoteList")
-                            Case "Newsletter"
-                                If moMailConfig("NewsletterList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
-                                End If
-                                ListId = moMailConfig("NewsletterList")
-                        End Select
-                        If ListId <> "" Then
-                            oMessaging.Activities.addToList(ListId, Name, Email, valDict)
+                        valDict.Add("Email", Email)
+                        valDict.Add("FirstName", firstName)
+                        valDict.Add("LastName", lastName)
+                        valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
+                            valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Telephone").InnerText)
+                            valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/City").InnerText)
+                            valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/State").InnerText)
+                            valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/PostalCode").InnerText)
+
+                            Dim ListId As String = ""
+                            Select Case StepName
+                                Case "Invoice"
+                                    ListId = moMailConfig("InvoiceList")
+                                    If moMailConfig("QuoteList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
+                                Case "Quote"
+                                    If moMailConfig("QuoteList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
+                                    ListId = moMailConfig("QuoteList")
+                                Case "Newsletter"
+                                    If moMailConfig("NewsletterList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                    End If
+                                    ListId = moMailConfig("NewsletterList")
+                            End Select
+                            If ListId <> "" Then
+                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                        End If
                         End If
                     End If
-                End If
 
             Catch ex As Exception
                 returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
