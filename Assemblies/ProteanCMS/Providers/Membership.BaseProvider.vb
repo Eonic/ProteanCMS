@@ -947,8 +947,27 @@ Check:
                                             Next
                                         End If
                                     End If
+                                    'code added by sonali for pure360
+                                    If (cDirectorySchemaName = "User") Then
+                                        Dim momailconfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+                                        Dim smessagingprovider As String = momailconfig("messagingprovider")
+                                        Dim omessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, smessagingprovider)
+                                        Dim ListId As String = momailconfig("Supplier")
+                                        Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
 
+                                        valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
+                                        valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
+                                        valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                        valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
+
+                                        Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
+                                        Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
+
+                                        omessaging.Activities.addToList(ListId, Name, Email, valDict)
+
+                                    End If
                                 End If
+
 
                                 If addNewitemToParId Then
                                     moDbHelper.maintainDirectoryRelation(parId, id, False)
