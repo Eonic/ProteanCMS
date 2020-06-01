@@ -1191,22 +1191,7 @@ Partial Public Module xmlTools
 
                 End If
 
-                Select Case filetype
-                    Case "jpg", "png", "gif"
 
-                        Dim webpFileName As String = Replace(cVirtualPath2, "." & filetype, sSuffix & ".webp")
-
-                        'create a WEBP version of the image.
-                        If VirtualFileExists(webpFileName) > 0 Then
-                            Using bitMap As New Bitmap(goServer.MapPath(newFilepath))
-                                Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
-                                    Dim encoder As New SimpleEncoder
-                                    encoder.Encode(bitMap, saveImageStream, 100)
-                                End Using
-                            End Using
-                        End If
-
-                End Select
 
 
             Catch ex As Exception
@@ -1220,6 +1205,45 @@ Partial Public Module xmlTools
 
             End Try
         End Function
+
+        Public Function CreateWebP(ByVal cVirtualPath As String) As String
+            Dim cProcessInfo As String = ""
+            Try
+
+
+                cVirtualPath = cVirtualPath.Replace("%20", " ")
+
+                Dim filename As String = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1)
+                Dim filetype As String = filename.Substring(filename.LastIndexOf(".") + 1)
+                Dim directoryPath As String = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1)
+
+
+                Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
+                Dim newFilepath As String = ""
+                If myWeb.mbAdminMode Then
+                    'create a WEBP version of the image.
+                    If VirtualFileExists(webpFileName) = 0 Then
+                        Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
+                            Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
+                                Dim encoder As New SimpleEncoder
+                                encoder.Encode(bitMap, saveImageStream, 100)
+                            End Using
+                        End Using
+                    End If
+                End If
+
+                Return webpFileName
+
+            Catch ex As Exception
+                If LCase(myWeb.moConfig("Debug")) = "on" Then
+                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
+                Else
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
+                End If
+            End Try
+        End Function
+
 
         Public Function Watermark(ByVal cVirtualPath As String, ByVal maxWidth As Long, ByVal maxHeight As Long, ByVal sPrefix As String, ByVal sSuffix As String, ByVal nCompression As Integer, ByVal noStretch As Boolean, ByVal isCrop As Boolean, ByVal forceCheck As Boolean, ByVal WatermarkText As String, ByVal WatermarkImage As String) As String
             Dim newFilepath As String = ""
