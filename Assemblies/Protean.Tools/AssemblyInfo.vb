@@ -33,8 +33,8 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.35.157")>
-<Assembly: AssemblyFileVersion("6.0.35.155")>
+<Assembly: AssemblyVersion("6.0.35.160")>
+<Assembly: AssemblyFileVersion("6.0.35.158")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 

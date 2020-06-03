@@ -1210,29 +1210,34 @@ Partial Public Module xmlTools
             Dim cProcessInfo As String = ""
             Try
 
+                If cVirtualPath = "" Then
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif"
+                Else
 
-                cVirtualPath = cVirtualPath.Replace("%20", " ")
+                    cVirtualPath = cVirtualPath.Replace("%20", " ")
 
-                Dim filename As String = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1)
-                Dim filetype As String = filename.Substring(filename.LastIndexOf(".") + 1)
-                Dim directoryPath As String = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1)
+                    Dim filename As String = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1)
+                    Dim filetype As String = filename.Substring(filename.LastIndexOf(".") + 1)
+                    Dim directoryPath As String = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1)
 
 
-                Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
-                Dim newFilepath As String = ""
-                If myWeb.mbAdminMode Then
-                    'create a WEBP version of the image.
-                    If VirtualFileExists(webpFileName) = 0 Then
-                        Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
-                            Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
-                                Dim encoder As New SimpleEncoder
-                                encoder.Encode(bitMap, saveImageStream, 100)
+                    Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
+                    Dim newFilepath As String = ""
+                    If myWeb.mbAdminMode Then
+                        'create a WEBP version of the image.
+                        If VirtualFileExists(webpFileName) = 0 Then
+                            Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
+                                Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
+                                    Dim encoder As New SimpleEncoder
+                                    encoder.Encode(bitMap, saveImageStream, 100)
+                                End Using
                             End Using
-                        End Using
+                        End If
                     End If
+
+                    Return webpFileName
                 End If
 
-                Return webpFileName
 
             Catch ex As Exception
                 If LCase(myWeb.moConfig("Debug")) = "on" Then

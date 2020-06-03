@@ -9644,6 +9644,102 @@
       </div>
     </div>
   </xsl:template>
+
+
+  <xsl:template match="*" mode="subscriptionTable">
+
+      <table class="table">
+        <tr>
+          <th>User</th>
+          <th>Usernane</th>
+          <th>Subscription</th>
+          <th>Rate</th>
+          <th>Status</th>
+          <th>PayProvider</th>
+          <th>Active</th>
+          <th>Start Date</th>
+          <th>Renewal Due</th>
+          <th>Action Result</th>
+          <th>&#160;</th>
+        </tr>
+        <xsl:for-each select="Subscribers">
+          <tr>
+            <td>
+              <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cDirName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cSubName/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="formatPrice">
+                <xsl:with-param name="price" select="nValueNet/node()"/>
+                <xsl:with-param name="currency" select="$currencySymbol"/>
+              </xsl:call-template>
+            </td>
+            <td>
+              <xsl:value-of select="cRenewalStatus/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cPayMthdProviderName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="bPaymentMethodActive/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dStartDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dExpireDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </td>
+            <td>
+
+                  <xsl:value-of select="@actionResult"/>
+
+            </td>
+            <td colspan="3">
+
+              <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                <i class="fa fa-edit">&#160;</i>&#160;Manage
+              </a>
+              <xsl:if test="parent::reminder">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                  <i class="fa fa-edit">&#160;</i>&#160;Email Reminder
+                </a>
+              </xsl:if>
+
+            </td>
+          </tr>
+          <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+            <xsl:if test="Subscriptions">
+              <tr>
+                <td>
+                  <xsl:apply-templates select="." mode="AdminSubscriptions">
+                    <xsl:with-param name="GroupID">
+                      <xsl:value-of select="@nCatKey"/>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </td>
+              </tr>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+
+      </table>
+    </xsl:template>
   
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
@@ -9686,6 +9782,11 @@
                   <a href="{$appPath}?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
                     <i class="fa fa-pencil">&#160;</i>&#160;Edit
                   </a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="7">
+                  <xsl:apply-templates select="." mode="subscriptionTable"/>
                 </td>
               </tr>
             </xsl:for-each>

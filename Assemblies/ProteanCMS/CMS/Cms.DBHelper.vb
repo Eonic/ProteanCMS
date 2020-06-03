@@ -403,6 +403,7 @@ Partial Public Class Cms
             'Subscriptions
             SubscriptionProcess = 300
             SubscriptionProcessAttempt = 301
+            SubscriptionAlert = 302
 
             'OpenQuote
             ValidationError = 255

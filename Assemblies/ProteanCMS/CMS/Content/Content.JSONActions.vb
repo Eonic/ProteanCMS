@@ -146,6 +146,7 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            ' to call /ewapi/Cms.Content/SearchIndex?data={query:'driving'}
 
             Public Function SearchIndex(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
                 Try

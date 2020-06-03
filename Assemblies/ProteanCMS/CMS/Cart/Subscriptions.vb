@@ -120,13 +120,24 @@ Partial Public Class Cms
             End Sub
 
 
-            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement)
+            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 3)
                 Try
+
+                    Dim ExpireRange As String = ""
+                    Select Case LCase(renewRangePeriod)
+                        Case "month"
+                            ExpireRange = sqlDate(Now().AddMonths(renewRangeCount * 1))
+                        Case "week"
+                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 7))
+                        Case "day"
+                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 1))
+                    End Select
+
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                         & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " where a.dExpireDate >= " & sqlDate(Now().AddDays(-5)) & "and a.dExpireDate <= " & sqlDate(Now().AddMonths(3)) _
+                        & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " where a.dExpireDate >= " & sqlDate(Now().AddDays(expiredMarginDays)) & "and a.dExpireDate <= " & ExpireRange _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
                     'List Subscription groups and thier subscriptions.
@@ -347,14 +358,94 @@ Partial Public Class Cms
                 Try
                     Dim moReminderCfg As XmlElement = WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders")
                     oParentElmt.InnerXml = moReminderCfg.OuterXml
+                    Dim ProcessedCount As Long = 0
+                    Dim oReminder As XmlElement
 
+                    For Each oReminder In oParentElmt.SelectNodes("subscriptionReminders/reminder")
+
+                        Select Case oReminder.GetAttribute("action")
+                            Case "renewalreminder"
+                                'Select the subscriptions that are caught up in this case
+                                ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                Dim subxml As XmlElement
+                                For Each subxml In oReminder.SelectNodes("Subscribers")
+                                    Dim force As Boolean = False
+                                    Dim actionResult As String
+                                    If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                        force = True
+                                    End If
+                                    actionResult = RenewalAction(myWeb.moRequest("SendId"), "renewalreminder", ProcessedCount, oReminder.GetAttribute("name"), force)
+                                    subxml.SetAttribute("actionResult", actionResult)
+                                Next
+
+                            Case "renew"
+                                'Select the subscriptions that are caught up in this case
+                                ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+
+                            Case "expire"
+                            Case "expired"
+
+                        End Select
+
+                    Next
 
                 Catch ex As Exception
                     returnException(mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
                 End Try
             End Sub
 
+            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal force As Boolean) As String
+                Dim actionResult As String = ""
+                ProcessedCount = ProcessedCount + 1
 
+                Try
+                    Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, SubId)
+                    SubXml.SetAttribute("messageType", messageType)
+                    SubXml.SetAttribute("action", Action)
+                    Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
+                    Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/id").InnerText
+                    Dim oMessager As New Protean.Messaging
+
+                    Select Case Action
+                        Case "renewalreminder"
+
+                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+                            If IsDate(actionDate) Then
+                                Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, SubId, messageType)
+                                actionResult = "sent"
+                            Else
+                                If actionDate = Nothing Then
+                                    actionResult = "not sent"
+                                Else
+                                    actionResult = actionDate
+                                End If
+                            End If
+
+                        Case "renew"
+
+                            Select Case RenewSubscription(SubXml, True)
+                                Case "Success"
+                                Case "Failed"
+                                    SubXml.SetAttribute("actionResult", actionResult)
+                                    Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                            End Select
+
+                        Case "expire"
+                            actionResult = ExpireSubscription(SubId, "Scheduled Expiration")
+                        Case "expired"
+
+                    End Select
+
+                    Return actionResult
+
+                Catch ex As Exception
+
+                End Try
+
+
+            End Function
 
 
 #End Region
