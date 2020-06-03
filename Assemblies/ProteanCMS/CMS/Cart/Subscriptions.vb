@@ -374,7 +374,7 @@ Partial Public Class Cms
                                     If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
                                         force = True
                                     End If
-                                    actionResult = RenewalAction(myWeb.moRequest("SendId"), "renewalreminder", ProcessedCount, oReminder.GetAttribute("name"), force)
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), "renewalreminder", ProcessedCount, oReminder.GetAttribute("name"), force)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -403,7 +403,7 @@ Partial Public Class Cms
                     SubXml.SetAttribute("messageType", messageType)
                     SubXml.SetAttribute("action", Action)
                     Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
-                    Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/id").InnerText
+                    Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/@id").InnerText
                     Dim oMessager As New Protean.Messaging
 
                     Select Case Action
@@ -411,16 +411,17 @@ Partial Public Class Cms
 
                             Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
                             Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
-                            If IsDate(actionDate) Then
-                                Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
-                                myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, SubId, messageType)
-                                actionResult = "sent"
-                            Else
-                                If actionDate = Nothing Then
-                                    actionResult = "not sent"
+
+                            If actionDate = "#1/1/0001 12:00:00 AM#" Then
+                                If force Then
+                                    Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                    myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
+                                    actionResult = "sent"
                                 Else
-                                    actionResult = actionDate
+                                    actionResult = "not sent"
                                 End If
+                            Else
+                                actionResult = actionDate
                             End If
 
                         Case "renew"
@@ -441,7 +442,8 @@ Partial Public Class Cms
                     Return actionResult
 
                 Catch ex As Exception
-
+                    returnException(mcModuleName, "RenewalAction", ex, "", "", gbDebug)
+                    Return ex.Message
                 End Try
 
 

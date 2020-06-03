@@ -6663,6 +6663,7 @@ restart:
 
         End Function
 
+
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, Optional ByVal nArtId As Long = 0, Optional ByVal cActivityDetail As String = "", Optional ByVal cForiegnRef As String = "") As Long
             Dim cSubName As String = "logActivity(ActivityType,Int,Int,[Int],[String])"
             PerfMon.Log("DBHelper", cSubName)
@@ -6674,6 +6675,7 @@ restart:
             End Try
 
         End Function
+
 
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, ByVal nArtId As Long, ByVal nOtherId As Long, ByVal cActivityDetail As String) As Long
             Return logActivity(nActivityType, nUserDirId, nStructId, nArtId, nOtherId, cActivityDetail, False)
