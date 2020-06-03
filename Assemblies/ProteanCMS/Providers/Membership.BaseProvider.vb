@@ -949,9 +949,9 @@ Check:
                                     End If
                                     'code added by sonali for pure360
                                     If (cDirectorySchemaName = "User") Then
-                                        Dim momailconfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
-                                        Dim smessagingprovider As String = momailconfig("messagingprovider")
-                                        Dim omessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, smessagingprovider)
+                                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+                                        Dim sMessagingProvider As String = moMailConfig("messagingprovider")
+                                        Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
                                         Dim ListId As String = momailconfig("Supplier")
                                         Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
 
@@ -963,7 +963,7 @@ Check:
                                         Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
                                         Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
 
-                                        omessaging.Activities.addToList(ListId, Name, Email, valDict)
+                                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
 
                                     End If
                                 End If
@@ -1648,8 +1648,16 @@ Check:
                                     If userDetails.Length = 3 Then
                                         userMode = userDetails(2).ToString()
                                     End If
-                                    duration = DateDiff(DateInterval.Minute, Convert.ToDateTime(timestamp), DateTime.Now)
-                                    If (duration < AuthenticationDuration) Then '' greater than 60
+
+                                    'myWeb.moResponse.Write(timestamp)
+                                    'myWeb.moResponse.Write(DateTime.Now.ToString("dd/MM/yyyy HH:MM"))
+                                    'Try
+                                    duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                        'Catch ex As Exception
+                                        '    myWeb.moResponse.Write(ex.Message)
+                                        'End Try
+
+                                        If (duration < AuthenticationDuration) Then '' greater than 60
 
                                         mnUserId = myWeb.moDbHelper.GetUserIDFromEmail(userEmail)
                                         myWeb.mnUserId = mnUserId
