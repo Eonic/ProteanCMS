@@ -5,9 +5,21 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>
+
+
+  <xsl:template match="*[alert]" mode="xform_control_script">
+    <script>
+      $(function () {
+      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
+      <xsl:text>-btn')
+      .popover('show');</xsl:text>
+      });
+    </script>
+  </xsl:template>
 
   <!-- -->
   <!-- ========================== XFORM ========================== -->
@@ -2984,13 +2996,7 @@
         <xsl:text> </xsl:text>
       </i>
     </button>
-    <script>
-      $(function () {
-      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
-      <xsl:text>-btn')
-      .popover('show');</xsl:text>
-      });
-    </script>
+
   </xsl:template>
 
   <!--	
