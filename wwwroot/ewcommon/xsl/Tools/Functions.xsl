@@ -963,6 +963,8 @@
       </xsl:otherwise>
     </xsl:choose>
 
+    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
     
     <!-- GOOGLE MAPS -->
