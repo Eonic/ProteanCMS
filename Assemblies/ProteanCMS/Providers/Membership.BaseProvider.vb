@@ -947,8 +947,27 @@ Check:
                                             Next
                                         End If
                                     End If
+                                    'code added by sonali for pure360
+                                    If (cDirectorySchemaName = "User") Then
+                                        Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
+                                        Dim sMessagingProvider As String = moMailConfig("messagingprovider")
+                                        Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                                        Dim ListId As String = momailconfig("Supplier")
+                                        Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
 
+                                        valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
+                                        valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
+                                        valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                        valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
+
+                                        Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
+                                        Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
+
+                                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
+
+                                    End If
                                 End If
+
 
                                 If addNewitemToParId Then
                                     moDbHelper.maintainDirectoryRelation(parId, id, False)
@@ -1343,12 +1362,12 @@ Check:
 
                                     'lets finally set the user Id from the session
                                     If IsNumeric(moSession("PreviewUser")) Then
-                                            If myWeb.moRequest("ewCmd") = "Normal" Or myWeb.moRequest("ewCmd") = "ExitPreview" Then
-                                                'jump out of admin mode...
-                                                myWeb.moSession("PreviewUser") = Nothing
-                                                myWeb.mbPreview = False
-                                            Else
-                                                mnUserId = moSession("PreviewUser")
+                                        If myWeb.moRequest("ewCmd") = "Normal" Or myWeb.moRequest("ewCmd") = "ExitPreview" Or myWeb.moRequest("ewCmd") = "EditContent" Or myWeb.moRequest("ewCmd") = "PublishContent" Then
+                                            'jump out of admin mode...
+                                            myWeb.moSession("PreviewUser") = Nothing
+                                            myWeb.mbPreview = False
+                                        Else
+                                            mnUserId = moSession("PreviewUser")
                                                 myWeb.mbPreview = True
                                             End If
                                         Else
@@ -1629,8 +1648,16 @@ Check:
                                     If userDetails.Length = 3 Then
                                         userMode = userDetails(2).ToString()
                                     End If
-                                    duration = DateDiff(DateInterval.Minute, Convert.ToDateTime(timestamp), DateTime.Now)
-                                    If (duration < AuthenticationDuration) Then '' greater than 60
+
+                                    'myWeb.moResponse.Write(timestamp)
+                                    'myWeb.moResponse.Write(DateTime.Now.ToString("dd/MM/yyyy HH:MM"))
+                                    'Try
+                                    duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                        'Catch ex As Exception
+                                        '    myWeb.moResponse.Write(ex.Message)
+                                        'End Try
+
+                                        If (duration < AuthenticationDuration) Then '' greater than 60
 
                                         mnUserId = myWeb.moDbHelper.GetUserIDFromEmail(userEmail)
                                         myWeb.mnUserId = mnUserId

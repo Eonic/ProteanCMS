@@ -30,6 +30,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\MySql.Data.
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Renci.SshNet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\TidyHTML5Managed.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\TidyHTML5Managed.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode.SharpZipLib.pdb
@@ -37,7 +38,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\ICSharpCode
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Renci.SshNet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb

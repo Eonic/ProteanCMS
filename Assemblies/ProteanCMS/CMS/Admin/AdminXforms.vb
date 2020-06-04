@@ -2528,32 +2528,13 @@ Partial Public Class Cms
                         'we may be halfway through a trigger so lets rescue the instance from the session
                         If goSession("oContentInstance") Is Nothing Then
                             If nVersionId > 0 Then
-                                'grab some values from the live version
-                                oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, id)
-                                Dim nAuditId As Long = oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText
-                                Dim nVersion As Long = oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText
-                                Dim nStatus As Long = oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText
-                                Dim sInsertDate As String = oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText
-                                Dim sInsertUser As String = oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText
 
-                                'pull the content in from the versions table
-                                oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.ContentVersion, nVersionId)
-                                'change to match
-                                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContentVersions"), "tblContent")
-                                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContent/nContentVersionKey"), "nContentKey")
-                                'update some of the values
-                                oTempInstance.SelectSingleNode("tblContent/nContentKey").InnerText = id
-                                oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText = nAuditId
-                                oTempInstance.SelectSingleNode("tblContent/nAuditId").InnerText = nAuditId
-                                oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText = nVersion
-
+                                oTempInstance = moDbHelper.GetVersionInstance(id, nVersionId)
                                 ' Only Update the status if the cmd is ewcmd is RollbackContent
                                 If Me.myWeb.moRequest("ewCmd") = "RollbackContent" Then
-                                    oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
+                                    oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = dbHelper.Status.Live
                                 End If
 
-                                oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText = sInsertDate
-                                oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText = sInsertUser
                             Else
                                 oTempInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Content, id)
                             End If
@@ -2666,7 +2647,7 @@ Partial Public Class Cms
                                 If NonTableInstanceElements.Name = "Relation" Then
                                     Dim sSql As String
                                     If LCase(NonTableInstanceElements.GetAttribute("direction")) = "child" Then
-                                        sSql = "Select nContentParentId from tblContentRelation where nContentChildId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
+                                        sSql = "Select nContentParentId from tblContentRelation where nContentChildId = " & id & " And cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     Else
                                         sSql = "Select nContentChildId from tblContentRelation where nContentParentId = " & id & " AND cRelationType = '" & NonTableInstanceElements.GetAttribute("type") & "'"
                                     End If
@@ -2767,12 +2748,28 @@ Partial Public Class Cms
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
                     If MyBase.isSubmitted Then
+
                         ' Additional Processing : Pre Submission 
                         xFrmEditContentSubmissionPreProcessing()
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
+
                         If MyBase.valid Then
+
+                            Dim bPreviewRedirect As Boolean = False
+
+                            If goRequest("ptn-preview") <> "" Then
+                                If myWeb.gbVersionControl Then
+                                    'Leave the current version unchanged and live
+
+                                    'create a new version of the content as pending
+                                    MyBase.Instance.SelectSingleNode("tblContent/nStatus").InnerText() = dbHelper.Status.InProgress
+
+                                    'redirect to preview version in preview mode
+                                    bPreviewRedirect = True
+                                End If
+                            End If
 
                             Dim editResult As dbHelper.ActivityType = Nothing
 
@@ -2793,7 +2790,9 @@ Partial Public Class Cms
                             End If
 
                             If id > 0 Then
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+
+                                Dim updatedVersionId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
 
                                 ' Individual content location set
@@ -2815,10 +2814,11 @@ Partial Public Class Cms
 
                                 editResult = dbHelper.ActivityType.ContentEdited
 
-                                nReturnId = id
-
-
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
+                                Else
+                                    nReturnId = id
+                                End If
 
                             Else
                                 Dim nContentId As Long
@@ -3018,7 +3018,17 @@ Partial Public Class Cms
                                     End Try
                                 End If
                             Next
+
+                            If bPreviewRedirect Then
+                                Dim VerId As Long = 0
+                                myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" & pgid & "&artid=" & id & "&verId=" & nReturnId
+                            End If
+
                         End If
+
+
+
+
                     ElseIf isSubmittedOther(pgid) Then ' has another specific submit button been pressed?
                         'This should really be taken over using  xForms Triggers
                         MyBase.updateInstanceFromRequest()

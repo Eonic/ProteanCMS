@@ -324,7 +324,7 @@ Partial Public Class Cms
             Live = 1
             Superceded = 2
             Pending = 3
-            InProgress = 4
+            InProgress = 4 ' preview
             Rejected = 5
             DraftSuperceded = 6
             Lead_AwaitingAuditBooking = 7
@@ -403,6 +403,7 @@ Partial Public Class Cms
             'Subscriptions
             SubscriptionProcess = 300
             SubscriptionProcessAttempt = 301
+            SubscriptionAlert = 302
 
             'OpenQuote
             ValidationError = 255
@@ -2414,6 +2415,10 @@ Partial Public Class Cms
             Dim oTableNode As XmlElement
 
             Dim cProcessInfo As String = ""
+            Dim nVersionId As Long = 0
+
+            Dim bSaveInstance As Boolean = True
+
             Try
 
                 'if we have not been given an instance we'll create one, this makes it easy to update the audit table by just supplying an id
@@ -2480,7 +2485,8 @@ restart:
                             End If
                             If gbVersionControl Then
                                 'out to a subroutine for versioning
-                                contentVersioning(oInstance, ObjectType, nKey)
+
+                                nVersionId = contentVersioning(oInstance, ObjectType, nKey, bSaveInstance)
                                 If ObjectType = objectTypes.ContentVersion Then GoTo restart
                                 nAuditId = tidyAuditId(oInstance, ObjectType, nKey)
                             Else
@@ -2622,7 +2628,11 @@ restart:
 
                 cProcessInfo = "Saving instance"
                 PerfMon.Log("DBHelper", "setObjectInstance", "startsave")
-                nKey = saveInstance(oInstance, getTable(ObjectType), getKey(ObjectType))
+                If bSaveInstance Then
+                    nKey = saveInstance(oInstance, getTable(ObjectType), getKey(ObjectType))
+                Else
+                    nKey = nVersionId
+                End If
                 PerfMon.Log("DBHelper", "setObjectInstance", "endsave")
                 If ObjectType = objectTypes.ContentStructure Then
                     clearStructureCacheAll()
@@ -2686,7 +2696,7 @@ restart:
         End Function
 
 #Region "DB Methods: Version Control"
-        Protected Sub contentVersioning(ByRef oInstance As XmlElement, ByRef ObjectType As objectTypes, Optional ByRef nKey As Long = 0)
+        Protected Function contentVersioning(ByRef oInstance As XmlElement, ByRef ObjectType As objectTypes, Optional ByRef nKey As Long = 0, Optional ByRef bSaveInstance As Boolean = True) As Long
 
             Dim cProcessInfo As String = ""
             Dim oElmt As XmlElement = Nothing
@@ -2695,6 +2705,7 @@ restart:
             Dim nNewVersionNumber As Long = 0
             Dim nStatus As Status
             Dim cSql As String = ""
+            Dim nVersionId As Long = 0
 
             Try
 
@@ -2751,19 +2762,24 @@ restart:
                                 oOrigInstance = moPageXml.CreateElement("instance")
                                 oOrigInstance.InnerXml = getObjectInstance(objectTypes.Content, nKey)
 
-                                setNewContentVersionInstance(oOrigInstance, nKey)
+                                nVersionId = setNewContentVersionInstance(oOrigInstance, nKey)
 
                                 ' If this was a pending item, supercede the copy in the version table (ie superceded anything that's pending)
                                 Dim cPreviousStatus As String = ""
                                 If NodeState(oInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
-                                    If cPreviousStatus = "3" Then
+                                    If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                                         ' Update everything with a status of Pending to be DraftSuperceded
-                                        ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND a.nStatus = " & Status.Pending)
+                                        ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nKey & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
                                     End If
                                 End If
 
                             End If
 
+                        Case Status.InProgress 'PREVIEW
+
+                            nVersionId = setNewContentVersionInstance(oInstance, nKey, Status.InProgress)
+                            '?how do we stop the origional updating?
+                            bSaveInstance = False
 
                         Case Status.Pending
 
@@ -2795,12 +2811,12 @@ restart:
 
                                         ' The LIVE content is pending, which means that this should be moved into the version 
                                         ' and the submitted content goes into the content table.
-                                        setNewContentVersionInstance(oOrigInstance, nKey)
+                                        nVersionId = setNewContentVersionInstance(oOrigInstance, nKey)
 
                                 End Select
 
                                 ' Update everything with a status of Pending to be DraftSuperceded
-                                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.DraftSuperceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & cParentId & " AND a.nStatus = " & Status.Pending)
+                                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.DraftSuperceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & cParentId & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
 
                             Else
 
@@ -2817,10 +2833,13 @@ restart:
                     End Select
 
                 End If
+
+                Return nVersionId
+
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "contentVersioning", ex, cProcessInfo))
             End Try
-        End Sub
+        End Function
 
         Private Sub prepareContentVersionInstance(ByRef oInstance As XmlElement, ByVal nContentPrimaryId As Long, Optional ByVal nStatus As Status = Status.Superceded)
             PerfMon.Log("DBHelper", "prepareContentVersionInstance")
@@ -2852,22 +2871,93 @@ restart:
 
         End Sub
 
-        Private Sub setNewContentVersionInstance(ByRef oInstance As XmlElement, ByVal nContentPrimaryId As Long, Optional ByVal nStatus As Status = Status.Superceded)
+        Private Function setNewContentVersionInstance(ByRef oInstance As XmlElement, ByVal nContentPrimaryId As Long, Optional ByVal nStatus As Status = Status.Superceded) As Long
             PerfMon.Log("DBHelper", "setNewContentVersionInstance")
             Dim cProcessInfo As String = "ContentParId = " & nContentPrimaryId
-
+            Dim nVersionId As Long = 0
             Try
                 ' Prepare the instance
                 prepareContentVersionInstance(oInstance, nContentPrimaryId, nStatus)
 
                 ' Save the intance
-                Me.setObjectInstance(objectTypes.ContentVersion, oInstance, 0)
+                nVersionId = Me.setObjectInstance(objectTypes.ContentVersion, oInstance, 0)
+
+                Return nVersionId
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setNewContentVersionInstance", ex, cProcessInfo))
+                Return Nothing
             End Try
 
-        End Sub
+        End Function
+
+        Public Function GetVersionInstance(ByVal nContentPrimaryId As Long, ByVal nContentVersionId As Long) As XmlElement
+
+            Dim cProcessInfo As String = "ContentParId = " & nContentPrimaryId
+            Dim oTempInstance As XmlElement = moPageXml.CreateElement("instance")
+            Try
+                'grab some values from the live version
+                oTempInstance.InnerXml = getObjectInstance(dbHelper.objectTypes.Content, nContentPrimaryId)
+                Dim nAuditId As Long = oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText
+                Dim nVersion As Long = oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText
+                Dim nStatus As Long = oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText
+                Dim sInsertDate As String = oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText
+                Dim sInsertUser As String = oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText
+
+                'pull the content in from the versions table
+                oTempInstance.InnerXml = getObjectInstance(dbHelper.objectTypes.ContentVersion, nContentVersionId)
+                'change to match
+                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContentVersions"), "tblContent")
+                Protean.Tools.Xml.renameNode(oTempInstance.SelectSingleNode("tblContent/nContentVersionKey"), "nContentKey")
+                'update some of the values
+                oTempInstance.SelectSingleNode("tblContent/nContentKey").InnerText = nContentPrimaryId
+                oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText = nAuditId
+                oTempInstance.SelectSingleNode("tblContent/nAuditId").InnerText = nAuditId
+                oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText = nVersion
+                oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText = sInsertDate
+                oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText = sInsertUser
+                oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
+
+                Return oTempInstance
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetVersionInstance", ex, cProcessInfo))
+                Return Nothing
+            End Try
+
+        End Function
+
+        Public Function contentStatus(ByVal nContentPrimaryId As Long, ByVal nContentVersionId As Long, Optional ByVal nStatus As Status = Status.Live) As Long
+            PerfMon.Log("DBHelper", "setNewContentVersionInstance")
+            Dim cProcessInfo As String = "ContentParId = " & nContentPrimaryId
+            Dim nVersionId As Long = 0
+            Try
+
+                Dim oTempInstance As XmlElement = GetVersionInstance(nContentPrimaryId, nContentVersionId)
+
+                oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = nStatus
+
+                ' Save the intance
+                nVersionId = Me.setObjectInstance(objectTypes.Content, oTempInstance, 0)
+
+                'Superceed previous versions
+                Dim cPreviousStatus As String = ""
+                '  If NodeState(oTempInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
+                '     If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
+                ' Update everything with a status of Pending to be DraftSuperceded
+                ExeProcessSql("UPDATE tblAudit SET nStatus = " & Status.Superceded & " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " & nContentPrimaryId & " AND (a.nStatus = " & Status.Pending & " or a.nStatus = " & Status.InProgress & ")")
+                ' End If
+                ' End If
+
+                Return nVersionId
+
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setNewContentVersionInstance", ex, cProcessInfo))
+                Return Nothing
+            End Try
+
+        End Function
+
 
         Public Function getPendingContent(Optional ByVal bGetContentSinceLastLogged As Boolean = False) As XmlElement
             PerfMon.Log("DBHelper", "getPendingContent")
@@ -2896,14 +2986,14 @@ restart:
                 If oDS.Tables.Count > 0 AndAlso oDS.Tables(0).Rows.Count > 0 Then
 
                     ' Get the Locations content
-                    myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT	nContentId AS id, nStructKey AS pageid, cStructName AS page FROM dbo.tblContentLocation l INNER JOIN dbo.tblContentStructure s ON l.nStructId = s.nStructKey WHERE bPrimary=1", "Location")
-                    oDS.Relations.Add("PendingLocations", oDS.Tables("Pending").Columns("id"), oDS.Tables("Location").Columns("id"), False)
-                    oDS.Relations("PendingLocations").Nested = True
+                    ' myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT	nContentId AS id, nStructKey AS pageid, cStructName AS page FROM dbo.tblContentLocation l INNER JOIN dbo.tblContentStructure s ON l.nStructId = s.nStructKey WHERE bPrimary=1", "Location")
+                    '  oDS.Relations.Add("PendingLocations", oDS.Tables("Pending").Columns("id"), oDS.Tables("Location").Columns("id"), False)
+                    '  oDS.Relations("PendingLocations").Nested = True
 
                     ' Get the Related content
-                    myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT	nContentParentId AS keyid, nContentKey AS id, cContentName AS name, cContentSchemaName AS type FROM	dbo.tblContentRelation r INNER JOIN dbo.tblContent c ON c.nContentKey = r.nContentChildId", "Content")
-                    oDS.Relations.Add("PendingRelations", oDS.Tables("Pending").Columns("id"), oDS.Tables("Content").Columns("keyid"), False)
-                    oDS.Relations("PendingRelations").Nested = True
+                    ' myWeb.moDbHelper.addTableToDataSet(oDS, "SELECT	nContentParentId AS keyid, nContentKey AS id, cContentName AS name, cContentSchemaName AS type FROM	dbo.tblContentRelation r INNER JOIN dbo.tblContent c ON c.nContentKey = r.nContentChildId", "Content")
+                    ' oDS.Relations.Add("PendingRelations", oDS.Tables("Pending").Columns("id"), oDS.Tables("Content").Columns("keyid"), False)
+                    '  oDS.Relations("PendingRelations").Nested = True
 
                     ' Map the attributes
                     With oDS.Tables("Pending")
@@ -2913,20 +3003,22 @@ restart:
                         .Columns("userid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("username").ColumnMapping = Data.MappingType.Attribute
                         .Columns("currentLiveVersion").ColumnMapping = Data.MappingType.Attribute
-                    End With
-
-                    With oDS.Tables("Location")
-                        .Columns("id").ColumnMapping = MappingType.Hidden
                         .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
                         .Columns("page").ColumnMapping = Data.MappingType.Attribute
                     End With
 
-                    With oDS.Tables("Content")
-                        .Columns("keyid").ColumnMapping = MappingType.Hidden
-                        .Columns("id").ColumnMapping = Data.MappingType.Attribute
-                        .Columns("type").ColumnMapping = Data.MappingType.Attribute
-                        .Columns("name").ColumnMapping = Data.MappingType.Attribute
-                    End With
+                    '   With oDS.Tables("Location")
+                    '  .Columns("id").ColumnMapping = MappingType.Hidden
+                    '  .Columns("pageid").ColumnMapping = Data.MappingType.Attribute
+                    '  .Columns("page").ColumnMapping = Data.MappingType.Attribute
+                    ' End With
+
+                    '  With oDS.Tables("Content")
+                    '  .Columns("keyid").ColumnMapping = MappingType.Hidden
+                    '  .Columns("id").ColumnMapping = Data.MappingType.Attribute
+                    '  .Columns("type").ColumnMapping = Data.MappingType.Attribute
+                    ' .Columns("name").ColumnMapping = Data.MappingType.Attribute
+                    '  End With
 
 
                     oDS.EnforceConstraints = False
@@ -6571,6 +6663,7 @@ restart:
 
         End Function
 
+
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, Optional ByVal nArtId As Long = 0, Optional ByVal cActivityDetail As String = "", Optional ByVal cForiegnRef As String = "") As Long
             Dim cSubName As String = "logActivity(ActivityType,Int,Int,[Int],[String])"
             PerfMon.Log("DBHelper", cSubName)
@@ -6582,6 +6675,7 @@ restart:
             End Try
 
         End Function
+
 
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, ByVal nArtId As Long, ByVal nOtherId As Long, ByVal cActivityDetail As String) As Long
             Return logActivity(nActivityType, nUserDirId, nStructId, nArtId, nOtherId, cActivityDetail, False)

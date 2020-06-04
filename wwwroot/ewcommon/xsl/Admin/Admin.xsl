@@ -662,10 +662,12 @@
           </xsl:if>
           <ul class="nav navbar-nav navbar-right">
             <li>
+              <xsl:if test="$page/@ewCmd='Normal'">
                 <!--<span class="glyphicon glyphicon-eye-open"></span>-->
                 <xsl:apply-templates select="MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="previewLink">
                   <xsl:with-param name="level">1</xsl:with-param>
                 </xsl:apply-templates>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </li>
           </ul>
@@ -4412,9 +4414,9 @@
 
   <xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='EditMailContent' or @ewCmd='AddMailModule']" mode="LayoutAdminJs">
     <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-    <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
     <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-    <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+    <script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
     <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
     <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
     <!-- The basic File Upload plugin -->
@@ -4484,9 +4486,9 @@
 
     <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
       <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js">/* */</script>
+      <script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">/* */</script>
       <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-      <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js">/* */</script>
+      <script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">/* */</script>
       <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
       <script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">/* */</script>
       <!-- The basic File Upload plugin -->
@@ -5551,7 +5553,9 @@
             </xsl:for-each>
           </div>
           <div class="col-md-8">
-
+            <a href="{$appPath}?ewCmd=AddUserContact&amp;parid=0&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-success btn-sm pull-right">
+              <i class="fa fa-plus">&#160;</i>&#160;Add New Address
+            </a>
             <xsl:for-each select="Contacts/Contact">
               
               <xsl:apply-templates select="." mode="AdminListContact"/>
@@ -6327,17 +6331,18 @@
   </xsl:template>
 
   <xsl:template match="Contact" mode="AdminListContact">
-    <xsl:variable name="userid" select="/Page/Request/QueryString/Item[@name='parid']"/>
+    <xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
     <div class="col-md-6">
     <div class="panel panel-default">
       <div class="panel-heading">
-      
-        <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">
+
+        <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm pull-right">-->
+          <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm pull-right">
           <i class="fa fa-edit">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>
           Edit</a>
-        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={$userid}&amp;id={nContactKey}" class="btn btn-danger btn-sm pull-right">
+        <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm pull-right">
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>Delete</a>
@@ -9639,6 +9644,113 @@
       </div>
     </div>
   </xsl:template>
+
+
+  <xsl:template match="*" mode="subscriptionTable">
+
+      <table class="table">
+        <tr>
+          <th>User</th>
+          <th>Usernane</th>
+          <th>Subscription</th>
+          <th>Rate</th>
+          <th>Status</th>
+          <th>PayProvider</th>
+          <th>Active</th>
+          <th>Start Date</th>
+          <th>Renewal Due</th>
+          <th>Sent Date</th>
+          <th>&#160;</th>
+        </tr>
+        <xsl:for-each select="Subscribers">
+          <tr>
+            <td>
+              <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cDirName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cSubName/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="formatPrice">
+                <xsl:with-param name="price" select="nValueNet/node()"/>
+                <xsl:with-param name="currency" select="$currencySymbol"/>
+              </xsl:call-template>
+            </td>
+            <td>
+              <xsl:value-of select="cRenewalStatus/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cPayMthdProviderName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="bPaymentMethodActive/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dStartDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dExpireDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </td>
+            <td>
+
+                  <xsl:value-of select="@actionResult"/>
+
+            </td>
+            <td colspan="3">
+
+              <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                <i class="fa fa-edit">&#160;</i>&#160;Manage
+              </a>
+              <xsl:if test="parent::reminder">
+                <xsl:choose>
+                                  <xsl:when test="@actionResult = 'not sent'">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-success btn-sm">
+                  <i class="fa fa-envelope">&#160;</i>&#160;Send Alert
+                </a>
+                </xsl:when>
+                  <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-warning btn-sm">
+                      <i class="fa fa-envelope">&#160;</i>&#160;Resend
+                    </a>
+                  </xsl:otherwise>
+
+                </xsl:choose>
+
+              </xsl:if>
+
+            </td>
+          </tr>
+          <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+            <xsl:if test="Subscriptions">
+              <tr>
+                <td>
+                  <xsl:apply-templates select="." mode="AdminSubscriptions">
+                    <xsl:with-param name="GroupID">
+                      <xsl:value-of select="@nCatKey"/>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </td>
+              </tr>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+
+      </table>
+    </xsl:template>
   
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
@@ -9681,6 +9793,11 @@
                   <a href="{$appPath}?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
                     <i class="fa fa-pencil">&#160;</i>&#160;Edit
                   </a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="7">
+                  <xsl:apply-templates select="." mode="subscriptionTable"/>
                 </td>
               </tr>
             </xsl:for-each>
@@ -10390,19 +10507,25 @@
                 </xsl:choose>
               </td>
               <td>
+                
                 <xsl:choose>
                   <xsl:when test="@primaryId='0' or @primaryId = @id">
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}" class="btn btn-xs btn-primary">
+                     <i class="fa fa-eye fa-white"><xsl:text> </xsl:text>
+                      </i> View</a>
                     <a href="{$appPath}?ewCmd=EditContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
                       <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Edit</a>
                   </xsl:when>
                   <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={/Page/@id}&amp;artid={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary"><i class="fa fa-eye fa-white"><xsl:text> </xsl:text>
+                      </i>             Preview</a>
                     <a href="{$appPath}?ewCmd=RollbackContent&amp;pgid={/Page/@id}&amp;id={@primaryId}&amp;verId={@id}" class="btn btn-xs btn-primary" title="Click here to rollback to this version">
-                      <i class="fa fa-go-back fa-white">
+                      <i class="fa fa-pencil fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>
-                      View Rollback</a>
+                      Edit &amp; Revert</a>
                   </xsl:otherwise>
                 </xsl:choose>
               </td>
@@ -10410,13 +10533,6 @@
           </xsl:for-each>
         </table>
       </div>
-      <div id="column1">
-        <h3>About Version History</h3>
-        <p>Version history allows you to view all of the changes that have been made to this specific item of content.</p>
-        <p>To view an old item hit the 'view rollback' button, if submit you will overright the current live version with the old one.</p>
-        <p>Note: this does not track the location of the content or any changes to related items.</p>
-      </div>
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
   <!-- -->
@@ -10425,8 +10541,7 @@
       <div class="col-md-9">
         <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
       </div>
-<div  class="col-md-3">
-        
+  <div class="col-md-3">
   <div class="panel">
     <div class="panel-body">
               <p>This lists all content that is awaiting approval from an administrator.</p>
@@ -10469,6 +10584,14 @@
         <xsl:apply-templates select="Name" mode="Pending"/>
       </tr>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Name[ancestor::*[name()='Pending']]" mode="reportCell">
+    <td>
+      <a href="/?ewCmd=Normal&amp;pgid={parent::Pending/Metadata/Locations/Location/@pageid}&amp;artid={parent::Pending/@id}">
+        <xsl:value-of select="node()"/>
+      </a>
+    </td>
   </xsl:template>
 
   <!-- -->
@@ -10536,6 +10659,21 @@
           </i>
           <xsl:text> </xsl:text>Delete</a>
       </xsl:if>
+
+      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+        <i class="fa fa-eye">
+          <xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>Preview
+      </a>
+        
+      <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
+        <i class="fa fa-history">
+          <xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>History
+      </a>
+      
       <a href="{$appPath}?ewCmd=EditContent&amp;id={@id}{$versionId}&amp;ewRedirCmd=AwaitingApproval" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-pencil fa-white">
           <xsl:text> </xsl:text>
@@ -11815,7 +11953,17 @@
       </xsl:when>
       <xsl:when test="$status='2'">
         <a href="#" data-toggle="tooltip" data-placement="right" title="Superceeded" data-original-title="Superceeded">
-          <i class="fa fa-exclamation text-warning" alt="live">&#160;</i>
+            <i class="fas fa-history text-default" alt="Superceeded">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='3'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Pending">
+          <i class="far fa-pause-circle" alt="live">&#160;</i>
+        </a>
+      </xsl:when>
+      <xsl:when test="$status='4'">
+        <a href="#" data-toggle="tooltip" data-placement="right" title="Pending" data-original-title="Preview">
+          <i class="far fa-pause-circle" alt="Preview">&#160;</i>
         </a>
       </xsl:when>
       <xsl:when test="$status='7'">
@@ -11838,14 +11986,6 @@
         <xsl:value-of select="parent::node()/@currentLiveVersion"/>
         <xsl:text>]</xsl:text>
       </xsl:if>
-    </td>
-  </xsl:template>
-  <!-- -->
-  <xsl:template match="Name[parent::Pending]" mode="reportCell">
-    <td>
-      <strong>
-        <xsl:value-of select="."/>
-      </strong>
     </td>
   </xsl:template>
   <!-- -->

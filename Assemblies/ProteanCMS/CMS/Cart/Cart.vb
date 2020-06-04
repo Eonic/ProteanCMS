@@ -1686,7 +1686,7 @@ processFlow:
                     sMessageResponse = emailCart(oCartElmt, CustomerEmailTemplatePath, moCartConfig("MerchantName"), moCartConfig("MerchantEmail"), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), cSubject,, moCartConfig("CustomerAttachmentTemplatePath"))
 
                     'Send to merchant
-                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, "", moCartConfig("MerchantEmailBcc"))
+                    sMessageResponse = emailCart(oCartElmt, MerchantEmailTemplatePath, (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText), (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText), moCartConfig("MerchantEmail"), cSubject, False, moCartConfig("MerchantAttachmentTemplatePath"), moCartConfig("MerchantEmailBcc"))
 
                     Dim oElmtEmail As XmlElement
                     oElmtEmail = moPageXml.CreateElement("Reciept")
@@ -1836,29 +1836,46 @@ processFlow:
                                 valDict.Add(Attribute.Name, Attribute.Value)
                             End If
                         Next
-                        Dim ListId As String = ""
-                        Select Case StepName
-                            Case "Invoice"
-                                ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                End If
-                            Case "Quote"
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                End If
-                                ListId = moMailConfig("QuoteList")
-                            Case "Newsletter"
-                                If moMailConfig("NewsletterList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
-                                End If
-                                ListId = moMailConfig("NewsletterList")
-                        End Select
-                        If ListId <> "" Then
-                            oMessaging.Activities.addToList(ListId, Name, Email, valDict)
+                        Dim fullName() As String = Name.Split(" ")
+                        Dim firstName As String = ""
+                        Dim lastName As String = ""
+                        If (fullName.Length >= 3) Then
+                            firstName = fullName(1)
+                            lastName = fullName(2)
+                        End If
+
+                        valDict.Add("Email", Email)
+                        valDict.Add("FirstName", firstName)
+                        valDict.Add("LastName", lastName)
+                        valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
+                            valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Telephone").InnerText)
+                            valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/City").InnerText)
+                            valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/State").InnerText)
+                            valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/PostalCode").InnerText)
+
+                            Dim ListId As String = ""
+                            Select Case StepName
+                                Case "Invoice"
+                                    ListId = moMailConfig("InvoiceList")
+                                    If moMailConfig("QuoteList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
+                                Case "Quote"
+                                    If moMailConfig("QuoteList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
+                                    ListId = moMailConfig("QuoteList")
+                                Case "Newsletter"
+                                    If moMailConfig("NewsletterList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                    End If
+                                    ListId = moMailConfig("NewsletterList")
+                            End Select
+                            If ListId <> "" Then
+                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                        End If
                         End If
                     End If
-                End If
 
             Catch ex As Exception
                 returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
@@ -7076,7 +7093,7 @@ processFlow:
             End Try
         End Sub
 
-        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cCustomerAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
+        Public Function emailCart(ByRef oCartXML As XmlElement, ByVal xsltPath As String, ByVal fromName As String, ByVal fromEmail As String, ByVal recipientEmail As String, ByVal SubjectLine As String, Optional ByVal bEncrypt As Boolean = False, Optional ByVal cAttachementTemplatePath As String = "", Optional ByVal cBCCEmail As String = "") As Object
             PerfMon.Log("Cart", "emailCart")
             Dim oXml As XmlDocument = New XmlDocument
             Dim cProcessInfo As String = "emailCart"
@@ -7091,18 +7108,18 @@ processFlow:
                 oCartXML.SetAttribute("lang", myWeb.mcPageLanguage)
 
                 Dim oMsg As Messaging = New Messaging
-                If cCustomerAttachementTemplatePath = "" Then
+                If cAttachementTemplatePath = "" Then
 
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
                 Else
-                    cCustomerAttachementTemplatePath = moServer.MapPath(cCustomerAttachementTemplatePath)
+                    cAttachementTemplatePath = moServer.MapPath(cAttachementTemplatePath)
                     Dim cFontPath As String = moServer.MapPath("/fonts")
                     Dim oPDF As New Protean.Tools.PDF
 
                     'create the xmlFO document
                     Dim oTransform As Protean.XmlHelper.Transform
 
-                    Dim styleFile As String = CType(cCustomerAttachementTemplatePath, String)
+                    Dim styleFile As String = CType(cAttachementTemplatePath, String)
                     PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
 

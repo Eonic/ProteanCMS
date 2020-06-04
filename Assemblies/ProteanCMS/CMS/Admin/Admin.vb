@@ -202,13 +202,13 @@ Partial Public Class Cms
                 End If
 
 
-                If myWeb.moSession("ewCmd") = "PreviewOn" And LCase(myWeb.moRequest("ewCmd")) <> "normal" Then
+                If myWeb.moSession("ewCmd") = "PreviewOn" And (LCase(myWeb.moRequest("ewCmd")) <> "normal" And LCase(myWeb.moRequest("ewCmd")) <> "editcontent" And LCase(myWeb.moRequest("ewCmd")) <> "publishcontent") Then
                     'case to cater for logoff in preview mode
                     mcEwCmd = "PreviewOn"
                     myWeb.mbPreview = True
                 ElseIf mcEwCmd = "" Then
                     mcEwCmd = myWeb.moSession("ewCmd")
-                ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And LCase(mcEwCmd) = "normal" Then
+                ElseIf myWeb.moSession("ewCmd") = "PreviewOn" And (LCase(mcEwCmd) = "normal" Or LCase(mcEwCmd) = "editcontent" Or LCase(mcEwCmd) = "publishcontent") Then
                     myWeb.moSession("ewCmd") = ""
                     mnAdminUserId = myWeb.mnUserId
                 End If
@@ -950,9 +950,10 @@ ProcessFlow:
                                 myWeb.moSession("ContentEdit") = ""
                                 ' Check for an optional command to redireect to
                                 If Not (String.IsNullOrEmpty("" & myWeb.moRequest("ewRedirCmd"))) Then
-
                                     myWeb.msRedirectOnEnd = gcProjectPath & "/?ewCmd=" & myWeb.moRequest("ewRedirCmd")
-
+                                ElseIf myWeb.msRedirectOnEnd.Contains("?ewCmd=PreviewOn") Then
+                                    'skip if already defined in Xform.
+                                    myWeb.moSession("lastPage") = ""
                                 ElseIf myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                     myWeb.moSession("lastPage") = ""
@@ -971,6 +972,11 @@ ProcessFlow:
                             sAdminLayout = "AdminXForm"
 
                         End If
+
+                    Case "PublishContent"
+
+                        myWeb.moDbHelper.contentStatus(myWeb.moRequest("id"), CLng("0" & myWeb.moRequest("verId")), dbHelper.Status.Live)
+                        myWeb.msRedirectOnEnd = "?ewCmd=PreviewOn&pgid=" & myWeb.moRequest("pgid") & "&artid=" & myWeb.moRequest("id")
 
                     Case "RollbackContent"
 
@@ -1519,10 +1525,10 @@ ProcessFlow:
 
                     Case "ListUserContacts", "ListContacts", "ListDirContacts"
 
-                        sAdminLayout = "ListUserContacts"
+                        sAdminLayout = "Profile"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(CInt("0" & myWeb.moRequest("parid")), True))
 
-                    Case "EditUserContact", "EditContact"
+                    Case "EditContact"
 
                         sAdminLayout = "EditUserContact"
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1531,7 +1537,28 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "AddUserContact", "AddContact", "AddDirContact"
+                    Case "EditUserContact"
+
+                        sAdminLayout = "EditUserContact"
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("parid")), CInt("0" & myWeb.moRequest("id"))))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUserContacts"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                            GoTo ProcessFlow
+                        End If
+                    Case "AddUserContact"
+
+                        sAdminLayout = mcEwCmd
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("parid")), CInt("0" & myWeb.moRequest("id"))))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "ListUserContacts"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                            GoTo ProcessFlow
+                        End If
+
+                    Case "AddContact", "AddDirContact"
 
                         sAdminLayout = mcEwCmd
                         oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & myWeb.moRequest("id")), CInt("0" & myWeb.moRequest("parid"))))
@@ -1541,7 +1568,13 @@ ProcessFlow:
                             GoTo ProcessFlow
                         End If
 
-                    Case "DeleteUserContact", "DeleteContact"
+                    Case "DeleteUserContact"
+
+                        myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, CInt("0" & myWeb.moRequest("parid")))
+                        mcEwCmd = "ListUserContacts"
+                        myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                        GoTo ProcessFlow
+                    Case "DeleteContact"
 
                         myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.CartContact, CInt("0" & myWeb.moRequest("id")))
                         mcEwCmd = "ListUserContacts"
@@ -1607,6 +1640,7 @@ ProcessFlow:
                             'return to process flow
                             mcEwCmd = myWeb.moSession("ewCmd")
                             mcEwCmd2 = myWeb.moSession("ewCmd2")
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies&pgid=1"
                             GoTo ProcessFlow
 
                         Else

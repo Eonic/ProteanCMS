@@ -1519,9 +1519,9 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  disabled="disabled"/>
+        <input type="text" name="{$ref}" id="{$ref}" value="{$displayDate}" class="input-small form-control"  readonly="readonly"/>
         <span class="input-group-btn">
-          <label for="{$ref}-alt" class="input-group-addon btn btn-default"  disabled="disabled">
+          <label for="{$ref}-alt" class="input-group-addon btn btn-default"  readonly="readonly">
             <i class="fa fa-calendar">
               <xsl:text> </xsl:text>
             </i>
@@ -1562,7 +1562,7 @@
     </xsl:variable>
     <div class="controls">
       <div class="input-group">
-        <input type="text" name="{$ref}" id="{$ref}" value="{ms:node-set($userXml)/User/FirstName/node()} {ms:node-set($userXml)/User/LastName/node()}" class="input-small form-control"  disabled="disabled"/>
+        <input type="text" name="{$ref}" id="{$ref}" value="{ms:node-set($userXml)/User/FirstName/node()} {ms:node-set($userXml)/User/LastName/node()}" class="input-small form-control"  readonly="readonly"/>
       </div>
     </div>
 
@@ -1923,7 +1923,7 @@
 
       </xsl:attribute>
       <xsl:if test="contains(@class,'readonly')">
-        <xsl:attribute name="disabled">disabled</xsl:attribute>
+        <xsl:attribute name="readonly">readonly</xsl:attribute>
         </xsl:if>
 
       <xsl:if test="@onChange!=''">

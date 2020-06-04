@@ -3279,6 +3279,11 @@
       </xsl:choose>
     </xsl:element>
   </xsl:template>
+  
+   <xsl:template match="Content[@type='error']" mode="ContentDetail">
+      <xsl:apply-templates select="." mode="cleanXhtml"/>
+  </xsl:template>
+
 
 
   <!--  ==  END GOOGLE MAPS v3  ==================================================================  -->

@@ -33,7 +33,7 @@
         <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*) = 1 ">
+        <xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
           <xsl:for-each select="group[1]">
             <xsl:if test="label[position()=1]">
               <div class="panel-heading">
@@ -49,7 +49,7 @@
           </xsl:for-each>
           <xsl:for-each select="group[2]">
             <xsl:if test="count(submit) &gt; 0">
-              <div class="panel-footer clearfix">
+              <div class="panel-footer navbar-fixed-bottom">
                 <xsl:if test="ancestor-or-self::Content/group/descendant-or-self::*[contains(@class,'required')]">
                   <span class="required">
                     <span class="req">*</span>

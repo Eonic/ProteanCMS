@@ -158,6 +158,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Sec
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache

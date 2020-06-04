@@ -206,6 +206,7 @@ Public Class FeedHandler
                     Dim name As XElement = Nothing
                     Dim item As XElement = Nothing
                     Dim sDoc As String = ""
+                    Dim sDocBefore As String = ""
                     reader.MoveToContent()
                     While reader.Read()
                         If reader.NodeType = XmlNodeType.Element AndAlso reader.Name = instanceNodeName Then
@@ -221,11 +222,14 @@ Public Class FeedHandler
                                 oTransform.Process(xreader, xWriter)
 
                                 sDoc = oWriter.ToString()
+
+                                sDocBefore = sDoc
                                 ' sDoc = Regex.Replace(sDoc, "&gt;", ">")
                                 ' sDoc = Regex.Replace(sDoc, "&lt;", "<")
                                 sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc)
                                 Dim filename As String
                                 Dim xDoc As New XmlDocument
+
                                 xDoc.LoadXml(sDoc)
                                 Dim oInstance As XmlElement
                                 For Each oInstance In xDoc.DocumentElement.SelectNodes("descendant-or-self::instance")
@@ -270,7 +274,7 @@ Public Class FeedHandler
                             Catch ex2 As Exception
                                 processInfo = sDoc
 
-                                AddExternalMessage(ex2.ToString & ex2.StackTrace.ToString & " DOC {" & sDoc & "} EndDoc")
+                                AddExternalMessage(ex2.ToString & ex2.StackTrace.ToString & " DOC {" & sDocBefore & "} EndDoc")
                                 bResult = False
                                 ' AddExternalError(ex2)
                             End Try

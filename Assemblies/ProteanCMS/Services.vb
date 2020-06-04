@@ -820,6 +820,93 @@ Public Class Services
         End Try
         Return oRXML
     End Function
+    <WebMethod(Description:="get content detail xml")>
+    Public Function GetContentDetailXml(nContentKey As Integer) As XmlElement
+        Dim xmlEle As XmlElement
+        xmlEle = myWeb.GetContentDetailXml(Nothing, nContentKey, False)
+
+
+        Return xmlEle
+    End Function
+
+
+    <WebMethod(Description:="get content url")>
+    Public Function GetContentUrl(contentId As Integer) As String
+        myWeb = New Protean.Cms
+        myWeb.Open()
+        Dim url As String
+        url = myWeb.GetContentUrl(contentId)
+
+        Return url
+        myWeb.Close()
+    End Function
+    <WebMethod(Description:="get standard filter for sql content")>
+    Public Function GetStandardFilterSQLForContent() As Object
+        myWeb = New Protean.Cms
+        myWeb.Open()
+
+        myWeb.GetStandardFilterSQLForContent()
+
+        Return Nothing
+        myWeb.Close()
+    End Function
+
+    <WebMethod(Description:="check page permission")>
+    Public Function checkPagePermission(parId As Integer) As Integer
+        myWeb = New Protean.Cms
+        myWeb.Open()
+
+        Dim data As Integer = Convert.ToInt32(myWeb.moDbHelper.checkPagePermission(parId))
+
+        Return data
+        myWeb.Close()
+    End Function
+
+    <WebMethod(Description:="Add data set to content")>
+    Public Sub AddDataSetToContent(oDs As DataSet, oRoot As XmlElement, exdate As DateTime)
+        myWeb = New Protean.Cms
+        myWeb.Open()
+
+        myWeb.moDbHelper.AddDataSetToContent(oDs, oRoot, myWeb.mnPageId, False, "", exdate, exdate)
+
+
+        myWeb.Close()
+    End Sub
+
+    <WebMethod(Description:="return admin mode")>
+    Public Function returnIsAdminMode() As Boolean
+        myWeb = New Protean.Cms
+        myWeb.Open()
+
+        Dim data As Boolean = myWeb.mbAdminMode
+
+        Return data
+        myWeb.Close()
+    End Function
+    <WebMethod(Description:="create Element")>
+    Public Function createElement(oRoot As XmlElement) As XmlElement
+        myWeb = New Protean.Cms
+        myWeb.Open()
+        oRoot = myWeb.moPageXml.CreateElement("Contents")
+        myWeb.moPageXml.DocumentElement.AppendChild(oRoot)
+        Return oRoot
+        myWeb.Close()
+    End Function
+
+    <WebMethod(Description:="Get All valid shipping options")>
+    Public Function GetShippingOptions(ByVal cCountry As String, ByVal nAmount As Long, ByVal nQuantity As Long, ByVal nWeight As Long) As DataSet
+        myWeb = New Protean.Cms
+        myWeb.Open()
+
+        Dim moCart As New Protean.Cms.Cart(myWeb)
+
+        Dim dsShippingOption As DataSet
+        dsShippingOption = moCart.getValidShippingOptionsDS(cCountry, nAmount, nQuantity, nWeight)
+        myWeb.Close()
+        myWeb = Nothing
+        Return dsShippingOption
+    End Function
+
 
 #End Region
 End Class
