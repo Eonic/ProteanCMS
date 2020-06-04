@@ -12,6 +12,9 @@
 
 
   <xsl:template match="*[alert]" mode="xform_control_script">
+    <xsl:variable name="ref2">
+      <xsl:value-of select="translate($ref,'/','-')"/>
+    </xsl:variable>
     <script>
       $(function () {
       <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
