@@ -9659,7 +9659,7 @@
           <th>Active</th>
           <th>Start Date</th>
           <th>Renewal Due</th>
-          <th>Action Result</th>
+          <th>Sent Date</th>
           <th>&#160;</th>
         </tr>
         <xsl:for-each select="Subscribers">
@@ -9716,9 +9716,20 @@
                 <i class="fa fa-edit">&#160;</i>&#160;Manage
               </a>
               <xsl:if test="parent::reminder">
-                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-primary btn-sm">
-                  <i class="fa fa-edit">&#160;</i>&#160;Email Reminder
+                <xsl:choose>
+                                  <xsl:when test="@actionResult = 'not sent'">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-success btn-sm">
+                  <i class="fa fa-envelope">&#160;</i>&#160;Send Alert
                 </a>
+                </xsl:when>
+                  <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-warning btn-sm">
+                      <i class="fa fa-envelope">&#160;</i>&#160;Resend
+                    </a>
+                  </xsl:otherwise>
+
+                </xsl:choose>
+
               </xsl:if>
 
             </td>

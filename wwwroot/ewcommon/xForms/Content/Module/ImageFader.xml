@@ -42,7 +42,7 @@
       <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
       <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
-      <bind id="cAnimationType" nodeset="@animationtype" required="true()" type="string"/>
+      <bind id="cAnimationType" nodeset="@animationtype" required="false()" type="string"/>
       <bind id="cFadingSpeed" nodeset="@fadingspeed" required="true()" type="string"/>
       <bind id="cFadeBetween" nodeset="@fadebetween" required="true()" type="string"/>
       <bind id="cSlideshowType" nodeset="@slideshowtype" required="true()" type="string"/>
