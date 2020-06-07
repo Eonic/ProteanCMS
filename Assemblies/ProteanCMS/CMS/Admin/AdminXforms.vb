@@ -6935,7 +6935,40 @@ Partial Public Class Cms
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
+
+
+                        If nSubId = 0 Then
+                            'we are creating a new subscription
+                            'first we get the subscription content XML
+                            Dim ContentId As Long = CLng(MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
+                            Dim ContentXml As XmlElement = myWeb.moPageXml.CreateElement("Content")
+                            ContentXml.InnerXml = moDbHelper.getContentBrief(ContentId)
+                            'Now we populate the instance
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText = myWeb.moRequest("userId")
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirType").InnerText = "user"
+                            MyBase.Instance.SelectSingleNode("tblSubscription/cSubName").InnerText = ContentXml.SelectSingleNode("Content/Name").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/cSubXml").InnerXml = ContentXml.InnerXml
+                            'dStartDate Populated by form
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nPeriod").InnerText = ContentXml.SelectSingleNode("Content/Duration/Length").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/cPeriodUnit").InnerText = ContentXml.SelectSingleNode("Content/Duration/Unit").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nMinimumTerm").InnerText = ContentXml.SelectSingleNode("Content/Duration/MinimumTerm").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nRenewalTerm").InnerText = ContentXml.SelectSingleNode("Content/Duration/RenewalTerm").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText = ContentXml.SelectSingleNode("Content/SubscriptionPrices/Price[@type='sale']").InnerText
+                            MyBase.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText = ContentXml.SelectSingleNode("Content/Type").InnerText
+
+                            MyBase.Instance.SelectSingleNode("tblSubscription/dPublishDate").InnerText = MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText
+
+                            Dim oSub As New Protean.Cms.Cart.Subscriptions()
+
+                            Dim dSubEndDate As DateTime = oSub.SubscriptionEndDate(CDate(MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText), ContentXml.SelectSingleNode("Content"))
+                            MyBase.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText = xmlDate(dSubEndDate)
+
+                            'Calculate Renewal Date
+
+                        End If
+
                         MyBase.validate()
+
                         If MyBase.valid Then
                             Dim nCId As Integer = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, MyBase.Instance, nSubId)
                         End If
@@ -7000,7 +7033,7 @@ Partial Public Class Cms
                         ElseIf MyBase.getSubmitted = "Confirm" Then
                             Dim bEmailClient As Boolean = False
                             If myWeb.moRequest("emailClient") = "yes" Then bEmailClient = True
-                            oSub.RenewSubscription(nSubscriptionId, True)
+                            oSub.RenewSubscription(nSubscriptionId, bEmailClient)
                             MyBase.valid = True
                             Return MyBase.moXformElmt
                         End If

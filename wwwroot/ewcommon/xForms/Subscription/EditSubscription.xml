@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Content type="xform" name="Subscription">
+<Content type="xform" name="EditUserSubscription">
 	<model>
 		<instance>
       <tblSubscription>
@@ -11,9 +11,9 @@
         <cSubName/>
         <cSubXml>
           <Content>
-            <Name>Annual Subscription</Name>
+            <Name></Name>
             <StockCode />
-            <Type>Rolling</Type>
+            <Type></Type>
             <Duration>
               <Unit>Year</Unit>
               <Length>1</Length>
@@ -110,98 +110,55 @@
         <cContactForiegnRef/>
       </Contact>
 		</instance>
-		<submission id="EditPaymentMethod" action="" method="post" event="return form_check(this)"/>
+		<submission id="EditUserSubscription" action="" method="post" event="return form_check(this)"/>
     <bind nodeset="tblSubscription">
       <bind id="cSubName" nodeset="cSubName" required="true()" type="string"/>
+      <bind id="cSubcriptionId" nodeset="nSubContentId" required="true()" type="string"/>
+      
       <bind id="nValueNet" nodeset="nValueNet" required="true()" type="string"/>
       <bind id="cPeriodUnit" nodeset="cPeriodUnit" required="true()" type="string"/>
-      <bind id="nRenewalTerm" nodeset="nRenewalTerm" required="true()" type="string"/>
+      <bind id="nPeriod" nodeset="nPeriod" required="true()" type="string"/>
       <bind id="cRenewalStatus" nodeset="cRenewalStatus" required="true()" type="string"/>
       <bind id="dExpireDate" nodeset="dExpireDate" required="true()" type="string"/>
       <bind id="dStartDate" nodeset="dStartDate" required="true()" type="string"/>
-      <bind nodeset="nPaymentMethodId">
-        <bind id="cPaymentMethod" nodeset="@type" required="true()" type="string"/>
-      </bind>
+      
     </bind>
-    <bind nodeset="tblCartPaymentMethod">
-      <bind id="currentPaymentMethod" nodeset="cPayMthdProviderName" required="false()" type="string"/>
-    </bind>
-    <bind nodeset="Contact">
-      <bind id="cContactName" nodeset="cContactName" required="true()" type="string"/>
-      <bind id="cContactEmail" nodeset="cContactEmail" required="true()" type="string"/>
-      <bind id="cContactCompany" nodeset="cContactCompany" required="false()" type="string"/>
-      <bind id="cContactAddress" nodeset="cContactAddress" required="true()" type="string"/>
-      <bind id="cContactCity" nodeset="cContactCity" required="true()" type="string"/>
-      <bind id="cContactState" nodeset="cContactState" required="true()" type="string"/>
-      <bind id="cContactZip" nodeset="cContactZip" required="true()" type="string"/>
-      <bind id="cContactCountry" nodeset="cContactCountry" required="true()" type="string"/>
-    </bind>
+
 	</model>
 	<group ref="EditSubscription" class="2Col">
-		<label>Confirm Subscription</label>
-			<group class="inline">
-				<label>Subscription Details</label>
-				<input bind="cSubName" class="readonly">
-					<label>Subscription Name</label>
-				</input>
-        <input bind="nValueNet" class="readonly">
-          <label>Repeat Price</label>
+		<label>Edit Subscription</label>
+			<group >
+				<label>Policy Details</label>
+				<select1 bind="cSubcriptionId" class="ewQuery" query="Subscriptions">
+					<label>Subscription</label>
+				</select1>
+        <input bind="nValueNet">
+          <label>Renewal Fee</label>
         </input>
         <input bind="cPeriodUnit" class="readonly">
           <label>Renewal Every</label>
         </input>
-        <input bind="nRenewalTerm" class="readonly">
+        <input bind="nPeriod" class="readonly">
           <label>Renewal Term</label>
         </input>
         <input bind="cRenewalStatus" class="readonly">
           <label>Renewal Type</label>
         </input>
-        <input bind="dStartDate" class="readonly">
-          <label>Start Date</label>
-        </input>
-        <input bind="dExpireDate" class="readonly">
-          <label>Next Payment Will Be Collected</label>
-        </input>
-        <input bind="currentPaymentMethod" class="readonly">
-          <label>Payment Method</label>
-        </input>
       </group>
-    <group class="inline">
-      <label>Billing Details</label>
-      <input bind="cContactName" class="required">
-        <label>Name</label>
+    <group>
+      <group >
+      <input bind="dStartDate" class="calendar">
+        <label>Start Date</label>
       </input>
-      <input bind="cContactEmail" class="required">
-        <label>Email</label>
+      <input bind="dExpireDate" class="readonly calendar si">
+        <label>Next Payment Will Be Collected</label>
       </input>
-      <input bind="cContactCompany" class="">
-        <label>Company</label>
-      </input>
-      <input bind="cContactAddress" class="required">
-        <label>Street</label>
-      </input>
-      <input bind="cContactCity" class="required">
-        <label>Town</label>
-      </input>
-      <input bind="cContactState" class="required">
-        <label>County</label>
-      </input>
-      <input bind="cContactZip" class="required">
-        <label>Postcode</label>
-      </input>
-      <select1 bind="cContactCountry" class="dropdown ewQuery required" query="Countries" appearance="minimal">
-        <label>Country</label>
-      </select1>
+    </group>
     </group>
 	</group>
-  <group>
-    <select1 bind="cPaymentMethod" appearance="full">
-      <label>Select New Payment Method</label>
-    </select1>
-  </group>
 	<group>
-		<submit submission="" ref="ewSubmit" value="Update Payment Details" class="principle">
-			<label>Update Payment Details</label>
+		<submit submission="EditUserSubscription" ref="ewSubmit" class="principle">
+			<label>Update Subscription</label>
 		</submit>
 	</group>
 </Content>

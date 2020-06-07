@@ -77,6 +77,20 @@ Namespace Providers
                 End Enum
 
 
+                Public Function CollectPayment(ByRef oWeb As Protean.Cms, ByVal nPaymentMethodId As Long, ByVal Amount As Double, ByVal CurrencyCode As String, ByVal PaymentDescription As String, ByRef oCart As Protean.Cms.Cart) As String
+                    Dim cProcessInfo As String = ""
+                    Try
+
+                        'Do nothing because recurring payments are automatic
+
+                        Return "Success"
+
+                    Catch ex As Exception
+                        returnException(mcModuleName, "CollectPayment", ex, "", cProcessInfo, gbDebug)
+                        Return "Payment Error"
+                    End Try
+                End Function
+
                 Public Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
                     PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
                     Dim sSql As String
