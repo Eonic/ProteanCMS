@@ -21,8 +21,7 @@
     <script>
       $(function () {
       <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
-      <xsl:text>-btn')
-      .popover('show');</xsl:text>
+      <xsl:text>-btn').popover('show');</xsl:text>
       });
     </script>
   </xsl:template>
