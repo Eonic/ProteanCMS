@@ -894,14 +894,47 @@ Public Class Services
     End Function
 
     <WebMethod(Description:="Get All valid shipping options")>
-    Public Function GetShippingOptions(ByVal cCountry As String, ByVal nAmount As Long, ByVal nQuantity As Long, ByVal nWeight As Long) As DataSet
+    Public Function GetIntranetShippingOptions(ByVal cCountry As String, ByVal nAmount As Long, ByVal nQuantity As Long, ByVal nWeight As Long) As DataSet
         myWeb = New Protean.Cms
         myWeb.Open()
 
-        Dim moCart As New Protean.Cms.Cart(myWeb)
-
         Dim dsShippingOption As DataSet
-        dsShippingOption = moCart.getValidShippingOptionsDS(cCountry, nAmount, nQuantity, nWeight)
+        Dim sSql As String
+        ' Dim sCountryList As String = getParentCountries(cDestinationCountry,
+
+        sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," & nAmount & "," & nQuantity & "," & nWeight & ") as nShippingTotal  from tblCartShippingLocations Loc "
+        sSql = sSql & "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId "
+        sSql = sSql & "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey "
+        sSql &= "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey"
+        sSql = sSql & " WHERE ((nShipOptQuantMin <= 0 or nShipOptQuantMin <= " & nQuantity & ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " & nQuantity & ") and "
+        sSql = sSql & "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " & nAmount & ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " & nAmount & ") and "
+        sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
+
+        'sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
+
+        'sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+        '                    " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+        '                    "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 1) > 0"
+        '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+        '                    " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+        '                    "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
+        'method allowed for authenticated or imporsonating CS users.
+        ' Dim shippingGroupCondition As String
+        sSql &= " OR (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                           "  where perm.nShippingMethodId = opt.nShipOptKey And perm.nDirId IN (3093) And perm.nPermLevel = 1) > 0)"
+
+
+
+        'Active methods
+
+        sSql &= " AND (tblAudit.nStatus >0)"
+        sSql &= " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " & Protean.Tools.Database.SqlDate(Now) & "))"
+        sSql &= " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " & Protean.Tools.Database.SqlDate(Now) & "))"
+        sSql &= " order by opt.nDisplayPriority, nShippingTotal"
+
+
+
+        dsShippingOption = myWeb.moDbHelper.GetDataSet(sSql, "Options")
         myWeb.Close()
         myWeb = Nothing
         Return dsShippingOption
