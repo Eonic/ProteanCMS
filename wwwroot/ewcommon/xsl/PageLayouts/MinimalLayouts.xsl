@@ -10207,6 +10207,33 @@
       </xsl:choose>
     </xsl:variable>
     <!--InnerFade Module JS -->
+    
+    <!-- ###### -->
+    <div id="imageFader">
+      <xsl:if test="/Page/@adminMode">
+        <div class="ewAdmin clear-fix">
+          <xsl:choose>
+            <xsl:when test="/Page/Request/QueryString/Item[@name='innerFade']">
+              <a href="{$currentPage/@url}" class="btn btn-primary btn-xs">Start Fader</a>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{$currentPage/@url}&amp;innerFade=disabled" class="btn btn-primary btn-xs">Stop Fader &amp; Show All</a>
+            </xsl:otherwise>
+          </xsl:choose>
+          <br/>
+          <br/>
+        </div>
+      </xsl:if>
+      <div id="featureImages{@id}" class="innerfade">
+        <xsl:apply-templates select="Content[@type='Image']" mode="faderImage2">
+          <xsl:with-param name="max-width" select="@SlideWidth"/>
+          <xsl:with-param name="max-height" select="@SlideHeight"/>
+        </xsl:apply-templates>
+      </div>
+      <div class="terminus">&#160;</div>
+    </div>
+  </xsl:template>
+  <xsl:template match="Content[@type='Module' and @moduleType='ImageFader']" mode="contentJS">
     <xsl:if test="not(/Page/Request/QueryString/Item[@name='innerFade']/node()='disabled')">
       <xsl:variable name="animationtype">
         <xsl:value-of select="@animationtype"/>
@@ -10248,32 +10275,9 @@
         <xsl:text>px'});});</xsl:text>
       </script>
     </xsl:if>
-    <!-- ###### -->
-    <div id="imageFader">
-      <xsl:if test="/Page/@adminMode">
-        <div class="ewAdmin clear-fix">
-          <xsl:choose>
-            <xsl:when test="/Page/Request/QueryString/Item[@name='innerFade']">
-              <a href="{$currentPage/@url}" class="btn btn-primary btn-xs">Start Fader</a>
-            </xsl:when>
-            <xsl:otherwise>
-              <a href="{$currentPage/@url}&amp;innerFade=disabled" class="btn btn-primary btn-xs">Stop Fader &amp; Show All</a>
-            </xsl:otherwise>
-          </xsl:choose>
-          <br/>
-          <br/>
-        </div>
-      </xsl:if>
-      <div id="featureImages{@id}" class="innerfade">
-        <xsl:apply-templates select="Content[@type='Image']" mode="faderImage2">
-          <xsl:with-param name="max-width" select="@SlideWidth"/>
-          <xsl:with-param name="max-height" select="@SlideHeight"/>
-        </xsl:apply-templates>
-      </div>
-      <div class="terminus">&#160;</div>
-    </div>
   </xsl:template>
-
+  
+  
   <xsl:template match="Content[@type='Image']" mode="faderImage2">
     <xsl:param name="max-width" />
     <xsl:param name="max-height" />
