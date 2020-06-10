@@ -374,22 +374,29 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Sub ListRenewalAlerts(ByRef oParentElmt As XmlElement)
+            Public Sub ListRenewalAlerts(ByRef oParentElmt As XmlElement, Optional ByVal bProcess As Boolean = False)
                 Try
                     Dim moReminderCfg As XmlElement = WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders")
                     oParentElmt.InnerXml = moReminderCfg.OuterXml
                     Dim ProcessedCount As Long = 0
                     Dim oReminder As XmlElement
 
+                    If myWeb.moRequest("process") = "all" Then
+                        bProcess = True
+                    End If
+
                     For Each oReminder In oParentElmt.SelectNodes("subscriptionReminders/reminder")
 
                         Select Case oReminder.GetAttribute("action")
-                            Case "renewalreminder"
+                            Case "renewalreminder", "renew"
                                 'Select the subscriptions that are caught up in this case
                                 ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
+                                    If bProcess Then
+                                        force = True
+                                    End If
                                     Dim ingoreIfPaymentActive As Boolean = False
                                     Dim actionResult As String
                                     If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
@@ -398,18 +405,29 @@ Partial Public Class Cms
                                     If oReminder.GetAttribute("invalidPaymentOnly") Then
                                         ingoreIfPaymentActive = True
                                     End If
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), "renewalreminder", ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
-                            Case "renew"
-                                'Select the subscriptions that are caught up in this case
-                                ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
-
-                            Case "expire"
-                            Case "expired"
+                            Case "expire", "expired"
                                 ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
-
+                                Dim subxml As XmlElement
+                                For Each subxml In oReminder.SelectNodes("Subscribers")
+                                    Dim force As Boolean = False
+                                    If bProcess Then
+                                        force = True
+                                    End If
+                                    Dim ingoreIfPaymentActive As Boolean = False
+                                    Dim actionResult As String
+                                    If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                        force = True
+                                    End If
+                                    If oReminder.GetAttribute("invalidPaymentOnly") Then
+                                        ingoreIfPaymentActive = True
+                                    End If
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+                                    subxml.SetAttribute("actionResult", actionResult)
+                                Next
 
                         End Select
 
@@ -461,14 +479,16 @@ Partial Public Class Cms
                             End If
 
                         Case "renew"
-
-                            Select Case RenewSubscription(SubXml, True)
-                                Case "Success"
-                                Case "Failed"
-                                    SubXml.SetAttribute("actionResult", actionResult)
-                                    Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
-                            End Select
-
+                            If force Then
+                                Select Case RenewSubscription(SubXml, True)
+                                    Case "Success"
+                                        actionResult = "Renewed"
+                                    Case "Failed"
+                                        actionResult = "Renewal Failed"
+                                        SubXml.SetAttribute("actionResult", actionResult)
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                End Select
+                            End If
                         Case "expire"
                             actionResult = ExpireSubscription(SubId, "Scheduled Expiration")
                         Case "expired"

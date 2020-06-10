@@ -121,7 +121,8 @@
       <bind id="cRenewalStatus" nodeset="cRenewalStatus" required="true()" type="string"/>
       <bind id="dExpireDate" nodeset="dExpireDate" required="true()" type="string"/>
       <bind id="dStartDate" nodeset="dStartDate" required="true()" type="string"/>
-      
+
+      <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
     </bind>
 
 	</model>
@@ -141,9 +142,21 @@
         <input bind="nPeriod" class="readonly">
           <label>Renewal Term</label>
         </input>
-        <input bind="cRenewalStatus" class="readonly">
-          <label>Renewal Type</label>
-        </input>
+        <select1 bind="cRenewalStatus" appearance="full" class="required vshort">
+          <label>Subscription type</label>
+          <item>
+            <label>Fixed Length</label>
+            <value>Fixed Length</value>
+          </item>
+          <item>
+            <label>Rolling</label>
+            <value>Rolling</value>
+          </item>
+          <item>
+            <label>Cancelled</label>
+            <value>Cancelled</value>
+          </item>
+        </select1>
       </group>
     <group>
       <group >
@@ -153,6 +166,9 @@
       <input bind="dExpireDate" class="readonly calendar si">
         <label>Next Payment Will Be Collected</label>
       </input>
+        <input bind="cDescription" class="textarea">
+          <label>Description</label>
+        </input>
     </group>
     </group>
 	</group>

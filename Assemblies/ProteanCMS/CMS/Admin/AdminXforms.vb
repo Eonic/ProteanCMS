@@ -6932,20 +6932,19 @@ Partial Public Class Cms
                     Dim i As Integer = 1
                     Dim bDone As Boolean = False
                     Dim cItems As String = ""
+                    Dim initialSubContentId As Long = CLng("0" & MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
+
 
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
+                        Dim ContentId As Long = CLng(MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
+                        Dim ContentXml As XmlElement = myWeb.moPageXml.CreateElement("Content")
+                        ContentXml.InnerXml = moDbHelper.getContentBrief(ContentId)
 
-
-                        If nSubId = 0 Then
-                            'we are creating a new subscription
-                            'first we get the subscription content XML
-                            Dim ContentId As Long = CLng(MyBase.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText)
-                            Dim ContentXml As XmlElement = myWeb.moPageXml.CreateElement("Content")
-                            ContentXml.InnerXml = moDbHelper.getContentBrief(ContentId)
+                        If initialSubContentId <> ContentId Then
                             'Now we populate the instance
-                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText = myWeb.moRequest("userId")
-                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirType").InnerText = "user"
+
+
                             MyBase.Instance.SelectSingleNode("tblSubscription/cSubName").InnerText = ContentXml.SelectSingleNode("Content/Name").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/cSubXml").InnerXml = ContentXml.InnerXml
                             'dStartDate Populated by form
@@ -6955,22 +6954,46 @@ Partial Public Class Cms
                             MyBase.Instance.SelectSingleNode("tblSubscription/nRenewalTerm").InnerText = ContentXml.SelectSingleNode("Content/Duration/RenewalTerm").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText = ContentXml.SelectSingleNode("Content/SubscriptionPrices/Price[@type='sale']").InnerText
                             MyBase.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText = ContentXml.SelectSingleNode("Content/Type").InnerText
-
                             MyBase.Instance.SelectSingleNode("tblSubscription/dPublishDate").InnerText = MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText
 
-                            Dim oSub As New Protean.Cms.Cart.Subscriptions()
+                        End If
 
+
+                        If nSubId = 0 Then
+                            'we are creating a new subscription
+                            'first we get the subscription content XML
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText = myWeb.moRequest("userId")
+                            MyBase.Instance.SelectSingleNode("tblSubscription/nDirType").InnerText = "user"
+                            MyBase.Instance.SelectSingleNode("tblSubscription/dPublishDate").InnerText = MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText
+
+                            'Calculate Renewal Date
+                            Dim oSub As New Protean.Cms.Cart.Subscriptions()
                             Dim dSubEndDate As DateTime = oSub.SubscriptionEndDate(CDate(MyBase.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText), ContentXml.SelectSingleNode("Content"))
                             MyBase.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText = xmlDate(dSubEndDate)
 
-                            'Calculate Renewal Date
-
+                        Else
+                            'updating an existing subscription
+                            If MyBase.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText <> "Cancelled" Then
+                                MyBase.Instance.SelectSingleNode("tblSubscription/nStatus").InnerText = "1"
+                            End If
                         End If
+
+
 
                         MyBase.validate()
 
                         If MyBase.valid Then
                             Dim nCId As Integer = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, MyBase.Instance, nSubId)
+                            If MyBase.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText <> "Cancelled" Then
+                                Dim oElmt As XmlElement
+                                If nSubId > 0 Then
+                                    For Each oElmt In MyBase.Instance.SelectNodes("tblSubscription/cSubXml/Content/UserGroups/Group[@id!='']")
+                                        Dim nGrpID As Integer = oElmt.Attributes("id").Value
+                                        myWeb.moDbHelper.saveDirectoryRelations(CInt(MyBase.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID)
+                                    Next
+                                End If
+                            End If
+
                         End If
                     End If
 

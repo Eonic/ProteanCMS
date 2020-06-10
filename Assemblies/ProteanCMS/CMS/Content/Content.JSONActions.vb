@@ -146,19 +146,26 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            ' to call /ewapi/Cms.Content/SearchIndex?data={query:'driving'}
+            ' to call /ewapi/Cms.Content/SearchIndex?data={query:'driving',hitsLimit:'30'}
 
             Public Function SearchIndex(ByRef myApi As Protean.API, ByRef searchFilter As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim SearchString As String = ""
+                    Dim HitsLimit As Integer = 50
+
                     If Not searchFilter Is Nothing Then
                         SearchString = searchFilter("query")
+                        If searchFilter("hitslimit") <> "" Then
+                            HitsLimit = CInt(searchFilter("hitslimit"))
+                        End If
                     End If
-                    Dim oSrch As New Protean.Cms.Search(myApi)
+
+
+                        Dim oSrch As New Protean.Cms.Search(myApi)
                     Dim oResultsXml As New XmlDocument()
                     oResultsXml.AppendChild(oResultsXml.CreateElement("Results"))
                     oSrch.moContextNode = oResultsXml.FirstChild
-                    oSrch.IndexQuery(myApi, SearchString)
+                    oSrch.IndexQuery(myApi, SearchString, HitsLimit)
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(oResultsXml, Newtonsoft.Json.Formatting.Indented)
                     Return jsonString.Replace("""@", """_")
 
