@@ -114,6 +114,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TidyHTML5Managed, Version=1.1.5.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NonNuget\TidyHTML5Managed.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calendar.cs" />
@@ -145,12 +149,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\_objSource\ReferencedAssemblies\TidyHtml5Managed\TidyHtml5Managed_Net45\TidyHtml5Managed_Net45.csproj">
-      <Project>{5fe3954b-6430-4b35-b5c7-5b32c515fccd}</Project>
-      <Name>TidyHtml5Managed_Net45</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\..\EonicClients\CapitalSpaceGit\packages\Magick.NET-Q8-x64.7.14.5\build\net40\Magick.NET-Q8-x64.targets')" />
