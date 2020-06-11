@@ -1733,6 +1733,13 @@ Partial Public Module xmlTools
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
+                    Case "Subscriptions"
+
+                        Dim sSql As String = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder"
+                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sSql)
+                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
+
 
                     Case Else
                         sql = Query1

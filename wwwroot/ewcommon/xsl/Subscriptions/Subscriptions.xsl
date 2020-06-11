@@ -534,62 +534,103 @@
         <xsl:apply-templates select="Content[@type='xform']" mode="xform"/>
       </xsl:when>
       <xsl:otherwise>
-        <div class="SubscriptionList">
-            <table class="table table-striped">
-              <tbody>
+        <div class="SubscriptionList list-group">
                 <xsl:apply-templates select="Subscription" mode="displayBrief">
                   <xsl:with-param name="sortBy" select="@sortBy"/>
                 </xsl:apply-templates>
-              </tbody>
-            </table>
-          </div>
+        </div>
       </xsl:otherwise>
     </xsl:choose>
 
   </xsl:template>
 
   <xsl:template match="Subscription" mode="displayBrief">
-    <tr>
-      <td>
-        <xsl:apply-templates select="." mode="status_legend"/>
-      </td>
-      <td>
-        <xsl:value-of select="@name"/>
+
+      <div class="list-group-item ">
+        <h4 class="list-group-item-heading">
+          <div class="pull-right">
+             <xsl:apply-templates select="/Page" mode="formatPrice">
+                  <xsl:with-param name="price" select="@value"/>
+                  <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+            </xsl:apply-templates>
+          </div>
+          <xsl:value-of select="@name"/>
+        </h4>
+        <xsl:choose>
+        <xsl:when test="@renewalStatus='Cancelled'">
+          <div class="alert alert-warning">
+            Cancelled
+          </div>
+        </xsl:when>
+          <xsl:when test="@renewalStatus='Fixed'">
+            Fixed Term
+          </xsl:when>
+        <xsl:otherwise>
+                    Renews every
+          <xsl:value-of select="@period"/>&#160;
+          <xsl:value-of select="@periodUnit"/>
+        </xsl:otherwise>
+        </xsl:choose>
+
         <br/>
-        <xsl:value-of select="@period"/> -
-        <xsl:value-of select="@periodUnit"/>
-      </td>
-      <td>
-        <xsl:apply-templates select="/Page" mode="formatPrice">
-              <xsl:with-param name="price" select="@value"/>
-              <xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
-        </xsl:apply-templates>
 
-      </td>
-      <td>
+        <strong>Started:</strong>&#160;<xsl:call-template name="DD_Mon_YYYY">
+          <xsl:with-param name="date" select="@startDate"/>
+        </xsl:call-template>
+        &#160;&#160;
+        <xsl:choose>
+          <xsl:when test="@renewalStatus='Rolling'">
+            <strong>Renews:</strong>&#160;<xsl:call-template name="DD_Mon_YYYY">
+              <xsl:with-param name="date" select="@expireDate"/>
+            </xsl:call-template>
+            <br/>
+            <xsl:choose>
+              <xsl:when test="@paymentStatus='active'">
+                Will automatically collect the next payment with <xsl:value-of select="@providerName"/>
+              </xsl:when>
+              <xsl:when test="@paymentStatus='error'">
+                <br/>
+                <div class="alert alert-danger">
+                  <i class="fas fa-exclamation-triangle fa-3x pull-left">&#160;</i>
+                  There was an error checking your payment method
+                  You need to update your payment method for the next installment to be collected
+                </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <br/>
+                <div class="alert alert-danger">
+                  <i class="fas fa-exclamation-triangle fa-3x pull-left">&#160;</i>
+                  You need to update your payment method for the next installment to be collected
+                </div>
+              </xsl:otherwise>
+            </xsl:choose>
+
+            <br/>
+            <a href="?subCmd=updateSubPayment&amp;subId={@id}" class="btn btn-xs btn-primary pull-right">
+              <i class="fa fa-money">&#160;</i>&#160;Update Payment Method
+            </a>
+            <a href="?subCmd=cancelSub&amp;subId={@id}">
+              <i class="fa fa-times">&#160;</i>&#160;Cancel
+            </a>
+
+          </xsl:when>
+          <xsl:when test="@renewalStatus='Fixed'">
+            <strong>Ends:</strong>&#160;<xsl:call-template name="DD_Mon_YYYY">
+              <xsl:with-param name="date" select="@expireDate"/>
+            </xsl:call-template>
+            <br/>
+          </xsl:when>
+          <xsl:when test="@renewalStatus='Cancelled'">
+
+            <strong>Ended:</strong>&#160;<xsl:call-template name="DD_Mon_YYYY">
+              <xsl:with-param name="date" select="@expireDate"/>
+            </xsl:call-template>
+
+          </xsl:when>
+        </xsl:choose>
         
-      </td>
-      <td>
-        <td>
-          <xsl:if test="@paymentStatus='active' or @paymentStatus='Manual' ">
-            Start Date:   <xsl:call-template name="DD_Mon_YYYY">
-                            <xsl:with-param name="date" select="@startDate"/>
-                          </xsl:call-template>
-
-            <xsl:if test="@paymentStatus='active'">
-              <br/> Will automatically Renew with
-            </xsl:if>
-            <xsl:value-of select="@providerName"/>
-            <a href="?subCmd=updateSubPayment&amp;subId={@id}" class="btn btn-xs btn-primary">
-            <i class="fa fa-money">&#160;</i>&#160;Update Payment Method  
-          </a>
-          <a href="?subCmd=cancelSub&amp;subId={@id}" class="btn btn-xs btn-warning">
-            <i class="fa fa-times">&#160;</i>&#160;Cancel
-          </a>
-          </xsl:if>
-        </td>
-      </td>
-    </tr>
+   
+    </div>
 
   </xsl:template>
 

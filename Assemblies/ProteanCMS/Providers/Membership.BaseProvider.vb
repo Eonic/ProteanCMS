@@ -957,9 +957,10 @@ Check:
 
                                         valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
                                         valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
-                                        valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
                                         valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
-
+                                        If Not Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") Is Nothing Then
+                                            valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                        End If
                                         Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
                                         Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
 
