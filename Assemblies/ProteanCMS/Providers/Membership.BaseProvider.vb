@@ -1684,7 +1684,31 @@ Check:
                                                 myWeb.moSession("PreviewUser") = Nothing
                                                 myWeb.moSession("adminMode") = "true"
                                                 myWeb.mbAdminMode = True
-                                                myWeb.msRedirectOnEnd = "/admin"
+                                                If myWeb.mcOriginalURL.Contains("ProductId") Then
+
+                                                    Dim pid As String = myWeb.mcOriginalURL.Substring(myWeb.mcOriginalURL.IndexOf("ProductId=")).Replace("ProductId=", "")
+
+                                                    myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&pid=" & pid
+                                                ElseIf myWeb.mcOriginalURL.Contains("SupplierId") Then
+
+                                                    Dim sid As String = myWeb.mcOriginalURL.Substring(myWeb.mcOriginalURL.IndexOf("SupplierId=")).Replace("SupplierId=", "")
+                                                    If myWeb.mcOriginalURL.Contains("EditSupplier") Then
+
+                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=EditSupplier&sid=" & sid
+
+                                                    ElseIf myWeb.mcOriginalURL.Contains("DisplayProductList") Then
+
+                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=DisplayProductList&sid=" & sid
+
+                                                    ElseIf myWeb.mcOriginalURL.Contains("AddRemoveDoc") Then
+
+                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=AddRemoveDoc&sid=" & sid
+                                                    End If
+                                                Else
+
+                                                        myWeb.msRedirectOnEnd = "/admin"
+                                                End If
+
                                             Case "user"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
                                         End Select
