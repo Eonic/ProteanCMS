@@ -5210,7 +5210,7 @@
             <i class="fa fa-repeat fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Reset Pwd</a>
-          <a href="{$appPath}?ewCmd=ImpersonateUser&amp;id={@id}" class="btn btn-xs btn-success">
+          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-success">
             <i class="fa fa-user-secret fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Impersonate</a>
@@ -5317,7 +5317,7 @@
           <div class="col-md-8">
 
             <xsl:for-each select="Contacts/Contact">
-              <xsl:apply-templates select="." mode="contactAddressBrief"/>
+              <xsl:apply-templates select="." mode="contactAddressBriefProfile"/>
               <xsl:if test="position() mod 2=0">
                 <div class="terminus">&#160;</div>
               </xsl:if>
@@ -5326,10 +5326,13 @@
         </div>
 
       </div>
-      <xsl:if test="Subscriptions">
+
         <div class="panel panel-default">
           <div class="panel-heading">
-        <h4 class="panel-title">Subscriptions</h4>
+            <a href="{$appPath}?ewCmd=EditUserSubscription&amp;id=0&amp;userId={@id}"  class="btn btn-primary btn-sm pull-right">
+              <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
+            </a>
+        <h3 class="panel-title">Subscriptions</h3>
           </div>
         <table class="table">
           <tr>
@@ -5399,7 +5402,6 @@
           </xsl:for-each>
         </table>
         </div>
-      </xsl:if>
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">Orders</h4>
@@ -5432,7 +5434,7 @@
    </a>
   </xsl:template>
 
-  <xsl:template match="Contact" mode="contactAddressBrief">
+  <xsl:template match="Contact" mode="contactAddressBriefProfile">
     <div class="col-md-6">
       <h4>
         <xsl:value-of select="cContactType"/>
@@ -9280,11 +9282,16 @@
     </xsl:variable>
     <xsl:variable name="parId" select="@parId" />
     <xsl:for-each select="ContentDetail/Subscription">
+
     <div class="subscription detail">
       <div class="row">
         <div class="col-md-6">
           <div class="panel panel-default">
             <div class="panel-heading">
+              <a href="?ewCmd=EditUserSubscription&amp;id={@id}" class="btn btn-primary pull-right">
+                <i class="fa fa-pencil">&#160;</i>&#160;
+                Edit Subscripiton
+              </a>
               <h3 class="panel-title">
                 <xsl:value-of select="@name"/>
               </h3>
@@ -9754,10 +9761,10 @@
   
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
+      <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
+        <i class="fa fa-history">&#160;</i>&#160;Process History
+      </a>
       <div class="col-md-12">
-        <a href="{$appPath}?ewCmd=EditTemplate&amp;ewCmd2=RenewalAlerts" class="btn btn-default"><i class="fa fa-pencil">&#160;</i>&#160;Edit Templates</a>
-        <br/>
-        <br/>
         <div class="panel panel-default">
           <table class="table">
             <tr>
@@ -9767,8 +9774,8 @@
               <th>Count</th>
               <th>Subject</th>
               <th>
-                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
-                  <i class="fa fa-plus">&#160;</i>&#160;Add
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-default">
+                  <i class="fa fa-plus">&#160;</i>&#160;Process All
                 </a>
               </th>
             </tr>
@@ -9788,11 +9795,6 @@
                 </td>
                 <td>
                   <xsl:value-of select="@subject"/>
-                </td>
-                <td>
-                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
-                    <i class="fa fa-pencil">&#160;</i>&#160;Edit
-                  </a>
                 </td>
               </tr>
               <tr>

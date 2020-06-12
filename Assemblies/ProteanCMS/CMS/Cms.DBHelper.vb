@@ -2498,7 +2498,11 @@ restart:
                                         nAuditId = CLng(oAuditElmt.InnerText())
                                     End If
                                     If nAuditId = 0 Then
-                                        nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        If myWeb Is Nothing Then
+                                            nAuditId = getAuditId(1, 0, "")
+                                        Else
+                                            nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        End If
                                         oInstance.SelectSingleNode("descendant-or-self::nAuditId").InnerText = nAuditId
                                     End If
                                 End If

@@ -1491,11 +1491,13 @@ Partial Public Module xmlTools
             Dim SelectElmt As XmlElement = myWeb.moPageXml.CreateElement("select1")
             Dim Query1 As String = ""
             Dim Query2 As String = ""
+            Dim Query3 As String = ""
             Dim sql As String
             Try
                 Dim QueryArr() As String = Split(Query, ".")
                 Query1 = QueryArr(0)
                 If UBound(QueryArr) > 0 Then Query2 = QueryArr(1)
+                If UBound(QueryArr) > 1 Then Query3 = QueryArr(2)
                 Dim oXfrms As New Protean.Cms.xForm
                 oXfrms.moPageXML = myWeb.moPageXml
                 Select Case Query1
@@ -1678,8 +1680,16 @@ Partial Public Module xmlTools
 
                     Case "Lookup"
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
+                        If (Query3 <> String.Empty) Then
+                            Select Case Query3
+                                Case "sortaz"
+                                    'check sorting is present
+                                    sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by cLkpKey, nDisplayOrder, nLkpID"
+                            End Select
+                        Else
+                            sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by nDisplayOrder, nLkpID"
+                        End If
 
-                        sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by nDisplayOrder, nLkpID"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
@@ -1722,6 +1732,13 @@ Partial Public Module xmlTools
                         sql = sql & " order by cCatName"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
+                    Case "Subscriptions"
+
+                        Dim sSql As String = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder"
+                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sSql)
+                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
 
 
                     Case Else
