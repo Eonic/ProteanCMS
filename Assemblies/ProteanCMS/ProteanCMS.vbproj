@@ -454,7 +454,7 @@
     <Compile Include="CMS\Admin\AdminXforms.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="C:\Users\trevors2\Documents\AssemblyInfo.vb">
+    <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
       <Link>AssemblyInfo.vb</Link>
     </Compile>
