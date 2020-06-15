@@ -394,9 +394,6 @@ Partial Public Class Cms
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
-                                    If bProcess Then
-                                        force = True
-                                    End If
                                     Dim ingoreIfPaymentActive As Boolean = False
                                     Dim actionResult As String
                                     If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
@@ -410,7 +407,7 @@ Partial Public Class Cms
                                         End If
                                     End If
 
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -433,7 +430,7 @@ Partial Public Class Cms
                                         End If
                                     End If
 
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -446,7 +443,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
+            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
                 Dim actionResult As String = ""
                 ProcessedCount = ProcessedCount + 1
 
@@ -474,7 +471,7 @@ Partial Public Class Cms
                                 If PaymentActive And ingoreIfPaymentActive Then
                                     actionResult = "not required"
                                 Else
-                                    If force Then
+                                    If force Or process Then
                                         Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
                                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
                                         actionResult = "sent"
@@ -487,8 +484,8 @@ Partial Public Class Cms
                             End If
 
                         Case "renew"
-                            If force Then
-                                Select Case RenewSubscription(SubXml.FirstChild, True)
+                            If force Or process Then
+                                Select Case RenewSubscription(SubXml, True)
                                     Case "Success"
                                         actionResult = "Renewed"
                                     Case "Failed"
