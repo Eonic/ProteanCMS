@@ -381,7 +381,7 @@ Partial Public Class Cms
                     Dim ProcessedCount As Long = 0
                     Dim oReminder As XmlElement
 
-                    If myWeb.moRequest("process") = "all" Then
+                    If myWeb.moRequest("ewCmd2") = "processAll" Then
                         bProcess = True
                     End If
 
@@ -394,18 +394,20 @@ Partial Public Class Cms
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
-                                    If bProcess Then
-                                        force = True
-                                    End If
                                     Dim ingoreIfPaymentActive As Boolean = False
                                     Dim actionResult As String
                                     If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
                                         force = True
                                     End If
-                                    If oReminder.GetAttribute("invalidPaymentOnly") Then
-                                        ingoreIfPaymentActive = True
+
+                                    If Not oReminder.GetAttribute("invalidPaymentOnly") Is Nothing Then
+
+                                        If oReminder.GetAttribute("invalidPaymentOnly") = "true" Then
+                                            ingoreIfPaymentActive = True
+                                        End If
                                     End If
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -422,10 +424,13 @@ Partial Public Class Cms
                                     If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
                                         force = True
                                     End If
-                                    If oReminder.GetAttribute("invalidPaymentOnly") Then
-                                        ingoreIfPaymentActive = True
+                                    If Not oReminder.GetAttribute("invalidPaymentOnly") Is Nothing Then
+                                        If oReminder.GetAttribute("invalidPaymentOnly") = "true" Then
+                                            ingoreIfPaymentActive = True
+                                        End If
                                     End If
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), force, ingoreIfPaymentActive)
+
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -438,7 +443,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
+            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
                 Dim actionResult As String = ""
                 ProcessedCount = ProcessedCount + 1
 
@@ -466,7 +471,7 @@ Partial Public Class Cms
                                 If PaymentActive And ingoreIfPaymentActive Then
                                     actionResult = "not required"
                                 Else
-                                    If force Then
+                                    If force Or process Then
                                         Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
                                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
                                         actionResult = "sent"
@@ -479,7 +484,7 @@ Partial Public Class Cms
                             End If
 
                         Case "renew"
-                            If force Then
+                            If force Or process Then
                                 Select Case RenewSubscription(SubXml, True)
                                     Case "Success"
                                         actionResult = "Renewed"
@@ -488,11 +493,35 @@ Partial Public Class Cms
                                         SubXml.SetAttribute("actionResult", actionResult)
                                         Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
                                 End Select
+                            Else
+                                actionResult = "To Renew"
                             End If
                         Case "expire"
-                            actionResult = ExpireSubscription(SubId, "Scheduled Expiration")
-                        Case "expired"
+                            If force Then
+                                actionResult = ExpireSubscription(SubId, "Scheduled Expiration")
+                            Else
+                                actionResult = "To Expire"
+                            End If
 
+                        Case "expired"
+                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+                            If actionDate = "#1/1/0001 12:00:00 AM#" Or (force And gbDebug) Then
+
+                                If PaymentActive And ingoreIfPaymentActive Then
+                                    actionResult = "not required"
+                                Else
+                                    If force Then
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
+                                        actionResult = "sent"
+                                    Else
+                                        actionResult = "not sent"
+                                    End If
+                                End If
+                            Else
+                                actionResult = actionDate
+                            End If
                     End Select
 
                     Return actionResult
@@ -1476,7 +1505,7 @@ RedoCheck:
                         Case "Year"
                             renewInterval = DateInterval.Year
                     End Select
-                    Dim SubId As Long = SubXml.GetAttribute("id")
+                    Dim SubId As Long = CLng("0" & SubXml.GetAttribute("id"))
 
                     Dim dNewStart As Date = DateAdd(DateInterval.Day, 1, CDate(SubXml.GetAttribute("expireDate")))
                     Dim dNewEnd As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")), CDate(SubXml.GetAttribute("expireDate")))
