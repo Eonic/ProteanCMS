@@ -478,8 +478,27 @@ Partial Public Class Cms
 
             End Function
 
+            Public Function UpdateCartProductPrice(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim cProductPrice As Double = 0
+                    Dim cartItemId As Integer
+                    Dim item As Newtonsoft.Json.Linq.JObject
+                    item = jObj("Item")
+                    If (item IsNot Nothing) Then
+                        If item.ContainsKey("itemId") Then
+                            cartItemId = item("itemId")
+                        End If
 
+                        If item.ContainsKey("itemPrice") Then
+                            cProductPrice = item("itemPrice")
+                        End If
+                    End If
 
+                Catch ex As Exception
+
+                End Try
+            End Function
 
         End Class
 
