@@ -484,7 +484,7 @@ Partial Public Class Cms
                     Dim cProductPrice As Double = CDbl(jObj("itemPrice"))
                     Dim cartItemId As Long = CLng(jObj("itemId"))
 
-                    If myWeb.moDbHelper.checkUserRole(myCart.moCartConfig("AllowPriceUpdateGroup"), "Role", CLng("0" & myWeb.moSession("nUserId"))) Then
+                    If myWeb.moDbHelper.checkUserRole(myCart.moCartConfig("AllowPriceUpdateRole"), "Role", CLng("0" & myWeb.moSession("nUserId"))) Then
 
                         myCart.UpdateItemPrice(cartItemId, cProductPrice)
 
