@@ -1499,9 +1499,8 @@
           <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
       </xsl:when>
       <xsl:otherwise>
-            <h3><strong>ProteanCMS,<br/> the new name for EonicWeb5</strong></h3>
-            <p>We have renamed to ProteanCMS to better reflect the true versitility and flexiblity of the platform.</p>
-            <p>As ProteanCMS is now fully opensource and available to be used by other agencies, we felt it was important for the platform to have its own name and identity.</p>
+            <h3><strong>ProteanCMS</strong></h3>
+              <p>ProteanCMS is fully opensource.</p>
             <a href="https://www.proteancms.com">For more information click here.</a>
       </xsl:otherwise>
     </xsl:choose>
@@ -9559,7 +9558,17 @@
             <xsl:for-each select="/Page/ContentDetail/Subscribers">
               <tr>
                 <td>
-                  <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+
+                  <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={nDirId/node()}">
+                    <span class="btn btn-primary btn-xs">
+                      <i class="fa fa-user fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                    </span>
+                    &#160;
+                        <xsl:value-of select="cDirXml/User/LastName"/>, <xsl:value-of select="cDirXml/User/FirstName"/>
+                    
+                  </a>
                 </td>
                 <td>
                   <xsl:value-of select="cDirName/node()"/>
@@ -9672,7 +9681,15 @@
         <xsl:for-each select="Subscribers">
           <tr>
             <td>
-              <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+              <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={nDirId/node()}">
+                <span class="btn btn-primary btn-xs">
+                  <i class="fa fa-user fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </span>
+                &#160;
+                <xsl:value-of select="cDirXml/User/LastName"/>, <xsl:value-of select="cDirXml/User/FirstName"/>
+              </a>
             </td>
             <td>
               <xsl:value-of select="cDirName/node()"/>
@@ -9730,7 +9747,7 @@
                 </a>
                 </xsl:when>
                   <xsl:otherwise>
-                    <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-warning btn-sm">
+                    <a href="{$appPath}?ewCmd=RenewalAlerts&amp;name={ancestor::reminder/@name}&amp;SendId={nSubKey/node()}"  class="btn btn-warning btn-sm">
                       <i class="fa fa-envelope">&#160;</i>&#160;Resend
                     </a>
                   </xsl:otherwise>
@@ -9761,9 +9778,7 @@
   
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
-      <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
-        <i class="fa fa-history">&#160;</i>&#160;Process History
-      </a>
+
       <div class="col-md-12">
         <div class="panel panel-default">
           <table class="table">
@@ -9774,8 +9789,11 @@
               <th>Count</th>
               <th>Subject</th>
               <th>
-                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-default">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-danger pull-right">
                   <i class="fa fa-plus">&#160;</i>&#160;Process All
+                </a>
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default pull-right" disabled="disabled">
+                  <i class="fa fa-history">&#160;</i>&#160;Process History
                 </a>
               </th>
             </tr>
@@ -9796,6 +9814,9 @@
                 <td>
                   <xsl:value-of select="@subject"/>
                 </td>
+                <td>
+                  &#160;
+                  </td>
               </tr>
               <tr>
                 <td colspan="7">

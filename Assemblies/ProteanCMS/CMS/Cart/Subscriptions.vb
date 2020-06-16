@@ -199,7 +199,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0)
+            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional excludeFixed As Boolean = False)
                 Try
 
                     Dim ExpireRange As String = ""
@@ -224,6 +224,10 @@ Partial Public Class Cms
                     Else
                         sSql = sSql & " where a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
 
+                    End If
+
+                    If excludeFixed Then
+                        sSql = sSql & " and sub.cRenewalStatus  <> 'Fixed'"
                     End If
 
                     sSql = sSql & " and sub.cRenewalStatus <> 'Cancelled'  order by a.dExpireDate desc"
@@ -367,6 +371,7 @@ Partial Public Class Cms
                         End If
 
                         oParentElmt.AppendChild(oElmt)
+                        oDs = Nothing
                     Next
                     Return oParentElmt
                 Catch ex As Exception
@@ -396,7 +401,7 @@ Partial Public Class Cms
                                     Dim force As Boolean = False
                                     Dim ingoreIfPaymentActive As Boolean = False
                                     Dim actionResult As String
-                                    If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                    If myWeb.moRequest("name") = oReminder.GetAttribute("name") And myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
                                         force = True
                                     End If
 
@@ -412,7 +417,13 @@ Partial Public Class Cms
                                 Next
 
                             Case "expire", "expired"
-                                ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+
+                                If oReminder.GetAttribute("action") = "expire" Then
+                                    ListExpiredSubscriptions(oReminder, oReminder.GetAttribute("count"), "", 0, True)
+                                Else
+                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                End If
+
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
@@ -421,7 +432,7 @@ Partial Public Class Cms
                                     End If
                                     Dim ingoreIfPaymentActive As Boolean = False
                                     Dim actionResult As String
-                                    If myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                    If myWeb.moRequest("name") = oReminder.GetAttribute("name") And myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
                                         force = True
                                     End If
                                     If Not oReminder.GetAttribute("invalidPaymentOnly") Is Nothing Then
@@ -449,6 +460,7 @@ Partial Public Class Cms
 
                 Try
                     Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, SubId)
+
                     SubXml.SetAttribute("messageType", messageType)
                     SubXml.SetAttribute("action", Action)
                     Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
@@ -485,7 +497,7 @@ Partial Public Class Cms
 
                         Case "renew"
                             If force Or process Then
-                                Select Case RenewSubscription(SubXml, True)
+                                Select Case RenewSubscription(SubXml.FirstChild, True)
                                     Case "Success"
                                         actionResult = "Renewed"
                                     Case "Failed"
@@ -1321,7 +1333,12 @@ RedoCheck:
                     editElmt.SelectSingleNode("cDescription").InnerText = cReason
 
                     'Cancel the payment method
-                    CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    Dim PaymentMethodId As Long = CLng("0" & editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+
+                    'Cancel the payment method
+                    If PaymentMethodId > 0 Then
+                        CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    End If
 
                     'We only remove user from groups (this needs to happen by schduler to remove once expired)
 
@@ -1351,12 +1368,19 @@ RedoCheck:
                     editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId
                     editElmt.SelectSingleNode("cDescription").InnerText = cReason
 
+                    Dim PaymentMethodId As Long = CLng("0" & editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+
                     'Cancel the payment method
-                    CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    If PaymentMethodId > 0 Then
+                        CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    End If
+
                     myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Subscription, SubInstance.DocumentElement)
 
                     'Remove the user from any user groups
-                    ExpireSubscriptionGroups(nId)
+                    If CDate(editElmt.SelectSingleNode("dExpireDate").InnerText) < xmlDate(Now()) Then
+                        ExpireSubscriptionGroups(nId)
+                    End If
 
                     Return "Subscription Expired" & cReason
 

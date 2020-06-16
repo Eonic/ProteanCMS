@@ -2989,7 +2989,7 @@ Public Class Cms
                     Catch ex As Exception
                         '  OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
                         sProcessInfo = classPath & "." & methodName & " not found"
-                        ocNode.InnerXml = "<Content type=""error""><div>" & sProcessInfo & ex.Message & ex.StackTrace & "</div></Content>"
+                        ocNode.InnerXml = "<Content type=""error""><div>" & HtmlEncode(sProcessInfo & ex.Message & ex.StackTrace) & "</div></Content>"
                     End Try
                 End If
 
