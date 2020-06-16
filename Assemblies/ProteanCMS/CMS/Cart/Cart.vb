@@ -6473,6 +6473,35 @@ processFlow:
         End Function
 
 
+        Public Sub UpdateItemPrice(ByVal nItemId As Long, ByVal nPrice As Double)
+            PerfMon.Log("Cart", "RemoveItem")
+            '   deletes record from item table in db
+
+            Dim sSql As String
+            Dim oDs As DataSet
+            Dim oRow As DataRow
+            Dim cProcessInfo As String = ""
+            Try
+
+                sSql = "select * from tblCartItem where (nCartItemKey = " & nItemId & ") and nCartOrderId = " & mnCartId
+
+                oDs = moDBHelper.getDataSetForUpdate(sSql, "Item")
+                If oDs.Tables("Item").Rows.Count > 0 Then
+                    For Each oRow In oDs.Tables("Item").Rows
+                        oRow("nPrice") = nPrice
+                    Next
+                End If
+                moDBHelper.updateDataset(oDs, "Item")
+                oDs = Nothing
+
+
+
+            Catch ex As Exception
+                returnException(mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+            End Try
+
+        End Sub
+
 
 
         ''' <summary>

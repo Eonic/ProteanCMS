@@ -481,22 +481,30 @@ Partial Public Class Cms
             Public Function UpdateCartProductPrice(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim cProcessInfo As String = ""
-                    Dim cProductPrice As Double = 0
-                    Dim cartItemId As Integer
-                    Dim item As Newtonsoft.Json.Linq.JObject
-                    item = jObj("Item")
-                    If (item IsNot Nothing) Then
-                        If item.ContainsKey("itemId") Then
-                            cartItemId = item("itemId")
-                        End If
+                    Dim cProductPrice As Double = CDbl(jObj("itemPrice"))
+                    Dim cartItemId As Long = CLng(jObj("itemId"))
 
-                        If item.ContainsKey("itemPrice") Then
-                            cProductPrice = item("itemPrice")
-                        End If
+                    If myWeb.moDbHelper.checkUserRole(myCart.moCartConfig("AllowPriceUpdateGroup"), "Role", CLng("0" & myWeb.moSession("nUserId"))) Then
+
+                        myCart.UpdateItemPrice(cartItemId, cProductPrice)
+
                     End If
 
-                Catch ex As Exception
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
+                    myCart.GetCart(CartXml.FirstChild)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
+
+
+                Catch ex As Exception
+                    Return ex.Message
                 End Try
             End Function
 
