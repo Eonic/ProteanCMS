@@ -6489,6 +6489,16 @@ processFlow:
                 If oDs.Tables("Item").Rows.Count > 0 Then
                     For Each oRow In oDs.Tables("Item").Rows
                         oRow("nPrice") = nPrice
+
+                        Dim oContentXml As New XmlDocument
+
+                        oContentXml.LoadXml(oRow("xItemXml"))
+                        Dim oRootElmt As XmlElement = oContentXml.FirstChild
+                        oRootElmt.SetAttribute("overridePrice", "true")
+
+                        oRow("xItemXml") = oContentXml.OuterXml
+
+
                     Next
                 End If
                 moDBHelper.updateDataset(oDs, "Item")
