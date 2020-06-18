@@ -8239,6 +8239,17 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Public Function getValidShippingOptionsDS(cDestinationCountry As String, nAmount As Long, nQuantity As Long, nWeight As Long) As DataSet
 
             Try
+                Dim userId As Integer = 0
+                If (myWeb.moSession IsNot Nothing) Then
+                    If myWeb.moSession("nUserId") <> 0 Then
+                        userId = myWeb.moSession("nUserId")
+                    Else
+                        userId = myWeb.mnUserId
+                    End If
+                Else
+                    userId = myWeb.mnUserId
+
+                End If
                 Dim sSql As String
                 Dim sCountryList As String = getParentCountries(cDestinationCountry, 1)
 
@@ -8252,15 +8263,22 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 sSql = sSql & "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " & nWeight & ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " & nWeight & ") "
 
                 sSql &= " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" & mcCurrency & "'))"
-                If myWeb.mnUserId > 0 Then
+                'If myWeb.mnUserId > 0 Then
+                '    ' if user in group then return it
+                '    sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
+                '    sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
+                '            " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
+                '            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
+                If userId > 0 Then
                     ' if user in group then return it
                     sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                             " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
+                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 1) > 0"
                     sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
                             " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
-
+                            "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & userId & " and perm.nPermLevel = 0) > 0)"
                     'method allowed for authenticated or imporsonating CS users.
                     Dim shippingGroupCondition As String
                     Dim customerSuccessGroup = "Customer Services"
