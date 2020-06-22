@@ -122,22 +122,42 @@ Partial Public Class Cms
 
             Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 12)
                 Try
-
-                    Dim ExpireRange As String = ""
+                    Dim StartRangeDate As DateTime
+                    Dim ExpireRange As DateTime
                     Select Case LCase(renewRangePeriod)
                         Case "month"
-                            ExpireRange = sqlDate(Now().AddMonths(renewRangeCount * 1))
+                            ExpireRange = Now().AddMonths(renewRangeCount * 1)
                         Case "week"
-                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 7))
+                            ExpireRange = Now().AddDays(renewRangeCount * 7)
                         Case "day"
-                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 1))
+                            ExpireRange = Now().AddDays(renewRangeCount * 1)
                     End Select
+
+                    If expiredMarginDays = "0" Then
+                        Dim NextElmt As XmlElement = oParentElmt.NextSibling
+
+                        If NextElmt.GetAttribute("action") = NextElmt.GetAttribute("action") Then
+                            Select Case LCase(NextElmt.GetAttribute("period"))
+                                Case "month"
+                                    StartRangeDate = Now().AddMonths(NextElmt.GetAttribute("count") * 1)
+                                Case "week"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 7)
+                                Case "day"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 1)
+                            End Select
+                        Else
+                            StartRangeDate = Now().AddDays(expiredMarginDays)
+                        End If
+                    Else
+                        StartRangeDate = Now().AddDays(expiredMarginDays)
+                    End If
+
 
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
                         & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " where a.dExpireDate >= " & sqlDate(Now().AddDays(expiredMarginDays)) & "and a.dExpireDate <= " & ExpireRange _
+                        & " where a.dExpireDate >= " & sqlDate(StartRangeDate) & "and a.dExpireDate <= " & sqlDate(ExpireRange) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
                     'List Subscription groups and thier subscriptions.
@@ -395,7 +415,7 @@ Partial Public Class Cms
                         Select Case oReminder.GetAttribute("action")
                             Case "renewalreminder", "renew"
                                 'Select the subscriptions that are caught up in this case
-                                ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                ListUpcomingRenewals(oReminder, CInt("0" & oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
