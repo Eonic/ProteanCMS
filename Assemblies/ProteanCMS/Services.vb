@@ -939,7 +939,22 @@ Public Class Services
         myWeb = Nothing
         Return dsShippingOption
     End Function
+    <WebMethod(Description:="Get data for manual oder by activity code")>
+    Public Function GetdtatForManualOrderbyActivity(ByVal cActivityCode As String) As DataSet
+        myWeb = New Protean.Cms
+        myWeb.Open()
+        Dim ssql As String
 
+        Dim dcOffers As DataSet
+
+        ssql = "SELECT  intOptionID,strCode,strDescription,strHTRDescriptions,dblPrice,strHTRTitle,intMinQtyPersons,intMaxQtyPersons,dblAmountVatcharged,dblAmountZeroRated FROM tblOptions O WHERE strCode =" & cActivityCode
+            dcOffers = myWeb.moDbHelper.GetDataSet(ssql, "Options")
+            myWeb.Close()
+            myWeb = Nothing
+            Return dcOffers
+
+
+    End Function
 
 #End Region
 End Class
