@@ -947,7 +947,7 @@ Public Class Services
         Dim ssql As String
 
 
-        ssql = "select cContentXmlDetail from tblContent where cContentSchemaName = 'SKU' and  CHARINDEX('" & cActivityCode & "'</StockCode>', cContentXmlDetail, 1) <>0"
+        ssql = "select cContentXmlDetail from tblContent where cContentSchemaName = 'SKU' and  CHARINDEX('" & cActivityCode & "</StockCode>', cContentXmlDetail, 1) <>0"
         Dim productContent As String = myWeb.moDbHelper.GetDataValue(ssql)
 
         Dim xDoc As XmlDocument = New XmlDocument()
