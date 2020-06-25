@@ -939,7 +939,27 @@ Public Class Services
         myWeb = Nothing
         Return dsShippingOption
     End Function
+    <WebMethod(Description:="Get data for manual oder by activity code")>
+    Public Function GetdtatForManualOrderbyActivity(ByVal cActivityCode As String) As XmlElement
 
+        myWeb = New Protean.Cms
+        myWeb.Open()
+        Dim ssql As String
+
+
+        ssql = "select cContentXmlDetail from tblContent where cContentSchemaName = 'SKU' and  CHARINDEX('" & cActivityCode & "</StockCode>', cContentXmlDetail, 1) <>0"
+        Dim productContent As String = myWeb.moDbHelper.GetDataValue(ssql)
+
+        Dim xDoc As XmlDocument = New XmlDocument()
+        xDoc.LoadXml(productContent)
+        Dim skuElement As XmlElement = xDoc.DocumentElement
+
+        myWeb.Close()
+        myWeb = Nothing
+        Return skuElement
+
+
+    End Function
 
 #End Region
 End Class
