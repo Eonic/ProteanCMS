@@ -2100,11 +2100,13 @@ processFlow:
                                         ewCmd = "PaymentForm"
                                         pseudoOrder = New Protean.Cms.Cart.Order(myWeb)
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
-                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl("0" & oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
+                                        Dim RandGen As New Random
+
+                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl("0" & oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) & "-" & RandGen.Next(1000, 9999).ToString
 
                                         pseudoOrder.firstPayment = nFirstPayment
                                         pseudoOrder.repeatPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
-                                        pseudoOrder.delayStart = True ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
+                                        pseudoOrder.delayStart = False ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
                                         pseudoOrder.startDate = dRenewalDate
                                         pseudoOrder.repeatInterval = oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Unit").InnerText
                                         pseudoOrder.repeatLength = CInt(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText)

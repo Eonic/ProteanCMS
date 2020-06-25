@@ -631,12 +631,9 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text>~/ewcommon/js/common.js</xsl:text>
-
-    <xsl:if test="//Content[@type='CookiePolicy']">
-      <xsl:if test="@previewMode!='true'">
+    <xsl:if test="Contents/Content[@type='CookiePolicy']">
         <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
-      </xsl:if>
+        <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>   
     </xsl:if>
     
   </xsl:template>
@@ -962,8 +959,6 @@
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
-
-    <xsl:apply-templates select="." mode="xform_control_scripts"/>
 
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
     
