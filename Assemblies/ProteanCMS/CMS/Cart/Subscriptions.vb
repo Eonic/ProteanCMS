@@ -1965,9 +1965,20 @@ RedoCheck:
 
                                 Dim PaymentMethodId As Long = CLng("0" & Me.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
 
+                                Dim contactXml As XmlElement = Instance.OwnerDocument.CreateElement("Contact")
+
+                                If myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']") Is Nothing Then
+                                    contactXml.InnerXml = "<Contact><nContactKey/><nContactDirId/><nContactCartId/><cContactType>Billing Address</cContactType><cContactName/><cContactCompany/><cContactAddress/><cContactCity/><cContactState/><cContactZip/><cContactCountry/><cContactTel/><cContactFax/><cContactEmail/><cContactXml><OptIn /></cContactXml><nAuditId/><cContactForiegnRef/><cContactForeignRef/></Contact>"
+                                Else
+                                    contactXml.InnerXml = myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                End If
+
+
                                 Me.Instance.InnerXml = Me.Instance.InnerXml &
                                                        moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, PaymentMethodId) &
-                                                       myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                                       contactXml.InnerXml
+
+
 
                                 Dim PaymentOptionsSelect As XmlElement = Me.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']")
 
