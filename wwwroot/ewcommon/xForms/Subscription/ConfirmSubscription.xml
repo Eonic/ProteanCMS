@@ -110,7 +110,7 @@
         <cContactForiegnRef/>
       </Contact>
 		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<submission id="EditPaymentMethod" action="" method="post" event="return form_check(this)"/>
     <bind nodeset="tblSubscription">
       <bind id="cSubName" nodeset="cSubName" required="true()" type="string"/>
       <bind id="nValueNet" nodeset="nValueNet" required="true()" type="string"/>
@@ -124,7 +124,7 @@
       </bind>
     </bind>
     <bind nodeset="tblCartPaymentMethod">
-      <bind id="currentPaymentMethod" nodeset="cPayMthdProviderName" required="true()" type="string"/>
+      <bind id="currentPaymentMethod" nodeset="cPayMthdProviderName" required="false()" type="string"/>
     </bind>
     <bind nodeset="Contact">
       <bind id="cContactName" nodeset="cContactName" required="true()" type="string"/>
@@ -200,7 +200,7 @@
     </select1>
   </group>
 	<group>
-		<submit submission="" ref="ewSubmit" class="principle">
+		<submit submission="" ref="ewSubmit" value="Update Payment Details" class="principle">
 			<label>Update Payment Details</label>
 		</submit>
 	</group>

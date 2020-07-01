@@ -403,6 +403,7 @@ Partial Public Class Cms
             'Subscriptions
             SubscriptionProcess = 300
             SubscriptionProcessAttempt = 301
+            SubscriptionAlert = 302
 
             'OpenQuote
             ValidationError = 255
@@ -2497,7 +2498,11 @@ restart:
                                         nAuditId = CLng(oAuditElmt.InnerText())
                                     End If
                                     If nAuditId = 0 Then
-                                        nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        If myWeb Is Nothing Then
+                                            nAuditId = getAuditId(1, 0, "")
+                                        Else
+                                            nAuditId = getAuditId(1, myWeb.mnUserId, "")
+                                        End If
                                         oInstance.SelectSingleNode("descendant-or-self::nAuditId").InnerText = nAuditId
                                     End If
                                 End If
@@ -6662,6 +6667,7 @@ restart:
 
         End Function
 
+
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, Optional ByVal nArtId As Long = 0, Optional ByVal cActivityDetail As String = "", Optional ByVal cForiegnRef As String = "") As Long
             Dim cSubName As String = "logActivity(ActivityType,Int,Int,[Int],[String])"
             PerfMon.Log("DBHelper", cSubName)
@@ -6673,6 +6679,7 @@ restart:
             End Try
 
         End Function
+
 
         Public Function logActivity(ByVal nActivityType As ActivityType, ByVal nUserDirId As Long, ByVal nStructId As Long, ByVal nArtId As Long, ByVal nOtherId As Long, ByVal cActivityDetail As String) As Long
             Return logActivity(nActivityType, nUserDirId, nStructId, nArtId, nOtherId, cActivityDetail, False)
@@ -9160,7 +9167,7 @@ restart:
             PerfMon.Log("DBHelper", "insertProductGroupRelation")
             Dim cProcessInfo As String
             Try
-                Dim oGroupArr() As String = Split(sGroupIds, ",")
+                Dim oGroupArr() As String = Split(sGroupIds.Trim(","), ",")
                 Dim cCount As Integer
                 Dim strReturn As New Text.StringBuilder
 

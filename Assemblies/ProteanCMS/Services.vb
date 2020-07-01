@@ -893,19 +893,6 @@ Public Class Services
         myWeb.Close()
     End Function
 
-    <WebMethod(Description:="Get All valid shipping options")>
-    Public Function GetShippingOptions(ByVal cCountry As String, ByVal nAmount As Long, ByVal nQuantity As Long, ByVal nWeight As Long) As DataSet
-        myWeb = New Protean.Cms
-        myWeb.Open()
-
-        Dim moCart As New Protean.Cms.Cart(myWeb)
-
-        Dim dsShippingOption As DataSet
-        dsShippingOption = moCart.getValidShippingOptionsDS(cCountry, nAmount, nQuantity, nWeight)
-        myWeb.Close()
-        myWeb = Nothing
-        Return dsShippingOption
-    End Function
 
 
 #End Region

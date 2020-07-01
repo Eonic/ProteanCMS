@@ -2,12 +2,36 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:template match="Page" mode="xform_control_scripts">
+    
+    <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
+      <script type="text/javascript">
+        var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;
+      </script>
+    </xsl:if>
+    
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
   </xsl:template>
 
   <xsl:template match="*" mode="xform_control_script"></xsl:template>
+  <xsl:template match="*" mode="tinymcelinklist"></xsl:template>
+
+  <xsl:template match="*[alert]" mode="xform_control_script">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="ref2">
+      <xsl:value-of select="translate($ref,'/','-')"/>
+    </xsl:variable>
+    <script>
+      $(function () {
+      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
+      <xsl:text>-btn').popover('show');</xsl:text>
+      });
+    </script>
+  </xsl:template>
 
   <!-- -->
   <!-- ========================== XFORM ========================== -->
@@ -2984,13 +3008,7 @@
         <xsl:text> </xsl:text>
       </i>
     </button>
-    <script>
-      $(function () {
-      <xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
-      <xsl:text>-btn')
-      .popover('show');</xsl:text>
-      });
-    </script>
+
   </xsl:template>
 
   <!--	

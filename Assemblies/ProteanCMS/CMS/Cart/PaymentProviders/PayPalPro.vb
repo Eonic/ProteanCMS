@@ -77,6 +77,20 @@ Namespace Providers
                 End Enum
 
 
+                Public Function CollectPayment(ByRef oWeb As Protean.Cms, ByVal nPaymentMethodId As Long, ByVal Amount As Double, ByVal CurrencyCode As String, ByVal PaymentDescription As String, ByRef oCart As Protean.Cms.Cart) As String
+                    Dim cProcessInfo As String = ""
+                    Try
+
+                        'Do nothing because recurring payments are automatic
+
+                        Return "Success"
+
+                    Catch ex As Exception
+                        returnException(mcModuleName, "CollectPayment", ex, "", cProcessInfo, gbDebug)
+                        Return "Payment Error"
+                    End Try
+                End Function
+
                 Public Function GetPaymentForm(ByRef oWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As xForm
                     PerfMon.Log("Protean.Providers.payment.PayPalPro", "GetPaymentForm")
                     Dim sSql As String
@@ -142,6 +156,7 @@ Namespace Providers
                         Dim repeatAmt As Double = CDbl("0" & oOrder.GetAttribute("repeatPrice"))
                         Dim repeatInterval As String = LCase(oOrder.GetAttribute("repeatInterval"))
                         Dim repeatFrequency As Integer = CDbl("0" & oOrder.GetAttribute("repeatFrequency"))
+                        If repeatFrequency = 0 Then repeatFrequency = CDbl("0" & oOrder.GetAttribute("repeatLength"))
                         Dim repeatLength As Integer = CDbl("0" & oOrder.GetAttribute("repeatLength"))
                         If repeatLength = 0 Then repeatLength = 1
                         Dim delayStart As Boolean = IIf(LCase(oOrder.GetAttribute("delayStart")) = "true", True, False)
@@ -496,7 +511,8 @@ Namespace Providers
                             ppAmount.Value = oEwProv.mnPaymentAmount
 
                             ppDetails.OrderTotal = ppAmount
-                            ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId)
+                            Dim RandGen As New Random
+                            ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId) & "-" & RandGen.Next(1000, 9999).ToString
                             ppDetails.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
 
                             ppRequestDetail.CreditCard = ppCreditCard

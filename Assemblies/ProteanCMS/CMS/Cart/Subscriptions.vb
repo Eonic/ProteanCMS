@@ -120,13 +120,44 @@ Partial Public Class Cms
             End Sub
 
 
-            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement)
+            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 12)
                 Try
+                    Dim StartRangeDate As DateTime
+                    Dim ExpireRange As DateTime
+                    Select Case LCase(renewRangePeriod)
+                        Case "month"
+                            ExpireRange = Now().AddMonths(renewRangeCount * 1)
+                        Case "week"
+                            ExpireRange = Now().AddDays(renewRangeCount * 7)
+                        Case "day"
+                            ExpireRange = Now().AddDays(renewRangeCount * 1)
+                    End Select
+
+                    If expiredMarginDays = "0" Then
+                        Dim NextElmt As XmlElement = oParentElmt.NextSibling
+
+                        If NextElmt.GetAttribute("action") = NextElmt.GetAttribute("action") Then
+                            Select Case LCase(NextElmt.GetAttribute("period"))
+                                Case "month"
+                                    StartRangeDate = Now().AddMonths(NextElmt.GetAttribute("count") * 1)
+                                Case "week"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 7)
+                                Case "day"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 1)
+                            End Select
+                        Else
+                            StartRangeDate = Now().AddDays(expiredMarginDays)
+                        End If
+                    Else
+                        StartRangeDate = Now().AddDays(expiredMarginDays)
+                    End If
+
+
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                         & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " where a.dExpireDate >= " & sqlDate(Now().AddDays(-5)) & "and a.dExpireDate <= " & sqlDate(Now().AddMonths(3)) _
+                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " where a.dExpireDate >= " & sqlDate(StartRangeDate) & "and a.dExpireDate <= " & sqlDate(ExpireRange) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
                     'List Subscription groups and thier subscriptions.
@@ -159,7 +190,7 @@ Partial Public Class Cms
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                        & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
                         & " where a.dExpireDate >= " & sqlDate(Now().AddDays(-5)) & "and a.dExpireDate <= " & sqlDate(Now().AddMonths(3)) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
@@ -188,14 +219,38 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement)
+            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional excludeFixed As Boolean = False)
                 Try
+
+                    Dim ExpireRange As String = ""
+                    Select Case LCase(renewRangePeriod)
+                        Case "month"
+                            ExpireRange = sqlDate(Now().AddMonths(renewRangeCount * -1))
+                        Case "week"
+                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * -7))
+                        Case "day"
+                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * -1))
+                    End Select
+
+
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                        & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " where a.dExpireDate <= " & sqlDate(Now()) _
-                        & " and sub.cRenewalStatus <> 'Cancelled'  order by a.dExpireDate desc"
+                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey"
+
+                    If ExpireRange <> "" Then
+                        sSql = sSql & " where a.dExpireDate >= " & ExpireRange & "and a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
+
+                    Else
+                        sSql = sSql & " where a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
+
+                    End If
+
+                    If excludeFixed Then
+                        sSql = sSql & " and sub.cRenewalStatus  <> 'Fixed'"
+                    End If
+
+                    sSql = sSql & " and sub.cRenewalStatus <> 'Cancelled'  order by a.dExpireDate desc"
 
                     'List Subscription groups and thier subscriptions.
                     Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers")
@@ -227,7 +282,7 @@ Partial Public Class Cms
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                        & " inner join tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
                         & " where sub.cRenewalStatus = 'Cancelled'  order by a.dExpireDate desc"
 
                     'List Subscription groups and thier subscriptions.
@@ -336,6 +391,7 @@ Partial Public Class Cms
                         End If
 
                         oParentElmt.AppendChild(oElmt)
+                        oDs = Nothing
                     Next
                     Return oParentElmt
                 Catch ex As Exception
@@ -343,18 +399,172 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Sub ListRenewalAlerts(ByRef oParentElmt As XmlElement)
+            Public Sub ListRenewalAlerts(ByRef oParentElmt As XmlElement, Optional ByVal bProcess As Boolean = False)
                 Try
                     Dim moReminderCfg As XmlElement = WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders")
                     oParentElmt.InnerXml = moReminderCfg.OuterXml
+                    Dim ProcessedCount As Long = 0
+                    Dim oReminder As XmlElement
 
+                    If myWeb.moRequest("ewCmd2") = "processAll" Then
+                        bProcess = True
+                    End If
+
+                    For Each oReminder In oParentElmt.SelectNodes("subscriptionReminders/reminder")
+
+                        Select Case oReminder.GetAttribute("action")
+                            Case "renewalreminder", "renew"
+                                'Select the subscriptions that are caught up in this case
+                                ListUpcomingRenewals(oReminder, CInt("0" & oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                Dim subxml As XmlElement
+                                For Each subxml In oReminder.SelectNodes("Subscribers")
+                                    Dim force As Boolean = False
+                                    Dim ingoreIfPaymentActive As Boolean = False
+                                    Dim actionResult As String
+                                    If myWeb.moRequest("name") = oReminder.GetAttribute("name") And myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                        force = True
+                                    End If
+
+                                    If Not oReminder.GetAttribute("invalidPaymentOnly") Is Nothing Then
+
+                                        If oReminder.GetAttribute("invalidPaymentOnly") = "true" Then
+                                            ingoreIfPaymentActive = True
+                                        End If
+                                    End If
+
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
+                                    subxml.SetAttribute("actionResult", actionResult)
+                                Next
+
+                            Case "expire", "expired"
+
+                                If oReminder.GetAttribute("action") = "expire" Then
+                                    ListExpiredSubscriptions(oReminder, oReminder.GetAttribute("count"), "", 0, True)
+                                Else
+                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                End If
+
+                                Dim subxml As XmlElement
+                                For Each subxml In oReminder.SelectNodes("Subscribers")
+                                    Dim force As Boolean = False
+                                    If bProcess Then
+                                        force = True
+                                    End If
+                                    Dim ingoreIfPaymentActive As Boolean = False
+                                    Dim actionResult As String
+                                    If myWeb.moRequest("name") = oReminder.GetAttribute("name") And myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                        force = True
+                                    End If
+                                    If Not oReminder.GetAttribute("invalidPaymentOnly") Is Nothing Then
+                                        If oReminder.GetAttribute("invalidPaymentOnly") = "true" Then
+                                            ingoreIfPaymentActive = True
+                                        End If
+                                    End If
+
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
+                                    subxml.SetAttribute("actionResult", actionResult)
+                                Next
+
+                        End Select
+
+                    Next
 
                 Catch ex As Exception
                     returnException(mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
                 End Try
             End Sub
 
+            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
+                Dim actionResult As String = ""
+                ProcessedCount = ProcessedCount + 1
 
+                Try
+                    Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, SubId)
+
+                    SubXml.SetAttribute("messageType", messageType)
+                    SubXml.SetAttribute("action", Action)
+                    Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
+                    Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/@id").InnerText
+                    Dim oMessager As New Protean.Messaging
+
+                    Dim PaymentActive As Boolean = False
+                    If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
+                        PaymentActive = True
+                    End If
+
+                    Select Case Action
+                        Case "renewalreminder"
+
+                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+
+                            If actionDate = "#1/1/0001 12:00:00 AM#" Or (force And gbDebug) Then
+
+                                If PaymentActive And ingoreIfPaymentActive Then
+                                    actionResult = "not required"
+                                Else
+                                    If force Or process Then
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
+                                        actionResult = "sent"
+                                    Else
+                                        actionResult = "not sent"
+                                    End If
+                                End If
+                            Else
+                                actionResult = actionDate
+                            End If
+
+                        Case "renew"
+                            If force Or process Then
+                                Select Case RenewSubscription(SubXml.FirstChild, True)
+                                    Case "Success"
+                                        actionResult = "Renewed"
+                                    Case "Failed"
+                                        actionResult = "Renewal Failed"
+                                        SubXml.SetAttribute("actionResult", actionResult)
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                End Select
+                            Else
+                                actionResult = "To Renew"
+                            End If
+                        Case "expire"
+                            If force Then
+                                actionResult = ExpireSubscription(SubId, "Scheduled Expiration")
+                            Else
+                                actionResult = "To Expire"
+                            End If
+
+                        Case "expired"
+                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+                            If actionDate = "#1/1/0001 12:00:00 AM#" Or (force And gbDebug) Then
+
+                                If PaymentActive And ingoreIfPaymentActive Then
+                                    actionResult = "not required"
+                                Else
+                                    If force Then
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
+                                        actionResult = "sent"
+                                    Else
+                                        actionResult = "not sent"
+                                    End If
+                                End If
+                            Else
+                                actionResult = actionDate
+                            End If
+                    End Select
+
+                    Return actionResult
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "RenewalAction", ex, "", "", gbDebug)
+                    Return ex.Message
+                End Try
+
+
+            End Function
 
 
 #End Region
@@ -760,7 +970,7 @@ RedoCheck:
                 End Try
             End Function
 
-            Private Function SubscriptionEndDate(ByVal dStart As Date, ByVal oSubDetailElmt As XmlElement) As Date
+            Public Function SubscriptionEndDate(ByVal dStart As Date, ByVal oSubDetailElmt As XmlElement) As Date
                 Try
                     Dim cDuration As Integer = 0
                     Dim cDurationUnit As String
@@ -1043,7 +1253,7 @@ RedoCheck:
                 Try
                     Dim cSQL As String = "SELECT s.nSubKey,s.cRenewalStatus, s.nSubContentId, s.dStartDate, s.nPeriod, s.cPeriodUnit, s.nValueNet, s.nPaymentMethodId, pm.cPayMthdProviderName, s.bPaymentMethodActive, a.nStatus, a.dPublishDate, a.dExpireDate, s.cSubXML" &
                     " FROM tblSubscription s INNER JOIN" &
-                    " tblAudit a ON s.nAuditId = a.nAuditKey INNER JOIN" &
+                    " tblAudit a ON s.nAuditId = a.nAuditKey LEFT OUTER JOIN" &
                     " tblCartPaymentMethod pm On s.nPaymentMethodId = pm.nPayMthdKey" &
                     " WHERE s.nDirId = " & nSubUserId
 
@@ -1143,7 +1353,12 @@ RedoCheck:
                     editElmt.SelectSingleNode("cDescription").InnerText = cReason
 
                     'Cancel the payment method
-                    CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    Dim PaymentMethodId As Long = CLng("0" & editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+
+                    'Cancel the payment method
+                    If PaymentMethodId > 0 Then
+                        CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    End If
 
                     'We only remove user from groups (this needs to happen by schduler to remove once expired)
 
@@ -1173,12 +1388,19 @@ RedoCheck:
                     editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId
                     editElmt.SelectSingleNode("cDescription").InnerText = cReason
 
+                    Dim PaymentMethodId As Long = CLng("0" & editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+
                     'Cancel the payment method
-                    CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    If PaymentMethodId > 0 Then
+                        CancelPaymentMethod(editElmt.SelectSingleNode("nPaymentMethodId").InnerText)
+                    End If
+
                     myWeb.moDbHelper.setObjectInstance(dbHelper.objectTypes.Subscription, SubInstance.DocumentElement)
 
                     'Remove the user from any user groups
-                    ExpireSubscriptionGroups(nId)
+                    If CDate(editElmt.SelectSingleNode("dExpireDate").InnerText) < xmlDate(Now()) Then
+                        ExpireSubscriptionGroups(nId)
+                    End If
 
                     Return "Subscription Expired" & cReason
 
@@ -1327,13 +1549,13 @@ RedoCheck:
                         Case "Year"
                             renewInterval = DateInterval.Year
                     End Select
-                    Dim SubId As Long = SubXml.GetAttribute("id")
+                    Dim SubId As Long = CLng("0" & SubXml.GetAttribute("id"))
 
                     Dim dNewStart As Date = DateAdd(DateInterval.Day, 1, CDate(SubXml.GetAttribute("expireDate")))
                     Dim dNewEnd As Date = DateAdd(renewInterval, CInt(SubXml.GetAttribute("period")), CDate(SubXml.GetAttribute("expireDate")))
 
                     Dim Amount As Double = CDbl(SubXml.GetAttribute("value"))
-                    Dim OrderId As Long = SubXml.GetAttribute("orderId")
+                    Dim OrderId As Long = CLng(0 & SubXml.GetAttribute("orderId"))
                     Dim SubContentId As Long = SubXml.GetAttribute("contentId")
                     Dim UserId As Long = SubXml.GetAttribute("userId")
                     Dim SubName As String = SubXml.GetAttribute("name") & " Renewal"
@@ -1346,8 +1568,9 @@ RedoCheck:
                     myWeb.moCart.mnEwUserId = UserId
                     myWeb.moCart.CreateNewCart(myWeb.moCart.moCartXml)
                     myWeb.moCart.SetPaymentMethod(nPaymentMethodId)
-                    myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml)
-
+                    If Not SubXml.SelectSingleNode("Content/Notes") Is Nothing Then
+                        myWeb.moCart.SetClientNotes(SubXml.SelectSingleNode("Content/Notes").InnerXml)
+                    End If
                     Dim oSubContent As XmlElement = SubXml.SelectSingleNode("Content")
                     oSubContent.SetAttribute("renewal", "true")
                     oSubContent.SetAttribute("renewalStart", xmlDate(dNewStart))
@@ -1740,11 +1963,22 @@ RedoCheck:
 
                                 Me.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.Subscription, SubscriptionId)
 
-                                Dim PaymentMethodId As Long = CLng(Me.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
+                                Dim PaymentMethodId As Long = CLng("0" & Me.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
+
+                                Dim contactXml As XmlElement = Instance.OwnerDocument.CreateElement("Contact")
+
+                                If myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']") Is Nothing Then
+                                    contactXml.InnerXml = "<Contact><nContactKey/><nContactDirId/><nContactCartId/><cContactType>Billing Address</cContactType><cContactName/><cContactCompany/><cContactAddress/><cContactCity/><cContactState/><cContactZip/><cContactCountry/><cContactTel/><cContactFax/><cContactEmail/><cContactXml><OptIn /></cContactXml><nAuditId/><cContactForiegnRef/><cContactForeignRef/></Contact>"
+                                Else
+                                    contactXml.InnerXml = myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                End If
+
 
                                 Me.Instance.InnerXml = Me.Instance.InnerXml &
                                                        moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, PaymentMethodId) &
-                                                       myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                                       contactXml.InnerXml
+
+
 
                                 Dim PaymentOptionsSelect As XmlElement = Me.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']")
 
@@ -1759,10 +1993,20 @@ RedoCheck:
                                 oPay.mcCurrency = moCartConfig("Currency")
 
                                 If LCase(moCartConfig("PaymentTypeButtons")) = "on" Then
-                                    oPay.getPaymentMethods(Me, PaymentOptionsSelect, PaymentAmount, "")
-                                Else
+                                    'remove submit button
+                                    Dim xSubmit As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::submit")
+                                    If Not xSubmit Is Nothing Then xSubmit.ParentNode.RemoveChild(xSubmit)
+
+                                    'add new submit button
                                     PaymentOptionsSelect.ParentNode.RemoveChild(PaymentOptionsSelect)
+                                    'remove binding
+                                    Dim PaymentBinding As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::bind[@id='cPaymentMethod']")
+                                    PaymentBinding.ParentNode.RemoveChild(PaymentBinding)
+
                                     oPay.getPaymentMethodButtons(Me, xfrmGroup, PaymentAmount)
+
+                                Else
+                                    oPay.getPaymentMethods(Me, PaymentOptionsSelect, PaymentAmount, "")
                                 End If
 
                             End If
@@ -1840,24 +2084,41 @@ processFlow:
                                     oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Help, "Thank you, your payment method has been updated", True, "term4060")
                                 End If
 
-                                If oSubForm.isSubmitted Then
+                                SelectedPaymentMethod = myWeb.moRequest("ewSubmit")
+                                If SelectedPaymentMethod = "Update Payment Details" Then
+                                    SelectedPaymentMethod = myWeb.moRequest("cPaymentMethod")
+                                End If
+
+
+                                If SelectedPaymentMethod <> "" Then ' equates to is submitted
                                     oSubForm.updateInstanceFromRequest()
                                     oSubForm.validate()
+                                    Dim dRenewalDate As Date = CDate(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText)
+                                    Dim nFirstPayment As Double = 0
 
-                                    SelectedPaymentMethod = myWeb.moRequest(buttonRef)
+                                    If dRenewalDate < Now() Then
+                                        nFirstPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
+                                        Dim oSub As New Subscriptions
+                                        dRenewalDate = oSub.SubscriptionEndDate(dRenewalDate, oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content"))
+                                        If dRenewalDate < Now() Then
+                                            oSubForm.valid = False
+                                            oSubForm.addNote(oSubForm.moXformElmt, Protean.xForm.noteTypes.Alert, "Your subscription has gone beyond the date it can be renewed you must get a new subscription.", True, "term4060")
 
-                                    SelectedPaymentMethod = myWeb.moRequest("cPaymentMethod")
+                                        End If
+                                    End If
 
                                     If oSubForm.valid Then
                                         ewCmd = "PaymentForm"
                                         pseudoOrder = New Protean.Cms.Cart.Order(myWeb)
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
-                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
+                                        Dim RandGen As New Random
 
-                                        pseudoOrder.firstPayment = 0 'CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
+                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl("0" & oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) & "-" & RandGen.Next(1000, 9999).ToString
+
+                                        pseudoOrder.firstPayment = nFirstPayment
                                         pseudoOrder.repeatPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
-                                        pseudoOrder.delayStart = True ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
-                                        pseudoOrder.startDate = CDate(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText)
+                                        pseudoOrder.delayStart = False ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
+                                        pseudoOrder.startDate = dRenewalDate
                                         pseudoOrder.repeatInterval = oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Unit").InnerText
                                         pseudoOrder.repeatLength = CInt(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText)
 
@@ -1893,11 +2154,11 @@ processFlow:
 
                                 Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, SelectedPaymentMethod)
 
-                                Dim ccPaymentXform As xForm = New xForm
+                                Dim ccPaymentXform As Protean.xForm = New Protean.xForm
 
                                 pseudoCart.mcPagePath = pseudoCart.mcCartURL & myWeb.mcPagePath
 
-                                ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
+                                ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, pseudoCart, pseudoOrder.xml, "?subCmd=updateSubPayment&subCmd2=PaymentForm&subId=" & myWeb.moRequest("subId"))
 
                                 If ccPaymentXform.valid Then
                                     ewCmd = "UpdateSubscription"
@@ -1981,6 +2242,7 @@ processFlow:
                                     oElmt.SetAttribute("renewalStatus", oDr("renewalStatus").ToString())
                                     oElmt.SetAttribute("providerName", oDr("providerName").ToString())
                                     oElmt.SetAttribute("providerRef", oDr("providerRef").ToString())
+
 
                                     If oDr("providerName").ToString() <> "" Then
                                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oDr("providerName").ToString())

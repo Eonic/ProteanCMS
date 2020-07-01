@@ -47,7 +47,7 @@
     </instance>
     <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
     <bind nodeset="tblContent">
-      <bind id="cContentHeadline" nodeset="cContentName" required="true()" type="string"/>
+      <bind id="cContentPath" nodeset="cContentName" required="true()" type="string"/>
       <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
       <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
       <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
@@ -142,6 +142,10 @@
         <label>Article Content</label>
         <label class="no-margin">Headline</label>
         <input bind="cContentHeadline" class="required long">
+        </input>
+        <label class="no-margin">Path</label>
+        <input bind="cContentPath" class="required long">
+          <hint>This forms the URL for the article which may be better optimised for SEO.</hint>
         </input>
         <label class="no-margin">Strapline</label>
         <textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">

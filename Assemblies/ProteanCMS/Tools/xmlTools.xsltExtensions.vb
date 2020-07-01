@@ -1210,34 +1210,39 @@ Partial Public Module xmlTools
             Dim cProcessInfo As String = ""
             Try
 
+                If cVirtualPath = "" Then
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif"
+                Else
 
-                cVirtualPath = cVirtualPath.Replace("%20", " ")
+                    cVirtualPath = cVirtualPath.Replace("%20", " ")
 
-                Dim filename As String = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1)
-                Dim filetype As String = filename.Substring(filename.LastIndexOf(".") + 1)
-                Dim directoryPath As String = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1)
+                    Dim filename As String = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1)
+                    Dim filetype As String = filename.Substring(filename.LastIndexOf(".") + 1)
+                    Dim directoryPath As String = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1)
 
 
-                Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
-                Dim newFilepath As String = ""
-                If myWeb.mbAdminMode Then
-                    'create a WEBP version of the image.
-                    If VirtualFileExists(webpFileName) = 0 Then
-                        Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
-                            Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
-                                Dim encoder As New SimpleEncoder
-                                encoder.Encode(bitMap, saveImageStream, 100)
+                    Dim webpFileName As String = Replace(cVirtualPath, "." & filetype, ".webp")
+                    Dim newFilepath As String = ""
+                    If myWeb.mbAdminMode Then
+                        'create a WEBP version of the image.
+                        If VirtualFileExists(webpFileName) = 0 Then
+                            Using bitMap As New Bitmap(goServer.MapPath(cVirtualPath))
+                                Using saveImageStream As FileStream = System.IO.File.Open(goServer.MapPath(webpFileName), FileMode.Create)
+                                    Dim encoder As New SimpleEncoder
+                                    encoder.Encode(bitMap, saveImageStream, 100)
+                                End Using
                             End Using
-                        End Using
+                        End If
                     End If
+
+                    Return webpFileName
                 End If
 
-                Return webpFileName
 
             Catch ex As Exception
                 If LCase(myWeb.moConfig("Debug")) = "on" Then
-                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
-                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
+                    ' reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message & " - " & ex.StackTrace
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
                 End If
@@ -1486,11 +1491,13 @@ Partial Public Module xmlTools
             Dim SelectElmt As XmlElement = myWeb.moPageXml.CreateElement("select1")
             Dim Query1 As String = ""
             Dim Query2 As String = ""
+            Dim Query3 As String = ""
             Dim sql As String
             Try
                 Dim QueryArr() As String = Split(Query, ".")
                 Query1 = QueryArr(0)
                 If UBound(QueryArr) > 0 Then Query2 = QueryArr(1)
+                If UBound(QueryArr) > 1 Then Query3 = QueryArr(2)
                 Dim oXfrms As New Protean.Cms.xForm
                 oXfrms.moPageXML = myWeb.moPageXml
                 Select Case Query1
@@ -1673,8 +1680,16 @@ Partial Public Module xmlTools
 
                     Case "Lookup"
                         'Returns all of a specified type in the directory to specify the type use attribute "query2"
+                        If (Query3 <> String.Empty) Then
+                            Select Case Query3
+                                Case "sortaz"
+                                    'check sorting is present
+                                    sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by cLkpKey, nDisplayOrder, nLkpID"
+                            End Select
+                        Else
+                            sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by nDisplayOrder, nLkpID"
+                        End If
 
-                        sql = "select cLkpValue as value, cLkpKey as name from tblLookup where cLkpCategory like '" & Query2 & "' order by nDisplayOrder, nLkpID"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
 
@@ -1717,6 +1732,13 @@ Partial Public Module xmlTools
                         sql = sql & " order by cCatName"
                         Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
+                    Case "Subscriptions"
+
+                        Dim sSql As String = "SELECT nContentKey as value, cContentName as name  FROM tblContent LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblContent.cContentSchemaName = 'Subscription') Order By tblCartCatProductRelations.nDisplayOrder"
+                        Dim oDr As System.Data.SqlClient.SqlDataReader = myWeb.moDbHelper.getDataReader(sSql)
+                        oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr)
+
 
 
                     Case Else

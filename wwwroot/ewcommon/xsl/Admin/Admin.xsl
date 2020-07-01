@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
 
-	<xsl:template name="eonicwebProductName">
+  <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+
+  <xsl:template name="eonicwebProductName">
     <xsl:choose>
       <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
@@ -152,7 +154,7 @@
 
   <xsl:template match="Page" mode="adminJs">
     <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
     </xsl:if>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
@@ -1499,9 +1501,8 @@
           <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
       </xsl:when>
       <xsl:otherwise>
-            <h3><strong>ProteanCMS,<br/> the new name for EonicWeb5</strong></h3>
-            <p>We have renamed to ProteanCMS to better reflect the true versitility and flexiblity of the platform.</p>
-            <p>As ProteanCMS is now fully opensource and available to be used by other agencies, we felt it was important for the platform to have its own name and identity.</p>
+            <h3><strong>ProteanCMS</strong></h3>
+              <p>ProteanCMS is fully opensource.</p>
             <a href="https://www.proteancms.com">For more information click here.</a>
       </xsl:otherwise>
     </xsl:choose>
@@ -5210,7 +5211,7 @@
             <i class="fa fa-repeat fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Reset Pwd</a>
-          <a href="{$appPath}?ewCmd=ImpersonateUser&amp;id={@id}" class="btn btn-xs btn-success">
+          <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@id}" class="btn btn-xs btn-success">
             <i class="fa fa-user-secret fa-white">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>Impersonate</a>
@@ -5317,7 +5318,7 @@
           <div class="col-md-8">
 
             <xsl:for-each select="Contacts/Contact">
-              <xsl:apply-templates select="." mode="contactAddressBrief"/>
+              <xsl:apply-templates select="." mode="contactAddressBriefProfile"/>
               <xsl:if test="position() mod 2=0">
                 <div class="terminus">&#160;</div>
               </xsl:if>
@@ -5326,10 +5327,13 @@
         </div>
 
       </div>
-      <xsl:if test="Subscriptions">
+
         <div class="panel panel-default">
           <div class="panel-heading">
-        <h4 class="panel-title">Subscriptions</h4>
+            <a href="{$appPath}?ewCmd=EditUserSubscription&amp;id=0&amp;userId={@id}"  class="btn btn-primary btn-sm pull-right">
+              <i class="fa fa-plus">&#160;</i>&#160;Add Subscription
+            </a>
+        <h3 class="panel-title">Subscriptions</h3>
           </div>
         <table class="table">
           <tr>
@@ -5399,7 +5403,6 @@
           </xsl:for-each>
         </table>
         </div>
-      </xsl:if>
       <div class="panel panel-default">
         <div class="panel-heading">
           <h4 class="panel-title">Orders</h4>
@@ -5432,7 +5435,7 @@
    </a>
   </xsl:template>
 
-  <xsl:template match="Contact" mode="contactAddressBrief">
+  <xsl:template match="Contact" mode="contactAddressBriefProfile">
     <div class="col-md-6">
       <h4>
         <xsl:value-of select="cContactType"/>
@@ -9280,11 +9283,16 @@
     </xsl:variable>
     <xsl:variable name="parId" select="@parId" />
     <xsl:for-each select="ContentDetail/Subscription">
+
     <div class="subscription detail">
       <div class="row">
         <div class="col-md-6">
           <div class="panel panel-default">
             <div class="panel-heading">
+              <a href="?ewCmd=EditUserSubscription&amp;id={@id}" class="btn btn-primary pull-right">
+                <i class="fa fa-pencil">&#160;</i>&#160;
+                Edit Subscripiton
+              </a>
               <h3 class="panel-title">
                 <xsl:value-of select="@name"/>
               </h3>
@@ -9552,7 +9560,17 @@
             <xsl:for-each select="/Page/ContentDetail/Subscribers">
               <tr>
                 <td>
-                  <xsl:value-of select="cDirXml/User/FirstName/node()"/>&#160;<xsl:value-of select="cDirXml/User/LastName/node()"/>
+
+                  <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={nDirId/node()}">
+                    <span class="btn btn-primary btn-xs">
+                      <i class="fa fa-user fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                    </span>
+                    &#160;
+                        <xsl:value-of select="cDirXml/User/LastName"/>, <xsl:value-of select="cDirXml/User/FirstName"/>
+                    
+                  </a>
                 </td>
                 <td>
                   <xsl:value-of select="cDirName/node()"/>
@@ -9644,13 +9662,126 @@
       </div>
     </div>
   </xsl:template>
+
+
+  <xsl:template match="*" mode="subscriptionTable">
+
+      <table class="table">
+        <tr>
+          <th>User</th>
+          <th>Usernane</th>
+          <th>Subscription</th>
+          <th>Rate</th>
+          <th>Status</th>
+          <th>PayProvider</th>
+          <th>Active</th>
+          <th>Start Date</th>
+          <th>Renewal Due</th>
+          <th>Sent Date</th>
+          <th>&#160;</th>
+        </tr>
+        <xsl:for-each select="Subscribers">
+          <tr>
+            <td>
+              <a href="/{$appPath}?ewCmd=Profile&amp;DirType=User&amp;id={nDirId/node()}">
+                <span class="btn btn-primary btn-xs">
+                  <i class="fa fa-user fa-white">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </span>
+                &#160;
+                <xsl:value-of select="cDirXml/User/LastName"/>, <xsl:value-of select="cDirXml/User/FirstName"/>
+              </a>
+            </td>
+            <td>
+              <xsl:value-of select="cDirName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cSubName/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="formatPrice">
+                <xsl:with-param name="price" select="nValueNet/node()"/>
+                <xsl:with-param name="currency" select="$currencySymbol"/>
+              </xsl:call-template>
+            </td>
+            <td>
+              <xsl:value-of select="cRenewalStatus/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="cPayMthdProviderName/node()"/>
+            </td>
+            <td>
+              <xsl:value-of select="bPaymentMethodActive/node()"/>
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dStartDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+
+            </td>
+            <td>
+              <xsl:call-template name="DD_Mon_YYYY">
+                <xsl:with-param name="date">
+                  <xsl:value-of select="dExpireDate/node()"/>
+                </xsl:with-param>
+                <xsl:with-param name="showTime">false</xsl:with-param>
+              </xsl:call-template>
+            </td>
+            <td>
+
+                  <xsl:value-of select="@actionResult"/>
+
+            </td>
+            <td colspan="3">
+
+              <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={nSubKey/node()}"  class="btn btn-primary btn-sm">
+                <i class="fa fa-edit">&#160;</i>&#160;Manage
+              </a>
+              <xsl:if test="parent::reminder">
+                <xsl:choose>
+                                  <xsl:when test="@actionResult = 'not sent'">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-success btn-sm">
+                  <i class="fa fa-envelope">&#160;</i>&#160;Send Alert
+                </a>
+                </xsl:when>
+                  <xsl:otherwise>
+                    <a href="{$appPath}?ewCmd=RenewalAlerts&amp;name={ancestor::reminder/@name}&amp;SendId={nSubKey/node()}"  class="btn btn-warning btn-sm">
+                      <i class="fa fa-envelope">&#160;</i>&#160;Resend
+                    </a>
+                  </xsl:otherwise>
+
+                </xsl:choose>
+
+              </xsl:if>
+
+            </td>
+          </tr>
+          <xsl:if  test="/Page/@ewCmd!='MoveSubscription'">
+            <xsl:if test="Subscriptions">
+              <tr>
+                <td>
+                  <xsl:apply-templates select="." mode="AdminSubscriptions">
+                    <xsl:with-param name="GroupID">
+                      <xsl:value-of select="@nCatKey"/>
+                    </xsl:with-param>
+                  </xsl:apply-templates>
+                </td>
+              </tr>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+
+      </table>
+    </xsl:template>
   
   <xsl:template match="Page[@layout='RenewalAlerts']" mode="Admin">
     <div class="row" id="template_Subscriptions">
+
       <div class="col-md-12">
-        <a href="{$appPath}?ewCmd=EditTemplate&amp;ewCmd2=RenewalAlerts" class="btn btn-default"><i class="fa fa-pencil">&#160;</i>&#160;Edit Templates</a>
-        <br/>
-        <br/>
         <div class="panel panel-default">
           <table class="table">
             <tr>
@@ -9660,8 +9791,11 @@
               <th>Count</th>
               <th>Subject</th>
               <th>
-                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default">
-                  <i class="fa fa-plus">&#160;</i>&#160;Add
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=processAll" class="btn btn-danger pull-right">
+                  <i class="fa fa-plus">&#160;</i>&#160;Process All
+                </a>
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;ewCmd2=add" class="btn btn-default pull-right" disabled="disabled">
+                  <i class="fa fa-history">&#160;</i>&#160;Process History
                 </a>
               </th>
             </tr>
@@ -9683,9 +9817,12 @@
                   <xsl:value-of select="@subject"/>
                 </td>
                 <td>
-                  <a href="{$appPath}?ewCmd=RenewalAlerts&amp;pos={position()}" class="btn btn-default">
-                    <i class="fa fa-pencil">&#160;</i>&#160;Edit
-                  </a>
+                  &#160;
+                  </td>
+              </tr>
+              <tr>
+                <td colspan="7">
+                  <xsl:apply-templates select="." mode="subscriptionTable"/>
                 </td>
               </tr>
             </xsl:for-each>
