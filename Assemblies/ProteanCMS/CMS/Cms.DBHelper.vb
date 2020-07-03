@@ -9167,7 +9167,7 @@ restart:
             PerfMon.Log("DBHelper", "insertProductGroupRelation")
             Dim cProcessInfo As String
             Try
-                Dim oGroupArr() As String = Split(sGroupIds, ",")
+                Dim oGroupArr() As String = Split(sGroupIds.Trim(","), ",")
                 Dim cCount As Integer
                 Dim strReturn As New Text.StringBuilder
 

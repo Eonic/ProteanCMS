@@ -41,7 +41,7 @@
     <bind id="cContactAddress" nodeset="tblCartContact/cContactAddress" required="true()" type="string" />
     <bind id="cContactCity" nodeset="tblCartContact/cContactCity" required="true()" type="string" />
     <bind id="cContactState" nodeset="tblCartContact/cContactState" required="false()" type="string" />
-    <bind id="cContactZip" nodeset="tblCartContact/cContactZip" required="true()" type="string" />
+    <bind id="cContactZip" nodeset="tblCartContact/cContactZip" required="false()" type="string" />
     <bind id="cContactCountry" nodeset="tblCartContact/cContactCountry" required="true()" type="string" />
     <bind id="cContactTel" nodeset="tblCartContact/cContactTel" required="true()" type="string" />
     <bind id="cContactFax" nodeset="tblCartContact/cContactFax" required="false()" type="string" />

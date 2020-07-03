@@ -122,22 +122,42 @@ Partial Public Class Cms
 
             Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 12)
                 Try
-
-                    Dim ExpireRange As String = ""
+                    Dim StartRangeDate As DateTime
+                    Dim ExpireRange As DateTime
                     Select Case LCase(renewRangePeriod)
                         Case "month"
-                            ExpireRange = sqlDate(Now().AddMonths(renewRangeCount * 1))
+                            ExpireRange = Now().AddMonths(renewRangeCount * 1)
                         Case "week"
-                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 7))
+                            ExpireRange = Now().AddDays(renewRangeCount * 7)
                         Case "day"
-                            ExpireRange = sqlDate(Now().AddDays(renewRangeCount * 1))
+                            ExpireRange = Now().AddDays(renewRangeCount * 1)
                     End Select
+
+                    If expiredMarginDays = "0" Then
+                        Dim NextElmt As XmlElement = oParentElmt.NextSibling
+
+                        If NextElmt.GetAttribute("action") = NextElmt.GetAttribute("action") Then
+                            Select Case LCase(NextElmt.GetAttribute("period"))
+                                Case "month"
+                                    StartRangeDate = Now().AddMonths(NextElmt.GetAttribute("count") * 1)
+                                Case "week"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 7)
+                                Case "day"
+                                    StartRangeDate = Now().AddDays(NextElmt.GetAttribute("count") * 1)
+                            End Select
+                        Else
+                            StartRangeDate = Now().AddDays(expiredMarginDays)
+                        End If
+                    Else
+                        StartRangeDate = Now().AddDays(expiredMarginDays)
+                    End If
+
 
                     Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
                         & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " where a.dExpireDate >= " & sqlDate(Now().AddDays(expiredMarginDays)) & "and a.dExpireDate <= " & ExpireRange _
+                        & " where a.dExpireDate >= " & sqlDate(StartRangeDate) & "and a.dExpireDate <= " & sqlDate(ExpireRange) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
                     'List Subscription groups and thier subscriptions.
@@ -395,7 +415,7 @@ Partial Public Class Cms
                         Select Case oReminder.GetAttribute("action")
                             Case "renewalreminder", "renew"
                                 'Select the subscriptions that are caught up in this case
-                                ListUpcomingRenewals(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                ListUpcomingRenewals(oReminder, CInt("0" & oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
@@ -1945,9 +1965,20 @@ RedoCheck:
 
                                 Dim PaymentMethodId As Long = CLng("0" & Me.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
 
+                                Dim contactXml As XmlElement = Instance.OwnerDocument.CreateElement("Contact")
+
+                                If myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']") Is Nothing Then
+                                    contactXml.InnerXml = "<Contact><nContactKey/><nContactDirId/><nContactCartId/><cContactType>Billing Address</cContactType><cContactName/><cContactCompany/><cContactAddress/><cContactCity/><cContactState/><cContactZip/><cContactCountry/><cContactTel/><cContactFax/><cContactEmail/><cContactXml><OptIn /></cContactXml><nAuditId/><cContactForiegnRef/><cContactForeignRef/></Contact>"
+                                Else
+                                    contactXml.InnerXml = myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                End If
+
+
                                 Me.Instance.InnerXml = Me.Instance.InnerXml &
                                                        moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, PaymentMethodId) &
-                                                       myWeb.GetUserXML(myWeb.mnUserId).SelectSingleNode("Contacts/Contact[cContactType='Billing Address']").OuterXml
+                                                       contactXml.InnerXml
+
+
 
                                 Dim PaymentOptionsSelect As XmlElement = Me.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']")
 
@@ -2080,11 +2111,13 @@ processFlow:
                                         ewCmd = "PaymentForm"
                                         pseudoOrder = New Protean.Cms.Cart.Order(myWeb)
                                         pseudoOrder.PaymentMethod = SelectedPaymentMethod
-                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl("0" & oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText)
+                                        Dim RandGen As New Random
+
+                                        pseudoOrder.TransactionRef = "SUB" & CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) & "-" & CDbl("0" & oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) & "-" & RandGen.Next(1000, 9999).ToString
 
                                         pseudoOrder.firstPayment = nFirstPayment
                                         pseudoOrder.repeatPayment = CDbl(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText)
-                                        pseudoOrder.delayStart = True ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
+                                        pseudoOrder.delayStart = False ' IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
                                         pseudoOrder.startDate = dRenewalDate
                                         pseudoOrder.repeatInterval = oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Unit").InnerText
                                         pseudoOrder.repeatLength = CInt(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText)

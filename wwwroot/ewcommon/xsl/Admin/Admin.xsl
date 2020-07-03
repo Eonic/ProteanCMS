@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
 
-	<xsl:template name="eonicwebProductName">
+  <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+
+  <xsl:template name="eonicwebProductName">
     <xsl:choose>
       <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
@@ -152,7 +154,7 @@
 
   <xsl:template match="Page" mode="adminJs">
     <xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key=AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo">&#160;</script>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">&#160;</script>
     </xsl:if>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">

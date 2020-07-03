@@ -1210,19 +1210,18 @@ Public Class xForm
                                                         End If
 
                                                     Case Else
-                                                        'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
-                                                        If bIsXml Then
-                                                            If submittedValue <> "" Then
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(submittedValue & "").Trim
-                                                            Else
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = ""
-                                                            End If
+                                                    'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
+                                                    If bIsXml Then
+                                                        If submittedValue <> "" Then
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(submittedValue & "").Trim
                                                         Else
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = ""
+                                                        End If
+                                                    Else
                                                         'take the form value over the querystring.
                                                         oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = submittedValue.Trim
                                                     End If
-
-                                                End Select
+                                            End Select
 
                                             End If
                                         End If

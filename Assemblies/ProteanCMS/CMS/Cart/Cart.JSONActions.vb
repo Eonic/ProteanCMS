@@ -330,10 +330,15 @@ Partial Public Class Cms
 
             End Function
 
-            Public Sub SetDeliveryOptionByCountry(ByRef myApi As Protean.API)
+            Public Function UpdateDeliveryOptionByCountry(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Dim country As String = jObj("country")
+
                 Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                myCart.setDeliveryOptionByCountry(CartXml.FirstChild)
-            End Sub
+                'check config setting here so that it will take order option which is optional.
+                Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
+                cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
+                Return cOrderofDeliveryOption
+            End Function
 
             Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
@@ -432,6 +437,7 @@ Partial Public Class Cms
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     Dim strMessage As String = String.Empty
+                    Dim jsonString As String = String.Empty
                     If Not (jObj("Code") Is Nothing) Then
                         strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
                         If (strMessage <> String.Empty) Then
@@ -442,12 +448,11 @@ Partial Public Class Cms
                         myCart.close()
                         CartXml = updateCartforJSON(CartXml)
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-                        Return jsonString
                     End If
-
+                    Return jsonString
                 Catch ex As Exception
 
                 End Try

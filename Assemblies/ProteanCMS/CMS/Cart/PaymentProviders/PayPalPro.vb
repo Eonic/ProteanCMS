@@ -156,6 +156,7 @@ Namespace Providers
                         Dim repeatAmt As Double = CDbl("0" & oOrder.GetAttribute("repeatPrice"))
                         Dim repeatInterval As String = LCase(oOrder.GetAttribute("repeatInterval"))
                         Dim repeatFrequency As Integer = CDbl("0" & oOrder.GetAttribute("repeatFrequency"))
+                        If repeatFrequency = 0 Then repeatFrequency = CDbl("0" & oOrder.GetAttribute("repeatLength"))
                         Dim repeatLength As Integer = CDbl("0" & oOrder.GetAttribute("repeatLength"))
                         If repeatLength = 0 Then repeatLength = 1
                         Dim delayStart As Boolean = IIf(LCase(oOrder.GetAttribute("delayStart")) = "true", True, False)
@@ -510,7 +511,8 @@ Namespace Providers
                             ppAmount.Value = oEwProv.mnPaymentAmount
 
                             ppDetails.OrderTotal = ppAmount
-                            ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId)
+                            Dim RandGen As New Random
+                            ppDetails.InvoiceID = oCart.moCartConfig("OrderNoPrefix") & CStr(oEwProv.mnCartId) & "-" & RandGen.Next(1000, 9999).ToString
                             ppDetails.PaymentAction = PayPalAPI.PaymentActionCodeType.Sale
 
                             ppRequestDetail.CreditCard = ppCreditCard

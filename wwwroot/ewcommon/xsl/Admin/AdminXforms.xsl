@@ -613,9 +613,8 @@
 			gecko_spellcheck: true,
 			theme_advanced_toolbar_location: "top",
 			theme_advanced_toolbar_align: "left",
-			paste_create_paragraphs: false,</xsl:text>
-    <xsl:apply-templates select="." mode="tinymcelinklist"/>
-    <xsl:text>
+			paste_create_paragraphs: false,
+      link_list: tinymcelinklist,
 			paste_use_dialog: true,</xsl:text>
     <xsl:apply-templates select="." mode="tinymceStyles"/>
     <xsl:apply-templates select="." mode="tinymceContentCSS"/>
@@ -626,11 +625,11 @@
   <xsl:template match="textarea" mode="tinymcelinklist">
 
     <xsl:text>
-    link_list: [</xsl:text>
+     [</xsl:text>
     <xsl:apply-templates select="/Page/Menu/MenuItem" mode="tinymcelinklistitem">
       <xsl:with-param name="level" select="number(1)"/>
     </xsl:apply-templates>
-    <xsl:text>],</xsl:text>
+    <xsl:text>]</xsl:text>
 
   </xsl:template>
 

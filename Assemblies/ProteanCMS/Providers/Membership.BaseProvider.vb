@@ -1653,12 +1653,14 @@ Check:
                                     'myWeb.moResponse.Write(timestamp)
                                     'myWeb.moResponse.Write(DateTime.Now.ToString("dd/MM/yyyy HH:MM"))
                                     'Try
-                                    duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
-                                        'Catch ex As Exception
-                                        '    myWeb.moResponse.Write(ex.Message)
-                                        'End Try
+                                    duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp("dd/MM/yyyy HH:MM").ToString()), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
 
-                                        If (duration < AuthenticationDuration) Then '' greater than 60
+                                    'duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                    'Catch ex As Exception
+                                    '    myWeb.moResponse.Write(ex.Message)
+                                    'End Try
+
+                                    If (duration < AuthenticationDuration) Then '' greater than 60
 
                                         mnUserId = myWeb.moDbHelper.GetUserIDFromEmail(userEmail)
                                         myWeb.mnUserId = mnUserId
@@ -1681,35 +1683,17 @@ Check:
                                                 End If
                                             Case "admin"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
-                                                myWeb.moSession("PreviewDate") = Nothing
-                                                myWeb.moSession("PreviewUser") = Nothing
                                                 myWeb.moSession("adminMode") = "true"
                                                 myWeb.mbAdminMode = True
-                                                If myWeb.mcOriginalURL.Contains("ProductId") Then
-
-                                                    Dim pid As String = myWeb.mcOriginalURL.Substring(myWeb.mcOriginalURL.IndexOf("ProductId=")).Replace("ProductId=", "")
-
-                                                    myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&pid=" & pid
-                                                ElseIf myWeb.mcOriginalURL.Contains("SupplierId") Then
-
-                                                    Dim sid As String = myWeb.mcOriginalURL.Substring(myWeb.mcOriginalURL.IndexOf("SupplierId=")).Replace("SupplierId=", "")
-                                                    If myWeb.mcOriginalURL.Contains("EditSupplier") Then
-
-                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=EditSupplier&sid=" & sid
-
-                                                    ElseIf myWeb.mcOriginalURL.Contains("DisplayProductList") Then
-
-                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=DisplayProductList&sid=" & sid
-
-                                                    ElseIf myWeb.mcOriginalURL.Contains("AddRemoveDoc") Then
-
-                                                        myWeb.msRedirectOnEnd = "/?ewCmd=EditForiegnContent&Type=AddRemoveDoc&sid=" & sid
-                                                    End If
+                                                If (ewCmd = "") Then
+                                                    myWeb.moSession("PreviewDate") = Nothing
+                                                    myWeb.moSession("PreviewUser") = Nothing
+                                                    myWeb.msRedirectOnEnd = "/admin"
                                                 Else
+                                                    Dim param As String = myWeb.mcOriginalURL.Substring(myWeb.mcOriginalURL.IndexOf("ewCmd=")).Replace("ewCmd=", "")
 
-                                                        myWeb.msRedirectOnEnd = "/admin"
+                                                    myWeb.msRedirectOnEnd = "/?ewCmd=" & param
                                                 End If
-
                                             Case "user"
                                                 myWeb.moSession("nUserId") = myWeb.mnUserId
                                         End Select
