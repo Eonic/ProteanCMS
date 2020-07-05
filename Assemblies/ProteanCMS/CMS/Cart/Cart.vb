@@ -8518,11 +8518,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
         End Function
 
 
-        Public Sub setDeliveryOptionByCountry(ByRef oCartElmt As XmlElement)
+        Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try
                 ''check if country is not default country
                 Dim quant As Long
-                 Dim oItemList As New Hashtable
+                Dim oItemList As New Hashtable
                 Dim weight As Double
                 Dim total As Double
                 Dim oDs As DataSet
@@ -8643,33 +8643,63 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
                     End If
                 Next
-
-                If oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") IsNot Nothing Then
-                    cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
+                Dim DeliveryOption As String = ""
+                If country <> "" Then
+                    cDestinationCountry = country
                     '' pass other parameters as well-
                     ''get it from cart
                     Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
-                    Dim oRowSO As DataRow
+                    'sort dataset for applied delivery option
+                    If (oDsShipOptions.Tables(0) IsNot Nothing And cOrderofDeliveryOption = "1") Then
+                        Dim TempTable As New DataTable
+                        Dim dv As DataView
+                        TempTable = oDsShipOptions.Tables(0)
+                        dv = TempTable.DefaultView
+                        ' dv.Sort = " nShippingTotal DESC"
+                        dv.RowFilter = "nShipOptCost > 0"
+                        TempTable = dv.ToTable
 
+                        oDsShipOptions.Tables(0).Clear()
+                        oDsShipOptions.Tables(0).Merge(TempTable)
+                    End If
+                    Dim oRowSO As DataRow
                     For Each oRowSO In oDsShipOptions.Tables(0).Rows
                         If bChangedDelivery Then
                             updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
-                            'shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                            'oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                            'oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                            'oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                            'oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                            'oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                            DeliveryOption = oRowSO("cShipOptName")
+                            'pass total item cost including packaging amount
+                            DeliveryOption = DeliveryOption & "#" & total
                             bChangedDelivery = False
                         End If
                     Next
                 End If
+                'If oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") IsNot Nothing Then
+                '    cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
+                '    '' pass other parameters as well-
+                '    ''get it from cart
+                '    Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
+                '    Dim oRowSO As DataRow
+
+                '    For Each oRowSO In oDsShipOptions.Tables(0).Rows
+                '        If bChangedDelivery Then
+                '            updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
+                '            'shipCost = CDbl("0" & oRowSO("nShipOptCost"))
+                '            'oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
+                '            'oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
+                '            'oCartElmt.SetAttribute("shippingCost", shipCost & "")
+                '            'oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
+                '            'oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
+                '            bChangedDelivery = False
+                '        End If
+                '    Next
+                'End If
+
+                Return DeliveryOption
             Catch ex As Exception
                 returnException(mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug)
             End Try
 
-
-        End Sub
+        End Function
     End Class
 
 

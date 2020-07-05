@@ -1333,7 +1333,7 @@ $(window).resize(function () {
                 }
                 else {
                     // $(oElem).insertAfter("<div>This must be completed</div>")
-                    alert("You have not entered any information in the field : " + cLabel + " - " + $(oElem).attr("id") + ' - ' + oElem.selectedIndex );
+                    alert("Please fill in the field: " + cLabel  );
 
                 }
                 oElem.focus();

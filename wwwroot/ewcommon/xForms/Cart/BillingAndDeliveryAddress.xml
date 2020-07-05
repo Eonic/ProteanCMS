@@ -124,7 +124,7 @@
 					<label>County</label>
 					<value />
 				</input>
-				<input bind="cContactZip" class="textbox required">
+				<input bind="cContactZip" class="textbox">
           <label>Postcode</label>
           <value />
         </input>
