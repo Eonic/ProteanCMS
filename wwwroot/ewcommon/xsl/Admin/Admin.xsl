@@ -9744,7 +9744,7 @@
               <xsl:if test="parent::reminder">
                 <xsl:choose>
                                   <xsl:when test="@actionResult = 'not sent'">
-                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;SendId={nSubKey/node()}"  class="btn btn-success btn-sm">
+                <a href="{$appPath}?ewCmd=RenewalAlerts&amp;name={ancestor::reminder/@name}&amp;SendId={nSubKey/node()}"  class="btn btn-success btn-sm">
                   <i class="fa fa-envelope">&#160;</i>&#160;Send Alert
                 </a>
                 </xsl:when>

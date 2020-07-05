@@ -120,7 +120,7 @@ Partial Public Class Cms
             End Sub
 
 
-            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 12)
+            Public Sub ListUpcomingRenewals(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = -5, Optional renewRangePeriod As String = "month", Optional renewRangeCount As Int16 = 12, Optional action As String = "")
                 Try
                     Dim StartRangeDate As DateTime
                     Dim ExpireRange As DateTime
@@ -153,10 +153,11 @@ Partial Public Class Cms
                     End If
 
 
-                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
+                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.*, al.dDateTime as dActionDate from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
                         & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" & action & "'" _
                         & " where a.dExpireDate >= " & sqlDate(StartRangeDate) & "and a.dExpireDate <= " & sqlDate(ExpireRange) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
 
@@ -219,7 +220,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional excludeFixed As Boolean = False)
+            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional excludeFixed As Boolean = False, Optional action As String = "")
                 Try
 
                     Dim ExpireRange As String = ""
@@ -233,17 +234,15 @@ Partial Public Class Cms
                     End Select
 
 
-                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.* from tblSubscription sub" _
+                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.*, al.dDateTime as dActionDate from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
-                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey"
-
+                        & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" & action & "'"
                     If ExpireRange <> "" Then
                         sSql = sSql & " where a.dExpireDate >= " & ExpireRange & "and a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
-
                     Else
                         sSql = sSql & " where a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
-
                     End If
 
                     If excludeFixed Then
@@ -415,7 +414,7 @@ Partial Public Class Cms
                         Select Case oReminder.GetAttribute("action")
                             Case "renewalreminder", "renew"
                                 'Select the subscriptions that are caught up in this case
-                                ListUpcomingRenewals(oReminder, CInt("0" & oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                ListUpcomingRenewals(oReminder, CInt("0" & oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), oReminder.GetAttribute("count"), oReminder.GetAttribute("name"))
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
@@ -431,22 +430,31 @@ Partial Public Class Cms
                                             ingoreIfPaymentActive = True
                                         End If
                                     End If
+                                    Dim ActionDate As DateTime = Nothing
+                                    If Not subxml.SelectSingleNode("dActionDate") Is Nothing Then
+                                        ActionDate = CDate(subxml.SelectSingleNode("dActionDate").InnerText)
+                                    End If
 
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
+
+
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
-                            Case "expire", "expired"
+                            Case "expire", "expired", "expirewarning"
 
                                 If oReminder.GetAttribute("action") = "expire" Then
                                     ListExpiredSubscriptions(oReminder, oReminder.GetAttribute("count"), "", 0, True)
                                 Else
-                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"))
+                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"), True, oReminder.GetAttribute("name"))
                                 End If
 
                                 Dim subxml As XmlElement
                                 For Each subxml In oReminder.SelectNodes("Subscribers")
                                     Dim force As Boolean = False
+                                    If myWeb.moRequest("name") = oReminder.GetAttribute("name") And myWeb.moRequest("SendId") = subxml.SelectSingleNode("nSubKey").InnerText Then
+                                        force = True
+                                    End If
                                     If bProcess Then
                                         force = True
                                     End If
@@ -460,8 +468,11 @@ Partial Public Class Cms
                                             ingoreIfPaymentActive = True
                                         End If
                                     End If
-
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive)
+                                    Dim ActionDate As DateTime = Nothing
+                                    If Not subxml.SelectSingleNode("dActionDate") Is Nothing Then
+                                        ActionDate = CDate(subxml.SelectSingleNode("dActionDate").InnerText)
+                                    End If
+                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -474,7 +485,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean) As String
+            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean, Optional actionDate As DateTime = Nothing) As String
                 Dim actionResult As String = ""
                 ProcessedCount = ProcessedCount + 1
 
@@ -495,8 +506,8 @@ Partial Public Class Cms
                     Select Case Action
                         Case "renewalreminder"
 
-                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
-                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+                            ' Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            ' Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
 
                             If actionDate = "#1/1/0001 12:00:00 AM#" Or (force And gbDebug) Then
 
@@ -504,7 +515,7 @@ Partial Public Class Cms
                                     actionResult = "not required"
                                 Else
                                     If force Or process Then
-                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "",,,,, oSubConfig("bccReminders"))
                                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
                                         actionResult = "sent"
                                     Else
@@ -523,7 +534,7 @@ Partial Public Class Cms
                                     Case "Failed"
                                         actionResult = "Renewal Failed"
                                         SubXml.SetAttribute("actionResult", actionResult)
-                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "",,,,, oSubConfig("bccReminders"))
                                 End Select
                             Else
                                 actionResult = "To Renew"
@@ -535,16 +546,16 @@ Partial Public Class Cms
                                 actionResult = "To Expire"
                             End If
 
-                        Case "expired"
-                            Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
-                            Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
+                        Case "expired", "expirewarning"
+                            ' Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
+                            '  Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
                             If actionDate = "#1/1/0001 12:00:00 AM#" Or (force And gbDebug) Then
 
                                 If PaymentActive And ingoreIfPaymentActive Then
                                     actionResult = "not required"
                                 Else
                                     If force Then
-                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "")
+                                        Dim cRetMessage As String = oMessager.emailer(SubXml, oSubConfig("ReminderXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), UserEmail, "",,,,, oSubConfig("bccReminders"))
                                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.SubscriptionAlert, UserId, 0, 0, SubId, messageType, False)
                                         actionResult = "sent"
                                     Else
