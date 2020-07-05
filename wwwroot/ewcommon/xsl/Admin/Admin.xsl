@@ -6448,19 +6448,35 @@
           <xsl:choose>
             <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
               <div class="panel-heading">
+                
+                <div class="panel-heading-buttons col-md-3 pull-right">
+                  <div class="form-group bulk-action">
+                    <div class="input-group">
+                      <label class="input-group-addon">Bulk Action</label>
+                      <select class="form-control" name="BulkAction" id="BulkAction">
+                        <option value="print">Print Delivery</option>
+                        <option value="setInProgress">Move to In Progress</option>
+                        <option value="setShipped">Move to Shipped</option>
+                      </select>
+                      <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">Go</button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
                 <div class="pull-right">
-                <xsl:apply-templates select="/" mode="adminStepper">
-                  <xsl:with-param name="itemCount" select="'100'"/>
-                  <xsl:with-param name="itemTotal" select="$total"/>
-                  <xsl:with-param name="startPos" select="$startPos"/>
-                  <xsl:with-param name="path" select="$queryString"/>
-                  <xsl:with-param name="itemName" select="$title"/>
-                </xsl:apply-templates>
-              </div>
+                  <xsl:apply-templates select="/" mode="adminStepper">
+                    <xsl:with-param name="itemCount" select="'100'"/>
+                    <xsl:with-param name="itemTotal" select="$total"/>
+                    <xsl:with-param name="startPos" select="$startPos"/>
+                    <xsl:with-param name="path" select="$queryString"/>
+                    <xsl:with-param name="itemName" select="$title"/>
+                  </xsl:apply-templates>
+                </div>
                 <h3 class="panel-title">
                   <xsl:value-of select="$title"/>
                 </h3>
-              
+                
                 <div class="terminus">
                   <xsl:text> </xsl:text>
                 </div>
@@ -6475,6 +6491,9 @@
                     <th>Time Placed</th>
                     <th>Value</th>
                     <th>&#160;</th>
+                    <th>
+                      <a href="" class="btn btn-default">All</a>
+                    </th>
                   </tr>
                   <xsl:apply-templates select="ContentDetail/Content[@type='order']" mode="ListOrders">
                     <xsl:with-param name="startPos"  select="$startPos"/>
@@ -6614,6 +6633,14 @@
           <i class="fa fa-eye">
             <xsl:text> </xsl:text>
           </i><xsl:text> </xsl:text>view order</a>
+        <xsl:if test="@statusId=6">
+          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-xs btn-primary">
+            <i class="fa fa-print">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> print</xsl:text>
+          </a>
+
+        </xsl:if>
         <xsl:if test="@statusId&lt;6 or @statusId=13">
           <a href="{$appPath}?ewCmd=PreviewOn&amp;PreviewUser={@userId}&amp;CartId={@id}&amp;cartCmd=Cart" class="btn btn-xs btn-primary">
             <i class="fa fa-cart-plus">
@@ -6622,6 +6649,11 @@
           </a>
         </xsl:if>
                 
+      </td>
+      <td>
+      <xsl:if test="@statusId=6">
+        <input type="checkbox" name="orderAction" value="{@id}" class="input-control"/>
+      </xsl:if>
       </td>
     </tr>
   </xsl:template>

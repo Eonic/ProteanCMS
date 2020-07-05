@@ -199,7 +199,7 @@ Partial Public Class Cms
             SettlementInitiated = 14
             SkipAddress = 15
             Archived = 16
-
+            InProgress = 17
         End Enum
 #End Region
 
@@ -423,6 +423,8 @@ Partial Public Class Cms
                     Return "Shipped"
                 Case cartProcess.Archived
                     Return "Archived"
+                Case cartProcess.InProgress
+                    Return "In Progress"
                 Case Else
                     Return "Unknown Process ID"
             End Select
