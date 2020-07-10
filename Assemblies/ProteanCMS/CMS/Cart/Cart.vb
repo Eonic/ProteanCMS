@@ -7368,7 +7368,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Sub
 
-        Public Sub ListOrders(Optional ByVal nOrderID As Integer = 0, Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
+        Public Sub ListOrders(Optional ByVal sOrderID As String = "0", Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
             PerfMon.Log("Cart", "ListOrders")
             If myWeb.mnUserId = 0 Then Exit Sub ' if not logged in, dont bother
             'For listing a users previous orders/quotes
@@ -7394,11 +7394,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If nRows < 1 Then nRows = 100
 
                 If Not nUserId = 0 Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID, ")") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 ElseIf Not myWeb.mbAdminMode Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID, ")") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 Else
-                    cWhereSQL = " WHERE " & IIf(nOrderID > 0, "  nCartOrderKey = " & nOrderID & " AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
+                    cWhereSQL = " WHERE " & IIf(sOrderID <> "0", "  nCartOrderKey IN (" & sOrderID & ") AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
                     'if nCartStatus = " & ProcessId
                     If Not ProcessId = 0 Then
                         cWhereSQL &= " and nCartStatus = " & ProcessId

@@ -6435,6 +6435,7 @@
     <xsl:variable name="title">
       <xsl:choose>
         <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
+        <xsl:when test="@ewCmd='OrdersInProgress'">In Progress</xsl:when>
         <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
         <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
         <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
@@ -6447,16 +6448,19 @@
         <div class="panel panel-default">
           <xsl:choose>
             <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
+              <form action="{$appPath}" method="get" class="ewXform">
               <div class="panel-heading">
-                
+             
+                  <input type="hidden" name="ewCmd" value="BulkCartAction"/>
+                  <input type="hidden" name="pgid" value="{$page/@id}"/>
                 <div class="panel-heading-buttons col-md-3 pull-right">
                   <div class="form-group bulk-action">
                     <div class="input-group">
                       <label class="input-group-addon">Bulk Action</label>
                       <select class="form-control" name="BulkAction" id="BulkAction">
-                        <option value="print">Print Delivery</option>
-                        <option value="setInProgress">Move to In Progress</option>
-                        <option value="setShipped">Move to Shipped</option>
+                        <option value="Print">Print Delivery</option>
+                        <option value="SetInProgress">Move to In Progress</option>
+                        <option value="SetShipped">Move to Shipped</option>
                       </select>
                       <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary">Go</button>
@@ -6501,6 +6505,8 @@
                   </xsl:apply-templates>
                 </tbody>
               </table>
+                
+                  </form>
               <div class="panel-footer">
                 <div class="pull-right">
               <xsl:apply-templates select="/" mode="adminStepper">
@@ -6652,7 +6658,7 @@
       </td>
       <td>
       <xsl:if test="@statusId=6">
-        <input type="checkbox" name="orderAction" value="{@id}" class="input-control"/>
+        <input type="checkbox" name="id" value="{@id}" class="input-control"/>
       </xsl:if>
       </td>
     </tr>

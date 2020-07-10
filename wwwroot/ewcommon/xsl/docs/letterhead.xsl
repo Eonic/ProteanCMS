@@ -3,12 +3,72 @@
   <xsl:output method="xml" indent="yes" omit-xml-declaration="no" encoding="UTF-8"/>
   <xsl:variable name="filePath" select="'D:\HostingSpaces\tbc\wwwroot\'"/>
   <xsl:variable name="headingfont" select="'Helvetica'"/>
-  <xsl:variable name="headingcolor" select="'#00ADEE'"/>
+  <xsl:variable name="headingcolor" select="'#333333'"/>
   <xsl:variable name="bodyfont" select="'Helvetica'"/>
   <xsl:variable name="page" select="."/>
-  
-  <xsl:template match="*">
 
+
+  <xsl:variable name="siteTitle">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteName'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="SiteLogo">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteLogo'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyName">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyName'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyAddress">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyAddress'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyTel">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyTel'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyEmail">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyEmail'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="VATnumber">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'VATnumber'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="CompanyRegNo">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyRegNo'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="CharityRegNo">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CharityRegNo'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:template match="*" mode="documentContainer">
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
       <fo:layout-master-set>
         <fo:simple-page-master master-name="simple"
@@ -23,40 +83,65 @@
           <fo:region-after extent="0cm"/>
         </fo:simple-page-master>
       </fo:layout-master-set>
-
-      <fo:page-sequence master-reference="simple">
-        <xsl:apply-templates select="descendant-or-self::*[name()='Policy'][1]" mode="PageTitle"/>
-        <fo:flow flow-name="xsl-region-body">
-          <fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="19cm">
-            <fo:block>
-              <fo:external-graphic src="{$filePath}/images/pdf/docheader.jpg"></fo:external-graphic>
-            </fo:block>
-          </fo:block-container>
-
-          <xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageBody"/>
-          
-
-          <fo:block-container position="absolute" top="24cm" right="0cm" left="0cm" height="3.66cm" width="20cm" border-top-color="#000000" border-top-style="solid" border-top-width="0.2mm">
-            <fo:block-container margin-left="5mm" height="3.66cm" width="20cm">
-             <fo:block font-size="13pt" text-align="left" font-family="{$headingfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-        
-            </fo:block>
-              <fo:block font-size="12pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-                Contact Details
-              </fo:block>
-            <fo:block font-size="10pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" padding-left="5mm">
-              tel: 0
-            </fo:block>
-            </fo:block-container>
-          </fo:block-container>
-          <fo:block-container position="absolute" top="26.5cm" right="0cm" left="0.5cm" height="3.66cm" width="19cm">
-            <fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve">
-              <fo:block></fo:block>
-            </fo:block>
-          </fo:block-container>
-        </fo:flow>
-      </fo:page-sequence>
+      <xsl:apply-templates select="." mode="documentPage"/>
     </fo:root>
+  </xsl:template>
+  
+
+  <xsl:template match="*" mode="documentPage">
+    <fo:page-sequence master-reference="simple"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+      <xsl:apply-templates select="descendant-or-self::*[name()='Policy'][1]" mode="PageTitle"/>
+      <fo:flow flow-name="xsl-region-body">
+        <fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="10cm">
+          <fo:block>
+            <!--fo:external-graphic src="{$filePath}/images/pdf/docheader.jpg"></fo:external-graphic-->
+            <fo:block font-size="14pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+              <xsl:value-of select="$CompanyName"/>
+            </fo:block>
+          </fo:block>
+        </fo:block-container>
+        <fo:block-container position="absolute" top="1.0cm" right="0cm" left="0.5cm" height="10.7cm" width="19cm">
+          <fo:block>
+            <fo:block font-size="10pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+              <xsl:value-of select="$CompanyAddress"/>
+            </fo:block>
+            <fo:block font-size="10pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" padding-left="5mm">
+              tel: <xsl:value-of select="$CompanyTel"/>
+            </fo:block>
+          </fo:block>
+        </fo:block-container>
+        <xsl:apply-templates select="." mode="PageBody"/>
+        <xsl:apply-templates select="." mode="documentFooter"/>
+        
+      </fo:flow>
+    </fo:page-sequence>
+  </xsl:template>
+
+  <xsl:template match="*" mode="documentFooter">
+    <fo:block-container position="absolute" top="26cm" right="0cm" left="0cm" height="1.66cm" width="20cm" border-top-color="#000000" border-top-style="solid" border-top-width="0.2mm"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+      <fo:block-container margin-left="5mm" height="3.66cm" width="20cm">
+        <fo:block font-size="13pt" text-align="left" font-family="{$headingfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+
+        </fo:block>
+        <fo:block font-size="10pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+          <xsl:value-of select="$CompanyAddress"/>
+        </fo:block>
+        <fo:block font-size="10pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" padding-left="5mm">
+          tel: <xsl:value-of select="$CompanyTel"/>
+        </fo:block>
+      </fo:block-container>
+    </fo:block-container>
+    <fo:block-container position="absolute" top="26.5cm" right="0cm" left="0.5cm" height="3.66cm" width="19cm"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+      <fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve">
+        <fo:block></fo:block>
+      </fo:block>
+    </fo:block-container>
+  </xsl:template>
+  
+  <xsl:template match="*">
+
+    <xsl:apply-templates select="." mode="documentContainer"/>
+    
   </xsl:template>
 
   <xsl:template match="*" mode="PageBody">

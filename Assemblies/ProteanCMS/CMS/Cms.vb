@@ -182,6 +182,7 @@ Public Class Cms
         ajaxadmin = 4
         mail = 5
         iframe = 6
+        pdf = 7
     End Enum
 
 #End Region
@@ -1081,6 +1082,7 @@ Public Class Cms
                     moApi.InitialiseVariables()
                     moApi.JSONRequest()
 
+
                 Case Else
 
 
@@ -1197,6 +1199,9 @@ Public Class Cms
                                     Case "application/json"
                                         moResponse.Write(Newtonsoft.Json.JsonConvert.SerializeXmlNode(moPageXml.DocumentElement, Newtonsoft.Json.Formatting.None))
                                 End Select
+
+
+
                             Else
 
                                 PerfMon.Log("Web", "GetPageHTML-loadxsl")
@@ -1216,6 +1221,11 @@ Public Class Cms
                                             styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
                                         End If
                                     End If
+                                    If moResponseType = pageResponseType.pdf Then
+
+                                        styleFile = CStr(goServer.MapPath(mcEwSiteXsl))
+                                    End If
+
                                 Else
                                     If moResponseType = pageResponseType.Page Then
                                         If moConfig("xframeoptions") <> "" Then
@@ -1275,39 +1285,129 @@ Public Class Cms
                                         gnResponseCode = 500
                                         moResponse.Write(textWriter.ToString())
                                     End If
+                                ElseIf moResponseType = pageResponseType.pdf Then
+                                    mcContentType = "application/pdf"
+                                    'Next we transform using into FO.Net Xml
+
+                                    '  If moTransform Is Nothing Then
+                                    Dim styleFile2 As String = CType(goServer.MapPath(mcEwSiteXsl), String)
+                                    PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
+                                    oTransform = New Protean.XmlHelper.Transform(Me, styleFile2, False)
+                                    ' End If
+
+                                    msException = ""
+
+
+                                    oTransform.mbDebug = gbDebug
+
+                                    icPageWriter = New IO.StringWriter
+
+                                    oTransform.ProcessTimed(moPageXml, icPageWriter)
+
+
+                                    Dim foNetXml As String = icPageWriter.ToString
+
+
+                                    If foNetXml.StartsWith("<html") Then
+                                        moResponse.Write(foNetXml)
+                                    Else
+                                        'now we use FO.Net to generate our PDF
+
+                                        Dim strFileName As String = "DeliveryNote.pdf"
+
+                                        Dim oFoNet As New Fonet.FonetDriver()
+                                        Dim ofileStream As New System.IO.MemoryStream()
+                                        Dim oTxtReader As New System.IO.StringReader(foNetXml)
+                                        oFoNet.CloseOnExit = False
+
+                                        Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
+
+                                        rendererOpts.Author = "ProteanCMS"
+                                        rendererOpts.EnablePrinting = True
+                                        rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
+                                        ' rendererOpts.Kerning = True
+                                        ' rendererOpts.EnableCopy = True
+
+                                        'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                                        'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+
+                                        Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
+                                        Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                                        Dim files As FileInfo() = dir.GetFiles()
+                                        Dim fi As FileInfo
+
+                                        For Each fi In files
+                                            Dim cExt As String = LCase(fi.Extension)
+                                            Select Case cExt
+                                                Case ".otf"
+                                                    rendererOpts.AddPrivateFont(fi)
+                                            End Select
+                                        Next fi
+
+                                        oFoNet.Options = rendererOpts
+                                        oFoNet.Render(oTxtReader, ofileStream)
+
+                                        moResponse.Buffer = True
+                                        moResponse.Expires = 0
+                                        goServer.ScriptTimeout = 10000
+
+                                        Dim strFileSize As String = ofileStream.Length
+                                        Dim Buffer() As Byte = ofileStream.ToArray
+
+                                        moCtx.Response.Clear()
+                                        'Const adTypeBinary = 1
+                                        moCtx.Response.AddHeader("Connection", "keep-alive")
+                                        If moCtx.Request.QueryString("mode") = "open" Then
+                                            moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+                                        Else
+                                            moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                        End If
+                                        moCtx.Response.AddHeader("Content-Length", strFileSize)
+                                        'ctx.Response.Charset = "UTF-8"
+                                        moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
+                                        moCtx.Response.BinaryWrite(Buffer)
+                                        moCtx.Response.Flush()
+
+                                        ' objStream = Nothing
+                                        oFoNet = Nothing
+                                        oTxtReader = Nothing
+                                        ofileStream = Nothing
+                                    End If
                                 Else
                                     moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                     oTransform.ProcessTimed(moPageXml, moResponse)
                                 End If
 
-                                'moResponse.SuppressContent = False
-                                If gnResponseCode <> 200 Then
-                                    ' TODO: This is IIS7 specific, needs addressing for IIS6
-                                    moResponse.TrySkipIisCustomErrors = True
-                                    moResponse.StatusCode = gnResponseCode
-                                End If
+                            End If
 
-                                PerfMon.Log("Web", "GetPageHTML-endxsl")
-                                oTransform.Close()
-                                oTransform = Nothing
 
-                                'we don't need this anymore.
-                                If Not ibIndexMode Then
-                                    If msRedirectOnEnd = "" Then
-                                        PerfMon.Write()
-                                        moPageXml = Nothing
-                                        If sServeFile = "" Then
-                                            Close()
-                                        End If
-                                    Else
-                                        moPageXml = Nothing
-                                        If sServeFile = "" Then
-                                            Close()
-                                        End If
+                            'moResponse.SuppressContent = False
+                            If gnResponseCode <> 200 Then
+                                ' TODO: This is IIS7 specific, needs addressing for IIS6
+                                moResponse.TrySkipIisCustomErrors = True
+                                moResponse.StatusCode = gnResponseCode
+                            End If
+
+                            PerfMon.Log("Web", "GetPageHTML-endxsl")
+                        '  oTransform.Close()
+                        'oTransform = Nothing
+
+                        'we don't need this anymore.
+                        If Not ibIndexMode Then
+                                If msRedirectOnEnd = "" Then
+                                    PerfMon.Write()
+                                    moPageXml = Nothing
+                                    If sServeFile = "" Then
+                                        Close()
                                     End If
                                 Else
-                                    moPageXml = New XmlDocument
+                                    moPageXml = Nothing
+                                    If sServeFile = "" Then
+                                        Close()
+                                    End If
                                 End If
+                            Else
+                                moPageXml = New XmlDocument
                             End If
                         End If
                     End If
