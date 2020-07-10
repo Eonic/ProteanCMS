@@ -96,6 +96,7 @@
     <MenuItem name="Ecommerce" cmd="Orders" display="true" feature="Cart" icon="fa-shopping-cart">
       <MenuItem name="Orders" cmd="Orders" display="true" icon="fa-shopping-cart">
         <MenuItem name="New Sales" cmd="Orders" display="true" icon="fa-shopping-cart"/>
+        <MenuItem name="In Progress" cmd="OrdersInProgress" display="true" icon="fa-archive"/>
         <MenuItem name="Awaiting Payment" cmd="OrdersAwaitingPayment" display="true" icon="fa-clock-o"/>
         <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
         <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
