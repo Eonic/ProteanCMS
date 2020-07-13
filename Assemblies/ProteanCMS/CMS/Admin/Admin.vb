@@ -3280,6 +3280,7 @@ AfterProcessFlow:
 
                             Dim ofs As New Protean.fsHelper()
                             myWeb.moResponseType = pageResponseType.pdf
+                            myWeb.mcOutputFileName = "DeliveryNote.pdf"
                             myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig("ProjectPath") & "\xsl\docs\deliverynote.xsl")
 
                             oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)

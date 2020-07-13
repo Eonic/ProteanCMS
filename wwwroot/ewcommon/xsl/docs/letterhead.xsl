@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
   <xsl:output method="xml" indent="yes" omit-xml-declaration="no" encoding="UTF-8"/>
-  <xsl:variable name="filePath" select="'D:\HostingSpaces\tbc\wwwroot\'"/>
+  <xsl:variable name="filePath" select="'D:\HostingSpaces\ewcommon_v5-1\'"/>
   <xsl:variable name="headingfont" select="'Helvetica'"/>
   <xsl:variable name="headingcolor" select="'#333333'"/>
   <xsl:variable name="bodyfont" select="'Helvetica'"/>
@@ -90,7 +90,7 @@
 
   <xsl:template match="*" mode="documentPage">
     <fo:page-sequence master-reference="simple"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
-      <xsl:apply-templates select="descendant-or-self::*[name()='Policy'][1]" mode="PageTitle"/>
+      <xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
       <fo:flow flow-name="xsl-region-body">
         <fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="10cm">
           <fo:block>

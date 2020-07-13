@@ -6454,6 +6454,7 @@
                   <input type="hidden" name="ewCmd" value="BulkCartAction"/>
                   <input type="hidden" name="pgid" value="{$page/@id}"/>
                 <div class="panel-heading-buttons col-md-3 pull-right">
+		      <xsl:if test="@ewCmd='Orders'">
                   <div class="form-group bulk-action">
                     <div class="input-group">
                       <label class="input-group-addon">Bulk Action</label>
@@ -6467,6 +6468,7 @@
                       </span>
                     </div>
                   </div>
+		  </xsl:if>
                 </div>
                 <div class="pull-right">
                   <xsl:apply-templates select="/" mode="adminStepper">

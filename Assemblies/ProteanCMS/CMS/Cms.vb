@@ -171,6 +171,7 @@ Public Class Cms
 
 
     Private _workingSetPrivateMemoryCounter As PerformanceCounter
+    Public mcOutputFileName As String = "FileName.pdf"
 
 #End Region
 #Region "Enums"
@@ -1287,91 +1288,63 @@ Public Class Cms
                                     End If
                                 ElseIf moResponseType = pageResponseType.pdf Then
                                     mcContentType = "application/pdf"
-                                    'Next we transform using into FO.Net Xml
-
-                                    '  If moTransform Is Nothing Then
+                                    msException = ""
                                     Dim styleFile2 As String = CType(goServer.MapPath(mcEwSiteXsl), String)
                                     PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                                     oTransform = New Protean.XmlHelper.Transform(Me, styleFile2, False)
-                                    ' End If
-
-                                    msException = ""
-
-
                                     oTransform.mbDebug = gbDebug
-
                                     icPageWriter = New IO.StringWriter
-
                                     oTransform.ProcessTimed(moPageXml, icPageWriter)
 
-
                                     Dim foNetXml As String = icPageWriter.ToString
-
-
                                     If foNetXml.StartsWith("<html") Then
                                         moResponse.Write(foNetXml)
                                     Else
-                                        'now we use FO.Net to generate our PDF
-
-                                        Dim strFileName As String = "DeliveryNote.pdf"
-
                                         Dim oFoNet As New Fonet.FonetDriver()
-                                        Dim ofileStream As New System.IO.MemoryStream()
+                                        Dim oFileStream As New System.IO.MemoryStream()
                                         Dim oTxtReader As New System.IO.StringReader(foNetXml)
                                         oFoNet.CloseOnExit = False
 
                                         Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
-
                                         rendererOpts.Author = "ProteanCMS"
                                         rendererOpts.EnablePrinting = True
                                         rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
                                         ' rendererOpts.Kerning = True
                                         ' rendererOpts.EnableCopy = True
-
-                                        'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                                        'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
-
-                                        Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
-                                        Dim subDirs As DirectoryInfo() = dir.GetDirectories()
-                                        Dim files As FileInfo() = dir.GetFiles()
-                                        Dim fi As FileInfo
-
-                                        For Each fi In files
-                                            Dim cExt As String = LCase(fi.Extension)
-                                            Select Case cExt
-                                                Case ".otf"
-                                                    rendererOpts.AddPrivateFont(fi)
-                                            End Select
-                                        Next fi
-
+                                        If Directory.Exists(goServer.MapPath("/") & "/fonts") Then
+                                            Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
+                                            Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                                            Dim files As FileInfo() = dir.GetFiles()
+                                            Dim fi As FileInfo
+                                            For Each fi In files
+                                                Dim cExt As String = LCase(fi.Extension)
+                                                Select Case cExt
+                                                    Case ".otf"
+                                                        rendererOpts.AddPrivateFont(fi)
+                                                End Select
+                                            Next fi
+                                        End If
                                         oFoNet.Options = rendererOpts
-                                        oFoNet.Render(oTxtReader, ofileStream)
-
+                                        oFoNet.Render(oTxtReader, oFileStream)
                                         moResponse.Buffer = True
                                         moResponse.Expires = 0
                                         goServer.ScriptTimeout = 10000
-
-                                        Dim strFileSize As String = ofileStream.Length
-                                        Dim Buffer() As Byte = ofileStream.ToArray
-
+                                        Dim strFileSize As String = oFileStream.Length
+                                        Dim Buffer() As Byte = oFileStream.ToArray
                                         moCtx.Response.Clear()
-                                        'Const adTypeBinary = 1
                                         moCtx.Response.AddHeader("Connection", "keep-alive")
                                         If moCtx.Request.QueryString("mode") = "open" Then
-                                            moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+                                            moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(mcOutputFileName, ",", ""))
                                         Else
-                                            moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                            moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(mcOutputFileName, ",", ""))
                                         End If
                                         moCtx.Response.AddHeader("Content-Length", strFileSize)
-                                        'ctx.Response.Charset = "UTF-8"
                                         moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
                                         moCtx.Response.BinaryWrite(Buffer)
                                         moCtx.Response.Flush()
-
-                                        ' objStream = Nothing
                                         oFoNet = Nothing
                                         oTxtReader = Nothing
-                                        ofileStream = Nothing
+                                        oFileStream = Nothing
                                     End If
                                 Else
                                     moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
@@ -1384,16 +1357,17 @@ Public Class Cms
                             'moResponse.SuppressContent = False
                             If gnResponseCode <> 200 Then
                                 ' TODO: This is IIS7 specific, needs addressing for IIS6
+
                                 moResponse.TrySkipIisCustomErrors = True
                                 moResponse.StatusCode = gnResponseCode
                             End If
 
                             PerfMon.Log("Web", "GetPageHTML-endxsl")
-                        '  oTransform.Close()
-                        'oTransform = Nothing
+                            '  oTransform.Close()
+                            'oTransform = Nothing
 
-                        'we don't need this anymore.
-                        If Not ibIndexMode Then
+                            'we don't need this anymore.
+                            If Not ibIndexMode Then
                                 If msRedirectOnEnd = "" Then
                                     PerfMon.Write()
                                     moPageXml = Nothing
@@ -1436,6 +1410,7 @@ Public Class Cms
 
 
         Catch ex As Exception
+            If mcEwSiteXsl <> moConfig("SiteXsl") Then mcEwSiteXsl = moConfig("SiteXsl")
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo))
             'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             moResponse.Write(msException)
