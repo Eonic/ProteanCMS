@@ -1344,7 +1344,9 @@ processFlow:
                             GoTo processFlow
                         End If
 
-                    Case "Billing" 'Check if order has Billing Address                
+                    Case "Billing" 'Check if order has Billing Address    
+                        'reset payment method
+                        mcPaymentMethod = Nothing
                         GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
@@ -6604,6 +6606,10 @@ processFlow:
                 sSql = "update tblCartOrder set nCartStatus = 11 where(nCartOrderKey = " & mnCartId & ")"
                 moDBHelper.ExeProcessSql(sSql)
                 mnTaxRate = moCartConfig("TaxRate")
+
+                myWeb.moSession("mcPaymentMethod") = Nothing
+                myWeb.moSession("mmcOrderType") = Nothing
+                myWeb.moRequest.Form("ordertype") = Nothing
 
             Catch ex As Exception
                 returnException(mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)

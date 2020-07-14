@@ -185,11 +185,14 @@
         </fo:block>
 
       </fo:block-container>
-      <fo:block-container position="absolute" top="22.5cm" left="0.5cm"  right="0cm" height="7cm" width="9cm">
+      
+      <fo:block-container position="absolute" top="22cm" left="1.1cm"  right="0cm" height="7cm" width="8.4cm">
+        <fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
           <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
+        </fo:block>
       </fo:block-container>
 
-      <fo:block-container position="absolute" top="26.0cm" left="0.5cm"  right="0cm" height="1.5cm" width="9cm">
+      <fo:block-container position="absolute" top="26.0cm" left="1.1cm"  right="0cm" height="1.5cm" width="8.4cm">
         <fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
           Ref: <xsl:value-of select="@InvoiceRef"/>
       </fo:block>
@@ -198,13 +201,13 @@
         </fo:block>
       </fo:block-container>
       
-      <fo:block-container position="absolute" top="22.5cm" left="10.5cm"  right="0cm" height="7cm" width="9cm">
+      <fo:block-container position="absolute" top="22.5cm" left="10.5cm"  right="0cm" height="7cm" width="8.4cm">
         <fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
           <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
         </fo:block>
       </fo:block-container>
 
-      <fo:block-container position="absolute" top="26.0cm" left="10.5cm"  right="0cm" height="1.5cm" width="9cm">
+      <fo:block-container position="absolute" top="26.0cm" left="10.5cm"  right="0cm" height="1.5cm" width="8.4cm">
         <fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
           Ref: <xsl:value-of select="@InvoiceRef"/>
         </fo:block>

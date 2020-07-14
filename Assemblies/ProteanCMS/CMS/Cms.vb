@@ -596,16 +596,16 @@ Public Class Cms
 
 
                     If CLng("0" & moConfig("AdminRootPageId")) > 0 And LCase(ewCmd) <> "logoff" Then
-                            rootPageIdFromConfig = moConfig("AdminRootPageId")
+                        rootPageIdFromConfig = moConfig("AdminRootPageId")
 
-                        ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
-                            ' This is to accomodate users in admin who have admin rights revoked and therefore must 
-                            ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
-                            rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
-                        End If
-                    Else
-                        ' Not admin mode
-                        If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
+                    ElseIf CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 AndAlso mnUserId > 0 AndAlso Not moDbHelper.checkUserRole("Administrator") Then
+                        ' This is to accomodate users in admin who have admin rights revoked and therefore must 
+                        ' be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
+                        rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
+                    End If
+                Else
+                    ' Not admin mode
+                    If mnUserId > 0 And CLng("0" & moConfig("AuthenticatedRootPageId")) > 0 Then
                         rootPageIdFromConfig = moConfig("AuthenticatedRootPageId")
                     End If
                 End If
@@ -1288,63 +1288,91 @@ Public Class Cms
                                     End If
                                 ElseIf moResponseType = pageResponseType.pdf Then
                                     mcContentType = "application/pdf"
-                                    msException = ""
+                                    'Next we transform using into FO.Net Xml
+
+                                    '  If moTransform Is Nothing Then
                                     Dim styleFile2 As String = CType(goServer.MapPath(mcEwSiteXsl), String)
                                     PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                                     oTransform = New Protean.XmlHelper.Transform(Me, styleFile2, False)
+                                    ' End If
+
+                                    msException = ""
+
+
                                     oTransform.mbDebug = gbDebug
+
                                     icPageWriter = New IO.StringWriter
+
                                     oTransform.ProcessTimed(moPageXml, icPageWriter)
 
+
                                     Dim foNetXml As String = icPageWriter.ToString
+
+
                                     If foNetXml.StartsWith("<html") Then
                                         moResponse.Write(foNetXml)
                                     Else
+                                        'now we use FO.Net to generate our PDF
+
+                                        Dim strFileName As String = mcOutputFileName
+
                                         Dim oFoNet As New Fonet.FonetDriver()
-                                        Dim oFileStream As New System.IO.MemoryStream()
+                                        Dim ofileStream As New System.IO.MemoryStream()
                                         Dim oTxtReader As New System.IO.StringReader(foNetXml)
                                         oFoNet.CloseOnExit = False
 
                                         Dim rendererOpts As New Fonet.Render.Pdf.PdfRendererOptions()
+
                                         rendererOpts.Author = "ProteanCMS"
                                         rendererOpts.EnablePrinting = True
                                         rendererOpts.FontType = Fonet.Render.Pdf.FontType.Embed
                                         ' rendererOpts.Kerning = True
                                         ' rendererOpts.EnableCopy = True
-                                        If Directory.Exists(goServer.MapPath("/") & "/fonts") Then
-                                            Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
-                                            Dim subDirs As DirectoryInfo() = dir.GetDirectories()
-                                            Dim files As FileInfo() = dir.GetFiles()
-                                            Dim fi As FileInfo
-                                            For Each fi In files
-                                                Dim cExt As String = LCase(fi.Extension)
-                                                Select Case cExt
-                                                    Case ".otf"
-                                                        rendererOpts.AddPrivateFont(fi)
-                                                End Select
-                                            Next fi
-                                        End If
+
+                                        'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                                        'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
+
+                                        Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
+                                        Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                                        Dim files As FileInfo() = dir.GetFiles()
+                                        Dim fi As FileInfo
+
+                                        For Each fi In files
+                                            Dim cExt As String = LCase(fi.Extension)
+                                            Select Case cExt
+                                                Case ".otf"
+                                                    rendererOpts.AddPrivateFont(fi)
+                                            End Select
+                                        Next fi
+
                                         oFoNet.Options = rendererOpts
-                                        oFoNet.Render(oTxtReader, oFileStream)
+                                        oFoNet.Render(oTxtReader, ofileStream)
+
                                         moResponse.Buffer = True
                                         moResponse.Expires = 0
                                         goServer.ScriptTimeout = 10000
-                                        Dim strFileSize As String = oFileStream.Length
-                                        Dim Buffer() As Byte = oFileStream.ToArray
+
+                                        Dim strFileSize As String = ofileStream.Length
+                                        Dim Buffer() As Byte = ofileStream.ToArray
+
                                         moCtx.Response.Clear()
+                                        'Const adTypeBinary = 1
                                         moCtx.Response.AddHeader("Connection", "keep-alive")
                                         If moCtx.Request.QueryString("mode") = "open" Then
-                                            moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(mcOutputFileName, ",", ""))
+                                            moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
                                         Else
-                                            moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(mcOutputFileName, ",", ""))
+                                            moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
                                         End If
                                         moCtx.Response.AddHeader("Content-Length", strFileSize)
+                                        'ctx.Response.Charset = "UTF-8"
                                         moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
                                         moCtx.Response.BinaryWrite(Buffer)
                                         moCtx.Response.Flush()
+
+                                        ' objStream = Nothing
                                         oFoNet = Nothing
                                         oTxtReader = Nothing
-                                        oFileStream = Nothing
+                                        ofileStream = Nothing
                                     End If
                                 Else
                                     moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
