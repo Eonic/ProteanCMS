@@ -7394,9 +7394,9 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If nRows < 1 Then nRows = 100
 
                 If Not nUserId = 0 Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID, ")") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID & ")", "") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 ElseIf Not myWeb.mbAdminMode Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID, ")") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID & ")", "") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 Else
                     cWhereSQL = " WHERE " & IIf(sOrderID <> "0", "  nCartOrderKey IN (" & sOrderID & ") AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
                     'if nCartStatus = " & ProcessId
