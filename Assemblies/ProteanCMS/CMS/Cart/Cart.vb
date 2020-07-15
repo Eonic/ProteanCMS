@@ -1435,15 +1435,9 @@ processFlow:
                             GoTo processFlow
                         End If
 
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
-
-                        Dim ccPaymentXform As xForm = New xForm
-
-
-
                         cProcessInfo = "Payment Method from session = '" & mcPaymentMethod & "'"
-
-
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
+                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then

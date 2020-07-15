@@ -20,17 +20,25 @@ Namespace Providers
     Namespace Payment
         Public Class SkipPayment
 
+            Private Const mcModuleName As String = "Providers.Payment.SkipPayment"
+
             Public Sub New()
                 'do nothing
             End Sub
 
-            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Cms)
+            Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef PayProvider As Object, ByRef myWeb As Cms)
+                Dim cProcessInfo As String = ""
+                Try
 
-                MemProvider.AdminXforms = New AdminXForms(myWeb)
-                MemProvider.AdminProcess = New AdminProcess(myWeb)
-                MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
-                MemProvider.Activities = New Activities()
+                    PayProvider.AdminXforms = New AdminXForms(myWeb)
+                    PayProvider.AdminProcess = New AdminProcess(myWeb)
+                    '   PayProvider.AdminProcess.oAdXfm = PayProvider.AdminXforms
+                    PayProvider.Activities = New Activities()
 
+                Catch ex As Exception
+                    returnException(mcModuleName, "Initiate", ex, "", cProcessInfo, gbDebug)
+
+                End Try
             End Sub
 
             Public Class AdminXForms
@@ -91,12 +99,12 @@ Namespace Providers
                     End Try
                 End Function
 
-                Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As Protean.Cms.xForm
+                Public Function GetPaymentForm(ByRef myWeb As Protean.Cms, ByRef oCart As Cms.Cart, ByRef oOrder As XmlElement, Optional returnCmd As String = "cartCmd=SubmitPaymentDetails") As Protean.xForm
                     PerfMon.Log("Protean.Providers.payment.SkipPayment", "GetPaymentForm")
                     Dim cProcessInfo As String = ""
                     Try
 
-                        Dim ccXform As xForm = New Protean.Cms.xForm
+                        Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx)
 
                         ccXform.NewFrm("SkipPayment")
 
