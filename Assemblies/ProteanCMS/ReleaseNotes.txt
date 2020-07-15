@@ -2217,3 +2217,11 @@ ALL NEEDS TO BE ADDED TO 4.1.0 AFTER THIS POINT
 
 4.0.1.14
 [TS]	Added move shipping location functionality. needs update of ewAdminV4.xsl
+
+Tidy dll -15-07-2020
+[SC]   If server server is 64 bit and failed to load tidy.dll reference and broke functionality
+	   Get dll from below link with the version you want http://binaries.html-tidy.org/	
+	   Please use following steps
+	   Put tidyX86.dll, tidyX64.dll and tindy.dll in C:\Windows\System32 and it will start working.
+	   
+
