@@ -1459,6 +1459,10 @@ processFlow:
                         If Not (oElmt.SelectSingleNode("error/msg") Is Nothing) Then
                             'oElmt.SelectSingleNode("error").PrependChild(oElmt.OwnerDocument.CreateElement("msg"))
                             'oElmt.SelectSingleNode("error").FirstChild.InnerXml = "<strong>PAYMENT CANNOT PROCEED UNTIL QUANTITIES ARE ADJUSTED</strong>"
+                        ElseIf mcPaymentMethod = Nothing Then
+
+                            mcCartCmd = "Confirm"
+                            GoTo processFlow
 
                         ElseIf ccPaymentXform.valid = True Then
 

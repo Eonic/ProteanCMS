@@ -3511,6 +3511,8 @@ Partial Public Class Cms
 
                 Try
 
+
+
                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
 
                     If sProfile <> "" Then
