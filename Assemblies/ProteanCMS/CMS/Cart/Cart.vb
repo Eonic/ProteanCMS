@@ -8674,7 +8674,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
                             DeliveryOption = oRowSO("cShipOptName")
                             'pass total item cost including packaging amount
-                            DeliveryOption = DeliveryOption & "#" & total
+                            DeliveryOption = DeliveryOption & "#" & total & "#" & oRowSO("nShipOptKey")
                             bChangedDelivery = False
                         End If
                     Next
