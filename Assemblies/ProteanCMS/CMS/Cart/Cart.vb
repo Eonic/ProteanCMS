@@ -199,7 +199,7 @@ Partial Public Class Cms
             SettlementInitiated = 14
             SkipAddress = 15
             Archived = 16
-
+            InProgress = 17
         End Enum
 #End Region
 
@@ -423,6 +423,8 @@ Partial Public Class Cms
                     Return "Shipped"
                 Case cartProcess.Archived
                     Return "Archived"
+                Case cartProcess.InProgress
+                    Return "In Progress"
                 Case Else
                     Return "Unknown Process ID"
             End Select
@@ -1342,7 +1344,9 @@ processFlow:
                             GoTo processFlow
                         End If
 
-                    Case "Billing" 'Check if order has Billing Address                
+                    Case "Billing" 'Check if order has Billing Address    
+                        'reset payment method
+                        mcPaymentMethod = Nothing
                         GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
@@ -1431,15 +1435,9 @@ processFlow:
                             GoTo processFlow
                         End If
 
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
-
-                        Dim ccPaymentXform As xForm = New xForm
-
-
-
                         cProcessInfo = "Payment Method from session = '" & mcPaymentMethod & "'"
-
-
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
+                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
@@ -1461,6 +1459,10 @@ processFlow:
                         If Not (oElmt.SelectSingleNode("error/msg") Is Nothing) Then
                             'oElmt.SelectSingleNode("error").PrependChild(oElmt.OwnerDocument.CreateElement("msg"))
                             'oElmt.SelectSingleNode("error").FirstChild.InnerXml = "<strong>PAYMENT CANNOT PROCEED UNTIL QUANTITIES ARE ADJUSTED</strong>"
+                        ElseIf mcPaymentMethod = Nothing Then
+
+                            mcCartCmd = "Confirm"
+                            GoTo processFlow
 
                         ElseIf ccPaymentXform.valid = True Then
 
@@ -6603,6 +6605,10 @@ processFlow:
                 moDBHelper.ExeProcessSql(sSql)
                 mnTaxRate = moCartConfig("TaxRate")
 
+                myWeb.moSession("mcPaymentMethod") = Nothing
+                myWeb.moSession("mmcOrderType") = Nothing
+                myWeb.moRequest.Form("ordertype") = Nothing
+
             Catch ex As Exception
                 returnException(mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
             End Try
@@ -7366,7 +7372,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Sub
 
-        Public Sub ListOrders(Optional ByVal nOrderID As Integer = 0, Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
+        Public Sub ListOrders(Optional ByVal sOrderID As String = "0", Optional ByVal bListAllQuotes As Boolean = False, Optional ByVal ProcessId As Integer = 0, Optional ByRef oPageDetail As XmlElement = Nothing, Optional ByVal bForceRefresh As Boolean = False, Optional nUserId As Long = 0)
             PerfMon.Log("Cart", "ListOrders")
             If myWeb.mnUserId = 0 Then Exit Sub ' if not logged in, dont bother
             'For listing a users previous orders/quotes
@@ -7392,11 +7398,11 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 If nRows < 1 Then nRows = 100
 
                 If Not nUserId = 0 Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & nUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID & ")", "") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 ElseIf Not myWeb.mbAdminMode Then
-                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(nOrderID > 0, " AND nCartOrderKey = " & nOrderID, "") & " AND cCartSchemaName = '" & mcOrderType & "'"
+                    cWhereSQL = " WHERE nCartUserDirId = " & myWeb.mnUserId & IIf(sOrderID <> "0", " AND nCartOrderKey IN (" & sOrderID & ")", "") & " AND cCartSchemaName = '" & mcOrderType & "'"
                 Else
-                    cWhereSQL = " WHERE " & IIf(nOrderID > 0, "  nCartOrderKey = " & nOrderID & " AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
+                    cWhereSQL = " WHERE " & IIf(sOrderID <> "0", "  nCartOrderKey IN (" & sOrderID & ") AND ", "") & " cCartSchemaName = '" & mcOrderType & "' "
                     'if nCartStatus = " & ProcessId
                     If Not ProcessId = 0 Then
                         cWhereSQL &= " and nCartStatus = " & ProcessId
@@ -8668,7 +8674,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                             updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
                             DeliveryOption = oRowSO("cShipOptName")
                             'pass total item cost including packaging amount
-                            DeliveryOption = DeliveryOption & "#" & total
+                            DeliveryOption = DeliveryOption & "#" & total & "#" & oRowSO("nShipOptKey")
                             bChangedDelivery = False
                         End If
                     Next

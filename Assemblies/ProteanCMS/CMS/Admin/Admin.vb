@@ -1804,7 +1804,7 @@ ProcessFlow:
                         'placeholder for ecommerce dashboard
                     Case "CartActivity", "CartReports", "CartActivityDrilldown", "CartActivityPeriod", "CartDownload"
                         OrderProcess(oPageDetail, sAdminLayout, "")
-                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved"
+                    Case "Orders", "OrdersShipped", "OrdersFailed", "OrdersDeposit", "OrdersRefunded", "OrdersHistory", "OrdersAwaitingPayment", "OrdersSaved", "OrdersInProgress", "BulkCartAction"
 
                         OrderProcess(oPageDetail, sAdminLayout, "Order")
                     Case "Quotes", "QuotesFailed", "QuotesDeposit", "QuotesHistory"
@@ -3213,10 +3213,41 @@ AfterProcessFlow:
 
             Try
 
-                If myWeb.moRequest("ewCmd").Contains("Order") Then
+                If mcEwCmd.Contains("Order") Or mcEwCmd = "BulkCartAction" Then
                     Dim oCart As New Cart(myWeb)
 
-                    Select Case myWeb.moRequest("ewCmd2")
+                    Dim ewCmd2 = myWeb.moRequest("ewCmd2")
+
+                    Select Case mcEwCmd
+                        Case "BulkCartAction"
+                            Select Case LCase(myWeb.moRequest("BulkAction"))
+                                Case "print"
+                                    ewCmd2 = "Print"
+                                    sAdminLayout = "Print"
+                                Case "setinprogress"
+
+                                    Dim ids() As String = Split(myWeb.moRequest("id"), ",")
+                                    Dim id As String
+                                    For Each id In ids
+                                        myWeb.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 17 where nCartOrderKey = " & id)
+                                    Next
+                                    mcEwCmd = "OrdersInProgress"
+                                Case "setshipped"
+
+                                    Dim ids() As String = Split(myWeb.moRequest("id"), ",")
+                                    Dim id As String
+                                    For Each id In ids
+                                        myWeb.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 9 where nCartOrderKey = " & id)
+                                    Next
+                                    mcEwCmd = "OrdersShipped"
+
+
+                            End Select
+                    End Select
+
+
+
+                    Select Case ewCmd2
                         Case "Display"
 
                             Dim nStatus As Long
@@ -3245,6 +3276,17 @@ AfterProcessFlow:
                                 End If
                             End If
 
+                        Case "Print"
+
+                            Dim ofs As New Protean.fsHelper()
+                            myWeb.moResponseType = pageResponseType.pdf
+                            myWeb.mcOutputFileName = "DeliveryNote.pdf"
+                            myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig("ProjectPath") & "\xsl\docs\deliverynote.xsl")
+
+                            oCart.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)
+
+                        Case "PrintConfirm"
+
 
                         Case "ResendReceipt"
 
@@ -3252,9 +3294,11 @@ AfterProcessFlow:
 
 
                         Case Else
-                            Select Case myWeb.moRequest("ewCmd")
+                            Select Case mcEwCmd
                                 Case "Orders"
                                     oCart.ListOrders(0, True, Cart.cartProcess.Complete, oPageDetail)
+                                Case "OrdersInProgress"
+                                    oCart.ListOrders(0, True, Cart.cartProcess.InProgress, oPageDetail)
                                 Case "OrdersSaved"
                                     oCart.ListOrders(0, True, Cart.cartProcess.Confirmed, oPageDetail)
                                 Case "OrdersAwaitingPayment"
@@ -3280,9 +3324,10 @@ AfterProcessFlow:
                     Select Case myWeb.moRequest("ewCmd2")
 
                         Case "Display"
+
+
                             oPageDetail.AppendChild(moAdXfm.xFrmUpdateOrder(myWeb.moRequest("id"), cSchemaName))
                             oQuote.ListOrders(myWeb.moRequest("id"), True, , oPageDetail)
-
 
                         Case Else
                             Select Case myWeb.moRequest("ewCmd")

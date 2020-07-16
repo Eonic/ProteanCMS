@@ -5673,11 +5673,16 @@ Partial Public Class Cms
                             MyBase.addOption(oSelElmt, "Refunded", 7)
                             MyBase.addOption(oSelElmt, shippedStatus, 9)
                             MyBase.addOption(oSelElmt, "Delete", 12)
+                        Case 17 ' In Progress
+                            MyBase.addOption(oSelElmt, "Awaiting Payment", 13, False, "Awaiting_Payment")
+                            MyBase.addOption(oSelElmt, "Completed", 6, False, "Completed")
+                            MyBase.addOption(oSelElmt, "Refunded", 7, False, "Refunded")
+                            MyBase.addOption(oSelElmt, shippedStatus, 9, False, "Shipped")
 
                     End Select
                     MyBase.addBind("nStatus", "tblCartOrder/nCartStatus", "true()")
 
-                    If nStatus = 6 Or myWeb.moRequest("nStatus") = "9" Then
+                    If nStatus = 6 Or myWeb.moRequest("nStatus") = "9" Or nStatus = 17 Then
                         'Add carrier information
                         Dim oSwitch As XmlElement = MyBase.addSwitch(oGrp1Elmt, "")
                         Dim oCase As XmlElement = MyBase.addCase(oSwitch, "Awaiting_Payment")

@@ -278,7 +278,15 @@ Namespace Providers
                               '  ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
 
                             Case "PayPalExpress"
-                                ccPaymentXform = oEwProv.payPayPalExpress(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)
+                                If myWeb.moRequest("ppCmd") = "cancel" Then
+                                    oCart.mcPaymentMethod = Nothing
+                                    Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx)
+                                    ccXform.NewFrm("Return")
+                                    ccXform.valid = False
+                                    Return ccXform
+                                Else
+                                    ccPaymentXform = oEwProv.payPayPalExpress(oOrder, oCart.mcPagePath & returnCmd, oCart.mcPaymentProfile)
+                                End If
 
                             Case Else
                                 If InStr(mcPaymentMethod, "Repeat_") > 0 Then
