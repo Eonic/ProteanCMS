@@ -1346,7 +1346,7 @@ processFlow:
 
                     Case "Billing" 'Check if order has Billing Address    
                         'reset payment method
-                        mcPaymentMethod = Nothing
+                        ' mcPaymentMethod = Nothing
                         GetCart(oElmt)
                         addressSubProcess(oElmt, "Billing Address")
                         GetCart(oElmt)
@@ -3602,7 +3602,8 @@ processFlow:
                             ' we already have shipping selected threfore we can skip Options Xform
                             Dim oSubmitBtn As XmlElement = oContactXform.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SubmitAdd']")
                             buttonRef = oSubmitBtn.GetAttribute("ref")
-                            oPay.getPaymentMethodButtons(oContactXform, oSubmitBtn.ParentNode, 0)
+                            Dim PaymentAmount As Double = CDbl("0" & oCartElmt.GetAttribute("total"))
+                            oPay.getPaymentMethodButtons(oContactXform, oSubmitBtn.ParentNode, PaymentAmount)
                             bSubmitPaymentMethod = True
                         End If
                     End If

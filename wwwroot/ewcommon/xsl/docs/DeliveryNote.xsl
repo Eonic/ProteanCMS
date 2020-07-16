@@ -134,12 +134,12 @@
                   </fo:table-cell>
                   <fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
                     <fo:block text-align="right" color="#000000">
-                      <xsl:value-of select="@price"/>
+                      £ <xsl:value-of select="format-number(@price, '#.00')"/>
                     </fo:block>
                   </fo:table-cell>
                   <fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
                     <fo:block text-align="right" color="#000000">
-                      <xsl:value-of select="@itemTotal"/>
+                      £ <xsl:value-of select="format-number(@itemTotal, '#.00')"/>
                     </fo:block>
                   </fo:table-cell>
                 </fo:table-row>
@@ -165,7 +165,32 @@
                 </fo:table-cell>
                 <fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
                   <fo:block text-align="right" color="#000000">
-                    <xsl:value-of select="@shippingCost"/>
+                    £ <xsl:value-of select="format-number(@shippingCost, '#.00')"/>
+                  </fo:block>
+                </fo:table-cell>
+              </fo:table-row>
+
+              <fo:table-row border-bottom-color="#000000" border-bottom-width=".25cm" border-bottom-style="solid">
+                <fo:table-cell padding="6pt" border-bottom="1pt solid black" border-top="1pt solid black">
+                  <fo:block text-align="left" color="#000000" font-weight="700">
+                    Total Cost:
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="6pt" border-bottom="1pt solid black" border-top="1pt solid black">
+                  <fo:block text-align="left" color="#000000">
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="6pt" border-bottom="1pt solid black" border-top="1pt  solid black">
+                  <fo:block text-align="right" color="#000000">
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="6pt" border-bottom="1pt solid black" border-top="1pt solid black">
+                  <fo:block text-align="right" color="#000000">
+                  </fo:block>
+                </fo:table-cell>
+                <fo:table-cell padding="6pt" border-bottom="1pt solid black" border-top="1pt solid black">
+                  <fo:block text-align="right" color="#000000" font-weight="700">
+                    £ <xsl:value-of select="format-number(@total, '#.00')"/>
                   </fo:block>
                 </fo:table-cell>
               </fo:table-row>
