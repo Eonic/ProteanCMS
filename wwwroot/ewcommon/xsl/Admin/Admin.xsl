@@ -4215,8 +4215,8 @@
   <xsl:template match="Page" mode="MaxUploadWidth">0</xsl:template>
   <xsl:template match="Page" mode="MaxUploadHeight">0</xsl:template>
   
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2000</xsl:template>
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2000</xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2700</xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2700</xsl:template>
     
     
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="Admin">
