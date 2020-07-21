@@ -135,8 +135,12 @@ Partial Public Class Cms
 
                     If expiredMarginDays = "0" Then
                         Dim NextElmt As XmlElement = oParentElmt.NextSibling
+                        Dim sNextElementAction As String = ""
+                        If Not NextElmt Is Nothing Then
+                            sNextElementAction = NextElmt.GetAttribute("action")
+                        End If
 
-                        If NextElmt.GetAttribute("action") = NextElmt.GetAttribute("action") Then
+                        If action = sNextElementAction Then
                             Select Case LCase(NextElmt.GetAttribute("period"))
                                 Case "month"
                                     StartRangeDate = Now().AddMonths(NextElmt.GetAttribute("count") * 1)
@@ -437,7 +441,7 @@ Partial Public Class Cms
 
 
 
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
+                                    actionResult = RenewalAction(subxml, CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -472,7 +476,7 @@ Partial Public Class Cms
                                     If Not subxml.SelectSingleNode("dActionDate") Is Nothing Then
                                         ActionDate = CDate(subxml.SelectSingleNode("dActionDate").InnerText)
                                     End If
-                                    actionResult = RenewalAction(CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
+                                    actionResult = RenewalAction(subxml, CLng(subxml.SelectSingleNode("nSubKey").InnerText), oReminder.GetAttribute("action"), ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate)
                                     subxml.SetAttribute("actionResult", actionResult)
                                 Next
 
@@ -485,7 +489,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Function RenewalAction(ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean, Optional actionDate As DateTime = Nothing) As String
+            Public Function RenewalAction(RootXml As XmlElement, ByRef SubId As Long, ByVal Action As String, ByRef ProcessedCount As Long, ByVal messageType As String, ByVal process As Boolean, ByVal force As Boolean, ByVal ingoreIfPaymentActive As Boolean, Optional actionDate As DateTime = Nothing) As String
                 Dim actionResult As String = ""
                 ProcessedCount = ProcessedCount + 1
 
@@ -494,6 +498,9 @@ Partial Public Class Cms
 
                     SubXml.SetAttribute("messageType", messageType)
                     SubXml.SetAttribute("action", Action)
+
+                    RootXml.AppendChild(SubXml)
+
                     Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
                     Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/@id").InnerText
                     Dim oMessager As New Protean.Messaging

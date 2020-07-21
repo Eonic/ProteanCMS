@@ -393,8 +393,9 @@ Partial Public Class Cms
                     Dim searcher As New IndexSearcher(fsDir, True)
 
                     ' Check for settings
-                    If myWeb.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
                     If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
+                    If myWeb.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
+                    If myWeb.moRequest("fuzzy") = "off" Then _includeFuzzySearch = False
 
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"

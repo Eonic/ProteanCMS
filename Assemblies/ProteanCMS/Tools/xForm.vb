@@ -40,6 +40,8 @@ Public Class xForm
 
     Public BindsToSkip As New System.Collections.Specialized.StringCollection
 
+    Public SubmittedRef As String
+
     Private Const mcModuleName As String = "Protean.Cms.xForm"
     Private bTriggered As Boolean = False
     Private bDeleted As Boolean = False
@@ -2600,12 +2602,16 @@ Public Class xForm
                     oElmt = oNode
                     If oElmt.GetAttribute("submission") <> "" And goRequest.Form(oElmt.GetAttribute("submission")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("submission")
                     ElseIf goRequest(oElmt.GetAttribute("ref")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("ref")
                     ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("bind")
                     ElseIf goRequest("ewSubmitClone_" & oElmt.GetAttribute("ref")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("ref")
                     End If
                 Next
             End If

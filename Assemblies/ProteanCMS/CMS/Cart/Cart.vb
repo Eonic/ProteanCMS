@@ -1849,13 +1849,16 @@ processFlow:
                         valDict.Add("Email", Email)
                         valDict.Add("FirstName", firstName)
                         valDict.Add("LastName", lastName)
-                        valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
+
+                        If Not oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']") Is Nothing Then
+                            valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
                             valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Telephone").InnerText)
                             valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/City").InnerText)
                             valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/State").InnerText)
                             valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/PostalCode").InnerText)
+                        End If
 
-                            Dim ListId As String = ""
+                        Dim ListId As String = ""
                             Select Case StepName
                                 Case "Invoice"
                                     ListId = moMailConfig("InvoiceList")
@@ -1874,8 +1877,8 @@ processFlow:
                                     ListId = moMailConfig("NewsletterList")
                             End Select
                             If ListId <> "" Then
-                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
-                        End If
+                                oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                            End If
                         End If
                     End If
 
