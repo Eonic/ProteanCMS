@@ -381,9 +381,9 @@ Partial Public Class Cms
                                         Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                                         doc.LoadXml(additionalInfo)
 
-                                    If (doc.InnerXml.Contains("FreeShippingMethods")) Then
-                                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("FreeShippingMethods").InnerText
-                                    End If
+                                    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                                            strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                                        End If
                                 End If
 
                                 End If
@@ -710,8 +710,8 @@ Partial Public Class Cms
                                     If (cFreeShippingMethods <> "") Then
                                         myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
                                     End If
-                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "1") Then
+                                    If (oDiscountLoop.SelectSingleNode("bApplyToTotal") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("bApplyToTotal").InnerText.ToString() = "1") Then
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
@@ -756,8 +756,8 @@ Partial Public Class Cms
 
 
 
-                                    If (oDiscountLoop.SelectSingleNode("ApplyToTotal") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("ApplyToTotal").InnerText.ToString() = "True") Then
+                                    If (oDiscountLoop.SelectSingleNode("bApplyToTotal") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("bApplyToTotal").InnerText.ToString() = "True") Then
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
@@ -1416,18 +1416,18 @@ NoDiscount:
                             Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
                             doc.LoadXml(additionalInfo)
 
-                            If (doc.InnerXml.Contains("MinimumOrderValue")) Then
-                                minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("MinimumOrderValue").InnerText)
+                            If (doc.InnerXml.Contains("nMinimumOrderValue")) Then
+                                minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText)
                             End If
-                            If (doc.InnerXml.Contains("MaximumOrderValue")) Then
-                                maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("MaximumOrderValue").InnerText)
+                            If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
+                                maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
                             End If
 
-                            If (doc.InnerXml.Contains("ApplyToTotal")) Then
-                                If (doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText = "") Then
+                            If (doc.InnerXml.Contains("bApplyToOrder")) Then
+                                If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
                                     applyToTotal = False
                                 Else
-                                    applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("ApplyToTotal").InnerText)
+                                    applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                 End If
                                 If (applyToTotal) Then
                                     If (maximumOrderTotal <> 0) Then
