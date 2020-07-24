@@ -1,5 +1,5 @@
-﻿// (c) Eonic Ltd 2002-2010
-// Authority: Trevor Spink, Will Hancock, Perry Harlock
+﻿// (c) Eonic Associates LLP. 2002-2020
+// Authority: Trevor Spink
 
 var obj = null;
 var oQueryParams = {};
@@ -767,16 +767,16 @@ $(window).resize(function () {
         // Make required inactive to avoid JS validation
         $("." + allDependants).find('.required').each(function () {
             $(this).removeClass('required');
-            $(this).addClass('reqinactive')
+            $(this).addClass('reqinactive');
         })
 
         // Make all now hidden fields inactive so values are lost when submitted.
         $("." + allDependants).find(":input").not(':submit').each(function () {
             var fieldName = $(this).attr('name');
             var tempFieldName = fieldName + '~inactive';
-            //alert("hide as " + tempFieldName);
+        //    alert("hide as " + tempFieldName);
             $(this).attr('name', tempFieldName);
-            $(this).attr('id', tempFieldName);
+         //   $(this).attr('id', $(this).attr('id') + '~inactive');
         });
 
         // Show wanted Dependants
@@ -786,15 +786,15 @@ $(window).resize(function () {
         $("#" + dependant).find('.reqinactive').each(function () {
             $(this).removeClass('reqinactive');
             $(this).addClass('required');
-        })
+        });
 
         // Find all inactive inputs, and re-activate,
         $("#" + dependant).find(":input").not(':submit').each(function () {
             var fieldName = $(this).attr('name');
             var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
             $(this).attr('name', tempFieldName);
-            //alert("enable " + tempFieldName);
-            $(this).attr('id', tempFieldName);
+          //  alert("enable " + tempFieldName);
+          //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
         });
    
         $("#" + dependant).prepareXform();

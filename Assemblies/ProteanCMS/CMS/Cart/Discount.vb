@@ -705,13 +705,14 @@ Partial Public Class Cms
                                 'we will always apply these
                                 Dim oDiscountElmt As XmlElement
                                 For Each oDiscountElmt In oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" & oDiscountLoop.GetAttribute("nDiscountKey") & "]")
-                                    oDiscountElmt.SetAttribute("Applied", 1)
+
                                     'set shipping option after applied promocode
                                     If (cFreeShippingMethods <> "") Then
                                         myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
                                     End If
-                                    If (oDiscountLoop.SelectSingleNode("bApplyToTotal") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("bApplyToTotal").InnerText.ToString() = "1") Then
+                                    If (oDiscountLoop.SelectSingleNode("bApplyToOrder") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() = "True") Then
+                                            oDiscountElmt.SetAttribute("Applied", 1)
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else
@@ -756,8 +757,8 @@ Partial Public Class Cms
 
 
 
-                                    If (oDiscountLoop.SelectSingleNode("bApplyToTotal") IsNot Nothing) Then
-                                        If (oDiscountLoop.SelectSingleNode("bApplyToTotal").InnerText.ToString() = "True") Then
+                                    If (oDiscountLoop.SelectSingleNode("bApplyToOrder") IsNot Nothing) Then
+                                        If (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() = "True") Then
                                             If (AmountToDiscount = 0) Then
                                                 bApplyOnTotal = True
                                             Else

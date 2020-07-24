@@ -579,7 +579,11 @@
 
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
-        <xsl:text>col-sm-9</xsl:text>
+        <xsl:text>col-sm-9</xsl:text>  
+      </xsl:if>
+      <xsl:if test="not(label)">
+
+        <xsl:text> col-md-offset-3</xsl:text>
       </xsl:if>
     </xsl:variable>
     
@@ -2394,7 +2398,6 @@
         </label>
       </span>
     </xsl:if>
-
     <div class="{@class} list-group">
       <xsl:choose>
         <!-- when Query to get select options -->
@@ -2480,7 +2483,6 @@
       <xsl:apply-templates select="ancestor::*[name()='select' or name()='select1']" mode="xform_value"/>
     </xsl:param>
     <xsl:variable name="class" select="ancestor::*[name()='select' or name()='select1' ]/@class"/>
-
     <span>
       <xsl:attribute name="class">
         <xsl:text>radiocheckbox checkbox</xsl:text>
@@ -2488,8 +2490,6 @@
           <xsl:text> multiline</xsl:text>
         </xsl:if>
       </xsl:attribute>
-
-
       <label for="{$ref}_{$value}">
         <xsl:attribute name="class">
           <xsl:text>radio</xsl:text>
@@ -2575,7 +2575,6 @@
         <xsl:apply-templates select="label" mode="xform-label"/>
         <xsl:text> </xsl:text>
       </label>
-
     </span>
     <!--<xsl:if test="contains($class,'multiline') and position()!=last()">
 					<br/>
@@ -2640,7 +2639,36 @@
             <xsl:value-of select="$dependantClass"/>
             <xsl:text>');</xsl:text>
           </xsl:attribute>
-
+          <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-notempty">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-notempty-message">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ancestor::select/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-choice">
+              <xsl:value-of select="ancestor::select/@data-fv-choice"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-min">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-max">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-message">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+            </xsl:attribute>
+            <xsl:if test="ancestor::select/@data-fv-notempty">
+              <xsl:attribute name="data-fv-notempty">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
+              </xsl:attribute>
+              <xsl:attribute name="data-fv-notempty-message">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
+              </xsl:attribute>
+            </xsl:if>
+          </xsl:if>
         </input>
         &#160;
         <xsl:value-of select="label/node()"/>
@@ -2715,7 +2743,36 @@
             <xsl:value-of select="$dependantClass"/>
             <xsl:text>');</xsl:text>
           </xsl:attribute>
-
+          <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-notempty">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-notempty-message">
+              <xsl:value-of select="ancestor::select1/@data-fv-notempty-message"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="ancestor::select/item[1]/value/node() = $value">
+            <xsl:attribute name="data-fv-choice">
+              <xsl:value-of select="ancestor::select/@data-fv-choice"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-min">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-min"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-max">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-max"/>
+            </xsl:attribute>
+            <xsl:attribute name="data-fv-choice-message">
+              <xsl:value-of select="ancestor::select/@data-fv-choice-message"/>
+            </xsl:attribute>
+            <xsl:if test="ancestor::select/@data-fv-notempty">
+              <xsl:attribute name="data-fv-notempty">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty"/>
+              </xsl:attribute>
+              <xsl:attribute name="data-fv-notempty-message">
+                <xsl:value-of select="ancestor::select/@data-fv-notempty-message"/>
+              </xsl:attribute>
+            </xsl:if>
+          </xsl:if>
         </input>
         &#160;
         <xsl:value-of select="label/node()"/>
