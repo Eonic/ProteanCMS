@@ -152,9 +152,10 @@ Partial Public Class Cms
                 Try
                     Dim SearchString As String = ""
                     Dim HitsLimit As Integer = 50
-
+                    Dim fuzzySearch As String = ""
                     If Not searchFilter Is Nothing Then
                         SearchString = searchFilter("query")
+                        fuzzySearch = searchFilter("fuzzysearch")
                         If searchFilter("hitslimit") <> "" Then
                             HitsLimit = CInt(searchFilter("hitslimit"))
                         End If
@@ -165,7 +166,7 @@ Partial Public Class Cms
                     Dim oResultsXml As New XmlDocument()
                     oResultsXml.AppendChild(oResultsXml.CreateElement("Results"))
                     oSrch.moContextNode = oResultsXml.FirstChild
-                    oSrch.IndexQuery(myApi, SearchString, HitsLimit)
+                    oSrch.IndexQuery(myApi, SearchString, HitsLimit, fuzzySearch)
                     Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(oResultsXml, Newtonsoft.Json.Formatting.Indented)
                     Return jsonString.Replace("""@", """_")
 
