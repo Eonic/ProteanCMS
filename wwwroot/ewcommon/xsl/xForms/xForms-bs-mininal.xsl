@@ -579,12 +579,12 @@
 
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'form-horizontal')]">
-        <xsl:text>col-sm-9</xsl:text>  
+        <xsl:text>col-sm-9</xsl:text>
+        <xsl:if test="not(label)">
+          <xsl:text> col-md-offset-3</xsl:text>
+        </xsl:if>  
       </xsl:if>
-      <xsl:if test="not(label)">
 
-        <xsl:text> col-md-offset-3</xsl:text>
-      </xsl:if>
     </xsl:variable>
     
     <div class="control-wrapper {name()}-wrapper appearance-{@appearance} {$fmhz} input-group">

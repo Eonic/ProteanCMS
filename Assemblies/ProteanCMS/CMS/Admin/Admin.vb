@@ -918,12 +918,15 @@ ProcessFlow:
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "EditContent"
-
-
                         ' Get a version Id if it's passed through.
                         Dim cVersionKey As String = myWeb.moRequest("verId") & ""
                         bClearEditContext = False
                         bLoadStructure = True
+
+                        If IsNumeric(myWeb.moRequest("pgid")) Then
+                            myWeb.gcLang = myWeb.moDbHelper.getPageLang(myWeb.moRequest("pgid"))
+                        End If
+
                         If Not (IsNumeric(cVersionKey)) Then cVersionKey = "0"
                         nContentId = 0
                         oPageDetail.AppendChild(moAdXfm.xFrmEditContent(myWeb.moRequest("id"), "", CLng(myWeb.moRequest("pgid")), , , nContentId, , , CLng(cVersionKey)))

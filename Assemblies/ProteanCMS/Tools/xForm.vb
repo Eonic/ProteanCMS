@@ -586,7 +586,6 @@ Public Class xForm
         'Dim cNsURI As String
         Dim sXpath As String
         Dim sXpathNoAtt As String
-        Dim sMessage As String = ""
         Dim obj As Xml.XPath.XPathNodeIterator
         Dim objValue As Object
         Dim missedError As Boolean = False
@@ -631,7 +630,7 @@ Public Class xForm
                 oBindElmt = oBindNode
                 sXpath = ""
                 bIsThisBindValid = True
-
+                Dim sMessage As String = ""
                 'NB REMOVE THIS
                 If oBindElmt.GetAttribute("type") = "fileUpload" Then
                     Dim DELETE As String = ""
@@ -687,7 +686,7 @@ Public Class xForm
                     End If
                 End If
 
-                If oBindElmt.GetAttribute("type") <> "" Then
+                If oBindElmt.GetAttribute("type") <> "" And (oBindElmt.GetAttribute("required") = "true()" And objValue <> "") Then
                     sMessage = evaluateByType(objValue, oBindElmt.GetAttribute("type"), cExtensions, LCase(oBindElmt.GetAttribute("required")) = "true()")
                 End If
 

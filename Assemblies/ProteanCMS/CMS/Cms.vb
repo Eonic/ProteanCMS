@@ -1617,6 +1617,8 @@ Public Class Cms
                 'TS moved this above setting page attributes as it now sets page id on page versions.
                 GetStructureXML("Site")
 
+
+
                 If mnMailMenuId > 0 Then
                     GetStructureXML("Newsletter", , mnMailMenuId, True)
                 End If
@@ -5145,7 +5147,7 @@ Public Class Cms
 
                 'Determine Page Version
                 If Features.ContainsKey("PageVersions") Then
-                    If Not (mbAdminMode) Then
+                    If (Not (mbAdminMode)) Or moRequest("ewCmd") = "Normal" Or moRequest("ewCmd") = "EditContent" Then
 
                         'check for language version
                         For Each verNodeLoop In oMenuItem.SelectNodes("PageVersion[@lang='" & gcLang & "']")
@@ -7774,26 +7776,24 @@ Public Class Cms
                     GetRequestLanguage()
                 End If
 
-
-
                 ' if the page requested is a version in another language then set the page language.
                 If mbAdminMode Then
                     Dim cPageLang As String = moDbHelper.getPageLang(mnPageId)
                     If cPageLang <> mcPageLanguage _
-                    And cPageLang <> goLangConfig.GetAttribute("code") Then
+                       And cPageLang <> goLangConfig.GetAttribute("code") Then
                         mcPageLanguage = moDbHelper.getPageLang(mnPageId)
                     End If
                 End If
 
                 'add the language info to the pageXml
                 If moPageXml.DocumentElement.SelectSingleNode("languages") Is Nothing Then
-                    Dim oLangElmt As XmlElement = moPageXml.CreateElement("Lang")
-                    oLangElmt.InnerXml = goLangConfig.OuterXml
-                    moPageXml.DocumentElement.AppendChild(oLangElmt.FirstChild)
-                End If
-            Else
-                'Legacy code
-                If Not moPageXml.DocumentElement.SelectSingleNode("Contents") Is Nothing Then
+                        Dim oLangElmt As XmlElement = moPageXml.CreateElement("Lang")
+                        oLangElmt.InnerXml = goLangConfig.OuterXml
+                        moPageXml.DocumentElement.AppendChild(oLangElmt.FirstChild)
+                    End If
+                Else
+                    'Legacy code
+                    If Not moPageXml.DocumentElement.SelectSingleNode("Contents") Is Nothing Then
                     ' First find the page language, which should be called after content has been loaded in
                     Dim cLang As String = ""
                     If Tools.Xml.NodeState(moPageXml.DocumentElement, "//Content[@name='XmlLang']", , , , , , cLang) = Tools.Xml.XmlNodeState.HasContents Then

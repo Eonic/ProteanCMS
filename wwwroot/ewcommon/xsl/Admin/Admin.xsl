@@ -3224,7 +3224,7 @@
             </xsl:for-each>
            </xsl:if>
     
-      <xsl:if test="descendant-or-self::MenuItem[@id=/Page/ContentDetail/Content/Location/@pgid]/@id">
+     <xsl:if test="descendant-or-self::MenuItem[@id=/Page/ContentDetail/Content/Location/@pgid or PageVersion/@id=/Page/ContentDetail/Content/Location/@pgid]/@id"> 
  
           <xsl:apply-templates select="MenuItem" mode="LocateContent">
             <xsl:with-param name="level">
@@ -3232,7 +3232,7 @@
             </xsl:with-param>
           </xsl:apply-templates>
 
-      </xsl:if>
+     </xsl:if> 
   </xsl:template>
 
   <!-- OLD LOCATION TREE VIEW - BROUGHT BACK UNTIL THE LOCATIONS AND THE TREE VIEW WORK -->
