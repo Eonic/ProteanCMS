@@ -556,7 +556,7 @@
                           </xsl:attribute>
                         </xsl:if>
                         <div class="parallax" data-parallax-image="{@backgroundImage}">
-    
+
                         </div>
                       </section>
                     </xsl:when>
@@ -1313,7 +1313,9 @@
     <div class="row">
       <xsl:if test="$adminMode and @moduleType='Conditional1Column'">
         <xsl:attribute name="class">row conditional-block</xsl:attribute>
-        <div class="conditional-note">This block is conditional on the querystring containing '<xsl:value-of select="@querystringcontains"/>'</div>
+        <div class="conditional-note">
+          This block is conditional on the querystring containing '<xsl:value-of select="@querystringcontains"/>'
+        </div>
       </xsl:if>
       <div id="column1-{@id}" class="column1 col-md-12">
         <xsl:apply-templates select="/Page" mode="addModule">
@@ -1330,7 +1332,8 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Content[@moduleType='2columns5050']" mode="displayBrief"><xsl:variable name="responsiveColumns">
+  <xsl:template match="Content[@moduleType='2columns5050']" mode="displayBrief">
+    <xsl:variable name="responsiveColumns">
       <xsl:apply-templates select="." mode="responsiveColumns">
         <xsl:with-param name="defaultCols" select="'6'"/>
       </xsl:apply-templates>
@@ -3279,9 +3282,9 @@
       </xsl:choose>
     </xsl:element>
   </xsl:template>
-  
-   <xsl:template match="Content[@type='error']" mode="ContentDetail">
-      <xsl:apply-templates select="." mode="cleanXhtml"/>
+
+  <xsl:template match="Content[@type='error']" mode="ContentDetail">
+    <xsl:apply-templates select="." mode="cleanXhtml"/>
   </xsl:template>
 
 
@@ -4045,15 +4048,15 @@
         <xsl:apply-templates select="Body/node()" mode="cleanXhtml"/>
       </div>
       <xsl:if test="Content[@type='FAQ']">
-      <div class="faq-list">
-        <h3>Question and Answer</h3>
-        <ul>
-          <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
-        </ul>
-        <xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
-          <xsl:with-param name="sortBy" select="@sortBy"/>
-        </xsl:apply-templates>
-      </div>
+        <div class="faq-list">
+          <h3>Question and Answer</h3>
+          <ul>
+            <xsl:apply-templates select="Content[@type='FAQ']" mode="displayFAQMenu"/>
+          </ul>
+          <xsl:apply-templates select="Content[@type='FAQ']" mode="displayBrief">
+            <xsl:with-param name="sortBy" select="@sortBy"/>
+          </xsl:apply-templates>
+        </div>
       </xsl:if>
       <!-- Terminus class fix to floating content -->
       <div class="terminus">&#160;</div>
@@ -4076,18 +4079,18 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='NewsArticle' and ancestor::ContentDetail]" mode="JSONLD">
-   [ { "@context": "https://schema.org",
-    "@type": "BlogPosting",  
-  	"mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "<xsl:value-of select="$href"/>"
-      },
+    [ { "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "<xsl:value-of select="$href"/>"
+    },
     "headline": "<xsl:apply-templates select="." mode="getDisplayName" />",
     "alternativeHeadline": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="Strapline" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>",
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Strapline" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
     "image": "<xsl:value-of select="Images/img[@class='detail']/@src"/>",
     <xsl:if test="Content[@type='Tag']">
       <xsl:for-each select="Content[@type='Tag'][1]">
@@ -4097,40 +4100,42 @@
         </xsl:text>
       </xsl:for-each>
     </xsl:if>
-    <xsl:if test="@metaKeywords!=''">"keywords": "<xsl:value-of select="@metaKeywords"/>",</xsl:if>
+    <xsl:if test="@metaKeywords!=''">
+      "keywords": "<xsl:value-of select="@metaKeywords"/>",
+    </xsl:if>
     "publisher": {
     "@type": "Organization",
     "name": "<xsl:value-of select="$siteName"/>",
     "logo":{
-      "@type": "ImageObject",
-      "name": "<xsl:value-of select="$siteName"/> Logo",
-      "url": "<xsl:value-of select="$siteURL"/><xsl:value-of select="$siteLogo"/>"
+    "@type": "ImageObject",
+    "name": "<xsl:value-of select="$siteName"/> Logo",
+    "url": "<xsl:value-of select="$siteURL"/><xsl:value-of select="$siteLogo"/>"
     }},
     "url": "<xsl:value-of select="$href"/>",
     "datePublished": "<xsl:value-of select="@publish"/>",
     "dateCreated": "<xsl:value-of select="@publish"/>",
     "dateModified": "<xsl:value-of select="@update"/>",
     <xsl:if test="@metaDescription!=''">
-    "description": "<xsl:value-of select="@metaDescription"/>",
+      "description": "<xsl:value-of select="@metaDescription"/>",
     </xsl:if>
     "articleBody": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="Body/*" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>"
-  <xsl:if test="Content[@type='Contact' and @rtype='Author']">
-    ,
-    <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author']" mode="JSONLD"/>
-  </xsl:if>}
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Body/*" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>"
+    <xsl:if test="Content[@type='Contact' and @rtype='Author']">
+      ,
+      <xsl:apply-templates select="Content[@type='Contact' and @rtype='Author']" mode="JSONLD"/>
+    </xsl:if>}
     <xsl:if test="Content[@type='FAQ']">
-    ,  { "@context": "https://schema.org",
+      ,  { "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
       <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
       ]
       }
     </xsl:if>
-]
+    ]
   </xsl:template>
 
   <xsl:template match="Content[@type='Contact' and ancestor::Content[@type='NewsArticle']]" mode="JSONLD">
@@ -4145,22 +4150,22 @@
     "jobTitle": "<xsl:value-of select="Title"/>",
     "image": "<xsl:value-of select="$siteURL"/><xsl:value-of select="Images/img[@class='detail']/@src"/>",
     "url": "<xsl:value-of select="$parentURL"/>",
-    "sameAs" : [ 
+    "sameAs" : [
     <xsl:if test="@facebookURL!=''">
       "<xsl:value-of select="@facebookURL"/>"
     </xsl:if>
-      <xsl:if test="@linkedInURL!=''">
+    <xsl:if test="@linkedInURL!=''">
       "<xsl:value-of select="@linkedInURL"/>"
     </xsl:if>
-        <xsl:if test="@twitterURL!=''">
+    <xsl:if test="@twitterURL!=''">
       "<xsl:value-of select="@twitterURL"/>"
     </xsl:if>
-     <xsl:if test="@instagramURL!=''">
+    <xsl:if test="@instagramURL!=''">
       "<xsl:value-of select="@instagramURL"/>"
     </xsl:if>]
     }
   </xsl:template>
-  
+
   <xsl:template match="Content" mode="ContentDetailCommenting">
     <xsl:param name="commentPlatform"/>
     <xsl:variable name="debugMode">
@@ -4267,7 +4272,8 @@
           <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:variable><!--responsive columns variables-->
+    </xsl:variable>
+    <!--responsive columns variables-->
     <xsl:variable name="xsColsToShow">
       <xsl:choose>
         <xsl:when test="@xsCol='2'">2</xsl:when>
@@ -4322,7 +4328,7 @@
           </xsl:if>
         </xsl:attribute>
         <!--end responsive columns-->
-          <xsl:if test="@autoplay !=''">
+        <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
           </xsl:attribute>
@@ -7903,7 +7909,8 @@
           <xsl:value-of select="count($currentPage/MenuItem)"/>
         </xsl:otherwise>
       </xsl:choose>
-    </xsl:variable><!--responsive columns variables-->
+    </xsl:variable>
+    <!--responsive columns variables-->
     <xsl:variable name="xsColsToShow">
       <xsl:choose>
         <xsl:when test="@xsCol='2'">2</xsl:when>
@@ -8214,7 +8221,7 @@
           <xsl:value-of select="true()"/>
         </xsl:otherwise>
       </xsl:choose>-->
-    <xsl:value-of select="$crop"/>
+      <xsl:value-of select="$crop"/>
     </xsl:variable>
     <xsl:variable name="lg-max-width">
       <xsl:apply-templates select="." mode="getFullSizeWidth"/>
@@ -8350,7 +8357,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
-		<xsl:value-of select="$appPath"/>
+                  <xsl:value-of select="$appPath"/>
                   <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
@@ -8376,7 +8383,7 @@
                   <xsl:value-of select="Path/node()"/>
                 </xsl:when>
                 <xsl:otherwise>
-		<xsl:value-of select="$appPath"/>
+                  <xsl:value-of select="$appPath"/>
                   <xsl:text>ewcommon/tools/download.ashx?docId=</xsl:text>
                   <xsl:value-of select="@id"/>
                 </xsl:otherwise>
@@ -8633,6 +8640,101 @@
     </div>
   </xsl:template>
 
+  <!-- Simple Links Module -->
+  <xsl:template match="Content[@type='Module' and @moduleType='LinkListSimple']" mode="displayBrief">
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+    <xsl:variable name="contentList">
+      <xsl:apply-templates select="." mode="getContent">
+        <xsl:with-param name="contentType" select="$contentType" />
+        <xsl:with-param name="startPos" select="$startPos" />
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="totalCount">
+      <xsl:choose>
+        <xsl:when test="@display='related'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <div class="clearfix LinkListSimple">
+      <xsl:if test="@carousel='true'">
+        <xsl:attribute name="class">
+          <xsl:text>clearfix LinkListSimple content-scroller</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
+      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}">
+        <xsl:if test="@autoplay !=''">
+          <xsl:attribute name="data-autoplay">
+            <xsl:value-of select="@autoplay"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@autoPlaySpeed !=''">
+          <xsl:attribute name="data-autoPlaySpeed">
+            <xsl:value-of select="@autoPlaySpeed"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@stepCount != '0'">
+          <xsl:apply-templates select="/" mode="genericStepper">
+            <xsl:with-param name="linkList" select="$contentList"/>
+            <xsl:with-param name="noPerPage" select="@stepCount"/>
+            <xsl:with-param name="startPos" select="$startPos"/>
+            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+            <xsl:with-param name="totalCount" select="$totalCount"/>
+          </xsl:apply-templates>
+        </xsl:if>
+        <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefSimple">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+        </xsl:apply-templates>
+      </div>
+    </div>
+  </xsl:template>
+
+  <!-- Simple Links Brief -->
+  <xsl:template match="Content[@type='Link']" mode="displayBriefSimple">
+    <xsl:param name="sortBy"/>
+    <xsl:variable name="preURL" select="substring(Url,1,3)" />
+    <xsl:variable name="url" select="Url/node()" />
+    <xsl:variable name="linkURL">
+      <xsl:choose>
+        <xsl:when test="format-number($url,'0')!='NaN'">
+          <xsl:apply-templates select="$page/descendant-or-self::MenuItem[@id=$url]" mode="getHref"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="$preURL='www' or $preURL='WWW'">
+            <xsl:text>http://</xsl:text>
+          </xsl:if>
+          <xsl:value-of select="$url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <div class="list-group-item listItem linkSimple">
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="'list-group-item listItem linkSimple'"/>
+        <xsl:with-param name="sortBy" select="$sortBy"/>
+      </xsl:apply-templates>
+      <xsl:if test="Images/img/@src!=''">
+        <a href="{$linkURL}" title="Click here to link to {Name}">
+          <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+            <xsl:attribute name="rel">external</xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="displayThumbnail"/>
+        </a>
+      </xsl:if>
+      <a href="{$linkURL}" title="{Name}">
+        <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+          <xsl:attribute name="rel">external</xsl:attribute>
+          <xsl:attribute name="class">extLink</xsl:attribute>
+        </xsl:if>
+        <xsl:value-of select="Name"/>
+      </a>
+    </div>
+  </xsl:template>
 
   <!-- Links Grid Module -->
   <xsl:template match="Content[@type='Module' and @moduleType='LinkListGrid']" mode="displayBrief">
@@ -10218,17 +10320,17 @@
         <a name="{@id}">
           &#160;
         </a>
-          <h3>
-            <xsl:choose>
-              <!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
-              <xsl:when test="DisplayName/node()!=''">
-                <xsl:value-of select="DisplayName/node()"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="@name"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </h3>
+        <h3>
+          <xsl:choose>
+            <!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
+            <xsl:when test="DisplayName/node()!=''">
+              <xsl:value-of select="DisplayName/node()"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="@name"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </h3>
         <xsl:if test="Images/img[@class='thumbnail']/@src!=''">
           <img src="{Images/img[@class='thumbnail']/@src}" width="{Images/img[@class='thumbnail']/@width}" height="{Images/img[@class='thumbnail']/@height}" alt="{Images/img[@class='thumbnail']/@alt}" class="thumbnail"/>
         </xsl:if>
@@ -10252,8 +10354,8 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-          <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
-        ]
+      <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+      ]
       }
     </xsl:if>
   </xsl:template>
@@ -10349,7 +10451,7 @@
       </xsl:choose>
     </xsl:variable>
     <!--InnerFade Module JS -->
-    
+
     <!-- ###### -->
     <div id="imageFader">
       <xsl:if test="/Page/@adminMode">
@@ -10418,8 +10520,8 @@
       </script>
     </xsl:if>
   </xsl:template>
-  
-  
+
+
   <xsl:template match="Content[@type='Image']" mode="faderImage2">
     <xsl:param name="max-width" />
     <xsl:param name="max-height" />
@@ -10679,7 +10781,7 @@
       </div>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="Content[@type='Module' and @moduleType='AdvancedCarousel']" mode="contentJS">
     <script type="text/javascript">
       <xsl:text>jQuery(document).ready(function() {</xsl:text>
@@ -13704,7 +13806,7 @@
     <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="TagsList">
-      
+
       <div class="cols{@cols}">
         <!--responsive columns-->
         <xsl:attribute name="class">
