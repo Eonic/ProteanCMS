@@ -8388,9 +8388,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="listItem list-group-item">
+    <div class="list-group-item listItem">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'list-group-item listItem'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
