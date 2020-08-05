@@ -3224,7 +3224,7 @@
             </xsl:for-each>
            </xsl:if>
     
-      <xsl:if test="descendant-or-self::MenuItem[@id=/Page/ContentDetail/Content/Location/@pgid]/@id">
+     <xsl:if test="descendant-or-self::MenuItem[@id=/Page/ContentDetail/Content/Location/@pgid or PageVersion/@id=/Page/ContentDetail/Content/Location/@pgid]/@id"> 
  
           <xsl:apply-templates select="MenuItem" mode="LocateContent">
             <xsl:with-param name="level">
@@ -3232,7 +3232,7 @@
             </xsl:with-param>
           </xsl:apply-templates>
 
-      </xsl:if>
+     </xsl:if> 
   </xsl:template>
 
   <!-- OLD LOCATION TREE VIEW - BROUGHT BACK UNTIL THE LOCATIONS AND THE TREE VIEW WORK -->
@@ -4215,8 +4215,8 @@
   <xsl:template match="Page" mode="MaxUploadWidth">0</xsl:template>
   <xsl:template match="Page" mode="MaxUploadHeight">0</xsl:template>
   
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2000</xsl:template>
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2000</xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2700</xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2700</xsl:template>
     
     
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="Admin">
@@ -6435,6 +6435,7 @@
     <xsl:variable name="title">
       <xsl:choose>
         <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
+        <xsl:when test="@ewCmd='OrdersInProgress'">In Progress</xsl:when>
         <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
         <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
         <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
@@ -6447,22 +6448,27 @@
         <div class="panel panel-default">
           <xsl:choose>
             <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
+              <form action="{$appPath}" method="get" class="ewXform">
               <div class="panel-heading">
-                
+             
+                  <input type="hidden" name="ewCmd" value="BulkCartAction"/>
+                  <input type="hidden" name="pgid" value="{$page/@id}"/>
                 <div class="panel-heading-buttons col-md-3 pull-right">
+		      <xsl:if test="@ewCmd='Orders'">
                   <div class="form-group bulk-action">
                     <div class="input-group">
                       <label class="input-group-addon">Bulk Action</label>
                       <select class="form-control" name="BulkAction" id="BulkAction">
-                        <option value="print">Print Delivery</option>
-                        <option value="setInProgress">Move to In Progress</option>
-                        <option value="setShipped">Move to Shipped</option>
+                        <option value="Print">Print Delivery</option>
+                        <option value="SetInProgress">Move to In Progress</option>
+                        <option value="SetShipped">Move to Shipped</option>
                       </select>
                       <span class="input-group-btn">
                         <button type="submit" class="btn btn-primary">Go</button>
                       </span>
                     </div>
                   </div>
+		  </xsl:if>
                 </div>
                 <div class="pull-right">
                   <xsl:apply-templates select="/" mode="adminStepper">
@@ -6501,6 +6507,8 @@
                   </xsl:apply-templates>
                 </tbody>
               </table>
+                
+                  </form>
               <div class="panel-footer">
                 <div class="pull-right">
               <xsl:apply-templates select="/" mode="adminStepper">
@@ -6652,7 +6660,7 @@
       </td>
       <td>
       <xsl:if test="@statusId=6">
-        <input type="checkbox" name="orderAction" value="{@id}" class="input-control"/>
+        <input type="checkbox" name="id" value="{@id}" class="input-control"/>
       </xsl:if>
       </td>
     </tr>

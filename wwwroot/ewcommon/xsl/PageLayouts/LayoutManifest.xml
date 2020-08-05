@@ -114,6 +114,7 @@
 
     <ModuleGroup name="Navigation and Links" icon="fa-link">
       <Module type="LinkList" name="Link List">Link List</Module>
+      <Module type="LinkListSimple" name="Simple Link List">Simple Link List</Module>
       <Module type="LinkListGrid" name="Link List Grid">Link Grid</Module>
       <Module type="SubPageList" name="SubPage Listing">SubPage Listing</Module>
       <Module type="SubPageGrid" name="SubPage Grid">Sub Page Grid</Module>

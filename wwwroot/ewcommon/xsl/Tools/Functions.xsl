@@ -6524,60 +6524,151 @@
             <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
             
             <!--New image tags-->
-            <source type="image/webp" media="(max-width: 575px)" src="{$newSrc-xxs-webp}" srcset="{$newSrc-xxs-webp} 1x, {$newSrc-xxs-x2-webp} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="image/webp" media="(max-width: 575px)" srcset="{$newSrc-xxs-webp} 1x, {$newSrc-xxs-x2-webp} 2x" >
+               <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-xxs-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-xxs-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
-                </xsl:attribute>
-              </xsl:if>
-              <xsl:if test="$style!=''">
-                <xsl:attribute name="style">
-                  <xsl:value-of select="$style" />
-                </xsl:attribute>
-              </xsl:if>
-            </source>
-            <source type="image/webp" media="(max-width: 767px)" src="{$newSrc-xs-webp}" srcset="{$newSrc-xs-webp} 1x, {$newSrc-xs-x2-webp} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
-                    <xsl:value-of select="$class" />
-                </xsl:attribute>
-              </xsl:if>
-              <xsl:if test="$style!=''">
-                <xsl:attribute name="style">
-                  <xsl:value-of select="$style" />
-                </xsl:attribute>
-              </xsl:if>
-            </source>
-            <source type="image/webp" media="(max-width: 991px)" src="{$newSrc-sm-webp}" srcset="{$newSrc-sm-webp} 1x, {$newSrc-sm-x2-webp} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
-                    <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
                 </xsl:attribute>
               </xsl:if>
             </source>
-            <source type="image/webp" media="(max-width: 1199px)" src="{$newSrc-md-webp}" srcset="{$newSrc-md-webp} 1x, {$newSrc-md-x2-webp} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="image/webp" media="(max-width: 767px)" srcset="{$newSrc-xs-webp} 1x, {$newSrc-xs-x2-webp} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-xs-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-xs-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
+              
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
                 </xsl:attribute>
               </xsl:if>
             </source>
-            <source type="image/webp" media="(min-width: 1200px)" src="{$newSrc-lg-webp}" srcset="{$newSrc-lg-webp} 1x, {$newSrc-lg-x2-webp} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="image/webp" media="(max-width: 991px)" srcset="{$newSrc-sm-webp} 1x, {$newSrc-sm-x2-webp} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-sm-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-sm-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
+              <xsl:if test="$style!=''">
+                <xsl:attribute name="style">
+                  <xsl:value-of select="$style" />
+                </xsl:attribute>
               </xsl:if>
+            </source>
+            <source type="image/webp" media="(max-width: 1199px)" srcset="{$newSrc-md-webp} 1x, {$newSrc-md-x2-webp} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-md-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-md-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
+                    <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
+              </xsl:attribute>
+              <xsl:if test="$style!=''">
+                <xsl:attribute name="style">
+                  <xsl:value-of select="$style" />
+                </xsl:attribute>
+              </xsl:if>
+            </source>
+            <source type="image/webp" media="(min-width: 1200px)" srcset="{$newSrc-lg-webp} 1x, {$newSrc-lg-x2-webp} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-lg-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-lg-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
+                    <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
+              </xsl:attribute>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
@@ -6585,12 +6676,30 @@
               </xsl:if>
             </source>
             
-            <source type="{$imageType}" media="(max-width: 575px)" src="{$newSrc-xxs}"  srcset="{$newSrc-xxs} 1x, {$newSrc-xxs-x2} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="{$imageType}" media="(max-width: 575px)" srcset="{$newSrc-xxs} 1x, {$newSrc-xxs-x2} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-xxs"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-xxs"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
@@ -6598,35 +6707,89 @@
               </xsl:if>
             </source>
             <source type="{$imageType}" media="(max-width: 767px)" src="{$newSrc-xs}" srcset="{$newSrc-xs} 1x, {$newSrc-xs-x2} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-xs"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-xs"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
                 </xsl:attribute>
               </xsl:if>
             </source>
-            <source type="{$imageType}" media="(max-width: 991px)" src="{$newSrc-sm}" srcset="{$newSrc-sm} 1x, {$newSrc-sm-x2} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="{$imageType}" media="(max-width: 991px)" srcset="{$newSrc-sm} 1x, {$newSrc-sm-x2} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-sm"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-sm"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
                 </xsl:attribute>
               </xsl:if>
             </source>
-            <source type="{$imageType}" media="(max-width: 1199px)" src="{$newSrc-md}" srcset="{$newSrc-md} 1x, {$newSrc-md-x2} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+            <source type="{$imageType}" media="(max-width: 1199px)" srcset="{$newSrc-md} 1x, {$newSrc-md-x2} 2x" >
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-md-webp"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-md-webp"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />
@@ -6634,11 +6797,29 @@
               </xsl:if>
             </source>
             <source type="{$imageType}" media="(min-width: 1200px)" src="{$newSrc-lg}" srcset="{$newSrc-lg} 1x, {$newSrc-lg-x2} 2x" >
-              <xsl:if test="$class!=''">
-                <xsl:attribute name="class">
+              <xsl:choose>
+                <xsl:when test="$lazy='on'">
+                  <xsl:attribute name="data-src">
+                    <xsl:value-of select="$newSrc-lg"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$lazyplaceholder"/>
+                  </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="src">
+                    <xsl:value-of select="$newSrc-lg"/>
+                  </xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:attribute name="class">
+                <xsl:if test="$class!=''">
                     <xsl:value-of select="$class" />
+                  </xsl:if>
+                  <xsl:if test="$lazy='on'">
+                      <xsl:text> lazy</xsl:text>
+                  </xsl:if>
               </xsl:attribute>
-              </xsl:if>
               <xsl:if test="$style!=''">
                 <xsl:attribute name="style">
                   <xsl:value-of select="$style" />

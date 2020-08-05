@@ -95,7 +95,7 @@
         </switch>
       </group>
       <group class="inline">
-        <label>DisplaySettings</label>
+        <label>Display Settings</label>
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='columns']"/>
         <select1 bind="nStepCount" appearance="full" class="required vshort">
           <label>Sub Pages per page</label>

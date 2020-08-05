@@ -1781,18 +1781,22 @@ Public Module Encryption
             Dim maxIndex As Long
             Dim sb As New StringBuilder
             Dim returnString As String = String.Empty
+            Try
 
-            maxIndex = Len(hex)
 
-            For index = 1 To maxIndex Step 2
-                sb.Append(Chr(CInt("&h" & Mid(hex, CInt(index), 2))))
-            Next
+                maxIndex = Len(hex)
 
-            returnString = sb.ToString
-            sb.Length = 0
+                For index = 1 To maxIndex Step 2
+                    sb.Append(Chr(CInt("&h" & Mid(hex, CInt(index), 2))))
+                Next
 
-            Return returnString
+                returnString = sb.ToString
+                sb.Length = 0
 
+                Return returnString
+            Catch ex As Exception
+                Return ""
+            End Try
         End Function
 
     End Class

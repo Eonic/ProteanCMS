@@ -9,8 +9,7 @@ Imports VB = Microsoft.VisualBasic
 Imports System.Web.Configuration
 Imports System.Configuration
 Imports System
-
-
+Imports System.Web.UI
 
 Public Class xForm
 
@@ -40,6 +39,8 @@ Public Class xForm
 
     Public BindsToSkip As New System.Collections.Specialized.StringCollection
 
+    Public SubmittedRef As String
+
     Private Const mcModuleName As String = "Protean.Cms.xForm"
     Private bTriggered As Boolean = False
     Private bDeleted As Boolean = False
@@ -50,8 +51,7 @@ Public Class xForm
 
     Private sNoteTypes() As String = {"help", "hint", "alert"}
     Private sBindAttributes() As String = {"calculate", "constraint", "readonly", "relevant", "required", "type"}
-
-
+    Private this As Object
 
     Enum noteTypes
         Help = 0
@@ -584,7 +584,6 @@ Public Class xForm
         'Dim cNsURI As String
         Dim sXpath As String
         Dim sXpathNoAtt As String
-        Dim sMessage As String = ""
         Dim obj As Xml.XPath.XPathNodeIterator
         Dim objValue As Object
         Dim missedError As Boolean = False
@@ -629,7 +628,7 @@ Public Class xForm
                 oBindElmt = oBindNode
                 sXpath = ""
                 bIsThisBindValid = True
-
+                Dim sMessage As String = ""
                 'NB REMOVE THIS
                 If oBindElmt.GetAttribute("type") = "fileUpload" Then
                     Dim DELETE As String = ""
@@ -685,7 +684,7 @@ Public Class xForm
                     End If
                 End If
 
-                If oBindElmt.GetAttribute("type") <> "" Then
+                If oBindElmt.GetAttribute("type") <> "" And (oBindElmt.GetAttribute("required") = "true()" And objValue <> "") Then
                     sMessage = evaluateByType(objValue, oBindElmt.GetAttribute("type"), cExtensions, LCase(oBindElmt.GetAttribute("required")) = "true()")
                 End If
 
@@ -738,7 +737,11 @@ Public Class xForm
                             If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=""msg-1007"">This must be completed</span>") = False Then
                                 missedError = True
                             End If
-                            cValidationError += oBindElmt.GetAttribute("id") & " - This must be completed"
+                            Dim oIptElmt As XmlElement
+                            oIptElmt = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
+                            If (cValidationError.Contains(oIptElmt.FirstChild.InnerText & " - This must be completed.") <> True) Then
+                                cValidationError += oIptElmt.FirstChild.InnerText & " - This must be completed." & " "
+                            End If
                         End If
                     End If
                 End If
@@ -812,7 +815,7 @@ Public Class xForm
                         cValidationError += oFileCheck.GetAttribute("id") & " - The file you are uploading is too large"
                     End If
 
-                    End If
+                End If
 
             Next
 
@@ -1053,163 +1056,163 @@ Public Class xForm
 
 
                                     If sXpath = "" Then sXpath = "."
-                                        cProcessInfo = "sXPath:" & sXpath & " value:" & submittedValue
-                                        'update for each bind element match
-                                        If oInstance.SelectSingleNode(sXpath, nsMgr) Is Nothing Then
-                                            sValue = "invalid path"
-                                            cValidationError += cValidationError & "<p>The following xpath could not be located in the instance: " & sXpath & "</p>"
+                                    cProcessInfo = "sXPath:" & sXpath & " value:" & submittedValue
+                                    'update for each bind element match
+                                    If oInstance.SelectSingleNode(sXpath, nsMgr) Is Nothing Then
+                                        sValue = "invalid path"
+                                        cValidationError += cValidationError & "<p>The following xpath could not be located in the instance: " & sXpath & "</p>"
+                                    Else
+                                        If sAttribute <> "" Then
+                                            oinstanceElmt = oInstance.SelectSingleNode(sXpath, nsMgr)
+                                            oinstanceElmt.SetAttribute(sAttribute, submittedValue)
                                         Else
-                                            If sAttribute <> "" Then
-                                                oinstanceElmt = oInstance.SelectSingleNode(sXpath, nsMgr)
-                                                oinstanceElmt.SetAttribute(sAttribute, submittedValue)
-                                            Else
-                                                Select Case sDataType
+                                            Select Case sDataType
 
-                                                    Case "xml-replace"
-                                                        Dim oElmtTemp As XmlElement
-                                                        oElmtTemp = moPageXML.CreateElement("Temp")
-                                                        If submittedValue Is Nothing Then
-                                                            cProcessInfo = sRequest
-                                                        ElseIf submittedValue = "" Then
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
-                                                        Else
-                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
-                                                        End If
-                                                        oElmtTemp = Nothing
+                                                Case "xml-replace"
+                                                    Dim oElmtTemp As XmlElement
+                                                    oElmtTemp = moPageXML.CreateElement("Temp")
+                                                    If submittedValue Is Nothing Then
+                                                        cProcessInfo = sRequest
+                                                    ElseIf submittedValue = "" Then
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
+                                                    Else
+                                                        oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
+                                                    End If
+                                                    oElmtTemp = Nothing
 
-                                                    Case "xml-replace-img"
+                                                Case "xml-replace-img"
 
-                                                        'Specific behaviour for an image tag.
+                                                    'Specific behaviour for an image tag.
 
-                                                        Dim oElmtTemp As XmlElement
-                                                        oElmtTemp = moPageXML.CreateElement("Temp")
-                                                        If submittedValue Is Nothing Then
-                                                            cProcessInfo = sRequest
-                                                        ElseIf submittedValue = "" Then
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
-                                                        Else
-                                                            oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
-                                                        End If
-                                                        oElmtTemp = Nothing
+                                                    Dim oElmtTemp As XmlElement
+                                                    oElmtTemp = moPageXML.CreateElement("Temp")
+                                                    If submittedValue Is Nothing Then
+                                                        cProcessInfo = sRequest
+                                                    ElseIf submittedValue = "" Then
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.RemoveChild(oInstance.SelectSingleNode(sXpath, nsMgr))
+                                                    Else
+                                                        oElmtTemp.InnerXml = (Protean.Tools.Xml.convertEntitiesToCodes(submittedValue) & "").Trim
+                                                        oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
+                                                    End If
+                                                    oElmtTemp = Nothing
 
-                                                    Case "image"
-                                                        ' Submitted Image File - not image HTML
-                                                        updateImageElement(oInstance.SelectSingleNode(sXpath, nsMgr), oBindElmt, goRequest.Files(sRequest))
+                                                Case "image"
+                                                    ' Submitted Image File - not image HTML
+                                                    updateImageElement(oInstance.SelectSingleNode(sXpath, nsMgr), oBindElmt, goRequest.Files(sRequest))
 
-                                                    Case "base64Binary"
-                                                        Dim oElmtFile As XmlElement
-                                                        oElmtFile = oInstance.SelectSingleNode(sXpath, nsMgr)
+                                                Case "base64Binary"
+                                                    Dim oElmtFile As XmlElement
+                                                    oElmtFile = oInstance.SelectSingleNode(sXpath, nsMgr)
 
-                                                        Dim oElmtFileStream As XmlElement = moPageXML.CreateElement(oElmtFile.Name & "Stream")
-                                                        oElmtFile.ParentNode.InsertAfter(oElmtFileStream, oElmtFile)
+                                                    Dim oElmtFileStream As XmlElement = moPageXML.CreateElement(oElmtFile.Name & "Stream")
+                                                    oElmtFile.ParentNode.InsertAfter(oElmtFileStream, oElmtFile)
 
-                                                        Dim fUpld As System.Web.HttpPostedFile
-                                                        fUpld = goRequest.Files(sRequest)
+                                                    Dim fUpld As System.Web.HttpPostedFile
+                                                    fUpld = goRequest.Files(sRequest)
 
-                                                        oElmtFile.InnerText = Tools.Text.filenameFromPath(fUpld.FileName)
+                                                    oElmtFile.InnerText = Tools.Text.filenameFromPath(fUpld.FileName)
 
-                                                        Dim body As System.IO.Stream = fUpld.InputStream
+                                                    Dim body As System.IO.Stream = fUpld.InputStream
 
-                                                        'body.Read(bodyBytes, 0, fUpld.ContentLength - 1)
-                                                        '
-                                                        Dim encoding As System.Text.Encoding = System.Text.Encoding.Default
-                                                        Dim reader As New System.IO.StreamReader(body)
-                                                        Dim bodyBytes As Byte() = (New System.Text.UTF8Encoding).GetBytes(reader.ReadToEnd)
+                                                    'body.Read(bodyBytes, 0, fUpld.ContentLength - 1)
+                                                    '
+                                                    Dim encoding As System.Text.Encoding = System.Text.Encoding.Default
+                                                    Dim reader As New System.IO.StreamReader(body)
+                                                    Dim bodyBytes As Byte() = (New System.Text.UTF8Encoding).GetBytes(reader.ReadToEnd)
 
-                                                        oElmtFileStream.InnerText = Convert.ToBase64String(bodyBytes)
-                                                    Case "base64Binary_Leave"
-                                                        'Do nothing, this is left to another part of the program to use
-                                                        'all we will do is pput the name of the file in
+                                                    oElmtFileStream.InnerText = Convert.ToBase64String(bodyBytes)
+                                                Case "base64Binary_Leave"
+                                                    'Do nothing, this is left to another part of the program to use
+                                                    'all we will do is pput the name of the file in
 
-                                                        oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files(sRequest).FileName) & "").Trim
+                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(Tools.Text.filenameFromPath(goRequest.Files(sRequest).FileName) & "").Trim
 
-                                                    Case "fileUpload"
-                                                        Dim cSavePath As String = oBindElmt.GetAttribute("saveTo")
-                                                        Dim cExtensions As String = oBindElmt.GetAttribute("allowedExt")
-                                                        Dim bAddTimeStamp As Boolean = (oBindElmt.GetAttribute("timeStamp") = "true")
-                                                        Dim Filename As String
+                                                Case "fileUpload"
+                                                    Dim cSavePath As String = oBindElmt.GetAttribute("saveTo")
+                                                    Dim cExtensions As String = oBindElmt.GetAttribute("allowedExt")
+                                                    Dim bAddTimeStamp As Boolean = (oBindElmt.GetAttribute("timeStamp") = "true")
+                                                    Dim Filename As String
 
 
-                                                        If cExtensions = "" Then
-                                                            cExtensions = "doc,docx,xls,xlsx,pdf,ppt,jpg,gif,png"
-                                                        End If
+                                                    If cExtensions = "" Then
+                                                        cExtensions = "doc,docx,xls,xlsx,pdf,ppt,jpg,gif,png"
+                                                    End If
 
-                                                        If (goRequest.Files.Count > 0) _
-                                                       AndAlso Not (goRequest.Files.Count = 1 And goRequest.Files(0).ContentLength = 0) Then
-                                                            Dim oFile As System.Web.HttpPostedFile = goRequest.Files(0)
+                                                    If (goRequest.Files.Count > 0) _
+                                                   AndAlso Not (goRequest.Files.Count = 1 And goRequest.Files(0).ContentLength = 0) Then
+                                                        Dim oFile As System.Web.HttpPostedFile = goRequest.Files(0)
 
                                                         cSavePath = cSavePath.Replace("$userId$", mnUserId)
                                                         cSavePath = cSavePath.Replace("$id$", goRequest("id"))
                                                         cSavePath.Replace("/", "\")
-                                                            If Not cSavePath.EndsWith("\") Then
-                                                                cSavePath &= "\"
-                                                            End If
+                                                        If Not cSavePath.EndsWith("\") Then
+                                                            cSavePath &= "\"
+                                                        End If
 
-                                                            If bAddTimeStamp Then
-                                                                Filename = System.IO.Path.GetFileNameWithoutExtension(oFile.FileName) & Now().ToString("yyyyMMddhhmmss") & "." & System.IO.Path.GetExtension(oFile.FileName)
-                                                            Else
-                                                                Filename = System.IO.Path.GetFileName(oFile.FileName)
-                                                            End If
-
-                                                            Dim upload As Boolean = False
-                                                            If cSavePath <> "" Then
-                                                                Dim cExtension As String = System.IO.Path.GetExtension(Filename)
-                                                                If cExtensions.Contains(Right(cExtension, 3)) Then
-                                                                    upload = True
-                                                                Else
-                                                                    sValue = "invalid file extension"
-                                                                    cValidationError += cValidationError & "<p>Invalid File Extension: " & cExtension & "</p>"
-                                                                    'NB Added to test bad extensions
-                                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Filename
-                                                                End If
-                                                                'Else
-                                                                ' Why would we try to upload nothing?
-                                                                '    upload = True
-                                                            End If
-
-                                                            If upload Then
-                                                                ' Need a way to check directory exists, if not then create it
-                                                                Dim cFullPath As String = goServer.MapPath("/").TrimEnd("/\".ToCharArray)
-
-                                                                'ensure the folder exists
-                                                                Dim oFs As New fsHelper()
-                                                                oFs.mcStartFolder = cFullPath
-                                                                cValidationError += oFs.CreatePath(cSavePath)
-                                                                If cValidationError = "1" Then cValidationError = ""
-
-                                                                If Directory.Exists(cFullPath & cSavePath) = True Then
-
-                                                                    Dim cFinalFullSavePath As String = oFs.getUniqueFilename(cFullPath & cSavePath & Filename)
-                                                                    oFile.SaveAs(cFinalFullSavePath)
-                                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFinalFullSavePath.Replace(cFullPath, "")
-
-                                                                    ' Working on the assumption that only one file has been submitted, then store this in a session object
-                                                                    If Not goSession Is Nothing Then goSession("formFileUploaded") = cFinalFullSavePath.Replace(cFullPath, "")
-                                                                Else
-                                                                    sValue = "invalid save path"
-                                                                    cValidationError += cValidationError & "<p>Save Path does not exist: " & cFullPath & cSavePath & "</p>"
-                                                                End If
-
-                                                            End If
-
+                                                        If bAddTimeStamp Then
+                                                            Filename = System.IO.Path.GetFileNameWithoutExtension(oFile.FileName) & Now().ToString("yyyyMMddhhmmss") & "." & System.IO.Path.GetExtension(oFile.FileName)
                                                         Else
-                                                            'No Files
+                                                            Filename = System.IO.Path.GetFileName(oFile.FileName)
+                                                        End If
 
-                                                            ' First check if there's a value in the session variable, which would indicate that 
-                                                            ' this has been uploaded but the form had to go through a couple of stages of validation
-                                                            If Not goSession Is Nothing AndAlso Not String.IsNullOrEmpty(CStr(goSession("formFileUploaded"))) Then
-                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = (goSession("formFileUploaded") & "").Trim
+                                                        Dim upload As Boolean = False
+                                                        If cSavePath <> "" Then
+                                                            Dim cExtension As String = System.IO.Path.GetExtension(Filename)
+                                                            If cExtensions.Contains(Right(cExtension, 3)) Then
+                                                                upload = True
                                                             Else
-                                                                sValue = "no files attached"
-                                                                cValidationError += cValidationError & "<p>No Files Have Been Attached For Upload</p>"
+                                                                sValue = "invalid file extension"
+                                                                cValidationError += cValidationError & "<p>Invalid File Extension: " & cExtension & "</p>"
+                                                                'NB Added to test bad extensions
+                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Filename
                                                             End If
+                                                            'Else
+                                                            ' Why would we try to upload nothing?
+                                                            '    upload = True
+                                                        End If
 
+                                                        If upload Then
+                                                            ' Need a way to check directory exists, if not then create it
+                                                            Dim cFullPath As String = goServer.MapPath("/").TrimEnd("/\".ToCharArray)
+
+                                                            'ensure the folder exists
+                                                            Dim oFs As New fsHelper()
+                                                            oFs.mcStartFolder = cFullPath
+                                                            cValidationError += oFs.CreatePath(cSavePath)
+                                                            If cValidationError = "1" Then cValidationError = ""
+
+                                                            If Directory.Exists(cFullPath & cSavePath) = True Then
+
+                                                                Dim cFinalFullSavePath As String = oFs.getUniqueFilename(cFullPath & cSavePath & Filename)
+                                                                oFile.SaveAs(cFinalFullSavePath)
+                                                                oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFinalFullSavePath.Replace(cFullPath, "")
+
+                                                                ' Working on the assumption that only one file has been submitted, then store this in a session object
+                                                                If Not goSession Is Nothing Then goSession("formFileUploaded") = cFinalFullSavePath.Replace(cFullPath, "")
+                                                            Else
+                                                                sValue = "invalid save path"
+                                                                cValidationError += cValidationError & "<p>Save Path does not exist: " & cFullPath & cSavePath & "</p>"
+                                                            End If
 
                                                         End If
 
-                                                    Case Else
+                                                    Else
+                                                        'No Files
+
+                                                        ' First check if there's a value in the session variable, which would indicate that 
+                                                        ' this has been uploaded but the form had to go through a couple of stages of validation
+                                                        If Not goSession Is Nothing AndAlso Not String.IsNullOrEmpty(CStr(goSession("formFileUploaded"))) Then
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = (goSession("formFileUploaded") & "").Trim
+                                                        Else
+                                                            sValue = "no files attached"
+                                                            cValidationError += cValidationError & "<p>No Files Have Been Attached For Upload</p>"
+                                                        End If
+
+
+                                                    End If
+
+                                                Case Else
                                                     'If goRequest(sRequest) <> "" Then "This is removed because we need to clear empty checkbox forms"
                                                     If bIsXml Then
                                                         If submittedValue <> "" Then
@@ -1223,9 +1226,9 @@ Public Class xForm
                                                     End If
                                             End Select
 
-                                            End If
                                         End If
                                     End If
+                                End If
                             Next
                         Catch ex2 As Exception
                             'no bind element found, do nothing
@@ -1663,20 +1666,20 @@ Public Class xForm
                                             'If no value is present, then assign a unique identifier
                                             If oElmt.GetAttribute("class").ToString.ToLower.Contains("generateuniqueid") And sValue = "" Then
 
-                                                    Dim Now As DateTime = DateTime.Now
+                                                Dim Now As DateTime = DateTime.Now
 
-                                                    sValue = "uID_" & goSession("pgid") & "_" & Now.Year.ToString & Now.DayOfYear.ToString & Now.Hour.ToString & Now.Minute.ToString & Now.Second.ToString & Now.Millisecond.ToString
-
-                                                End If
-                                                'If Not moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']") Is Nothing Then
-                                                'Dim tempNode As XmlElement = moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']")
-                                                'sValue = tempNode.InnerText
-                                                'End If
-
-
+                                                sValue = "uID_" & goSession("pgid") & "_" & Now.Year.ToString & Now.DayOfYear.ToString & Now.Hour.ToString & Now.Minute.ToString & Now.Second.ToString & Now.Millisecond.ToString
 
                                             End If
+                                            'If Not moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']") Is Nothing Then
+                                            'Dim tempNode As XmlElement = moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']")
+                                            'sValue = tempNode.InnerText
+                                            'End If
+
+
+
                                         End If
+                                    End If
                                 End If
 
                         End Select
@@ -2600,12 +2603,16 @@ Public Class xForm
                     oElmt = oNode
                     If oElmt.GetAttribute("submission") <> "" And goRequest.Form(oElmt.GetAttribute("submission")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("submission")
                     ElseIf goRequest(oElmt.GetAttribute("ref")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("ref")
                     ElseIf goRequest(oElmt.GetAttribute("bind")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("bind")
                     ElseIf goRequest("ewSubmitClone_" & oElmt.GetAttribute("ref")) <> "" Then
                         isSubmitted = True
+                        SubmittedRef = oElmt.GetAttribute("ref")
                     End If
                 Next
             End If
@@ -2841,7 +2848,7 @@ Public Class xForm
                                 For Each oNode In oInstanceNodeSet
                                     oInstanceNodeSetCount = oInstanceNodeSetCount + 1
                                     If oInstanceNodeSet.Count = oInstanceNodeSetCount And isInserted Then
-                                        bskipbinds = True
+                                        bSkipBinds = True
                                     End If
                                     If Not (oNode.GetAttribute("deletefromXformInstance") = "true") Then
 
