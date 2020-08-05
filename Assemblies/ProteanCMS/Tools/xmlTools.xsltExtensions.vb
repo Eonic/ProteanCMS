@@ -1777,11 +1777,16 @@ Partial Public Module xmlTools
 
                 Dim assemblyInstance As [Assembly]
 
-                If ourProvider.parameters("path") <> "" Then
-                    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
+                If ourProvider IsNot Nothing Then
+                    If ourProvider.parameters("path") <> "" Then
+                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(ourProvider.parameters("path")))
+                    Else
+                        assemblyInstance = [Assembly].Load(ourProvider.Type)
+                    End If
                 Else
-                    assemblyInstance = [Assembly].Load(ourProvider.Type)
+                    assemblyInstance = [Assembly].Load(ProviderName)
                 End If
+
 
                 Dim calledType As Type = assemblyInstance.GetType(classPath, True)
 
