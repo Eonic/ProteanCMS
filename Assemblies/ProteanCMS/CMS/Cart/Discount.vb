@@ -779,7 +779,7 @@ Partial Public Class Cms
                     'set packaging option to giftbox after applied promocode
                     If (strbFreeGiftBox <> "") Then
                         myCart.updatePackagingForFreeGiftDiscount(myCart.mnCartId)
-                        myCart.GetCart()
+
                     End If
                 Catch ex As Exception
                     returnException(mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
