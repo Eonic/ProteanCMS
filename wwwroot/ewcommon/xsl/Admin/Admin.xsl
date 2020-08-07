@@ -3390,10 +3390,18 @@
       <tr>
         <td>
           <xsl:value-of select="$indent"/>
+	  <xsl:choose>
+	  
+	  <xsl:when test="@name!=''">
           <xsl:value-of select="@name"/>
-          <xsl:if test="Content/StockCode/node()">
+	  </xsl:when>
+          <xsl:otherwise>
+	  <xsl:copy-of select="Name/node()"/>
+	  </xsl:otherwise>
+	  </xsl:choose>
+          <xsl:if test="StockCode/node()">
             <xsl:text> - </xsl:text>
-            <xsl:value-of select="Content/StockCode/node()"/>
+            <xsl:value-of select="StockCode/node()"/>
           </xsl:if>
         </td>
         <td>

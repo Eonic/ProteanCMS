@@ -1480,6 +1480,20 @@ Public Class Cms
             sProcessInfo = "BuildPageXML"
             BuildPageXML()
 
+            If Not mbAdminMode And moConfig("CheckPageURL") = "on" Then
+                If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
+                    Dim oMenuNode As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & mnPageId & "']")
+                    If Not oMenuNode Is Nothing Then
+                        If Not oMenuNode.GetAttribute("url").StartsWith("http") Then
+                            If oMenuNode.GetAttribute("url") <> mcPagePath Then
+                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                moResponse.StatusCode = 404
+                            End If
+                        End If
+                    End If
+                End If
+            End If
+
             Dim layoutCmd As String = ""
             If Not moSession Is Nothing And Not ibIndexMode Then
                 If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
@@ -2390,7 +2404,7 @@ Public Class Cms
 
                                     Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                                     oPageElmt.AppendChild(oPageDetail)
-                                    oPageDetail.InnerXml = "<Content type=""message""><div>Content deleted successfully.</div></Content>"
+                                    oPageDetail.InnerXml = "<Content type="" message""><div>Content deleted successfully.</div></Content>"
                                     ClearPageCache()
 
                                 Else
@@ -2413,7 +2427,7 @@ Public Class Cms
                         'raise error or do nothing
                         Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                         oPageElmt.AppendChild(oPageDetail)
-                        oPageDetail.InnerXml = "<Content type=""error""><div>Sorry you do not have permission to " & IIf(AjaxCmd = "Delete", "delete", "update") & " this item, please contact the site administrator.</div></Content>"
+                        oPageDetail.InnerXml = "<Content type="" error""><div>Sorry you do not have permission to " & IIf(AjaxCmd = "Delete", "delete", "update") & " this item, please contact the site administrator.</div></Content>"
 
                     End If
 
@@ -2731,9 +2745,9 @@ Public Class Cms
                         AndAlso IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText) Then
                         closeDate = CDate(ocNode.SelectSingleNode("dCloseDate").InnerText)
                     End If
-                    If openDate > Date.Now Or closeDate < Date.Now Then
-                        bCanVote = False
-                        nVoteBlockReason = PollBlockReason.PollNotAvailable
+                    If openDate > Date.Now Or closeDate <Date.Now Then
+                        bCanVote= False
+                        nVoteBlockReason= PollBlockReason.PollNotAvailable
                     End If
 
                     ' Sort out the vote frequency
