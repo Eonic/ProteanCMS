@@ -374,6 +374,8 @@ Public Class Conversion
 
                         _fName = fields(ii)
                         _fName = _fName.Replace("""", "")
+                        _fName = _fName.Replace("?", "")
+                        _fName = String.Concat(_fName.Where(Function(c) Not Char.IsWhiteSpace(c)))
                         rowTemplate.AppendChild(ResponseXml.CreateElement(_fName))
                     Next
                     firstRow = False

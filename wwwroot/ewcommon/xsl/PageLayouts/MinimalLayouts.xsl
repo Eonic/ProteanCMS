@@ -3689,7 +3689,7 @@
           <xsl:text>clearfix NewsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
         <xsl:attribute name="class">
           <xsl:text>cols</xsl:text>
@@ -5296,13 +5296,61 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="clearfix EventsList">
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
+    <div class="clearfix EventsList TrainingList">
       <xsl:if test="@carousel='true'">
         <xsl:attribute name="class">
           <xsl:text>clearfix EventsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1"  data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -8340,16 +8388,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="listItem list-group-item">
+    <div class="list-group-item listItem">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'list-group-item listItem'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
         <xsl:if test="$showThumbnail='true'">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </xsl:if>
-        <h3>
+        <h3 class="title">
           <a rel="external">
             <xsl:attribute name="href">
               <xsl:choose>

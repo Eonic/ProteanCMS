@@ -440,19 +440,23 @@ Partial Public Class Cms
                     Dim jsonString As String = String.Empty
                     If Not (jObj("Code") Is Nothing) Then
                         strMessage = myCart.moDiscount.AddDiscountCode(jObj("Code"))
+                        If (strMessage = jObj("Code")) Then
+                            myCart.GetCart(CartXml.FirstChild)
+                            'persist cart
+                            myCart.close()
+                            CartXml = updateCartforJSON(CartXml)
+
+                            jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                            jsonString = jsonString.Replace("""@", """_")
+                            jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                        End If
                         If (strMessage <> String.Empty) Then
                             Return strMessage
                         End If
-                        myCart.GetCart(CartXml.FirstChild)
-                        'persist cart
-                        myCart.close()
-                        CartXml = updateCartforJSON(CartXml)
 
-                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                        jsonString = jsonString.Replace("""@", """_")
-                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     End If
-                    Return jsonString
+                    Return strMessage
                 Catch ex As Exception
 
                 End Try
