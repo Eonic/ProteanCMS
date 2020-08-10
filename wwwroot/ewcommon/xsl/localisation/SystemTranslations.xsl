@@ -165,6 +165,7 @@
 
   <!-- 1007 This must be completed -->
   <xsl:template match="span[@class='msg-1007']" mode="term">
+    <xsl:value-of select="span[@class='labelName']/node()"/>
     <xsl:choose>
       <xsl:when test="$lang='de'">Bitte vervollständigen</xsl:when>
       <xsl:when test="$lang='en-pr'">Ya must fill this out</xsl:when>
@@ -179,6 +180,7 @@
 
   <!-- 1008 This information must be valid -->
   <xsl:template match="span[@class='msg-1008']" mode="term">
+    <xsl:value-of select="span[@class='labelName']/node()"/>
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">T'information must be valid</xsl:when>
       <xsl:when test="$lang='de'">Die Information muss gültig sein</xsl:when>
@@ -370,8 +372,39 @@
       <xsl:otherwise>Please confirm you are not a robot</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
+
+  <!-- 1007 This must be completed -->
+  <xsl:template match="span[@class='msg-1033']" mode="term">
+    <xsl:value-of select="span[@class='labelName']/node()"/>
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">Ya be to beamy</xsl:when>
+      <xsl:otherwise>The file you are uploading is too large</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+
+  <!-- 1007 This must be completed -->
+  <xsl:template match="span[@class='msg-1034']" mode="term">
+    <xsl:value-of select="span[@class='labelName']/node()"/>
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">Must be unique</xsl:when>
+      <xsl:otherwise>Must be unique</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- 1007 This must be completed -->
+
+  <xsl:template match="span[@class='msg-1035']" mode="term">
+    <xsl:value-of select="span[@class='labelName']/node()"/>
+    <xsl:choose>
+      <xsl:when test="$lang='en-pr'">Ya be talking nonsense</xsl:when>
+      <xsl:otherwise>This information must be valid</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
   
-  
+
   <!-- 1021 This username already exists in <membership>. Please select another. -->
   <xsl:template name="term1021">
     <xsl:param name="p1"/>

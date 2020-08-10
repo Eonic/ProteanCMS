@@ -2,6 +2,24 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:template match="Page" mode="xform_control_scripts">
+
+    <xsl:if test="descendant-or-self::instance">
+      <!--################################################ modal for alert-->
+      <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
+        <div class="modal-dialog">
+          <div class="modal-content  alert alert-danger" role="alert">
+            <div class="modal-body">
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+              <button type="button" class="close" data-dismiss="modal">
+                <i class="fa fa-times"> &#160;</i>
+              </button>
+              <span id="errorMessage"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </xsl:if>
     
     <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
       <script type="text/javascript">
