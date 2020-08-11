@@ -952,23 +952,24 @@ Check:
                                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                         Dim sMessagingProvider As String = moMailConfig("messagingprovider")
                                         Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
-                                        Dim ListId As String = momailconfig("Supplier")
-                                        Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
+                                        Dim ListId As String = moMailConfig("AllUsersList")
+                                        If Not ListId Is Nothing Then
+                                            Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
 
-                                        valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
-                                        valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
-                                        valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
-                                        If Not Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") Is Nothing Then
-                                            valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                            valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
+                                            valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
+                                            valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
+                                            If Not Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") Is Nothing Then
+                                                valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                            End If
+                                            Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
+                                            Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
+
+                                            oMessaging.Activities.addToList(ListId, Name, Email, valDict)
                                         End If
-                                        Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
-                                        Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
-
-                                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
 
                                     End If
                                 End If
-
 
                                 If addNewitemToParId Then
                                     moDbHelper.maintainDirectoryRelation(parId, id, False)

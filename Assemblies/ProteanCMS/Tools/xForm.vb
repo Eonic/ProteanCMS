@@ -687,13 +687,16 @@ Public Class xForm
                 If oBindElmt.GetAttribute("type") <> "" And (oBindElmt.GetAttribute("required") = "true()" And objValue <> "") Then
                     sMessage = evaluateByType(objValue, oBindElmt.GetAttribute("type"), cExtensions, LCase(oBindElmt.GetAttribute("required")) = "true()")
                 End If
-
-                Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
                 Dim labelText As String = oBindElmt.GetAttribute("id")
-                Dim inputLabel As XmlElement = oIptElmt.SelectSingleNode("label")
-                If Not inputLabel Is Nothing Then
-                    labelText = oIptElmt.SelectSingleNode("label").InnerText
+                Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
+
+                If Not oIptElmt Is Nothing Then
+                    Dim inputLabel As XmlElement = oIptElmt.SelectSingleNode("label")
+                    If Not inputLabel Is Nothing Then
+                        labelText = oIptElmt.SelectSingleNode("label").InnerText
+                    End If
                 End If
+
 
                 If sMessage <> "" Then
                     bIsValid = False
