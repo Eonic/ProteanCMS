@@ -1333,33 +1333,6 @@ function displayErrorMessage() {
     } else { alert(arguments[0]); }
 }
 
-//freegiftbox validation
-$('.select1-group #bDiscountIsPercent').change(function () {
-    showFreeGiftBoxDiv();
-})
-function showFreeGiftBoxDiv() {
-    if ($('.select1-group #bDiscountIsPercent').val() == 0) {
-        $('.checkbox-primary #bFreeGiftBox_True').parent().css({ "display": "block" });
-    }
-    else { $('.checkbox-primary #bFreeGiftBox_True').parent().css({ "display": "none" }); }
-}
-
-showFreeGiftBoxDiv();
-
-if ($(".select-wrapper input[name='bFreeGiftBox']").prop('checked')) {
-    $(".list-group input[name='bApplyToOrder']").prop('checked', false);
-    $(".list-group input[name='bApplyToOrder']").prop('disabled', true);
-}
-
-$(".select-wrapper input[name='bFreeGiftBox']").change(function () {
-    if (this.checked) {
-        $(".list-group input[name='bApplyToOrder']").prop('checked', false);
-        $(".list-group input[name='bApplyToOrder']").prop('disabled', true);
-    }
-    else {
-        $(".list-group input[name='bApplyToOrder']").prop('disabled', false);
-    }
-})
 
 /////
 function form_alert(cAlertType, oElem) {

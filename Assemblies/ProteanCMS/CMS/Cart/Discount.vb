@@ -1791,18 +1791,29 @@ NoDiscount:
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
+                Dim sPromoCode As String
                 Try
                     'myCart.moCartXml
                     If myCart.mnCartId > 0 Then
                         sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                        Dim xmlNotes As XmlElement = Nothing
+                        Dim xmlDoc As New XmlDocument
+
                         For Each oRow In oDs.Tables("Order").Rows
+                            xmlDoc.LoadXml(oRow("cClientNotes"))
+                            xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+
                             oRow("cClientNotes") = Nothing
                         Next
                         myWeb.moDbHelper.updateDataset(oDs, "Order", True)
                         oDs.Clear()
                         oDs = Nothing
+                        ' If (xmlNotes!= Nothing) Then
+                        sPromoCode = xmlNotes.InnerText
+                        '  End If
 
+                        UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
                         Return ""
                     Else
 
@@ -1813,6 +1824,28 @@ NoDiscount:
                 End Try
             End Function
 
+            'update packaging from giftbox to standard when removing promocode
+            Public Sub UpdatePackagingforRemovePromoCode(ByVal CartId As Integer, ByVal sPromoCode As String)
+                Try
+                    Dim sSQL, sValidtoremove As String
+                    If (sPromoCode <> "") Then
+                        sSQL = "select nDiscountKey from tblCartDiscountRules where cDiscountCode = '" & sPromoCode & "' and cAdditionalXML like '%<bFreeGiftBox>True</bFreeGiftBox>%'"
+                        sValidtoremove = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL)
+                    End If
+                    ' moConfig("GiftPack")
+
+                    If (sValidtoremove <> "") Then
+                        If (moConfig("DefaultPack") IsNot Nothing And moConfig("GiftPack") IsNot Nothing) Then
+                            sSQL = ""
+                            sSQL = "update tblcartitem set cItemName = '" & moConfig("DefaultPack") & "', nPrice = 0.00 where nParentId != 0 and  cItemName = '" & moConfig("GiftPack") & "' and nCartOrderId =" & CartId.ToString()
+                            myWeb.moDbHelper.ExeProcessSql(sSQL)
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug)
+                End Try
+            End Sub
 #End Region
 
 #Region "Copied Cart Functions"

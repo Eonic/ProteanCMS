@@ -689,9 +689,10 @@ Public Class xForm
                 End If
                 Dim labelText As String = oBindElmt.GetAttribute("id")
                 Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
-
+                Dim labelText As String = oBindElmt.GetAttribute("id")
+                Dim inputLabel As XmlElement = Nothing
                 If Not oIptElmt Is Nothing Then
-                    Dim inputLabel As XmlElement = oIptElmt.SelectSingleNode("label")
+                    inputLabel = oIptElmt.SelectSingleNode("label")
                     If Not inputLabel Is Nothing Then
                         labelText = oIptElmt.SelectSingleNode("label").InnerText
                     End If

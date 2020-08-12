@@ -8414,15 +8414,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
 
-                Dim sSql2 As String
-                Dim ods2 As DataSet
                 Dim ods As DataSet
                 Dim oRow As DataRow
                 Dim sSql As String
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
                 Dim cSqlUpdate As String
-                Dim ShippingName As String
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey = " & nShipOptKey
@@ -8434,7 +8431,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(cSqlUpdate)
                 Next
-
 
                 ' If (cShippingDesc = "Evoucher-UK Parcel") Then
                 '    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
