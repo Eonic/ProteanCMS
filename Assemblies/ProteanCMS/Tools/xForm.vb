@@ -689,7 +689,6 @@ Public Class xForm
                 End If
                 Dim labelText As String = oBindElmt.GetAttribute("id")
                 Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
-                Dim labelText As String = oBindElmt.GetAttribute("id")
                 Dim inputLabel As XmlElement = Nothing
                 If Not oIptElmt Is Nothing Then
                     inputLabel = oIptElmt.SelectSingleNode("label")
@@ -2573,7 +2572,11 @@ Public Class xForm
                                 nsmgr.AddNamespace("ews", cNsURI)
                                 sResponse = oSoapElmt.SelectSingleNode("ews:" & sActionName & "Result", nsmgr).InnerText
                             Catch ex As Exception
-                                sResponse = oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr).InnerText
+                                If oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr) Is Nothing Then
+                                    sResponse = soapClnt.results.OuterXml.Replace("<", "[").Replace(">", "]")
+                                Else
+                                    sResponse = oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr).InnerText
+                                End If
                             End Try
 
                             ' Try to add the response

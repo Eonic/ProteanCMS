@@ -65,6 +65,7 @@ Public Class SoapClient
             results.LoadXml(soapResponse)
 
         Catch ex As Exception
+            results.LoadXml("<error>" & ex.Message & "</error>")
             returnException(mcModuleName, "sendSoapRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
