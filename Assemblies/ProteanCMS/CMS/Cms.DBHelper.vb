@@ -1527,6 +1527,7 @@ Partial Public Class Cms
 
                 cSql = "select cVersionLang from  tblContentStructure where nStructKey = " & nPageId
                 cLayout = GetDataValue(cSql, , , "default").ToString()
+                If cLayout = "" Then cLayout = "en-gb"
 
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getPageLang", ex, cSql))
