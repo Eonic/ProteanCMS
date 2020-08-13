@@ -8535,6 +8535,47 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
+        'check whether promocode is applier for delivery option
+        Public Function CheckPromocodeAppliedForDelivery() As String
+            Dim sSql, sPromocode As String
+            Dim oDs As DataSet
+            Dim doc As New XmlDocument()
+            Dim oRow As DataRow
+            Dim strcFreeShippingMethods As String = ""
+            Try
+                'get applied promocode
+                sSql = "select * from tblCartOrder where nCartOrderKey=" & mnCartId
+                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                Dim xmlNotes As XmlElement = Nothing
+                Dim xmlDoc As New XmlDocument
+
+                For Each oRow In oDs.Tables("Order").Rows
+                    xmlDoc.LoadXml(oRow("cClientNotes"))
+                    xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+                Next
+                If (xmlNotes IsNot Nothing) Then
+                    sPromocode = xmlNotes.InnerText
+                End If
+                'check promocode applicable for delivery
+                sSql = "Select cAdditionalXML From tblCartDiscountRules Where cDiscountUserCode = '" & sPromocode & "'"
+                oDs = myWeb.moDbHelper.GetDataSet(sSql.ToString, "Discount", "Discounts")
+                If oDs.Tables("Discount").Rows.Count > 0 Then
+                    Dim additionalInfo As String = "<additionalXml>" + oDs.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                    doc.LoadXml(additionalInfo)
+
+                    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                    End If
+                End If
+
+                oDs.Clear()
+                oDs = Nothing
+
+                Return strcFreeShippingMethods
+            Catch ex As Exception
+                returnException(mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+            End Try
+        End Function
 
         Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try
