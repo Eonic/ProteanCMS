@@ -262,7 +262,7 @@ Partial Public Class Cms
                             cDestinationCountry = jObj("country")
                         Else
                             cDestinationCountry = myCart.moCartConfig("DefaultDeliveryCountry")
-                            End If
+                        End If
 
                         If jObj("qty") = "0" Then
                             nQuantity = jObj("qty")
@@ -337,8 +337,17 @@ Partial Public Class Cms
                 'check config setting here so that it will take order option which is optional.
                 Dim cOrderofDeliveryOption As String = myCart.moCartConfig("ShippingTotalIsNotZero")
                 cOrderofDeliveryOption = myCart.updateDeliveryOptionByCountry(CartXml.FirstChild, country, cOrderofDeliveryOption)
+                If (myCart.CheckPromocodeAppliedForDelivery() <> "") Then
+                    RemoveDiscountCode(myApi, jObj)
+                    'this will remove discount section from address page in vuemain.js
+                    cOrderofDeliveryOption = cOrderofDeliveryOption & "#1"
+                Else
+                    cOrderofDeliveryOption = cOrderofDeliveryOption & "#0"
+                End If
+
                 Return cOrderofDeliveryOption
             End Function
+
 
             Public Function GetContacts(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
@@ -446,9 +455,9 @@ Partial Public Class Cms
                             myCart.close()
                             CartXml = updateCartforJSON(CartXml)
 
-                            jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                            jsonString = jsonString.Replace("""@", """_")
-                            jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                            'jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                            'jsonString = jsonString.Replace("""@", """_")
+                            'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
 
                         End If
                         If (strMessage <> String.Empty) Then
@@ -462,12 +471,10 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
             Public Function RemoveDiscountCode(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
 
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-
 
                     myCart.moDiscount.RemoveDiscountCode()
                     myCart.GetCart(CartXml.FirstChild)
@@ -479,7 +486,6 @@ Partial Public Class Cms
                     jsonString = jsonString.Replace("""@", """_")
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
                     Return jsonString
-
 
                 Catch ex As Exception
 

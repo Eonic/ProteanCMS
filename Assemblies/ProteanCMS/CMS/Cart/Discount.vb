@@ -1791,7 +1791,7 @@ NoDiscount:
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
-                Dim sPromoCode As String
+                Dim sPromoCode As String = ""
                 Try
                     'myCart.moCartXml
                     If myCart.mnCartId > 0 Then
@@ -1809,16 +1809,13 @@ NoDiscount:
                         myWeb.moDbHelper.updateDataset(oDs, "Order", True)
                         oDs.Clear()
                         oDs = Nothing
-                        ' If (xmlNotes!= Nothing) Then
-                        sPromoCode = xmlNotes.InnerText
-                        '  End If
+                        If (xmlNotes IsNot Nothing) Then
+                            sPromoCode = xmlNotes.InnerText
+                        End If
 
                         UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
-                        Return ""
-                    Else
-
-                        Return ""
                     End If
+                    Return ""
                 Catch ex As Exception
                     returnException(mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
@@ -1832,7 +1829,6 @@ NoDiscount:
                         sSQL = "select nDiscountKey from tblCartDiscountRules where cDiscountCode = '" & sPromoCode & "' and cAdditionalXML like '%<bFreeGiftBox>True</bFreeGiftBox>%'"
                         sValidtoremove = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL)
                     End If
-                    ' moConfig("GiftPack")
 
                     If (sValidtoremove <> "") Then
                         If (moConfig("DefaultPack") IsNot Nothing And moConfig("GiftPack") IsNot Nothing) Then
