@@ -22,6 +22,40 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.maintainMembershipsFromXForm(System.Int32,System.String,System.String,System.Boolean)">
+ <summary>
+     Maintains membership between userid and groups as found in xForm
+ </summary>
+ <param name="nUserId">The user id to be associated with</param>
+ <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
+ <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.validateMemberCode(System.String,System.String,System.String)">
+ <summary>
+ Validates a member code in an xform.
+ </summary>
+ <param name="cXPathToCode">The xpath to the code in the instance</param>
+ <param name="cBindOrReftoCode">The bind or ref of the node in the form</param>
+ <returns>String - returns the code if a code was entered and it is not a valid code</returns>
+ <remarks>
+ <para>If a code was entered and it's not valid, then the xform will be invalidated.</para>
+ <para>Note that if the xpath can't be found or a code has not been entered then the form will not be invalidated.</para>
+ <para>This requires MemberCodes to be turned on in web.config</para>
+</remarks> 
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.useMemberCode(System.String,System.Int64)">
+ <summary>
+ Registers a user against a member code, and adds the user to the code memberships
+ </summary>
+ <param name="cCode">The code to use</param>
+ <param name="nUserId">The user to register the code against</param>
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.Activities.LogSingleUserSession">
+ <summary>
+ If in Single Session per Session mode this will log an activity indicating that the user is still in session.
+ </summary>
+ <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
+</member>
 <member name="T:Protean.Cms.Synchronisation">
  <summary>
  Class for sync methods that are specific to Protean.Cms
@@ -652,40 +686,6 @@ ProteanCMS
  <returns>A count of the number of content items removed</returns>
  <remarks></remarks>
  
-</member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.maintainMembershipsFromXForm(System.Int32,System.String,System.String,System.Boolean)">
- <summary>
-     Maintains membership between userid and groups as found in xForm
- </summary>
- <param name="nUserId">The user id to be associated with</param>
- <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
- <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
-</member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.validateMemberCode(System.String,System.String,System.String)">
- <summary>
- Validates a member code in an xform.
- </summary>
- <param name="cXPathToCode">The xpath to the code in the instance</param>
- <param name="cBindOrReftoCode">The bind or ref of the node in the form</param>
- <returns>String - returns the code if a code was entered and it is not a valid code</returns>
- <remarks>
- <para>If a code was entered and it's not valid, then the xform will be invalidated.</para>
- <para>Note that if the xpath can't be found or a code has not been entered then the form will not be invalidated.</para>
- <para>This requires MemberCodes to be turned on in web.config</para>
-</remarks> 
-</member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.useMemberCode(System.String,System.Int64)">
- <summary>
- Registers a user against a member code, and adds the user to the code memberships
- </summary>
- <param name="cCode">The code to use</param>
- <param name="nUserId">The user to register the code against</param>
-</member>
-<member name="M:Protean.Providers.Membership.EonicProvider.Activities.LogSingleUserSession">
- <summary>
- If in Single Session per Session mode this will log an activity indicating that the user is still in session.
- </summary>
- <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
 </member>
 <member name="T:Protean.PayPalAPI.CustomSecurityHeaderType">
 <remarks/>

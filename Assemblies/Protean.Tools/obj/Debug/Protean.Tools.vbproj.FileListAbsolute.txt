@@ -133,7 +133,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll
@@ -163,13 +162,11 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csha
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Protean.Tools.Csharp.dll.config
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\ICSharpCode.SharpZipLib.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\TidyHTML5Managed.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache
@@ -177,3 +174,10 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbpr
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Newtonsoft.Json.xml
