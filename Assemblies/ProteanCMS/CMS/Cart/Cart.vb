@@ -8399,10 +8399,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
             Try
                 Dim cSqlUpdate As String
-                Dim nOrderid As String
-
-                nOrderid = nCartItemKey
-                cSqlUpdate = " update tblCartItem set  cItemName = 'GiftBox' where  nitemid=0 and nCartOrderId= " & nOrderid
+                cSqlUpdate = " update tblCartItem set  cItemName = 'GiftBox' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
