@@ -8873,6 +8873,10 @@
     <xsl:value-of select="translate($text, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')"/>
   </xsl:template>
 
+  <xsl:template name="touppercase">
+    <xsl:param name="text"/>
+    <xsl:value-of select="translate($text, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
+  </xsl:template>
   <!-- ## REGULAR EXPRESSION TEST ##############################################################################################-->
   <!--    ew:RegexTest(string,string) Function 
             Returns a boolean - i.e. true() or false()
