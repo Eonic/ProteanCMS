@@ -4224,8 +4224,17 @@
   
   <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2700</xsl:template>
   <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2700</xsl:template>
-    
-    
+
+
+  <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="adminPageHeader">
+    <h1 class="page-header">
+      <i class="fa {/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@icon}">&#160;</i>&#160;
+      <xsl:value-of select="/Page/AdminMenu/descendant-or-self::MenuItem[@cmd=/Page/@ewCmd]/@name"/>
+      -
+      <xsl:value-of select="ContentDetail/*/@name"/>
+    </h1>
+  </xsl:template>
+
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="Admin">
     <xsl:variable name="MaxUploadWidth">
       <xsl:apply-templates select="." mode="MaxUploadWidth"/>
@@ -4292,81 +4301,7 @@
     </xsl:variable>
     
     <div id="template_FileSystem" class="panel panel-default">
-      <div class="panel-heading">
-       
-        <div class="panel-heading-buttons">
-          <xsl:for-each select="descendant-or-self::folder[@active='true']">
-         <ul class="pageControlButtons">
-            <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
-            <li>
-              <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
-                <xsl:if test="$submitPath!='/?'">
-                  <xsl:attribute name="data-toggle">modal</xsl:attribute>
-                  <xsl:attribute name="data-target">
-                    <xsl:text>#modal-</xsl:text>
-                    <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
-                  </xsl:attribute>
-                </xsl:if>
-                <i class="fa fa-arrow-up fa-white">
-                  <xsl:text> </xsl:text>
-                </i>
-                Up Folder</a>
-            </li>
-            </xsl:if>
-            <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-              <li>
-                <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
-                  <xsl:if test="$submitPath!='/?'">
-                    <xsl:attribute name="data-toggle">modal</xsl:attribute>
-                    <xsl:attribute name="data-target">
-                      <xsl:text>#modal-</xsl:text>
-                      <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
-                    </xsl:attribute>
-                  </xsl:if>
-                  <i class="fa fa-folder-open fa-white">
-                  <xsl:text> </xsl:text>
-                </i>&#160;New Folder</a>
-              </li>
-              <li>
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                  <i class="fa fa-upload fa-white">
-                    <xsl:text> </xsl:text>
-                  </i><xsl:text> </xsl:text>
-                  <span>Upload Files</span>
-                  <!-- The file input field used as target for the file upload widget -->
-                  <input id="fileupload" type="file" name="files[]" multiple=""/>
-                </span>
-                <span class="fileupload-loading">
-                  <xsl:text> </xsl:text>
-                </span>
-              </li>
-              <!--not for popup window or for root..!-->
-              <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
-                <li>
-                  <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
-                    <i class="fa fa-trash-o fa-white">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    Delete Folder</a>
-                </li>
-              </xsl:if>
-            </xsl:if>
-          </ul>
-          </xsl:for-each>   
-        </div>
-       <h4>
-          <xsl:choose>
-            <xsl:when test="descendant-or-self::folder[@active='true']/@path!=''">
-              <xsl:value-of select="$targetPath"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="descendant-or-self::folder[@active='true']/@name"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </h4>
-      </div>
-      
+    
         <div class="panel-body row">
   
           <div id="MenuTree" class="list-group col-md-3 col-sm-4">
@@ -4376,41 +4311,121 @@
           </div>
 
         <div class="col-md-9 col-sm-8">
-        <xsl:for-each select="descendant-or-self::folder[@active='true']">
-          <div id="fileupload">
-          
-          <xsl:if test="starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock')">
-            <div class="well well-sm well-success">
-              <i class="fa fa-picture-o fa-2x pull-left">&#160;</i> This is a Free Royalty Free Image Library, you cannot add or amend these files but you are welcome to use the images on your site
+          <!--div class="row">
+          <div id="uploadFiles" class="col-md-8">
+
+            <div id="progress" class="progress progress-success progress-striped">
+              <div class="bar">
+                <xsl:text> </xsl:text>
+              </div>
             </div>
-          </xsl:if>
-            <div id="uploadFiles">
+            <div class="alert alert-info" role="alert">
+              <xsl:if test="$MaxUploadWidth='0'">
+                <i class="fa fa-floppy-o fa-2x pull-left">&#160;</i>Maximum Filesize for uploads 4MB. For bigger files ask about FTP access.<br/>
+              </xsl:if>
+              <xsl:if test="$MaxUploadWidth!='0'">
+                <i class="fa fa-compress fa-2x pull-left">&#160;</i>
+                Images will automatically reduce to a maximum of <xsl:value-of select="$MaxUploadWidth"/> x <xsl:value-of select="$MaxUploadHeight"/>
+              </xsl:if>
+            </div>
+          </div-->
+          <div class="">
+            <span id="uploadFiles">
               <xsl:choose>
                 <xsl:when test="contains($browserVersion,'Firefox') or contains($browserVersion,'Chrome')">
                   <div class="drophere">...or drag and drop files here to upload them</div>
                 </xsl:when>
                 <xsl:when test="contains($browserVersion,'MSIE') or contains($browserVersion,'')">
-                  <div class="hint">Note: You can upload multiple files without refreshing the page.<br/> You are using Internet Explorer<br/> Try Chrome or Firefox to upload multiple files using drag and drop</div>
+                  <div class="hint">
+                    Note: You can upload multiple files without refreshing the page.<br/> You are using Internet Explorer<br/> Try Chrome or Firefox to upload multiple files using drag and drop
+                  </div>
                 </xsl:when>
               </xsl:choose>
-              <div id="progress" class="progress progress-success progress-striped">
-                <div class="bar">
-                  <xsl:text> </xsl:text>
-                </div>
+            </span>
+            <xsl:for-each select="descendant-or-self::folder[@active='true']">
+              <ul class="pageControlButtons">
+                <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
+                  <li>
+                    <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={parent::folder/@path}" class="btn btn-primary">
+                      <xsl:if test="$submitPath!='/?'">
+                        <xsl:attribute name="data-toggle">modal</xsl:attribute>
+                        <xsl:attribute name="data-target">
+                          <xsl:text>#modal-</xsl:text>
+                          <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+                        </xsl:attribute>
+                      </xsl:if>
+                      <i class="fa fa-arrow-up fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      Up Folder
+                    </a>
+                  </li>
+                </xsl:if>
+                <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
+                  <li>
+                    <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-success">
+                      <xsl:if test="$submitPath!='/?'">
+                        <xsl:attribute name="data-toggle">modal</xsl:attribute>
+                        <xsl:attribute name="data-target">
+                          <xsl:text>#modal-</xsl:text>
+                          <xsl:value-of select="/Page/Request/QueryString/Item[@name='targetField']/node()"/>
+                        </xsl:attribute>
+                      </xsl:if>
+                      <i class="fa fa-folder-open fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>&#160;New Folder
+                    </a>
+                  </li>
+                  <li>
+                    <!-- The fileinput-button span is used to style the file input field as button -->
+                    <span class="btn btn-success fileinput-button">
+                      <i class="fa fa-upload fa-white">
+                        <xsl:text> </xsl:text>
+                      </i>
+                      <xsl:text> </xsl:text>
+                      <span>Upload Files</span>
+                      <!-- The file input field used as target for the file upload widget -->
+                      <input id="fileupload" type="file" name="files[]" multiple=""/>
+                    </span>
+                    <span class="fileupload-loading">
+                      <xsl:text> </xsl:text>
+                    </span>
+                  </li>
+                  <!--not for popup window or for root..!-->
+                  <xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup')) and not(@path='')">
+                    <li>
+                      <a href="{$submitPath}ewcmd={/Page/@ewCmd}&amp;ewCmd2=deleteFolder&amp;fld={@path}" class="btn btn-danger">
+                        <i class="fa fa-trash-o fa-white">
+                          <xsl:text> </xsl:text>
+                        </i>
+                        Delete Folder
+                      </a>
+                    </li>
+                  </xsl:if>
+                </xsl:if>
+              </ul>
+            </xsl:for-each>
+          </div>
+            <div id="progress" class="progress progress-success progress-striped">
+              <div class="bar">
+                <xsl:text> </xsl:text>
               </div>
-              <div class="alert alert-info" role="alert">
-                <xsl:if test="$MaxUploadWidth='0'"><i class="fa fa-floppy-o fa-2x pull-left">&#160;</i>Maximum Filesize for uploads 4MB. For bigger files ask about FTP access.<br/></xsl:if>
-                  <xsl:if test="$MaxUploadWidth!='0'"><i class="fa fa-compress fa-2x pull-left">&#160;</i>
-                  Images will automatically reduce to a maximum of <xsl:value-of select="$MaxUploadWidth"/> x <xsl:value-of select="$MaxUploadHeight"/></xsl:if>
-              </div>
-
+            </div>
+        <xsl:for-each select="descendant-or-self::folder[@active='true']">
+          <div id="fileupload">
+          <xsl:if test="starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock')">
+            <div class="well well-sm well-success">
+              <i class="fa fa-picture-o fa-2x pull-left">&#160;</i> This is a Free Royalty Free Image Library, you cannot add or amend these files but you are welcome to use the images on your site
+            </div>
+          </xsl:if>
+<!--
               <div class="alert alert-danger" role="alert"><i class="fa fa-warning fa-2x pull-left">&#160;</i>Please ensure you have permission to use all images uploaded.You could be at risk of legal claims if you upload unlicenced images.</div>
-              <!-- The table listing the files available for upload/download -->
+-->
+<!-- The table listing the files available for upload/download -->
               <xsl:apply-templates select="." mode="ImageFolder">
                 <xsl:with-param name="rootPath" select="$rootPath"/>
               </xsl:apply-templates>
             </div>
-          </div>
           </xsl:for-each>
         </div>
       </div>

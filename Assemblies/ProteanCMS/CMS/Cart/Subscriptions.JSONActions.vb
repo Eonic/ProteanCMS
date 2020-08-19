@@ -18,7 +18,7 @@ Imports System.Collections.Generic
 
 Partial Public Class Cms
 
-    Partial Public Class Cart
+    Partial Public Class Subscriptions
 
 #Region "JSON Actions"
 

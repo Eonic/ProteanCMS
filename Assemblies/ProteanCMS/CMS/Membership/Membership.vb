@@ -9,7 +9,7 @@ Imports System.Collections.Generic
 
 
 Partial Public Class Cms
-    Public Class Membership
+    Partial Public Class Membership
 
 #Region "Declarations"
 
