@@ -1324,43 +1324,15 @@ function form_check(oForm) {
 
 //bootstrap validation alert
 function displayErrorMessage() {
-    if (document.getElementById("errorIcon") != null) {
+    if (document.getElementById("xFrmAlertModal") != null) {
         var iconClassName = document.getElementById("errorIcon").className;
-        $('#alertModal #errorMessage').text(arguments[0]);
-        $("#alertModal #errorIcon").removeClass(iconClassName);
-        $("#alertModal #errorIcon").addClass(arguments[1]);
-
-        $('#alertModal').modal();
+        $('#xFrmAlertModal #errorMessage').text(arguments[0]);
+        $("#xFrmAlertModal #errorIcon").removeClass(iconClassName);
+        $("#xFrmAlertModal #errorIcon").addClass(arguments[1]);
+        $('#xFrmAlertModal').modal();
     } else { alert(arguments[0]); }
 }
 
-//freegiftbox validation
-$('.select1-group #bDiscountIsPercent').change(function () {
-    showFreeGiftBoxDiv();
-})
-function showFreeGiftBoxDiv() {
-    if ($('.select1-group #bDiscountIsPercent').val() == 0) {
-        $('.checkbox-primary #bFreeGiftBox_True').parent().css({ "display": "block" });
-    }
-    else { $('.checkbox-primary #bFreeGiftBox_True').parent().css({ "display": "none" }); }
-}
-
-showFreeGiftBoxDiv();
-
-if ($(".select-wrapper input[name='bFreeGiftBox']").prop('checked')) {
-    $(".list-group input[name='bApplyToOrder']").prop('checked', false);
-    $(".list-group input[name='bApplyToOrder']").prop('disabled', true);
-}
-
-$(".select-wrapper input[name='bFreeGiftBox']").change(function () {
-    if (this.checked) {
-        $(".list-group input[name='bApplyToOrder']").prop('checked', false);
-        $(".list-group input[name='bApplyToOrder']").prop('disabled', true);
-    }
-    else {
-        $(".list-group input[name='bApplyToOrder']").prop('disabled', false);
-    }
-})
 
 /////
 function form_alert(cAlertType, oElem) {

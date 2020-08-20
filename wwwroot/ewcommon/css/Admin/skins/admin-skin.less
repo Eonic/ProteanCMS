@@ -595,6 +595,11 @@ NEW BS ADMIN HEADER
         background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
     }
 
+    #template_FileSystem #MenuTree {
+        height: 100vh;
+        overflow-y: scroll;
+    }
+
     #MenuTree table td {
         background-color: transparent !important;
     }
@@ -660,9 +665,7 @@ NEW BS ADMIN HEADER
         &:hover {
             background: lighten(@admin-header-color-link, 7%) !important;
         }
-
         //border-width: 0px;
-
         &:focus {
             outline: none;
         }
@@ -676,8 +679,9 @@ NEW BS ADMIN HEADER
         background: lighten(@admin-primary, 30%) !important;
         border-color: @admin-primary;
         color: @admin-primary !important;
-        border-width:1px!important;
-        border-style:solid;
+        border-width: 1px !important;
+        border-style: solid;
+
         &:hover {
             background: lighten(@admin-primary, 32%) !important;
         }
@@ -707,7 +711,7 @@ NEW BS ADMIN HEADER
 
     .btn-success {
         background: @admin-success !important;
-       // border-width: 0px;
+        // border-width: 0px;
         color: @admin-header-color !important;
 
         &:hover {
@@ -753,33 +757,33 @@ NEW BS ADMIN HEADER
         }
     }
 
-    
-        h1.page-header {
-            font-size: 2em;
-            margin: 0;
-            border-bottom: 1px solid #cccccc;
-            font-family: @admin-body-font;
-            font-weight: 500;
-            line-height: 1.1;
-            color: #333333;
-        }
 
-        .panel-heading {
-            legend {
-                border-bottom: 0;
-                margin-bottom: 0;
-            }
+    h1.page-header {
+        font-size: 2em;
+        margin: 0;
+        border-bottom: 1px solid #cccccc;
+        font-family: @admin-body-font;
+        font-weight: 500;
+        line-height: 1.1;
+        color: #333333;
+    }
 
-            h3 {
-                margin-top: 10px;
-                margin-bottom: 10px;
-                font-size: 18px;
-            }
-        }
-
-        .panel-body > .alert:last-child {
+    .panel-heading {
+        legend {
+            border-bottom: 0;
             margin-bottom: 0;
         }
+
+        h3 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+    }
+
+    .panel-body > .alert:last-child {
+        margin-bottom: 0;
+    }
 
     table.manage-lookups .buttonCell {
         min-width: 210px;

@@ -8166,7 +8166,7 @@ Partial Public Class Cms
                         MyBase.addInput(oFrmElmt, "fld", True, "Upload Path", "readonly")
                         MyBase.addBind("fld", "file/@path", "true()")
 
-                        MyBase.addUpload(oFrmElmt, "uploadFile", True, "image/*", "Pick File")
+                        MyBase.addUpload(oFrmElmt, "uploadFile", True, "image/*", "Upload File")
                         MyBase.addBind("uploadFile", "file", "true()")
 
                         Dim oSelectElmt2 As XmlElement
@@ -8175,13 +8175,13 @@ Partial Public Class Cms
                         MyBase.addOption(oSelectElmt2, "Full Import", "import")
                         MyBase.addBind("opperationMode", "file/@opsMode", "true()")
 
-                        If myWeb.moConfig("debug") = "on" Then
-                            Dim oSelectElmt3 As XmlElement
+                        '   If myWeb.moConfig("debug") = "on" Then
+                        Dim oSelectElmt3 As XmlElement
                             oSelectElmt3 = MyBase.addSelect1(oFrmElmt, "contentType", True, "Response Xml", , ApperanceTypes.Full)
                             MyBase.addOption(oSelectElmt3, "on", "xml")
                             MyBase.addOption(oSelectElmt3, "off", "")
-                        End If
-                        MyBase.addBind("xml", "file/@xml", "true()")
+                        '   End If
+                        MyBase.addBind("xml", "file/@xml", "false()")
 
                         MyBase.addSubmit(oFrmElmt, "", "Upload", "ewSubmit")
 

@@ -1160,6 +1160,30 @@ Namespace Providers
 
                 End Function
 
+
+                Public Function GetMethodDetail(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderId As Long) As String
+                    Dim cProcessInfo As String = ""
+                    Try
+
+
+                        Try
+                            Dim oMethodInfo As XmlElement = oWeb.moPageXml.CreateElement("MethodInfo")
+
+                            Return oMethodInfo.OuterXml
+
+
+                        Catch ex As Exception
+                            Dim ErrorMsg As String = "Error"
+                            Return ErrorMsg
+                        End Try
+
+
+                    Catch ex As Exception
+                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        Return ""
+                    End Try
+
+                End Function
                 Public Function getBinding() As System.ServiceModel.BasicHttpBinding
 
                     Dim ppBinding As New System.ServiceModel.BasicHttpBinding(System.ServiceModel.BasicHttpSecurityMode.Transport)

@@ -530,6 +530,9 @@ Partial Public Class fsHelper
                     Dim oFileInfo As IO.FileInfo = New IO.FileInfo(cFullFilePath)
                     oFileInfo.IsReadOnly = False
                     IO.File.Delete(cFullFilePath)
+
+                    ' scan for thumbnails to delete. subfolders starting with ~ look for files that end in the filename regardless of extension.
+
                 Else
                     Return "this file does not exist"
                 End If

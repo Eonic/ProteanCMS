@@ -687,6 +687,16 @@ Public Class xForm
                 If oBindElmt.GetAttribute("type") <> "" And (oBindElmt.GetAttribute("required") = "true()" And objValue <> "") Then
                     sMessage = evaluateByType(objValue, oBindElmt.GetAttribute("type"), cExtensions, LCase(oBindElmt.GetAttribute("required")) = "true()")
                 End If
+                Dim labelText As String = oBindElmt.GetAttribute("id")
+                Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
+                Dim inputLabel As XmlElement = Nothing
+                If Not oIptElmt Is Nothing Then
+                    inputLabel = oIptElmt.SelectSingleNode("label")
+                    If Not inputLabel Is Nothing Then
+                        labelText = oIptElmt.SelectSingleNode("label").InnerText
+                    End If
+                End If
+
 
                 If sMessage <> "" Then
                     bIsValid = False
@@ -694,7 +704,7 @@ Public Class xForm
                     If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Type, sMessage) = False Then
                         missedError = True
                     End If
-                    cValidationError += oBindElmt.GetAttribute("id") & " - " & sMessage
+                    cValidationError += "<span>" & labelText & " - " & sMessage & "</span>"
                 End If
 
                 'case for calculate
@@ -709,7 +719,6 @@ Public Class xForm
                         updateElmt = oInstance.SelectSingleNode(sXpathNoAtt, nsMgr)
                         updateElmt.SetAttribute(sAttribute, sValue2)
                     Else
-
                         If Not String.IsNullOrEmpty(sXpath) AndAlso Not oInstance.SelectSingleNode(sXpath) Is Nothing Then
                             oInstance.SelectSingleNode(sXpath).InnerText = sValue2
                             objValue = sValue2
@@ -737,10 +746,9 @@ Public Class xForm
                             If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=""msg-1007"">This must be completed</span>") = False Then
                                 missedError = True
                             End If
-                            Dim oIptElmt As XmlElement
-                            oIptElmt = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
-                            If (cValidationError.Contains(oIptElmt.FirstChild.InnerText & " - This must be completed.") <> True) Then
-                                cValidationError += oIptElmt.FirstChild.InnerText & " - This must be completed." & " "
+
+                            If (cValidationError.Contains("<span class=""labelName"">" & labelText & "</span> must be completed") <> True) Then
+                                cValidationError += "<span class=""msg-1007""><span class=""labelName"">" & labelText & "</span> must be completed" & "</span>"
                             End If
                         End If
                     End If
@@ -766,7 +774,7 @@ Public Class xForm
                         If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=""msg-1008"">This information must be valid</span>") Then
                             missedError = True
                         End If
-                        cValidationError += oBindElmt.GetAttribute("id") & " - This information must be valid"
+                        cValidationError += "<span class=""msg-1035""><span class=""labelName"">" & labelText & "</span> - This information must be valid</span>"
                     End If
                 End If
 
@@ -781,7 +789,7 @@ Public Class xForm
                             If addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=""msg-1008"">This must be unique</span>") Then
                                 missedError = True
                             End If
-                            cValidationError += oBindElmt.GetAttribute("id") & " - This must be unique"
+                            cValidationError += "<span class=""msg-1034""><span class=""labelName"">" & labelText & "</span> - This must be unique</span>"
                         End If
                     End If
 
@@ -798,6 +806,14 @@ Public Class xForm
             ' note that "number(NODE)=number(NODE)" is an XPath test to see if NODE is a number
             For Each oFileCheck As XmlElement In model.SelectNodes("descendant-or-self::bind[not(ancestor::instance) and @type='fileUpload' and number(@maxSize)=number(@maxSize)]")
                 cProcessInfo = "Checking maximum file sizes"
+
+                Dim oIptElmt As XmlElement = moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" & oBindElmt.GetAttribute("id") & "' or @bind='" & oBindElmt.GetAttribute("id") & "']")
+                Dim labelText As String = oBindElmt.GetAttribute("id")
+                Dim inputLabel As XmlElement = oIptElmt.SelectSingleNode("label")
+                If Not inputLabel Is Nothing Then
+                    labelText = oIptElmt.SelectSingleNode("label").InnerText
+                End If
+
                 ' Check that the bind exists in the uploaded files
                 If oFileCheck.GetAttribute("id") <> "" _
                     AndAlso Not (goRequest.Files.Item(oFileCheck.GetAttribute("id")) Is Nothing) Then
@@ -812,7 +828,7 @@ Public Class xForm
                         End If
                         bIsValid = False
                         bIsThisBindValid = False
-                        cValidationError += oFileCheck.GetAttribute("id") & " - The file you are uploading is too large"
+                        cValidationError += "<span class=""msg-1033""><span class=""labelName"">" & labelText & "</span> -  The file you are uploading is too large</span>"
                     End If
 
                 End If
@@ -2556,7 +2572,11 @@ Public Class xForm
                                 nsmgr.AddNamespace("ews", cNsURI)
                                 sResponse = oSoapElmt.SelectSingleNode("ews:" & sActionName & "Result", nsmgr).InnerText
                             Catch ex As Exception
-                                sResponse = oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr).InnerText
+                                If oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr) Is Nothing Then
+                                    sResponse = soapClnt.results.OuterXml.Replace("<", "[").Replace(">", "]")
+                                Else
+                                    sResponse = oSoapElmt.SelectSingleNode(sActionName & "Result", nsmgr).InnerText
+                                End If
                             End Try
 
                             ' Try to add the response

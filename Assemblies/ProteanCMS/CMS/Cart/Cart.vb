@@ -8399,10 +8399,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
             Try
                 Dim cSqlUpdate As String
-                Dim nOrderid As String
-
-                nOrderid = nCartItemKey
-                cSqlUpdate = " update tblCartItem set  cItemName = 'GiftBox' where  nitemid=0 and nCartOrderId= " & nOrderid
+                cSqlUpdate = " update tblCartItem set  cItemName = 'GiftBox' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
@@ -8414,15 +8411,12 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updateGCgetValidShippingOptionsDS(ByVal nShipOptKey As String) As String
             Try
 
-                Dim sSql2 As String
-                Dim ods2 As DataSet
                 Dim ods As DataSet
                 Dim oRow As DataRow
                 Dim sSql As String
                 Dim cShippingDesc As String
                 Dim nShippingCost As String
                 Dim cSqlUpdate As String
-                Dim ShippingName As String
 
                 sSql = "select * from tblCartShippingMethods "
                 sSql = sSql & " where nShipOptKey = " & nShipOptKey
@@ -8434,7 +8428,6 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
                     moDBHelper.ExeProcessSql(cSqlUpdate)
                 Next
-
 
                 ' If (cShippingDesc = "Evoucher-UK Parcel") Then
                 '    Dim cSqlpkgopUpdate As String = "Update tblCartItem set cItemName='Evoucher', nPrice=0 WHERE isNull(nParentId,0)<>0 and nCartOrderId=" & mnCartId
@@ -8539,6 +8532,47 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
         End Function
 
+        'check whether promocode is applier for delivery option
+        Public Function CheckPromocodeAppliedForDelivery() As String
+            Dim sSql, sPromocode As String
+            Dim oDs As DataSet
+            Dim doc As New XmlDocument()
+            Dim oRow As DataRow
+            Dim strcFreeShippingMethods As String = ""
+            Try
+                'get applied promocode
+                sSql = "select * from tblCartOrder where nCartOrderKey=" & mnCartId
+                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                Dim xmlNotes As XmlElement = Nothing
+                Dim xmlDoc As New XmlDocument
+
+                For Each oRow In oDs.Tables("Order").Rows
+                    xmlDoc.LoadXml(oRow("cClientNotes"))
+                    xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+                Next
+                If (xmlNotes IsNot Nothing) Then
+                    sPromocode = xmlNotes.InnerText
+                End If
+                'check promocode applicable for delivery
+                sSql = "Select cAdditionalXML From tblCartDiscountRules Where cDiscountUserCode = '" & sPromocode & "'"
+                oDs = myWeb.moDbHelper.GetDataSet(sSql.ToString, "Discount", "Discounts")
+                If oDs.Tables("Discount").Rows.Count > 0 Then
+                    Dim additionalInfo As String = "<additionalXml>" + oDs.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                    doc.LoadXml(additionalInfo)
+
+                    If (doc.InnerXml.Contains("cFreeShippingMethods")) Then
+                        strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText
+                    End If
+                End If
+
+                oDs.Clear()
+                oDs = Nothing
+
+                Return strcFreeShippingMethods
+            Catch ex As Exception
+                returnException(mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+            End Try
+        End Function
 
         Public Function updateDeliveryOptionByCountry(ByRef oCartElmt As XmlElement, Optional ByVal country As String = "", Optional ByVal cOrderofDeliveryOption As String = "") As String
             Try

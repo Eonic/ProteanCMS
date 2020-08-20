@@ -60,6 +60,7 @@
     <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
       <xsl:value-of select="Country/node()"/>
     </fo:block>
+
   </xsl:template>
   
   
@@ -76,6 +77,12 @@
       </fo:block-container>
       <fo:block-container position="absolute" top="4.5cm" right=".5cm" left="0.5cm" height="5cm" width="10cm">
         <xsl:apply-templates select="Contact[@type='Billing Address']" mode="AddressBlock"/>
+	    <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
+      Tel: <xsl:value-of select="Contact[@type='Billing Address']/Telephone/node()"/>
+    </fo:block>
+    <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"  font-size="12pt" font-family="{$bodyfont}">
+      Email: <xsl:value-of select="Contact[@type='Billing Address']/Email/node()"/>
+    </fo:block>
       </fo:block-container>
       <fo:block-container position="absolute" top="4.5cm" right=".5cm" left="13.5cm" height="2cm" width="6cm">
         <fo:block font-size="12pt" font-family="{$headingfont}">
@@ -92,8 +99,8 @@
       <fo:block-container position="absolute" top="8.5cm" right="0cm" left="0.5cm" height="20cm" width="19cm">
         <fo:block font-size="10pt" font-family="{$headingfont}">
           <fo:table table-layout="fixed">
-            <fo:table-column column-width="3cm"/>
-            <fo:table-column column-width="9cm"/>
+            <fo:table-column column-width="4cm"/>
+            <fo:table-column column-width="8cm"/>
             <fo:table-column column-width="2cm"/>
             <fo:table-column column-width="2.5cm"/>
             <fo:table-column column-width="2.5cm"/>

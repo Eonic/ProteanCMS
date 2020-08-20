@@ -952,23 +952,24 @@ Check:
                                         Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                         Dim sMessagingProvider As String = moMailConfig("messagingprovider")
                                         Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
-                                        Dim ListId As String = momailconfig("Supplier")
-                                        Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
+                                        Dim ListId As String = moMailConfig("AllUsersList")
+                                        If Not ListId Is Nothing Then
+                                            Dim valDict = New System.Collections.Generic.Dictionary(Of String, String)
 
-                                        valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
-                                        valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
-                                        valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
-                                        If Not Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") Is Nothing Then
-                                            valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                            valDict.Add("Email", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText)
+                                            valDict.Add("FirstName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText)
+                                            valDict.Add("LastName", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/LastName").InnerText)
+                                            If Not Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile") Is Nothing Then
+                                                valDict.Add("Mobile", Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Mobile").InnerText)
+                                            End If
+                                            Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
+                                            Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
+
+                                            oMessaging.Activities.addToList(ListId, Name, Email, valDict)
                                         End If
-                                        Dim Name As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/FirstName").InnerText
-                                        Dim Email As String = Instance.SelectSingleNode("descendant-or-self::*/cDirXml/User/Email").InnerText
-
-                                        oMessaging.Activities.addToList(ListId, Name, Email, valDict)
 
                                     End If
                                 End If
-
 
                                 If addNewitemToParId Then
                                     moDbHelper.maintainDirectoryRelation(parId, id, False)
@@ -1650,15 +1651,15 @@ Check:
                                         userMode = userDetails(2).ToString()
                                     End If
 
-                                    'myWeb.moResponse.Write(timestamp)
-                                    'myWeb.moResponse.Write(DateTime.Now.ToString("dd/MM/yyyy HH:MM"))
-                                    'Try
-                                    duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp("dd/MM/yyyy HH:MM").ToString()), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
-
-                                    'duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
-                                    'Catch ex As Exception
-                                    '    myWeb.moResponse.Write(ex.Message)
-                                    'End Try
+                                    'myWeb.moResponse.Write(DateTime.Parse(timestamp.ToString("dd/MM/yyyy HH:MM")))
+                                    'myWeb.moResponse.Write(DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                    Try
+                                        duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                        ' myWeb.moResponse.Write(duration)
+                                        'duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
+                                    Catch ex As Exception
+                                        '    myWeb.moResponse.Write(ex.Message)
+                                    End Try
 
                                     If (duration < AuthenticationDuration) Then '' greater than 60
 
@@ -1674,7 +1675,12 @@ Check:
                                                     myWeb.moSession("PreviewDate") = Now.Date
                                                     myWeb.moSession("PreviewUser") = 0
                                                     myWeb.mbPreview = True
-                                                    myWeb.msRedirectOnEnd = "/"
+                                                    If (String.IsNullOrEmpty(myWeb.mcPagePath) = False) Then
+                                                        myWeb.msRedirectOnEnd = myWeb.mcPagePath
+                                                    Else
+                                                        myWeb.msRedirectOnEnd = "/"
+                                                    End If
+
                                                 Else
                                                     myWeb.moSession("ewCmd") = Nothing
                                                     myWeb.moSession("PreviewDate") = Nothing

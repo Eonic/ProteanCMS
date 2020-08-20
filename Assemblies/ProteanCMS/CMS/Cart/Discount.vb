@@ -774,13 +774,13 @@ Partial Public Class Cms
                                 Next
                             End If
                         Next
-                    Next
 
-                    'set packaging option to giftbox after applied promocode
-                    If (strbFreeGiftBox <> "") Then
-                        myCart.updatePackagingForFreeGiftDiscount(myCart.mnCartId)
-                        myCart.GetCart()
-                    End If
+
+                        'set packaging option to giftbox after applied promocode
+                        If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
+                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value)
+                        End If
+                    Next
                 Catch ex As Exception
                     returnException(mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
                 End Try
@@ -1791,28 +1791,57 @@ NoDiscount:
                 Dim sSql As String
                 Dim oDs As DataSet
                 Dim oRow As DataRow
+                Dim sPromoCode As String = ""
                 Try
                     'myCart.moCartXml
                     If myCart.mnCartId > 0 Then
                         sSql = "select * from tblCartOrder where nCartOrderKey=" & myCart.mnCartId
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                        Dim xmlNotes As XmlElement = Nothing
+                        Dim xmlDoc As New XmlDocument
+
                         For Each oRow In oDs.Tables("Order").Rows
+                            xmlDoc.LoadXml(oRow("cClientNotes"))
+                            xmlNotes = xmlDoc.SelectSingleNode("Notes/PromotionalCode")
+
                             oRow("cClientNotes") = Nothing
                         Next
                         myWeb.moDbHelper.updateDataset(oDs, "Order", True)
                         oDs.Clear()
                         oDs = Nothing
+                        If (xmlNotes IsNot Nothing) Then
+                            sPromoCode = xmlNotes.InnerText
+                        End If
 
-                        Return ""
-                    Else
-
-                        Return ""
+                        UpdatePackagingforRemovePromoCode(myCart.mnCartId, sPromoCode)
                     End If
+                    Return ""
                 Catch ex As Exception
                     returnException(mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 
+            'update packaging from giftbox to standard when removing promocode
+            Public Sub UpdatePackagingforRemovePromoCode(ByVal CartId As Integer, ByVal sPromoCode As String)
+                Try
+                    Dim sSQL, sValidtoremove As String
+                    If (sPromoCode <> "") Then
+                        sSQL = "select nDiscountKey from tblCartDiscountRules where cDiscountCode = '" & sPromoCode & "' and cAdditionalXML like '%<bFreeGiftBox>True</bFreeGiftBox>%'"
+                        sValidtoremove = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL)
+                    End If
+
+                    If (sValidtoremove <> "") Then
+                        If (moConfig("DefaultPack") IsNot Nothing And moConfig("GiftPack") IsNot Nothing) Then
+                            sSQL = ""
+                            sSQL = "update tblcartitem set cItemName = '" & moConfig("DefaultPack") & "', nPrice = 0.00 where nParentId != 0 and  cItemName = '" & moConfig("GiftPack") & "' and nCartOrderId =" & CartId.ToString()
+                            myWeb.moDbHelper.ExeProcessSql(sSQL)
+                        End If
+                    End If
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug)
+                End Try
+            End Sub
 #End Region
 
 #Region "Copied Cart Functions"
