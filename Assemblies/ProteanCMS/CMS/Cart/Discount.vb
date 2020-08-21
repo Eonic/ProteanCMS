@@ -774,13 +774,13 @@ Partial Public Class Cms
                                 Next
                             End If
                         Next
+
+
+                        'set packaging option to giftbox after applied promocode
+                        If (strbFreeGiftBox <> "" And oItemLoop.SelectSingleNode("Discount") IsNot Nothing) Then
+                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes("id").Value)
+                        End If
                     Next
-
-                    'set packaging option to giftbox after applied promocode
-                    If (strbFreeGiftBox <> "") Then
-                        myCart.updatePackagingForFreeGiftDiscount(myCart.mnCartId)
-
-                    End If
                 Catch ex As Exception
                     returnException(mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
                 End Try

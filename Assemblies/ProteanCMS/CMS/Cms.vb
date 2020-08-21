@@ -6704,12 +6704,33 @@ Public Class Cms
                         End If
                         moContentDetail = oRoot.FirstChild
 
+                        'Add single item shipping costs for JSON-LD
+                        Dim ProductTypes As String = moConfig("ProductTypes")
+                        If ProductTypes = "" Then ProductTypes = "Product,SKU"
+                        If ProductTypes.Contains(contentElmt.GetAttribute("type")) Then
+                            Try
+                                Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
 
+                                Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
+                                Dim nPrice As Double = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                If nPrice = 0 Then
+                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                End If
+
+                                Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
+
+                                oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
+                                contentElmt.AppendChild(oShippingElmt)
+                            Catch ex As Exception
+
+                            End Try
+                        End If
 
                         Return moContentDetail
 
-                    Else
-                        sProcessInfo = "no content to add - we redirect"
+                        Else
+                            sProcessInfo = "no content to add - we redirect"
                         'this content is not found either page not found or re-direct home.
                         If Not disableRedirect Then
                             'put this in to prevent a redirect if we are calling this from somewhere strange.

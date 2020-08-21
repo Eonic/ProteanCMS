@@ -380,6 +380,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CMS\Cart\Cart.JSONActions.vb" />
     <Compile Include="CMS\Cart\PaymentProviders\SkipPayment.vb" />
     <Compile Include="CMS\Content\Contact.vb" />
     <Compile Include="ExternalSynchronisation.vb" />
@@ -464,7 +465,7 @@
     </Compile>
     <Compile Include="CMS\API.vb" />
     <Compile Include="CMS\Calendar.vb" />
-    <Compile Include="CMS\Cart\Cart.JSONActions.vb" />
+    <Compile Include="CMS\Cart\Subscriptions.JSONActions.vb" />
     <Compile Include="CMS\Cart\Cart.Modules.vb" />
     <Compile Include="CMS\Cart\Cart.vb">
       <SubType>Code</SubType>

@@ -1,4 +1,5 @@
-﻿Option Strict Off
+﻿
+Option Strict Off
 Option Explicit On
 Imports System.Xml
 Imports System.Collections
@@ -529,4 +530,5 @@ Partial Public Class Cms
     End Class
 
 End Class
+
 

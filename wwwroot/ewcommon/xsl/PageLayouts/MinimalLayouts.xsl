@@ -14429,7 +14429,7 @@
             <xsl:text> carousel-h-</xsl:text>
             <xsl:value-of select="@position-horizontal"/>
           </xsl:attribute>
-          <div class="carousel-caption-inner">
+          <div class="carousel-caption-inner ">
             <xsl:if test="Title/node()!=''">
               <h3 class="caption-title">
                 <xsl:value-of select="Title/node()"/>
@@ -14437,7 +14437,22 @@
             </xsl:if>
             <xsl:apply-templates select="Body/node()" mode="cleanXhtml"></xsl:apply-templates>
             <xsl:if test="@link!=''">
-              <xsl:apply-templates select="." mode="moreLink" />
+
+              <xsl:apply-templates select="." mode="moreLink">
+                <xsl:with-param name="link">
+                  <xsl:choose>
+                    <xsl:when test="format-number(@link,'0')!='NaN'">
+                      <xsl:variable name="pageId" select="@link"/>
+                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId or PageVersion[@vParId=$pageId]]" mode="getHref"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="@link"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:with-param>
+                <xsl:with-param name="linkText" select="@linkText"/>
+                <xsl:with-param name="altText" select="@title"/>
+              </xsl:apply-templates>
             </xsl:if>
           </div>
         </div>
