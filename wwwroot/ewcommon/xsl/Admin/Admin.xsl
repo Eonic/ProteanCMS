@@ -4385,7 +4385,7 @@
                       <xsl:text> </xsl:text>
                       <span>Upload Files</span>
                       <!-- The file input field used as target for the file upload widget -->
-                      <input id="fileupload" type="file" name="files[]" multiple=""/>
+                      <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                     </span>
                     <span class="fileupload-loading">
                       <xsl:text> </xsl:text>
