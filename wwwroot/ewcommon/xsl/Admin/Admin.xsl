@@ -201,8 +201,9 @@
     </xsl:variable>
     <!-- Not Needed - Pulled into Admin.js 
     <script src="/ewcommon/js/jquery/ajaxtreeview/jquery.ajaxtreeview.js" type="text/javascript">&#160;</script>-->
-    <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">&#160;</script>
+    <!--<script type="text/javascript" src="/ewthemes/IntoTheBlue2019/js/theme-specific.js">&#160;</script>-->
     <script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">&#160;</script>
+    <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
     <script type="text/javascript" src="/ewcommon/js/jQuery/simplemodal/jquery.simplemodal-1.4.4.min.js">&#160;</script>
     <xsl:if test="@cssFramework!='bs3'">
     <script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">&#160;</script>
@@ -4335,7 +4336,7 @@
                   </i><xsl:text> </xsl:text>
                   <span>Upload Files</span>
                   <!-- The file input field used as target for the file upload widget -->
-                  <input id="fileupload" type="file" name="files[]" multiple=""/>
+                  <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                 </span>
                 <span class="fileupload-loading">
                   <xsl:text> </xsl:text>
