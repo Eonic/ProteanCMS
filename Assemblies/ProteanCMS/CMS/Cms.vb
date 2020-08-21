@@ -1493,6 +1493,9 @@ Public Class Cms
                                 If (url.Length <> 0 And Right(url, 1) = "/") Then
                                     url = Left(url, url.Length - 1)
                                 End If
+                                If (pagePath.Length <> 0 And Right(pagePath, 1) = "/") Then
+                                    pagePath = Left(pagePath, pagePath.Length - 1)
+                                End If
                             End If
 
                             If url.ToLower() <> pagePath.ToLower() Then
