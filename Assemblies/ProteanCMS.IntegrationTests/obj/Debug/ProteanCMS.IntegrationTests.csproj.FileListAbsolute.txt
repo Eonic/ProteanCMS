@@ -20,7 +20,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Fone
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\JsonWebTokens.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Lucene.Net.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\PayPal.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\CMPCDotNet.dll
@@ -54,7 +53,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSh
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Newtonsoft.Json.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Lucene.Net.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\PayPal.xml
@@ -67,7 +65,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Alph
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\JavaScriptEngineSwitcher.V8.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Renci.SshNet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AngleSharp.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Microsoft.Web.Infrastructure.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\ru-ru\BundleTransformer.Core.resources.dll
@@ -76,3 +73,21 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\Prot
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Imazen.WebP.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AdvancedStringBuilder.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\WebGrease.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Antlr3.Runtime.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\TidyHTML5Managed.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Newtonsoft.Json.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\AdvancedStringBuilder.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Antlr3.Runtime.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml

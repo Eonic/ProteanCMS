@@ -22,39 +22,63 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.maintainMembershipsFromXForm(System.Int32,System.String,System.String,System.Boolean)">
+<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
  <summary>
-     Maintains membership between userid and groups as found in xForm
+ This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
+ Only works if 3rd party messaging provider enabled.
  </summary>
- <param name="nUserId">The user id to be associated with</param>
- <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
- <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
+ <param name="StepName"></param>
+ <param name="oCartElmt"></param>
 </member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.validateMemberCode(System.String,System.String,System.String)">
+<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
  <summary>
- Validates a member code in an xform.
+ This does the same as get cart without the item information, so we call get cart and delete any items we find
  </summary>
- <param name="cXPathToCode">The xpath to the code in the instance</param>
- <param name="cBindOrReftoCode">The bind or ref of the node in the form</param>
- <returns>String - returns the code if a code was entered and it is not a valid code</returns>
- <remarks>
- <para>If a code was entered and it's not valid, then the xform will be invalidated.</para>
- <para>Note that if the xpath can't be found or a code has not been entered then the form will not be invalidated.</para>
- <para>This requires MemberCodes to be turned on in web.config</para>
-</remarks> 
+ <param name="oCartElmt"></param>
+ <param name="nSelCartId"></param>
+ <remarks></remarks>
 </member>
-<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.useMemberCode(System.String,System.Int64)">
+<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
  <summary>
- Registers a user against a member code, and adds the user to the code memberships
+ Each user need only have a single active billing address
  </summary>
- <param name="cCode">The code to use</param>
- <param name="nUserId">The user to register the code against</param>
+ <param name="UserId"></param>
+ <param name="ContactId"></param>
+ <returns>If Contact ID = 0 then uses last updated</returns>
+ <remarks></remarks>
 </member>
-<member name="M:Protean.Providers.Membership.EonicProvider.Activities.LogSingleUserSession">
+<member name="M:Protean.Cms.Cart.EmptyCart">
  <summary>
- If in Single Session per Session mode this will log an activity indicating that the user is still in session.
+ Empties all items in a shopping cart.
  </summary>
- <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
+ <summary>
+ Calculates and updates the tax rate.
+ </summary>
+ <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
+ <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
+</member>
+<member name="M:Protean.Cms.Cart.SelectCurrency">
+ <summary>
+ Select currency deals with the workflow around choosing a currency when an item is added to the cart.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
+ <summary>
+ takes the mcCurrencyRef and sets the currency for the current order 
+ </summary>
+</member>
+<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
+ <summary>
+ Returns an XML contain information about all of the discounts on the site.
+ Only used to inumberate discounts to display to customers. 
+ WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
+ </summary>
+ <param name="PageElmt"></param>
+ <remarks></remarks>
 </member>
 <member name="T:Protean.Cms.Synchronisation">
  <summary>
@@ -178,64 +202,6 @@ ProteanCMS
  Searching next content and update the relevant nodes with appropritae contents
  </summary>
  <remarks>Use a For loop to looking the relvant nodes within the main content</remarks>
-</member>
-<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
- <summary>
- This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
- Only works if 3rd party messaging provider enabled.
- </summary>
- <param name="StepName"></param>
- <param name="oCartElmt"></param>
-</member>
-<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
- <summary>
- This does the same as get cart without the item information, so we call get cart and delete any items we find
- </summary>
- <param name="oCartElmt"></param>
- <param name="nSelCartId"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
- <summary>
- Each user need only have a single active billing address
- </summary>
- <param name="UserId"></param>
- <param name="ContactId"></param>
- <returns>If Contact ID = 0 then uses last updated</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.EmptyCart">
- <summary>
- Empties all items in a shopping cart.
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
- <summary>
- Calculates and updates the tax rate.
- </summary>
- <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
- <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
-</member>
-<member name="M:Protean.Cms.Cart.SelectCurrency">
- <summary>
- Select currency deals with the workflow around choosing a currency when an item is added to the cart.
- </summary>
- <returns></returns>
-</member>
-<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
- <summary>
- takes the mcCurrencyRef and sets the currency for the current order 
- </summary>
-</member>
-<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
- <summary>
- Returns an XML contain information about all of the discounts on the site.
- Only used to inumberate discounts to display to customers. 
- WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
- </summary>
- <param name="PageElmt"></param>
- <remarks></remarks>
 </member>
 <member name="M:Protean.Cms.dbHelper.getDBObjectNameWithBespokeCheck(System.String)">
  <summary>
@@ -674,6 +640,40 @@ ProteanCMS
  <param name="cProcessName"></param>
  <param name="cDescription"></param>
  <remarks></remarks>
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.maintainMembershipsFromXForm(System.Int32,System.String,System.String,System.Boolean)">
+ <summary>
+     Maintains membership between userid and groups as found in xForm
+ </summary>
+ <param name="nUserId">The user id to be associated with</param>
+ <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
+ <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.validateMemberCode(System.String,System.String,System.String)">
+ <summary>
+ Validates a member code in an xform.
+ </summary>
+ <param name="cXPathToCode">The xpath to the code in the instance</param>
+ <param name="cBindOrReftoCode">The bind or ref of the node in the form</param>
+ <returns>String - returns the code if a code was entered and it is not a valid code</returns>
+ <remarks>
+ <para>If a code was entered and it's not valid, then the xform will be invalidated.</para>
+ <para>Note that if the xpath can't be found or a code has not been entered then the form will not be invalidated.</para>
+ <para>This requires MemberCodes to be turned on in web.config</para>
+</remarks> 
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.useMemberCode(System.String,System.Int64)">
+ <summary>
+ Registers a user against a member code, and adds the user to the code memberships
+ </summary>
+ <param name="cCode">The code to use</param>
+ <param name="nUserId">The user to register the code against</param>
+</member>
+<member name="M:Protean.Providers.Membership.EonicProvider.Activities.LogSingleUserSession">
+ <summary>
+ If in Single Session per Session mode this will log an activity indicating that the user is still in session.
+ </summary>
+ <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
 </member>
 <member name="M:Protean.ExternalSynchronisation.Xslt.RemoveRelatedContentByRef(System.String,System.Int32,System.String)">
  <summary>

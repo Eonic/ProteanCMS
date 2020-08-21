@@ -5340,7 +5340,8 @@
           <div class="col-md-8">
 
             <xsl:for-each select="Contacts/Contact">
-              <xsl:apply-templates select="." mode="contactAddressBriefProfile"/>
+              <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
+              <xsl:apply-templates select="." mode="AdminListContact"/>
               <xsl:if test="position() mod 2=0">
                 <div class="terminus">&#160;</div>
               </xsl:if>

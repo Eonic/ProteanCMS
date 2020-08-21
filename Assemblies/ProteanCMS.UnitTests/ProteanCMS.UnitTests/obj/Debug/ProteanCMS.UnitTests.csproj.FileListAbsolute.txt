@@ -17,7 +17,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\TidyHTML5Managed.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\JsonWebTokens.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET-Q8-AnyCPU.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Lucene.Net.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\PayPal.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\CMPCDotNet.dll
@@ -44,7 +43,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Fonet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET-Q8-AnyCPU.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Lucene.Net.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Lucene.Net.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\PayPal.xml
@@ -77,6 +75,19 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Newtonsoft.Json.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Google.Protobuf.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Renci.SshNet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\AngleSharp.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\DocumentFormat.OpenXml.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Imazen.WebP.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\AdvancedStringBuilder.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\WebGrease.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Antlr3.Runtime.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\TidyHTML5Managed.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Newtonsoft.Json.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\DocumentFormat.OpenXml.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Magick.NET-Q8-x64.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\AdvancedStringBuilder.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.UnitTests\ProteanCMS.UnitTests\bin\Debug\Antlr3.Runtime.pdb
