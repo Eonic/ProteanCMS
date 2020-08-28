@@ -2136,6 +2136,8 @@ Partial Public Module xmlTools
                                 oImp.UndoImpersonation()
                                 oImp = Nothing
                             End If
+                        Else
+                            sReturnString = "Admin Account logon Failure"
                         End If
 
                     End If
@@ -2146,7 +2148,7 @@ Partial Public Module xmlTools
 
             Catch ex As Exception
                 'OnComponentError(myWeb, New Protean.Tools.Errors.ErrorEventArgs("xslt.BundleCSS", "LayoutActions", ex, CommaSeparatedFilenames))
-
+                sReturnError = ex.Message
                 ' Return ex.StackTrace
                 myWeb.bPageCache = False
                 Return sReturnError
