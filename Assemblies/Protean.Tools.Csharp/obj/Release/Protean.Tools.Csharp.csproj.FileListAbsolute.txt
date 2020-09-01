@@ -58,3 +58,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Magick.NET-Q8-x64.xml

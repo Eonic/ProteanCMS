@@ -1280,7 +1280,7 @@ Public Class Cms
                                             moResponse.Write(textWriter.ToString())
                                         End If
                                     Else
-                                            moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
+                                        moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
                                         gnResponseCode = 500
                                         moResponse.Write(textWriter.ToString())
                                     End If

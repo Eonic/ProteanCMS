@@ -71,7 +71,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Owin.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PreMailer.Net.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Tools.Csharp.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Buffers.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.dll
@@ -101,7 +100,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Microsoft.Owin.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Microsoft.Owin.Security.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\MsieJavaScriptEngine.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Newtonsoft.Json.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\React.Core.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Renci.SshNet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.IdentityModel.Tokens.Jwt.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Runtime.CompilerServices.Unsafe.xml
@@ -222,3 +220,19 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x64.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\tidy.x86.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Lucene.Net.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PayPal.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Net.FtpClient.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\TidyHTML5Managed.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\WebGrease.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\AdvancedStringBuilder.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\BundleTransformer.MicrosoftAjax.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Lucene.Net.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Lucene.Net.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\PayPal.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Net.FtpClient.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Text.Encoding.CodePages.xml
