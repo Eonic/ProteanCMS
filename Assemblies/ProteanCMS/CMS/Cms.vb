@@ -6737,8 +6737,11 @@ Public Class Cms
                                 If nPrice = 0 Then
                                     nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
                                 End If
-
-                                Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                Dim nWeight As Double = 0
+                                If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then
+                                    nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                End If
+                                ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
 
                                 oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")
