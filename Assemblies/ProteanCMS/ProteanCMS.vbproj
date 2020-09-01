@@ -457,10 +457,6 @@
     <Compile Include="CMS\Admin\AdminXforms.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.vb">
-      <SubType>Code</SubType>
-      <Link>AssemblyInfo.vb</Link>
-    </Compile>
     <Compile Include="CMS\API.vb" />
     <Compile Include="CMS\Calendar.vb" />
     <Compile Include="CMS\Cart\Subscriptions.JSONActions.vb" />
