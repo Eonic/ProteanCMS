@@ -259,9 +259,6 @@
       <HintPath>..\NonNuget\PreMailer.Net.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="React.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9aed67b161f7db78, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\React.Core.4.1.1\lib\net45\React.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>
@@ -380,6 +377,7 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.vb" />
     <Compile Include="CMS\Cart\Cart.JSONActions.vb" />
     <Compile Include="CMS\Cart\PaymentProviders\SkipPayment.vb" />
     <Compile Include="CMS\Content\Contact.vb" />
@@ -458,10 +456,6 @@
     </Compile>
     <Compile Include="CMS\Admin\AdminXforms.vb">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AssemblyInfo.vb">
-      <SubType>Code</SubType>
-      <Link>AssemblyInfo.vb</Link>
     </Compile>
     <Compile Include="CMS\API.vb" />
     <Compile Include="CMS\Calendar.vb" />
@@ -859,7 +853,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2000/1/1" BuildVersion_UpdateFileVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_DetectChanges="False" BuildVersion_IncrementBeforeBuild="False" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="False" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_ConfigurationName="Any" BuildVersion_UpdateFileVersion="False" BuildVersion_StartDate="2000/1/1" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -867,9 +861,9 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\ProteanCMS Addons\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\ProteanCMS Addons\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
     <Error Condition="!Exists('..\..\..\ProteanCMS Addons\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\ProteanCMS Addons\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props'))" />
     <Error Condition="!Exists('..\..\..\ProteanCMS Addons\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\ProteanCMS Addons\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props'))" />
-    <Error Condition="!Exists('..\..\..\ProteanCMS Addons\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\ProteanCMS Addons\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />
     <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.3.1.1\build\JavaScriptEngineSwitcher.ChakraCore.Native.win-x64.props'))" />
     <Error Condition="!Exists('..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\JavaScriptEngineSwitcher.V8.Native.win-x64.3.1.0\build\JavaScriptEngineSwitcher.V8.Native.win-x64.props'))" />
     <Error Condition="!Exists('..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TidyHtml5ManagedRepack.1.1.4\build\TidyHtml5ManagedRepack.targets'))" />

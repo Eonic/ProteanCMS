@@ -7,7 +7,7 @@
       var klass;
       klass = (function () {
 
-          alert('hi');
+        
         switch (true) {
           case $(element).is('textarea'):
             return jQueryAce.TextareaEditor;

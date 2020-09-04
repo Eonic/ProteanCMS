@@ -14,3 +14,8 @@ D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Release\ReplaceProvider
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb

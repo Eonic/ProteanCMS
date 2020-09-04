@@ -7030,6 +7030,7 @@
   </xsl:template>
 
 
+
   <xsl:template match="Content | MenuItem | Company | Item" mode="displayDetailImage">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
@@ -7090,7 +7091,17 @@
     <xsl:variable name="lg-max-height">
       <xsl:apply-templates select="." mode="getFullSizeHeight"/>
     </xsl:variable>
+      <xsl:variable name="cropvar">
+        <xsl:choose>
+          <xsl:when test="$crop='true'">
+            <xsl:value-of select="true()"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="getFullCrop"/>
+          </xsl:otherwise>
+        </xsl:choose>
 
+      </xsl:variable>
     <!-- IF Image to resize -->
     <xsl:choose>
       <xsl:when test="$src!=''">
@@ -7114,7 +7125,7 @@
             </xsl:with-param>
             <xsl:with-param name="file-suffix" select="''"/>
             <xsl:with-param name="quality" select="100"/>
-            <xsl:with-param name="crop" select="$crop"/>
+            <xsl:with-param name="crop" select="$cropvar"/>
             <xsl:with-param name="no-stretch" select="$no-stretch" />
             <xsl:with-param name="forceResize" select="$VForceResize" />
           </xsl:call-template>
@@ -7139,7 +7150,7 @@
             </xsl:with-param>
             <xsl:with-param name="file-suffix" select="''"/>
             <xsl:with-param name="quality" select="100"/>
-            <xsl:with-param name="crop" select="$crop"/>
+            <xsl:with-param name="crop" select="$cropvar"/>
             <xsl:with-param name="no-stretch" select="$no-stretch" />
             <xsl:with-param name="forceResize" select="$VForceResize" />
           </xsl:call-template>
@@ -7233,6 +7244,10 @@
         </span>
       </xsl:otherwise>-->
     </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match="Content | MenuItem | Company | Item" mode="getFullCrop">
+    <xsl:value-of select="false()"/>
   </xsl:template>
 
   <xsl:template match="Content | MenuItem" mode="displayDetailImageOnly">

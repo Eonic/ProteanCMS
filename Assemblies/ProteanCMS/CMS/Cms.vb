@@ -1273,14 +1273,12 @@ Public Class Cms
                                     oTransform.ProcessTimed(moPageXml, textWriter)
                                     'save the page
                                     If Not oTransform.bError Then
-                                        '  If bPageCache Then
-
-                                        SavePage(sCachePath, textWriter.ToString())
-                                        sServeFile = mcPageCacheFolder & sCachePath
-
-                                        '  Else
-                                        '  moResponse.Write(textWriter.ToString())
-                                        'End If
+                                        If bPageCache Then
+                                            SavePage(sCachePath, textWriter.ToString())
+                                            sServeFile = mcPageCacheFolder & sCachePath
+                                        Else
+                                            moResponse.Write(textWriter.ToString())
+                                        End If
                                     Else
                                         moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
                                         gnResponseCode = 500
@@ -1481,17 +1479,39 @@ Public Class Cms
             BuildPageXML()
 
             If Not mbAdminMode And moConfig("CheckPageURL") = "on" Then
+                Dim url As String
+                Dim pagePath As String
                 If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
                     Dim oMenuNode As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & mnPageId & "']")
                     If Not oMenuNode Is Nothing Then
                         If Not oMenuNode.GetAttribute("url").StartsWith("http") Then
-                            If oMenuNode.GetAttribute("url") <> mcPagePath Then
+                            url = oMenuNode.GetAttribute("url")
+                            pagePath = mcPagePath
+                            If moConfig("TrailingSlash") = "on" Then
+                                If (url.Length <> 0 And Right(url, 1) = "/") Then
+                                    url = Left(url, url.Length - 1)
+                                End If
+                                If (pagePath.Length <> 0 And Right(pagePath, 1) = "/") Then
+                                    pagePath = Left(pagePath, pagePath.Length - 1)
+                                End If
+                            End If
+
+                            If url.ToLower() <> pagePath.ToLower() Then
                                 msRedirectOnEnd = "/System+Pages/Page+Not+Found"
                                 moResponse.StatusCode = 404
                             End If
                         End If
+                    Else
+                        If (moConfig("PageNotFoundId") IsNot Nothing) Then
+                            If mnPageId.ToString() <> moConfig("PageNotFoundId") Then
+                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                moResponse.StatusCode = 404
+                            End If
+
+                        End If
                     End If
                 End If
+
             End If
 
             Dim layoutCmd As String = ""
@@ -1761,8 +1781,8 @@ Public Class Cms
                 ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
                 If gbClone _
                     AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
-                        ' If the current page is a cloned page
-                        oPageElmt.SetAttribute("clone", "true")
+                    ' If the current page is a cloned page
+                    oPageElmt.SetAttribute("clone", "true")
                 End If
             Else
                 'Invalid Licence
@@ -2382,9 +2402,9 @@ Public Class Cms
 
                                     ClearPageCache()
 
-                                    Else
-                                        'lets add the form to Content Detail
-                                        Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
+                                Else
+                                    'lets add the form to Content Detail
+                                    Dim oPageDetail As XmlElement = moPageXml.CreateElement("ContentDetail")
                                     oPageElmt.AppendChild(oPageDetail)
                                     oPageDetail.AppendChild(xFrmContent)
 
@@ -2745,10 +2765,11 @@ Public Class Cms
                         AndAlso IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText) Then
                         closeDate = CDate(ocNode.SelectSingleNode("dCloseDate").InnerText)
                     End If
-                    If openDate > Date.Now Or closeDate <Date.Now Then
-                        bCanVote= False
-                        nVoteBlockReason= PollBlockReason.PollNotAvailable
+                    If openDate > Date.Now Or closeDate < Date.Now Then
+                        bCanVote = False
+                        nVoteBlockReason = PollBlockReason.PollNotAvailable
                     End If
+
 
                     ' Sort out the vote frequency
                     Select Case sVoteFrequency
@@ -6716,8 +6737,11 @@ Public Class Cms
                                 If nPrice = 0 Then
                                     nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
                                 End If
-
-                                Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                Dim nWeight As Double = 0
+                                If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then
+                                    nWeight = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
+                                End If
+                                ' Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                 Dim dsShippingOption As DataSet = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1, nWeight)
 
                                 oShippingElmt.InnerXml = Replace(dsShippingOption.GetXml, "xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""", "")

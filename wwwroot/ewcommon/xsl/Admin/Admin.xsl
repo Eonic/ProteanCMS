@@ -4385,7 +4385,7 @@
                       <xsl:text> </xsl:text>
                       <span>Upload Files</span>
                       <!-- The file input field used as target for the file upload widget -->
-                      <input id="fileupload" type="file" name="files[]" multiple=""/>
+                      <input id="fileupload" type="file" name="files[]" multiple="" class="fileUploadCheck"/>
                     </span>
                     <span class="fileupload-loading">
                       <xsl:text> </xsl:text>
@@ -5340,7 +5340,8 @@
           <div class="col-md-8">
 
             <xsl:for-each select="Contacts/Contact">
-              <xsl:apply-templates select="." mode="contactAddressBriefProfile"/>
+              <!--xsl:apply-templates select="." mode="contactAddressBriefProfile"/-->
+              <xsl:apply-templates select="." mode="AdminListContact"/>
               <xsl:if test="position() mod 2=0">
                 <div class="terminus">&#160;</div>
               </xsl:if>

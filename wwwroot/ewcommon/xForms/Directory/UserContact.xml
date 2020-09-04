@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="Edit_User_Contact">
-	<model>
-		<instance>
-			<tblCartContact>
+  <model>
+    <instance>
+      <tblCartContact>
         <nContactKey/>
         <nContactDirId/>
         <nContactCartId>0</nContactCartId>
@@ -21,18 +21,18 @@
           <Content/>
         </cContactXml>
         <nAuditId/>
-				<nAuditKey/>
-				<dPublishDate/>
-				<dExpireDate/>
-				<dInsertDate/>
-				<nInsertDirId/>
-				<dUpdateDate/>
-				<nUpdateDirId/>
-				<nStatus>-1</nStatus>
-				<cDescription/>
-			</tblCartContact>
-		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>-1</nStatus>
+        <cDescription/>
+      </tblCartContact>
+    </instance>
+    <submission id="EditContact" action="" method="post" event="return form_check(this)"/>
     <bind nodeset="tblCartContact">
       <bind id="nContactKey" nodeset="nContactKey" required="false()" type="string"/>
       <bind id="nContactDirId" nodeset="nContactDirId" required="true()" type="string"/>
@@ -49,72 +49,77 @@
       <bind id="cContactEmail" nodeset="cContactEmail" required="true()" type="email"/>
       <bind nodeset="cContactXml/Content"/>
     </bind>
-	</model>
-	<group ref="EditContent" class="1Col">
-		<group class="xFormContainer">
-		<label>Edit Contact</label>
-      <select1 bind="cContactType" class="required">
-        <label>Contact Type</label>
-        <item>
-          <label>Billing Address</label>
-          <value>Billing Address</value>
-        </item>
-        <item>
-          <label>Delivery Address</label>
-          <value>Delivery Address</value>
-        </item>
-        <item>
-          <label>Business</label>
-          <value>Business</value>
-        </item>
-        <item>
-          <label>Home</label>
-          <value>Home</value>
-        </item>
-        <item>
-          <label>Other</label>
-          <value>Other</value>
-        </item>
-      </select1>
-      <input bind="cContactName" class="required">
-        <label>Name</label>
-      </input>
-      <input bind="cContactCompany">
-        <label>Company</label>
-      </input>
-      <input bind="cContactAddress" class="required">
-        <label>Address</label>
-      </input>
-      <input bind="cContactCity" class="required">
-        <label>City</label>
-      </input>
-      <input bind="cContactState" class="required">
-        <label>State/County</label>
-      </input>
-      <input bind="cContactZip" class="required">
-        <label>Zip/Postcode</label>
-      </input>
-      <select1 bind="cContactCountry" class="dropdown required" appearance="minimal">
-        <label>Country</label>
-      </select1>
-      <input bind="cContactTel">
-        <label>Telephone</label>
-      </input>
-      <input bind="cContactFax">
-        <label>Fax</label>
-      </input>
-      <input bind="cContactEmail" class="required">
-        <label>Email</label>
-      </input>
-      <input bind="nContactKey" class="hidden">
-        <value/>
-      </input>
-      <input bind="nContactDirId" class="hidden">
-        <value/>
-      </input>
-      <submit submission="" ref="ewSubmit" class="principle">
-				<label>Save Contact</label>
-			</submit>
-		</group>
-	</group>
+  </model>
+  <group ref="EditContact" >
+    <label>Edit Contact</label>
+    <group  class="row">
+      <group class="col-md-4">
+        <select1 bind="cContactType" class="required">
+          <label>Contact Type</label>
+          <item>
+            <label>Billing Address</label>
+            <value>Billing Address</value>
+          </item>
+          <item>
+            <label>Delivery Address</label>
+            <value>Delivery Address</value>
+          </item>
+          <item>
+            <label>Business</label>
+            <value>Business</value>
+          </item>
+          <item>
+            <label>Home</label>
+            <value>Home</value>
+          </item>
+          <item>
+            <label>Other</label>
+            <value>Other</value>
+          </item>
+        </select1>
+        <input bind="cContactName" class="required">
+          <label>Name</label>
+        </input>
+        <input bind="cContactCompany">
+          <label>Company</label>
+        </input>
+        <input bind="cContactTel">
+          <label>Telephone</label>
+        </input>
+        <input bind="cContactFax">
+          <label>Fax</label>
+        </input>
+        <input bind="cContactEmail" class="required">
+          <label>Email</label>
+        </input>
+      </group>
+      <group class="col-md-8">
+        <input bind="cContactAddress" class="required">
+          <label>Address</label>
+        </input>
+        <input bind="cContactCity" class="required">
+          <label>City</label>
+        </input>
+        <input bind="cContactState" class="required">
+          <label>State/County</label>
+        </input>
+        <input bind="cContactZip" class="required">
+          <label>Zip/Postcode</label>
+        </input>
+        <select1 bind="cContactCountry" class="dropdown required" appearance="minimal">
+          <label>Country</label>
+        </select1>
+
+        <input bind="nContactKey" class="hidden">
+          <value/>
+        </input>
+        <input bind="nContactDirId" class="hidden">
+          <value/>
+        </input>
+      </group>
+    </group>
+    <submit submission="EditContact" ref="ewSubmit" class="principle">
+      <label>Save Contact</label>
+    </submit>
+  </group>
 </Content>
