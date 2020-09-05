@@ -347,6 +347,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+         
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResetConnection", ex, "Setting Connection Info", 0));
             }
         }
@@ -916,6 +917,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+               
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "getDataSet", ex, cProcessInfo));
                 oDs = null/* TODO Change to default(_) if this is not a reference type */;
             }

@@ -104,19 +104,19 @@
   <!-- ## Error Layout   #############################################################################   -->
   <xsl:template match="Page[@layout='Error']" mode="Layout">
     <xsl:param name="containerClass"/>
-    <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@name='1005']">
-        <xsl:apply-templates select="/Page/Contents/Content[@name='1005']" mode="displayBrief"/>
-      </xsl:when>
-      <xsl:when test="Contents/Content">
-        <xsl:apply-templates select="Contents/Content" mode="displayBrief"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <div class="template" id="Error" >
-          <xsl:call-template name="term2003" />
-        </div>
-      </xsl:otherwise>
-    </xsl:choose>
+    <div class="container content" id="Error" >
+      <xsl:choose>
+        <xsl:when test="/Page/Contents/Content[@name='1005']">
+          <xsl:apply-templates select="/Page/Contents/Content[@name='1005']" mode="displayBrief"/>
+        </xsl:when>
+        <xsl:when test="Contents/Content">
+          <xsl:apply-templates select="Contents/Content" mode="displayBrief"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="term2003" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </div>
   </xsl:template>
 
   <!-- ## Module Layouts   ###########################################################################   -->

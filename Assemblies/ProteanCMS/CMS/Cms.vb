@@ -1478,143 +1478,149 @@ Public Class Cms
             sProcessInfo = "BuildPageXML"
             BuildPageXML()
 
-            If Not mbAdminMode And moConfig("CheckPageURL") = "on" Then
-                Dim url As String
-                Dim pagePath As String
-                If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
-                    Dim oMenuNode As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & mnPageId & "']")
-                    If Not oMenuNode Is Nothing Then
-                        If Not oMenuNode.GetAttribute("url").StartsWith("http") Then
-                            url = oMenuNode.GetAttribute("url")
-                            pagePath = mcPagePath
-                            If moConfig("TrailingSlash") = "on" Then
-                                If (url.Length <> 0 And Right(url, 1) = "/") Then
-                                    url = Left(url, url.Length - 1)
+            If msException = "" Then
+
+
+                If Not mbAdminMode And moConfig("CheckPageURL") = "on" Then
+                    Dim url As String
+                    Dim pagePath As String
+                    If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
+                        Dim oMenuNode As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & mnPageId & "']")
+                        If Not oMenuNode Is Nothing Then
+                            If Not oMenuNode.GetAttribute("url").StartsWith("http") Then
+                                url = oMenuNode.GetAttribute("url")
+                                pagePath = mcPagePath
+                                If moConfig("TrailingSlash") = "on" Then
+                                    If (url.Length <> 0 And Right(url, 1) = "/") Then
+                                        url = Left(url, url.Length - 1)
+                                    End If
+                                    If (pagePath.Length <> 0 And Right(pagePath, 1) = "/") Then
+                                        pagePath = Left(pagePath, pagePath.Length - 1)
+                                    End If
                                 End If
-                                If (pagePath.Length <> 0 And Right(pagePath, 1) = "/") Then
-                                    pagePath = Left(pagePath, pagePath.Length - 1)
+
+                                If url.ToLower() <> pagePath.ToLower() Then
+                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    moResponse.StatusCode = 404
                                 End If
                             End If
+                        Else
+                            If (moConfig("PageNotFoundId") IsNot Nothing) Then
+                                If mnPageId.ToString() <> moConfig("PageNotFoundId") And msException = "" Then
 
-                            If url.ToLower() <> pagePath.ToLower() Then
-                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                moResponse.StatusCode = 404
+                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    moResponse.StatusCode = 404
+                                End If
+
                             End If
                         End If
+                    End If
+
+                End If
+
+                Dim layoutCmd As String = ""
+                If Not moSession Is Nothing And Not ibIndexMode Then
+                    If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
+                        If moRequest("noFrames") <> "True" Then ' Fix for frameset double counting                   
+                            'moDbHelper.logActivity(dbHelper.ActivityType.PageAccess, mnUserId, mnPageId, mnArtId)
+                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.PageViewed, mnUserId, moSession.SessionID, Now, mnPageId, mnArtId, moRequest.ServerVariables("REMOTE_ADDR") & " " & moRequest.ServerVariables("HTTP_USER_AGENT"))
+                        End If
+                    End If
+                End If
+
+                sProcessInfo = "Check Index Mode"
+                If Not ibIndexMode Then
+
+                    sProcessInfo = "Check Membership"
+                    If gbMembership Then
+                        MembershipProcess()
+                    ElseIf mbAdminMode And mnUserId > 0 Then
+                        RefreshUserXML()
+                    End If
+
+                    sProcessInfo = "Check Admin Mode"
+                    ContentActions()
+
+                    If LCase(moConfig("FinalAddBulk")) = "on" Then
+
+                        Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
+                        Dim nMaxDepth As Integer = 1
+                        If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
+                        AndAlso IsNumeric(cShowRelatedBriefDepth) Then
+                            nMaxDepth = CInt(cShowRelatedBriefDepth)
+                        End If
+                        moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
+
+                    End If
+
+                    CommonActions()
+
+
+                    'TS commented out so Century can perform searches in admin mode
+                    '  If Not (mbAdminMode) Then
+                    layoutCmd = LayoutActions()
+                    '  End If
+
+                    AddCart()
+
+                    If gbQuote Then
+                        sProcessInfo = "Begin Quote"
+                        Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
+                        oEq.apply()
+                        oEq.close()
+                        oEq = Nothing
+                        sProcessInfo = "End Quote"
+                    End If
+
+                    If LCase(moConfig("Search")) = "On" Then
+
+                        Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
+                        oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
+                        oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
+                        moPageXml.DocumentElement.AppendChild(oSearchNode)
+
+                    End If
+
+                    If mbAdminMode Then
+                        Try
+                            If moRequest("ewCmd") = "" Then
+                                ProcessReports()
+                            End If
+                        Catch
+                            'do nothing
+                        End Try
+
                     Else
-                        If (moConfig("PageNotFoundId") IsNot Nothing) Then
-                            If mnPageId.ToString() <> moConfig("PageNotFoundId") Then
-                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                moResponse.StatusCode = 404
-                            End If
+                        ProcessReports()
+                    End If
 
-                        End If
+                    ' Process the Calendars
+                    ProcessCalendar()
+
+                    If gbVersionControl Then CheckContentVersions()
+
+                End If
+                sProcessInfo = "CheckMultiParents"
+                Me.CheckMultiParents(moPageXml.DocumentElement, mnPageId)
+
+                ' ProcessContentForLanguage
+                ProcessPageXMLForLanguage()
+
+                ' Add the responses
+                CommitResponsesToPage()
+
+                If Not moSession Is Nothing Then
+                    If moSession("RedirectReason") <> "" And Not (bRedirectStarted) Then ' bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
+                        ' Add a flag - the XSL can pick this up
+                        Me.moPageXml.DocumentElement.SetAttribute("RedirectReason", moSession("RedirectReason"))
+                        ' Remove the Registration flag.
+                        moSession.Remove("RedirectReason")
                     End If
                 End If
 
-            End If
-
-            Dim layoutCmd As String = ""
-            If Not moSession Is Nothing And Not ibIndexMode Then
-                If (mnUserId <> "0" Or LCase(moConfig("LogAll")) = "On") And mbAdminMode = False And Features.ContainsKey("ActivityReporting") Then
-                    If moRequest("noFrames") <> "True" Then ' Fix for frameset double counting                   
-                        'moDbHelper.logActivity(dbHelper.ActivityType.PageAccess, mnUserId, mnPageId, mnArtId)
-                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.PageViewed, mnUserId, moSession.SessionID, Now, mnPageId, mnArtId, moRequest.ServerVariables("REMOTE_ADDR") & " " & moRequest.ServerVariables("HTTP_USER_AGENT"))
-                    End If
-                End If
-            End If
-
-            sProcessInfo = "Check Index Mode"
-            If Not ibIndexMode Then
-
-                sProcessInfo = "Check Membership"
-                If gbMembership Then
-                    MembershipProcess()
-                ElseIf mbAdminMode And mnUserId > 0 Then
-                    RefreshUserXML()
-                End If
-
-                sProcessInfo = "Check Admin Mode"
-                ContentActions()
-
-                If LCase(moConfig("FinalAddBulk")) = "on" Then
-
-                    Dim cShowRelatedBriefDepth As String = moConfig("ShowRelatedBriefDepth") & ""
-                    Dim nMaxDepth As Integer = 1
-                    If Not (String.IsNullOrEmpty(cShowRelatedBriefDepth)) _
-                    AndAlso IsNumeric(cShowRelatedBriefDepth) Then
-                        nMaxDepth = CInt(cShowRelatedBriefDepth)
-                    End If
-                    moDbHelper.addBulkRelatedContent(moPageXml.DocumentElement.SelectSingleNode("Contents"), mdPageUpdateDate, nMaxDepth)
-
-                End If
-
-                CommonActions()
-
-
-                'TS commented out so Century can perform searches in admin mode
-                '  If Not (mbAdminMode) Then
-                layoutCmd = LayoutActions()
-                '  End If
-
-                AddCart()
-
-                If gbQuote Then
-                    sProcessInfo = "Begin Quote"
-                    Dim oEq As Protean.Cms.Quote = New Protean.Cms.Quote(Me)
-                    oEq.apply()
-                    oEq.close()
-                    oEq = Nothing
-                    sProcessInfo = "End Quote"
-                End If
-
-                If LCase(moConfig("Search")) = "On" Then
-
-                    Dim oSearchNode As XmlElement = moPageXml.CreateElement("Search")
-                    oSearchNode.SetAttribute("mode", moConfig("SearchMode"))
-                    oSearchNode.SetAttribute("contentTypes", moConfig("SearchContentTypes"))
-                    moPageXml.DocumentElement.AppendChild(oSearchNode)
-
-                End If
-
-                If mbAdminMode Then
-                    Try
-                        If moRequest("ewCmd") = "" Then
-                            ProcessReports()
-                        End If
-                    Catch
-                        'do nothing
-                    End Try
-
-                Else
-                    ProcessReports()
-                End If
-
-                ' Process the Calendars
-                ProcessCalendar()
-
-                If gbVersionControl Then CheckContentVersions()
+                GetPageXML = moPageXml
 
             End If
-            sProcessInfo = "CheckMultiParents"
-            Me.CheckMultiParents(moPageXml.DocumentElement, mnPageId)
-
-            ' ProcessContentForLanguage
-            ProcessPageXMLForLanguage()
-
-            ' Add the responses
-            CommitResponsesToPage()
-
-            If Not moSession Is Nothing Then
-                If moSession("RedirectReason") <> "" And Not (bRedirectStarted) Then ' bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
-                    ' Add a flag - the XSL can pick this up
-                    Me.moPageXml.DocumentElement.SetAttribute("RedirectReason", moSession("RedirectReason"))
-                    ' Remove the Registration flag.
-                    moSession.Remove("RedirectReason")
-                End If
-            End If
-
-            GetPageXML = moPageXml
 
         Catch ex As Exception
             'returnException(mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -1651,146 +1657,147 @@ Public Class Cms
                 'TS moved this above setting page attributes as it now sets page id on page versions.
                 GetStructureXML("Site")
 
+                If msException = "" Then
 
-
-                If mnMailMenuId > 0 Then
-                    GetStructureXML("Newsletter", , mnMailMenuId, True)
-                End If
-                If mnSystemPagesId > 0 And Not mnSystemPagesId = RootPageId Then
-                    GetStructureXML(0, mnSystemPagesId, 0, "SystemPages", True, True, False, True, False, "", "")
-                End If
-
-                '
-                If gcMenuContentCountTypes <> "" Then
-                    Dim contentType As String
-                    For Each contentType In Split(gcMenuContentCountTypes, ",")
-                        AddContentCount(moPageXml.SelectSingleNode("/Page/Menu"), Trim(contentType))
-                    Next
-                End If
-
-                If gcMenuContentBriefTypes <> "" Then
-                    Dim contentType As String
-                    For Each contentType In Split(gcMenuContentBriefTypes, ",")
-                        AddContentBrief(moPageXml.SelectSingleNode("/Page/Menu"), Trim(contentType))
-                    Next
-                End If
-
-                'establish the artid
-                If Not moRequest.QueryString.Count = 0 Then
-                    If moRequest("artid") <> "" Then
-                        mnArtId = moRequest("artid")
+                    If mnMailMenuId > 0 Then
+                        GetStructureXML("Newsletter", , mnMailMenuId, True)
                     End If
-                End If
-
-                'set the page attributes
-                If mnArtId > 0 Then
-                    oPageElmt.SetAttribute("artid", mnArtId)
-                End If
-
-                oPageElmt.SetAttribute("id", mnPageId)
-                If Not moSession Is Nothing Then
-                    If CInt("0" & moSession("LogonRedirectId")) > 0 And Not (moSession("LogonRedirectId") = mnPageId) Then
-                        oPageElmt.SetAttribute("requestedId", moSession("LogonRedirectId"))
+                    If mnSystemPagesId > 0 And Not mnSystemPagesId = RootPageId Then
+                        GetStructureXML(0, mnSystemPagesId, 0, "SystemPages", True, True, False, True, False, "", "")
                     End If
-                End If
 
-                oPageElmt.SetAttribute("cacheMode", mnPageCacheMode)
+                    '
+                    If gcMenuContentCountTypes <> "" Then
+                        Dim contentType As String
+                        For Each contentType In Split(gcMenuContentCountTypes, ",")
+                            AddContentCount(moPageXml.SelectSingleNode("/Page/Menu"), Trim(contentType))
+                        Next
+                    End If
 
-                If gcEwBaseUrl <> "" Then
-                    oPageElmt.SetAttribute("baseUrl", gcEwBaseUrl)
-                End If
+                    If gcMenuContentBriefTypes <> "" Then
+                        Dim contentType As String
+                        For Each contentType In Split(gcMenuContentBriefTypes, ",")
+                            AddContentBrief(moPageXml.SelectSingleNode("/Page/Menu"), Trim(contentType))
+                        Next
+                    End If
 
-                'introduce the layout
-                If sLayout = "Default" Then
-                    sLayout = moDbHelper.getPageLayout(mnPageId)
-                End If
-                oPageElmt.SetAttribute("layout", sLayout)
-                oPageElmt.SetAttribute("pageExt", moConfig("pageExt"))
-                oPageElmt.SetAttribute("cssFramework", moConfig("cssFramework"))
+                    'establish the artid
+                    If Not moRequest.QueryString.Count = 0 Then
+                        If moRequest("artid") <> "" Then
+                            mnArtId = moRequest("artid")
+                        End If
+                    End If
 
-                If mnPageId > 0 Then
-                    GetContentXml(oPageElmt)
-                    'only get the detail if we are not on a system page and not at root
-                    If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or
+                    'set the page attributes
+                    If mnArtId > 0 Then
+                        oPageElmt.SetAttribute("artid", mnArtId)
+                    End If
+
+                    oPageElmt.SetAttribute("id", mnPageId)
+                    If Not moSession Is Nothing Then
+                        If CInt("0" & moSession("LogonRedirectId")) > 0 And Not (moSession("LogonRedirectId") = mnPageId) Then
+                            oPageElmt.SetAttribute("requestedId", moSession("LogonRedirectId"))
+                        End If
+                    End If
+
+                    oPageElmt.SetAttribute("cacheMode", mnPageCacheMode)
+
+                    If gcEwBaseUrl <> "" Then
+                        oPageElmt.SetAttribute("baseUrl", gcEwBaseUrl)
+                    End If
+
+                    'introduce the layout
+                    If sLayout = "Default" Then
+                        sLayout = moDbHelper.getPageLayout(mnPageId)
+                    End If
+                    oPageElmt.SetAttribute("layout", sLayout)
+                    oPageElmt.SetAttribute("pageExt", moConfig("pageExt"))
+                    oPageElmt.SetAttribute("cssFramework", moConfig("cssFramework"))
+
+                    If mnPageId > 0 Then
+                        GetContentXml(oPageElmt)
+                        'only get the detail if we are not on a system page and not at root
+                        If RootPageId = mnPageId Or Not (mnPageId = gnPageNotFoundId Or
                     mnPageId = gnPageAccessDeniedId Or
                     mnPageId = gnPageLoginRequiredId Or
                     mnPageId = gnPageErrorId) Then
 
 
-                        Dim validatedVersion As Long = 0
+                            Dim validatedVersion As Long = 0
 
-                        If mbPreview And moRequest("verId") <> "" Then
-                            validatedVersion = moRequest("verId")
-                        End If
-
-                        If mbPreview = False And moRequest("verId") <> "" Then
-                            If Tools.Encryption.RC4.Decrypt(moRequest("previewKey"), moConfig("SharedKey")) = moRequest("verId") Then
-
+                            If mbPreview And moRequest("verId") <> "" Then
                                 validatedVersion = moRequest("verId")
-
                             End If
-                        End If
+
+                            If mbPreview = False And moRequest("verId") <> "" Then
+                                If Tools.Encryption.RC4.Decrypt(moRequest("previewKey"), moConfig("SharedKey")) = moRequest("verId") Then
+
+                                    validatedVersion = moRequest("verId")
+
+                                End If
+                            End If
 
 
-                        If validatedVersion Then
-                            moContentDetail = GetContentDetailXml(oPageElmt, , , True, moRequest("verId"))
-                        Else
-                            If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
-                                moContentDetail = GetContentDetailXml(oPageElmt)
+                            If validatedVersion Then
+                                moContentDetail = GetContentDetailXml(oPageElmt, , , True, moRequest("verId"))
                             Else
-                                moContentDetail = GetContentDetailXml(oPageElmt, , , True)
+                                If LCase(moConfig("AllowContentDetailAccess")) = "On" Then
+                                    moContentDetail = GetContentDetailXml(oPageElmt)
+                                Else
+                                    moContentDetail = GetContentDetailXml(oPageElmt, , , True)
+                                End If
                             End If
                         End If
-                    End If
 
-                    If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
-                        If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
-                            Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
-                            cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
-                            Dim RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
-                            If RequestedContentName.contains("?") Then
-                                RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
-                                'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
-                            End If
+                        If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
+                            If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
+                                Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
+                                cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
+                                Dim RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
+                                If RequestedContentName.contains("?") Then
+                                    RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
+                                    'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
+                                End If
 
-                            If RequestedContentName <> cContentDetailName Then
-                                mnPageId = gnPageNotFoundId
-                                oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                mnProteanCMSError = 1005
+                                If RequestedContentName <> cContentDetailName Then
+                                    mnPageId = gnPageNotFoundId
+                                    oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                    mnProteanCMSError = 1005
+                                End If
                             End If
                         End If
+
+                        Me.CheckMultiParents(oPageElmt, mnPageId)
+                    Else
+                        mnProteanCMSError = 1005
+                    End If
+                    If mnProteanCMSError > 0 Then
+                        GetErrorXml(oPageElmt)
                     End If
 
-                    Me.CheckMultiParents(oPageElmt, mnPageId)
-                Else
-                    mnProteanCMSError = 1005
-                End If
-                If mnProteanCMSError > 0 Then
-                    GetErrorXml(oPageElmt)
-                End If
+                    '  Me.SetPageLanguage() 'TS not sure why this is being called twice ???
 
-                '  Me.SetPageLanguage() 'TS not sure why this is being called twice ???
+                    oPageElmt.SetAttribute("expireDate", Protean.Tools.Xml.XmlDate(mdPageExpireDate))
+                    oPageElmt.SetAttribute("updateDate", Protean.Tools.Xml.XmlDate(mdPageUpdateDate))
+                    oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString.ToLower)
+                    oPageElmt.SetAttribute("pageViewDate", Protean.Tools.Xml.XmlDate(mdDate))
 
-                oPageElmt.SetAttribute("expireDate", Protean.Tools.Xml.XmlDate(mdPageExpireDate))
-                oPageElmt.SetAttribute("updateDate", Protean.Tools.Xml.XmlDate(mdPageUpdateDate))
-                oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString.ToLower)
-                oPageElmt.SetAttribute("pageViewDate", Protean.Tools.Xml.XmlDate(mdDate))
-
-                ' Assess if this page is a cloned page.
-                ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
-                ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
-                If gbClone _
+                    ' Assess if this page is a cloned page.
+                    ' Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
+                    ' Or is it a child of a cloned page (in which case the page id MenuItem will have a @cloneparent node that matches the requested context, stored in mnCloneContextPageId)
+                    If gbClone _
                     AndAlso Not (oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id And (@clone > 0 Or (@cloneparent='" & Me.mnCloneContextPageId & "' and @cloneparent > 0 ))]") Is Nothing) Then
-                    ' If the current page is a cloned page
-                    oPageElmt.SetAttribute("clone", "true")
-                End If
-            Else
-                'Invalid Licence
-                mnProteanCMSError = 1008
-                If mnProteanCMSError > 0 Then
-                    GetErrorXml(oPageElmt)
-                End If
+                        ' If the current page is a cloned page
+                        oPageElmt.SetAttribute("clone", "true")
+                    End If
+                Else
+                    'Invalid Licence
+                    mnProteanCMSError = 1008
+                    If mnProteanCMSError > 0 Then
+                        GetErrorXml(oPageElmt)
+                    End If
 
+                End If
             End If
 
             Return moPageXml
@@ -2765,14 +2772,14 @@ Public Class Cms
                         AndAlso IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText) Then
                         closeDate = CDate(ocNode.SelectSingleNode("dCloseDate").InnerText)
                     End If
-                    If openDate > Date.Now Or closeDate < Date.Now Then
-                        bCanVote = False
-                        nVoteBlockReason = PollBlockReason.PollNotAvailable
+                    If openDate > Date.Now Or closeDate <Date.Now Then
+                        bCanVote= False
+                        nVoteBlockReason= PollBlockReason.PollNotAvailable
                     End If
 
 
-                    ' Sort out the vote frequency
-                    Select Case sVoteFrequency
+                            ' Sort out the vote frequency
+                            Select Case sVoteFrequency
                         Case "once"
                             bVoteOnce = True
                         Case "daily"

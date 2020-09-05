@@ -23,6 +23,7 @@ Public Module stdTools
     Public PerfMon As New PerfLog("")
 
     Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
+    Public mbDBError As Boolean = False
 
     Public gbDebug As Boolean = False ' make sure this is False when doing a release
 
@@ -133,21 +134,21 @@ Public Module stdTools
                             Dim adFrom As New MailAddress(errorEmail, "ProteanCMS")
                             Dim adTo As New MailAddress("error@protean.site", "ErrorLog")
                             sProcessInfo = "Creating Email - New MailMessage Object"
-                                Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
-                                oMail.IsBodyHtml = True
-                                'oMail.Subject = moRequest.ServerVariables("HTTP_HOST") & " has generated an Error"
-                                oMail.Subject = cSubjectLinePrefix & cHost & " has generated an Error"
-                                sProcessInfo = "Creating Email - Adding Body"
-                                Try
-                                    oMail.Body = strErrorHtml
-                                Catch ex2 As Exception
-                                    oMail.Body = "Error sending error html:" & ex2.Message
-                                End Try
+                            Dim oMail As New Net.Mail.MailMessage(adFrom, adTo)
+                            oMail.IsBodyHtml = True
+                            'oMail.Subject = moRequest.ServerVariables("HTTP_HOST") & " has generated an Error"
+                            oMail.Subject = cSubjectLinePrefix & cHost & " has generated an Error"
+                            sProcessInfo = "Creating Email - Adding Body"
+                            Try
+                                oMail.Body = strErrorHtml
+                            Catch ex2 As Exception
+                                oMail.Body = "Error sending error html:" & ex2.Message
+                            End Try
 
 
-                                'Send the email
-                                Dim oSmtp As New SmtpClient
-                                Try
+                            'Send the email
+                            Dim oSmtp As New SmtpClient
+                            Try
                                 sProcessInfo = "Trying Email 1 -" & oConfig("MailServer")
                                 oSmtp.Host = oConfig("MailServer")
                                 If oConfig("MailServerPort") <> "" Then
@@ -163,82 +164,88 @@ Public Module stdTools
                                     oSmtp.EnableSsl = False
                                 End If
                                 oSmtp.Send(oMail)
-                                Catch ex As Exception
-                                    Try
-                                        sProcessInfo = "Trying Email 2 -" & oConfig("MailServer")
-                                        oSmtp.Host.Insert(0, oConfig("MailServer"))
-                                        oSmtp.Send(oMail)
-                                    Catch exp As Exception
-                                        AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo)
-                                    End Try
+                            Catch ex As Exception
+                                Try
+                                    sProcessInfo = "Trying Email 2 -" & oConfig("MailServer")
+                                    oSmtp.Host.Insert(0, oConfig("MailServer"))
+                                    oSmtp.Send(oMail)
+                                Catch exp As Exception
+                                    AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo)
                                 End Try
-                            End If
-                            '############################
-                            ' Load the content from the Error Page, if it exists.
-                            '############################
+                            End Try
+                        End If
+                        '############################
+                        ' Load the content from the Error Page, if it exists.
+                        '############################
 
-                            Try
-                            sProcessInfo = "Loading Error Page Settings - ConStr"
-                            Dim dbAuth As String
+                        Try
+                            If Not mbDBError Then
 
-                            If oConfig("DatabasePassword") <> "" Then
-                                dbAuth = "user id=" & oConfig("DatabaseUsername") & "; password=" & oConfig("DatabasePassword")
-                            Else
-                                dbAuth = oConfig("DatabaseAuth")
-                            End If
+                                sProcessInfo = "Loading Error Page Settings - ConStr"
+                                Dim dbAuth As String
 
-                            Dim cEwConnStr As String = "Data Source=" & oConfig("DatabaseServer") & "; " &
-                            "Initial Catalog=" & oConfig("DatabaseName") & "; " & dbAuth
-
-                            sProcessInfo = "Loading Error Page Settings - Conn Open"
-                            Dim cSQL As String = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Eonic Error'"
-                            Dim oCN As New SqlClient.SqlConnection(cEwConnStr)
-                            Dim oCMD As New SqlClient.SqlCommand(cSQL, oCN)
-                            oCMD.Connection.Open()
-
-                            sProcessInfo = "Loading Error Page Settings - Exec Reader"
-                            Dim oDR As SqlClient.SqlDataReader = oCMD.ExecuteReader
-
-                            Dim nErrorPageId As Integer = 0
-                            Dim cLayout As String = ""
-
-                            sProcessInfo = "Data Reader"
-                            Do While oDR.Read
-                                nErrorPageId = oDR(0)
-                                cLayout = oDR(1)
-                                Exit Do
-                            Loop
-                            oDR.Close()
-                            If oCMD.Connection.State <> ConnectionState.Closed Then oCMD.Connection.Close()
-                            If nErrorPageId > 0 Then
-                                sProcessInfo = "Loading Error Page"
-                                oExceptionXml.DocumentElement.SetAttribute("layout", cLayout)
-                                cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey where( CL.nStructId = " & nErrorPageId
-                                cSQL &= ") order by type, cl.nDisplayOrder"
-                                Dim oDataAdpt As New SqlClient.SqlDataAdapter(cSQL, oCN)
-                                oCN.Open()
-                                Dim oDs As New DataSet
-                                oDs.DataSetName = "Contents"
-                                oDataAdpt.Fill(oDs, "Content")
-                                oCN.Close()
-                                oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
-                                If oDs.Tables(0).Columns.Contains("parID") Then
-                                    oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+                                If oConfig("DatabasePassword") <> "" Then
+                                    dbAuth = "user id=" & oConfig("DatabaseUsername") & "; password=" & oConfig("DatabasePassword")
+                                Else
+                                    dbAuth = oConfig("DatabaseAuth")
                                 End If
-                                oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
-                                oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
-                                oDs.EnforceConstraints = False
-                                'convert to Xml Dom
-                                Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
-                                oXml.PreserveWhitespace = False
-                                oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
+
+                                Dim cEwConnStr As String = "Data Source=" & oConfig("DatabaseServer") & "; " &
+                                "Initial Catalog=" & oConfig("DatabaseName") & "; " & dbAuth
+
+                                sProcessInfo = "Loading Error Page Settings - Conn Open"
+                                Dim cSQL As String = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Eonic Error'"
+                                Dim oCN As New SqlClient.SqlConnection(cEwConnStr)
+                                Dim oCMD As New SqlClient.SqlCommand(cSQL, oCN)
+                                oCMD.Connection.Open()
+
+                                sProcessInfo = "Loading Error Page Settings - Exec Reader"
+                                Dim oDR As SqlClient.SqlDataReader = oCMD.ExecuteReader
+
+                                Dim nErrorPageId As Integer = 0
+                                Dim cLayout As String = ""
+
+                                sProcessInfo = "Data Reader"
+                                Do While oDR.Read
+                                    nErrorPageId = oDR(0)
+                                    cLayout = oDR(1)
+                                    Exit Do
+                                Loop
+                                oDR.Close()
+                                If oCMD.Connection.State <> ConnectionState.Closed Then oCMD.Connection.Close()
+                                If nErrorPageId > 0 Then
+                                    sProcessInfo = "Loading Error Page"
+                                    oExceptionXml.DocumentElement.SetAttribute("layout", cLayout)
+                                    cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey where( CL.nStructId = " & nErrorPageId
+                                    cSQL &= ") order by type, cl.nDisplayOrder"
+                                    Dim oDataAdpt As New SqlClient.SqlDataAdapter(cSQL, oCN)
+                                    oCN.Open()
+                                    Dim oDs As New DataSet
+                                    oDs.DataSetName = "Contents"
+                                    oDataAdpt.Fill(oDs, "Content")
+                                    oCN.Close()
+                                    oDs.Tables(0).Columns("id").ColumnMapping = Data.MappingType.Attribute
+                                    If oDs.Tables(0).Columns.Contains("parID") Then
+                                        oDs.Tables(0).Columns("parId").ColumnMapping = Data.MappingType.Attribute
+                                    End If
+                                    oDs.Tables(0).Columns("ref").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("name").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("type").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("status").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("publish").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("expire").ColumnMapping = Data.MappingType.Attribute
+                                    oDs.Tables(0).Columns("content").ColumnMapping = Data.MappingType.SimpleContent
+                                    oDs.EnforceConstraints = False
+                                    'convert to Xml Dom
+                                    Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
+                                    oXml.PreserveWhitespace = False
+                                    oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
+                                End If
+
                             End If
                         Catch ex As Exception
+
+                            mbDBError = True
                             'sProcessInfo = "Found Error"
                             AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo)
                             oElmt.InnerXml = strMessageHtml
@@ -258,8 +265,18 @@ Public Module stdTools
 
                     'add Eonic Bespoke Functions
                     Dim xsltArgs As Xsl.XsltArgumentList = New Xsl.XsltArgumentList
-                    Dim ewXsltExt As New xsltExtensions(Nothing)
-                    xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
+                    Dim errWeb As Protean.Cms
+                    If Not System.Web.HttpContext.Current Is Nothing Then
+                        'so we compile errors out of debug mode too.
+                        errWeb = New Protean.Cms(System.Web.HttpContext.Current)
+                        errWeb.InitializeVariables()
+                        Dim ewXsltExt As New xsltExtensions(errWeb)
+                        xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
+                    Else
+                        Dim ewXsltExt As New xsltExtensions()
+                        xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
+                    End If
+
 
                     sProcessInfo = "Transform"
                     ' Would be useful to have some indicator that this is an error, even if loading from another page.
@@ -268,7 +285,7 @@ Public Module stdTools
                     oStyle.Transform(oExceptionXml, xsltArgs, sWriter, Nothing)
                     sProcessInfo = "Setting Return"
                     sReturnHtml = sWriter.ToString()
-
+                    errWeb = Nothing
 
                 Catch ex As Exception
                     AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo)

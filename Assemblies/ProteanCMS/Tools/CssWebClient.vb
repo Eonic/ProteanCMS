@@ -100,7 +100,8 @@ Public Class CssWebClient
             Dim cssSplit As Integer = IIf(moConfig("cssSplit") = "", 2000, moConfig("cssSplit"))
             ComputeCSS(fullCss, cssSplit)
         Catch ex As Exception
-            returnException(mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
+            cProcessInfo = ex.Message
+            'returnException(mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
