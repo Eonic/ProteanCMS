@@ -438,32 +438,32 @@
   <xsl:template match="Content[@type='Module' and @moduleType='MembershipLogon']" mode="moduleLink">
         <xsl:apply-templates select="." mode="moduleTitle"/>
   </xsl:template>
-  
-	<xsl:template match="Content[@type='xform' and @name='UserLogon']" mode="loginBrief">
-		<form method="post" action="" id="UserLogon" name="UserLogon" onsubmit="form_check(this)" xmlns="http://www.w3.org/1999/xhtml">
-			<div class="username">
-				<label for="ewmLogon/username">
-					<!--Username-->
-					<xsl:call-template name="term4000" />
-				</label>
-				<input type="text" name="cUserName" id="cUserName" class="textbox required" value="" onfocus="if (this.value=='Please enter username') {this.value=''}"/>
-			</div>
-			<div class="password">
-				<label for="ewmLogon/password">
-					<!--Password-->
-					<xsl:call-template name="term4001" />
-				</label>
-				<input type="password" name="cPassword" id="cPassword" class="textbox password required"/>
-			</div>
-			<input name="ewmLogon/@ewCmd" class="hidden" value="membershipLogon"/>
-			<div class="logon">
-				<input type="submit" name="submit" value="Login" class="btn btn-primary" onclick="disableButton(this);"/>
-			</div>
-			<xsl:if test="alert">
-				<xsl:apply-templates select="alert" mode="xform"/>
-			</xsl:if>
-		</form>
-	</xsl:template>
+
+  <xsl:template match="Content[@type='xform' and @name='UserLogon']" mode="loginBrief">
+    <form method="post" action="" id="UserLogon" name="UserLogon" class="form-inline" onsubmit="form_check(this)" xmlns="http://www.w3.org/1999/xhtml">
+      <div class="form-group">
+        <label class="sr-only" for="ewmLogon/username">
+          <!--Username-->
+          <xsl:call-template name="term4000" />
+        </label>
+        <input type="text" name="cUserName" id="cUserName" class="form-control required" value="" onfocus="if (this.value=='Please enter username') {this.value=''}" placeholder="Email"/>
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="ewmLogon/password">
+          <!--Password-->
+          <xsl:call-template name="term4001" />
+        </label>
+        <input type="password" name="cPassword" id="cPassword" class="form-control password required"  placeholder="Password"/>
+      </div>
+      <input name="ewmLogon/@ewCmd" class="hidden" value="membershipLogon"/>
+      <button type="submit" name="submit" value="Login" class="btn btn-primary" onclick="disableButton(this);">
+        Login
+      </button>
+      <xsl:if test="alert">
+        <xsl:apply-templates select="alert" mode="xform"/>
+      </xsl:if>
+    </form>
+  </xsl:template>
   <!--xsl:template match="Page[@layout='User_Contact']" mode="Layout">
     <xsl:apply-templates select="Contents/Content[@type='xform' and @name='Edit_User_Contact']" mode="xform"/>
     <p class="backlink">
