@@ -2587,8 +2587,8 @@ processFlow:
                             weight = weight + (oRow("weight") * oRow("quantity"))
                             quant = quant + oRow("quantity")
 
-                            total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
-
+                            'total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
+                            total += Round((oRow("price") * oRow("quantity")) + nOpPrices, , , mbRoundup)
                             'we do this later after we have applied discounts
 
                             'Round( Price * Vat ) * Quantity
@@ -8399,7 +8399,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
         Private Function updatePackagingForFreeGiftDiscount(ByVal nCartItemKey As String) As String
             Try
                 Dim cSqlUpdate As String
-                cSqlUpdate = " update tblCartItem set  cItemName = 'GiftBox' where  nitemid=0 and nParentid = " & nCartItemKey
+                cSqlUpdate = " update tblCartItem set  cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
