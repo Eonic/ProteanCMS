@@ -24,52 +24,58 @@ Public Class RegularProxy
         ' We don't want to buffer because we want to save memory
         context.Response.Buffer = False
 
-        ' Serve from cache if available
-        If context.Cache(url) IsNot Nothing Then
-            context.Response.BinaryWrite(TryCast(context.Cache(url), Byte()))
-            context.Response.Flush()
-            Return
-        End If
-        Using client As New WebClient()
-            If Not String.IsNullOrEmpty(contentType) Then
-                client.Headers("Content-Type") = contentType
-            End If
-
-            client.Headers("Accept-Encoding") = "gzip"
-            client.Headers("Accept") = "*/*"
-            client.Headers("Accept-Language") = "en-US"
-            client.Headers("User-Agent") = "Mozilla/5.0 (Windows; U; Windows NT 6.0; " & "en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"
-
-            Dim data As Byte() = client.DownloadData(url)
-
-            context.Cache.Insert(url, data, Nothing, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(cacheDuration), CacheItemPriority.Normal, _
-             Nothing)
-
-            If Not context.Response.IsClientConnected Then
+        If url.StartsWith("http") Then
+            ' Serve from cache if available
+            If context.Cache(url) IsNot Nothing Then
+                context.Response.BinaryWrite(TryCast(context.Cache(url), Byte()))
+                context.Response.Flush()
                 Return
             End If
+            Using client As New WebClient()
+                If Not String.IsNullOrEmpty(contentType) Then
+                    client.Headers("Content-Type") = contentType
+                End If
+
+                client.Headers("Accept-Encoding") = "gzip"
+                client.Headers("Accept") = "*/*"
+                client.Headers("Accept-Language") = "en-US"
+                client.Headers("User-Agent") = "Mozilla/5.0 (Windows; U; Windows NT 6.0; " & "en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.6"
+
+                Dim data As Byte() = client.DownloadData(url)
+
+                context.Cache.Insert(url, data, Nothing, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(cacheDuration), CacheItemPriority.Normal, Nothing)
+
+                If Not context.Response.IsClientConnected Then
+                    Return
+                End If
 
 
-            ' Deliver content type, encoding and length
-            ' as it is received from the external URL
-            context.Response.ContentType = client.ResponseHeaders("Content-Type")
-            Dim contentEncoding As String = client.ResponseHeaders("Content-Encoding")
-            Dim contentLength As String = client.ResponseHeaders("Content-Length")
+                ' Deliver content type, encoding and length
+                ' as it is received from the external URL
+                context.Response.ContentType = client.ResponseHeaders("Content-Type")
+                Dim contentEncoding As String = client.ResponseHeaders("Content-Encoding")
+                Dim contentLength As String = client.ResponseHeaders("Content-Length")
 
-            If Not String.IsNullOrEmpty(contentEncoding) Then
-                context.Response.AppendHeader("Content-Encoding", contentEncoding)
-            End If
-            If Not String.IsNullOrEmpty(contentLength) Then
-                context.Response.AppendHeader("Content-Length", contentLength)
-            End If
+                If Not String.IsNullOrEmpty(contentEncoding) Then
+                    context.Response.AppendHeader("Content-Encoding", contentEncoding)
+                End If
+                If Not String.IsNullOrEmpty(contentLength) Then
+                    context.Response.AppendHeader("Content-Length", contentLength)
+                End If
 
-            'If cacheDuration > 0 Then
-            '    HttpHelper.CacheResponse(context, cacheDuration)
-            'End If
+                'If cacheDuration > 0 Then
+                '    HttpHelper.CacheResponse(context, cacheDuration)
+                'End If
 
-            ' Transmit the exact bytes downloaded
-            context.Response.BinaryWrite(data)
-        End Using
+                ' Transmit the exact bytes downloaded
+                context.Response.BinaryWrite(data)
+            End Using
+        Else
+
+            context.Response.StatusCode = 404
+            context.Response.Write("File Not Found")
+
+        End If
     End Sub
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable
@@ -77,5 +83,5 @@ Public Class RegularProxy
             Return False
         End Get
     End Property
-   
+
 End Class

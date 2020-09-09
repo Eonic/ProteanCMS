@@ -2063,7 +2063,7 @@ ProcessFlow:
                         oWeb.mbAdminMode = False
                         If Not myWeb.mbSuppressLastPageOverrides Then myWeb.moSession("lastPage") = "/" & gcProjectPath & myWeb.mcPagePath.TrimStart("/") & "?ewCmd=ViewSystemPages&pgid=" & myWeb.mnPageId
 
-                    Case "Subscriptions", "EditUserSubscription", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
+                    Case "Subscriptions", "EditUserSubscription", "AddSubscriptionGroup", "EditSubscriptionGroup", "AddSubscription", "CancelSubscription", "ResendCancellation", "EditSubscription", "MoveSubscription", "RenewSubscription", "LocateSubscription", "UpSubscription", "DownSubscription", "ListSubscribers", "ManageUserSubscription", "UpcomingRenewals", "ExpiredSubscriptions", "CancelledSubscriptions", "RenewalAlerts"
                         SubscriptionProcess(mcEwCmd, sAdminLayout, oPageDetail)
                         bLoadStructure = True
 
@@ -3196,6 +3196,16 @@ AfterProcessFlow:
                             'close window / js
                         End If
                     Case "FolderSettings"
+
+                    Case "FileUpload"
+
+                        Dim oFS As New fsHelper(myWeb.moCtx)
+
+                        oFS.UploadRequest(myWeb.moCtx)
+
+                        oFS = Nothing
+
+
                     Case Else
                         bShowTree = True
                 End Select
@@ -4250,7 +4260,10 @@ SP:
                     Else
                         sAdminLayout = "AdminXForm"
                     End If
-
+                Case "ResendCancellation"
+                    oSub.ResendCancelation(myWeb.moRequest("id"))
+                    cCmd = "ManageUserSubscription"
+                    GoTo SP
                 Case "Subscriptions"
                     oSub.ListSubscriptions(oPageDetail)
                 Case "ListSubscribers"

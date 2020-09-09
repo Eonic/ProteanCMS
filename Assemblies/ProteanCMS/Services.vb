@@ -820,9 +820,13 @@ Public Class Services
         End Try
         Return oRXML
     End Function
+
     <WebMethod(Description:="get content detail xml")>
     Public Function GetContentDetailXml(nContentKey As Integer) As XmlElement
         Dim xmlEle As XmlElement
+
+        'We should be checking users permissions here.
+
         xmlEle = myWeb.GetContentDetailXml(Nothing, nContentKey, False)
 
 
@@ -840,6 +844,7 @@ Public Class Services
         Return url
         myWeb.Close()
     End Function
+
     <WebMethod(Description:="get standard filter for sql content")>
     Public Function GetStandardFilterSQLForContent() As Object
         myWeb = New Protean.Cms
@@ -862,17 +867,6 @@ Public Class Services
         myWeb.Close()
     End Function
 
-    <WebMethod(Description:="Add data set to content")>
-    Public Sub AddDataSetToContent(oDs As DataSet, oRoot As XmlElement, exdate As DateTime)
-        myWeb = New Protean.Cms
-        myWeb.Open()
-
-        myWeb.moDbHelper.AddDataSetToContent(oDs, oRoot, myWeb.mnPageId, False, "", exdate, exdate)
-
-
-        myWeb.Close()
-    End Sub
-
     <WebMethod(Description:="return admin mode")>
     Public Function returnIsAdminMode() As Boolean
         myWeb = New Protean.Cms
@@ -883,6 +877,7 @@ Public Class Services
         Return data
         myWeb.Close()
     End Function
+
     <WebMethod(Description:="create Element")>
     Public Function createElement(oRoot As XmlElement) As XmlElement
         myWeb = New Protean.Cms

@@ -1161,11 +1161,12 @@
     <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.iframe-transport.js"></script>
     <!-- The basic File Upload plugin -->
     <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.fileupload.js"></script>
-
+  
+    
     <script>
-
+      <xsl:text>
       $('#fileupload').fileupload({
-      url: '/ewcommon/tools/FileTransferHandler.ashx?storageRoot=<xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
+      url: '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/><xsl:text>&amp;ewCmd2=FileUpload&amp;storageRoot=</xsl:text><xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
       dataType: 'json',
       sequentialUploads: true,
       dropZone:$('#uploadFiles'),

@@ -1480,19 +1480,39 @@ RedoCheck:
                     ExpireSubscriptionGroups(nId)
 
                     'Email the site owner to inform of cancelation !!!
-                    If oSubConfig("CancelationXSL") <> "" Then
+                    If oSubConfig("CancellationXSL") <> "" Then
                         Dim oMessager As New Protean.Messaging
                         Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
                         Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText
                         ' Inform the client
-                        Dim cRetMessage As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancelationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), CustomerEmail, "Cancel Subscription")
+                        Dim cRetMessage As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancellationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), CustomerEmail, "Cancel Subscription")
                         ' Inform the site owner
-                        Dim cRetMessage2 As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancelationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), oSubConfig("SubscriptionEmail"), "Cancel Subscription")
+                        Dim cRetMessage2 As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancellationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), oSubConfig("SubscriptionEmail"), "Cancel Subscription")
                     End If
 
 
                 Catch ex As Exception
                     returnException(mcModuleName, "CancelSubscription", ex, "", "", gbDebug)
+                End Try
+            End Sub
+
+
+            Public Sub ResendCancelation(ByVal nId As Integer, Optional cReason As String = "")
+                Try
+
+                    'Email the site owner to inform of cancelation !!!
+                    If oSubConfig("CancellationXSL") <> "" Then
+                        Dim oMessager As New Protean.Messaging
+                        Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
+                        Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText
+                        ' Inform the client
+                        Dim cRetMessage As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancellationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), CustomerEmail, "Cancel Subscription")
+                        ' Inform the site owner
+                        Dim cRetMessage2 As String = oMessager.emailer(SubXml.FirstChild, oSubConfig("CancellationXSL"), oSubConfig("SubscriptionEmailName"), oSubConfig("SubscriptionEmail"), oSubConfig("SubscriptionEmail"), "Cancel Subscription")
+                    End If
+
+                Catch ex As Exception
+                    returnException(mcModuleName, "ResendCancelation", ex, "", "", gbDebug)
                 End Try
             End Sub
 

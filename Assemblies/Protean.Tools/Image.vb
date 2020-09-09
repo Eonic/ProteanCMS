@@ -547,6 +547,8 @@ Public Class Image
                     imgfileInfo.Refresh()
                     difference = difference - imgfileInfo.Length
                     optimizer = Nothing
+                Case ".webp"
+
             End Select
             Return difference
 

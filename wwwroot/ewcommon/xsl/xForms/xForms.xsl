@@ -3844,7 +3844,7 @@
     <script>
 
       $('#fileupload').fileupload({
-      url: '/ewcommon/tools/FileTransferHandler.ashx?storageRoot=<xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
+      url: '/?ewCmd={$page/@ewCmd}&amp;ewCmd2=FileUpload&amp;storageRoot=<xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
       dataType: 'json',
       sequentialUploads: true,
       dropZone:$('#uploadFiles'),

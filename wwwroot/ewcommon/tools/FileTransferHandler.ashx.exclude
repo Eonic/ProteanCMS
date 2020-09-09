@@ -153,15 +153,11 @@ Public Class FileTransferHandler : Implements IHttpHandler
 
     ' Handle request based on method
     Private Sub HandleMethod(ByVal context As HttpContext)
-        Select Case context.Request.HttpMethod
-            Case "HEAD", "GET"
-                If GivenFilename(context) Then
-                    DeliverFile(context)
-                Else
-                    ListCurrentFiles(context)
-                End If
-                Exit Select
 
+        'Check user has permissions
+
+
+        Select Case context.Request.HttpMethod
             Case "POST", "PUT"
                 UploadFile(context)
                 Exit Select
@@ -178,7 +174,7 @@ Public Class FileTransferHandler : Implements IHttpHandler
     End Sub
 
     Private Sub ReturnOptions(ByVal context As HttpContext)
-        context.Response.AddHeader("Allow", "GET,HEAD,POST,PUT,OPTIONS")
+        context.Response.AddHeader("Allow", "POST,PUT,OPTIONS")
         context.Response.StatusCode = 200
     End Sub
 
@@ -227,6 +223,7 @@ Public Class FileTransferHandler : Implements IHttpHandler
                 Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
 
 
+
                 file.SaveAs(StorageRoot & fileNameFixed)
 
                 If LCase(StorageRoot & fileNameFixed).EndsWith(".jpg") Or LCase(StorageRoot & fileNameFixed).EndsWith(".jpeg") Or LCase(StorageRoot & fileNameFixed).EndsWith(".png") Then
@@ -267,28 +264,6 @@ Public Class FileTransferHandler : Implements IHttpHandler
         Return Not String.IsNullOrEmpty(context.Request("f"))
     End Function
 
-    Private Sub DeliverFile(ByVal context As HttpContext)
-        Dim filename = context.Request("f")
-        Dim filePath = StorageRoot & filename
-
-        If File.Exists(filePath) Then
-            context.Response.AddHeader("Content-Disposition", "attachment, filename=""" & filename & """")
-            context.Response.ContentType = "application/octet-stream"
-            context.Response.ClearContent()
-            context.Response.WriteFile(filePath)
-        Else
-            context.Response.StatusCode = 404
-        End If
-    End Sub
-
-    Private Sub ListCurrentFiles(ByVal context As HttpContext)
-        Dim files = New DirectoryInfo(StorageRoot).GetFiles("*", SearchOption.TopDirectoryOnly).Where(Function(f) Not f.Attributes.HasFlag(FileAttributes.Hidden)).[Select](Function(f) New FilesStatus(f)).ToArray()
-
-        Dim jsonObj As String = js.Serialize(files)
-        context.Response.AddHeader("Content-Disposition", "inline, filename=""files.json""")
-        context.Response.Write(jsonObj)
-        context.Response.ContentType = "application/json"
-    End Sub
 
     Public Sub New()
 

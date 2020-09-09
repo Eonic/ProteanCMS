@@ -802,6 +802,138 @@ Partial Public Class fsHelper
 
     End Function
 
+
+    Public Sub UploadRequest(ByVal context As System.Web.HttpContext)
+        Try
+
+
+            context.Response.AddHeader("Pragma", "no-cache")
+            context.Response.AddHeader("Cache-Control", "private, no-cache")
+
+            mcStartFolder = context.Server.MapPath(context.Request("storageRoot").Replace("\", "/").Replace("""", ""))
+            mcRoot = context.Server.MapPath("/")
+
+            HandleUploads(context)
+
+        Catch ex As Exception
+            'catch errorr
+        End Try
+    End Sub
+
+    Private Sub HandleUploads(ByVal context As System.Web.HttpContext)
+
+        'Check user has permissions
+
+
+        Select Case context.Request.HttpMethod
+            Case "POST", "PUT"
+                UploadFile(context)
+                Exit Select
+
+            Case "OPTIONS"
+                ReturnOptions(context)
+                Exit Select
+            Case Else
+
+                context.Response.ClearHeaders()
+                context.Response.StatusCode = 405
+                Exit Select
+        End Select
+    End Sub
+
+    Private Sub ReturnOptions(ByVal context As System.Web.HttpContext)
+        context.Response.AddHeader("Allow", "POST,PUT,OPTIONS")
+        context.Response.StatusCode = 200
+    End Sub
+
+    ' Upload file to the server
+    Private Sub UploadFile(ByVal context As System.Web.HttpContext)
+        Dim statuses = New List(Of FilesStatus)()
+        Dim headers = context.Request.Headers
+
+        If String.IsNullOrEmpty(headers("X-File-Name")) Then
+            UploadWholeFile(context, statuses)
+        Else
+            UploadPartialFile(headers("X-File-Name"), context, statuses)
+        End If
+
+        WriteJsonIframeSafe(context, statuses)
+    End Sub
+
+    ' Upload partial file
+    Private Sub UploadPartialFile(ByVal fileName As String, ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
+        If context.Request.Files.Count <> 1 Then
+            Throw New System.Web.HttpRequestValidationException("Attempt to upload chunked file containing more than one fragment per request")
+        End If
+        Dim inputStream = context.Request.Files(0).InputStream
+        Dim fullName = mcStartFolder & Path.GetFileName(fileName)
+
+        Using fs = New FileStream(fullName, FileMode.Append, FileAccess.Write)
+            Dim buffer = New Byte(1023) {}
+
+            Dim l = inputStream.Read(buffer, 0, 1024)
+            While l > 0
+                fs.Write(buffer, 0, l)
+                l = inputStream.Read(buffer, 0, 1024)
+            End While
+            fs.Flush()
+            fs.Close()
+        End Using
+        statuses.Add(New FilesStatus(New FileInfo(fullName)))
+    End Sub
+
+    ' Upload entire file
+    Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
+        For i As Integer = 0 To context.Request.Files.Count - 1
+            Dim file As Object = context.Request.Files(i)
+            Try
+                If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
+                Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
+
+
+
+                file.SaveAs(mcStartFolder & fileNameFixed)
+
+                If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
+                    Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
+                    Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                    eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
+                End If
+                Dim fullName As String = Path.GetFileName(file.FileName)
+                statuses.Add(New FilesStatus(fullName, file.ContentLength))
+
+
+            Catch ex As Exception
+                statuses.Add(New FilesStatus("failed", 0))
+            End Try
+
+
+
+        Next
+    End Sub
+
+    Private ReadOnly js As New System.Web.Script.Serialization.JavaScriptSerializer()
+
+    Private Sub WriteJsonIframeSafe(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
+        context.Response.AddHeader("Vary", "Accept")
+        Try
+            If context.Request("HTTP_ACCEPT").Contains("application/json") Then
+                context.Response.ContentType = "application/json"
+            Else
+                context.Response.ContentType = "text/plain"
+            End If
+        Catch
+            context.Response.ContentType = "text/plain"
+        End Try
+
+        Dim jsonObj = js.Serialize(statuses.ToArray())
+        context.Response.Write(jsonObj)
+
+    End Sub
+
+    Private Function GivenFilename(ByVal context As System.Web.HttpContext) As Boolean
+        Return Not String.IsNullOrEmpty(context.Request("f"))
+    End Function
 #End Region
 #Region "Private Methods"
     Private Function AddElements(ByVal startNode As XmlElement, ByVal Folder As String) As XmlElement
@@ -1149,6 +1281,122 @@ Partial Public Class fsHelper
 
 #End Region
 
+End Class
+
+Public Class FilesStatus
+    Public Const HandlerPath As String = "/"
+
+    Public Property group() As String
+        Get
+            Return m_group
+        End Get
+        Set(ByVal value As String)
+            m_group = value
+        End Set
+    End Property
+    Private m_group As String
+    Public Property name() As String
+        Get
+            Return m_name
+        End Get
+        Set(ByVal value As String)
+            m_name = value
+        End Set
+    End Property
+    Private m_name As String
+    Public Property type() As String
+        Get
+            Return m_type
+        End Get
+        Set(ByVal value As String)
+            m_type = value
+        End Set
+    End Property
+    Private m_type As String
+    Public Property size() As Integer
+        Get
+            Return m_size
+        End Get
+        Set(ByVal value As Integer)
+            m_size = value
+        End Set
+    End Property
+    Private m_size As Integer
+    Public Property progress() As String
+        Get
+            Return m_progress
+        End Get
+        Set(ByVal value As String)
+            m_progress = value
+        End Set
+    End Property
+    Private m_progress As String
+    Public Property url() As String
+        Get
+            Return m_url
+        End Get
+        Set(ByVal value As String)
+            m_url = value
+        End Set
+    End Property
+    Private m_url As String
+    Public Property thumbnail_url() As String
+        Get
+            Return m_thumbnail_url
+        End Get
+        Set(ByVal value As String)
+            m_thumbnail_url = value
+        End Set
+    End Property
+    Private m_thumbnail_url As String
+    Public Property delete_url() As String
+        Get
+            Return m_delete_url
+        End Get
+        Set(ByVal value As String)
+            m_delete_url = value
+        End Set
+    End Property
+    Private m_delete_url As String
+    Public Property delete_type() As String
+        Get
+            Return m_delete_type
+        End Get
+        Set(ByVal value As String)
+            m_delete_type = value
+        End Set
+    End Property
+    Private m_delete_type As String
+    Public Property [error]() As String
+        Get
+            Return m_error
+        End Get
+        Set(ByVal value As String)
+            m_error = value
+        End Set
+    End Property
+    Private m_error As String
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(ByVal fileInfo As FileInfo)
+        SetValues(fileInfo.Name, CInt(fileInfo.Length))
+    End Sub
+
+    Public Sub New(ByVal fileName As String, ByVal fileLength As Integer)
+        SetValues(fileName, fileLength)
+    End Sub
+
+    Private Sub SetValues(ByVal fileName As String, ByVal fileLength As Integer)
+        name = fileName
+        type = "image/png"
+        size = fileLength
+        progress = "1.0"
+        url = HandlerPath & "FileTransferHandler.ashx?f=" & fileName
+        delete_url = HandlerPath & "FileTransferHandler.ashx?f=" & fileName
+        delete_type = "DELETE"
+    End Sub
 End Class
 
 

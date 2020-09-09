@@ -4525,7 +4525,7 @@
     <script>
       <xsl:text>
         $('#fileupload').fileupload({
-        url: '/ewcommon/tools/FileTransferHandler.ashx?storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>',
+        url: '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/><xsl:text>&amp;ewCmd2=FileUpload&amp;storageRoot="</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>',
         dataType: 'json',
         sequentialUploads: true,
         dropZone:$('#uploadFiles'),

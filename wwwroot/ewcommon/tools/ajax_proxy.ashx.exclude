@@ -11,7 +11,12 @@ Public Class AjaxProxy : Implements IHttpHandler
         context.Response.ContentType = "text/plain"
 
         Using client As New WebClient()
-            context.Response.BinaryWrite(client.DownloadData(context.Request.QueryString("url")))
+            If context.Request.QueryString("url").StartsWith("http") Then
+                context.Response.BinaryWrite(client.DownloadData(context.Request.QueryString("url")))
+            Else
+                context.Response.StatusCode = 404
+                context.Response.Write("File Not Found")
+            End If
         End Using
 
     End Sub
