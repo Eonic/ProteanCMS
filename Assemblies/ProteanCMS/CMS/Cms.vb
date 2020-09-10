@@ -1084,11 +1084,6 @@ Public Class Cms
                     moApi.InitialiseVariables()
                     moApi.JSONRequest()
 
-                Case pageResponseType.flush
-
-                    moResponse.Flush()
-                    moResponse.End()
-                    Close()
 
                 Case Else
 
@@ -1163,12 +1158,18 @@ Public Class Cms
                             End If
                         End If
 
+                        If moResponseType = pageResponseType.flush Then
+
+                            moResponse.Flush()
+                            moResponse.End()
+                            Close()
+                        Else
 
 
-                        'we assume this has allready been set and we have allready done a response.write
-                        'used for admin file uploader, not quite happy with this TS. 9-9-2020
+                            'we assume this has allready been set and we have allready done a response.write
+                            'used for admin file uploader, not quite happy with this TS. 9-9-2020
 
-                        If Not msException = "" Then
+                            If Not msException = "" Then
                                 'If there is an error we can add our own header.
                                 'this means external programs can check that there is an error
                                 moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
@@ -1422,8 +1423,9 @@ Public Class Cms
                                 End If
                             End If
                         End If
+                    End If
 
-                        If Not moSession Is Nothing Then
+                    If Not moSession Is Nothing Then
                             moSession("previousPage") = mcOriginalURL
                         End If
 

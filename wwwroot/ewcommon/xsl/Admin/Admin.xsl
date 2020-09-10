@@ -6895,11 +6895,19 @@
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
+          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-edit"> </i>
+            Edit
+          </a>
           <xsl:apply-templates select="Contact[@type='Billing Address']" mode="cart"/>
         </div>
       </xsl:if>
       <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
         <div id="deliveryAddress" class="cartAddress col-md-3">
+          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-edit"> </i>
+            Edit
+          </a>
           <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
         </div>
       </xsl:if>

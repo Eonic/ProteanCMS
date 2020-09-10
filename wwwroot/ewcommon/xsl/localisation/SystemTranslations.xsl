@@ -520,7 +520,7 @@
         <a href="javascript:history.back();">Click here to return to the previous page.</a>
       </xsl:when>
       <xsl:otherwise>
-        <h2>Unfortunately this site has experienced an error...</h2>
+        <h2>Unfortunately this site has experienced an error.</h2>
         <h3>We take all errors very seriously.</h3>
         <p>
           This error has been recorded and details sent to <a href="http://www.eonic.co.uk">Eonic</a> who provide technical support for this website.
