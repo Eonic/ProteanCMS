@@ -2584,11 +2584,10 @@ processFlow:
                                 CheckQuantities(oCartElmt, oRow("productDetail") & "", CLng("0" & oRow("quantity")))
                             End If
 
-                            weight = weight + (oRow("weight") * oRow("quantity"))
-                            quant = quant + oRow("quantity")
+                            weight += (oRow("weight") * oRow("quantity"))
+                            quant += oRow("quantity")
 
-                            'total = total + (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
-                            total += Round((oRow("price") * oRow("quantity")) + nOpPrices, , , mbRoundup)
+                            total += (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
                             'we do this later after we have applied discounts
 
                             'Round( Price * Vat ) * Quantity

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="ResetAccount"><model><instance><user><email></email></user></instance>
+<submission id="ResetAccount" action="" method="post" event="form_check(this)" />
+<bind id="cEmail" nodeset="user/email" required="true()" type="format:^[a-zA-Z0-9._%+-@ ]*$" />
+</model><group ref="ResetAccount"><label>
+  <span class="msg-028">Please enter your email address and we will email you with your password.</span></label>
+<input bind="cEmail"><label>Email address / Username</label><value></value></input>
+<submit submission="" ref="ewAccountReset" class="principle"><label>Send Password</label></submit></group>
+</Content>

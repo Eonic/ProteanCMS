@@ -60,7 +60,12 @@ Public Class Services
     Function CheckUserIP() As Boolean
         Try
             Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
-            Dim SoapIps As String = moConfig("SoapIps") & ",127.0.0.1,::1,"
+            Dim SoapIps As String = moConfig("SoapIps")
+
+            If LCase(moConfig("Debug")) = "on" Then
+                SoapIps = +",127.0.0.1,::1,"
+            End If
+
             Dim cIP As String = GetIpAddress(moRequest)
             If SoapIps.Contains(cIP & ",") Then
                 Return True

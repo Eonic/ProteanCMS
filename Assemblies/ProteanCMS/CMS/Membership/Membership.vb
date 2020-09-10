@@ -766,6 +766,15 @@ Partial Public Class Cms
                             Case "md5salt", "md5", "sha1", "sha256"
                                 If myWeb.moRequest("ewCmd") = "AR-MOD" Then
                                     Dim cAccountHash As String = myWeb.moRequest("AI")
+                                    'Validate to prevent SQL injection
+                                    'strip out any spaces to prevent SQL injection
+                                    If cAccountHash.Contains(" ") Then
+                                        cAccountHash = Left(cAccountHash, InStr(cAccountHash, " "))
+                                    End If
+                                    If cAccountHash.Contains("%20") Then
+                                        cAccountHash = Left(cAccountHash, InStr(cAccountHash, "%20"))
+                                    End If
+
                                     If Not cAccountHash = "" Then
                                         oXfmElmt = adXfm.xFrmConfirmPassword(cAccountHash)
                                     Else

@@ -632,7 +632,9 @@ Check:
                 Public Function xFrmConfirmPassword(ByVal AccountHash As String) As XmlElement
                     Try
                         Dim oMembership As New Protean.Cms.Membership(myWeb)
-                        Dim nUserId As Integer = oMembership.DecryptResetLink(goRequest("id"), AccountHash)
+                        Dim SubmittedUserId As Integer = CInt("0" + goRequest("id"))
+
+                        Dim nUserId As Integer = oMembership.DecryptResetLink(SubmittedUserId, AccountHash)
 
                         Return xFrmConfirmPassword(nUserId)
 
