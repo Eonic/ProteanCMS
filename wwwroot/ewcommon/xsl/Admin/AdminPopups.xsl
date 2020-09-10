@@ -255,10 +255,10 @@
           <xsl:text>&amp;pathonly=true</xsl:text>
         </xsl:if>
       </xsl:variable>
-      <div class="row" id="files">
+      
           <xsl:variable name="fileCount" select="count(file)"/>
           <xsl:variable name="itemCount" select="'24'"/>
-          <xsl:choose>
+       <xsl:choose>
             <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
               <xsl:variable name="startPos">
                 <xsl:choose>
@@ -280,15 +280,30 @@
                   Show All
                 </a>
 
-                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">Next <xsl:value-of select="$itemCount"/></a>
-              <span class="small">Showing <xsl:value-of select="($startPos + 1)"/> to <xsl:value-of select="$endPos"/> of <xsl:value-of select="$fileCount"/> files</span>
+                <a class="btn btn-primary btn-sm pull-right" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos+$itemCount)}">
+                  Next <xsl:value-of select="$itemCount"/>
+                </a>
+                <span class="small">
+                  Showing <xsl:value-of select="($startPos + 1)"/> to <xsl:value-of select="$endPos"/> of <xsl:value-of select="$fileCount"/> files
+                </span>
               </div>
-            <xsl:apply-templates select="file[position() &gt;= $startPos and position() &lt;= $endPos]" mode="ImageFile">
+              </xsl:when>
+         <xsl:otherwise>
+           <div class="alert alert-info">
+             <xsl:value-of select="$fld"/> contains <xsl:value-of select="$fileCount"/> files
+           </div>
+
+         </xsl:otherwise>
+       </xsl:choose>
+      <div class="row" id="files">
+          <xsl:choose>
+            <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
+            
+              <xsl:apply-templates select="file[position() &gt;= $startPos and position() &lt;= $endPos]" mode="ImageFile">
                 <xsl:with-param name="fld" select="$fld"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
-              <div class="alert alert-info"><xsl:value-of select="$fld"/> contains <xsl:value-of select="$fileCount"/> files</div>
               <xsl:apply-templates select="file" mode="ImageFile">
                 <xsl:with-param name="fld" select="$fld"/>
               </xsl:apply-templates>

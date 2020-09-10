@@ -1415,24 +1415,30 @@
             }
         }
     }
-#uploadFiles{
-    float:left;
+
+#template_FileSystem .pageControlButtons{
+    text-align:right;
+    padding-top:5px;
 }
-#uploadFiles .drophere {
+
+#uploadFiles {
     border: 2px dashed #C0CFD8;
     -moz-border-radius: 4px;
     border-radius: 4px;
-    height: 45px;
     line-height: 1;
-    padding-top: 10px;
+    padding: 5px;
     text-align: center;
     margin-bottom: 5px;
     background: white;
+
+    #fileupload {
+        .alert {
+            margin-bottom: 5px;
+        }
+    }
 }
 
-    .ewAdmin #fileupload #uploadFiles {
-        padding-top: 5px;
-    }
+
 
     .ewAdmin #fileupload td {
         height: 20px;
@@ -1508,26 +1514,31 @@
         background-repeat: repeat-x;
         border-radius: 4px 4px 4px 4px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
-        height: 20px;
-        margin-bottom: 20px;
+        height: 30px;
+        margin-bottom: 5px;
         overflow: hidden;
     }
-
-    .progress .bar {
-        -moz-box-sizing: border-box;
-        background-color: #0E90D2;
-        background-image: linear-gradient(to bottom, #149BDF, #0480BE);
-        background-repeat: repeat-x;
-        box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
-        color: #FFFFFF;
-        float: left;
-        font-size: 12px;
-        height: 100%;
-        text-align: center;
-        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-        transition: width 0.6s ease 0s;
-        width: 0;
-    }
+.progress .overlay {
+    position: absolute;
+    padding: 7px;
+    padding-left: 20px;
+    font-size: 14px;
+}
+.progress .bar {
+    -moz-box-sizing: border-box;
+    background-color: #0E90D2;
+    background-image: linear-gradient(to bottom, #149BDF, #0480BE);
+    background-repeat: repeat-x;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+    color: #FFFFFF;
+    float: left;
+    font-size: 12px;
+    height: 100%;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    transition: width 0.6s ease 0s;
+    width: 0;
+}
 
     .progress-striped .bar {
         background-color: #149BDF;

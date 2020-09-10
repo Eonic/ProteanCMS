@@ -900,7 +900,7 @@ Partial Public Class fsHelper
                     eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
                 Dim fullName As String = Path.GetFileName(file.FileName)
-                statuses.Add(New FilesStatus(fullName, file.ContentLength))
+                statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
 
 
             Catch ex As Exception
