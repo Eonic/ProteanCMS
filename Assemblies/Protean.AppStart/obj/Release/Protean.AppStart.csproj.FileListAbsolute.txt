@@ -24,7 +24,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\JavaScriptEn
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\JavaScriptEngineSwitcher.V8.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaScriptEngineSwitcher.Core.resources.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csprojAssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb
