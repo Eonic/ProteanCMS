@@ -184,6 +184,7 @@ Public Class Cms
         mail = 5
         iframe = 6
         pdf = 7
+        flush = 8
     End Enum
 
 #End Region
@@ -1083,6 +1084,11 @@ Public Class Cms
                     moApi.InitialiseVariables()
                     moApi.JSONRequest()
 
+                Case pageResponseType.flush
+
+                    moResponse.Flush()
+                    moResponse.End()
+                    Close()
 
                 Case Else
 
@@ -1157,11 +1163,12 @@ Public Class Cms
                             End If
                         End If
 
-                        If moResponse.ContentType <> "application/json" Then
-                            'we assume this has allready been set and we have allready done a response.write
-                            'used for admin file uploader, not quite happy with this TS. 9-9-2020
 
-                            If Not msException = "" Then
+
+                        'we assume this has allready been set and we have allready done a response.write
+                        'used for admin file uploader, not quite happy with this TS. 9-9-2020
+
+                        If Not msException = "" Then
                                 'If there is an error we can add our own header.
                                 'this means external programs can check that there is an error
                                 moResponse.AddHeader("X-ProteanCMSError", "An Error has occured")
@@ -1435,11 +1442,7 @@ Public Class Cms
                             End If
                             Close()
                         End If
-                    Else
-                        'response is done earlier
-                        moResponse.End()
-                        Close()
-                    End If
+
 
             End Select
 

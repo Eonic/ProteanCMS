@@ -3200,11 +3200,10 @@ AfterProcessFlow:
                     Case "FileUpload"
 
                         Dim oFS As New fsHelper(myWeb.moCtx)
-
                         oFS.UploadRequest(myWeb.moCtx)
-
                         oFS = Nothing
-
+                        'we want to not render anything else
+                        myWeb.moResponseType = pageResponseType.flush
 
                     Case Else
                         bShowTree = True
