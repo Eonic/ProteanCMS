@@ -2571,7 +2571,13 @@ processFlow:
 
                                         'oOpRow.EndEdit()
                                     Else
-                                        nOpPrices += oOpRow("price")
+
+                                        If (moCartConfig("ProductOptionOverideQuantity") = "on") Then
+                                            nOpPrices += (oOpRow("price") * oOpRow("quantity"))
+                                        Else
+                                            nOpPrices += (oOpRow("price"))
+                                        End If
+
                                     End If
                                 End If
                             Next
@@ -2586,8 +2592,13 @@ processFlow:
 
                             weight += (oRow("weight") * oRow("quantity"))
                             quant += oRow("quantity")
+                            If (moCartConfig("ProductOptionOverideQuantity") = "on") Then
+                                total += (oRow("quantity") * Round(oRow("price"), , , mbRoundup)) + Round(nOpPrices, , , mbRoundup)
+                            Else
+                                total += (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
+                            End If
 
-                            total += (oRow("quantity") * Round(oRow("price") + nOpPrices, , , mbRoundup))
+
                             'we do this later after we have applied discounts
 
                             'Round( Price * Vat ) * Quantity

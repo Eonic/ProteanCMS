@@ -36,6 +36,7 @@
         <add key="DefaultDeliveryCountry" value="" />
         <add key="ShippedValidation" value="on" />
         <add key="PaymentTypeButtons" value="off" />
+        <add key="ProductOptionOverideQuantity" value="off"/>
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -70,6 +71,7 @@
     <bind id="DefaultDeliveryCountry" nodeset="cart/add[@key='DefaultDeliveryCountry']/@value" required="false()" type="string" />
     <bind id="ShippedValidation" nodeset="cart/add[@key='ShippedValidation']/@value" required="false()" type="string" />
     <bind id="PaymentTypeButtons" nodeset="cart/add[@key='PaymentTypeButtons']/@value" required="false()" type="string" />
+    <bind id="ProductOptionOverideQuantity" nodeset="cart/add[@key='ProductOptionOverideQuantity']/@value" required="false()" type="string" />
   </model>
   <group ref="CartSettings">
     <label>Cart Settings</label>
@@ -303,6 +305,18 @@
       </select1>
       <select1 bind="PaymentTypeButtons" appearance="full">
         <label>Show buttons not radios for Payment Type</label>
+        <item>
+          <label>On</label>
+          <value>on</value>
+        </item>
+        <item>
+          <label>Off</label>
+          <value>off</value>
+        </item>
+        <value />
+      </select1>
+      <select1 bind="ProductOptionOverideQuantity" appearance="full">
+        <label>Ignore product quantity for price options, and use option quanity</label>
         <item>
           <label>On</label>
           <value>on</value>
