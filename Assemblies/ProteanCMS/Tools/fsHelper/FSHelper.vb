@@ -267,7 +267,7 @@ Partial Public Class fsHelper
             mcStartFolder = tempStartFolder
 
             Dim nodeElem As XmlElement = XmlElement("folder", New DirectoryInfo(mcStartFolder).Name)
-            nodeElem.SetAttribute("path", "")
+            nodeElem.SetAttribute("path", "\")
             PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
             TreeXml = AddElements(nodeElem, mcStartFolder)
             PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsEnd")
@@ -954,7 +954,7 @@ Partial Public Class fsHelper
                 sVirtualPath = Replace(Folder, mcStartFolder, "")
             End If
 
-            If mcPopulateFilesNode = sVirtualPath Then
+            If mcPopulateFilesNode = sVirtualPath Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
                 startNode.SetAttribute("active", "true")
                 For Each fi In files
                     If Not (Left(fi.Name, 5) = "Icon_") And Not (fi.Name.ToLower = "thumbs.db") And Not (fi.Name.ToLower = ".ds_store") Then

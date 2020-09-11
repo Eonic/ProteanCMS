@@ -8,6 +8,7 @@ Imports System.Collections.Generic
 Imports System.Text
 Imports System.Drawing.Drawing2D
 Imports Protean.Tools.Text
+Imports Tinify
 
 Public Class Image
 #Region "Declarations"
@@ -488,68 +489,84 @@ Public Class Image
         End Try
     End Function
 
-    Public Function CompressImage(ByRef imgfileInfo As FileInfo, ByVal lossless As Boolean) As Long
+    Public Function CompressImage(ByRef imgfileInfo As FileInfo, ByVal lossless As Boolean, Optional ByVal TinyKey As String = "") As Long
         Dim difference As Long
         Try
-            'Compress the File using ImageMagick
-            Select Case LCase(imgfileInfo.Extension)
-                Case ".gif"
 
-                    difference = imgfileInfo.Length
-                    Dim optimizer As New ImageMagick.ImageOptimizers.GifOptimizer()
-                    If lossless Then
-                        optimizer.LosslessCompress(imgfileInfo)
-                    Else
-                        '  optimizer.LosslessCompress = True
-                        Try
-                            optimizer.Compress(imgfileInfo)
-                        Catch ex As Exception
-                            optimizer = Nothing
-                            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                        End Try
-                    End If
-                    imgfileInfo.Refresh()
-                    difference = difference - imgfileInfo.Length
-                    optimizer = Nothing
-                Case ".png"
 
-                    difference = imgfileInfo.Length
-                    Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
-                    If lossless Then
-                        optimizer.LosslessCompress(imgfileInfo)
-                    Else
-                        optimizer.OptimalCompression = True
-                        Try
-                            optimizer.Compress(imgfileInfo)
-                        Catch ex As Exception
-                            optimizer = Nothing
-                            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                        End Try
-                    End If
-                    imgfileInfo.Refresh()
-                    difference = difference - imgfileInfo.Length
-                    optimizer = Nothing
-                Case ".jpg", ".jpeg"
+            If TinyKey <> "" Then
 
-                    difference = imgfileInfo.Length
-                    Dim optimizer As New ImageMagick.ImageOptimizers.JpegOptimizer()
-                    If lossless Then
-                        optimizer.LosslessCompress(imgfileInfo)
-                    Else
-                        optimizer.OptimalCompression = True
-                        Try
-                            optimizer.Compress(imgfileInfo)
-                        Catch ex As Exception
-                            optimizer = Nothing
-                            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                        End Try
-                    End If
-                    imgfileInfo.Refresh()
-                    difference = difference - imgfileInfo.Length
-                    optimizer = Nothing
-                Case ".webp"
+                'Dim tinyApi As New Tinify.TinifyAPI()
 
-            End Select
+                ' tinyApi.
+
+
+            Else
+
+                'Compress the File using ImageMagick
+                Select Case LCase(imgfileInfo.Extension)
+                    Case ".gif"
+
+                        difference = imgfileInfo.Length
+                        Dim optimizer As New ImageMagick.ImageOptimizers.GifOptimizer()
+                        If lossless Then
+                            optimizer.LosslessCompress(imgfileInfo)
+                        Else
+                            '  optimizer.LosslessCompress = True
+                            Try
+                                optimizer.Compress(imgfileInfo)
+                            Catch ex As Exception
+                                optimizer = Nothing
+                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                            End Try
+                        End If
+                        imgfileInfo.Refresh()
+                        difference = difference - imgfileInfo.Length
+                        optimizer = Nothing
+                    Case ".png"
+
+                        difference = imgfileInfo.Length
+                        Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
+                        If lossless Then
+                            optimizer.LosslessCompress(imgfileInfo)
+                        Else
+                            optimizer.OptimalCompression = True
+                            Try
+                                optimizer.Compress(imgfileInfo)
+                            Catch ex As Exception
+                                optimizer = Nothing
+                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                            End Try
+                        End If
+                        imgfileInfo.Refresh()
+                        difference = difference - imgfileInfo.Length
+                        optimizer = Nothing
+                    Case ".jpg", ".jpeg"
+
+                        difference = imgfileInfo.Length
+                        Dim optimizer As New ImageMagick.ImageOptimizers.JpegOptimizer()
+                        If lossless Then
+                            optimizer.LosslessCompress(imgfileInfo)
+                        Else
+                            optimizer.OptimalCompression = True
+
+
+                            Try
+                                optimizer.Compress(imgfileInfo)
+                            Catch ex As Exception
+                                optimizer = Nothing
+                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                            End Try
+                        End If
+                        imgfileInfo.Refresh()
+                        difference = difference - imgfileInfo.Length
+                        optimizer = Nothing
+                    Case ".webp"
+
+                End Select
+
+
+            End If
             Return difference
 
         Catch ex As Exception
