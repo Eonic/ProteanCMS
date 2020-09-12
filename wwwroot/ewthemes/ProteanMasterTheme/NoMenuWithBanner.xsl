@@ -63,11 +63,21 @@
           </div>
         </div>
       </div>
+      <xsl:if test="$adminMode or /Page/Contents/Content[@position='site-alert']">
+        <div id="site-alert" class="clearfix">
+          <xsl:apply-templates select="/Page" mode="addModule">
+            <xsl:with-param name="text">Add Module</xsl:with-param>
+            <xsl:with-param name="name">site-alert</xsl:with-param>
+            <xsl:with-param name="position">site-alert</xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
       <xsl:apply-templates select="." mode="header-template1">
         <xsl:with-param name="nav-collapse">false</xsl:with-param>
       </xsl:apply-templates>
-      <!--~~~~~~~~~~~~~~ TOP SUB MENU ~~~~~~~~~~~~~~ -->
-      <xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail)">
+      <!--~~~~~~~~~~~~~~ TOP BANNER ~~~~~~~~~~~~~~ -->
+      <!--<xsl:if test="not($cartPage) and $currentPage/@name!='Home' and not($page/ContentDetail)">
         <div id="header-banner" style="background-image:url({/Page/Contents/Content[@name='Banner']/img/@src})">
           <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
             <xsl:with-param name="type">Image</xsl:with-param>
@@ -75,7 +85,7 @@
             <xsl:with-param name="name">Banner</xsl:with-param>
           </xsl:apply-templates>
           <div class="header-banner-inner">
-            <!--<xsl:apply-templates select="/Page/Contents/Content[@name='Banner']" mode="displayBrief" />-->
+            --><!--<xsl:apply-templates select="/Page/Contents/Content[@name='Banner']" mode="displayBrief" />--><!--
             <xsl:if test="not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home' and $themeBreadcrumb='true'">
               <section class="wrapper">
                 <div class="container">
@@ -86,7 +96,7 @@
               </section>
             </xsl:if>
             <xsl:if test="not($cartPage) and $currentPage/@name!='Home'">
-              <!--<xsl:if test="$currentPage/@name!='Home'">-->
+              --><!--<xsl:if test="$currentPage/@name!='Home'">--><!--
               <xsl:if test="$themeTitle='true' and not($page/ContentDetail)">
                 <section class="wrapper">
                   <div class="container">
@@ -106,6 +116,52 @@
             </div>
           </div>
         </div>
+      </xsl:if>-->
+      <xsl:if test="not($page/ContentDetail) and not($currentPage/@name='Home') and not($cartPage)">
+        <xsl:choose>
+          <xsl:when test="/Page/Contents/Content[@name='Banner']/img/@src!='' or $adminMode">
+            <div id="header-banner" style="background-image:url({/Page/Contents/Content[@name='Banner']/img/@src})">
+              <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
+                <xsl:with-param name="type">Image</xsl:with-param>
+                <xsl:with-param name="text">Add Banner Background</xsl:with-param>
+                <xsl:with-param name="name">Banner</xsl:with-param>
+              </xsl:apply-templates>
+              <div class="header-banner-inner">
+                <!--<xsl:apply-templates select="/Page/Contents/Content[@name='Banner']" mode="displayBrief" />-->
+                <xsl:if test="not($currentPage/DisplayName[@nonav='true']) and $currentPage/@name!='Home' and $themeBreadcrumb='true'">
+                  <section class="wrapper">
+                    <div class="container">
+                      <ol class="breadcrumb">
+                        <xsl:apply-templates select="Menu/MenuItem" mode="breadcrumb"/>
+                      </ol>
+                    </div>
+                  </section>
+                </xsl:if>
+                <xsl:if test="not($cartPage) and $currentPage/@name!='Home'">
+                  <!--<xsl:if test="$currentPage/@name!='Home'">-->
+                  <xsl:if test="$themeTitle='true' and not($page/ContentDetail)">
+                    <section class="wrapper">
+                      <div class="container">
+                        <div id="mainTitle">
+                          <xsl:apply-templates select="/" mode="getMainTitle" />
+                        </div>
+                      </div>
+                    </section>
+                  </xsl:if>
+                </xsl:if>
+              </div>
+            </div>
+          </xsl:when>
+          <xsl:otherwise>
+            <section class="wrapper bannerless-page">
+              <div class="container">
+                <div id="mainTitle">
+                  <xsl:apply-templates select="/" mode="getMainTitle" />
+                </div>
+              </div>
+            </section>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
 
       <!--<xsl:if test="$page/ContentDetail">
