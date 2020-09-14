@@ -504,66 +504,66 @@ Public Class Image
             Else
 
                 'Compress the File using ImageMagick
-                Select Case LCase(imgfileInfo.Extension)
-                    Case ".gif"
+                'Select Case LCase(imgfileInfo.Extension)
+                '    Case ".gif"
 
-                        difference = imgfileInfo.Length
-                        Dim optimizer As New ImageMagick.ImageOptimizers.GifOptimizer()
-                        If lossless Then
-                            optimizer.LosslessCompress(imgfileInfo)
-                        Else
-                            '  optimizer.LosslessCompress = True
-                            Try
-                                optimizer.Compress(imgfileInfo)
-                            Catch ex As Exception
-                                optimizer = Nothing
-                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                            End Try
-                        End If
-                        imgfileInfo.Refresh()
-                        difference = difference - imgfileInfo.Length
-                        optimizer = Nothing
-                    Case ".png"
+                '        difference = imgfileInfo.Length
+                '        Dim optimizer As New ImageMagick.ImageOptimizers.GifOptimizer()
+                '        If lossless Then
+                '            optimizer.LosslessCompress(imgfileInfo)
+                '        Else
+                '            '  optimizer.LosslessCompress = True
+                '            Try
+                '                optimizer.Compress(imgfileInfo)
+                '            Catch ex As Exception
+                '                optimizer = Nothing
+                '                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                '            End Try
+                '        End If
+                '        imgfileInfo.Refresh()
+                '        difference = difference - imgfileInfo.Length
+                '        optimizer = Nothing
+                '    Case ".png"
 
-                        difference = imgfileInfo.Length
-                        Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
-                        If lossless Then
-                            optimizer.LosslessCompress(imgfileInfo)
-                        Else
-                            optimizer.OptimalCompression = True
-                            Try
-                                optimizer.Compress(imgfileInfo)
-                            Catch ex As Exception
-                                optimizer = Nothing
-                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                            End Try
-                        End If
-                        imgfileInfo.Refresh()
-                        difference = difference - imgfileInfo.Length
-                        optimizer = Nothing
-                    Case ".jpg", ".jpeg"
+                '        difference = imgfileInfo.Length
+                '        Dim optimizer As New ImageMagick.ImageOptimizers.PngOptimizer()
+                '        If lossless Then
+                '            optimizer.LosslessCompress(imgfileInfo)
+                '        Else
+                '            optimizer.OptimalCompression = True
+                '            Try
+                '                optimizer.Compress(imgfileInfo)
+                '            Catch ex As Exception
+                '                optimizer = Nothing
+                '                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                '            End Try
+                '        End If
+                '        imgfileInfo.Refresh()
+                '        difference = difference - imgfileInfo.Length
+                '        optimizer = Nothing
+                '    Case ".jpg", ".jpeg"
 
-                        difference = imgfileInfo.Length
-                        Dim optimizer As New ImageMagick.ImageOptimizers.JpegOptimizer()
-                        If lossless Then
-                            optimizer.LosslessCompress(imgfileInfo)
-                        Else
-                            optimizer.OptimalCompression = True
+                '        difference = imgfileInfo.Length
+                '        Dim optimizer As New ImageMagick.ImageOptimizers.JpegOptimizer()
+                '        If lossless Then
+                '            optimizer.LosslessCompress(imgfileInfo)
+                '        Else
+                '            optimizer.OptimalCompression = True
 
 
-                            Try
-                                optimizer.Compress(imgfileInfo)
-                            Catch ex As Exception
-                                optimizer = Nothing
-                                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
-                            End Try
-                        End If
-                        imgfileInfo.Refresh()
-                        difference = difference - imgfileInfo.Length
-                        optimizer = Nothing
-                    Case ".webp"
+                '            Try
+                '                optimizer.Compress(imgfileInfo)
+                '            Catch ex As Exception
+                '                optimizer = Nothing
+                '                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CompressImage", ex, ""))
+                '            End Try
+                '        End If
+                '        imgfileInfo.Refresh()
+                '        difference = difference - imgfileInfo.Length
+                '        optimizer = Nothing
+                '    Case ".webp"
 
-                End Select
+                'End Select
 
 
             End If
