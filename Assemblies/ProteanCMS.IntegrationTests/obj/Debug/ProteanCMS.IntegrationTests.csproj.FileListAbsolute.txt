@@ -91,3 +91,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Adva
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\Antlr3.Runtime.pdb
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csprojAssemblyReference.cache
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.csproj.CoreCompileInputs.cache
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
