@@ -24,7 +24,7 @@ Public Class RegularProxy
         ' We don't want to buffer because we want to save memory
         context.Response.Buffer = False
 
-        If url.StartsWith("http") Then
+        If url.StartsWith("http://") Or url.StartsWith("https://") Then
             ' Serve from cache if available
             If context.Cache(url) IsNot Nothing Then
                 context.Response.BinaryWrite(TryCast(context.Cache(url), Byte()))

@@ -234,6 +234,16 @@
         Name of site here
       </div>-->
 
+      <xsl:if test="$adminMode or /Page/Contents/Content[@position='site-alert']">
+        <div id="site-alert" class="clearfix">
+          <xsl:apply-templates select="/Page" mode="addModule">
+            <xsl:with-param name="text">Add Module</xsl:with-param>
+            <xsl:with-param name="name">site-alert</xsl:with-param>
+            <xsl:with-param name="position">site-alert</xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
+        </div>
+      </xsl:if>
       <!--~~~~~~~~~~~~~~ HEADER AND MAIN NAV TEMPLATE CALLED FROM TOOLS/LAYOUT.XSL ~~~~~~~~~~~~~~ -->
       <xsl:apply-templates select="." mode="header6OC">
         <xsl:with-param name="nav-collapse">false</xsl:with-param>

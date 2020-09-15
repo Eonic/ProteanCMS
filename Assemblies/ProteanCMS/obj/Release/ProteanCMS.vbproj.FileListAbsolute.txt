@@ -236,3 +236,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.xml

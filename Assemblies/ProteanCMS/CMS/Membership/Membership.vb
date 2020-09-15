@@ -774,6 +774,11 @@ Partial Public Class Cms
                                     If cAccountHash.Contains("%20") Then
                                         cAccountHash = Left(cAccountHash, InStr(cAccountHash, "%20"))
                                     End If
+                                    Dim regex As System.Text.RegularExpressions.Regex = New System.Text.RegularExpressions.Regex("[\d,]")
+
+                                    If Not regex.Match(cAccountHash).Success Then
+                                        cAccountHash = ""
+                                    End If
 
                                     If Not cAccountHash = "" Then
                                         oXfmElmt = adXfm.xFrmConfirmPassword(cAccountHash)
