@@ -616,3 +616,5 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\System.Diagnostics.DiagnosticSource.xml

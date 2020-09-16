@@ -278,7 +278,7 @@ Partial Public Class Cms
 
 #Region "Search Methods"
 
-        Protected Function BuildFiltersFromRequest(ByRef currentRequest As System.Web.HttpRequest) As XmlElement
+        Protected Function BuildFiltersFromRequest(ByRef XmlDoc As XmlDocument, ByRef currentRequest As System.Web.HttpRequest) As XmlElement
             PerfMon.Log("Search", "BuildFiltersFromRequest")
             Dim processInfo As String = ""
 
@@ -298,7 +298,7 @@ Partial Public Class Cms
                 ' sf-max - for range queries, the max
                 ' sf-type - the data type of the field "string","number" or "float"
 
-                filters = myWeb.moPageXml.CreateElement("Filters")
+                filters = XmlDoc.CreateElement("Filters")
 
                 requestItemsLength = currentRequest.QueryString.AllKeys.Length + currentRequest.Form.AllKeys.Length
 
@@ -412,7 +412,7 @@ Partial Public Class Cms
                     Dim livePages As Filter = LivePageLuceneFilter()
 
                     ' Generate the query criteria
-                    Dim searchFilters As XmlElement = BuildFiltersFromRequest(myWeb.moRequest)
+                    Dim searchFilters As XmlElement = BuildFiltersFromRequest(resultsXML.OwnerDocument, myWeb.moRequest)
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                     ' Generate the search query
@@ -660,9 +660,9 @@ Partial Public Class Cms
                         ' Generate the live page filter
                         Dim livePages As Filter = LivePageLuceneFilter(myAPI)
 
-                        ' Generate the query criteria
-                        Dim searchFilters As XmlElement = BuildFiltersFromRequest(myAPI.moRequest)
-                        If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
+                    ' Generate the query criteria
+                    Dim searchFilters As XmlElement = BuildFiltersFromRequest(resultsXML.OwnerDocument, myAPI.moRequest)
+                    If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                         ' Generate the search query
                         Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
@@ -2011,6 +2011,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 Dim livePagesQuery As New BooleanQuery()
                 Dim myWeb As New Protean.Cms(myApi.moCtx)
+                myWeb.Open()
 
                 Dim siteStructure As XmlElement = myWeb.GetStructureXML(myWeb.mnUserId)
                 Dim livePages As XmlNodeList = siteStructure.SelectNodes("*/descendant-or-self::MenuItem")

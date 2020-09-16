@@ -70,6 +70,8 @@
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />
         <add key="CheckDetailPath" value="off" />
+         <add key="EnableWebP" value="off" />
+         <add key="EnableRetina" value="off" />
        </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -131,8 +133,9 @@
      <bind id="XmlSettings" nodeset="web/add[@key='XmlSettings']/@value" required="false()" type="string" />
      <bind id="ewPageCache" nodeset="web/add[@key='PageCache']/@value" required="false()" type="string" />
      <bind id="ewPageCacheTimeout" nodeset="web/add[@key='PageCacheTimeout']/@value" required="false()" type="string" />
-     
      <bind id="ewCheckDetailPath" nodeset="web/add[@key='CheckDetailPath']/@value" required="false()" type="string" />
+     <bind id="ewEnableWebP" nodeset="web/add[@key='EnableWebP']/@value" required="false()" type="string" />
+     <bind id="ewEnableRetina" nodeset="web/add[@key='EnableRetina']/@value" required="false()" type="string" />
    </model>
    <group ref="WebSettings">
     <label>Web Settings</label>
@@ -196,6 +199,33 @@
 			  <value>1</value>
 			</input>
 		</group>
+     <group ref="Image" class="inline">
+       <label>Image Handling</label>
+       <select1 bind="ewEnableWebP" appearance="full">
+         <label>Enable WebP</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>on</value>
+       </select1>
+       <select1 bind="ewEnableRetina" appearance="full">
+         <label>Enable Retina Images</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>on</value>
+       </select1>
+     </group>
 	   <group ref="Email" class="inline">
 		   <label>Email</label>
        <div class="long">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>

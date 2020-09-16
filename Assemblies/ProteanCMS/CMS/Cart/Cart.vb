@@ -2613,14 +2613,21 @@ processFlow:
                         '    xstr &= oRow(ix) & ", "
                         'Next
 
-                        Dim discountSQL As String = ""
-                        If Discount <> 0 Then
-                            '     discountSQL = ", nDiscountValue = " & Discount & " "
-                        End If
+                        Try
+                            If oRow("price") <> Nothing Then
+                                If oRow("price") <> "" Then
+                                    Dim discountSQL As String = ""
+                                    If Discount <> 0 Then
+                                        '     discountSQL = ", nDiscountValue = " & Discount & " "
+                                    End If
+                                    Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
+                                    moDBHelper.ExeProcessSql(cUpdtSQL)
+                                End If
+                            End If
 
-                        Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
-                        moDBHelper.ExeProcessSql(cUpdtSQL)
+                        Catch ex As Exception
 
+                        End Try
 
                     Next
 

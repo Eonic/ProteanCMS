@@ -11357,10 +11357,13 @@ ReturnMe:
 
                             Dim bRelocate As Boolean = False
 
+                            Dim bCommitUpdate = True
+
                             If nId > 0 Then
                                 'case for updates
                                 If ImportStateObj.oInstance.getAttribute("update").contains("none") Then
                                     ImportStateObj.bSkipExisting = True
+                                    bCommitUpdate = False
                                 End If
                                 If ImportStateObj.oInstance.getAttribute("update").contains("relocate") Then
                                     bRelocate = True
@@ -11370,10 +11373,11 @@ ReturnMe:
                                 'case for inserts
                                 If ImportStateObj.oInstance.getAttribute("insert").contains("none") Then
                                     ImportStateObj.bSkipExisting = True
+                                    bCommitUpdate = False
                                 End If
                             End If
 
-                            If Not ImportStateObj.bSkipExisting Then
+                            If bCommitUpdate Then
                                 nId = modbhelper.setObjectInstance(oObjType, updateInstance, nId)
                                 If bRelocate Then
                                     modbhelper.processInstanceExtras(nId, updateInstance, ImportStateObj.bResetLocations, ImportStateObj.bOrphan)
