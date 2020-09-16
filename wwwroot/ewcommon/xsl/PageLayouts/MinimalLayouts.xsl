@@ -8301,12 +8301,28 @@
                 <xsl:with-param name="height" select="$lg-max-height"/>
               </xsl:apply-templates>
             </xsl:if>
+            <xsl:if test="DisplayName/@icon!=''">
+              <i>
+                <xsl:attribute name="class">
+                  <xsl:text>fa fa-3x center-block </xsl:text>
+                  <xsl:value-of select="DisplayName/@icon"/>
+                </xsl:attribute>
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>
+            </xsl:if>
+            <xsl:if test="DisplayName/@uploadIcon!='' and DisplayName/@uploadIcon!='_'">
+              <span class="upload-icon">
+                <img src="{DisplayName/@uploadIcon}" alt="icon" class="center-block img-responsive"/>
+              </span>
+            </xsl:if>
             <div class="caption">
               <h4>
                 <xsl:apply-templates select="." mode="getDisplayName"/>
               </h4>
             </div>
           </div>
+          
         </a>
       </div>
     </xsl:if>
