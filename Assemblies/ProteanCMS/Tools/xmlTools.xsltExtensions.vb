@@ -1197,7 +1197,7 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 ' PerfMon.Log("xmlTools", "ResizeImage - End")
                 If LCase(myWeb.moConfig("Debug")) = "on" Then
-                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    reportException(myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
@@ -1358,7 +1358,7 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 ' PerfMon.Log("xmlTools", "ResizeImage - End")
                 If LCase(myWeb.moConfig("Debug")) = "on" Then
-                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    reportException(myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message

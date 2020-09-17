@@ -462,7 +462,7 @@ Namespace Providers
                         Return ppXform
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -486,7 +486,7 @@ Namespace Providers
 
                         oOptXform.addSubmit(oFrmElmt, submissionValue, PaymentLabel, refValue, "pay-button pay-" & configXml.GetAttribute("name"), iconclass, configXml.GetAttribute("name"))
                     Catch ex As Exception
-                        returnException(mcModuleName, "AddPaymentButton", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "AddPaymentButton", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -513,7 +513,7 @@ Namespace Providers
                         oDr = Nothing
                         Return strReturn
                     Catch ex As Exception
-                        returnException(mcModuleName, "getCountryISOnum", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "getCountryISOnum", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -530,7 +530,7 @@ Namespace Providers
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 
@@ -545,7 +545,7 @@ Namespace Providers
                         Return "Not Implemented"
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 

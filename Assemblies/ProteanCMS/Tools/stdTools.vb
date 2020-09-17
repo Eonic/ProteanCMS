@@ -22,7 +22,7 @@ Public Module stdTools
 
     Public PerfMon As New PerfLog("")
 
-    Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
+    ' Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
     Public mbDBError As Boolean = False
 
     Public gbDebug As Boolean = False ' make sure this is False when doing a release
@@ -54,8 +54,7 @@ Public Module stdTools
 
     Public SortDirectionVal() As String = {"descending", "ascending"}
 
-    Public Sub returnException(ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
-
+    Public Sub returnException(ByRef sException As String, ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
         'Author:        Trevor Spink
         'Copyright:     Eonic Ltd 2005
         'Date:          2005-07-08
@@ -75,10 +74,13 @@ Public Module stdTools
 
         'Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
         sProcessInfo = "Getting Host"
+
+
+
         If Not System.Web.HttpContext.Current Is Nothing Then
             cHost = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST")
         End If
-        If msException = "" Then
+        If sException = "" Then
             If xsltTemplatePath = "" Then
                 xsltTemplatePath = oConfig("SiteXsl")
             End If
@@ -102,15 +104,15 @@ Public Module stdTools
                 oElmt.SetAttribute("name", "column1")
 
                 strErrorHtml = exceptionReport(oException, vstrModuleName & "." & vstrRoutineName, vstrFurtherInfo)
-                strMessageHtml = "<div style=""font-family:Verdana,Tahoma,Arial""><h2>Unfortunately this site has experienced an error.</h2>" & _
-                "<h3>We take all errors very seriously.</h3>" & _
-                "<p>" & _
-                "This error has been recorded and details sent to <a href=""http://www.eonic.co.uk"">Eonic</a> who provide technical support for this website." & _
-                "</p>" & _
-                "<p>" & _
-                "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=""mailto:support@eonic.co.uk"">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." & _
-                "</p>" & _
-                "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" & _
+                strMessageHtml = "<div style=""font-family:Verdana,Tahoma,Arial""><h2>Unfortunately this site has experienced an error.</h2>" &
+                "<h3>We take all errors very seriously.</h3>" &
+                "<p>" &
+                "This error has been recorded and details sent to <a href=""http://www.eonic.co.uk"">Eonic</a> who provide technical support for this website." &
+                "</p>" &
+                "<p>" &
+                "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=""mailto:support@eonic.co.uk"">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." &
+                "</p>" &
+                "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" &
                 "<a href=""javascript:history.back();"">Click Here to return to the previous page.</a></div>"
 
                 Try
@@ -295,13 +297,13 @@ Public Module stdTools
                     sReturnHtml = "<html><title>Error Message</title><body>" & strErrorHtml & "</body></html>"
 
                 Finally
-                    msException = sReturnHtml
+                    sException = sReturnHtml
                 End Try
             End If
         End If
     End Sub
 
-    Public Sub reportException(ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
+    Public Sub reportException(ByRef sException As String, ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
 
         'Author:        Trevor Spink
         'Copyright:     Eonic Ltd 2005
@@ -324,7 +326,7 @@ Public Module stdTools
         If Not System.Web.HttpContext.Current Is Nothing Then
             cHost = System.Web.HttpContext.Current.Request.ServerVariables("HTTP_HOST")
         End If
-        If msException = "" Then
+        If sException = "" Then
             If xsltTemplatePath = "" Then
                 xsltTemplatePath = oConfig("SiteXsl")
             End If
@@ -348,15 +350,15 @@ Public Module stdTools
                 oElmt.SetAttribute("name", "column1")
 
                 strErrorHtml = exceptionReport(oException, vstrModuleName & "." & vstrRoutineName, vstrFurtherInfo)
-                strMessageHtml = "<div style=""font-family:Verdana,Tahoma,Arial""><h2>Unfortunately this site has experienced an error.</h2>" & _
-                "<h3>We take all errors very seriously.</h3>" & _
-                "<p>" & _
-                "This error has been recorded and details sent to <a href=""http://www.eonic.co.uk"">Eonic</a> who provide technical support for this website." & _
-                "</p>" & _
-                "<p>" & _
-                "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=""mailto:support@eonic.co.uk"">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." & _
-                "</p>" & _
-                "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" & _
+                strMessageHtml = "<div style=""font-family:Verdana,Tahoma,Arial""><h2>Unfortunately this site has experienced an error.</h2>" &
+                "<h3>We take all errors very seriously.</h3>" &
+                "<p>" &
+                "This error has been recorded and details sent to <a href=""http://www.eonic.co.uk"">Eonic</a> who provide technical support for this website." &
+                "</p>" &
+                "<p>" &
+                "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=""mailto:support@eonic.co.uk"">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." &
+                "</p>" &
+                "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" &
                 "<a href=""javascript:history.back();"">Click Here to return to the previous page.</a></div>"
 
                 Try

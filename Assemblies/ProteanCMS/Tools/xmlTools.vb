@@ -523,7 +523,7 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
                     transformException = ex
-                    returnException("Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
+                    returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True
                 End Try
             End Set
@@ -547,7 +547,7 @@ Public Class XmlHelper
                     End If
                 Catch ex As Exception
                     transformException = ex
-                    returnException("Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value)
+                    returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value)
                     bError = True
                 End Try
             End Set
@@ -601,7 +601,7 @@ Public Class XmlHelper
                 xsltArgs.AddExtensionObject("urn:ew", ewXsltExt)
             Catch ex As Exception
                 transformException = ex
-                returnException("Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
                 bError = True
             End Try
         End Sub
@@ -645,7 +645,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 transformException = ex
-                returnException("Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug)
                 bError = True
             End Try
         End Sub
@@ -662,7 +662,7 @@ Public Class XmlHelper
                 oCStyle = Nothing
                 xsltArgs = Nothing
             Catch ex As Exception
-                returnException("Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug)
 
             End Try
         End Sub
@@ -689,8 +689,8 @@ Public Class XmlHelper
                 End If
                 d.EndInvoke(DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                returnException("Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oResponse.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                oResponse.Write(myWeb.msException)
                 bError = True
             End Try
         End Sub
@@ -712,8 +712,8 @@ Public Class XmlHelper
                 End If
                 d.EndInvoke(oWriter, DirectCast(res, Runtime.Remoting.Messaging.AsyncResult))
             Catch ex As Exception
-                returnException("Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
-                oWriter.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo)
+                oWriter.Write(myWeb.msException)
                 bError = True
             End Try
         End Sub
@@ -740,8 +740,8 @@ Public Class XmlHelper
                 oXml.InnerXml = oWriter.ToString
                 Return oXml
             Catch ex As Exception
-                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oWriter.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                oWriter.Write(myWeb.msException)
                 bError = True
                 Return Nothing
             End Try
@@ -761,7 +761,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 transformException = ex
-                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
                 ' oResponse.Write(msException)
                 bError = True
             End Try
@@ -802,7 +802,7 @@ Public Class XmlHelper
                     Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(oXml.OuterXml))
                     Dim sWriter As IO.StringWriter = New IO.StringWriter
 
-                    If msException = "" Then
+                    If myWeb.msException = "" Then
                         'Run transformation
 
                         ' Dim xsltDomainProxy As ProxyDomain = xsltDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, GetType(ProxyDomain).FullName)
@@ -812,7 +812,7 @@ Public Class XmlHelper
 
                         oCStyle.Transform(oReader, xsltArgs, XmlWriter.Create(oResponse.OutputStream, ws), resolver)
                     Else
-                        oResponse.Write(msException)
+                        oResponse.Write(myWeb.msException)
                     End If
                     oReader.Close()
                     sWriter.Dispose()
@@ -823,11 +823,11 @@ Public Class XmlHelper
                     Dim oXmlNodeReader As XmlNodeReader = New XmlNodeReader(oXml)
                     Dim xpathDoc As XPath.XPathDocument = New XPath.XPathDocument(oXmlNodeReader)
 
-                    If msException = "" Then
+                    If myWeb.msException = "" Then
                         'Run transformation
                         oStyle.Transform(xpathDoc, xsltArgs, oResponse.OutputStream, Nothing)
                     Else
-                        oResponse.Write(msException)
+                        oResponse.Write(myWeb.msException)
                     End If
 
                     oXmlNodeReader.Close()
@@ -836,8 +836,8 @@ Public Class XmlHelper
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oResponse.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                oResponse.Write(myWeb.msException)
                 bError = True
             End Try
         End Sub
@@ -882,31 +882,31 @@ Public Class XmlHelper
             Dim sProcessInfo As String = "Processing: " & msXslFile
             Try
                 If mbCompiled Then
-                    If msException = "" Then
+                    If myWeb.msException = "" Then
                         'Run transformation 
                         Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(oXml.OuterXml))
                         Dim sWriter As IO.StringWriter = New IO.StringWriter
                         oCStyle.Transform(oReader, xsltArgs, oWriter)
                     Else
-                        oWriter.Write(msException)
+                        oWriter.Write(myWeb.msException)
                     End If
 
                 Else
                     'Change the xmlDocument to xPathDocument to improve performance
                     Dim xpathDoc As XPath.XPathDocument = New XPath.XPathDocument(New XmlNodeReader(oXml))
 
-                    If msException = "" Or msException Is Nothing Then
+                    If myWeb.msException = "" Or myWeb.msException Is Nothing Then
                         'Run transformation
                         oStyle.Transform(xpathDoc, xsltArgs, oWriter, Nothing)
                     Else
-                        oWriter.Write(msException)
+                        oWriter.Write(myWeb.msException)
                     End If
 
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException("Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oWriter.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                oWriter.Write(myWeb.msException)
                 bError = True
             End Try
         End Sub
@@ -950,11 +950,11 @@ Public Class XmlHelper
                     Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(oXml.OuterXml))
                     Dim sWriter As IO.StringWriter = New IO.StringWriter
 
-                    If msException = "" Then
+                    If myWeb.msException = "" Then
                         'Run transformation
                         oStyle.Transform(oReader, xsltArgs, oWriter)
                     Else
-                        oWriter.Write(msException)
+                        oWriter.Write(myWeb.msException)
                     End If
 
                 Else
@@ -973,11 +973,11 @@ Public Class XmlHelper
                     'Change the xmlDocument to xPathDocument to improve performance
                     Dim xpathDoc As XPath.XPathDocument = New XPath.XPathDocument(New XmlNodeReader(oXml))
 
-                    If msException = "" Then
+                    If myWeb.msException = "" Then
                         'Run transformation
                         oStyle.Transform(xpathDoc, xsltArgs, oWriter, Nothing)
                     Else
-                        oWriter.Write(msException)
+                        oWriter.Write(myWeb.msException)
                     End If
 
 
@@ -988,8 +988,8 @@ Public Class XmlHelper
             Catch ex As Exception
                 bError = True
                 currentError = ex
-                returnException("Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug)
-                oWriter.Write(msException)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug)
+                oWriter.Write(myWeb.msException)
                 Return Nothing
             End Try
         End Function
@@ -1037,7 +1037,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 bError = True
-                returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function
@@ -1087,7 +1087,7 @@ Public Class XmlHelper
 
             Catch ex As Exception
                 bError = True
-                returnException("Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug)
+                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug)
                 Return Nothing
             End Try
         End Function

@@ -867,7 +867,7 @@ Partial Public Class Cms
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetUsersByGroup", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetUsersByGroup", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -910,7 +910,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UserContacts", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "UserContacts", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -963,7 +963,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CompanyContact", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CompanyContact", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -989,7 +989,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddUserToGroup", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddUserToGroup", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 

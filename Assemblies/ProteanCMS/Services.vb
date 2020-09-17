@@ -108,7 +108,7 @@ Public Class Services
         AddResponse(e.ToString)
 
         ' Try to generate an Eonic Error
-        returnException(e.ModuleName, e.ProcedureName, e.Exception, , e.AddtionalInformation, gbDebug, "Services: ")
+        returnException(myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, , e.AddtionalInformation, gbDebug, "Services: ")
     End Sub
 
 
@@ -123,7 +123,7 @@ Public Class Services
         Dim cProcessInfo As String = "emailer"
         Try
             If CheckUserIP() Then
-                Dim oMsg As Protean.Messaging = New Protean.Messaging
+                Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
                 sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
             End If
 
@@ -142,7 +142,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerXMLAttach"
         Try
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, , , , ccRecipient, bccRecipient, cSeperator)
 
@@ -163,7 +163,7 @@ Public Class Services
         Dim cProcessInfo As String = "multiEmailer"
         Try
 
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine)
 
@@ -209,7 +209,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
             sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
@@ -229,7 +229,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
             Dim arrayItem As String
             Dim strFilePath As String() = cAttachmentFilePath.Split(",")
 
@@ -260,7 +260,7 @@ Public Class Services
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
 
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
             'oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
 
             'oMsg.deleteAttachment(cAttachmentFilePath)
@@ -498,7 +498,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "UserAlerts", ex, , , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "UserAlerts", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
         End Try
@@ -525,7 +525,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "Monitor", ex, , , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "Monitor", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
         End Try
@@ -550,7 +550,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "Monitor", ex, , , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "Monitor", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
         End Try
@@ -598,7 +598,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "GetPendingContent", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
             myWeb.Close()

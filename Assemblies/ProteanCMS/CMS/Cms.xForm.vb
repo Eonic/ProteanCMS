@@ -93,7 +93,7 @@ Partial Public Class Cms
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
                 Return ""
             End Try
         End Function
