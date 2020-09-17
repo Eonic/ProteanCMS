@@ -27,7 +27,7 @@ Partial Public Class Cms
                 moPageXml = myWeb.moPageXml
                 moDB = myWeb.moDbHelper
             Catch ex As Exception
-                returnException(mcModuleName, "New", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
             End Try
         End Sub
 
@@ -37,7 +37,7 @@ Partial Public Class Cms
             Try
 
             Catch ex As Exception
-                returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -72,7 +72,7 @@ Partial Public Class Cms
                 Next
 
             Catch ex As Exception
-                returnException(mcModuleName, "apply", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "apply", ex, "", , gbDebug)
             End Try
 
         End Sub
@@ -158,7 +158,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "report_StoredProcedure", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "report_StoredProcedure", ex, "", , gbDebug)
             End Try
         End Sub
 

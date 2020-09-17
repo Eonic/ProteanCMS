@@ -30,7 +30,7 @@ Public Class Cms
 
     Protected Overrides Sub OnComponentError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError, oSync.OnError, moCalendar.OnError
         'deals with the error
-        returnException(e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
+        returnException(Me.msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
         'close connection poolinguseralerts
         If Not moDbHelper Is Nothing Then
             Try
@@ -63,7 +63,9 @@ Public Class Cms
     Public mcContentType As String = Mime.MediaTypeNames.Text.Html
     Public mcContentDisposition As String = ""
     Public mnProteanCMSError As Long = 0
-    ' Public msException As String = ""
+
+
+    Public msException As String = ""
 
     ' Clone Page Info
     Public mnClonePageId As Integer = 0
@@ -214,7 +216,7 @@ Public Class Cms
             ' Open()
             '
         Catch ex As Exception
-            'returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo))
         End Try
     End Sub
@@ -492,7 +494,7 @@ Public Class Cms
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
+            returnException(msException, mcModuleName, "GetPendingContent", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
         End Try
@@ -1060,7 +1062,7 @@ Public Class Cms
             ' force an error for testing error function
 
         Catch ex As Exception
-            'returnException(mcModuleName, "InitializeVariables", ex, gcEwSiteXsl, cProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "InitializeVariables", ex, gcEwSiteXsl, cProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "InitializeVariables", ex, ""))
         End Try
 
@@ -1426,24 +1428,24 @@ Public Class Cms
                     End If
 
                     If Not moSession Is Nothing Then
-                            moSession("previousPage") = mcOriginalURL
-                        End If
+                        moSession("previousPage") = mcOriginalURL
+                    End If
 
-                        If sServeFile <> "" Then
-                            If moConfig("xframeoptions") <> "" Then
-                                moResponse.AddHeader("X-Frame-Options", moConfig("xframeoptions"))
-                            Else
-                                moResponse.AddHeader("X-Frame-Options", "DENY")
-                            End If
-                            Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
-                            moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
-                            If filelen > 260 Then
-                                moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
-                            Else
-                                moResponse.WriteFile(goServer.MapPath("/" & gcProjectPath) & sServeFile)
-                            End If
-                            Close()
+                    If sServeFile <> "" Then
+                        If moConfig("xframeoptions") <> "" Then
+                            moResponse.AddHeader("X-Frame-Options", moConfig("xframeoptions"))
+                        Else
+                            moResponse.AddHeader("X-Frame-Options", "DENY")
                         End If
+                        Dim filelen As Int16 = goServer.MapPath("/" & gcProjectPath).Length + sServeFile.Length
+                        moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate))
+                        If filelen > 260 Then
+                            moResponse.Write(Alphaleonis.Win32.Filesystem.File.ReadAllText(goServer.MapPath("/" & gcProjectPath) & sServeFile))
+                        Else
+                            moResponse.WriteFile(goServer.MapPath("/" & gcProjectPath) & sServeFile)
+                        End If
+                        Close()
+                    End If
 
 
             End Select
@@ -1452,7 +1454,7 @@ Public Class Cms
         Catch ex As Exception
             If mcEwSiteXsl <> moConfig("SiteXsl") Then mcEwSiteXsl = moConfig("SiteXsl")
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo))
-            'returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             moResponse.Write(msException)
             Me.Finalize()
         Finally
@@ -1637,7 +1639,7 @@ Public Class Cms
             End If
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageXML", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -1818,7 +1820,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "BuildPageXML", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -2552,7 +2554,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetAjaxXML", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -2594,7 +2596,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            returnException(mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             If bReturnBlankError Then
                 Return ""
             Else
@@ -2643,7 +2645,7 @@ Public Class Cms
                 End If
             End If
         Catch ex As Exception
-            'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCart", ex, sProcessInfo))
         End Try
     End Sub
@@ -2670,7 +2672,7 @@ Public Class Cms
                 sProcessInfo = "End Cart"
             End If
         Catch ex As Exception
-            'returnException(mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCart", ex, sProcessInfo))
         End Try
     End Sub
@@ -2689,7 +2691,7 @@ Public Class Cms
                 sProcessInfo = "End Report"
             End If
         Catch ex As Exception
-            'returnException(mcModuleName, "ProcessReports", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "ProcessReports", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessReports", ex, sProcessInfo))
 
         End Try
@@ -2786,14 +2788,14 @@ Public Class Cms
                         AndAlso IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText) Then
                         closeDate = CDate(ocNode.SelectSingleNode("dCloseDate").InnerText)
                     End If
-                    If openDate > Date.Now Or closeDate <Date.Now Then
-                        bCanVote= False
-                        nVoteBlockReason= PollBlockReason.PollNotAvailable
+                    If openDate > Date.Now Or closeDate < Date.Now Then
+                        bCanVote = False
+                        nVoteBlockReason = PollBlockReason.PollNotAvailable
                     End If
 
 
-                            ' Sort out the vote frequency
-                            Select Case sVoteFrequency
+                    ' Sort out the vote frequency
+                    Select Case sVoteFrequency
                         Case "once"
                             bVoteOnce = True
                         Case "daily"
@@ -3371,7 +3373,7 @@ Public Class Cms
             Return ""
 
         Catch ex As Exception
-            'returnException(mcModuleName, "LayoutActions", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "LayoutActions", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "LayoutActions", ex, sProcessInfo))
             Return ""
         End Try
@@ -3552,7 +3554,7 @@ Public Class Cms
     '        AddGroupsToContent(oRoot)
     '    Catch ex As Exception
 
-    '        ' returnException(mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+    '        ' returnException(msException, mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
     '        OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo))
     '    End Try
     'End Sub
@@ -3679,7 +3681,7 @@ Public Class Cms
             ' AddGroupsToContent(oRoot)
         Catch ex As Exception
 
-            ' returnException(mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            ' returnException(msException, mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo))
         End Try
     End Sub
@@ -3818,7 +3820,7 @@ Public Class Cms
             '   AddGroupsToContent(oRoot)
         Catch ex As Exception
 
-            ' returnException(mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            ' returnException(msException, mcModuleName, "GetPageContentFromSelect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo))
         End Try
     End Sub
@@ -3836,7 +3838,7 @@ Public Class Cms
             Return oMembershipProv.Activities.MembershipProcess(Me)
 
         Catch ex As Exception
-            'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -4087,7 +4089,7 @@ Public Class Cms
             End If
 
         Catch ex As Exception
-            'returnException(mcModuleName, "logonRedirect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "logonRedirect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "logonRedirect", ex, sProcessInfo))
         End Try
     End Sub
@@ -4407,7 +4409,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "buildPageXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetRequestVariablesXml", ex, sProcessInfo))
         End Try
 
@@ -4494,7 +4496,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "getUserXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getUserXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserXml", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -4515,7 +4517,7 @@ Public Class Cms
                 End If
             End If
         Catch ex As Exception
-            'returnException(mcModuleName, "RefreshUserXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "RefreshUserXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "RefreshUserXML", ex, sProcessInfo))
         End Try
 
@@ -5740,7 +5742,7 @@ Public Class Cms
             oDR = Nothing
 
         Catch ex As Exception
-            'returnException(mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
+            'returnException(msException, mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addPageDetailLinksToStructure", ex, cProcessInfo))
         End Try
     End Sub
@@ -5762,7 +5764,7 @@ Public Class Cms
             oContents.AppendChild(oContentElmt)
 
         Catch ex As Exception
-            'returnException(mcModuleName, "AddContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "AddContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentXml", ex, sProcessInfo))
         End Try
 
@@ -5841,7 +5843,7 @@ Public Class Cms
 
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXml", ex, sProcessInfo))
         End Try
 
@@ -5914,7 +5916,7 @@ Public Class Cms
 
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getPageContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getPageContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetPagecontentXml", ex, sProcessInfo))
         End Try
 
@@ -5971,7 +5973,7 @@ Public Class Cms
             PerfMon.Log("Web", "AddGroupsToContent-end")
 
         Catch ex As Exception
-            'returnException(mcModuleName, "AddGroupsToConent", ex, gcEwSiteXsl, "", gbDebug)
+            'returnException(msException, mcModuleName, "AddGroupsToConent", ex, gcEwSiteXsl, "", gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddGroupsToContent", ex, ""))
         End Try
     End Sub
@@ -6048,7 +6050,7 @@ Public Class Cms
 
                 Next
             End If
-                If PrimaryPageId > 0 Then
+            If PrimaryPageId > 0 Then
                 Dim pageMenuElmt As XmlElement = moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" & PrimaryPageId & "']")
                 If Not pageMenuElmt Is Nothing Then
                     ContentURL = pageMenuElmt.GetAttribute("url") & ContentURL
@@ -6063,7 +6065,7 @@ Public Class Cms
             Return ContentURL
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXml", ex, sProcessInfo))
             Return ""
         End Try
@@ -6217,7 +6219,7 @@ Public Class Cms
             End If
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckContentVersions", ex, cProcessInfo))
         End Try
 
@@ -6352,7 +6354,7 @@ Public Class Cms
 
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckContentVersions", ex, cProcessInfo))
         End Try
 
@@ -6440,7 +6442,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "GetErrorXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "GetErrorXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorXml", ex, sProcessInfo))
         End Try
 
@@ -6528,7 +6530,7 @@ Public Class Cms
             moDbHelper.AddDataSetToContent(oDS, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByType", ex, ""))
         End Try
     End Sub
@@ -6774,8 +6776,8 @@ Public Class Cms
 
                         Return moContentDetail
 
-                        Else
-                            sProcessInfo = "no content to add - we redirect"
+                    Else
+                        sProcessInfo = "no content to add - we redirect"
                         'this content is not found either page not found or re-direct home.
                         If Not disableRedirect Then
                             'put this in to prevent a redirect if we are calling this from somewhere strange.
@@ -6810,7 +6812,7 @@ Public Class Cms
             sSql = Nothing
 
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -6927,7 +6929,7 @@ Public Class Cms
 
             Return retElmt
         Catch ex As Exception
-            'returnException(mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentBriefXml", ex, sProcessInfo))
             Return Nothing
         End Try
@@ -7029,7 +7031,7 @@ Public Class Cms
             oElmt.AppendChild(oElmt2)
 
         Catch ex As Exception
-            'returnException(mcModuleName, "AddBreadCrumb", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "AddBreadCrumb", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddBreadCrumb", ex, sProcessInfo))
         End Try
     End Sub
@@ -7321,7 +7323,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "returnDocumentFromItem", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "returnDocumentFromItem", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "returnDocumentFromItem", ex, sProcessInfo))
             moResponse.Write(msException)
         End Try
@@ -7467,7 +7469,7 @@ Public Class Cms
 
         Catch ex As Exception
 
-            'returnException(mcModuleName, "returnDocumentFromItem", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+            'returnException(msException, mcModuleName, "returnDocumentFromItem", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "returnDocumentFromItem", ex, sProcessInfo))
             moResponse.Write(msException)
         End Try
@@ -7542,7 +7544,7 @@ Public Class Cms
             Next
             PerfMon.Log("Web", "CheckMultiParents-End")
         Catch ex As Exception
-            'returnException(mcModuleName, "CheckMultiParents", ex, gcEwSiteXsl, , gbDebug)
+            'returnException(msException, mcModuleName, "CheckMultiParents", ex, gcEwSiteXsl, , gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckMultiParents", ex, ""))
         End Try
     End Sub
@@ -7561,7 +7563,7 @@ Public Class Cms
             '    oElmt.SetAttribute("parId", nCurrentPage)
             'Next
         Catch ex As Exception
-            'returnException(mcModuleName, "CheckMultiParents", ex, gcEwSiteXsl, , gbDebug)
+            'returnException(msException, mcModuleName, "CheckMultiParents", ex, gcEwSiteXsl, , gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CheckMultiParents", ex, ""))
         End Try
     End Sub
@@ -7643,7 +7645,7 @@ Public Class Cms
 
 
         Catch ex As Exception
-            'returnException(mcModuleName, "GetParId", ex, gcEwSiteXsl, , gbDebug)
+            'returnException(msException, mcModuleName, "GetParId", ex, gcEwSiteXsl, , gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetParId", ex, ""))
             Return oParents(0)
         End Try
@@ -7867,13 +7869,13 @@ Public Class Cms
 
                 'add the language info to the pageXml
                 If moPageXml.DocumentElement.SelectSingleNode("languages") Is Nothing Then
-                        Dim oLangElmt As XmlElement = moPageXml.CreateElement("Lang")
-                        oLangElmt.InnerXml = goLangConfig.OuterXml
-                        moPageXml.DocumentElement.AppendChild(oLangElmt.FirstChild)
-                    End If
-                Else
-                    'Legacy code
-                    If Not moPageXml.DocumentElement.SelectSingleNode("Contents") Is Nothing Then
+                    Dim oLangElmt As XmlElement = moPageXml.CreateElement("Lang")
+                    oLangElmt.InnerXml = goLangConfig.OuterXml
+                    moPageXml.DocumentElement.AppendChild(oLangElmt.FirstChild)
+                End If
+            Else
+                'Legacy code
+                If Not moPageXml.DocumentElement.SelectSingleNode("Contents") Is Nothing Then
                     ' First find the page language, which should be called after content has been loaded in
                     Dim cLang As String = ""
                     If Tools.Xml.NodeState(moPageXml.DocumentElement, "//Content[@name='XmlLang']", , , , , , cLang) = Tools.Xml.XmlNodeState.HasContents Then
@@ -8008,7 +8010,7 @@ Public Class Cms
             PerfMon.Log("Web", "ProcessContentForLanguage - End")
 
         Catch ex As Exception
-            returnException(mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug)
         End Try
     End Sub
 
@@ -8297,7 +8299,7 @@ Public Class Cms
         Catch ex As Exception
             'if saving of a page fails we are not that bothered.
             'cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-            returnException(mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
             'bIsError = True
         End Try
     End Sub
@@ -8309,7 +8311,7 @@ Public Class Cms
             moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
-            returnException(mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 

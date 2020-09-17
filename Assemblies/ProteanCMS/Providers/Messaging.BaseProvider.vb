@@ -110,7 +110,7 @@ Namespace Providers
                     calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
                 End Try
 
             End Sub
@@ -218,7 +218,7 @@ Namespace Providers
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -316,7 +316,7 @@ Namespace Providers
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -364,7 +364,7 @@ Namespace Providers
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -697,7 +697,7 @@ ProcessFlow:
                         'Return cRetVal
                         Return ""
                     Catch ex As Exception
-                        returnException(mcModuleName, "NewsLetterProcess", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "NewsLetterProcess", ex, "", "", gbDebug)
                         Return ""
                     End Try
                 End Function
@@ -722,7 +722,7 @@ ProcessFlow:
                         'do nothing this is a placeholder
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "maintainUserInGroup", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "maintainUserInGroup", ex, "", "", gbDebug)
                     End Try
                 End Sub
 
@@ -800,7 +800,8 @@ ProcessFlow:
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
+
+                        returnException(msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
                         Return False
                     End Try
                 End Function
@@ -819,7 +820,7 @@ ProcessFlow:
                         oSmtpn.Send(oMailn)
                         Return "Sent"
                     Catch ex As Exception
-                        returnException(mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
                         Return "Error"
                     End Try
                 End Function
@@ -830,7 +831,7 @@ ProcessFlow:
                         'do nothing this is a placeholder
                         Return Nothing
                     Catch ex As Exception
-                        returnException(mcModuleName, "AddToList", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "AddToList", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -841,7 +842,7 @@ ProcessFlow:
                         'do nothing this is a placeholder
                         Return Nothing
                     Catch ex As Exception
-                        returnException(mcModuleName, "RemoveFromList", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "RemoveFromList", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function

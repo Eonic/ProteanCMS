@@ -8021,7 +8021,7 @@ restart:
                 End If
 
             Catch ex As Exception
-                'returnException(mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                'returnException(myWeb.msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo))
                 Return Nothing
             End Try
@@ -10554,7 +10554,7 @@ ReturnMe:
                 Return popularSearches
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -10638,7 +10638,7 @@ ReturnMe:
                 Return nPaymentId
 
             Catch ex As Exception
-                returnException(mcModuleName, "savePayment", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "savePayment", ex, "", "", gbDebug)
                 Return 0
             End Try
         End Function
@@ -10648,7 +10648,7 @@ ReturnMe:
                 Dim cSQL As String = "UPDATE tblCartOrder SET nPayMthdId = " & PaymentId & " WHERE nCartOrderKey = " & CartId
                 ExeProcessSql(cSQL)
             Catch ex As Exception
-                returnException(mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -10671,7 +10671,7 @@ ReturnMe:
                 updateDataset(oDs, "Order")
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -10692,7 +10692,7 @@ ReturnMe:
                 updateDataset(oDs, "Order")
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -10741,7 +10741,7 @@ ReturnMe:
                 oContentsXML.AppendChild(listElement)
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListReports", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListReports", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -10893,7 +10893,7 @@ ReturnMe:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetReport", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetReport", ex, "", processInfo, gbDebug)
             End Try
         End Sub
 

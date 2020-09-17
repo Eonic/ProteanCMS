@@ -113,7 +113,7 @@ Namespace Providers
                     calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
                 End Try
 
             End Sub
@@ -285,7 +285,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -365,7 +365,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -394,7 +394,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -529,7 +529,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
 
@@ -624,7 +624,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmResetPassword", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmResetPassword", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -639,7 +639,7 @@ Check:
                         Return xFrmConfirmPassword(nUserId)
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -749,7 +749,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "addInput", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -984,7 +984,7 @@ Check:
                         Return MyBase.moXformElmt
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -1032,7 +1032,7 @@ Check:
 
                         PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "end")
                     Catch ex As Exception
-                        returnException(mcModuleName, "maintainMembershipsFromXForm", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "maintainMembershipsFromXForm", ex, "", "", gbDebug)
                     End Try
 
                 End Sub
@@ -1115,7 +1115,7 @@ Check:
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmActivationCode", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmActivationCode", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -1157,7 +1157,7 @@ Check:
                         Return cReturnCode
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "validateMemberCode", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "validateMemberCode", ex, "", "", gbDebug)
                         Return ""
                     End Try
                 End Function
@@ -1186,7 +1186,7 @@ Check:
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "useMemberCode", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "useMemberCode", ex, "", "", gbDebug)
                     End Try
                 End Sub
 
@@ -1240,7 +1240,7 @@ Check:
                     'deals with the error
                     Dim moDbHelper As Protean.Cms.dbHelper = myWeb.moDbHelper
 
-                    returnException(e.ModuleName, e.ProcedureName, e.Exception, myWeb.mcEwSiteXsl, e.AddtionalInformation, gbDebug)
+                    returnException(myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, myWeb.mcEwSiteXsl, e.AddtionalInformation, gbDebug)
                     'close connection pooling
                     If Not moDbHelper Is Nothing Then
                         Try
@@ -1372,15 +1372,15 @@ Check:
                                             myWeb.mbPreview = False
                                         Else
                                             mnUserId = moSession("PreviewUser")
-                                                myWeb.mbPreview = True
-                                            End If
-                                        Else
-                                            mnUserId = moSession("nUserId")
+                                            myWeb.mbPreview = True
                                         End If
-
+                                    Else
+                                        mnUserId = moSession("nUserId")
                                     End If
 
                                 End If
+
+                            End If
                         End If
 
                         Return mnUserId
@@ -1753,7 +1753,7 @@ Check:
                         Return sReturnValue
 
                     Catch ex As Exception
-                        'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                        'returnException(myWeb.msException, mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                         OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo))
                         Return Nothing
                     End Try
@@ -1876,7 +1876,7 @@ Check:
                                             Dim recipientEmail As String = ""
                                             If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
                                             Dim SubjectLine As String = "Your Registration Details"
-                                            Dim oMsg As Protean.Messaging = New Protean.Messaging
+                                            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
                                             'send an email to the new registrant
                                             If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                             'send an email to the webadmin
@@ -1991,7 +1991,7 @@ Check:
 
                         End Select
                     Catch ex As Exception
-                        'returnException(mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                        'returnException(myWeb.msException, mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                         OnComponentError(myWeb, Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipV4LayoutProcess", ex, sProcessInfo))
                         Return Nothing
                     End Try

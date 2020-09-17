@@ -1155,10 +1155,16 @@
     </xsl:if>
 
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
-    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'ds01.eonic') and contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT']/node(),'bot')">
-      <xsl:comment>STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS</xsl:comment>
+    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
+      <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
     </xsl:if>
+
+    <xsl:if test="Cart and Cart/@cmd!=''">
+      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+    </xsl:if>
+
+
     <xsl:if test="Contents/Content[@name='MetaLocation' or @name='metaLocation']">
       <meta name="location" content="{Contents/Content[@name='MetaLocation' or @name='metaLocation']}"/>
     </xsl:if>

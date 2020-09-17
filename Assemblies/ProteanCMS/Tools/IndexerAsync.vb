@@ -95,7 +95,7 @@ Public Class IndexerAsync
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Sub
 
@@ -127,7 +127,7 @@ Public Class IndexerAsync
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Function
 
@@ -315,7 +315,7 @@ Public Class IndexerAsync
         Catch ex As Exception
 
             cExError &= ex.InnerException.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             errElmt = oIndexInfo.CreateElement("error")
             errElmt.InnerXml = cExError
             oIndexInfo.FirstChild.AppendChild(errElmt)
@@ -335,7 +335,7 @@ Public Class IndexerAsync
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             End Try
         End Try
 
@@ -368,7 +368,7 @@ Public Class IndexerAsync
             End If
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
 
             bIsError = True
             Try
@@ -396,7 +396,7 @@ Public Class IndexerAsync
                         IO.File.Delete(IO.Directory.GetFiles(cDirectory)(0))
                     Catch ex As Exception
                         cExError &= ex.StackTrace.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
 
                     End Try
@@ -407,7 +407,7 @@ Public Class IndexerAsync
                         IO.Directory.Delete(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf", True)
                     Catch ex As Exception
                         cExError &= ex.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
                     End Try
                 End If
@@ -420,7 +420,7 @@ Public Class IndexerAsync
 
             End Try
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -440,7 +440,7 @@ Public Class IndexerAsync
             oImp.UndoImpersonation()
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
             bIsError = True
         End Try
     End Sub
@@ -460,7 +460,7 @@ Public Class IndexerAsync
             Next
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -685,9 +685,9 @@ Public Class IndexerAsync
 
                 If cPageHtml = "" Then
                     'we have an error to handle
-                    If Not msException Is Nothing Then
+                    If Not myWeb.msException Is Nothing Then
                         Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                        errorElmt.InnerText = msException
+                        errorElmt.InnerText = myWeb.msException
                         Try
                             errorElmt.SetAttribute("pgid", oPage.pgid)
                             errorElmt.SetAttribute("name", oPage.pagename)
@@ -764,10 +764,10 @@ Public Class IndexerAsync
 
                                 If cPageHtml = "" Then
                                     'we have an error to handle
-                                    If msException = "" Then msException = Nothing
-                                    If Not msException Is Nothing Then
+                                    If myWeb.msException = "" Then myWeb.msException = Nothing
+                                    If Not myWeb.msException Is Nothing Then
                                         Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                                        errorElmt.InnerXml = msException
+                                        errorElmt.InnerXml = myWeb.msException
                                         Try
                                             errorElmt.SetAttribute("pgid", oPage.xslPath)
                                             errorElmt.SetAttribute("name", oPage.pagename)
@@ -950,7 +950,7 @@ Public Class IndexerAsync
 
                 End Try
                 cExError &= ex.StackTrace.ToString & vbCrLf
-                returnException(mcModuleName, methodName, ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, methodName, ex, "", processInfo, gbDebug)
                 bIsError = True
             End Try
         End Sub
@@ -995,7 +995,7 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
                 bIsError = True
             End Try
         End Sub
@@ -1124,7 +1124,7 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
                 bIsError = True
             End Try
 
@@ -1138,7 +1138,7 @@ Public Class IndexerAsync
                 Return cOtherText & oFile.Text
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
                 Return cOtherText
             End Try
         End Function
@@ -1211,7 +1211,7 @@ Public Class IndexerAsync
             Catch ex As Exception
                 'if saving of a page fails we are not that bothered.
                 cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-                'returnException(mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+                'returnException(myWeb.msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
                 'bIsError = True
             End Try
         End Sub

@@ -158,7 +158,7 @@ Partial Public Class Cms
                                 Try
                                     Dim oMailer As New Protean.Messaging
                                     Dim cResponse As String = oMailer.emailer(oAlertElmt, oAlertConfig("AlertXsl"), oAlertConfig("AlertFrom"), oAlertConfig("AlertFromEmail"), oMember.Email, cAlertTitles, , , , , , , , oAlertConfig("AlertPickupHost"), oAlertConfig("AlertPickupLocation"))
-                                    msException = "" ' Clear the sodding error
+                                    myWeb.msException = "" ' Clear the sodding error
                                     If bReportDeep Then
                                         Dim oElmt As XmlElement = oResponseXML.CreateElement("Email")
                                         oElmt.SetAttribute("Address", oMember.Email)

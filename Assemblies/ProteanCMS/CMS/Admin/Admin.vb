@@ -107,7 +107,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "open", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "open", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -118,7 +118,7 @@ Partial Public Class Cms
                 moAdXfm = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -2227,7 +2227,7 @@ AfterProcessFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "adminProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "adminProcess", ex, "", sProcessInfo, gbDebug)
             Finally
 
             End Try
@@ -2349,7 +2349,7 @@ AfterProcessFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "adminAccessRights", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "adminAccessRights", ex, "", processInfo, gbDebug)
             Finally
 
             End Try
@@ -2468,7 +2468,7 @@ AfterProcessFlow:
 
                 'This is just a placeholder for overloading
             Catch ex As Exception
-                returnException(mcModuleName, "EditXFormProcess", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "EditXFormProcess", ex, "", processInfo, gbDebug)
             Finally
 
             End Try
@@ -2630,7 +2630,7 @@ AfterProcessFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "FileImportProcess", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "FileImportProcess", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -2688,7 +2688,7 @@ AfterProcessFlow:
 
             Catch ex As Exception
 
-                returnException(mcModuleName, "buildPageXML", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "buildPageXML", ex, "", sProcessInfo, gbDebug)
 
             End Try
 
@@ -3037,7 +3037,7 @@ AfterProcessFlow:
 
                 Return oMenuRoot
             Catch ex As Exception
-                returnException(mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -3068,7 +3068,7 @@ AfterProcessFlow:
                 moPageXML.DocumentElement.AppendChild(oElmt)
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -3095,7 +3095,7 @@ AfterProcessFlow:
                 Return oElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -3215,7 +3215,7 @@ AfterProcessFlow:
                 oFsh = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3430,7 +3430,7 @@ AfterProcessFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3465,7 +3465,7 @@ AfterProcessFlow:
                 oCart.close()
                 oCart = Nothing
             Catch ex As Exception
-                returnException(mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3512,7 +3512,7 @@ AfterProcessFlow:
                 oCart.close()
                 oCart = Nothing
             Catch ex As Exception
-                returnException(mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3548,7 +3548,7 @@ AfterProcessFlow:
                 oCart.close()
                 oCart = Nothing
             Catch ex As Exception
-                returnException(mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3582,7 +3582,7 @@ AfterProcessFlow:
                 oCart.close()
                 oCart = Nothing
             Catch ex As Exception
-                returnException(mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3683,7 +3683,7 @@ AfterProcessFlow:
                 sAdminLayout = "ManagePollVotes"
 
             Catch ex As Exception
-                returnException(mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3779,7 +3779,7 @@ listItems:
                 sAdminLayout = "ManageLookups"
 
             Catch ex As Exception
-                returnException(mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3834,7 +3834,7 @@ listItems:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3904,7 +3904,7 @@ listItems:
                 oElmt.InnerXml = Replace(Replace(oDS.GetXml, "&lt;", "<"), "&gt;", ">")
                 oPageDetail.AppendChild(oElmt.FirstChild)
             Catch ex As Exception
-                returnException(mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3966,7 +3966,7 @@ listItems:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -4020,7 +4020,7 @@ listItems:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -4229,7 +4229,7 @@ Process:
                         GoTo Process
                 End Select
             Catch ex As Exception
-                returnException(mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -4401,7 +4401,7 @@ SP:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "VersionControlProcess", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -4450,7 +4450,7 @@ SP:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -4574,7 +4574,7 @@ SP:
                 sAdminLayout = "DirectoryCodes"
 
             Catch ex As Exception
-                returnException(mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -4596,7 +4596,7 @@ SP:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 

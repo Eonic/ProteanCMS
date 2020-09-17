@@ -143,9 +143,9 @@ Public Class FeedHandler
             End Select
 
 
-            If Not msException = "" Then
+            If Not oDBH.myWeb.msException = "" Then
                 bResult = False
-                AddExternalMessage(msException)
+                AddExternalMessage(oDBH.myWeb.msException)
             End If
             Return bResult
         Catch ex As Exception

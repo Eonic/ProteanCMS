@@ -65,7 +65,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -86,7 +86,7 @@ Partial Public Class Cms
                     nID = myWeb.moDbHelper.GetIdInsertSql(cSQL)
                     Return nID
                 Catch ex As Exception
-                    returnException(mcModuleName, "SubscriptionToGroup", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "SubscriptionToGroup", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -115,7 +115,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -186,7 +186,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -256,7 +256,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -290,7 +290,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -346,7 +346,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -379,7 +379,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -468,7 +468,7 @@ Partial Public Class Cms
                     Next
                     Return oParentElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -580,7 +580,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -598,7 +598,7 @@ Partial Public Class Cms
 
                     Dim UserEmail As String = SubXml.SelectSingleNode("Subscription/User/Email").InnerText
                     Dim UserId As String = SubXml.SelectSingleNode("Subscription/User/@id").InnerText
-                    Dim oMessager As New Protean.Messaging
+                    Dim oMessager As New Protean.Messaging(myWeb.msException)
 
                     Dim PaymentActive As Boolean = False
                     If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
@@ -672,7 +672,7 @@ Partial Public Class Cms
                     Return actionResult
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "RenewalAction", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "RenewalAction", ex, "", "", gbDebug)
                     Return ex.Message
                 End Try
 
@@ -742,7 +742,7 @@ Partial Public Class Cms
                     oCartXml.SetAttribute("payableType", "Initial Payment")
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UpdateSubsTotals", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "UpdateSubsTotals", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -809,7 +809,7 @@ RedoCheck:
                         Return False
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "CheckCartForSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CheckCartForSubscriptions", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -892,7 +892,7 @@ RedoCheck:
                     End If
                     Return nTotalPrice
                 Catch ex As Exception
-                    returnException(mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -967,7 +967,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1019,7 +1019,7 @@ RedoCheck:
                     End Select
                     Return nEndPrice
                 Catch ex As Exception
-                    returnException(mcModuleName, "SubscriptionPrice", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "SubscriptionPrice", ex, "", "", gbDebug)
                     Return 0
                 End Try
             End Function
@@ -1079,7 +1079,7 @@ RedoCheck:
                     Return nPrice
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UpgradeCredit", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "UpgradeCredit", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -1108,7 +1108,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "SubscriptionEndDate", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "SubscriptionEndDate", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -1125,7 +1125,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetRenewalDate", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetRenewalDate", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -1241,7 +1241,7 @@ RedoCheck:
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddUserSubscriptions", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddUserSubscriptions", ex, "", "", gbDebug)
                 End Try
 
             End Sub
@@ -1353,7 +1353,7 @@ RedoCheck:
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddUserSubscription", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddUserSubscription", ex, "", "", gbDebug)
                 End Try
 
             End Sub
@@ -1394,7 +1394,7 @@ RedoCheck:
                         oElmt.AppendChild(oSubElmt)
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddSubscriptionToUserXML", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddSubscriptionToUserXML", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1446,7 +1446,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddSubscription", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddSubscription", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1492,7 +1492,7 @@ RedoCheck:
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CancelSubscription", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CancelSubscription", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1512,7 +1512,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ResendCancelation", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ResendCancelation", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1548,7 +1548,7 @@ RedoCheck:
                     Return "Subscription Expired" & cReason
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ExpireSubscription", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ExpireSubscription", ex, "", "", gbDebug)
                     Return "Expiry Failed"
                 End Try
             End Function
@@ -1570,7 +1570,7 @@ RedoCheck:
 
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "CancelSubscription", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CancelSubscription", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1667,7 +1667,7 @@ RedoCheck:
                     Return moResponse
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)
                     moReminderCfg.SetAttribute("exception", ex.Message)
                     moReminderCfg.SetAttribute("stackTrace", ex.StackTrace)
                     Return moReminderCfg
@@ -1816,7 +1816,7 @@ RedoCheck:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
 
@@ -1828,7 +1828,7 @@ RedoCheck:
                     Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, SubKey)
                     ExpireSubscriptionGroups(SubXml.FirstChild)
                 Catch ex As Exception
-                    returnException(mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1884,7 +1884,7 @@ RedoCheck:
                     'Alert customer & merchant elsewhere
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug)
                 End Try
 
             End Sub
@@ -1940,7 +1940,7 @@ RedoCheck:
             '        Next
             '        Return True
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "CheckExpiringSubscriptions", ex, "", "", gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "CheckExpiringSubscriptions", ex, "", "", gbDebug)
             '        Return False
             '    End Try
             'End Function
@@ -2036,7 +2036,7 @@ RedoCheck:
             '        End If
             '        Return True
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "RepeatSubscriptions", ex, "", "", gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "RepeatSubscriptions", ex, "", "", gbDebug)
             '        Return False
             '    End Try
             'End Function
@@ -2075,7 +2075,7 @@ RedoCheck:
                         MyBase.cLanguage = myWeb.mcPageLanguage
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                     End Try
                 End Sub
 
@@ -2182,7 +2182,7 @@ Check:
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "xFrmConfirmSubscription", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "xFrmConfirmSubscription", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -2327,7 +2327,7 @@ processFlow:
 
                         myWeb.moPageXml.FirstChild.AppendChild(ContentDetailElmt)
                     Catch ex As Exception
-                        returnException(mcModuleName, "UpdateSubscriptionPaymentMethod", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "UpdateSubscriptionPaymentMethod", ex, "", "", gbDebug)
                         'Return Nothing
                     End Try
 
@@ -2426,7 +2426,7 @@ processFlow:
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "ManageUserSubscriptions", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "ManageUserSubscriptions", ex, "", "", gbDebug)
                         'Return Nothing
                     End Try
 
@@ -2511,7 +2511,7 @@ processFlow:
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "ManageUserSubscriptions", ex, sProcessInfo, "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "ManageUserSubscriptions", ex, sProcessInfo, "", gbDebug)
                         'Return Nothing
                     End Try
 
@@ -2535,7 +2535,7 @@ processFlow:
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckUpgrade", ex, sProcessInfo, "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckUpgrade", ex, sProcessInfo, "", gbDebug)
                         'Return Nothing
                     End Try
 

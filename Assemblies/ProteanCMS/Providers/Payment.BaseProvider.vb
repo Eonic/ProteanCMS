@@ -113,7 +113,7 @@ Namespace Providers
                     calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
                 End Try
 
             End Sub
@@ -345,7 +345,7 @@ Namespace Providers
                         oEwProv = Nothing
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
 
@@ -358,7 +358,7 @@ Namespace Providers
                         Return "Manual"
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 
@@ -371,7 +371,7 @@ Namespace Providers
                         Return "Not Available"
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 
