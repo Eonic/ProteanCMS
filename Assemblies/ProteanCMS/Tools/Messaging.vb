@@ -20,7 +20,7 @@ Public Class Messaging
     Public msGnuOriginator As String = ""
     Public msGnuPassphrase As String = ""
     Public mbIsBodyHtml As Boolean = True
-    Public msException As String = ""
+    Public Shared msException As String = ""
 
     Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
 
@@ -837,7 +837,7 @@ Public Class Messaging
             'Console.WriteLine("[{0}] Send canceled.", token)
         End If
         If e.Error IsNot Nothing Then
-            returnException("messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug)
+            returnException(msException, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug)
             'Console.WriteLine("[{0}] {1}", token, e.Error.ToString())
         Else
             sender.Dispose()
@@ -1813,7 +1813,7 @@ Public Class POP3
             oXML.DocumentElement.AppendChild(oMessageElement)
             Return oXML
         Catch ex As Exception
-            returnException("POP3", "EmailListTransform", ex, "", "EmailListTransform", )
+            'returnException("POP3", "EmailListTransform", ex, "", "EmailListTransform", )
             Return Nothing
         End Try
 

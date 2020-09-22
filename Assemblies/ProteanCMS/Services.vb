@@ -575,7 +575,7 @@ Public Class Services
                         AddResponse("There is no content currently awaiting approval")
                     Else
                         ' Email the response
-                        Dim oMsg As Protean.Messaging = New Protean.Messaging
+                        Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
                         Dim cEmail As String = oVConfig("notificationEmail")
                         Dim cXSLPath As String = IIf(String.IsNullOrEmpty("" & oVConfig("notificationXsl")), "/ewcommon/xsl/Email/pendingcontentNotification.xsl", oVConfig("notificationXsl"))
@@ -634,7 +634,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "Syndicate", ex, , , gbDebug)
+            ' returnException(mcModuleName, "Syndicate", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
             myWeb.Close()
@@ -672,7 +672,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "SyndicateExtended", ex, , , gbDebug)
+            '  returnException(mcModuleName, "SyndicateExtended", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
             myWeb.Close()
@@ -817,7 +817,7 @@ Public Class Services
         Catch ex As System.Exception
             bResult = False
             AddResponse(ex.ToString)
-            returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
+            ' returnException(mcModuleName, "GetPendingContent", ex, , , gbDebug)
         Finally
             oResponseElmt.SetAttribute("bResult", bResult)
             myWeb.Close()

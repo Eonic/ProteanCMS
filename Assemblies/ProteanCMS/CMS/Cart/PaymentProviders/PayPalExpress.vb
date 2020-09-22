@@ -75,7 +75,7 @@ Namespace Providers
                     PerfMon.Log("PaymentProviders", "payPayPalExpress")
                     Dim sSql As String
 
-                    Dim ppXform As xForm = New xForm
+                    Dim ppXform As xForm = New xForm(myWeb.msException)
 
                     Dim Xform3dSec As xForm = Nothing
 

@@ -1413,7 +1413,7 @@ processFlow:
                             Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
                         End If
                         Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
-                        Dim Redirect3dsXform As xForm = New xForm
+                        Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
                         Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
                         moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt)
                         myWeb.moResponseType = pageResponseType.iframe
@@ -1437,7 +1437,7 @@ processFlow:
 
                         cProcessInfo = "Payment Method from session = '" & mcPaymentMethod & "'"
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
-                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm
+                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
@@ -2615,14 +2615,14 @@ processFlow:
 
                         Try
                             If oRow("price") <> Nothing Then
-                                If oRow("price") <> "" Then
-                                    Dim discountSQL As String = ""
+                                ' If oRow("price") <> 0 Then
+                                Dim discountSQL As String = ""
                                     If Discount <> 0 Then
                                         '     discountSQL = ", nDiscountValue = " & Discount & " "
                                     End If
                                     Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
                                     moDBHelper.ExeProcessSql(cUpdtSQL)
-                                End If
+                                '  End If
                             End If
 
                         Catch ex As Exception
@@ -3832,7 +3832,7 @@ processFlow:
 
         Public Overridable Function contactXform(ByVal cAddressType As String, ByVal cSubmitName As String, ByVal cCmdType As String, ByVal cCmdAction As String, ByVal bDontPopulate As Boolean, Optional ContactId As Long = 0, Optional cmd2 As String = "") As xForm
             PerfMon.Log("Cart", "contactXform")
-            Dim oXform As xForm = New xForm
+            Dim oXform As xForm = New xForm(myWeb.msException)
             Dim oGrpElmt As XmlElement
             Dim oDs As DataSet
             Dim oDr As DataRow
@@ -4266,7 +4266,7 @@ processFlow:
 
         Public Overridable Function pickContactXform(ByVal cAddressType As String, Optional ByVal submitPrefix As String = "", Optional ByVal cCmdType As String = "cartCmd", Optional ByVal cCmdAction As String = "") As xForm
             PerfMon.Log("Cart", "pickContactXform")
-            Dim oXform As xForm = New xForm
+            Dim oXform As xForm = New xForm(myWeb.msException)
 
             Dim oReturnForm As xForm
             Dim oGrpElmt As XmlElement
@@ -4759,7 +4759,7 @@ processFlow:
         Protected Sub UpdateExistingUserAddress(ByRef oContactXform As xForm)
             PerfMon.Log("Cart", "UpdateExistingUserAddress")
             ' Check if it exists - if it does then update the nContactKey node
-            Dim oTempCXform As New xForm
+            Dim oTempCXform As New xForm(myWeb.msException)
             Dim cProcessInfo As String = ""
             Dim sSql As String
             Dim nCount As Long
@@ -4888,7 +4888,7 @@ processFlow:
             Dim cProcessInfo As String = ""
             Try
                 'Get notes XML
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 oXform.moPageXML = moPageXml
                 'oXform.NewFrm(formName)
                 Dim cDiscountsXform As String = moCartConfig("DiscountsXform")
@@ -5057,7 +5057,7 @@ processFlow:
             Dim cProcessInfo As String = ""
             Try
                 'Get notes XML
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 oXform.moPageXML = moPageXml
                 '         
 
@@ -5366,7 +5366,7 @@ processFlow:
                 'Go and collect the valid shipping options available for this order
                 ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
-                Dim oOptXform As New xForm
+                Dim oOptXform As New xForm(myWeb.msException)
                 oOptXform.moPageXML = moPageXml
 
                 If Not oOptXform.load("/xforms/Cart/Options.xml") Then
@@ -6102,47 +6102,59 @@ processFlow:
                         oProdXml.InnerXml = ProductXml
                     Else
                         If nProductId > 0 Then
-                            oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId)
+                            Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
+                            If sItemXml <> "" Then
+                                oProdXml.InnerXml = sItemXml
+                            Else
+                                oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
+                            End If
                             If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
-                            If cProductText = "" Then
-                                cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
-                            End If
-                            If nPrice = 0 Then
-                                oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
-                            End If
-                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
-                                mbOveridePrice = True
-                            End If
-                            'lets add the discount to the cart if supplied
-                            If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
-                                Dim strDiscount1 As String = oProdXml.SelectSingleNode(
+                                If cProductText = "" Then
+                                    cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
+                                End If
+
+                                If nPrice = 0 Then
+                                    oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                                End If
+
+                                If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
+                                    mbOveridePrice = True
+                                End If
+
+                                'lets add the discount to the cart if supplied
+                                If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
+                                    Dim strDiscount1 As String = oProdXml.SelectSingleNode(
                                                     "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
                                                     ).InnerText
-                                addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
-                            End If
-                            If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
-                                nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
-                            End If
-                            If (UniqueProduct) Then
-
-                                If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                    giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                    oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                Else
-                                    ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
-                            End If
-                            'Add Parent Product to cart if SKU.
-                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                'Then we need to add the Xml for the ParentProduct.
-                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
-                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                            End If
+                                If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
+                                    nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
+                                End If
 
-                        End If
+                                If (UniqueProduct) Then
+
+                                    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    Else
+                                        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    End If
+                                End If
+
+                                'Add Parent Product to cart if SKU.
+                                If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                    'Then we need to add the Xml for the ParentProduct.
+                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                                End If
+
+
+                            End If
                     End If
 
 
@@ -6356,11 +6368,17 @@ processFlow:
                                         End If
                                     Next 'end option loop
                                     'Add Item
-                                    AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                    If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
+                                        If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
+                                            AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                        End If
+                                    Else
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                    End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
-                                End If
-                            End If 'end check for previously added
+                                    End If
+                                End If 'end check for previously added
                         End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
@@ -7173,7 +7191,7 @@ processFlow:
 
                 oCartXML.SetAttribute("lang", myWeb.mcPageLanguage)
 
-                Dim oMsg As Messaging = New Messaging
+                Dim oMsg As Messaging = New Messaging(myWeb.msException)
                 If cAttachementTemplatePath = "" Then
 
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
@@ -7255,7 +7273,7 @@ processFlow:
                 'Check if it is empty
                 If cNotes = "" Then
                     'we get the empty notes schema from the notes xForm instance.
-                    Dim oXform As xForm = New xForm
+                    Dim oXform As xForm = New xForm(myWeb.msException)
                     oXform.moPageXML = moPageXml
                     oXform.NewFrm("notesForm")
                     If oXform.load(mcNotesXForm) Then

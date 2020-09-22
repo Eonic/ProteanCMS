@@ -790,7 +790,7 @@ Public Module stdTools
 
             Return oResponseDict
         Catch ex As Exception
-            returnException("stdTools", "UrlResponseToHashTable", ex, "", "", gbDebug)
+            'returnException("stdTools", "UrlResponseToHashTable", ex, "", "", gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1033,7 +1033,7 @@ Public Module stdTools
             cNewString &= Right(cInitialString, nNoCharsToLeave)
             Return cNewString
         Catch ex As Exception
-            returnException("stdTools", "MaskString", ex, "", "", gbDebug)
+            '   returnException("stdTools", "MaskString", ex, "", "", gbDebug)
             Return cNewString
         End Try
     End Function

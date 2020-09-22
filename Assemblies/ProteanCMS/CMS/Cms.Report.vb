@@ -184,7 +184,7 @@ Partial Public Class Cms
                     End If
                 End If
             Catch ex As Exception
-                returnException("stdTools", "SetDefaultSortColumn", ex, "", "", gbDebug)
+                returnException(myWeb.msException, "stdTools", "SetDefaultSortColumn", ex, "", "", gbDebug)
             End Try
         End Sub
 

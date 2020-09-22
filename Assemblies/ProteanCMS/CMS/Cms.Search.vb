@@ -1582,7 +1582,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 moContextNode.AppendChild(oResXML)
 
             Catch ex As Exception
-                returnException("Search", "SearchLatestContent", ex, "", , gbDebug)
+                returnException(myWeb.msException, "Search", "SearchLatestContent", ex, "", , gbDebug)
             End Try
 
         End Sub

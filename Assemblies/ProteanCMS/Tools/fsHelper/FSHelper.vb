@@ -38,6 +38,7 @@ Partial Public Class fsHelper
     Public mcStartFolder As String = ""
     Public mcPopulateFilesNode As String = ""
     Public mcRoot As String = ""
+    Shared msException As String
 
     Shared _libraryTypeExtensions()() As String = { _
                                                  New String() {}, _
@@ -78,7 +79,7 @@ Partial Public Class fsHelper
             moPageXML = oPageXml
 
         Catch ex As Exception
-            returnException(mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 #End Region
@@ -105,7 +106,7 @@ Partial Public Class fsHelper
             mcStartFolder = cStartFolder
 
         Catch ex As Exception
-            returnException(mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -132,7 +133,7 @@ Partial Public Class fsHelper
             mcStartFolder = cStartFolder
 
         Catch ex As Exception
-            returnException(mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -153,7 +154,7 @@ Partial Public Class fsHelper
             Return oConfigNode
 
         Catch ex As Exception
-            returnException(mcModuleName, "getConfigNode", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getConfigNode", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
 
@@ -173,7 +174,7 @@ Partial Public Class fsHelper
             Return filePath
 
         Catch ex As Exception
-            returnException(mcModuleName, "checkLeadingSlash", ex, "", filePath, gbDebug)
+            returnException(msException, mcModuleName, "checkLeadingSlash", ex, "", filePath, gbDebug)
             Return filePath
         End Try
 
@@ -194,7 +195,7 @@ Partial Public Class fsHelper
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "checkCommonFilePath", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "checkCommonFilePath", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
 
@@ -213,7 +214,7 @@ Partial Public Class fsHelper
             oConfigXml.Save(goServer.MapPath(goConfig("ProjectPath") & "/web.config"))
             Return oInstance
         Catch ex As Exception
-            returnException(mcModuleName, "setConfigNode", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "setConfigNode", ex, "", cProcessInfo, gbDebug)
             Return oInstance
         End Try
 
@@ -239,7 +240,7 @@ Partial Public Class fsHelper
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
 
@@ -414,7 +415,7 @@ Partial Public Class fsHelper
             Return cFilePathNew
 
         Catch ex As Exception
-            returnException(mcModuleName, "getUniqueFilename", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getUniqueFilename", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
 

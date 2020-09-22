@@ -86,6 +86,7 @@ Partial Public Class Cms
 
 
             Public Sub New(ByRef aWeb As Protean.Cms)
+                MyBase.New(aWeb)
                 PerfMon.Log("PaymentProviders", "New")
                 Dim cProcessInfo As String = ""
                 Try
@@ -2572,7 +2573,7 @@ Partial Public Class Cms
                 Dim oCartAdd As XmlNode
                 Dim sAddress As String = ""
                 Dim cCurrentURL As String = "http"
-                Dim wpXform As xForm = New xForm
+                Dim wpXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim oElmt As XmlElement
                 Dim oPPCfg As XmlNode
@@ -2721,7 +2722,7 @@ Partial Public Class Cms
                 Dim oCartAdd As XmlNode
                 Dim sAddress As String = ""
 
-                Dim wpXform As xForm = New xForm
+                Dim wpXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim oDictOpt As Hashtable
                 Dim bCv2 As Boolean = False
@@ -2886,7 +2887,7 @@ Partial Public Class Cms
                         sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
 
                         'Send the card details via Secure Email
-                        Dim oMsg As Messaging = New Messaging
+                        Dim oMsg As Messaging = New Messaging(myWeb.msException)
                         oMsg.mbEncrypt = True
                         oMsg.msGnuDirectory = cGnuDirectory
                         oMsg.msGnuOriginator = cGnuOriginator
@@ -2926,7 +2927,7 @@ Partial Public Class Cms
             Function payDirectDebitSecureEmail(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
                 PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail")
                 Dim sSql As String
-                Dim ddXform As New xForm
+                Dim ddXform As New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim sCardAccepted As String = ""
                 Dim cXFormPath As String = ""
@@ -3068,7 +3069,7 @@ Partial Public Class Cms
                             sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
 
                             'Send the card details via Secure Email
-                            Dim oMsg As Messaging = New Messaging
+                            Dim oMsg As Messaging = New Messaging(myWeb.msException)
                             oMsg.mbIsBodyHtml = False
 
                             If cGnuDirectory <> "" Then
@@ -3243,7 +3244,7 @@ Partial Public Class Cms
             Function payByCash(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
                 PerfMon.Log("PaymentProviders", "payByCash")
                 Dim sSql As String
-                Dim ccXform As xForm = New xForm
+                Dim ccXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim bCv2 As Boolean = False
                 Dim bEncrypt As Boolean = False
@@ -3481,7 +3482,7 @@ Partial Public Class Cms
                 PerfMon.Log("PaymentProviders", "payPayPalExpress")
                 Dim sSql As String
 
-                Dim ppXform As xForm = New xForm
+                Dim ppXform As xForm = New xForm(myWeb.msException)
 
                 Dim Xform3dSec As xForm = Nothing
 
@@ -4179,7 +4180,7 @@ Partial Public Class Cms
 
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3D")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
 
@@ -4231,7 +4232,7 @@ Partial Public Class Cms
 
             Function xfrmSecure3Dv2(ByVal acs_url As String, ByVal jwt As String, ByVal SongbirdURL As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3Dv2")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
 
@@ -4274,7 +4275,7 @@ Partial Public Class Cms
 
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
-                Dim oXform As xForm = New Protean.Cms.xForm
+                Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim RedirectURL As String
@@ -4318,7 +4319,7 @@ Partial Public Class Cms
 
             Function creditCardXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal cardTypes As String = "MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch:Switch", Optional ByVal bCV2 As Boolean = True, Optional ByVal sFormTitle As String = "Your Credit Card Details", Optional ByVal b3dSecure As Boolean = False, Optional ByVal cInstance As String = "", Optional ByVal bOverrideValidity As Boolean = False, Optional ByVal bSavePayment As Boolean = False) As xForm
                 PerfMon.Log("PaymentProviders", "creditCardXform")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim sSql As String
@@ -4620,7 +4621,7 @@ Partial Public Class Cms
 
             Function UkashXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal sFormTitle As String = "Your Ukash Payment Details") As xForm
                 PerfMon.Log("PaymentProviders", "UkashXform")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim bIsValid As Boolean = False
@@ -5267,7 +5268,7 @@ Partial Public Class Cms
                 PerfMon.Log("PaymentProviders", "payPremiumCredit")
                 Dim sSql As String
 
-                Dim ccXform As xForm = New xForm
+                Dim ccXform As xForm = New xForm(myWeb.msException)
 
                 Dim err_msg As String = ""
                 Dim err_msg_log As String = ""

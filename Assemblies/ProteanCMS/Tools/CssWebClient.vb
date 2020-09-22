@@ -23,6 +23,7 @@ Public Class CssWebClient
 
     Public moCtx As System.Web.HttpContext
     Public goRequest As System.Web.HttpRequest
+    Private msException As String
 
     Private cssSplit As List(Of String) = New List(Of String)
     Public ReadOnly Property CssSplits As List(Of String)
@@ -50,7 +51,7 @@ Public Class CssWebClient
 
     Public Shadows mcModuleName As String = "Eonic.CssWebClient"
 
-    Public Sub New(ByVal context As System.Web.HttpContext)
+    Public Sub New(ByVal context As System.Web.HttpContext, ByRef sException As String)
         moCtx = context
         goRequest = context.Request
     End Sub
@@ -101,7 +102,7 @@ Public Class CssWebClient
             ComputeCSS(fullCss, cssSplit)
         Catch ex As Exception
             cProcessInfo = ex.Message
-            'returnException(mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "SendHttpHandlerRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -150,7 +151,7 @@ Public Class CssWebClient
                 Return
             End If
         Catch ex As Exception
-            returnException(mcModuleName, "ComputeCSS", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "ComputeCSS", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 

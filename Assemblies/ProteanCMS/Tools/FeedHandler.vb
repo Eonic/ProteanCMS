@@ -28,7 +28,7 @@ Public Class FeedHandler
 
     Public oDBH As Cms.dbHelper
     Public oTransform As Protean.XmlHelper.Transform
-    Public oAdmXFrm As New Cms.Admin.AdminXforms()
+    ' Public oAdmXFrm As New Cms.Admin.AdminXforms()
 
     Dim oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
@@ -56,6 +56,7 @@ Public Class FeedHandler
             oDBH.myWeb = New Protean.Cms(System.Web.HttpContext.Current)
             oDBH.myWeb.InitializeVariables()
             'oDBH.myWeb.Open()
+            Dim oAdmXFrm As New Cms.Admin.AdminXforms(oDBH.myWeb.msException)
             oAdmXFrm.goConfig = oConfig
             oAdmXFrm.moDbHelper = oDBH
             oAdmXFrm.myWeb = oDBH.myWeb
@@ -477,6 +478,7 @@ Public Class FeedHandler
 
                     Me.AddExternalMessage("Adding Item", cId)
                     _counters("add").Add()
+                    Dim oAdmXFrm As New Cms.Admin.AdminXforms(oDBH.myWeb.msException)
                     oAdmXFrm.xFrmFeedItem(, oInstanceElmt, nHostPageID, cFeedURL)
 
                 ElseIf nContentKey > 0 And UpdateExistingItems Then
@@ -489,7 +491,7 @@ Public Class FeedHandler
                     If oNewElmt.SelectSingleNode("//nContentKey") IsNot Nothing Then oNewElmt.SelectSingleNode("//nContentKey").InnerText = nContentKey
                     If oNewElmt.SelectSingleNode("//nContentPrimaryId") IsNot Nothing Then oNewElmt.SelectSingleNode("//nContentPrimaryId").InnerText = "0"
                     If oNewElmt.SelectSingleNode("//nAuditId") IsNot Nothing Then oNewElmt.SelectSingleNode("//nAuditId").ParentNode.RemoveChild(oNewElmt.SelectSingleNode("//nAuditId"))
-
+                    Dim oAdmXFrm As New Cms.Admin.AdminXforms(oDBH.myWeb.msException)
                     Dim oXfrm As XmlElement = oAdmXFrm.xFrmFeedItem(nContentKey, oNewElmt, 0, cFeedURL)
 
                     If oXfrm.GetAttribute("itemupdated") = "true" Then

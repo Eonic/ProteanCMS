@@ -1481,7 +1481,7 @@ RedoCheck:
 
                     'Email the site owner to inform of cancelation !!!
                     If oSubConfig("CancellationXSL") <> "" Then
-                        Dim oMessager As New Protean.Messaging
+                        Dim oMessager As New Protean.Messaging(myWeb.msException)
                         Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
                         Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText
                         ' Inform the client
@@ -1502,7 +1502,7 @@ RedoCheck:
 
                     'Email the site owner to inform of cancelation !!!
                     If oSubConfig("CancellationXSL") <> "" Then
-                        Dim oMessager As New Protean.Messaging
+                        Dim oMessager As New Protean.Messaging(myWeb.msException)
                         Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
                         Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText
                         ' Inform the client
@@ -1598,7 +1598,7 @@ RedoCheck:
                         'CheckExpiringSubscriptions()
 
                         Dim reminderNode As XmlElement
-                        Dim oMessager As New Protean.Messaging
+                        Dim oMessager As New Protean.Messaging(myWeb.msException)
 
                         Dim cSQL As String = ""
 
@@ -2057,7 +2057,7 @@ RedoCheck:
                 Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
                 Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                    returnException(e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+                    returnException(xForm.msException, e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
                 End Sub
 
                 'Public myWeb As Protean.Cms
@@ -2079,8 +2079,8 @@ RedoCheck:
                     End Try
                 End Sub
 
-                Public Sub New()
-
+                Public Sub New(ByRef sException As String)
+                    MyBase.New(sException)
                 End Sub
 
                 Public Overridable Function xFrmConfirmSubscription(ByVal SubscriptionId As Long, Optional ByVal FormName As String = "ConfirmSubscription") As XmlElement
@@ -2297,7 +2297,7 @@ processFlow:
 
                                 Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, SelectedPaymentMethod)
 
-                                Dim ccPaymentXform As Protean.xForm = New Protean.xForm
+                                Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
 
                                 pseudoCart.mcPagePath = pseudoCart.mcCartURL & myWeb.mcPagePath
 
@@ -2452,7 +2452,7 @@ processFlow:
                                     'Email site owner with new subscription details
                                     'send registration confirmation
                                     Dim oUserElmt As XmlElement = myWeb.GetUserXML(myWeb.mnUserId)
-                                    Dim oMsg As Messaging = New Messaging
+                                    Dim oMsg As Messaging = New Messaging(myWeb.msException)
                                     Dim oUserEmail As XmlElement = oUserElmt.SelectSingleNode("Email")
                                     Dim fromName As String = myWeb.moConfig("SiteAdminName")
                                     Dim fromEmail As String = myWeb.moConfig("SiteAdminEmail")
