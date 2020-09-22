@@ -947,7 +947,7 @@ Namespace Providers
 
                 Function xfrmSecure3DReturn(ByVal acs_url As String) As xForm
                     PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
-                    Dim oXform As xForm = New Protean.Cms.xForm
+                    Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                     Dim oFrmInstance As XmlElement
                     Dim oFrmGroup As XmlElement
 

@@ -1022,7 +1022,7 @@ Public Class XmlHelper
                             Dim fso As New fsHelper()
                             fso.DeleteFile(fi.FullName)
                         Catch ex2 As Exception
-                            returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
+                            ' returnException("Protean.XmlHelper.Transform", "ClearXSLTassemblyCache", ex2, msXslFile, sProcessInfo)
                         End Try
                     Next
 

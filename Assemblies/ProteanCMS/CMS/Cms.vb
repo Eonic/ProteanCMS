@@ -1516,16 +1516,25 @@ Public Class Cms
                                 End If
 
                                 If url.ToLower() <> pagePath.ToLower() Then
-                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    '     msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+
+                                    mnPageId = gnPageNotFoundId
+                                    moPageXml = New XmlDocument()
+                                    BuildPageXML()
                                     moResponse.StatusCode = 404
+
                                 End If
                             End If
                         Else
                             If (moConfig("PageNotFoundId") IsNot Nothing) Then
                                 If mnPageId.ToString() <> moConfig("PageNotFoundId") And msException = "" Then
 
-                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    '  msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                    mnPageId = gnPageNotFoundId
+                                    moPageXml = New XmlDocument()
+                                    BuildPageXML()
                                     moResponse.StatusCode = 404
+
                                 End If
 
                             End If
@@ -6782,7 +6791,10 @@ Public Class Cms
                         If Not disableRedirect Then
                             'put this in to prevent a redirect if we are calling this from somewhere strange.
                             If gnPageNotFoundId > 1 Then
-                                msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                ' msRedirectOnEnd = "/System+Pages/Page+Not+Found"
+                                mnPageId = gnPageNotFoundId
+                                moPageXml = New XmlDocument()
+                                BuildPageXML()
                                 moResponse.StatusCode = 404
                             Else
                                 msRedirectOnEnd = moConfig("BaseUrl")
@@ -7507,7 +7519,7 @@ Public Class Cms
             'Add remaining details pulled in
             moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(oXmlE, True))
 
-            Dim oMsg As Protean.Messaging = New Protean.Messaging
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(msException)
             oMsg.emailer(oPageElmt, "/ewcommon/xsl/email/siteAdminError_FileNotFound.xsl", "ProteanCMS Error", "error@proteancms.com", moConfig("siteAdminEmail"), "File not found", , , , "error@proteancms.com")
 
         Catch ex As Exception

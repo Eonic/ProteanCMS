@@ -68,8 +68,8 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Sub New()
-
+            Public Sub New(ByRef sException As String)
+                MyBase.New(sException)
             End Sub
 
             Public Shadows Sub open(ByVal oPageXml As XmlDocument)
@@ -8755,7 +8755,7 @@ Partial Public Class Cms
                             Item = selectItem
 
                         Catch ex As Exception
-                            returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
+                            '  returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                         End Try
                     End Sub
 
@@ -8830,7 +8830,7 @@ Partial Public Class Cms
                             Return "" & SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
 
                         Catch ex As Exception
-                            returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
+                            '   returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
                             Return ""
                         End Try
 
@@ -8890,7 +8890,7 @@ Partial Public Class Cms
             Public myWeb As Protean.Cms
 
             Public Sub New(ByRef aWeb As Protean.Cms, Optional ByVal contentId As Long = 0)
-
+                MyBase.New(aWeb.msException)
 
                 ' Set the Web context variables
                 myWeb = aWeb
@@ -8936,7 +8936,7 @@ Partial Public Class Cms
 
             Protected Sub CreateMasterForm(Optional ByVal contentId As Long = 0)
                 Try
-                    _masterXform = New Protean.xForm
+                    _masterXform = New Protean.xForm(myWeb.msException)
                     _masterXform.moPageXML = Me.moPageXML
                     _masterInstance = Me.moPageXML.CreateElement("instance")
 

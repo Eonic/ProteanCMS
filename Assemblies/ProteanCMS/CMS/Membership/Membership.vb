@@ -683,7 +683,7 @@ Partial Public Class Cms
                                 Dim recipientEmail As String = ""
                                 If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
                                 Dim SubjectLine As String = "Your Registration Details"
-                                Dim oMsg As Messaging = New Messaging
+                                Dim oMsg As Messaging = New Messaging(myWeb.msException)
                                 'send an email to the new registrant
                                 If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                 'send an email to the webadmin
@@ -1120,7 +1120,7 @@ Partial Public Class Cms
                                         If oXform.valid Then
                                             Dim sMessage As String
 
-                                            Dim oMsg As Protean.Messaging = New Protean.Messaging
+                                            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
                                             sMessage = oMsg.emailer(oXform.Instance.SelectSingleNode("emailer/oBodyXML"),
                                                                     oXform.Instance.SelectSingleNode("emailer/xsltPath").InnerText,

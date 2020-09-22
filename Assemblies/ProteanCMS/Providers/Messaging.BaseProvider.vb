@@ -187,9 +187,9 @@ Namespace Providers
                                 Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                 Dim cEmail As String = MyBase.Instance.SelectSingleNode("cEmail").InnerText
                                 'first we will only deal with unpersonalised
-                                Dim oMessager As New Protean.Messaging
+                                Dim oMessager As New Protean.Messaging(myWeb.msException)
                                 'get the subject
-                                Dim oMessaging As New Activities
+                                Dim oMessaging As New Activities(myWeb.msException)
 
                                 Dim cMailingXsl As String = moMailConfig("MailingXsl")
                                 If cMailingXsl = "" Then cMailingXsl = "/xsl/mailer/mailerStandard.xsl"
@@ -283,7 +283,7 @@ Namespace Providers
                             If MyBase.valid Then
                                 Dim moMailConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
                                 'get the individual elements
-                                Dim oMessaging As New Protean.Messaging
+                                Dim oMessaging As New Protean.Messaging(myWeb.msException)
                                 'First we need to get the groups we are sending to
                                 Dim oGroupElmt As XmlElement = MyBase.Instance.SelectSingleNode("cGroups")
                                 Dim oFromEmailElmt As XmlElement = MyBase.Instance.SelectSingleNode("cDefaultEmail")
@@ -731,6 +731,10 @@ ProcessFlow:
             Public Class Activities
                 Inherits Protean.Messaging
 
+                Public Sub New(ByRef sException As String)
+                    MyBase.New(sException)
+                End Sub
+
                 Overloads Function SendMailToList_Queued(ByVal nPageId As Integer, ByVal cEmailXSL As String, ByVal cGroups As String, ByVal cFromEmail As String, ByVal cFromName As String, ByVal cSubject As String) As Boolean
                     PerfMon.Log("Messaging", "SendMailToList_Queued")
 
@@ -801,7 +805,7 @@ ProcessFlow:
 
                     Catch ex As Exception
 
-                        returnException(msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
+                        returnException(MyBase.msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
                         Return False
                     End Try
                 End Function
@@ -820,7 +824,7 @@ ProcessFlow:
                         oSmtpn.Send(oMailn)
                         Return "Sent"
                     Catch ex As Exception
-                        returnException(myWeb.msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
+                        returnException(msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
                         Return "Error"
                     End Try
                 End Function
@@ -831,7 +835,7 @@ ProcessFlow:
                         'do nothing this is a placeholder
                         Return Nothing
                     Catch ex As Exception
-                        returnException(myWeb.msException, mcModuleName, "AddToList", ex, "", "", gbDebug)
+                        returnException(MyBase.msException, mcModuleName, "AddToList", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -842,7 +846,7 @@ ProcessFlow:
                         'do nothing this is a placeholder
                         Return Nothing
                     Catch ex As Exception
-                        returnException(myWeb.msException, mcModuleName, "RemoveFromList", ex, "", "", gbDebug)
+                        returnException(MyBase.msException, mcModuleName, "RemoveFromList", ex, "", "", gbDebug)
                         Return Nothing
                     End Try
                 End Function

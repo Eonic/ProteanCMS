@@ -765,7 +765,7 @@ Recheck:
 
                 'Remove all foreign keys
                 myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
-                msException = ""
+                myWeb.msException = ""
                 'If Not msException = "" Then
                 '    AddResponse(msException)
                 '    msException = ""
@@ -1749,7 +1749,7 @@ DoOptions:
         Try
             'AddResponse("Removing V4 Tables")
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
-            msException = ""
+            myWeb.msException = ""
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/ClearDB.SQL"))
             AddResponse("Run File (/ewcommon/sqlupdate/toV4/ClearDB.SQL)")
             Return saveVersionNumber("0.0.0.0")
@@ -1959,13 +1959,14 @@ DoOptions:
         Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
         Public Sub New(ByRef asetup As Protean.Setup)
+            MyBase.New(asetup.myWeb.msException)
             PerfMon.Log("Discount", "New")
             Try
                 mySetup = asetup
                 goConfig = mySetup.goConfig
                 MyBase.moPageXML = mySetup.moPageXml
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "New", ex, "", "", True)
+                returnException(MyBase.msException, mcModuleName, "New", ex, "", "", True)
             End Try
         End Sub
 
@@ -1982,7 +1983,7 @@ DoOptions:
                 siteUrl = Replace(siteUrl, "-", "_")
                 Return "ew_" & siteUrl
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "GuessDBName", ex, "", "", True)
+                returnException(MyBase.msException, mcModuleName, "GuessDBName", ex, "", "", True)
                 Return ""
             End Try
         End Function
@@ -2128,7 +2129,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2197,7 +2198,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2285,7 +2286,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2346,7 +2347,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(myWeb.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2701,10 +2702,10 @@ Public Class ContentMigration
                         End If
                     End If
                 End If
-                If msException <> Nothing Then
+                If myWeb.msException <> Nothing Then
                     oSetup.AddResponse("Error Converting Original:")
                     oSetup.AddResponse("<code>" & cResponse.Replace("<", "&lt;").Replace(">", "&gt;") & "</code><!--" & cResponse & "-->")
-                    oSetup.AddResponse(msException)
+                    oSetup.AddResponse(myWeb.msException)
                     Exit For
                 End If
             Next
@@ -2755,7 +2756,7 @@ Public Class ContentMigration
             oXmlDr.LoadXml(cContentXml.Trim)
 
             'set exception to nothing
-            msException = Nothing
+            myWeb.msException = Nothing
 
             sWriter = New IO.StringWriter
             oTransform2.Compiled = False
@@ -2979,7 +2980,7 @@ Public Class ContentImport
             Dim oElmt As XmlElement
 
             For Each oElmt In oInstances.DocumentElement.SelectNodes("instance/tblContent")
-                oXForm = New xForm
+                oXForm = New xForm(myWeb.msException)
                 oXForm.load(cXFormPath)
                 oXForm.LoadInstance(oElmt)
                 Dim nNewContentId As Integer = 0

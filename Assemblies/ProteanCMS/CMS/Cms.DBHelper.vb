@@ -1150,35 +1150,38 @@ Partial Public Class Cms
                                 'handling for content versions ?
                             End If
                             'now get the page id 
-                            sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
-                            ods = GetDataSet(sSql, "Pages")
-                            If ods.Tables("Pages").Rows.Count = 1 Then
-                                If bCheckPermissions Then
-                                    ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                    Dim checkPermissionPageId As Long = checkPagePermission(ods.Tables("Pages").Rows("0").Item("nStructId"))
-                                    If checkPermissionPageId <> 0 _
-                                                    And (ods.Tables("Pages").Rows("0").Item("nStructId") = checkPermissionPageId _
-                                                    Or IsSystemPage(checkPermissionPageId)) Then
-                                        nPageId = checkPermissionPageId
+                            If nArtId > 0 Then
+                                sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
+                                ods = GetDataSet(sSql, "Pages")
+                                If ods.Tables("Pages").Rows.Count = 1 Then
+                                    If bCheckPermissions Then
+                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                        Dim checkPermissionPageId As Long = checkPagePermission(ods.Tables("Pages").Rows("0").Item("nStructId"))
+                                        If checkPermissionPageId <> 0 _
+                                                        And (ods.Tables("Pages").Rows("0").Item("nStructId") = checkPermissionPageId _
+                                                        Or IsSystemPage(checkPermissionPageId)) Then
+                                            nPageId = checkPermissionPageId
+                                        End If
+                                    Else
+                                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
                                     End If
-                                Else
                                     nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
-                                End If
-                                nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
 
 
-                                If checkRedirect Then
-                                    Dim redirectUrl As String
-                                    redirectUrl = "/" & thisPrefix & "/" & sPath.ToString.Replace(" ", "-").Trim("-") & "/"
-                                    If sFullPath <> redirectUrl Then
-                                        myWeb.msRedirectOnEnd = redirectUrl
+                                    If checkRedirect Then
+                                        Dim redirectUrl As String
+                                        redirectUrl = "/" & thisPrefix & "/" & sPath.ToString.Replace(" ", "-").Trim("-") & "/"
+                                        If sFullPath <> redirectUrl Then
+                                            myWeb.msRedirectOnEnd = redirectUrl
+                                        End If
                                     End If
+
+
+                                Else
+                                    'handling for multiple parents versions ?
                                 End If
-
-
-                            Else
-                                'handling for multiple parents versions ?
                             End If
+
                         End If
                 End Select
 
@@ -6433,7 +6436,7 @@ restart:
 
 
                         'now lets send the email
-                        Dim oMsg As Messaging = New Messaging
+                        Dim oMsg As Messaging = New Messaging(myWeb.msException)
 
 
 

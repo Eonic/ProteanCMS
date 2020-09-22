@@ -156,7 +156,7 @@ Partial Public Class Cms
                             If oAlertElmt.SelectNodes("Contents/Content").Count > 0 Then
                                 nEmailCount += 1
                                 Try
-                                    Dim oMailer As New Protean.Messaging
+                                    Dim oMailer As New Protean.Messaging(myWeb.msException)
                                     Dim cResponse As String = oMailer.emailer(oAlertElmt, oAlertConfig("AlertXsl"), oAlertConfig("AlertFrom"), oAlertConfig("AlertFromEmail"), oMember.Email, cAlertTitles, , , , , , , , oAlertConfig("AlertPickupHost"), oAlertConfig("AlertPickupLocation"))
                                     myWeb.msException = "" ' Clear the sodding error
                                     If bReportDeep Then

@@ -2227,7 +2227,7 @@ Check:
                             oEmailDoc.DocumentElement.SetAttribute("lang", myWeb.mcPageLanguage)
                             oEmailDoc.DocumentElement.SetAttribute("translang", myWeb.mcPreferredLanguage)
 
-                            Dim oMessage As New Protean.Messaging
+                            Dim oMessage As New Protean.Messaging(myWeb.msException)
 
                             Dim fs As fsHelper = New fsHelper()
                             Dim path As String = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders)

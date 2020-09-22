@@ -104,12 +104,12 @@ Public Class SoapClient
 
             ' Dim serviceResponse As HttpWebResponse = ex.Response
             ' serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
-            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
+            ' returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         Catch ex As Exception
 
             'Return ex.Message.tostring
-            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
+            'returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         End Try
         serviceResponseBody = serviceResponseStream.ReadToEnd

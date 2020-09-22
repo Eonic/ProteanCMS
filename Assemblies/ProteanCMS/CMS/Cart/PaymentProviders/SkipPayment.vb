@@ -104,7 +104,7 @@ Namespace Providers
                     Dim cProcessInfo As String = ""
                     Try
 
-                        Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx)
+                        Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx, myWeb.msException)
 
                         ccXform.NewFrm("SkipPayment")
 

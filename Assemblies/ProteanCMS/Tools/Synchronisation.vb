@@ -164,7 +164,7 @@ Partial Public Class Cms
                     If String.IsNullOrEmpty(contentTypes) Then contentTypes = fsHelper.GetDefaultContentSchemaNamesForLibraryType(fileType)
                     Dim contentTypesList As New List(Of String)(contentTypes.Split(","))
                     If contentTypesList.Count > 0 Then
-                        Dim blankSchema As New xForm()
+                        Dim blankSchema As New xForm(_myWeb.msException)
                         For Each schemaName As String In contentTypesList
                             If blankSchema.load("/xforms/content/" & schemaName & ".xml", _myWeb.maCommonFolders) Then
                                 Tools.Xml.AddExistingNode(importSchemas, blankSchema.Instance)
