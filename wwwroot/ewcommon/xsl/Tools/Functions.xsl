@@ -229,6 +229,15 @@
     </xsl:if>
   </xsl:variable>
 
+  <xsl:variable name="PayPalTagManagerID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'PayPalTagManagerID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+
   <!-- Cal Cmd for Calendars -->
   <xsl:variable name="calendarMonth">
     <xsl:choose>
@@ -313,6 +322,17 @@
             })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
           </script>
           <!-- End Google Tag Manager -->
+        </xsl:if>
+        <xsl:if test="$PayPalTagManagerID!=''">
+        <!-- PayPal BEGIN -->
+        <script>
+          (function (a, t, o, m, s) {
+          a[m] = a[m] || []; a[m].push({ t: new Date().getTime(), event: 'snippetRun' });
+          var f = t.getElementsByTagName(o)[0], e = t.createElement(o), d = m !== 'paypalDDL' ? '&amp;m=' + m : ''; e.async = !0;
+          e.src = 'https://www.paypal.com/tagmanager/pptm.js?id=' + s + d; f.parentNode.insertBefore(e, f);
+          })(window, document, 'script', 'paypalDDL', '<xsl:value-of select="$PayPalTagManagerID"/>');
+        </script>
+        <!-- PayPal END -->
         </xsl:if>
         <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->

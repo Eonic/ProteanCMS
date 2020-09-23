@@ -3639,15 +3639,15 @@ Partial Public Class Cms
                                         ppXform.NewFrm("PayForm")
                                         ppXform.valid = bIsValid
 
-                                        Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID 'PayPal User
-                                        '   Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
+                                        Dim cPaymentRef As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo("TransactionID")) 'PayPal transaction id
+                                        Dim cPayerId As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID) 'PayPal Us
 
 
                                         Dim oInstanceElmt As XmlElement = ppXform.Instance.OwnerDocument.CreateElement("instance")
                                         Dim oPayPalElmt As XmlElement = ppXform.Instance.OwnerDocument.CreateElement("PayPalExpress")
                                         oInstanceElmt.AppendChild(oPayPalElmt)
                                         'Add stuff we want to save here...
-                                        oPayPalElmt.SetAttribute("payerId", cPaymentRef)
+                                        oPayPalElmt.SetAttribute("payerId", cPayerId)
 
                                         ppXform.Instance = oInstanceElmt
 
@@ -3657,7 +3657,7 @@ Partial Public Class Cms
                                         err_msg = "Notes:" & oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note
 
 
-                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", cPaymentRef, CStr(oDictOpt("accountId")), ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
+                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", CStr(oDictOpt("accountId")), cPaymentRef, ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
                                     Case Else
                                         Dim ppError As Protean.PayPalAPI.ErrorType
                                         For Each ppError In oDoExpChkResponse.Errors
