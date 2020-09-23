@@ -3642,9 +3642,6 @@ Partial Public Class Cms
                                         Dim cPaymentRef As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo("TransactionID")) 'PayPal transaction id
                                         Dim cPayerId As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID) 'PayPal Us
 
-                                        '   Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
-
-
 
                                         Dim oInstanceElmt As XmlElement = ppXform.Instance.OwnerDocument.CreateElement("instance")
                                         Dim oPayPalElmt As XmlElement = ppXform.Instance.OwnerDocument.CreateElement("PayPalExpress")
