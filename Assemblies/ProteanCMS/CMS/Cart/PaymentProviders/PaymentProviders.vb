@@ -3638,7 +3638,7 @@ Partial Public Class Cms
                                         ppXform.NewFrm("PayForm")
                                         ppXform.valid = bIsValid
 
-                                        Dim cPaymentRef As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo("TransactionID")) 'PayPal transaction id
+                                        Dim cPaymentRef As String = Convert.ToString(oDoExpChkResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo(0).TransactionID) 'PayPal transaction id
                                         Dim cPayerId As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID) 'PayPal Us
 
                                         '   Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
@@ -3658,7 +3658,7 @@ Partial Public Class Cms
                                         err_msg = "Notes:" & oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note
 
 
-                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", CStr(oDictOpt("accountId")), cPaymentRef, ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
+                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", cPaymentRef, CStr(oDictOpt("accountId")), ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
                                     Case Else
                                         Dim ppError As Protean.PayPalAPI.ErrorType
                                         For Each ppError In oDoExpChkResponse.Errors
