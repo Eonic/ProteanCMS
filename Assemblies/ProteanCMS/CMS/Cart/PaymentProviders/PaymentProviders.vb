@@ -3775,7 +3775,9 @@ Partial Public Class Cms
                             oShippingOptions(0) = oShippingOption
                             oSetExpChkDetails.FlatRateShippingOptions = oShippingOptions
 
-                            oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
+                            Dim RandGen As New Random
+                            oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId) & "-" & RandGen.Next(1000, 9999).ToString
+                            ' oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
 
                             Dim oDeliveryAddress As Protean.PayPalAPI.AddressType = New Protean.PayPalAPI.AddressType
                             sType = "Delivery Address"
