@@ -2732,25 +2732,25 @@ var SWFObject = deconcept.SWFObject;
 
 
 
-var Files = [];
+//var Files = [];
 
-$(".fileUploadCheck").on('change', function () {
+//$(".fileUploadCheck").on('change', function () {
    
-    $.each(this.files, (i, file) => Files.push(file));
-    var size = 0;
-     size = calculateTotalSize();
-    size= size / 1024 / 1024;
-    if (size > 4.0) {
-        Files.length = 0;
-        alert('File size should be less than 4MB');
-        this.val('');
+//    $.each(this.files, (i, file) => Files.push(file));
+//    var size = 0;
+//     size = calculateTotalSize();
+//    size= size / 1024 / 1024;
+//    if (size > 4.0) {
+//        Files.length = 0;
+//        alert('File size should be less than 4MB');
+//        this.val('');
        
-        return false;
-    }
-    Files.length = 0;
-});
-function calculateTotalSize() {
-    var totalSize = 0;
-    Files.map((file) => totalSize += file.size)
-    return `${totalSize}`;
-}
+//        return false;
+//    }
+//    Files.length = 0;
+//});
+//function calculateTotalSize() {
+//    var totalSize = 0;
+//    Files.map((file) => totalSize += file.size)
+//    return `${totalSize}`;
+//}

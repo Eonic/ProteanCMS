@@ -2244,7 +2244,7 @@
 
   <!-- Log Order Items-->
   <xsl:template match="Content" mode="ga-universal-impression">
-    <xsl:text>ga('ec:ec:addImpression', {</xsl:text>
+    <xsl:text>ga('ec:addImpression', {</xsl:text>
     <!-- Stock Code -->
     <xsl:text>'id': '</xsl:text>
     <xsl:call-template name="escape-js">
