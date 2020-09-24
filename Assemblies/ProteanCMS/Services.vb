@@ -118,11 +118,12 @@ Public Class Services
     <WebMethod(Description:="Sends Email From Website xForm")>
     Public Function emailer(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String) As Object
 
-        Dim sMessage As String
+        Dim sMessage As String = ""
 
         Dim cProcessInfo As String = "emailer"
         Try
             If CheckUserIP() Then
+                Dim myWeb As New Protean.Cms(moCtx)
                 Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
                 sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
             End If

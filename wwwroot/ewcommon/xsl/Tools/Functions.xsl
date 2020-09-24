@@ -1180,7 +1180,7 @@
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
     </xsl:if>
 
-    <xsl:if test="Cart and Cart/@cmd!=''">
+    <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
     </xsl:if>
 

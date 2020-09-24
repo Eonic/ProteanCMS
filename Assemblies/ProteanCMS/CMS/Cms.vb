@@ -1497,7 +1497,7 @@ Public Class Cms
             If msException = "" Then
 
 
-                If Not mbAdminMode And moConfig("CheckPageURL") = "on" Then
+                If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode Then
                     Dim url As String
                     Dim pagePath As String
                     If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
@@ -6760,7 +6760,7 @@ Public Class Cms
                         'Add single item shipping costs for JSON-LD
                         Dim ProductTypes As String = moConfig("ProductTypes")
                         If ProductTypes = "" Then ProductTypes = "Product,SKU"
-                        If ProductTypes.Contains(contentElmt.GetAttribute("type")) Then
+                        If ProductTypes.Contains(contentElmt.GetAttribute("type")) And Not moCart Is Nothing Then
                             Try
                                 Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
 
