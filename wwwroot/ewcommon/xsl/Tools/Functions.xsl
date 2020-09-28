@@ -640,6 +640,11 @@
 
   <xsl:template match="Page" mode="commonJsFiles">
     <xsl:choose>
+      <xsl:when test="$jqueryVer='3.5'">
+        <xsl:text>~/ewcommon/js/jquery/jquery-3.5.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery.browser.js,</xsl:text>
+      </xsl:when>
       <xsl:when test="$jqueryVer='3.4'">
         <xsl:text>~/ewcommon/js/jquery/jquery-3.4.1.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>

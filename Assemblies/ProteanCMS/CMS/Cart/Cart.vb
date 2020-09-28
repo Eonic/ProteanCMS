@@ -6646,7 +6646,7 @@ processFlow:
 
                 myWeb.moSession("mcPaymentMethod") = Nothing
                 myWeb.moSession("mmcOrderType") = Nothing
-                myWeb.moRequest.Form("ordertype") = Nothing
+                '  myWeb.moRequest.Form("ordertype") = Nothing
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
