@@ -2757,7 +2757,7 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='EmbeddedHtml' ]" mode="displayBrief">
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+    <xsl:apply-templates select="*" mode="cleanXhtml"/>
     <xsl:text> </xsl:text>
   </xsl:template>
 

@@ -2256,7 +2256,7 @@
             <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='AwaitingApproval']">
               <li>
                 <a href="?ewCmd=ContentVersions&amp;pgid={/Page/@id}&amp;id={@id}{$subTypeOption}" title="Click here to view version history">
-                  <i class="fa fa-copy">&#160;</i>&#160;Version History
+                  <i class="fa fa-copy">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
                 </a>
               </li>
             </xsl:if>

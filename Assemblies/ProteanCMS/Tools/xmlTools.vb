@@ -882,31 +882,40 @@ Public Class XmlHelper
             Dim sProcessInfo As String = "Processing: " & msXslFile
             Try
                 If mbCompiled Then
-                    If myWeb.msException = "" Then
-                        'Run transformation 
+                    If myWeb Is Nothing Then
                         Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(oXml.OuterXml))
                         Dim sWriter As IO.StringWriter = New IO.StringWriter
                         oCStyle.Transform(oReader, xsltArgs, oWriter)
                     Else
-                        oWriter.Write(myWeb.msException)
+                        If myWeb.msException = "" Then
+                            'Run transformation 
+                            Dim oReader As Xml.XmlTextReader = New XmlTextReader(New StringReader(oXml.OuterXml))
+                            Dim sWriter As IO.StringWriter = New IO.StringWriter
+                            oCStyle.Transform(oReader, xsltArgs, oWriter)
+                        Else
+                            oWriter.Write(myWeb.msException)
+                        End If
                     End If
-
                 Else
                     'Change the xmlDocument to xPathDocument to improve performance
                     Dim xpathDoc As XPath.XPathDocument = New XPath.XPathDocument(New XmlNodeReader(oXml))
-
-                    If myWeb.msException = "" Or myWeb.msException Is Nothing Then
-                        'Run transformation
+                    If myWeb Is Nothing Then
                         oStyle.Transform(xpathDoc, xsltArgs, oWriter, Nothing)
                     Else
-                        oWriter.Write(myWeb.msException)
+                        If myWeb.msException = "" Or myWeb.msException Is Nothing Then
+                            'Run transformation
+                            oStyle.Transform(xpathDoc, xsltArgs, oWriter, Nothing)
+                        Else
+                            oWriter.Write(myWeb.msException)
+                        End If
                     End If
-
                 End If
             Catch ex As Exception
                 transformException = ex
-                returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
-                oWriter.Write(myWeb.msException)
+                If Not myWeb Is Nothing Then
+                    returnException(myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug)
+                    oWriter.Write(myWeb.msException)
+                End If
                 bError = True
             End Try
         End Sub
