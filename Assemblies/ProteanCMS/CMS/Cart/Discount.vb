@@ -1432,6 +1432,13 @@ NoDiscount:
                                 Else
                                     applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                 End If
+                                If (maximumOrderTotal <> 0) Then
+                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                        oDsDiscounts.Clear()
+                                        oDsDiscounts = Nothing
+                                        Return oDiscountMessage
+                                    End If
+                                End If
                                 If (applyToTotal) Then
                                     If (maximumOrderTotal <> 0) Then
                                         If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
@@ -1441,7 +1448,6 @@ NoDiscount:
                                         End If
                                     End If
                                 End If
-
                             End If
                             oDsDiscounts.Clear()
                             oDsDiscounts = Nothing
