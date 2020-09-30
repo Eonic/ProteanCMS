@@ -84,7 +84,7 @@ Partial Public Class Cms
         Public Function DecryptResetLink(ByVal AccountID As Integer, ByVal EncryptedString As String) As Integer
             Try
                 EncryptedString = Protean.Tools.Text.DeAscString(EncryptedString)
-                Dim cSQL As String = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '" & EncryptedString & "' AND nDirKey = " & AccountID
+                Dim cSQL As String = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '" & SqlFmt(EncryptedString) & "' AND nDirKey = " & AccountID
                 Return myWeb.moDbHelper.GetDataValue(cSQL, , , 0)
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DecryptResetLink", ex, ""))
