@@ -100,7 +100,7 @@ Partial Public Class Cms
                     End Select
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetResults", ex, "", , gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetResults", ex, "", , gbDebug)
                 End Try
             End Sub
 
@@ -146,7 +146,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "New", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
             End Try
         End Sub
 
@@ -189,7 +189,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "New", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
             End Try
         End Sub
 
@@ -271,7 +271,7 @@ Partial Public Class Cms
                 End Select
 
             Catch ex As Exception
-                returnException(mcModuleName, "ExecuteSearch", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ExecuteSearch", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -372,7 +372,7 @@ Partial Public Class Cms
                 Return filters
 
             Catch ex As Exception
-                returnException(mcModuleName, "BuildFiltersFromRequest", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "BuildFiltersFromRequest", ex, "", processInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -622,7 +622,7 @@ Partial Public Class Cms
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "Search", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
 
@@ -652,214 +652,214 @@ Partial Public Class Cms
                     End If
 
                     _overrideQueryBuilder = myAPI.moRequest("overrideQueryBuilder") = "true"
-                        _includePrefixNameSearch = myAPI.moRequest("prefixNameSearch") = "true"
+                    _includePrefixNameSearch = myAPI.moRequest("prefixNameSearch") = "true"
 
-                        resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
-                        resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
+                    resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
+                    resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
-                        ' Generate the live page filter
-                        Dim livePages As Filter = LivePageLuceneFilter(myAPI)
+                    ' Generate the live page filter
+                    Dim livePages As Filter = LivePageLuceneFilter(myAPI)
 
                     ' Generate the query criteria
                     Dim searchFilters As XmlElement = BuildFiltersFromRequest(resultsXML.OwnerDocument, myAPI.moRequest)
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
-                        ' Generate the search query
-                        Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
+                    ' Generate the search query
+                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
 
-                        ' Add a sort from the request
-                        Dim queryOrder As Sort = SetSortFieldFromRequest(myAPI.moRequest)
+                    ' Add a sort from the request
+                    Dim queryOrder As Sort = SetSortFieldFromRequest(myAPI.moRequest)
 
-                        ' Perform the search
-                        Dim results As Lucene.Net.Search.TopDocs
+                    ' Perform the search
+                    Dim results As Lucene.Net.Search.TopDocs
 
-                        If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
-                            addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
-                            If Not livePages Is Nothing Then
-                                addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                    If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
+                        addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
+                        If Not livePages Is Nothing Then
+                            addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+                        End If
+                    End If
+
+                    '  Dim HitsLimit As Integer = 300
+
+                    If livePages Is Nothing Then
+                        results = searcher.Search(searchQuery, HitsLimit)
+                    Else
+                        results = searcher.Search(searchQuery, livePages, HitsLimit, queryOrder)
+                    End If
+
+                    ' Log the search
+                    If _logSearches Then
+                        myAPI.moDbHelper.logActivity(IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myAPI.mnUserId, 0, 0, results.TotalHits, cQuery)
+                    End If
+
+                    ' Optional fuzzysearch for figures
+                    ' This is simply designed to get a count that can be fed back to users
+                    ' This could be a performance no-no, although most searches are quick
+                    If _runPreFuzzySearch And Not _includeFuzzySearch Then
+                        _includeFuzzySearch = True
+                        searchQuery = BuildLuceneQuery(cQuery, searchFilters)
+                        resultsXML.SetAttribute("fuzzyCount", searcher.Search(searchQuery, livePages, HitsLimit, queryOrder).TotalHits.ToString)
+                    End If
+
+                    Dim resultDoc As Document = Nothing
+                    Dim result As XmlElement = Nothing
+                    Dim pageIdField As Field = Nothing
+                    Dim pageId As Long = 0
+                    Dim url As String = ""
+                    Dim menuItem As XmlElement = Nothing
+                    Dim reservedFieldNames() As String = {"type", "text", "abstract"}
+                    Dim pageStart As Integer
+                    Dim pageCount As Integer
+                    Dim pageEnd As Integer
+                    ' Paging settings
+                    ' Hits is so lightweight that we don't have to filter it beforehand
+                    ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
+                    Dim totalResults As Long = results.TotalHits
+
+                    pageCount = 0 'myAPI.GetRequestItemAsInteger("pageCount", _pagingDefaultSize)
+                    If pageCount <= 0 Then
+                        pageCount = results.TotalHits
+                    End If
+
+                    If totalResults = 0 Then
+                        pageStart = totalResults
+                        pageEnd = totalResults
+                    Else
+                        ' pageStart = Math.Max(myAPI.GetRequestItemAsInteger("pageStart", 1), 1)
+
+                        pageStart = 1
+                        pageEnd = Math.Min(totalResults, pageStart + pageCount - 1)
+                    End If
+
+                    If pageEnd < pageStart Then pageEnd = pageStart
+
+                    If totalResults > 0 And pageCount > 0 Then
+                        Dim pageNumber As Integer = totalResults Mod pageCount
+                    End If
+
+
+                    resultsXML.SetAttribute("pageStart", pageStart)
+                    resultsXML.SetAttribute("pageCount", pageCount)
+                    resultsXML.SetAttribute("pageEnd", pageEnd)
+
+                    resultsXML.SetAttribute("sortCol", myAPI.moRequest("sortCol"))
+                    resultsXML.SetAttribute("sortColType", myAPI.moRequest("sortColType"))
+                    resultsXML.SetAttribute("sortDir", myAPI.moRequest("sortDir"))
+
+                    Dim artIdResults As New List(Of Long)
+
+
+                    ' Process the results
+                    If totalResults > 0 Then
+                        Dim sDoc As ScoreDoc
+                        For Each sDoc In results.ScoreDocs()
+
+                            resultDoc = searcher.Doc(sDoc.Doc)
+
+                            pageIdField = resultDoc.GetField("pgid")
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
+                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            Else
+                                pageId = 0
                             End If
-                        End If
 
-                        '  Dim HitsLimit As Integer = 300
+                            url = "" ' this is the link for the page
 
-                        If livePages Is Nothing Then
-                            results = searcher.Search(searchQuery, HitsLimit)
-                        Else
-                            results = searcher.Search(searchQuery, livePages, HitsLimit, queryOrder)
-                        End If
+                            ' Get the menuitem element from the xml
+                            '     If NodeState(moContextNode.OwnerDocument.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
 
-                        ' Log the search
-                        If _logSearches Then
-                            myAPI.moDbHelper.logActivity(IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myAPI.mnUserId, 0, 0, results.TotalHits, cQuery)
-                        End If
+                            ' Only process this result if it's in the paging zone
+                            ' pageStart - 1 To pageEnd - 1
+                            'don't add artId more than twice to results.
+                            Dim thisArtId As Long
+                            If Not resultDoc.GetField("artid") Is Nothing Then
+                                thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                            End If
 
-                        ' Optional fuzzysearch for figures
-                        ' This is simply designed to get a count that can be fed back to users
-                        ' This could be a performance no-no, although most searches are quick
-                        If _runPreFuzzySearch And Not _includeFuzzySearch Then
-                            _includeFuzzySearch = True
-                            searchQuery = BuildLuceneQuery(cQuery, searchFilters)
-                            resultsXML.SetAttribute("fuzzyCount", searcher.Search(searchQuery, livePages, HitsLimit, queryOrder).TotalHits.ToString)
-                        End If
+                            If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
+                                If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
-                        Dim resultDoc As Document = Nothing
-                        Dim result As XmlElement = Nothing
-                        Dim pageIdField As Field = Nothing
-                        Dim pageId As Long = 0
-                        Dim url As String = ""
-                        Dim menuItem As XmlElement = Nothing
-                        Dim reservedFieldNames() As String = {"type", "text", "abstract"}
-                        Dim pageStart As Integer
-                        Dim pageCount As Integer
-                        Dim pageEnd As Integer
-                        ' Paging settings
-                        ' Hits is so lightweight that we don't have to filter it beforehand
-                        ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-                        Dim totalResults As Long = results.TotalHits
+                                url = resultDoc.GetField("url").StringValue & ""
 
-                        pageCount = 0 'myAPI.GetRequestItemAsInteger("pageCount", _pagingDefaultSize)
-                        If pageCount <= 0 Then
-                            pageCount = results.TotalHits
-                        End If
-
-                        If totalResults = 0 Then
-                            pageStart = totalResults
-                            pageEnd = totalResults
-                        Else
-                            ' pageStart = Math.Max(myAPI.GetRequestItemAsInteger("pageStart", 1), 1)
-
-                            pageStart = 1
-                            pageEnd = Math.Min(totalResults, pageStart + pageCount - 1)
-                        End If
-
-                        If pageEnd < pageStart Then pageEnd = pageStart
-
-                        If totalResults > 0 And pageCount > 0 Then
-                            Dim pageNumber As Integer = totalResults Mod pageCount
-                        End If
+                                ' Build the URL
+                                If url = "" Then
+                                    url = menuItem.GetAttribute("url")
+                                    ' Add the artId, if exists
+                                    If Not resultDoc.GetField("artid") Is Nothing Then
 
 
-                        resultsXML.SetAttribute("pageStart", pageStart)
-                        resultsXML.SetAttribute("pageCount", pageCount)
-                        resultsXML.SetAttribute("pageEnd", pageEnd)
-
-                        resultsXML.SetAttribute("sortCol", myAPI.moRequest("sortCol"))
-                        resultsXML.SetAttribute("sortColType", myAPI.moRequest("sortColType"))
-                        resultsXML.SetAttribute("sortDir", myAPI.moRequest("sortDir"))
-
-                        Dim artIdResults As New List(Of Long)
-
-
-                        ' Process the results
-                        If totalResults > 0 Then
-                            Dim sDoc As ScoreDoc
-                            For Each sDoc In results.ScoreDocs()
-
-                                resultDoc = searcher.Doc(sDoc.Doc)
-
-                                pageIdField = resultDoc.GetField("pgid")
-                                If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                    pageId = Convert.ToInt32(pageIdField.StringValue)
-                                Else
-                                    pageId = 0
-                                End If
-
-                                url = "" ' this is the link for the page
-
-                                ' Get the menuitem element from the xml
-                                '     If NodeState(moContextNode.OwnerDocument.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
-
-                                ' Only process this result if it's in the paging zone
-                                ' pageStart - 1 To pageEnd - 1
-                                'don't add artId more than twice to results.
-                                Dim thisArtId As Long
-                                If Not resultDoc.GetField("artid") Is Nothing Then
-                                    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
-                                End If
-
-                                If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
-                                    If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
-
-                                    url = resultDoc.GetField("url").StringValue & ""
-
-                                    ' Build the URL
-                                    If url = "" Then
-                                        url = menuItem.GetAttribute("url")
-                                        ' Add the artId, if exists
-                                        If Not resultDoc.GetField("artid") Is Nothing Then
-
-
-                                            If resultDoc.GetField("contenttype") IsNot Nothing _
+                                        If resultDoc.GetField("contenttype") IsNot Nothing _
                                                 AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                                url = resultDoc.GetField("url").StringValue
-                                            Else
-                                                If moConfig("LegacyRedirect") = "on" Then
-                                                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
+                                            url = resultDoc.GetField("url").StringValue
+                                        Else
+                                            If moConfig("LegacyRedirect") = "on" Then
+                                                url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
 
-                                                    Dim artName As String = ""
-                                                    If resultDoc.GetField("name") IsNot Nothing Then
-                                                        artName = resultDoc.GetField("name").StringValue
-                                                        Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                                        artName = oRe.Replace(artName, "-").Trim("-")
-                                                        url &= artName
-                                                    End If
-                                                Else
-                                                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                Dim artName As String = ""
+                                                If resultDoc.GetField("name") IsNot Nothing Then
+                                                    artName = resultDoc.GetField("name").StringValue
+                                                    Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                                                    artName = oRe.Replace(artName, "-").Trim("-")
+                                                    url &= artName
                                                 End If
+                                            Else
+                                                url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
                                             End If
-
-
                                         End If
+
+
+                                    End If
+                                End If
+
+
+
+                                result = moContextNode.OwnerDocument.CreateElement("Content")
+                                result.SetAttribute("type", "SearchResult")
+                                'result.SetAttribute("indexId", )
+                                result.SetAttribute("indexRank", sDoc.Score)
+
+                                For Each docField As Field In resultDoc.GetFields()
+
+                                    ' Don't add info to certain fields
+                                    If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                        result.SetAttribute(docField.Name, docField.StringValue)
                                     End If
 
+                                    If docField.Name = "abstract" Then
 
-
-                                    result = moContextNode.OwnerDocument.CreateElement("Content")
-                                    result.SetAttribute("type", "SearchResult")
-                                    'result.SetAttribute("indexId", )
-                                    result.SetAttribute("indexRank", sDoc.Score)
-
-                                    For Each docField As Field In resultDoc.GetFields()
-
-                                        ' Don't add info to certain fields
-                                        If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                            result.SetAttribute(docField.Name, docField.StringValue)
-                                        End If
-
-                                        If docField.Name = "abstract" Then
-
-                                            ' Try to output this as Xml
-                                            Dim innerString As String = docField.StringValue & ""
+                                        ' Try to output this as Xml
+                                        Dim innerString As String = docField.StringValue & ""
+                                        processInfo = innerString
+                                        Try
+                                            result.InnerXml = innerString.Trim
+                                        Catch ex As Exception
+                                            innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
                                             processInfo = innerString
-                                            Try
-                                                result.InnerXml = innerString.Trim
-                                            Catch ex As Exception
-                                                innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
-                                                processInfo = innerString
-                                                result.InnerText = innerString
-                                            End Try
+                                            result.InnerText = innerString
+                                        End Try
 
-                                        End If
-                                    Next
-                                    result.SetAttribute("url", url)
+                                    End If
+                                Next
+                                result.SetAttribute("url", url)
 
-                                    moContextNode.AppendChild(result)
-                                    resultsCount = resultsCount + 1
-                                End If
+                                moContextNode.AppendChild(result)
+                                resultsCount = resultsCount + 1
+                            End If
 
-                                '  Else
-                                ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-                                ' processInfo = "not found in live page filter"
-                                'End If
+                            '  Else
+                            ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+                            ' processInfo = "not found in live page filter"
+                            'End If
 
-                            Next
-                        End If
+                        Next
+                    End If
 
-                        dateFinish = Now
-                        resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
-                        'resultsCount = results.TotalHits()
-                    Else
-                        resultsXML.SetAttribute("Time", "0")
+                    dateFinish = Now
+                    resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
+                    'resultsCount = results.TotalHits()
+                Else
+                    resultsXML.SetAttribute("Time", "0")
                 End If
 
                 'Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
@@ -873,7 +873,7 @@ Partial Public Class Cms
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "Search", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
 
@@ -996,7 +996,7 @@ Partial Public Class Cms
 
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "Search", ex, "", , gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Search", ex, "", , gbDebug)
             End Try
         End Sub
 
@@ -1251,7 +1251,7 @@ Partial Public Class Cms
 
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -1441,7 +1441,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -1582,7 +1582,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 moContextNode.AppendChild(oResXML)
 
             Catch ex As Exception
-                returnException("Search", "SearchLatestContent", ex, "", , gbDebug)
+                returnException(myWeb.msException, "Search", "SearchLatestContent", ex, "", , gbDebug)
             End Try
 
         End Sub
@@ -1629,7 +1629,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "SetSearchTrackingCookie", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SetSearchTrackingCookie", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -1705,7 +1705,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
             Catch ex As Exception
 
-                returnException(mcModuleName, "ParseKeywordsAndPhrases", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ParseKeywordsAndPhrases", ex, "", processInfo, gbDebug)
 
                 Dim defaultString(1) As String
                 defaultString(0) = searchString
@@ -1798,7 +1798,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 Return nResultCount
             Catch ex As Exception
-                returnException(mcModuleName, "getContentXml", ex, , sProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getContentXml", ex, , sProcessInfo, gbDebug)
                 Return nResultCount
             End Try
 
@@ -1963,7 +1963,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 Return queryBuilder
 
             Catch ex As Exception
-                returnException(mcModuleName, "BuildLuceneQuery", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "BuildLuceneQuery", ex, "", processInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -2083,7 +2083,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "BuildLuceneKeywordQuery", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "BuildLuceneKeywordQuery", ex, "", processInfo, gbDebug)
             End Try
 
         End Sub
@@ -2126,7 +2126,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 Return returnedSort
 
             Catch ex As Exception
-                returnException(mcModuleName, "SetSortFieldFromRequest", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SetSortFieldFromRequest", ex, "", processInfo, gbDebug)
                 Return Nothing
             End Try
         End Function

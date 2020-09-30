@@ -95,7 +95,7 @@ Public Class IndexerAsync
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Sub
 
@@ -127,7 +127,7 @@ Public Class IndexerAsync
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Function
 
@@ -293,7 +293,7 @@ Public Class IndexerAsync
 
                 'send email update as to index success or failure
                 cProcessInfo = "Sending Email Report"
-                Dim msg As New Protean.Messaging
+                Dim msg As New Protean.Messaging(myWeb.msException)
                 Dim serverSenderEmail As String = moConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = moConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
@@ -315,7 +315,7 @@ Public Class IndexerAsync
         Catch ex As Exception
 
             cExError &= ex.InnerException.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             errElmt = oIndexInfo.CreateElement("error")
             errElmt.InnerXml = cExError
             oIndexInfo.FirstChild.AppendChild(errElmt)
@@ -335,7 +335,7 @@ Public Class IndexerAsync
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             End Try
         End Try
 
@@ -368,7 +368,7 @@ Public Class IndexerAsync
             End If
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
 
             bIsError = True
             Try
@@ -396,7 +396,7 @@ Public Class IndexerAsync
                         IO.File.Delete(IO.Directory.GetFiles(cDirectory)(0))
                     Catch ex As Exception
                         cExError &= ex.StackTrace.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
 
                     End Try
@@ -407,7 +407,7 @@ Public Class IndexerAsync
                         IO.Directory.Delete(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf", True)
                     Catch ex As Exception
                         cExError &= ex.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
                     End Try
                 End If
@@ -420,7 +420,7 @@ Public Class IndexerAsync
 
             End Try
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -440,7 +440,7 @@ Public Class IndexerAsync
             oImp.UndoImpersonation()
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
             bIsError = True
         End Try
     End Sub
@@ -460,7 +460,7 @@ Public Class IndexerAsync
             Next
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -685,9 +685,9 @@ Public Class IndexerAsync
 
                 If cPageHtml = "" Then
                     'we have an error to handle
-                    If Not msException Is Nothing Then
+                    If Not myWeb.msException Is Nothing Then
                         Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                        errorElmt.InnerText = msException
+                        errorElmt.InnerText = myWeb.msException
                         Try
                             errorElmt.SetAttribute("pgid", oPage.pgid)
                             errorElmt.SetAttribute("name", oPage.pagename)
@@ -712,7 +712,7 @@ Public Class IndexerAsync
                         If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                         If Not InStr(cRules, "NOINDEX") > 0 And Not oElmtURL Is Nothing Then
                             If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Then
-                                IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement)
+                                IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement, "Page", myWeb.msException)
 
                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                 oPageElmt.SetAttribute("url", oElmtURL.GetAttribute("url"))
@@ -764,10 +764,10 @@ Public Class IndexerAsync
 
                                 If cPageHtml = "" Then
                                     'we have an error to handle
-                                    If msException = "" Then msException = Nothing
-                                    If Not msException Is Nothing Then
+                                    If myWeb.msException = "" Then myWeb.msException = Nothing
+                                    If Not myWeb.msException Is Nothing Then
                                         Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                                        errorElmt.InnerXml = msException
+                                        errorElmt.InnerXml = myWeb.msException
                                         Try
                                             errorElmt.SetAttribute("pgid", oPage.xslPath)
                                             errorElmt.SetAttribute("name", oPage.pagename)
@@ -796,7 +796,7 @@ Public Class IndexerAsync
                                                     End If
                                                 End If
 
-                                                IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"))
+                                                IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), myWeb.msException)
 
                                                 Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                                 oPageElmt.SetAttribute("url", sPageUrl)
@@ -816,8 +816,8 @@ Public Class IndexerAsync
                                                         nDocumentsSkipped += 1
                                                     Else
                                                         cProcessInfo = "Indexing - " & oDocElmt.InnerText
-                                                        Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText))
-                                                        IndexPage(myWeb.mnPageId, "<h1>" & oElmt.GetAttribute("name") & "</h1>" & fileAsText, oDocElmt.InnerText, oElmt.GetAttribute("name"), "Download", myWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
+                                                        Dim fileAsText As String = GetFileText(myWeb.goServer.MapPath(oDocElmt.InnerText), myWeb.msException)
+                                                        IndexPage(myWeb.mnPageId, "<h1>" & oElmt.GetAttribute("name") & "</h1>" & fileAsText, oDocElmt.InnerText, myWeb.msException, oElmt.GetAttribute("name"), "Download", myWeb.mnArtId, cPageExtract, IIf(IsDate(oElmt.GetAttribute("publish")), CDate(oElmt.GetAttribute("publish")), Nothing), IIf(IsDate(oElmt.GetAttribute("update")), CDate(oElmt.GetAttribute("update")), Nothing))
 
                                                         Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                                         oPageElmt.SetAttribute("file", oDocElmt.InnerText)
@@ -896,7 +896,7 @@ Public Class IndexerAsync
             End If
         End Function
 
-        Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, Optional ByVal pageType As String = "Page")
+        Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, ByVal pageType As String, ByRef sException As String)
 
             Dim methodName As String = "IndexPage(String,XmlElement,[String])"
             PerfMon.Log("Indexer", methodName)
@@ -917,7 +917,7 @@ Public Class IndexerAsync
                     ' Add the meta data to the fields
                     For Each metaContent As XmlElement In pageXml.SelectNodes("/html/head/meta")
 
-                        indexMeta(indexDoc, metaContent)
+                        indexMeta(indexDoc, metaContent, sException)
 
                     Next
 
@@ -950,13 +950,13 @@ Public Class IndexerAsync
 
                 End Try
                 cExError &= ex.StackTrace.ToString & vbCrLf
-                returnException(mcModuleName, methodName, ex, "", processInfo, gbDebug)
+                returnException(sException, mcModuleName, methodName, ex, "", processInfo, gbDebug)
                 bIsError = True
             End Try
         End Sub
 
 
-        Private Sub IndexPage(ByVal nPageId As Integer, ByVal cPageText As String, ByVal cURL As String, ByVal cPageTitle As String, Optional ByVal cContentType As String = "Page", Optional ByVal nContentId As Long = 0, Optional ByVal cAbstract As String = "", Optional ByVal dPublish As Date = Nothing, Optional ByVal dUpdate As Date = Nothing)
+        Private Sub IndexPage(ByVal nPageId As Integer, ByVal cPageText As String, ByVal cURL As String, ByVal cPageTitle As String, ByRef sException As String, Optional ByVal cContentType As String = "Page", Optional ByVal nContentId As Long = 0, Optional ByVal cAbstract As String = "", Optional ByVal dPublish As Date = Nothing, Optional ByVal dUpdate As Date = Nothing)
             PerfMon.Log("Indexer", "IndexPage")
             Dim cProcessInfo As String = cURL
 
@@ -995,13 +995,13 @@ Public Class IndexerAsync
 
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
+                returnException(sException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
                 bIsError = True
             End Try
         End Sub
 
 
-        Private Sub indexMeta(ByRef indexDocument As Document, ByVal metaContent As XmlElement, Optional ByVal forSorting As Boolean = False)
+        Private Sub indexMeta(ByRef indexDocument As Document, ByVal metaContent As XmlElement, ByRef sException As String, Optional ByVal forSorting As Boolean = False)
             Dim processInfo As String = ""
 
             ' Values grabbed from each content item
@@ -1118,19 +1118,19 @@ Public Class IndexerAsync
 
                     ' Check for sorting
                     If metaContent.GetAttribute("sortable") = "true" And Not forSorting Then
-                        indexMeta(indexDocument, metaContent, True)
+                        indexMeta(indexDocument, metaContent, sException, True)
                     End If
                 End If
 
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
+                returnException(sException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
                 bIsError = True
             End Try
 
         End Sub
 
-        Private Function GetFileText(ByVal cPath As String, Optional ByVal cOtherText As String = "") As String
+        Private Function GetFileText(ByVal cPath As String, ByRef sException As String, Optional ByVal cOtherText As String = "") As String
             PerfMon.Log("Indexer", "GetFileText")
             Dim cProcessInfo As String = ""
             Try
@@ -1138,7 +1138,7 @@ Public Class IndexerAsync
                 Return cOtherText & oFile.Text
             Catch ex As Exception
                 cExError &= ex.ToString & vbCrLf
-                returnException(mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
+                returnException(sException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
                 Return cOtherText
             End Try
         End Function
@@ -1211,7 +1211,7 @@ Public Class IndexerAsync
             Catch ex As Exception
                 'if saving of a page fails we are not that bothered.
                 cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-                'returnException(mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+                'returnException(myWeb.msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
                 'bIsError = True
             End Try
         End Sub

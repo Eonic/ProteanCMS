@@ -93,7 +93,7 @@ Public Class Indexer
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Sub
 
@@ -125,7 +125,7 @@ Public Class Indexer
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "New", ex, "", , gbDebug)
+            returnException(myWeb.msException, mcModuleName, "New", ex, "", , gbDebug)
         End Try
     End Function
 
@@ -218,9 +218,9 @@ Public Class Indexer
 
                     If cPageHtml = "" Then
                         'we have an error to handle
-                        If Not msException Is Nothing Then
+                        If Not myWeb.msException Is Nothing Then
                             Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                            errorElmt.InnerText = msException
+                            errorElmt.InnerText = myWeb.msException
                             Try
                                 errorElmt.SetAttribute("pgid", oDR("nStructKey"))
                                 errorElmt.SetAttribute("name", oDR("cStructName"))
@@ -297,9 +297,9 @@ Public Class Indexer
 
                                     If cPageHtml = "" Then
                                         'we have an error to handle
-                                        If Not msException Is Nothing Then
+                                        If Not myWeb.msException Is Nothing Then
                                             Dim errorElmt As XmlElement = oIndexInfo.CreateElement("IndexElement")
-                                            errorElmt.InnerXml = msException
+                                            errorElmt.InnerXml = myWeb.msException
                                             Try
                                                 errorElmt.SetAttribute("pgid", oDR("nStructKey"))
                                                 errorElmt.SetAttribute("name", oDR("cStructName"))
@@ -436,7 +436,7 @@ Public Class Indexer
 
         Catch ex As Exception
             cExError &= ex.InnerException.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             errElmt = oIndexInfo.CreateElement("error")
             errElmt.InnerXml = cExError
             oIndexInfo.FirstChild.AppendChild(errElmt)
@@ -461,7 +461,7 @@ Public Class Indexer
             Try
                 'send email update as to index success or failure
                 cProcessInfo = "Sending Email Report"
-                Dim msg As New Protean.Messaging
+                Dim msg As New Protean.Messaging(myWeb.msException)
                 Dim serverSenderEmail As String = moConfig("ServerSenderEmail") & ""
                 Dim serverSenderEmailName As String = moConfig("ServerSenderEmailName") & ""
                 If Not (Tools.Text.IsEmail(serverSenderEmail)) Then
@@ -477,7 +477,7 @@ Public Class Indexer
                 msg = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug)
             End Try
         End Try
 
@@ -510,7 +510,7 @@ Public Class Indexer
             End If
         Catch ex As Exception
             cExError &= ex.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug)
 
             bIsError = True
             Try
@@ -538,7 +538,7 @@ Public Class Indexer
                         IO.File.Delete(IO.Directory.GetFiles(cDirectory)(0))
                     Catch ex As Exception
                         cExError &= ex.StackTrace.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
 
                     End Try
@@ -549,7 +549,7 @@ Public Class Indexer
                         IO.Directory.Delete(cDirectory & IIf(Right(cDirectory, 1) = "\", "", "\") & "_vti_cnf", True)
                     Catch ex As Exception
                         cExError &= ex.ToString & vbCrLf
-                        returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
                         Exit Sub
                     End Try
                 End If
@@ -562,7 +562,7 @@ Public Class Indexer
 
             End Try
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -619,7 +619,7 @@ Public Class Indexer
 
             End Try
             cExError &= ex.StackTrace.ToString & vbCrLf
-            returnException(mcModuleName, methodName, ex, "", processInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, methodName, ex, "", processInfo, gbDebug)
             bIsError = True
         End Try
     End Sub
@@ -670,17 +670,17 @@ Public Class Indexer
 
                 Case "float", "number"
 
-                    If Tools.Number.CheckAndReturnStringAsNumber( _
-                                                         metaContentValue, _
-                                                         convertedNumber, _
-                                                         IIf(metaType = "float", GetType(Single), GetType(Long)) _
+                    If Tools.Number.CheckAndReturnStringAsNumber(
+                                                         metaContentValue,
+                                                         convertedNumber,
+                                                         IIf(metaType = "float", GetType(Single), GetType(Long))
                                                         ) Then
 
                         ' Create the numeric field
-                        metaNumericField = New NumericField( _
-                                                        metaName, _
-                                                        storeContent, _
-                                                         True _
+                        metaNumericField = New NumericField(
+                                                        metaName,
+                                                        storeContent,
+                                                         True
                                                         )
 
 
@@ -710,11 +710,11 @@ Public Class Indexer
                     ' Check if the string is a valid date
                     If Not (String.IsNullOrEmpty(metaContentValue)) AndAlso Date.TryParse(metaContentValue, convertedDate) Then
 
-                        metaField = New Field( _
-                                                    metaName, _
-                                                    DateTools.DateToString(metaContentValue, DateTools.Resolution.SECOND), _
-                                                    storeContent, _
-                                                    indexContent _
+                        metaField = New Field(
+                                                    metaName,
+                                                    DateTools.DateToString(metaContentValue, DateTools.Resolution.SECOND),
+                                                    storeContent,
+                                                    indexContent
                                                     )
                     Else
 
@@ -726,11 +726,11 @@ Public Class Indexer
 
                 Case Else
 
-                    metaField = New Field( _
-                                                    metaName, _
-                                                    metaContentValue, _
-                                                    storeContent, _
-                                                    indexContent _
+                    metaField = New Field(
+                                                    metaName,
+                                                    metaContentValue,
+                                                    storeContent,
+                                                    indexContent
                                                     )
 
             End Select
@@ -747,7 +747,7 @@ Public Class Indexer
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug)
             bIsError = True
         End Try
 
@@ -792,7 +792,7 @@ Public Class Indexer
 
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug)
             bIsError = True
         End Try
     End Sub
@@ -868,7 +868,7 @@ Public Class Indexer
         Catch ex As Exception
             'if saving of a page fails we are not that bothered.
             cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-            'returnException(mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
+            'returnException(myWeb.msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
             'bIsError = True
         End Try
     End Sub
@@ -884,7 +884,7 @@ Public Class Indexer
             oImp.UndoImpersonation()
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)
             bIsError = True
         End Try
     End Sub
@@ -897,7 +897,7 @@ Public Class Indexer
             Return cOtherText & oFile.Text
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug)
             Return cOtherText
         End Try
     End Function
@@ -916,7 +916,7 @@ Public Class Indexer
             Next
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
-            returnException(mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 

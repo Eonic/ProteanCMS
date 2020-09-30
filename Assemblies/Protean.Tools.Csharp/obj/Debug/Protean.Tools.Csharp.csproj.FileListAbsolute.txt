@@ -89,3 +89,4 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.C
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
+D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache

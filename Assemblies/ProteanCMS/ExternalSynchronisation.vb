@@ -205,7 +205,7 @@ Public Class ExternalSynchronisation
                                     cSchemaName = oRDBesElmt.SelectSingleNode("cContentSchemaName").InnerText
                                 End If
                                 If Not cSchemaName = "" Then
-                                    Dim oXForm As New Protean.xForm
+                                    Dim oXForm As New Protean.xForm(myWeb.msException)
                                     If Not oXForm.load("/xforms/content/" & cSchemaName & ".xml", myWeb.maCommonFolders) Then
                                         'cant load it
                                         GoTo SkipIt
@@ -634,7 +634,7 @@ EndIt:
     Public Function AdminProcess(ByVal cEwCmd2 As String) As String
         Dim oSyncItems() As String = Split(moSyncConfig("Actions"), ",")
         Dim i As Integer = 0
-        Dim oXForm As New xForm
+        Dim oXForm As New xForm(myWeb.msException)
 
 
         Try

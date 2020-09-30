@@ -20,6 +20,7 @@ Public Class Messaging
     Public msGnuOriginator As String = ""
     Public msGnuPassphrase As String = ""
     Public mbIsBodyHtml As Boolean = True
+    Public Shared msException As String = ""
 
     Public moCtx As System.Web.HttpContext = System.Web.HttpContext.Current
 
@@ -39,6 +40,10 @@ Public Class Messaging
     Private Shared mailSent As Boolean = False
 
     Private _language As String = ""
+
+    Public Sub New(ByRef sException As String)
+        msException = sException
+    End Sub
 
     Public Property Language() As String
         Get
@@ -67,7 +72,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -84,7 +89,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -118,7 +123,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -134,7 +139,7 @@ Public Class Messaging
             Attachments.Add(oAtt)
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", "", gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", "", gbDebug)
             End If
         End Try
     End Sub
@@ -187,7 +192,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", "", gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", "", gbDebug)
             End If
         End Try
     End Sub
@@ -202,7 +207,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -223,7 +228,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -245,7 +250,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug)
             End If
         End Try
     End Sub
@@ -279,7 +284,7 @@ Public Class Messaging
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -671,7 +676,7 @@ Public Class Messaging
                             Catch ex As Exception
                                 If goConfig("MailServer2") = "" Then
                                     If gbDebug Then
-                                        returnException(mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
+                                        returnException(msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
                                         Return "ex: " & ex.ToString
                                     Else
                                         Return failureMessage & " - Error1: " & ex.Message & " - " & cProcessInfo & " - " & ex.StackTrace
@@ -682,7 +687,7 @@ Public Class Messaging
                                         oSmtpn.Send(oMailn)
                                     Catch ex3 As Exception
                                         If gbDebug Then
-                                            returnException(mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug)
+                                            returnException(msException, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug)
                                             Return "ex3: " & ex3.ToString
                                         Else
                                             Return failureMessage & " - Error1: " & ex3.Message & " - " & cProcessInfo & " - " & ex.StackTrace
@@ -706,7 +711,7 @@ Public Class Messaging
                             End Try
                         Catch ex2 As Exception
                             If gbDebug Then
-                                returnException(mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug)
+                                returnException(msException, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug)
                                 Return "ex2: " & ex2.ToString
                             Else
                                 Return failureMessage & " - Error1: " & ex2.Message & " - " & cProcessInfo & " - " & ex.StackTrace
@@ -814,7 +819,7 @@ Public Class Messaging
 
         Catch ex As Exception
             If gbDebug Then
-                returnException(mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
+                returnException(msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
                 Return ex.ToString
             Else
                 Return failureMessage & " - Error2: " & ex.Message & " - " & cProcessInfo & " - " & ex.StackTrace
@@ -832,7 +837,7 @@ Public Class Messaging
             'Console.WriteLine("[{0}] Send canceled.", token)
         End If
         If e.Error IsNot Nothing Then
-            returnException("messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug)
+            returnException(msException, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug)
             'Console.WriteLine("[{0}] {1}", token, e.Error.ToString())
         Else
             sender.Dispose()
@@ -874,7 +879,7 @@ Public Class Messaging
 
     '    Catch ex As Exception
     '        If gbDebug Then
-    '            returnException(mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
+    '            returnException(msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug)
     '            Return ex.ToString
     '        Else
     '            Return failureMessage & " - Error: " & ex.Message & " - " & cProcessInfo
@@ -1001,7 +1006,7 @@ Public Class Messaging
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo)
+            returnException(msException, mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo)
             Return ex.ToString
         End Try
 
@@ -1139,7 +1144,7 @@ Public Class Messaging
             Return cResults
 
         Catch ex As Exception
-            returnException(mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo)
+            returnException(msException, mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo)
             Return "Error: " & ex.ToString
         End Try
 
@@ -1180,7 +1185,7 @@ Public Class Messaging
             Return cResponse
 
         Catch ex As Exception
-            returnException(mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo)
+            returnException(msException, mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo)
             Return "Error: " & ex.ToString
         End Try
     End Function
@@ -1200,7 +1205,7 @@ Public Class Messaging
             oSmtpn.Send(oMailn)
             Return "Sent"
         Catch ex As Exception
-            returnException(mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug)
             Return "Error"
         End Try
     End Function
@@ -1275,7 +1280,7 @@ Public Class Messaging
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
     End Function
@@ -1310,7 +1315,7 @@ Public Class Messaging
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -1379,7 +1384,7 @@ Public Class Messaging
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -1509,7 +1514,7 @@ Public Class Messaging
             Next
             Return oDic
         Catch ex As Exception
-            returnException(mcModuleName, "emailer", ex, "GetGroupEmails", "", gbDebug)
+            returnException(msException, mcModuleName, "emailer", ex, "GetGroupEmails", "", gbDebug)
             Return Nothing
         End Try
 
@@ -1562,7 +1567,7 @@ Public Class Messaging
     ''        Next
 
     ''    Catch ex As Exception
-    ''        returnException(mcModuleName, "courseReminder", ex, "", cProcessInfo, gbDebug)
+    ''        returnException(msException, mcModuleName, "courseReminder", ex, "", cProcessInfo, gbDebug)
     ''    End Try
     ''End Sub
 
@@ -1808,7 +1813,7 @@ Public Class POP3
             oXML.DocumentElement.AppendChild(oMessageElement)
             Return oXML
         Catch ex As Exception
-            returnException("POP3", "EmailListTransform", ex, "", "EmailListTransform", )
+            'returnException("POP3", "EmailListTransform", ex, "", "EmailListTransform", )
             Return Nothing
         End Try
 

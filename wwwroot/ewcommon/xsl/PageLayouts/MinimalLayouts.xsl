@@ -2757,7 +2757,7 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='EmbeddedHtml' ]" mode="displayBrief">
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+    <xsl:apply-templates select="*" mode="cleanXhtml"/>
     <xsl:text> </xsl:text>
   </xsl:template>
 
@@ -14500,7 +14500,7 @@
             <xsl:text> carousel-h-</xsl:text>
             <xsl:value-of select="@position-horizontal"/>
           </xsl:attribute>
-          <div class="carousel-caption-inner ">
+          <div class="carousel-caption-inner">
             <xsl:if test="Title/node()!=''">
               <h3 class="caption-title">
                 <xsl:value-of select="Title/node()"/>
