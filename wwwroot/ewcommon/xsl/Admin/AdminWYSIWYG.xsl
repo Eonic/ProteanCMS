@@ -180,10 +180,21 @@
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="bodyBuilder">
-    <body id="pg_{@id}" >
+    <body>
+      <xsl:attribute name="id">
+        <xsl:text>page</xsl:text>
+        <xsl:value-of select="@id"/>
+        <xsl:if test="@artid!=''">
+          <xsl:text>-art</xsl:text>
+          <xsl:value-of select="@artid"/>
+        </xsl:if>
+      </xsl:attribute>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="PreviewMenu"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
+      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+        <xsl:apply-templates select="." mode="commonStyle"/>
+      </xsl:if>
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>

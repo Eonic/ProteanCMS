@@ -403,10 +403,9 @@
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+      
 
+      
     </html>
   </xsl:template>
 
@@ -1529,6 +1528,11 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
+      
+      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+        <xsl:apply-templates select="." mode="commonStyle"/>
+      </xsl:if>
+      
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
