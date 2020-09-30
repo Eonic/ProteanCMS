@@ -36,7 +36,7 @@ Namespace Providers
                     PayProvider.Activities = New Activities()
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "Initiate", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Initiate", ex, "", cProcessInfo, gbDebug)
 
                 End Try
             End Sub
@@ -94,7 +94,7 @@ Namespace Providers
                         Return "Success"
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CollectPayment", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CollectPayment", ex, "", cProcessInfo, gbDebug)
                         Return "Payment Error"
                     End Try
                 End Function
@@ -104,7 +104,7 @@ Namespace Providers
                     Dim cProcessInfo As String = ""
                     Try
 
-                        Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx)
+                        Dim ccXform As xForm = New Protean.xForm(myWeb.moCtx, myWeb.msException)
 
                         ccXform.NewFrm("SkipPayment")
 
@@ -113,7 +113,7 @@ Namespace Providers
                         Return ccXform
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -129,7 +129,7 @@ Namespace Providers
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 
@@ -143,7 +143,7 @@ Namespace Providers
                         Return CheckStatus(oWeb, nPaymentProviderRef)
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 

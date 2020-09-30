@@ -29,7 +29,7 @@ Partial Public Module xmlTools
             Try
                 BaseXmlElement = xmlElement
             Catch ex As Exception
-                returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
+                ' returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -51,7 +51,7 @@ Partial Public Module xmlTools
                 BaseXmlElement.AppendChild(newElmt.XmlElement)
                 Return newElmt
             Catch ex As Exception
-                returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
+                '  returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -69,7 +69,7 @@ Partial Public Module xmlTools
                 newElmt.AddElement("Description", description)
                 Return newElmt
             Catch ex As Exception
-                returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
+                '  returnException(mcModuleName, "AddElement", ex, "", "", gbDebug)
                 Return Nothing
             End Try
         End Function

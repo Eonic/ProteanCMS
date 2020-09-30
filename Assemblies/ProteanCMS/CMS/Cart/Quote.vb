@@ -41,7 +41,7 @@ Partial Public Class Cms
             Try
                 InitializeVariables()
             Catch ex As Exception
-                returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -217,7 +217,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
                 'close()
             Finally
                 oDr = Nothing
@@ -232,7 +232,7 @@ Partial Public Class Cms
                 MyBase.close()
 
             Catch ex As Exception
-                returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -275,7 +275,7 @@ Partial Public Class Cms
                 myWeb.moSession("nTaxRate") = mnTaxRate
 
             Catch ex As Exception
-                returnException(mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
                 'close()
             End Try
         End Sub
@@ -349,7 +349,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -753,7 +753,7 @@ processFlow:
                     'mbRedirect = True
                     'do nothing
                 Else
-                    returnException(mcModuleName, "apply", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug)
                 End If
 
             End Try
@@ -788,7 +788,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -807,7 +807,7 @@ processFlow:
                 myWeb.moSession("QuoteID") = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -952,7 +952,7 @@ processFlow:
                 myWeb.moResponse.Redirect("/?cartCmd=Cart")
                 Return True
             Catch ex As Exception
-                returnException(mcModuleName, "QuoteToOrder", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "QuoteToOrder", ex, "", cProcessInfo, gbDebug)
                 Return False
             End Try
         End Function
@@ -1056,7 +1056,7 @@ processFlow:
                 'bRedirect = True
                 'myWeb.moResponse.Redirect("?quoteCmd=Quote")
             Catch ex As Exception
-                returnException(mcModuleName, "MakeCurrent", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -1074,7 +1074,7 @@ processFlow:
                 mnCartId = 0
 
             Catch ex As Exception
-                returnException(mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub

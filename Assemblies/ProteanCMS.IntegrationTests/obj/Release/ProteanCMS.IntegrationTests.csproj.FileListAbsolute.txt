@@ -23,7 +23,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\T
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Newtonsoft.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\JsonWebTokens.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\DocumentFormat.OpenXml.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Lucene.Net.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\PayPal.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\CMPCDotNet.dll
@@ -64,7 +63,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\I
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\DocumentFormat.OpenXml.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Lucene.Net.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\Lucene.Net.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Release\PayPal.xml

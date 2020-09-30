@@ -604,7 +604,7 @@
 			width: "auto",
       content_css: ['/ewcommon/js/tinymce/plugins/leaui_code_editor/css/pre.css'],
 			relative_urls: false,
-			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor advlist code visualblocks contextmenu fullscreen searchreplace youtube leaui_code_editor",
+			plugins: "table paste link image ewimage media visualchars searchreplace emoticons anchor advlist code visualblocks contextmenu fullscreen searchreplace youtube leaui_code_editor wordcount",
 			entity_enconding: "numeric",
       image_advtab: true,
       menubar: "edit insert view format table tools",

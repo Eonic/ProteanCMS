@@ -95,7 +95,7 @@ Partial Public Module xmlTools
 
         Function GetContentInstance(ByVal cXformName As String, ByVal cModuleType As String) As XmlElement
 
-            Dim oXfrm As New Protean.xForm
+            Dim oXfrm As New Protean.xForm(myWeb.msException)
 
             If cModuleType <> "" Then cXformName = cXformName & "/" & cModuleType
 
@@ -1197,7 +1197,7 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 ' PerfMon.Log("xmlTools", "ResizeImage - End")
                 If LCase(myWeb.moConfig("Debug")) = "on" Then
-                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    reportException(myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
@@ -1358,7 +1358,7 @@ Partial Public Module xmlTools
             Catch ex As Exception
                 ' PerfMon.Log("xmlTools", "ResizeImage - End")
                 If LCase(myWeb.moConfig("Debug")) = "on" Then
-                    reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
+                    reportException(myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.InnerException.Message & " - " & ex.Message & " - " & ex.StackTrace
                 Else
                     Return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" & ex.Message
@@ -1498,7 +1498,7 @@ Partial Public Module xmlTools
                 Query1 = QueryArr(0)
                 If UBound(QueryArr) > 0 Then Query2 = QueryArr(1)
                 If UBound(QueryArr) > 1 Then Query3 = QueryArr(2)
-                Dim oXfrms As New Protean.Cms.xForm
+                Dim oXfrms As New Protean.Cms.xForm(myWeb.msException)
                 oXfrms.moPageXML = myWeb.moPageXml
                 Select Case Query1
                     Case "SiteTree"
@@ -2083,7 +2083,7 @@ Partial Public Module xmlTools
                             End If
 
                             'set the services urls list and call the handler request
-                            Dim oCssWebClient As CssWebClient = New CssWebClient(myWeb.moCtx) With {.ServiceUrlsList = Split(CommaSeparatedFilenames, ",").ToList()}
+                            Dim oCssWebClient As CssWebClient = New CssWebClient(myWeb.moCtx, myWeb.msException) With {.ServiceUrlsList = Split(CommaSeparatedFilenames, ",").ToList()}
                             oCssWebClient.SendCssHttpHandlerRequest()
 
                             Dim scriptFile As String = ""

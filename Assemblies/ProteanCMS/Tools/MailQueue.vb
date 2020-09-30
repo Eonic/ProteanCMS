@@ -10,6 +10,8 @@ Public Class MailQueue
 
     Public mcModuleName As String = "Eonic.MailQueue"
     Public moConfig As System.Collections.Specialized.NameValueCollection
+    Public msException As String
+
 
     Public Sub New()
         MyBase.New()
@@ -84,7 +86,7 @@ Public Class MailQueue
             Next
             FinishRequest(nRequestID)
         Catch ex As Exception
-            returnException(mcModuleName, "Add", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "Add", ex, "", "", gbDebug)
         End Try
     End Function
 
@@ -103,7 +105,7 @@ Public Class MailQueue
             cSQL &= IIf(bSkipQue, 1, 0) & ")"
             Return oDBT_Remote.GetIdInsertSql(cSQL)
         Catch ex As Exception
-            returnException(mcModuleName, "Add Request", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "Add Request", ex, "", "", gbDebug)
         End Try
     End Function
 
@@ -119,7 +121,7 @@ Public Class MailQueue
             cSQL &= "'" & cToName & "')"
             Return oDBT_Remote.GetIdInsertSql(cSQL)
         Catch ex As Exception
-            returnException(mcModuleName, "Add Recipient", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "Add Recipient", ex, "", "", gbDebug)
         End Try
     End Function
 
@@ -129,7 +131,7 @@ Public Class MailQueue
             Dim cSQL As String = "UPDATE tblMailRequests SET nStatus = 1 WHERE nMailRequestKey = " & nRequestId
             oDBT_Remote.ExeProcessSql(cSQL)
         Catch ex As Exception
-            returnException(mcModuleName, "Finish Request", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "Finish Request", ex, "", "", gbDebug)
         End Try
     End Sub
 

@@ -32,7 +32,7 @@ Public Class FileDoc
         Try
             cPath = thePath
         Catch ex As Exception
-            returnException(mcModuleName, "DocWord", ex, "")
+            '  returnException(mcModuleName, "DocWord", ex, "")
             cPath = ""
         End Try
     End Sub
@@ -53,7 +53,7 @@ Public Class FileDoc
                 End If
                 Return cExt
             Catch ex As Exception
-                returnException(mcModuleName, "Extension", ex, "")
+                '    returnException(mcModuleName, "Extension", ex, "")
                 Return ""
             End Try
         End Get
@@ -89,7 +89,7 @@ Public Class FileDoc
                         Return ""
                 End Select
             Catch ex As Exception
-                returnException(mcModuleName, "Text", ex, "")
+                '   returnException(mcModuleName, "Text", ex, "")
                 Return ""
             End Try
         End Get
@@ -100,7 +100,7 @@ Public Class FileDoc
         Try
             Return Me.Text
         Catch ex As Exception
-            returnException(mcModuleName, "ToString", ex, "")
+            '     returnException(mcModuleName, "ToString", ex, "")
             Return ""
         End Try
     End Function

@@ -115,7 +115,7 @@ Namespace Providers
                     calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, Nothing, o, args)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", ProviderName & " Could Not be Loaded", gbDebug)
                 End Try
 
             End Sub
