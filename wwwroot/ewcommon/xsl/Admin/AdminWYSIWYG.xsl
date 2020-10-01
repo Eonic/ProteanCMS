@@ -153,8 +153,8 @@
     <xsl:apply-templates select="." mode="siteAdminJs"/>
 
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-    
-    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+
+    <!--xsl:apply-templates select="." mode="xform_control_scripts"/-->
 
   </xsl:template>
 
