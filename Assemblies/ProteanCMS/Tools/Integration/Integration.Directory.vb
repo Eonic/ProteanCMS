@@ -161,7 +161,7 @@ Namespace Integration.Directory
 
         Function GetUserSchemaXml() As XmlElement
 
-            Dim oXform As New Protean.xForm
+            Dim oXform As New Protean.xForm(myWeb.msException)
             oXform.load("/xforms/directory/User.xml", myWeb.maCommonFolders)
             Return oXform.Instance.SelectSingleNode("tblDirectory/cDirXml")
 

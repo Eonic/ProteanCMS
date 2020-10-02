@@ -66,7 +66,7 @@ Public Class SoapClient
 
         Catch ex As Exception
             results.LoadXml("<error>" & ex.Message & "</error>")
-            returnException(mcModuleName, "sendSoapRequest", ex, "", cProcessInfo, gbDebug)
+            ' returnException(mcModuleName, "sendSoapRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -83,7 +83,7 @@ Public Class SoapClient
             bodyStream.Close()
 
         Catch ex As Exception
-            returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
+            '  returnException(mcModuleName, "addSoap", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -104,12 +104,12 @@ Public Class SoapClient
 
             ' Dim serviceResponse As HttpWebResponse = ex.Response
             ' serviceResponseStream = New StreamReader(serviceResponse.GetResponseStream, System.Text.Encoding.ASCII)
-            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
+            ' returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         Catch ex As Exception
 
             'Return ex.Message.tostring
-            returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
+            'returnException(mcModuleName, "ReturnSoapResponse", ex, "", cProcessInfo, gbDebug)
 
         End Try
         serviceResponseBody = serviceResponseStream.ReadToEnd
@@ -136,7 +136,7 @@ Public Class SoapClient
             Return oXml
 
         Catch ex As Exception
-            returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
+            '  returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -163,7 +163,7 @@ Public Class SoapClient
             Return oXml
 
         Catch ex As Exception
-            returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
+            '  returnException(mcModuleName, "getSoapEnvelope", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function

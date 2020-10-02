@@ -390,6 +390,7 @@
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_header">
     <xsl:variable name="bind" select="@bind"/>
+
     <legend>
       <xsl:apply-templates select="label">
         <xsl:with-param name="cLabel">
@@ -628,6 +629,7 @@
           <xsl:value-of select="@prefix"/>
         </div>
       </xsl:if>
+
       <xsl:apply-templates select="." mode="xform_control"/>
       <xsl:if test="@suffix!=''">
         <div class="input-group-addon">
@@ -1077,6 +1079,11 @@
       <xsl:if test="@autocomplete!=''">
         <xsl:attribute name="autocomplete">
           <xsl:value-of select="@autocomplete"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="@data-length!=''">
+        <xsl:attribute name="data-length">
+          <xsl:value-of select="@data-length"/>
         </xsl:attribute>
       </xsl:if>
     </input>
@@ -2976,6 +2983,11 @@
   <xsl:template match="label">
     <xsl:param name="cLabel"/>
     <xsl:param name="bRequired"/>
+    <xsl:if test="parent::input[@data-length!='']">
+      <span class="field-char-count badge" data-fieldref="{$cLabel}">
+        <span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::input/@data-length"/> characters
+      </span>
+    </xsl:if>
     <xsl:if test ="./node()!='' or span[contains(@class,'term')]">
       <label>
         <xsl:if test="$cLabel!=''">
@@ -3018,7 +3030,7 @@
 
   <xsl:template match="label" mode="xform-label">
 
-      <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+    <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
   </xsl:template>
 
   <xsl:template match="label[parent::input[contains(@class,'hidden')]]">

@@ -10,7 +10,7 @@ Partial Public Class Cms
         Public Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
         Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-            returnException(e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+            returnException(MyBase.msException, e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
         End Sub
 
 #End Region
@@ -19,12 +19,12 @@ Partial Public Class Cms
         Public myWeb As Protean.Cms
         Private mcModuleName As String = "Web.xForm"
 #End Region
-        Public Sub New()
-            MyBase.New()
+        Public Sub New(sException)
+            MyBase.New(sException)
         End Sub
 
         Public Sub New(ByRef aWeb As Protean.Cms)
-            MyBase.New()
+            MyBase.New(aWeb.msException)
             PerfMon.Log(mcModuleName, "New")
             Try
 
@@ -93,7 +93,7 @@ Partial Public Class Cms
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
                 Return ""
             End Try
         End Function

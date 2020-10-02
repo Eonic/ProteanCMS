@@ -446,7 +446,7 @@ Partial Public Class Cms
                 moServer = aWeb.moCtx.Server
 
             Catch ex As Exception
-                returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -845,7 +845,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
                 'close()
             Finally
                 oDr = Nothing
@@ -885,7 +885,7 @@ Partial Public Class Cms
             Try
                 PersistVariables()
             Catch ex As Exception
-                returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -941,7 +941,7 @@ Partial Public Class Cms
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug)
                 'close()
             End Try
         End Sub
@@ -1015,7 +1015,7 @@ Partial Public Class Cms
                 'End Select
 
             Catch ex As Exception
-                returnException(mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -1038,7 +1038,7 @@ Partial Public Class Cms
                 Return oContentElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug)
                 Return Nothing
             End Try
 
@@ -1413,7 +1413,7 @@ processFlow:
                             Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
                         End If
                         Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
-                        Dim Redirect3dsXform As xForm = New xForm
+                        Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
                         Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
                         moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt)
                         myWeb.moResponseType = pageResponseType.iframe
@@ -1437,7 +1437,7 @@ processFlow:
 
                         cProcessInfo = "Payment Method from session = '" & mcPaymentMethod & "'"
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
-                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm
+                        Dim ccPaymentXform As Protean.xForm = New Protean.xForm(myWeb.msException)
                         ccPaymentXform = oPayProv.Activities.GetPaymentForm(myWeb, Me, oElmt)
 
                         If InStr(mcPaymentMethod, "Repeat_") > 0 Then
@@ -1618,7 +1618,7 @@ processFlow:
                     'mbRedirect = True
                     'do nothing
                 Else
-                    returnException(mcModuleName, "apply", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug)
                 End If
 
             End Try
@@ -1639,7 +1639,7 @@ processFlow:
 
                 moPageXml.DocumentElement.AppendChild(oContentElmt)
             Catch ex As Exception
-                returnException(mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -1659,7 +1659,7 @@ processFlow:
                 End Select
 
             Catch ex As Exception
-                returnException(mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -1702,7 +1702,7 @@ processFlow:
                     End If
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -1803,7 +1803,7 @@ processFlow:
                 Next
 
             Catch ex As Exception
-                returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -1883,7 +1883,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -1893,7 +1893,7 @@ processFlow:
                 Dim cSQL As String = "UPDATE tblCartOrder SET nShippingMethodId = 0, cShippingDesc = NULL, nShippingCost = 0 WHERE nCartOrderKey = " & nOrderId
                 myWeb.moDbHelper.ExeProcessSqlorIgnore(cSQL)
             Catch ex As Exception
-                returnException(mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug)
             End Try
         End Sub
         'Sub GetCartSummary(ByRef oCartElmt As XmlElement, Optional ByVal nSelCartId As Integer = 0)
@@ -2059,7 +2059,7 @@ processFlow:
         '        End If
 
         '    Catch ex As Exception
-        '        returnException(mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
+        '        returnException(myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
         '    End Try
 
         'End Sub
@@ -2347,7 +2347,7 @@ processFlow:
 
 
         '    Catch ex As Exception
-        '        returnException(mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
+        '        returnException(myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
         '    End Try
 
         'End Sub
@@ -2378,7 +2378,7 @@ processFlow:
                 Next
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -2387,7 +2387,7 @@ processFlow:
             Try
                 GetCart(moCartXml.FirstChild)
             Catch ex As Exception
-                returnException(mcModuleName, "GetCart", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetCart", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -2615,14 +2615,14 @@ processFlow:
 
                         Try
                             If oRow("price") <> Nothing Then
-                                If oRow("price") <> "" Then
-                                    Dim discountSQL As String = ""
+                                ' If oRow("price") <> 0 Then
+                                Dim discountSQL As String = ""
                                     If Discount <> 0 Then
                                         '     discountSQL = ", nDiscountValue = " & Discount & " "
                                     End If
                                     Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
                                     moDBHelper.ExeProcessSql(cUpdtSQL)
-                                End If
+                                '  End If
                             End If
 
                         Catch ex As Exception
@@ -2975,7 +2975,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -3069,7 +3069,7 @@ processFlow:
                 Return vatAmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug)
             End Try
         End Function
 
@@ -3090,7 +3090,7 @@ processFlow:
                 oCartXml.AppendChild(oShippingXml.FirstChild.FirstChild)
 
             Catch ex As Exception
-                returnException(mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -3114,7 +3114,7 @@ processFlow:
                 Return nPrice
 
             Catch ex As Exception
-                returnException(mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug)
             End Try
 
         End Function
@@ -3143,7 +3143,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "getProductTaxRate", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug)
                 Return Nothing
             End Try
 
@@ -3225,7 +3225,7 @@ processFlow:
                 Return oThePrice
 
             Catch ex As Exception
-                returnException(mcModuleName, "getContentPricesNode", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getContentPricesNode", ex, "", "", gbDebug)
                 Return Nothing
             End Try
 
@@ -3285,7 +3285,7 @@ processFlow:
 
                 Return nPrice
             Catch ex As Exception
-                returnException(mcModuleName, "getOptionPricesByXml", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getOptionPricesByXml", ex, "", "", gbDebug)
             End Try
         End Function
 
@@ -3377,7 +3377,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "CheckQuantities", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CheckQuantities", ex, "", "", gbDebug)
             End Try
 
         End Sub
@@ -3423,7 +3423,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3492,7 +3492,7 @@ processFlow:
                 Next
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -3514,7 +3514,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
         'deprecated for the single call function above.
@@ -3554,7 +3554,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug)
             Finally
                 oDr2 = Nothing
                 oDs = Nothing
@@ -3585,7 +3585,7 @@ processFlow:
                 Return cReturn
 
             Catch ex As Exception
-                returnException(mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -3763,7 +3763,7 @@ processFlow:
                 oContactXform = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -3816,7 +3816,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug)
                 Return False
             End Try
 
@@ -3832,7 +3832,7 @@ processFlow:
 
         Public Overridable Function contactXform(ByVal cAddressType As String, ByVal cSubmitName As String, ByVal cCmdType As String, ByVal cCmdAction As String, ByVal bDontPopulate As Boolean, Optional ContactId As Long = 0, Optional cmd2 As String = "") As xForm
             PerfMon.Log("Cart", "contactXform")
-            Dim oXform As xForm = New xForm
+            Dim oXform As xForm = New xForm(myWeb.msException)
             Dim oGrpElmt As XmlElement
             Dim oDs As DataSet
             Dim oDr As DataRow
@@ -4255,7 +4255,7 @@ processFlow:
                 Return oXform
 
             Catch ex As Exception
-                returnException(mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -4266,7 +4266,7 @@ processFlow:
 
         Public Overridable Function pickContactXform(ByVal cAddressType As String, Optional ByVal submitPrefix As String = "", Optional ByVal cCmdType As String = "cartCmd", Optional ByVal cCmdAction As String = "") As xForm
             PerfMon.Log("Cart", "pickContactXform")
-            Dim oXform As xForm = New xForm
+            Dim oXform As xForm = New xForm(myWeb.msException)
 
             Dim oReturnForm As xForm
             Dim oGrpElmt As XmlElement
@@ -4637,7 +4637,7 @@ processFlow:
                 Return oReturnForm
 
             Catch ex As Exception
-                returnException(mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -4685,7 +4685,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -4752,14 +4752,14 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
         Protected Sub UpdateExistingUserAddress(ByRef oContactXform As xForm)
             PerfMon.Log("Cart", "UpdateExistingUserAddress")
             ' Check if it exists - if it does then update the nContactKey node
-            Dim oTempCXform As New xForm
+            Dim oTempCXform As New xForm(myWeb.msException)
             Dim cProcessInfo As String = ""
             Dim sSql As String
             Dim nCount As Long
@@ -4832,7 +4832,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug)
             Finally
                 oTempCXform = Nothing
             End Try
@@ -4865,7 +4865,7 @@ processFlow:
                 Return sCartCmd
 
             Catch ex As Exception
-                returnException(mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug)
                 Return ""
             End Try
 
@@ -4888,7 +4888,7 @@ processFlow:
             Dim cProcessInfo As String = ""
             Try
                 'Get notes XML
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 oXform.moPageXML = moPageXml
                 'oXform.NewFrm(formName)
                 Dim cDiscountsXform As String = moCartConfig("DiscountsXform")
@@ -4986,7 +4986,7 @@ processFlow:
                 Return oXform
 
             Catch ex As Exception
-                returnException(mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -5029,7 +5029,7 @@ processFlow:
                 Return sCartCmd
 
             Catch ex As Exception
-                returnException(mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug)
                 Return ""
             End Try
 
@@ -5057,7 +5057,7 @@ processFlow:
             Dim cProcessInfo As String = ""
             Try
                 'Get notes XML
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 oXform.moPageXML = moPageXml
                 '         
 
@@ -5277,7 +5277,7 @@ processFlow:
                 notesXform = oXform
 
             Catch ex As Exception
-                returnException(mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -5366,7 +5366,7 @@ processFlow:
                 'Go and collect the valid shipping options available for this order
                 ods = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight)
 
-                Dim oOptXform As New xForm
+                Dim oOptXform As New xForm(myWeb.msException)
                 oOptXform.moPageXML = moPageXml
 
                 If Not oOptXform.load("/xforms/Cart/Options.xml") Then
@@ -5790,7 +5790,7 @@ processFlow:
                 Return oOptXform
 
             Catch ex As Exception
-                returnException(mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -5865,7 +5865,7 @@ processFlow:
 
                 Return sCountryList
             Catch ex As Exception
-                returnException(mcModuleName, "getParentCountries", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getParentCountries", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -5891,7 +5891,7 @@ processFlow:
                 iterateCountryList = sListReturn
 
             Catch ex As Exception
-                returnException(mcModuleName, "iterateCountryList", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "iterateCountryList", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -5917,7 +5917,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -5976,7 +5976,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug)
 
             End Try
 
@@ -5999,7 +5999,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "AddPaymentMethod", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddPaymentMethod", ex, "", cProcessInfo, gbDebug)
             End Try
         End Function
 
@@ -6020,7 +6020,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -6102,47 +6102,59 @@ processFlow:
                         oProdXml.InnerXml = ProductXml
                     Else
                         If nProductId > 0 Then
-                            oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId)
+                            Dim sItemXml As String = CStr("" & moDBHelper.ExeProcessSqlScalar("Select cContentXmlDetail FROM tblContent WHERE nContentKey = " & nProductId))
+                            If sItemXml <> "" Then
+                                oProdXml.InnerXml = sItemXml
+                            Else
+                                oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
+                            End If
                             If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
-                            If cProductText = "" Then
-                                cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
-                            End If
-                            If nPrice = 0 Then
-                                oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
-                            End If
-                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
-                                mbOveridePrice = True
-                            End If
-                            'lets add the discount to the cart if supplied
-                            If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
-                                Dim strDiscount1 As String = oProdXml.SelectSingleNode(
+                                If cProductText = "" Then
+                                    cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
+                                End If
+
+                                If nPrice = 0 Then
+                                    oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                                End If
+
+                                If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
+                                    mbOveridePrice = True
+                                End If
+
+                                'lets add the discount to the cart if supplied
+                                If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
+                                    Dim strDiscount1 As String = oProdXml.SelectSingleNode(
                                                     "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
                                                     ).InnerText
-                                addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
-                            End If
-                            If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
-                                nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
-                            End If
-                            If (UniqueProduct) Then
-
-                                If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                    giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                    oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                Else
-                                    ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
                                 End If
-                            End If
-                            'Add Parent Product to cart if SKU.
-                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                'Then we need to add the Xml for the ParentProduct.
-                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
 
-                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                            End If
+                                If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
+                                    nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
+                                End If
 
-                        End If
+                                If (UniqueProduct) Then
+
+                                    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                        oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                    Else
+                                        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                    End If
+                                End If
+
+                                'Add Parent Product to cart if SKU.
+                                If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                    'Then we need to add the Xml for the ParentProduct.
+                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                                End If
+
+
+                            End If
                     End If
 
 
@@ -6278,7 +6290,7 @@ processFlow:
                 End If
                 Return True
             Catch ex As Exception
-                returnException(mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug)
             End Try
         End Function
 
@@ -6356,11 +6368,17 @@ processFlow:
                                         End If
                                     Next 'end option loop
                                     'Add Item
-                                    AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                    If myWeb.moRequest.Form.Get("donationAmount") <> "" Then
+                                        If IsNumeric(myWeb.moRequest.Form.Get("donationAmount")) Then
+                                            AddItem(nProductKey, nQuantity, oOptions, "Donation", CDbl(myWeb.moRequest.Form.Get("donationAmount")))
+                                        End If
+                                    Else
+                                        AddItem(nProductKey, nQuantity, oOptions, cReplacementName)
+                                    End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
-                                End If
-                            End If 'end check for previously added
+                                    End If
+                                End If 'end check for previously added
                         End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
@@ -6372,7 +6390,7 @@ processFlow:
                     AddItems = False
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug)
                 Return False
             End Try
 
@@ -6421,7 +6439,7 @@ processFlow:
                 Return itemCount
 
             Catch ex As Exception
-                returnException(mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Function
@@ -6490,7 +6508,7 @@ processFlow:
                 Return itemCount
 
             Catch ex As Exception
-                returnException(mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Function
@@ -6530,7 +6548,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -6561,7 +6579,7 @@ processFlow:
                 oDr = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -6600,7 +6618,7 @@ processFlow:
                 moDBHelper.ExeProcessSql(sSql)
 
             Catch ex As Exception
-                returnException(mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
             Finally
                 oDr = Nothing
             End Try
@@ -6628,10 +6646,10 @@ processFlow:
 
                 myWeb.moSession("mcPaymentMethod") = Nothing
                 myWeb.moSession("mmcOrderType") = Nothing
-                myWeb.moRequest.Form("ordertype") = Nothing
+                '  myWeb.moRequest.Form("ordertype") = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -6651,7 +6669,7 @@ processFlow:
                 mnTaxRate = moCartConfig("TaxRate")
 
             Catch ex As Exception
-                returnException(mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -6755,7 +6773,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateCart", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -6792,7 +6810,7 @@ processFlow:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -6846,7 +6864,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -6878,7 +6896,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -6908,7 +6926,7 @@ processFlow:
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -6958,7 +6976,7 @@ processFlow:
                 oContentsXML.AppendChild(oElmt)
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -7001,7 +7019,7 @@ processFlow:
                 oXml = Nothing
 
             Catch ex As Exception
-                returnException(mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -7078,7 +7096,7 @@ processFlow:
                 End If
                 PerfMon.Log("Cart", "UpdateTaxEnd")
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug)
 
             End Try
 
@@ -7155,7 +7173,7 @@ processFlow:
                 End Select
 
             Catch ex As Exception
-                returnException(mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -7173,7 +7191,7 @@ processFlow:
 
                 oCartXML.SetAttribute("lang", myWeb.mcPageLanguage)
 
-                Dim oMsg As Messaging = New Messaging
+                Dim oMsg As Messaging = New Messaging(myWeb.msException)
                 If cAttachementTemplatePath = "" Then
 
                     cProcessInfo = oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed",,, cBCCEmail)
@@ -7189,7 +7207,7 @@ processFlow:
                     PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     oTransform = New Protean.XmlHelper.Transform(myWeb, styleFile, False)
 
-                    msException = ""
+                    myWeb.msException = ""
 
                     oTransform.mbDebug = gbDebug
                     Dim icPageWriter = New IO.StringWriter
@@ -7221,7 +7239,7 @@ processFlow:
                 Return cProcessInfo
 
             Catch ex As Exception
-                returnException(mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug)
                 Return Nothing
             End Try
 
@@ -7255,7 +7273,7 @@ processFlow:
                 'Check if it is empty
                 If cNotes = "" Then
                     'we get the empty notes schema from the notes xForm instance.
-                    Dim oXform As xForm = New xForm
+                    Dim oXform As xForm = New xForm(myWeb.msException)
                     oXform.moPageXML = moPageXml
                     oXform.NewFrm("notesForm")
                     If oXform.load(mcNotesXForm) Then
@@ -7389,7 +7407,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 sSql = "UPDATE tblCartOrder SET  cClientNotes = '" & oNoteXML.OuterXml & "' WHERE (nCartOrderKey = " & mnCartId & ")"
                 moDBHelper.ExeProcessSql(sSql)
             Catch ex As Exception
-                returnException(mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -7597,7 +7615,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     End If
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "ListOrders", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListOrders", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -7694,7 +7712,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 myWeb.moResponse.Redirect("?cartCmd=Cart", False)
                 myWeb.moCtx.ApplicationInstance.CompleteRequest()
             Catch ex As Exception
-                returnException(mcModuleName, "MakeCurrent", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -7722,7 +7740,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     Return False
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "Delete Cart", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "Delete Cart", ex, "", "", gbDebug)
             End Try
         End Function
 
@@ -7736,7 +7754,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "SaveCartXML", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -7859,7 +7877,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
 
             Catch ex As Exception
-                returnException(mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Function
@@ -7901,7 +7919,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "GetCurrencyDefinition", ex, , cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetCurrencyDefinition", ex, , cProcessInfo, gbDebug)
             End Try
         End Sub
 
@@ -7916,7 +7934,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return oRptElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "CartOverview", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartOverview", ex, , "", gbDebug)
                 Return Nothing
             End Try
 
@@ -7968,7 +7986,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 Return oRptElmt
             Catch ex As Exception
-                returnException(mcModuleName, "CartReports", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartReports", ex, , "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -8025,7 +8043,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 oReturnElmt.SetAttribute("cOrderType", cOrderType)
                 Return oRptElmt
             Catch ex As Exception
-                returnException(mcModuleName, "CartReports", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartReports", ex, , "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -8144,7 +8162,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 Return oRptElmt
             Catch ex As Exception
-                returnException(mcModuleName, "CartReports", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartReports", ex, , "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -8190,7 +8208,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 Return oRptElmt
             Catch ex As Exception
-                returnException(mcModuleName, "CartReports", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartReports", ex, , "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -8245,7 +8263,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         xmlMethod = xmlMethod
                         xmlProduct = xmlProduct
 
-                        returnException(mcModuleName, "AddShippingCosts", ex, , "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "AddShippingCosts", ex, , "", gbDebug)
                     End Try
 
                 Next
@@ -8254,7 +8272,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 xmlProduct.AppendChild(xmlShippingOptionsValid.CloneNode(True))
 
             Catch ex As Exception
-                returnException(mcModuleName, "AddShippingCosts", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddShippingCosts", ex, , "", gbDebug)
 
             End Try
 
@@ -8349,7 +8367,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return moDBHelper.GetDataSet(sSql & " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping")
             Catch ex As Exception
 
-                returnException(mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, , "", gbDebug)
 
             End Try
 
@@ -8407,7 +8425,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 Return oShippingOptions
 
             Catch ex As Exception
-                returnException(mcModuleName, "makeShippingOptionsXML", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, , "", gbDebug)
 
             End Try
 
@@ -8420,7 +8438,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 moDBHelper.ExeProcessSql(cSqlUpdate)
 
             Catch ex As Exception
-                returnException(mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, , "", gbDebug)
             End Try
         End Function
 
@@ -8455,7 +8473,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
             Catch ex As Exception
 
-                returnException(mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, , "", gbDebug)
 
             End Try
         End Function
@@ -8545,7 +8563,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     Return ""
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
             End Try
         End Function
 
@@ -8587,7 +8605,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 Return strcFreeShippingMethods
             Catch ex As Exception
-                returnException(mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug)
             End Try
         End Function
 
@@ -8769,7 +8787,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
 
                 Return DeliveryOption
             Catch ex As Exception
-                returnException(mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug)
             End Try
 
         End Function

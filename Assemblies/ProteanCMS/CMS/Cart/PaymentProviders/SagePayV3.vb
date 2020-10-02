@@ -551,7 +551,7 @@ Namespace Providers
                         Return ccXform
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "GetPaymentForm", ex, "", cProcessInfo, gbDebug)
                         Return Nothing
                     End Try
                 End Function
@@ -565,7 +565,7 @@ Namespace Providers
                         If sdate <> "" Then strReturn = Left(sdate, 2) & Right(sdate, 2)
                         Return strReturn
                     Catch ex As Exception
-                        returnException(mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
                         Return ""
 
                     End Try
@@ -595,7 +595,7 @@ Namespace Providers
                         End If
                         Return amount
                     Catch ex As Exception
-                        returnException(mcModuleName, "FullMoneyString", ex, "", "", gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "FullMoneyString", ex, "", "", gbDebug)
                         Return amount
                     End Try
 
@@ -614,7 +614,7 @@ Namespace Providers
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 
@@ -630,7 +630,7 @@ Namespace Providers
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "CancelPayments", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 

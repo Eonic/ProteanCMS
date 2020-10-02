@@ -86,6 +86,7 @@ Partial Public Class Cms
 
 
             Public Sub New(ByRef aWeb As Protean.Cms)
+                MyBase.New(aWeb)
                 PerfMon.Log("PaymentProviders", "New")
                 Dim cProcessInfo As String = ""
                 Try
@@ -96,7 +97,7 @@ Partial Public Class Cms
                     MyBase.moPageXML = myWeb.moPageXml
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Sub
 
@@ -218,7 +219,7 @@ Partial Public Class Cms
                     Return nOptCount
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -340,7 +341,7 @@ Partial Public Class Cms
                     Return nOptCount
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getPaymentMethods", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -817,7 +818,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1047,7 +1048,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "paySecPayUkash", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecPayUkash", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1384,7 +1385,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "paySagePay", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySagePay", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1833,7 +1834,7 @@ Partial Public Class Cms
 
                 Catch ex As Exception
 
-                    returnException(mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2058,7 +2059,7 @@ Partial Public Class Cms
 
                 Catch ex As Exception
 
-                    returnException(mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecureTrading", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2300,7 +2301,7 @@ Partial Public Class Cms
                     payMetaCharge = ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payMetaCharge", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payMetaCharge", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2521,7 +2522,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payAuthorizeNet", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payAuthorizeNet", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2559,7 +2560,7 @@ Partial Public Class Cms
                     Return sOrder
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getAutorizeNetOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getAutorizeNetOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2572,7 +2573,7 @@ Partial Public Class Cms
                 Dim oCartAdd As XmlNode
                 Dim sAddress As String = ""
                 Dim cCurrentURL As String = "http"
-                Dim wpXform As xForm = New xForm
+                Dim wpXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim oElmt As XmlElement
                 Dim oPPCfg As XmlNode
@@ -2708,7 +2709,7 @@ Partial Public Class Cms
                     payWorldPay = wpXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecPay", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2721,7 +2722,7 @@ Partial Public Class Cms
                 Dim oCartAdd As XmlNode
                 Dim sAddress As String = ""
 
-                Dim wpXform As xForm = New xForm
+                Dim wpXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim oDictOpt As Hashtable
                 Dim bCv2 As Boolean = False
@@ -2829,7 +2830,7 @@ Partial Public Class Cms
                     Return wpXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payNetBanx", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payNetBanx", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2886,7 +2887,7 @@ Partial Public Class Cms
                         sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
 
                         'Send the card details via Secure Email
-                        Dim oMsg As Messaging = New Messaging
+                        Dim oMsg As Messaging = New Messaging(myWeb.msException)
                         oMsg.mbEncrypt = True
                         oMsg.msGnuDirectory = cGnuDirectory
                         oMsg.msGnuOriginator = cGnuOriginator
@@ -2918,7 +2919,7 @@ Partial Public Class Cms
                     paySecureEmail = ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "paySecureEmail", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "paySecureEmail", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2926,7 +2927,7 @@ Partial Public Class Cms
             Function payDirectDebitSecureEmail(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
                 PerfMon.Log("PaymentProviders", "payDirectDebitSecureEmail")
                 Dim sSql As String
-                Dim ddXform As New xForm
+                Dim ddXform As New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim sCardAccepted As String = ""
                 Dim cXFormPath As String = ""
@@ -3068,7 +3069,7 @@ Partial Public Class Cms
                             sSql = "select * from tblCartOrder where nCartOrderKey = " & mnCartId
 
                             'Send the card details via Secure Email
-                            Dim oMsg As Messaging = New Messaging
+                            Dim oMsg As Messaging = New Messaging(myWeb.msException)
                             oMsg.mbIsBodyHtml = False
 
                             If cGnuDirectory <> "" Then
@@ -3117,7 +3118,7 @@ Partial Public Class Cms
                     Return ddXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payDirectDebitSecureEmail", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payDirectDebitSecureEmail", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3235,7 +3236,7 @@ Partial Public Class Cms
                     payOnAccount = ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payOnAccount", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payOnAccount", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3243,7 +3244,7 @@ Partial Public Class Cms
             Function payByCash(ByRef oRoot As XmlElement, ByVal sSubmitPath As String) As xForm
                 PerfMon.Log("PaymentProviders", "payByCash")
                 Dim sSql As String
-                Dim ccXform As xForm = New xForm
+                Dim ccXform As xForm = New xForm(myWeb.msException)
                 Dim sProcessInfo As String = ""
                 Dim bCv2 As Boolean = False
                 Dim bEncrypt As Boolean = False
@@ -3353,7 +3354,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payByCash", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payByCash", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3472,7 +3473,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payOnAccount", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payOnAccount", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3481,7 +3482,7 @@ Partial Public Class Cms
                 PerfMon.Log("PaymentProviders", "payPayPalExpress")
                 Dim sSql As String
 
-                Dim ppXform As xForm = New xForm
+                Dim ppXform As xForm = New xForm(myWeb.msException)
 
                 Dim Xform3dSec As xForm = Nothing
 
@@ -3638,7 +3639,7 @@ Partial Public Class Cms
                                         ppXform.NewFrm("PayForm")
                                         ppXform.valid = bIsValid
 
-                                        Dim cPaymentRef As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo("TransactionID")) 'PayPal transaction id
+                                        Dim cPaymentRef As String = Convert.ToString(oDoExpChkResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo(0).TransactionID) 'PayPal transaction id
                                         Dim cPayerId As String = Convert.ToString(oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID) 'PayPal Us
 
                                         '   Dim cPaymentRef As String = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentInfo. 'PayPal User
@@ -3658,7 +3659,7 @@ Partial Public Class Cms
                                         err_msg = "Notes:" & oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note
 
 
-                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", CStr(oDictOpt("accountId")), cPaymentRef, ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
+                                        savedPaymentId = savePayment(myWeb.mnUserId, "PayPalExpress", cPaymentRef, CStr(oDictOpt("accountId")), ppXform.Instance.FirstChild, Now, False, mnPaymentAmount)
                                     Case Else
                                         Dim ppError As Protean.PayPalAPI.ErrorType
                                         For Each ppError In oDoExpChkResponse.Errors
@@ -3776,7 +3777,9 @@ Partial Public Class Cms
                             oShippingOptions(0) = oShippingOption
                             oSetExpChkDetails.FlatRateShippingOptions = oShippingOptions
 
-                            oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
+                            Dim RandGen As New Random
+                            oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId) & "-" & RandGen.Next(1000, 9999).ToString
+                            ' oSetExpChkDetails.PaymentDetails(0).InvoiceID = moCartConfig("OrderNoPrefix") & CStr(mnCartId)
 
                             Dim oDeliveryAddress As Protean.PayPalAPI.AddressType = New Protean.PayPalAPI.AddressType
                             sType = "Delivery Address"
@@ -3918,7 +3921,7 @@ Partial Public Class Cms
                     Return ppXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payPayPalExpress", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payPayPalExpress", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3962,7 +3965,7 @@ Partial Public Class Cms
                     If sdate <> "" Then strReturn = Left(sdate, 2) & Right(sdate, 2)
                     Return strReturn
                 Catch ex As Exception
-                    returnException(mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
                     Return ""
 
                 End Try
@@ -3978,7 +3981,7 @@ Partial Public Class Cms
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4009,7 +4012,7 @@ Partial Public Class Cms
                     Return sOrder
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getSecPayOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getSecPayOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4106,7 +4109,7 @@ Partial Public Class Cms
 
                     getSecPayAddress = sAddress
                 Catch ex As Exception
-                    returnException(mcModuleName, "getSecPayAddress", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getSecPayAddress", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4134,7 +4137,7 @@ Partial Public Class Cms
                     oDr = Nothing
                     Return strReturn
                 Catch ex As Exception
-                    returnException(mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4161,7 +4164,7 @@ Partial Public Class Cms
                     oDr = Nothing
                     Return strReturn
                 Catch ex As Exception
-                    returnException(mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4178,7 +4181,7 @@ Partial Public Class Cms
 
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3D")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
 
@@ -4222,7 +4225,7 @@ Partial Public Class Cms
                     Return oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4230,7 +4233,7 @@ Partial Public Class Cms
 
             Function xfrmSecure3Dv2(ByVal acs_url As String, ByVal jwt As String, ByVal SongbirdURL As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3Dv2")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
 
@@ -4264,7 +4267,7 @@ Partial Public Class Cms
                     Return oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4273,7 +4276,7 @@ Partial Public Class Cms
 
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
-                Dim oXform As xForm = New Protean.Cms.xForm
+                Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim RedirectURL As String
@@ -4308,7 +4311,7 @@ Partial Public Class Cms
                     Return oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xfrmSecure3D", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4317,7 +4320,7 @@ Partial Public Class Cms
 
             Function creditCardXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal cardTypes As String = "MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch:Switch", Optional ByVal bCV2 As Boolean = True, Optional ByVal sFormTitle As String = "Your Credit Card Details", Optional ByVal b3dSecure As Boolean = False, Optional ByVal cInstance As String = "", Optional ByVal bOverrideValidity As Boolean = False, Optional ByVal bSavePayment As Boolean = False) As xForm
                 PerfMon.Log("PaymentProviders", "creditCardXform")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim sSql As String
@@ -4611,7 +4614,7 @@ Partial Public Class Cms
                     creditCardXform = oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4619,7 +4622,7 @@ Partial Public Class Cms
 
             Function UkashXform(ByRef oRoot As XmlElement, Optional ByVal formName As String = "creditCard", Optional ByVal action As String = "", Optional ByVal sFormTitle As String = "Your Ukash Payment Details") As xForm
                 PerfMon.Log("PaymentProviders", "UkashXform")
-                Dim oXform As xForm = New xForm
+                Dim oXform As xForm = New xForm(myWeb.msException)
                 Dim oFrmInstance As XmlElement
                 Dim oFrmGroup As XmlElement
                 Dim bIsValid As Boolean = False
@@ -4684,7 +4687,7 @@ Partial Public Class Cms
                     UkashXform = oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "creditCardXform", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -4790,7 +4793,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "repeatSecPay", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "repeatSecPay", ex, "", "", gbDebug)
                     Return "An Error Occured"
                 End Try
             End Function
@@ -5041,7 +5044,7 @@ Partial Public Class Cms
                     ' Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payMetaCharge", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payMetaCharge", ex, "", "", gbDebug)
                     Return "An Error Occured"
                 End Try
             End Function
@@ -5054,7 +5057,7 @@ Partial Public Class Cms
                     Return nPaymentId
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "savePayment", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "savePayment", ex, "", "", gbDebug)
                     Return 0
                 End Try
             End Function
@@ -5065,7 +5068,7 @@ Partial Public Class Cms
                     myWeb.moDbHelper.CartPaymentMethod(mnCartId, nPaymentId)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -5100,7 +5103,7 @@ Partial Public Class Cms
                     Return nCount
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "ReturnRepeatPayments", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ReturnRepeatPayments", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -5119,7 +5122,7 @@ Partial Public Class Cms
                         Return 0
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "HasRepeatPayments", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "HasRepeatPayments", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -5137,7 +5140,7 @@ Partial Public Class Cms
                             Return False
                     End Select
                 Catch ex As Exception
-                    returnException(mcModuleName, "payRepeat", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payRepeat", ex, "", "", gbDebug)
                     Return False
                 End Try
             End Function
@@ -5212,7 +5215,7 @@ Partial Public Class Cms
                     Return oXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "creditCardXform", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "creditCardXform", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
 
@@ -5237,7 +5240,7 @@ Partial Public Class Cms
 
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "ValidatePaymentByCart", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "ValidatePaymentByCart", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -5255,7 +5258,7 @@ Partial Public Class Cms
                     End If
                     Return amount
                 Catch ex As Exception
-                    returnException(mcModuleName, "FullMoneyString", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "FullMoneyString", ex, "", "", gbDebug)
                     Return amount
                 End Try
 
@@ -5266,7 +5269,7 @@ Partial Public Class Cms
                 PerfMon.Log("PaymentProviders", "payPremiumCredit")
                 Dim sSql As String
 
-                Dim ccXform As xForm = New xForm
+                Dim ccXform As xForm = New xForm(myWeb.msException)
 
                 Dim err_msg As String = ""
                 Dim err_msg_log As String = ""
@@ -5578,7 +5581,7 @@ Partial Public Class Cms
                     Return ccXform
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "payPremiumCredit", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "payPremiumCredit", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5712,7 +5715,7 @@ Partial Public Class Cms
                     Return nOptCount
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getPremiumCreditPaymentMethods", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getPremiumCreditPaymentMethods", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function

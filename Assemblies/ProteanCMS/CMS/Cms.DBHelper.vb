@@ -1150,35 +1150,38 @@ Partial Public Class Cms
                                 'handling for content versions ?
                             End If
                             'now get the page id 
-                            sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
-                            ods = GetDataSet(sSql, "Pages")
-                            If ods.Tables("Pages").Rows.Count = 1 Then
-                                If bCheckPermissions Then
-                                    ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                    Dim checkPermissionPageId As Long = checkPagePermission(ods.Tables("Pages").Rows("0").Item("nStructId"))
-                                    If checkPermissionPageId <> 0 _
-                                                    And (ods.Tables("Pages").Rows("0").Item("nStructId") = checkPermissionPageId _
-                                                    Or IsSystemPage(checkPermissionPageId)) Then
-                                        nPageId = checkPermissionPageId
+                            If nArtId > 0 Then
+                                sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
+                                ods = GetDataSet(sSql, "Pages")
+                                If ods.Tables("Pages").Rows.Count = 1 Then
+                                    If bCheckPermissions Then
+                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                        Dim checkPermissionPageId As Long = checkPagePermission(ods.Tables("Pages").Rows("0").Item("nStructId"))
+                                        If checkPermissionPageId <> 0 _
+                                                        And (ods.Tables("Pages").Rows("0").Item("nStructId") = checkPermissionPageId _
+                                                        Or IsSystemPage(checkPermissionPageId)) Then
+                                            nPageId = checkPermissionPageId
+                                        End If
+                                    Else
+                                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
                                     End If
-                                Else
                                     nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
-                                End If
-                                nPageId = ods.Tables("Pages").Rows("0").Item("nStructId")
 
 
-                                If checkRedirect Then
-                                    Dim redirectUrl As String
-                                    redirectUrl = "/" & thisPrefix & "/" & sPath.ToString.Replace(" ", "-").Trim("-") & "/"
-                                    If sFullPath <> redirectUrl Then
-                                        myWeb.msRedirectOnEnd = redirectUrl
+                                    If checkRedirect Then
+                                        Dim redirectUrl As String
+                                        redirectUrl = "/" & thisPrefix & "/" & sPath.ToString.Replace(" ", "-").Trim("-") & "/"
+                                        If sFullPath <> redirectUrl Then
+                                            myWeb.msRedirectOnEnd = redirectUrl
+                                        End If
                                     End If
+
+
+                                Else
+                                    'handling for multiple parents versions ?
                                 End If
-
-
-                            Else
-                                'handling for multiple parents versions ?
                             End If
+
                         End If
                 End Select
 
@@ -6433,7 +6436,7 @@ restart:
 
 
                         'now lets send the email
-                        Dim oMsg As Messaging = New Messaging
+                        Dim oMsg As Messaging = New Messaging(myWeb.msException)
 
 
 
@@ -8021,7 +8024,7 @@ restart:
                 End If
 
             Catch ex As Exception
-                'returnException(mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                'returnException(myWeb.msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo))
                 Return Nothing
             End Try
@@ -10554,7 +10557,7 @@ ReturnMe:
                 Return popularSearches
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug)
                 Return Nothing
             End Try
         End Function
@@ -10638,7 +10641,7 @@ ReturnMe:
                 Return nPaymentId
 
             Catch ex As Exception
-                returnException(mcModuleName, "savePayment", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "savePayment", ex, "", "", gbDebug)
                 Return 0
             End Try
         End Function
@@ -10648,7 +10651,7 @@ ReturnMe:
                 Dim cSQL As String = "UPDATE tblCartOrder SET nPayMthdId = " & PaymentId & " WHERE nCartOrderKey = " & CartId
                 ExeProcessSql(cSQL)
             Catch ex As Exception
-                returnException(mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -10671,7 +10674,7 @@ ReturnMe:
                 updateDataset(oDs, "Order")
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -10692,7 +10695,7 @@ ReturnMe:
                 updateDataset(oDs, "Order")
 
             Catch ex As Exception
-                returnException(mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
@@ -10741,7 +10744,7 @@ ReturnMe:
                 oContentsXML.AppendChild(listElement)
 
             Catch ex As Exception
-                returnException(mcModuleName, "ListReports", ex, "", "", gbDebug)
+                returnException(myWeb.msException, mcModuleName, "ListReports", ex, "", "", gbDebug)
             End Try
         End Sub
 
@@ -10893,7 +10896,7 @@ ReturnMe:
                 End If
 
             Catch ex As Exception
-                returnException(mcModuleName, "GetReport", ex, "", processInfo, gbDebug)
+                returnException(myWeb.msException, mcModuleName, "GetReport", ex, "", processInfo, gbDebug)
             End Try
         End Sub
 

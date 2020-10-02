@@ -46,7 +46,7 @@ Partial Public Class Cms
             Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
             Private Sub _OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles Me.OnError
-                returnException(e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
+                returnException(myWeb.msException, mcModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug)
             End Sub
 
             'Public myWeb As Protean.Cms
@@ -64,12 +64,12 @@ Partial Public Class Cms
                     MyBase.cLanguage = myWeb.mcPageLanguage
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                 End Try
             End Sub
 
-            Public Sub New()
-
+            Public Sub New(ByRef sException As String)
+                MyBase.New(sException)
             End Sub
 
             Public Shadows Sub open(ByVal oPageXml As XmlDocument)
@@ -78,7 +78,7 @@ Partial Public Class Cms
                     moPageXML = oPageXml
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Sub
 
@@ -97,7 +97,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -212,7 +212,7 @@ Partial Public Class Cms
             '                    Return MyBase.moXformElmt
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -232,7 +232,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -293,7 +293,7 @@ Partial Public Class Cms
             '                    Return MyBase.moXformElmt
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -313,7 +313,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -346,7 +346,7 @@ Partial Public Class Cms
             '                    Return MyBase.moXformElmt
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -365,7 +365,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -436,7 +436,7 @@ Partial Public Class Cms
             '                    Return MyBase.moXformElmt
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -455,7 +455,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -470,7 +470,7 @@ Partial Public Class Cms
             '                    Return xFrmConfirmPassword(nUserId)
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "addInput", ex, "", "", gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -489,7 +489,7 @@ Partial Public Class Cms
                     Return oAdXfm.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -555,7 +555,7 @@ Partial Public Class Cms
             '                    Return MyBase.moXformElmt
 
             '                Catch ex As Exception
-            '                    returnException(mcModuleName, "addInput", ex, "", "", gbDebug)
+            '                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
             '                    Return Nothing
             '                End Try
             '            End Function
@@ -677,7 +677,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug)
                     Return Nothing
                 End Try
 
@@ -880,7 +880,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -995,7 +995,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1147,7 +1147,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1316,7 +1316,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1428,7 +1428,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1470,7 +1470,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug)
                 End Try
 
             End Sub
@@ -1741,7 +1741,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -1778,7 +1778,7 @@ Partial Public Class Cms
                         MyBase.addNote("cStructName", noteTypes.Alert, "Page names are used for the URL and only contain alphanumberic characters, underscores and spaces.")
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Sub
 
@@ -1916,7 +1916,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2089,7 +2089,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2255,7 +2255,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2366,7 +2366,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2440,7 +2440,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -2494,7 +2494,7 @@ Partial Public Class Cms
                         End If
                     End Try
                 Catch ex As Exception
-                    returnException(mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug)
                 End Try
 
             End Sub
@@ -3057,7 +3057,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3200,7 +3200,7 @@ Partial Public Class Cms
 
                     Return bResult
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3252,7 +3252,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3311,7 +3311,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3380,7 +3380,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3457,7 +3457,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3505,7 +3505,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3555,7 +3555,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3614,7 +3614,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3672,7 +3672,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3740,7 +3740,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3798,7 +3798,7 @@ Partial Public Class Cms
             '        Return MyBase.moXformElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -3864,7 +3864,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -3898,7 +3898,7 @@ Partial Public Class Cms
                     Return Me.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4014,7 +4014,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4170,7 +4170,7 @@ Partial Public Class Cms
                         Return MyBase.moXformElmt
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4511,7 +4511,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4571,7 +4571,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4631,7 +4631,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4690,7 +4690,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4820,7 +4820,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -4950,7 +4950,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5036,7 +5036,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5187,7 +5187,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    Protean.returnException(mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, Protean.gbDebug)
+                    Protean.returnException(myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, Protean.gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5259,7 +5259,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5397,7 +5397,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5457,7 +5457,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5528,7 +5528,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5593,7 +5593,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5825,7 +5825,7 @@ Partial Public Class Cms
                                     Dim cSubject As String = moCartConfig("OrderEmailSubject")
                                     If String.IsNullOrEmpty(cSubject) Then cSubject = "Order Shipped"
                                     'send to customer
-                                    Dim oMsg As Messaging = New Messaging
+                                    Dim oMsg As Messaging = New Messaging(myWeb.msException)
                                     Dim cartXml As New XmlDocument
                                     Dim cartElement As XmlElement = cartXml.CreateElement("Cart")
                                     cartElement.InnerXml = MyBase.Instance.SelectSingleNode("tblCartOrder/cCartXml").InnerXml
@@ -5856,7 +5856,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -5974,7 +5974,7 @@ Partial Public Class Cms
                     End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6045,7 +6045,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6097,7 +6097,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6163,7 +6163,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6259,7 +6259,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6377,7 +6377,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6425,7 +6425,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6474,7 +6474,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6547,7 +6547,7 @@ Partial Public Class Cms
             '        Return MyBase.moXformElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -6641,7 +6641,7 @@ Partial Public Class Cms
             '        Return MyBase.moXformElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -6713,7 +6713,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6770,7 +6770,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -6785,7 +6785,7 @@ Partial Public Class Cms
                         MenuReiterate(oMenuItem, oSelect, 0)
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "MenuSelect", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "MenuSelect", ex, "", "", gbDebug)
                 End Try
             End Sub
             Sub MenuReiterate(ByVal oMenuItem As XmlElement, ByRef oSelect As XmlElement, ByVal nDepth As Integer)
@@ -6801,7 +6801,7 @@ Partial Public Class Cms
                         MenuReiterate(oSubelmt, oSelect, nDepth + 1)
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "MenuReiterate", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "MenuReiterate", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -6840,7 +6840,7 @@ Partial Public Class Cms
                         End If
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "cInitialFolder", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "cInitialFolder", ex, "", "", gbDebug)
                 End Try
             End Sub
 #End Region
@@ -6913,7 +6913,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7006,7 +7006,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7068,7 +7068,7 @@ Partial Public Class Cms
                     End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7106,7 +7106,7 @@ Partial Public Class Cms
                     End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7144,7 +7144,7 @@ Partial Public Class Cms
                     End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7300,7 +7300,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7377,7 +7377,7 @@ Partial Public Class Cms
 
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7479,7 +7479,7 @@ Partial Public Class Cms
                     End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7553,7 +7553,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7656,7 +7656,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7746,7 +7746,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7833,7 +7833,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7874,7 +7874,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -7960,7 +7960,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8088,7 +8088,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8122,7 +8122,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8177,9 +8177,9 @@ Partial Public Class Cms
 
                         '   If myWeb.moConfig("debug") = "on" Then
                         Dim oSelectElmt3 As XmlElement
-                            oSelectElmt3 = MyBase.addSelect1(oFrmElmt, "contentType", True, "Response Xml", , ApperanceTypes.Full)
-                            MyBase.addOption(oSelectElmt3, "on", "xml")
-                            MyBase.addOption(oSelectElmt3, "off", "")
+                        oSelectElmt3 = MyBase.addSelect1(oFrmElmt, "contentType", True, "Response Xml", , ApperanceTypes.Full)
+                        MyBase.addOption(oSelectElmt3, "on", "xml")
+                        MyBase.addOption(oSelectElmt3, "off", "")
                         '   End If
                         MyBase.addBind("xml", "file/@xml", "false()")
 
@@ -8240,7 +8240,7 @@ Partial Public Class Cms
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8302,7 +8302,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8334,7 +8334,7 @@ Partial Public Class Cms
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8412,7 +8412,7 @@ Partial Public Class Cms
                     MyBase.addValues()
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8473,7 +8473,7 @@ Partial Public Class Cms
 
                     Return MyBase.moXformElmt
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8513,7 +8513,7 @@ Partial Public Class Cms
 
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                        returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                     End Try
                 End Sub
 #End Region
@@ -8523,7 +8523,7 @@ Partial Public Class Cms
                     Try
                         _selects = _form.RootGroup.SelectNodes(_selectsXPath)
                     Catch ex As Exception
-                        returnException(mcModuleName, "Refresh", ex, "", "", gbDebug)
+                        returnException(_form.myWeb.msException, mcModuleName, "Refresh", ex, "", "", gbDebug)
                     End Try
                 End Sub
                 Public Function IsActive() As Boolean
@@ -8531,7 +8531,7 @@ Partial Public Class Cms
                     Try
                         Return (_selects.Count > 0)
                     Catch ex As Exception
-                        returnException(mcModuleName, "IsActive", ex, "", "", gbDebug)
+                        returnException(_form.myWeb.msException, mcModuleName, "IsActive", ex, "", "", gbDebug)
                         Return False
                     End Try
                 End Function
@@ -8678,7 +8678,7 @@ Partial Public Class Cms
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "ProcessSelects", ex, "", "", gbDebug)
+                        returnException(_form.myWeb.msException, mcModuleName, "ProcessSelects", ex, "", "", gbDebug)
 
                     End Try
                 End Sub
@@ -8723,7 +8723,7 @@ Partial Public Class Cms
                         End If
 
                     Catch ex As Exception
-                        returnException(mcModuleName, "ProcessRequest", ex, "", "", gbDebug)
+                        returnException(_form.myWeb.msException, mcModuleName, "ProcessRequest", ex, "", "", gbDebug)
 
                     End Try
                 End Sub
@@ -8755,7 +8755,7 @@ Partial Public Class Cms
                             Item = selectItem
 
                         Catch ex As Exception
-                            returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                            '  returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                         End Try
                     End Sub
 
@@ -8830,7 +8830,7 @@ Partial Public Class Cms
                             Return "" & SimpleRegexFind(" " & ClassName() & " ", pattern, 1)
 
                         Catch ex As Exception
-                            returnException(mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
+                            '   returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
                             Return ""
                         End Try
 
@@ -8890,7 +8890,7 @@ Partial Public Class Cms
             Public myWeb As Protean.Cms
 
             Public Sub New(ByRef aWeb As Protean.Cms, Optional ByVal contentId As Long = 0)
-
+                MyBase.New(aWeb.msException)
 
                 ' Set the Web context variables
                 myWeb = aWeb
@@ -8936,7 +8936,7 @@ Partial Public Class Cms
 
             Protected Sub CreateMasterForm(Optional ByVal contentId As Long = 0)
                 Try
-                    _masterXform = New Protean.xForm
+                    _masterXform = New Protean.xForm(myWeb.msException)
                     _masterXform.moPageXML = Me.moPageXML
                     _masterInstance = Me.moPageXML.CreateElement("instance")
 
@@ -8948,7 +8948,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CreateMasterForm", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CreateMasterForm", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -8968,7 +8968,7 @@ Partial Public Class Cms
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "loadForm", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "loadForm", ex, "", "", gbDebug)
                     Return False
                 End Try
 
@@ -9032,7 +9032,7 @@ Partial Public Class Cms
                     Return Me.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -9082,7 +9082,7 @@ Partial Public Class Cms
                     Return Me.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmDeleteElement", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmDeleteElement", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -9131,7 +9131,7 @@ Partial Public Class Cms
                     node.ParentNode.RemoveChild(node)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "deleteElementAction", ex, "", processInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "deleteElementAction", ex, "", processInfo, gbDebug)
                 End Try
             End Sub
 
@@ -9165,7 +9165,7 @@ Partial Public Class Cms
                     End Select
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "moveElement", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "moveElement", ex, "", cProcessInfo, gbDebug)
                 End Try
 
             End Sub
@@ -9240,7 +9240,7 @@ Partial Public Class Cms
                     Return Me.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormItem", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormItem", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -9364,7 +9364,7 @@ Partial Public Class Cms
                     Return Me.moXformElmt
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "xFrmEditXFormInput", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormInput", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -9762,7 +9762,7 @@ Partial Public Class Cms
             '        Return Me.moXformElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -9887,7 +9887,7 @@ Partial Public Class Cms
             '        Return Me.moXformElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -9952,7 +9952,7 @@ Partial Public Class Cms
             '        Return oElmt
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "addAnswerNode", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "addAnswerNode", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function
@@ -9974,7 +9974,7 @@ Partial Public Class Cms
             '        End If
 
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "clearAnswerScores", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "clearAnswerScores", ex, "", cProcessInfo, gbDebug)
             '    End Try
             'End Sub
 
@@ -9991,7 +9991,7 @@ Partial Public Class Cms
 
             '        Return oElmt
             '    Catch ex As Exception
-            '        returnException(mcModuleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
+            '        returnException(myWeb.msException, mcModuleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
             '        Return Nothing
             '    End Try
             'End Function

@@ -75,7 +75,7 @@ Partial Public Class Cms
                     mcModuleName = "Eonic.Discount"
                     PerfMon.Log("Discount", "New-End")
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -108,7 +108,7 @@ Partial Public Class Cms
                     PerfMon.Log("Discount", "New-End")
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "New", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -434,7 +434,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CheckDiscounts", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug)
                 End Try
             End Function
 
@@ -634,7 +634,7 @@ Partial Public Class Cms
                     Return nTotalSaved
                     'Thats all folks!
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug)
                 End Try
             End Function
 #End Region
@@ -782,7 +782,7 @@ Partial Public Class Cms
                         End If
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -910,7 +910,7 @@ FinishTest:
 NoDiscount:
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -976,7 +976,7 @@ NoDiscount:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_Basic_Percent", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_Basic_Percent", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1054,7 +1054,7 @@ NoDiscount:
                         Next
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_xForPriceY", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_xForPriceY", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1235,7 +1235,7 @@ NoDiscount:
                         End If
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_CheapestFree", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_CheapestFree", ex, "", "", gbDebug)
                 End Try
 
             End Sub
@@ -1328,7 +1328,7 @@ NoDiscount:
                         nTotalItemsValue = 0
                     Next
                 Catch ex As Exception
-                    returnException(mcModuleName, "Discount_Break Group", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "Discount_Break Group", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1432,6 +1432,13 @@ NoDiscount:
                                 Else
                                     applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
                                 End If
+                                If (maximumOrderTotal <> 0) Then
+                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                        oDsDiscounts.Clear()
+                                        oDsDiscounts = Nothing
+                                        Return oDiscountMessage
+                                    End If
+                                End If
                                 If (applyToTotal) Then
                                     If (maximumOrderTotal <> 0) Then
                                         If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
@@ -1441,7 +1448,6 @@ NoDiscount:
                                         End If
                                     End If
                                 End If
-
                             End If
                             oDsDiscounts.Clear()
                             oDsDiscounts = Nothing
@@ -1487,7 +1493,7 @@ NoDiscount:
                         Return ""
                     End If
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 
@@ -1678,7 +1684,7 @@ NoDiscount:
                     PerfMon.Log("Discount", "getAvailableDiscounts-endIterateContentNodes")
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1782,7 +1788,7 @@ NoDiscount:
                     PageElmt.AppendChild(oDiscounts)
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "returnDocumentFromItem", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "returnDocumentFromItem", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -1817,7 +1823,7 @@ NoDiscount:
                     End If
                     Return ""
                 Catch ex As Exception
-                    returnException(mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 
@@ -1839,7 +1845,7 @@ NoDiscount:
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug)
                 End Try
             End Sub
 #End Region
@@ -1902,7 +1908,7 @@ NoDiscount:
                     End If
                     getProductPricesByXml_OLD = nPrice
                 Catch ex As Exception
-                    returnException(mcModuleName, "getProductPricesByXml", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 
@@ -1957,7 +1963,7 @@ NoDiscount:
 
                     Return nPrice
                 Catch ex As Exception
-                    returnException(mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug)
                 End Try
 
             End Function
@@ -2014,7 +2020,7 @@ NoDiscount:
                     Next
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "applyDiscountsToPriceXml", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "applyDiscountsToPriceXml", ex, "", "", gbDebug)
                 End Try
             End Sub
 
@@ -2039,7 +2045,7 @@ NoDiscount:
                     PerfMon.Log("Discount", "getGroupsByName-end")
                     Return cReturn
                 Catch ex As Exception
-                    returnException(mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function

@@ -153,8 +153,8 @@
     <xsl:apply-templates select="." mode="siteAdminJs"/>
 
     <xsl:apply-templates select="." mode="LayoutAdminJs"/>
-    
-    <xsl:apply-templates select="." mode="xform_control_scripts"/>
+
+    <!--xsl:apply-templates select="." mode="xform_control_scripts"/-->
 
   </xsl:template>
 
@@ -180,10 +180,21 @@
   </xsl:template>
 
   <xsl:template match="Page[@previewMode]" mode="bodyBuilder">
-    <body id="pg_{@id}" >
+    <body>
+      <xsl:attribute name="id">
+        <xsl:text>page</xsl:text>
+        <xsl:value-of select="@id"/>
+        <xsl:if test="@artid!=''">
+          <xsl:text>-art</xsl:text>
+          <xsl:value-of select="@artid"/>
+        </xsl:if>
+      </xsl:attribute>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="PreviewMenu"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
+      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+        <xsl:apply-templates select="." mode="commonStyle"/>
+      </xsl:if>
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -2256,7 +2267,7 @@
             <xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='AwaitingApproval']">
               <li>
                 <a href="?ewCmd=ContentVersions&amp;pgid={/Page/@id}&amp;id={@id}{$subTypeOption}" title="Click here to view version history">
-                  <i class="fa fa-copy">&#160;</i>&#160;Version History
+                  <i class="fa fa-copy">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
                 </a>
               </li>
             </xsl:if>
