@@ -3064,7 +3064,7 @@
     <div id="popover-{$ref2}" class="popover-{$ref2} popoverContent" role="tooltip">
       <xsl:copy-of select="help/node()"/>
     </div>
-    <button type="button" class="btn btn-info" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="left" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
+    <button type="button" class="btn btn-info" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover" data-original-title="{label/node()}" title="{label/node()}">
       <i class="fa fa-info">
         <xsl:text> </xsl:text>
       </i>
@@ -3078,7 +3078,7 @@
     <xsl:variable name="ref2">
       <xsl:value-of select="translate($ref,'/','-')"/>
     </xsl:variable>
-    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="left" rel="frmPopover"  title="{label/node()}">
+    <button type="button" class="btn btn-danger" id="popover-{$ref2}-btn" data-content="{alert/node()}" data-contentwrapper="#popover-{$ref2}" data-toggle="popover" data-container="body" data-placement="bottom" rel="frmPopover"  title="{label/node()}">
       <i class="fa fa-exclamation-triangle">
         <xsl:text> </xsl:text>
       </i>
