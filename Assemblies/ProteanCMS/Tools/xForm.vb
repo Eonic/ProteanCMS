@@ -21,6 +21,8 @@ Public Class xForm
     Public goSession As System.Web.SessionState.HttpSessionState
     Public goServer As System.Web.HttpServerUtility
 
+    Public Shared msException As String
+
     Private bValid As Boolean = False
     Private cValidationError As String = ""
     Private _formParameters() As String = Nothing
@@ -112,7 +114,7 @@ Public Class xForm
                     oRootGroup = Me.moXformElmt.SelectSingleNode("group")
                 End If
             Catch ex As Exception
-                returnException(mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug)
+                returnException(msException, mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug)
             End Try
             Return oRootGroup
         End Get
@@ -142,16 +144,17 @@ Public Class xForm
         End Get
     End Property
 
-    Public Sub New()
+    Public Sub New(ByRef sException As String)
 
-        Me.New(System.Web.HttpContext.Current)
+        Me.New(System.Web.HttpContext.Current, sException)
 
     End Sub
 
-    Public Sub New(ByVal Context As System.Web.HttpContext)
+    Public Sub New(ByVal Context As System.Web.HttpContext, ByRef sException As String)
 
         Dim sProcessInfo As String = ""
         Try
+            msException = sException
             moCtx = Context
 
             If Not moCtx Is Nothing Then
@@ -163,7 +166,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "New", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "New", ex, "", "", gbDebug)
         End Try
     End Sub
 
@@ -198,7 +201,7 @@ Public Class xForm
             processRepeats(moXformElmt)
 
         Catch ex As Exception
-            returnException(mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -268,7 +271,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -288,7 +291,7 @@ Public Class xForm
             oFrmElmt.AppendChild(model)
             moXformElmt = oFrmElmt
         Catch ex As Exception
-            returnException(mcModuleName, "NewFrm", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "NewFrm", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -312,7 +315,7 @@ Public Class xForm
             oSubElmt.SetAttribute("event", submitEvent)
 
         Catch ex As Exception
-            returnException(mcModuleName, "submission", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -418,7 +421,7 @@ Public Class xForm
             Return returnValue
 
         Catch ex As Exception
-            returnException(mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
             ' If any problems are encountered return false.
             ' Return False
         End Try
@@ -469,7 +472,7 @@ Public Class xForm
             Return returnValue
 
         Catch ex As Exception
-            returnException(mcModuleName, "load(String,String())", ex, "", filePath, gbDebug)
+            returnException(msException, mcModuleName, "load(String,String())", ex, "", filePath, gbDebug)
             Return False
         End Try
     End Function
@@ -484,7 +487,7 @@ Public Class xForm
             load(oElmt, bWithRepeats)
 
         Catch ex As Exception
-            returnException(mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -544,7 +547,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -567,7 +570,7 @@ Public Class xForm
             Instance = model.SelectSingleNode("instance")
 
         Catch ex As Exception
-            returnException(mcModuleName, "submission", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -860,7 +863,7 @@ Public Class xForm
             valid = bIsValid
 
         Catch ex As Exception
-            returnException(mcModuleName, "validate", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "validate", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -922,7 +925,7 @@ Public Class xForm
             End If
             Return cReturn
         Catch ex As Exception
-            returnException(mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
     End Function
@@ -934,7 +937,7 @@ Public Class xForm
         Try
             Return True
         Catch ex As Exception
-            returnException(mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
     End Function
@@ -969,7 +972,7 @@ Public Class xForm
                 Return False
             End If
         Catch ex As Exception
-            returnException(mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
 
@@ -1248,7 +1251,7 @@ Public Class xForm
                             Next
                         Catch ex2 As Exception
                             'no bind element found, do nothing
-                            returnException(mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, gbDebug)
+                            returnException(msException, mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, gbDebug)
                         End Try
                     End If
                 Else
@@ -1282,7 +1285,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -1353,7 +1356,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -1511,7 +1514,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "updateImageElement", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "updateImageElement", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -1635,7 +1638,7 @@ Public Class xForm
 
 
                     Catch ex2 As Exception
-                        returnException(mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug)
+                        returnException(msException, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug)
                     End Try
 
                 End If
@@ -1723,7 +1726,7 @@ Public Class xForm
                 End If
             Next
         Catch ex As Exception
-            returnException(mcModuleName, "addValues", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addValues", ex, "", cProcessInfo, gbDebug)
 
         End Try
 
@@ -1744,7 +1747,7 @@ Public Class xForm
                 Next
             End If
         Catch ex As Exception
-            returnException(mcModuleName, "ProcessLanguageLabels", ex, "", "", gbDebug)
+            returnException(msException, mcModuleName, "ProcessLanguageLabels", ex, "", "", gbDebug)
         End Try
     End Sub
 
@@ -1765,7 +1768,7 @@ Public Class xForm
                 oOldNode = oNode.ParentNode.RemoveChild(oNode)
             Next
         Catch ex As Exception
-            returnException(mcModuleName, "resetXFormUI", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "resetXFormUI", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -1797,7 +1800,7 @@ Public Class xForm
             Return oGrpElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1831,7 +1834,7 @@ Public Class xForm
             Return oGrpElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1848,7 +1851,7 @@ Public Class xForm
             Return oGrpElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1874,7 +1877,7 @@ Public Class xForm
             Return oGrpElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addRepeat", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addRepeat", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1886,7 +1889,7 @@ Public Class xForm
 
             Return addInput(oContextNode, sRef, bBound, sLabel, "")
         Catch ex As Exception
-            returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1915,7 +1918,7 @@ Public Class xForm
             oContextNode.AppendChild(oIptElmt)
             addInput = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -1946,7 +1949,7 @@ Public Class xForm
             Return oBindElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
 
@@ -1976,7 +1979,7 @@ Public Class xForm
 
             addSecret = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addSecret", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addSecret", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2011,7 +2014,7 @@ Public Class xForm
 
             addTextArea = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2056,7 +2059,7 @@ Public Class xForm
 
             addRange = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addRange", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addRange", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2093,7 +2096,7 @@ Public Class xForm
 
             addUpload = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addUpload", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addUpload", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2133,7 +2136,7 @@ Public Class xForm
 
             addSelect = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addSelect", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addSelect", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2172,7 +2175,7 @@ Public Class xForm
             addSelect1 = oIptElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2189,7 +2192,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "addValue", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addValue", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2211,7 +2214,7 @@ Public Class xForm
             Return oOptElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2249,7 +2252,7 @@ Public Class xForm
             Return oOptElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug)
             Return Nothing
 
         End Try
@@ -2287,7 +2290,7 @@ Public Class xForm
             oDr = Nothing
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2319,7 +2322,7 @@ Public Class xForm
             oDr = Nothing
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2350,7 +2353,7 @@ Public Class xForm
             Next
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2376,7 +2379,7 @@ Public Class xForm
             Next
 
         Catch ex As Exception
-            returnException(mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2411,7 +2414,7 @@ Public Class xForm
             End If
         Catch ex As Exception
             cProcessInfo = sRef & " - " & nTypes & " - " & sMessage
-            returnException(mcModuleName, "addNote - by ref", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addNote - by ref", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2447,7 +2450,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "addNote - by node", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addNote - by node", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -2469,7 +2472,7 @@ Public Class xForm
 
             addDiv = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addDiv", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addDiv", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2504,7 +2507,7 @@ Public Class xForm
 
             addSubmit = oIptElmt
         Catch ex As Exception
-            returnException(mcModuleName, "addSubmit", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "addSubmit", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2602,7 +2605,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "submit", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "submit", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Function
@@ -2639,7 +2642,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Function
@@ -2667,7 +2670,7 @@ Public Class xForm
 
 
         Catch ex As Exception
-            returnException(mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Function
@@ -2693,7 +2696,7 @@ Public Class xForm
             Next
             Return strReturn
         Catch ex As Exception
-            returnException(mcModuleName, "isSubmitted", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "isSubmitted", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
 
@@ -2754,7 +2757,7 @@ Public Class xForm
             Return refPrefix & CStr(nLastNum + 1)
 
         Catch ex As Exception
-            returnException(mcModuleName, "getNewRef", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "getNewRef", ex, "", cProcessInfo, gbDebug)
             Return Nothing
         End Try
     End Function
@@ -2802,7 +2805,7 @@ Public Class xForm
             Return bDeletionDone
 
         Catch ex As Exception
-            returnException(mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, gbDebug)
+            returnException(msException, mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, gbDebug)
         End Try
     End Function
 
@@ -2982,7 +2985,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "processRepeats", ex, "", , gbDebug)
+            returnException(msException, mcModuleName, "processRepeats", ex, "", , gbDebug)
         End Try
     End Sub
 
@@ -3009,7 +3012,7 @@ Public Class xForm
             End If
 
         Catch ex As Exception
-            returnException(mcModuleName, "processFormParameters", ex, "", processInfo, gbDebug)
+            returnException(msException, mcModuleName, "processFormParameters", ex, "", processInfo, gbDebug)
         End Try
     End Sub
 
@@ -3055,7 +3058,7 @@ Public Class xForm
 
 
     '    Catch ex As Exception
-    '        returnException(mcModuleName, "CombineInstance", ex, "", "", gbDebug)
+    '        returnException(msException, mcModuleName, "CombineInstance", ex, "", "", gbDebug)
 
     '    End Try
     'End Sub
@@ -3103,7 +3106,7 @@ Public Class xForm
     '        End If
 
     '    Catch ex As Exception
-    '        returnException(mcModuleName, "CombineInstance_Sub1", ex, "", "", gbDebug)
+    '        returnException(msException, mcModuleName, "CombineInstance_Sub1", ex, "", "", gbDebug)
     '    End Try
     'End Sub
 
@@ -3127,7 +3130,7 @@ Public Class xForm
     '        oRefPart.AppendChild(oMasterInstance.OwnerDocument.ImportNode(oExisting, True))
     '        CombineInstance_MarkSubElmts(oExisting)
     '    Catch ex As Exception
-    '        returnException(mcModuleName, "CombineInstance_Sub2", ex, "", "", gbDebug)
+    '        returnException(msException, mcModuleName, "CombineInstance_Sub2", ex, "", "", gbDebug)
     '    End Try
     'End Sub
 
@@ -3141,7 +3144,7 @@ Public Class xForm
     '            End If
     '        End If
     '    Catch ex As Exception
-    '        returnException(mcModuleName, "CombineInstance_GetXPath", ex, "", , gbDebug)
+    '        returnException(msException, mcModuleName, "CombineInstance_GetXPath", ex, "", , gbDebug)
     '    End Try
     'End Sub
 
@@ -3157,7 +3160,7 @@ Public Class xForm
     '            CombineInstance_MarkSubElmts(oChild, bRemove)
     '        Next
     '    Catch ex As Exception
-    '        returnException(mcModuleName, "CombineInstance_MarkSubElmts", ex, "", "", gbDebug)
+    '        returnException(msException, mcModuleName, "CombineInstance_MarkSubElmts", ex, "", "", gbDebug)
     '    End Try
     'End Sub
 

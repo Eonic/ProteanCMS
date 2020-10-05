@@ -40,7 +40,7 @@ Public Class Monitor
         Try
 
             Dim oSchedulerConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/scheduler")
-            Dim oMsg As New Protean.Messaging
+            Dim oMsg As New Protean.Messaging(myWeb.msException)
 
             If Not oSchedulerConfig Is Nothing Then
                 cMonitorEmail = oSchedulerConfig("SchedulerMonitorEmail")

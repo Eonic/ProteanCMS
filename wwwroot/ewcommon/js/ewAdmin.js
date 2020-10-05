@@ -589,14 +589,27 @@ $.fn.prepareAdminXform = function () {
                 $('input#' + myname + '-import').val(myvalue.substr(myvalue.indexOf('|') + 1, myvalue.length))
             });
         });
-    };
+    }
 
     if ($(this).find('textarea.pickImage').exists()) {
         $(this).find('textarea.pickImage').each(function (i) {
             $(this).text($(this).text().replace('></img>', '/>'))
             $(this).text($(this).text().replace('">', '"/>'))
         });
-    };
+    }
+
+    if ($(this).find('.field-char-count').exists()) {
+
+        $(this).find('.field-char-count').each(function (i) {
+            var fieldRef = $(this).data("fieldref");
+
+            checkTextAreaMaxLength(fieldRef, event);
+
+            $("#" + fieldRef).on("keyup", function (event) {
+                checkTextAreaMaxLength(fieldRef, event);
+            });
+        });
+    }
 
    // $('.ewXform label').each(function () {
    //     if ($(this).parent().is('span.radiocheckbox')) {
@@ -1978,6 +1991,30 @@ function formatXml2(xml) {
         }
     }
     return out;
+}
+
+function checkTextAreaMaxLength(textBoxRef, e) { 
+    var myTextBox = $("input#" + textBoxRef);
+    var maxLength = parseInt(myTextBox.data("length"));
+  
+    if (!checkSpecialKeys(e)) {
+        // if (myTextBox.value.val() > maxLength - 1) {
+        //    $("#" + textBoxRef + "-char-count").
+        //  }
+    }
+    $("#" + textBoxRef + "-char-count").html(myTextBox.val().length);
+    return true;
+}
+/*
+Checks if the keyCode pressed is inside special chars
+-------------------------------------------------------
+@prerequisite:	e = e.keyCode object for the key pressed
+*/
+function checkSpecialKeys(e) {
+    if (e.keyCode != 8 && e.keyCode != 46 && e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40)
+        return false;
+    else
+        return true;
 }
 
 

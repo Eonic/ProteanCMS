@@ -403,10 +403,9 @@
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
-      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
-        <xsl:apply-templates select="." mode="commonStyle"/>
-      </xsl:if>
+      
 
+      
     </html>
   </xsl:template>
 
@@ -640,6 +639,11 @@
 
   <xsl:template match="Page" mode="commonJsFiles">
     <xsl:choose>
+      <xsl:when test="$jqueryVer='3.5'">
+        <xsl:text>~/ewcommon/js/jquery/jquery-3.5.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
+        <xsl:text>~/ewcommon/js/jquery/jquery.browser.js,</xsl:text>
+      </xsl:when>
       <xsl:when test="$jqueryVer='3.4'">
         <xsl:text>~/ewcommon/js/jquery/jquery-3.4.1.min.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-3.0.1.min.js,</xsl:text>
@@ -1175,10 +1179,16 @@
     </xsl:if>
 
     <!-- STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS -->
-    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'ds01.eonic') and contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT']/node(),'bot')">
-      <xsl:comment>STOP SEARCH ENGINES INDEXING DS01 SITES IF SOME PLUM HAS PUBLISHED IT ON THE INTERWEBS</xsl:comment>
+    <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'eonichost.co.uk') or contains(/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node(),'yeomanshosting.co.uk')">
+      <xsl:comment>STOP SEARCH ENGINES INDEXING PREVIEW SITES IF SOME PLUM HAS SHARED A LINK ON THE INTERWEBS</xsl:comment>
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
     </xsl:if>
+
+    <xsl:if test="Cart[@type='order']/Order/@cmd!=''">
+      <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
+    </xsl:if>
+
+
     <xsl:if test="Contents/Content[@name='MetaLocation' or @name='metaLocation']">
       <meta name="location" content="{Contents/Content[@name='MetaLocation' or @name='metaLocation']}"/>
     </xsl:if>
@@ -1518,6 +1528,11 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
+      
+      <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
+        <xsl:apply-templates select="." mode="commonStyle"/>
+      </xsl:if>
+      
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -2238,7 +2253,7 @@
 
   <!-- Log Order Items-->
   <xsl:template match="Content" mode="ga-universal-impression">
-    <xsl:text>ga('ec:ec:addImpression', {</xsl:text>
+    <xsl:text>ga('ec:addImpression', {</xsl:text>
     <!-- Stock Code -->
     <xsl:text>'id': '</xsl:text>
     <xsl:call-template name="escape-js">

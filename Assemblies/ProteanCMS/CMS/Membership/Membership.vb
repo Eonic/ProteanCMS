@@ -84,7 +84,8 @@ Partial Public Class Cms
         Public Function DecryptResetLink(ByVal AccountID As Integer, ByVal EncryptedString As String) As Integer
             Try
                 EncryptedString = Protean.Tools.Text.DeAscString(EncryptedString)
-                Dim cSQL As String = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '" & EncryptedString & "' AND nDirKey = " & AccountID
+
+                Dim cSQL As String = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '" & SqlFmt(EncryptedString) & "' AND nDirKey = " & AccountID
                 Return myWeb.moDbHelper.GetDataValue(cSQL, , , 0)
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DecryptResetLink", ex, ""))
@@ -683,7 +684,7 @@ Partial Public Class Cms
                                 Dim recipientEmail As String = ""
                                 If Not oUserEmail Is Nothing Then recipientEmail = oUserEmail.InnerText
                                 Dim SubjectLine As String = "Your Registration Details"
-                                Dim oMsg As Messaging = New Messaging
+                                Dim oMsg As Messaging = New Messaging(myWeb.msException)
                                 'send an email to the new registrant
                                 If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
                                 'send an email to the webadmin
@@ -867,7 +868,7 @@ Partial Public Class Cms
 
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "GetUsersByGroup", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "GetUsersByGroup", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -910,7 +911,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "UserContacts", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "UserContacts", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -963,7 +964,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "CompanyContact", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "CompanyContact", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -989,7 +990,7 @@ Partial Public Class Cms
                     End If
 
                 Catch ex As Exception
-                    returnException(mcModuleName, "AddUserToGroup", ex, "", "", gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "AddUserToGroup", ex, "", "", gbDebug)
                     'Return Nothing
                 End Try
 
@@ -1120,7 +1121,7 @@ Partial Public Class Cms
                                         If oXform.valid Then
                                             Dim sMessage As String
 
-                                            Dim oMsg As Protean.Messaging = New Protean.Messaging
+                                            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
                                             sMessage = oMsg.emailer(oXform.Instance.SelectSingleNode("emailer/oBodyXML"),
                                                                     oXform.Instance.SelectSingleNode("emailer/xsltPath").InnerText,

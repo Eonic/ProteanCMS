@@ -74,7 +74,7 @@ Public Class Setup
 
     Protected Overridable Sub OnComponentError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs) Handles moDbHelper.OnError
         'deals with the error
-        returnException(e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug)
+        returnException(myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug)
         'close connection pooling
         If Not myWeb.moDbHelper Is Nothing Then
             Try
@@ -170,7 +170,7 @@ Public Class Setup
             oResponse = moPageXml.CreateElement("ProgressResponses")
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "open", ex, "", sProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "open", ex, "", sProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -190,7 +190,7 @@ Public Class Setup
             moPageXml = Nothing
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "close", ex, "", sProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "close", ex, "", sProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -253,10 +253,10 @@ Public Class Setup
                 goApp("JSEngineEnabled") = sJsEngine
             End If
 
-            msException = ""
+            myWeb.msException = ""
             GetSetupXml()
 
-            msException = ""
+            myWeb.msException = ""
 
             sProcessInfo = "Transform PageXML using XSLT"
 
@@ -290,7 +290,7 @@ Public Class Setup
 
         Catch ex As Exception
 
-            returnException(mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug)
 
         End Try
 
@@ -303,13 +303,13 @@ Public Class Setup
         Dim icPageWriter As StringWriter = New IO.StringWriter
         Try
 
-            msException = ""
+            myWeb.msException = ""
             GetSetupXml()
 
-            msException = ""
+            myWeb.msException = ""
 
             Dim styleFile As String = CType(goServer.MapPath("/ewcommon/xsl/admin/setup.xsl"), String)
-            msException = ""
+            myWeb.msException = ""
 
             Dim oTransform As New Protean.XmlHelper.Transform(myWeb, styleFile, False)
             oTransform.mbDebug = gbDebug
@@ -319,7 +319,7 @@ Public Class Setup
             cPageHTML = Replace(icPageWriter.ToString, "<?xml version=""1.0"" encoding=""utf-16""?>", "")
             cPageHTML = Replace(cPageHTML, "<?xml version=""1.0"" encoding=""UTF-8""?>", "")
 
-            If bReturnBlankError And Not msException = "" Then
+            If bReturnBlankError And Not myWeb.msException = "" Then
                 Return ""
             Else
                 Return cPageHTML
@@ -327,11 +327,11 @@ Public Class Setup
 
         Catch ex As Exception
 
-            returnException(mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug)
             If bReturnBlankError Then
                 Return ""
             Else
-                Return msException
+                Return myWeb.msException
             End If
         Finally
             icPageWriter.Dispose()
@@ -413,7 +413,7 @@ Public Class Setup
             oPageElmt.SetAttribute("Step", cStep)
 
         Catch ex As Exception
-            returnException(mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -616,7 +616,7 @@ Recheck:
             moPageXml.DocumentElement.AppendChild(oRoot)
             oRoot.AppendChild(oResponse)
         Catch ex As Exception
-            returnException(mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug)
         End Try
 
     End Sub
@@ -700,7 +700,7 @@ Recheck:
             Return oElmt
 
         Catch ex As Exception
-            returnException(mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug)
+            returnException(myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug)
 
             Return Nothing
         End Try
@@ -739,7 +739,7 @@ Recheck:
             AddResponse("Database Upgrade Complete")
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
             'AddResponse(ex.Message & " - " & ex.InnerException.ToString)
             AddResponse("Update Failed")
             Return False
@@ -765,7 +765,7 @@ Recheck:
 
                 'Remove all foreign keys
                 myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
-                msException = ""
+                myWeb.msException = ""
                 'If Not msException = "" Then
                 '    AddResponse(msException)
                 '    msException = ""
@@ -821,7 +821,7 @@ Recheck:
                                                     Catch ex As Exception
                                                         bRes = False
                                                         AddResponse("Error:" & ex.ToString)
-                                                        AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+                                                        AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
                                                     End Try
                                                     'If Not msException = "" Then
                                                     '    AddResponse(msException)
@@ -867,7 +867,7 @@ Recheck:
             End If
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
             AddResponse(ex.Message & " - " & ex.InnerException.ToString)
             AddResponse("Update Failed")
             Return False
@@ -960,7 +960,7 @@ Recheck:
             Return saveVersionNumber()
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
 
@@ -997,7 +997,7 @@ Recheck:
 
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
 
@@ -1067,7 +1067,7 @@ Recheck:
             Return True
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
             AddResponse("Failed to update version number - Error Condition")
             Return False
         End Try
@@ -1093,7 +1093,7 @@ Recheck:
             Return sVersionNumber
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
             AddResponse("Failed to update version number - Error Condition")
             Return False
         End Try
@@ -1237,7 +1237,7 @@ Recheck:
 
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "Migrate_Directory", ex, "", "", gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "Migrate_Directory", ex, "", "", gbDebug)
 
 
             Return False
@@ -1401,7 +1401,7 @@ Recheck:
 
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "Migrate_Content", ex, "", "", gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "Migrate_Content", ex, "", "", gbDebug)
 
 
             Return False
@@ -1521,7 +1521,7 @@ Recheck:
             Next
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "Migrate_Shipping", ex, "", "", gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "Migrate_Shipping", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -1693,7 +1693,7 @@ DoOptions:
             Next
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "Migrate_Cart", ex, "", "", gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "Migrate_Cart", ex, "", "", gbDebug)
             Return False
         End Try
 
@@ -1738,7 +1738,7 @@ DoOptions:
             Return sResult
 
         Catch ex As Exception
-            AddResponseError(ex, cProcessInfo) 'returnException(mcModuleName, "upgradeContentSchemas", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex, cProcessInfo) 'returnException(myWeb.msException, mcModuleName, "upgradeContentSchemas", ex, "", cProcessInfo, gbDebug)
             Return ""
         End Try
 
@@ -1749,12 +1749,12 @@ DoOptions:
         Try
             'AddResponse("Removing V4 Tables")
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/DropAllForeignKeys.sql"))
-            msException = ""
+            myWeb.msException = ""
             myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath("/ewcommon/sqlupdate/toV4/ClearDB.SQL"))
             AddResponse("Run File (/ewcommon/sqlupdate/toV4/ClearDB.SQL)")
             Return saveVersionNumber("0.0.0.0")
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "Rollback_Migration", ex, "", "", gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "Rollback_Migration", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -1778,7 +1778,7 @@ DoOptions:
             sSqlStr = sSqlStr & "drop table [dbo].[" & sTableName & "] "
             myWeb.moDbHelper.ExeProcessSql(sSqlStr)
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "ifTableExistsDropIt", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifTableExistsDropIt", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
     Private Sub ifSqlObjectExistsDropIt(ByRef sName As String, ByRef sObjectType As String)
@@ -1802,7 +1802,7 @@ DoOptions:
             myWeb.moDbHelper.ExeProcessSql(sSqlStr)
 
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
 
@@ -1837,7 +1837,7 @@ DoOptions:
 
         '    Return True
         'Catch ex As Exception
-        '    AddResponseError(ex) 'returnException(mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
+        '    AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
         '    Return False
         'End Try
         Dim cProcessInfo As String = "LoadShippingLocations"
@@ -1862,7 +1862,7 @@ DoOptions:
 
             Return True
         Catch ex As Exception
-            AddResponseError(ex) 'returnException(mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
+            AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ifSqlObjectExistsDropIt", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
     End Function
@@ -1959,13 +1959,14 @@ DoOptions:
         Public goConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
         Public Sub New(ByRef asetup As Protean.Setup)
+            MyBase.New(asetup.myWeb.msException)
             PerfMon.Log("Discount", "New")
             Try
                 mySetup = asetup
                 goConfig = mySetup.goConfig
                 MyBase.moPageXML = mySetup.moPageXml
             Catch ex As Exception
-                returnException(mcModuleName, "New", ex, "", "", True)
+                returnException(MyBase.msException, mcModuleName, "New", ex, "", "", True)
             End Try
         End Sub
 
@@ -1982,7 +1983,7 @@ DoOptions:
                 siteUrl = Replace(siteUrl, "-", "_")
                 Return "ew_" & siteUrl
             Catch ex As Exception
-                returnException(mcModuleName, "GuessDBName", ex, "", "", True)
+                returnException(MyBase.msException, mcModuleName, "GuessDBName", ex, "", "", True)
                 Return ""
             End Try
         End Function
@@ -2128,7 +2129,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2197,7 +2198,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2285,7 +2286,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2346,7 +2347,7 @@ DoOptions:
                 Return MyBase.moXformElmt
 
             Catch ex As Exception
-                returnException(mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
+                returnException(MyBase.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, True)
                 Return Nothing
             End Try
         End Function
@@ -2598,7 +2599,7 @@ Public Class ContentMigration
             Return True
         Catch ex As Exception
             oSetup.AddResponseError(ex)
-            'returnException(mcModuleName, "GetPage", ex, "", "", gbDebug)
+            'returnException(myWeb.msException, mcModuleName, "GetPage", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -2701,16 +2702,16 @@ Public Class ContentMigration
                         End If
                     End If
                 End If
-                If msException <> Nothing Then
+                If myWeb.msException <> Nothing Then
                     oSetup.AddResponse("Error Converting Original:")
                     oSetup.AddResponse("<code>" & cResponse.Replace("<", "&lt;").Replace(">", "&gt;") & "</code><!--" & cResponse & "-->")
-                    oSetup.AddResponse(msException)
+                    oSetup.AddResponse(myWeb.msException)
                     Exit For
                 End If
             Next
             Return True
         Catch ex As Exception
-            oSetup.AddResponseError(ex) ' returnException(mcModuleName, "DoChange", ex, "", cProcessInfo, gbDebug)
+            oSetup.AddResponseError(ex) ' returnException(myWeb.msException, mcModuleName, "DoChange", ex, "", cProcessInfo, gbDebug)
             Return False
         End Try
     End Function
@@ -2755,7 +2756,7 @@ Public Class ContentMigration
             oXmlDr.LoadXml(cContentXml.Trim)
 
             'set exception to nothing
-            msException = Nothing
+            myWeb.msException = Nothing
 
             sWriter = New IO.StringWriter
             oTransform2.Compiled = False
@@ -2791,7 +2792,7 @@ Public Class ContentMigration
             Return oXML.DocumentElement
 
         Catch exxml As XmlException
-            oSetup.AddResponseError(exxml) ' returnException(mcModuleName, "upgradeContentSchemas", exxml, "", cProcessInfo, gbDebug)
+            oSetup.AddResponseError(exxml) ' returnException(myWeb.msException, mcModuleName, "upgradeContentSchemas", exxml, "", cProcessInfo, gbDebug)
             Return oXML.DocumentElement
         Catch ex As Exception
             oSetup.AddResponseError(ex) 'cError = ex.ToString
@@ -2827,7 +2828,7 @@ Public Class ContentMigration
         Catch ex As Exception
             oSetup.AddResponseError(ex)
             Return False
-            'returnException(mcModuleName, "BuildForm", ex, "", "", gbDebug)
+            'returnException(myWeb.msException, mcModuleName, "BuildForm", ex, "", "", gbDebug)
         End Try
     End Function
 
@@ -2851,7 +2852,7 @@ Public Class ContentMigration
             'Next
             Return cResult
         Catch ex As Exception
-            oSetup.AddResponseError(ex) 'returnException(mcModuleName, "ByteToStr", ex, "", "ByteToStr", gbDebug)
+            oSetup.AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "ByteToStr", ex, "", "ByteToStr", gbDebug)
             Return ""
 
         End Try
@@ -2900,7 +2901,7 @@ Public Class ContentImport
             Return True
 
         Catch ex As Exception
-            oSetup.AddResponseError(ex) 'returnException(mcModuleName, "BuildForm", ex, "", "", gbDebug)
+            oSetup.AddResponseError(ex) 'returnException(myWeb.msException, mcModuleName, "BuildForm", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -2947,7 +2948,7 @@ Public Class ContentImport
             End If
 
         Catch ex As Exception
-            oSetup.AddResponseError(ex) '  returnException(mcModuleName, "GetPage", ex, "", "", gbDebug)
+            oSetup.AddResponseError(ex) '  returnException(myWeb.msException, mcModuleName, "GetPage", ex, "", "", gbDebug)
             Return False
         End Try
     End Function
@@ -2979,7 +2980,7 @@ Public Class ContentImport
             Dim oElmt As XmlElement
 
             For Each oElmt In oInstances.DocumentElement.SelectNodes("instance/tblContent")
-                oXForm = New xForm
+                oXForm = New xForm(myWeb.msException)
                 oXForm.load(cXFormPath)
                 oXForm.LoadInstance(oElmt)
                 Dim nNewContentId As Integer = 0
@@ -2991,7 +2992,7 @@ Public Class ContentImport
             Return True
         Catch ex As Exception
             oSetup.AddResponseError(ex)
-            Return False ' returnException(mcModuleName, "GetPage", ex, "", "", gbDebug)
+            Return False ' returnException(myWeb.msException, mcModuleName, "GetPage", ex, "", "", gbDebug)
         End Try
     End Function
 
