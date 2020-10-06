@@ -41,6 +41,9 @@ Public Class Messaging
 
     Private _language As String = ""
 
+    Public Sub New()
+
+    End Sub
     Public Sub New(ByRef sException As String)
         msException = sException
     End Sub
