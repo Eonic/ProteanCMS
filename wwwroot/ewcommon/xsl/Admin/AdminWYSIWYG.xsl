@@ -2273,6 +2273,24 @@
             </xsl:if>
 
             <xsl:choose>
+              <xsl:when test="parent::*[name()='Content']">
+                <xsl:variable name="parId" select="parent::*[name()='Content']/@id"/>
+                <li class="divider">&#160;</li>
+                <li class="updown">
+                  <a href="?ewCmd=MoveTop&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item to the top" class="btn btn-xs">
+                    <i class="fa fa-step-backward fa-rotate-90">&#160;</i>
+                  </a>
+                  <a href="?ewCmd=MoveUp&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item up by one space" class="btn btn-xs">
+                    <i class="fa fa-caret-up fa-lg">&#160;</i>
+                  </a>
+                  <a href="?ewCmd=MoveDown&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item down by one space" class="btn btn-xs">
+                    <i class="fa fa-caret-down fa-lg">&#160;</i>
+                  </a>
+                  <a href="?ewCmd=MoveBottom&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item to the bottom" class="btn btn-xs">
+                    <i class="fa fa-step-forward fa-rotate-90">&#160;</i>
+                  </a>
+                </li>
+              </xsl:when>
               <xsl:when test="$sortBy='' or $sortBy='Position'">
                 <li class="divider">&#160;</li>
                 <li class="updown">
