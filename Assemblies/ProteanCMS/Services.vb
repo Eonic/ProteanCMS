@@ -230,6 +230,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
+            Dim myWeb As New Protean.Cms(moCtx)
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
             Dim arrayItem As String
             Dim strFilePath As String() = cAttachmentFilePath.Split(",")
