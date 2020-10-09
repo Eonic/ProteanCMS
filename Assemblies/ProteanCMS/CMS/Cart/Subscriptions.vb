@@ -426,10 +426,14 @@ Partial Public Class Cms
 
                         If oDr("providerName").ToString() <> "" Then
                             Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oDr("providerName").ToString())
-                            Dim paymentStatus As String
+                            '  Dim paymentStatus As String
                             Try
-                                paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId"))
-                                oElmt.SetAttribute("paymentStatus", paymentStatus)
+                                ' paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId"))
+                                '  oElmt.SetAttribute("paymentStatus", paymentStatus)
+
+                                oElmt.AppendChild(oPayProv.Activities.UpdatePaymentStatus(myWeb, oDr("providerId")))
+
+
                             Catch ex2 As Exception
                                 oElmt.SetAttribute("paymentStatus", "error")
                             End Try
@@ -601,9 +605,9 @@ Partial Public Class Cms
                     Dim oMessager As New Protean.Messaging(myWeb.msException)
 
                     Dim PaymentActive As Boolean = False
-                    If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
-                        PaymentActive = True
-                    End If
+                    '   If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
+                    '    PaymentActive = True
+                    '    End If
 
                     Select Case Action
                         Case "renewalreminder"

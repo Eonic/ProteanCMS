@@ -611,7 +611,7 @@
           <p>
             <a target="_new" id="userGuideURL">
               <xsl:attribute name="href">
-                <xsl:text>/ewcommon/tools/eonicwebGuide.ashx?fRef=</xsl:text>
+                <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
                 <xsl:choose>
                   <xsl:when test="$ewCmd='EditContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
                     <xsl:choose>
