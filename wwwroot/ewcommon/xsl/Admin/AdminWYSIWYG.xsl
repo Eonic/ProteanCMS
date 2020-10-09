@@ -595,13 +595,13 @@
     <xsl:variable name="cContentSchemaName" select="/Page/ContentDetail/descendant::cContentSchemaName/node()"/>
     <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
     <button id="btnHelpEditing">
-      <i class="fa fa-question-circle fa-2x">
+      <i class="fas fa-graduation-cap fa-lg">
         <xsl:text> </xsl:text>
-      </i>
-      <span>
-        <xsl:text>GUIDE</xsl:text>
+      </i><br/>
+      <span>  
+        <xsl:text>USER GUIDE</xsl:text>     
       </span>
-      <i class="fa fa-chevron-left ">
+      <i class="fa fa-chevron-left">
         <xsl:text> </xsl:text>
       </i>
 	</button>

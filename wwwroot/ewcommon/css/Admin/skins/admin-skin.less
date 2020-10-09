@@ -900,34 +900,43 @@ NEW BS ADMIN HEADER
 
 
 // - GUIDE
-	#btnHelpEditing{
-		background:@admin-header-color-link;
-		border-radius:@admin-header-border-radius 0 0 @admin-header-border-radius;
-		border: none;
-		position: fixed;
-		right: 0px;
-		width: 32px;
-		height: 117px;
-		top: 40%;
-		cursor: pointer;
-		z-index: 5000;
-		outline:none;
-		color:#fff;
-		span{
-			transform:rotate(-90deg);
-			-ms-transform:rotate(-90deg); /* IE 9 */
-			-webkit-transform:rotate(-90deg); /* Safari and Chrome */
-			display:block;
-			width: 59px;
-			height: 59px;
-			font-weight:300;
-		}
-		&:hover{
-			background:lighten(@admin-header-color-link, 10)
-		}
-        .fa-question-circle{display:none}
-        i{padding:0!important}
-	}
+#btnHelpEditing {
+    background: @admin-header-color-link;
+    border-radius: @admin-header-border-radius 0 0 @admin-header-border-radius;
+    border-left: 2px solid #fff;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    border-right: 0;
+    position: fixed;
+    right: 0px;
+    width: 34px;
+    height: 180px;
+    top: 40%;
+    cursor: pointer;
+    z-index: 5000;
+    outline: none;
+    color: #fff;
+
+    span {
+        transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg); /* IE 9 */
+        -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+        display: block;
+        width: 100px;
+        height: 100px;
+        vertical-align: top;
+        padding: 0px;
+        font-weight: 300;
+    }
+
+    &:hover {
+        background: lighten(@admin-header-color-link, 10)
+    }
+
+    i {
+        padding: 0 !important
+    }
+}
 	#btnHelpEditing.open .fa-chevron-left
 	{
 		transform:rotate(-180deg);
