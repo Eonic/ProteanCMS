@@ -9637,24 +9637,24 @@
                 </td>
                 <td>
                   <xsl:choose>
-                    <xsl:when test="Subscription/Subscription/tblCartPaymentMethod/nStatus='1'">
+                    <xsl:when test="nPayMethodStatus='1'">
                       <span class="text-success">
                         <i class="far fa-lg fa-check-circle">&#160;</i>
-                        <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                        <xsl:value-of select="cPayMthdProviderName/node()"/>
                       </span>
                       <br/>
                       <small>
-                        <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                        <xsl:value-of select="cPayMthdDescription/node()"/>
                       </small>
                     </xsl:when>
                     <xsl:otherwise>
                       <span class="text-danger">
                         <i class="far fa-lg fa-times-circle">&#160;</i>
-                        <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                        <xsl:value-of select="cPayMthdProviderName/node()"/>
                       </span>
                       <br/>
                       <small>
-                        <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                        <xsl:value-of select="cPayMthdDescription/node()"/>
                       </small>
                     </xsl:otherwise>
                   </xsl:choose>
