@@ -624,35 +624,54 @@
           <xsl:text> has-alert</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      <xsl:if test="@prefix!=''">
-        <div class="input-group-addon">
-          <xsl:value-of select="@prefix"/>
-        </div>
-      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!='' or help or hint or alert">
+          <div class="input-group">
+            <xsl:if test="@prefixIcon!=''">
+              <span class="input-group-addon">
+                <i class="{@prefixIcon}">&#160;</i>
+              </span>
+            </xsl:if>
+            <xsl:if test="@prefix!=''">
+              <div class="input-group-addon">
+                <xsl:value-of select="@prefix"/>
+              </div>
+            </xsl:if>
 
-      <xsl:apply-templates select="." mode="xform_control"/>
-      <xsl:if test="@suffix!=''">
-        <div class="input-group-addon">
-          <xsl:value-of select="@suffix"/>
-        </div>
-      </xsl:if>
-      <xsl:if test="help">
-        <span class="input-group-btn">
-          <xsl:apply-templates select="." mode="infoButton"/>
-        </span>
-      </xsl:if>
-      <xsl:if test="hint">
-        <span class="input-group-btn">
-          <xsl:apply-templates select="." mode="hintButton"/>
-        </span>
-      </xsl:if>
-      <xsl:if test="alert">
-        <span class="input-group-btn">
-          <xsl:apply-templates select="." mode="alertButton"/>
-        </span>
-      </xsl:if>
-    </div>
+            <xsl:apply-templates select="." mode="xform_control"/>
+            <xsl:if test="@suffix!=''">
+              <div class="input-group-addon">
+                <xsl:value-of select="@suffix"/>
+              </div>
+            </xsl:if>
+            <xsl:if test="@suffixIcon!=''">
+              <span class="input-group-addon">
+                <i class="{@suffixIcon}">&#160;</i>
+              </span>
+            </xsl:if>
+            <xsl:if test="help">
+              <span class="input-group-btn">
+                <xsl:apply-templates select="." mode="infoButton"/>
+              </span>
+            </xsl:if>
+            <xsl:if test="hint">
+              <span class="input-group-btn">
+                <xsl:apply-templates select="." mode="hintButton"/>
+              </span>
+            </xsl:if>
+            <xsl:if test="alert">
+              <span class="input-group-btn">
+                <xsl:apply-templates select="." mode="alertButton"/>
+              </span>
+            </xsl:if>
+          </div>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="xform_control"/>
+        </xsl:otherwise>
+      </xsl:choose>
   
+    </div>
     
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
