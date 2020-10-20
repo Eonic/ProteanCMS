@@ -4309,8 +4309,9 @@ SP:
                 Case "RenewSubscription"
                     oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmRenewSubscription(myWeb.moRequest("id")), True))
                     If oADX.valid Then
-                        cCmd = "ManageUserSubscription"
-                        GoTo SP
+                        'cCmd = "AdminXForm"
+                        myWeb.msRedirectOnEnd = "/?ewCmd=UpcomingRenewals"
+                        ' GoTo SP
                     Else
                         sAdminLayout = "AdminXForm"
                     End If

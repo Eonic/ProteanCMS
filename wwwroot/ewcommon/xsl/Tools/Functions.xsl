@@ -395,11 +395,11 @@
           </xsl:otherwise>
         </xsl:choose>
 
+        <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
-        
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
@@ -434,9 +434,10 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="htmlattr"></xsl:template>
-
-
+  
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
+
+  <xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -1528,7 +1529,6 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      
       <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
         <xsl:apply-templates select="." mode="commonStyle"/>
       </xsl:if>
