@@ -2372,7 +2372,8 @@ Public Class Cms
                     Dim bResetUser As Boolean = False
 
                     If mbPreview Then
-                        mnUserId = moSession("nUserId")
+                        ' commented out because it was breaking PSMG edit jobs
+                        '      mnUserId = moSession("nUserId")
                     End If
 
                     If mnUserId = 0 Then
