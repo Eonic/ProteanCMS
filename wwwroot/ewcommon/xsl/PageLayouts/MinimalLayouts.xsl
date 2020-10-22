@@ -2562,7 +2562,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:if test="@linkType='external'">
+      <xsl:if test="@linkType='external' and starts-with(@link,'http')">
         <xsl:attribute name="rel">external</xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="." mode="displayBriefImg">

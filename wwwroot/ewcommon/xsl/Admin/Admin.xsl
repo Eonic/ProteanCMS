@@ -4564,6 +4564,14 @@
       });
     </script>
 
+    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+      <script>
+      $(function() {
+      $('.lazy').lazy();
+      });
+    </script>
+
+      
   </xsl:template>
   
 
@@ -4616,8 +4624,8 @@
                         <xsl:choose>
                             <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
                                 <xsl:if test="@root">
-                     
-                                            <xsl:variable name="imgUrl">
+
+                                  <!--xsl:variable name="imgUrl">
                                                 <xsl:call-template name="resize-image">
                                                     <xsl:with-param name="path" select="concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)"/>
                                                     <xsl:with-param name="max-width" select="'165'"/>
@@ -4641,7 +4649,7 @@
                                                         <xsl:value-of select="$imgUrl"/>
                                                     </xsl:with-param>
                                                 </xsl:call-template>
-                                            </xsl:variable>
+                                            </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
                                             <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
@@ -4659,7 +4667,7 @@
                                           <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                                                <xsl:choose>
                                                  <xsl:when test="@width&gt;125 and @height&gt;125">
-                                                   <img src="{$imgUrl}" width="{$imgWidth}" height="{$imgHeight} " class="{@class} img-responsive"/>
+                                                   <img class="lazy" src="/ewcommon/images/loadingImage.png" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                   <div class="img-overflow">
