@@ -12,7 +12,6 @@ Imports System.Net
 Imports System.Net.Sockets
 Imports System.Text
 Imports System.Text.RegularExpressions
-'Imports Protx.Vsp
 Imports System.Data.SqlClient
 Imports System.Net.Mail
 

@@ -147,7 +147,7 @@
   </xsl:template>
 
 
-  <!--<xsl:template match="*[name()='a' and not(ancestor::Page)]" mode="cleanXhtml">
+  <xsl:template match="a" mode="cleanXhtml">
 
     <xsl:element name="{name()}">
 
@@ -155,9 +155,24 @@
         <xsl:attribute name="{name()}">
 
           <xsl:choose>
-            <xsl:when test="name()='href' and not(contains(.,'http://'))">
-              <xsl:value-of select="$GuideSite"/>
-              <xsl:value-of select="." />
+            <!-- when we doing the href attribute AND contains pgid -> get proper URL -->
+            <xsl:when test="name()='href'">
+              <xsl:variable name="url" select="."/>
+              <xsl:choose>
+                <xsl:when test="contains(.,'?pgid=')">
+                  <xsl:call-template name="getHrefFromPgid">
+                    <xsl:with-param name="url" select="."/>
+                  </xsl:call-template>
+                </xsl:when>
+                <xsl:when test="//MenuItem[@url=$url and @ref!='']">
+                  <xsl:text>/ewcommon/tools/userGuide.ashx?fRef=</xsl:text>
+                  <xsl:value-of select="//MenuItem[@url=$url]/@ref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="." />
+                </xsl:otherwise>
+              </xsl:choose>
+              
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="." />
@@ -170,7 +185,8 @@
       <xsl:apply-templates mode="cleanXhtml"/>
 
     </xsl:element>
-  </xsl:template>-->
+  </xsl:template>
+  
 
   <!--Match on Menu Item - Build URL for that MenuItem-->
   <xsl:template match="MenuItem" mode="getHref">
@@ -194,7 +210,7 @@
             <xsl:value-of select="@url"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>/ewcommon/tools/eonicwebGuide.ashx?fRef=</xsl:text>
+            <xsl:text>/ewcommon/tools/userGuide.ashx?fRef=</xsl:text>
             <xsl:value-of select="//MenuItem[@url=$url]/@ref"/>
           </xsl:otherwise>
         </xsl:choose>

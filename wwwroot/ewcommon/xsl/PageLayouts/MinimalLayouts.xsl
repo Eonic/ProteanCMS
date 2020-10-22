@@ -2562,7 +2562,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:if test="@linkType='external'">
+      <xsl:if test="@linkType='external' and starts-with(@link,'http')">
         <xsl:attribute name="rel">external</xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="." mode="displayBriefImg">
@@ -9990,6 +9990,32 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <!-- Output Module -->
     <div class="clearfix VacancyList">
       <xsl:if test="@carousel='true'">
@@ -9997,7 +10023,29 @@
           <xsl:text>clearfix VacancyList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@autoplay !=''">
           <xsl:attribute name="data-autoplay">
             <xsl:value-of select="@autoplay"/>
@@ -10043,12 +10091,10 @@
             <xsl:value-of select="JobTitle/node()"/>
           </a>
         </h3>
-        <a href="{$parentURL}" title="Read More - {Headline/node()}">
+        <a href="{$parentURL}" title="Read More - {Headline/node()}" class="vacancy-image">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </a>
-        <!--Accessiblity fix : Separate adjacent links with more than whitespace-->
-        <span class="hidden">|</span>
-        <div class="pull-left">
+        <div class="vacancy-intro">
           <dl class="dl-horizontal">
             <xsl:if test="@publish and @publish!=''">
               <dt class="date">
@@ -10116,12 +10162,11 @@
             </xsl:if>
           </dl>
         </div>
-        <div class="pull-left">
+        <div class="vacancy-summary">
           <xsl:if test="Summary/node()!=''">
             <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
           </xsl:if>
         </div>
-        <div class="terminus">&#160;</div>
         <div class="entryFooter">
           <xsl:apply-templates select="." mode="displayTags"/>
           <xsl:apply-templates select="." mode="moreLink">
@@ -10147,7 +10192,7 @@
       <h1 class="content-title" itemprop="title">
         <xsl:value-of select="JobTitle/node()"/>
       </h1>
-      <div class="pull-right">
+      <div class="vacancy-intro">
         <dl class="dl-horizontal">
           <xsl:if test="@publish and @publish!=''">
             <dt class="date" itemprop="datePosted">
@@ -10214,7 +10259,7 @@
               <xsl:apply-templates select="JobOccupation/@ref" mode="cleanXhtml"/>
             </dd>
           </xsl:if>
-          <xsl:if test="JobOccupation/@name">
+          <xsl:if test="JobOccupation/@name and JobOccupation/@name!=''">
             <dt class="JobOccupation ">
               <!--Occupation-->
               <xsl:call-template name="term2086" />

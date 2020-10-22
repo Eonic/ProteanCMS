@@ -1199,7 +1199,7 @@ Check:
                 Public Event OnErrorWithWeb(ByRef myweb As Protean.Cms, ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
 
-                Dim _oAdXfm As Protean.Providers.Payment.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Payment.DefaultProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)

@@ -61,7 +61,7 @@ Namespace Providers
 
 
             Public Class Activities
-                Inherits Protean.Providers.Payment.EonicProvider.Activities
+                Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.Pay360.Activities"
                 Private myWeb As Protean.Cms

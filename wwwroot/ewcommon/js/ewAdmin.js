@@ -89,8 +89,6 @@ $(document).ready(function () {
         });
     }
 
-
-
     $('#mainMenuButton').click(function () {
 
         //$('#adminOptions').dialog('open');
@@ -1517,7 +1515,7 @@ function afterLoad() { // After the content from the user guide is loaded
     //resizeScroll();
     $('#helpBox .SubPages .subpageItem .entryFooter').remove();
     $('#helpBox .module .tl .title a').contents().unwrap(); // Remove the links around titles
-    $('#helpBox a.lightbox').lightBox();
+    $('#helpBox a.lightbox').magnificPopup({ type: 'image' });
     $('.scroll-pane-arrows').addClass('nobackground'); // Remove loading.gif
     //    $('#userguideFormToggle').click(function () {
     //        if ($('#userguideForm').hasClass('userguideFormVisibile')) {

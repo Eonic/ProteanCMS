@@ -797,24 +797,25 @@
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
     <xsl:variable name="cContentSchemaName" select="/Page/ContentDetail/descendant::cContentSchemaName/node()"/>
     <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
-    <button id="btnHelpEditing">
-      <i class="fa fa-question-circle fa-2x">
-        <xsl:text> </xsl:text>
-      </i>
-      <span>
-        <xsl:text>GUIDE</xsl:text>
-      </span>
-      <i class="fa fa-chevron-left ">
-        <xsl:text> </xsl:text>
-      </i>
-	</button>
+      <button id="btnHelpEditing">
+        <i class="fas fa-graduation-cap fa-lg">
+          <xsl:text> </xsl:text>
+        </i>
+        <br/>
+        <span>
+          <xsl:text>USER GUIDE</xsl:text>
+        </span>
+        <i class="fa fa-chevron-left">
+          <xsl:text> </xsl:text>
+        </i>
+      </button>
     <div id="divHelpBox">
       <div id="helpBox">
         <div class="scroll-pane-arrows">
           <p>
             <a target="_new" id="userGuideURL">
               <xsl:attribute name="href">
-                <xsl:text>/ewcommon/tools/eonicwebGuide.ashx?fRef=</xsl:text>
+                <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
                 <xsl:choose>
                   <xsl:when test="$ewCmd='EditContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
                     <xsl:choose>
@@ -4563,6 +4564,14 @@
       });
     </script>
 
+    <script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
+      <script>
+      $(function() {
+      $('.lazy').lazy();
+      });
+    </script>
+
+      
   </xsl:template>
   
 
@@ -4615,8 +4624,8 @@
                         <xsl:choose>
                             <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
                                 <xsl:if test="@root">
-                     
-                                            <xsl:variable name="imgUrl">
+
+                                  <!--xsl:variable name="imgUrl">
                                                 <xsl:call-template name="resize-image">
                                                     <xsl:with-param name="path" select="concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)"/>
                                                     <xsl:with-param name="max-width" select="'165'"/>
@@ -4640,7 +4649,7 @@
                                                         <xsl:value-of select="$imgUrl"/>
                                                     </xsl:with-param>
                                                 </xsl:call-template>
-                                            </xsl:variable>
+                                            </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
                                             <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
@@ -4658,7 +4667,7 @@
                                           <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                                                <xsl:choose>
                                                  <xsl:when test="@width&gt;125 and @height&gt;125">
-                                                   <img src="{$imgUrl}" width="{$imgWidth}" height="{$imgHeight} " class="{@class} img-responsive"/>
+                                                   <img class="lazy" src="/ewcommon/images/loadingImage.png" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                   <div class="img-overflow">
@@ -9405,6 +9414,7 @@
                   <xsl:text>Every </xsl:text><xsl:value-of select="@period"/><xsl:text> </xsl:text><xsl:value-of select="Content/Duration/Unit/node()"/><xsl:text>s</xsl:text>
                 </dd>
               </dl>
+              
               <xsl:if test="@paymentStatus='active' or @paymentStatus='Manual' ">
                 <div class="alert alert-success">
                   <xsl:if test="@paymentStatus='active'">
@@ -9421,7 +9431,9 @@
                   </a>
                 </div>
               </xsl:if>
+  
               <xsl:value-of select="@paymentStatus"/>
+ 
               <xsl:if test="contains(@paymentStatus,'Expires')">
                 <div class="alert alert-success">
                     Credit Card Payment needs to be processed <strong>
@@ -9431,7 +9443,6 @@
                   <xsl:value-of select="@paymentStatus"/>
                     <br/>
                     <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
-
                   <br/>
                   <br/>
                   <a href="{$appPath}?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
@@ -9599,7 +9610,6 @@
               <th>Rate</th>
               <th>Status</th>
               <th>PayProvider</th>
-              <th>Active</th>
               <th>Start Date</th>
               <th>Renewal Due</th>
             </tr>
@@ -9634,10 +9644,28 @@
                   <xsl:value-of select="cRenewalStatus/node()"/>
                 </td>
                 <td>
-                  <xsl:value-of select="cPayMthdProviderName/node()"/>
-                </td>
-                <td>
-                  <xsl:value-of select="bPaymentMethodActive/node()"/>
+                  <xsl:choose>
+                    <xsl:when test="nPayMethodStatus='1'">
+                      <span class="text-success">
+                        <i class="far fa-lg fa-check-circle">&#160;</i>
+                        <xsl:value-of select="cPayMthdProviderName/node()"/>
+                      </span>
+                      <br/>
+                      <small>
+                        <xsl:value-of select="cPayMthdDescription/node()"/>
+                      </small>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <span class="text-danger">
+                        <i class="far fa-lg fa-times-circle">&#160;</i>
+                        <xsl:value-of select="cPayMthdProviderName/node()"/>
+                      </span>
+                      <br/>
+                      <small>
+                        <xsl:value-of select="cPayMthdDescription/node()"/>
+                      </small>
+                    </xsl:otherwise>
+                  </xsl:choose>
                 </td>
                 <td>
                   <xsl:call-template name="DD_Mon_YYYY">
@@ -9720,7 +9748,6 @@
           <th>Rate</th>
           <th>Status</th>
           <th>PayProvider</th>
-          <th>Active</th>
           <th>Start Date</th>
           <th>Renewal Due</th>
           <th>Sent Date</th>
@@ -9755,10 +9782,28 @@
               <xsl:value-of select="cRenewalStatus/node()"/>
             </td>
             <td>
-              <xsl:value-of select="cPayMthdProviderName/node()"/>
-            </td>
-            <td>
-              <xsl:value-of select="bPaymentMethodActive/node()"/>
+              <xsl:choose>
+                <xsl:when test="Subscription/Subscription/tblCartPaymentMethod/nStatus='1'">
+                  <span class="text-success">
+                  <i class="far fa-lg fa-check-circle">&#160;</i>
+                    <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span>
+
+                  <br/>
+                  <small>
+                    <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                  </small>
+                </xsl:when>
+                <xsl:otherwise>
+                  <span class="text-danger">
+                  <i class="far fa-lg fa-times-circle">&#160;</i>
+                    <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span><br/>
+                  <small>
+                  <xsl:value-of select="Subscription/Subscription/tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                    </small>
+                </xsl:otherwise>
+              </xsl:choose>
             </td>
             <td>
               <xsl:call-template name="DD_Mon_YYYY">
