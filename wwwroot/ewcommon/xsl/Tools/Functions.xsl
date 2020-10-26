@@ -389,9 +389,7 @@
             <xsl:apply-templates select="." mode="commonStyle"/>
           </xsl:when>
           <xsl:otherwise>
-            <style>
-              <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
-            </style>
+            <xsl:apply-templates select="." mode="criticalPathCSS"/>         
           </xsl:otherwise>
         </xsl:choose>
 
@@ -407,6 +405,12 @@
 
       
     </html>
+  </xsl:template>
+
+  <xsl:template match="Page" mode="criticalPathCSS">
+           <style>
+              <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+            </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -3543,7 +3547,7 @@
 
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>?adminMode=<xsl:value-of select="$adminMode"/>
+              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>

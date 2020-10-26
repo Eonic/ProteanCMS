@@ -559,16 +559,18 @@ Partial Public Class fsHelper
             If Not dir.Exists Then
                 CreatePath(cFolderPath)
             End If
-            Dim myFile As FileStream = File.Create(mcStartFolder & cFolderPath & "\" & FileName)
-            myFile.Write(FileData, 0, FileData.Length)
-            myFile.Close()
-            myFile = Nothing
+            File.WriteAllBytes(mcStartFolder & cFolderPath & "\" & FileName, FileData)
+
+            'Dim myFile As FileStream = File.Create(mcStartFolder & cFolderPath & "\" & FileName)
+            'myFile.Write(FileData, 0, FileData.Length)
+            'myFile.Close()
+            'myFile = Nothing
             dir = Nothing
 
             Return cFolderPath & "/" & FileName
 
         Catch ex As Exception
-            Return ex.Message
+            Return "ERROR: " & ex.Message
         End Try
     End Function
 

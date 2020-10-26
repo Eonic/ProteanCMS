@@ -4651,7 +4651,7 @@
                                                 </xsl:call-template>
                                             </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
-                                            <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+                                            <img src="/ewcommon/images/loadingImage.png" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
                                               <span class="image-description-name">
                                                 <xsl:value-of select="@name"/>

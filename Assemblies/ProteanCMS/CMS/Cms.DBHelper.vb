@@ -954,6 +954,8 @@ Partial Public Class Cms
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
+                'we want to touch the parent table just incase we have any triggers asscoiated with it
+                'change get DateReader to getdataset and update.
                 oDr = getDataReader(sSql)
 
                 While oDr.Read
