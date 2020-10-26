@@ -8108,6 +8108,32 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <div class="SubPageMenu">
       <div>
         <xsl:if test="@stepCount != '0'">
@@ -8119,7 +8145,29 @@
             <xsl:with-param name="totalCount" select="$totalCount" />
           </xsl:apply-templates>
         </xsl:if>
-        <ul class="cols{@cols}">
+        <ul class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}">
+          <!--responsive columns-->
+          <xsl:attribute name="class">
+            <xsl:text>cols</xsl:text>
+            <xsl:choose>
+              <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+              <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+            </xsl:choose>
+            <xsl:if test="@smCol and @smCol!=''">
+              <xsl:text> sm-content-</xsl:text>
+              <xsl:value-of select="@smCol"/>
+            </xsl:if>
+            <xsl:if test="@mdCol and @mdCol!=''">
+              <xsl:text> md-content-</xsl:text>
+              <xsl:value-of select="@mdCol"/>
+            </xsl:if>
+            <xsl:text> cols</xsl:text>
+            <xsl:value-of select="@cols"/>
+            <xsl:if test="@mdCol and @mdCol!=''">
+              <xsl:text> content-cols-responsive</xsl:text>
+            </xsl:if>
+          </xsl:attribute>
+          <!--end responsive columns-->
           <xsl:if test="@homeLink='true'">
             <li class="first">
               <xsl:apply-templates select="$parentPage" mode="menuLink"/>
