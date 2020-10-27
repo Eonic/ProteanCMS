@@ -968,6 +968,12 @@ Partial Public Class Cms
                 sSql = "UPDATE tblAudit SET nStatus = " & status & " WHERE nAuditKey =" & nAuditId
                 sResult = ExeProcessSql(sSql)
 
+                'update query to fire triggers if any. This query does not change any data values.
+                If nAuditId > 0 Then
+                    sSql = "UPDATE " & getTable(objecttype) & " SET nAuditId = " & nAuditId & " WHERE nAuditId =" & nAuditId
+                    sResult = ExeProcessSql(sSql)
+                End If
+
                 If objecttype = objectTypes.ContentStructure Then
                     clearStructureCacheAll()
                 End If
