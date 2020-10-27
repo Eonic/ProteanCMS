@@ -389,17 +389,15 @@
             <xsl:apply-templates select="." mode="commonStyle"/>
           </xsl:when>
           <xsl:otherwise>
-            <style>
-              <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
-            </style>
+            <xsl:apply-templates select="." mode="criticalPathCSS"/>         
           </xsl:otherwise>
         </xsl:choose>
 
+        <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
-        
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
@@ -407,6 +405,12 @@
 
       
     </html>
+  </xsl:template>
+
+  <xsl:template match="Page" mode="criticalPathCSS">
+           <style>
+              <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+            </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -434,9 +438,10 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="htmlattr"></xsl:template>
-
-
+  
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
+
+  <xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
     <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
@@ -1528,7 +1533,6 @@
       </xsl:if>
       <xsl:apply-templates select="." mode="bodyStyle"/>
       <xsl:apply-templates select="." mode="bodyDisplay"/>
-      
       <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
         <xsl:apply-templates select="." mode="commonStyle"/>
       </xsl:if>
@@ -3543,7 +3547,7 @@
 
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>?adminMode=<xsl:value-of select="$adminMode"/>
+              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>

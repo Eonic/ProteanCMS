@@ -157,10 +157,11 @@ Partial Public Class Cms
                     End If
 
 
-                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.*, al.dDateTime as dActionDate from tblSubscription sub" _
+                    Dim sSql As String = "select dir.cDirName, dir.cDirXml, sub.*, a.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, pma.nStatus as nPayMethodStatus, pma.dExpireDate as dPayMethodExpireDate,  al.dDateTime as dActionDate from tblSubscription sub" _
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
                         & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
+                        & " inner join tblAudit pma on pma.nAuditKey = pay.nAuditId" _
                         & " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" & action & "'" _
                         & " where a.dExpireDate >= " & sqlDate(StartRangeDate) & "and a.dExpireDate <= " & sqlDate(ExpireRange) _
                         & " and sub.cRenewalStatus = 'Rolling' order by a.dExpireDate"
@@ -294,7 +295,7 @@ Partial Public Class Cms
                 End Try
             End Sub
 
-            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional excludeFixed As Boolean = False, Optional action As String = "")
+            Public Sub ListExpiredSubscriptions(ByRef oParentElmt As XmlElement, Optional expiredMarginDays As Int16 = 0, Optional renewRangePeriod As String = "", Optional renewRangeCount As Int16 = 0, Optional SubType As String = "", Optional action As String = "")
                 Try
 
                     Dim ExpireRange As String = ""
@@ -312,15 +313,21 @@ Partial Public Class Cms
                         & " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" _
                         & " inner join tblAudit a on a.nAuditKey = sub.nAuditId" _
                         & " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" _
-                        & " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" & action & "'"
-                    If ExpireRange <> "" Then
-                        sSql = sSql & " where a.dExpireDate >= " & ExpireRange & "and a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
+                        & " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" & action & "' and al.dDateTime = (SELECT MAX(dDateTime) FROM   tblActivityLog WHERE  cActivityDetail like '" & action & "' and nOtherId = sub.nSubKey ) "
+                    If renewRangeCount < 0 Then
+                        If renewRangeCount < 0 Then
+                            sSql = sSql & " where a.dExpireDate <= " & ExpireRange & "and a.dExpireDate >= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
+
+                        Else
+                            sSql = sSql & " where a.dExpireDate >= " & ExpireRange & "and a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
+                        End If
+
                     Else
                         sSql = sSql & " where a.dExpireDate <= " & sqlDate(Now().AddDays(expiredMarginDays * -1))
                     End If
 
-                    If excludeFixed Then
-                        sSql = sSql & " and sub.cRenewalStatus  <> 'Fixed'"
+                    If SubType <> "" Then
+                        sSql = sSql & " and sub.cRenewalStatus  = '" & SubType & "'"
                     End If
 
                     sSql = sSql & " and sub.cRenewalStatus <> 'Cancelled'  order by a.dExpireDate desc"
@@ -426,10 +433,14 @@ Partial Public Class Cms
 
                         If oDr("providerName").ToString() <> "" Then
                             Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, oDr("providerName").ToString())
-                            Dim paymentStatus As String
+                            '  Dim paymentStatus As String
                             Try
-                                paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId"))
-                                oElmt.SetAttribute("paymentStatus", paymentStatus)
+                                ' paymentStatus = oPayProv.Activities.CheckStatus(myWeb, oDr("providerId"))
+                                '  oElmt.SetAttribute("paymentStatus", paymentStatus)
+
+                                oElmt.AppendChild(oPayProv.Activities.UpdatePaymentStatus(myWeb, oDr("providerId")))
+
+
                             Catch ex2 As Exception
                                 oElmt.SetAttribute("paymentStatus", "error")
                             End Try
@@ -545,7 +556,7 @@ Partial Public Class Cms
                                 If oReminder.GetAttribute("action") = "expire" Then
                                     ListExpiredSubscriptions(oReminder, oReminder.GetAttribute("count"), "", 0, True)
                                 Else
-                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"), True, oReminder.GetAttribute("name"))
+                                    ListExpiredSubscriptions(oReminder, 0, oReminder.GetAttribute("period"), oReminder.GetAttribute("count"), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"))
                                 End If
 
                                 Dim subxml As XmlElement
@@ -601,9 +612,9 @@ Partial Public Class Cms
                     Dim oMessager As New Protean.Messaging(myWeb.msException)
 
                     Dim PaymentActive As Boolean = False
-                    If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
-                        PaymentActive = True
-                    End If
+                    '   If SubXml.SelectSingleNode("Subscription/@paymentStatus").InnerText = "active" Then
+                    '    PaymentActive = True
+                    '    End If
 
                     Select Case Action
                         Case "renewalreminder"

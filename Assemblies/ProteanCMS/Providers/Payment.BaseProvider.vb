@@ -88,7 +88,7 @@ Namespace Providers
                     End If
 
                     If ProviderClass = "" Then
-                        ProviderClass = "Protean.Providers.Payment.EonicProvider"
+                        ProviderClass = "Protean.Providers.Payment.DefaultProvider"
                         calledType = System.Type.GetType(ProviderClass, True)
                     Else
                         Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders")
@@ -120,7 +120,7 @@ Namespace Providers
 
         End Class
 
-        Public Class EonicProvider
+        Public Class DefaultProvider
 
             Public Sub New()
                 'do nothing
@@ -148,7 +148,7 @@ Namespace Providers
             Public Class AdminProcess
                 Inherits Cms.Admin
 
-                Dim _oAdXfm As Protean.Providers.Payment.EonicProvider.AdminXForms
+                Dim _oAdXfm As Protean.Providers.Payment.DefaultProvider.AdminXForms
 
                 Public Property oAdXfm() As Object
                     Set(ByVal value As Object)
@@ -363,6 +363,22 @@ Namespace Providers
                     End Try
 
                 End Function
+
+
+                Public Function UpdatePaymentStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentMethodKey As Long) As XmlElement
+                    Dim cProcessInfo As String = ""
+                    Try
+                        Dim oDoc As XmlElement = oWeb.moPageXml.CreateElement("PaymentMethod")
+                        oDoc.InnerXml = oWeb.moDbHelper.getObjectInstance(dbHelper.objectTypes.CartPaymentMethod, nPaymentMethodKey)
+                        Return oDoc.FirstChild
+
+                    Catch ex As Exception
+                        returnException(myWeb.msException, mcModuleName, "UpdatePaymentStatus", ex, "", cProcessInfo, gbDebug)
+                        Return Nothing
+                    End Try
+
+                End Function
+
 
                 Public Function GetMethodDetail(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""

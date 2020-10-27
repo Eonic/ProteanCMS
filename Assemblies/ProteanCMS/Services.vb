@@ -63,7 +63,7 @@ Public Class Services
             Dim SoapIps As String = moConfig("SoapIps")
 
             If LCase(moConfig("Debug")) = "on" Then
-                SoapIps = +",127.0.0.1,::1,"
+                SoapIps = SoapIps & ",127.0.0.1,::1,"
             End If
 
             Dim cIP As String = GetIpAddress(moRequest)
