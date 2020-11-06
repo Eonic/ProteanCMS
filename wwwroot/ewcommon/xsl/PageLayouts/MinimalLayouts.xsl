@@ -475,6 +475,9 @@
             <xsl:if test="@responsiveImg='true'">
               <xsl:text> module-img-responsive</xsl:text>
             </xsl:if>
+            <xsl:if test="@modAnim and @modAnim!=''">
+              <xsl:text> moduleAnimate-invisible</xsl:text>
+            </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
             <xsl:apply-templates select="." mode="themeModuleClassExtras"/>
@@ -722,6 +725,9 @@
                   <xsl:text> boxnotitle</xsl:text>
                 </xsl:if>
                 pos-<xsl:value-of select="@position"/>
+                <xsl:if test="@modAnim and @modAnim!=''">
+                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
@@ -792,6 +798,9 @@
               <xsl:text> boxnotitle</xsl:text>
             </xsl:if>
             pos-<xsl:value-of select="@position"/>
+            <xsl:if test="@modAnim and @modAnim!=''">
+              <xsl:text> moduleAnimate-invisible</xsl:text>
+            </xsl:if>
             <xsl:apply-templates select="." mode="hideScreens" />
             <xsl:apply-templates select="." mode="marginBelow" />
             <xsl:apply-templates select="." mode="themeModuleExtras"/>
@@ -1007,6 +1016,9 @@
                   <xsl:text> boxnotitle</xsl:text>
                 </xsl:if>
                 pos-<xsl:value-of select="@position"/>
+                <xsl:if test="@modAnim and @modAnim!=''">
+                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
@@ -1054,6 +1066,9 @@
             <xsl:text> boxnotitle</xsl:text>
           </xsl:if>
           pos-<xsl:value-of select="@position"/>
+          <xsl:if test="@modAnim and @modAnim!=''">
+            <xsl:text> moduleAnimate-invisible</xsl:text>
+          </xsl:if>
           <xsl:apply-templates select="." mode="hideScreens" />
           <xsl:apply-templates select="." mode="marginBelow" />
         </xsl:variable>
@@ -1131,6 +1146,9 @@
       </xsl:if>
       <xsl:text> pos-</xsl:text>
       <xsl:value-of select="@position"/>
+      <xsl:if test="@modAnim and @modAnim!=''">
+        <xsl:text> moduleAnimate-invisible</xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="." mode="hideScreens" />
       <xsl:apply-templates select="." mode="marginBelow" />
     </xsl:variable>
@@ -1201,6 +1219,9 @@
       </xsl:if>
       <xsl:text> pos-</xsl:text>
       <xsl:value-of select="@position"/>
+      <xsl:if test="@modAnim and @modAnim!=''">
+        <xsl:text> moduleAnimate-invisible</xsl:text>
+      </xsl:if>
       <xsl:apply-templates select="." mode="hideScreens" />
       <xsl:apply-templates select="." mode="marginBelow" />
     </xsl:variable>
@@ -2072,6 +2093,9 @@
           <xsl:text> boxnotitle</xsl:text>
         </xsl:if>
         pos-<xsl:value-of select="@position"/>
+        <xsl:if test="@modAnim and @modAnim!=''">
+          <xsl:text> moduleAnimate-invisible</xsl:text>
+        </xsl:if>
         <xsl:apply-templates select="." mode="hideScreens" />
         <xsl:apply-templates select="." mode="marginBelow" />
       </xsl:attribute>
@@ -2234,6 +2258,9 @@
             <xsl:attribute name="class">
               <xsl:text>module nobox pos-</xsl:text>
               <xsl:value-of select="@position"/>
+              <xsl:if test="@modAnim and @modAnim!=''">
+                <xsl:text> moduleAnimate-invisible</xsl:text>
+              </xsl:if>
               <xsl:apply-templates select="." mode="hideScreens" />
               <xsl:apply-templates select="." mode="marginBelow" />
             </xsl:attribute>
@@ -2241,6 +2268,9 @@
               <xsl:attribute name="class">
                 <xsl:text>module nobox layoutModule pos-</xsl:text>
                 <xsl:value-of select="@position"/>
+                <xsl:if test="@modAnim and @modAnim!=''">
+                  <xsl:text> moduleAnimate-invisible</xsl:text>
+                </xsl:if>
                 <xsl:apply-templates select="." mode="hideScreens" />
                 <xsl:apply-templates select="." mode="marginBelow" />
               </xsl:attribute>
