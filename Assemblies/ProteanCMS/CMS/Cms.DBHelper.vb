@@ -954,6 +954,8 @@ Partial Public Class Cms
             Dim cProcessInfo As String = ""
             Try
                 sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
+                'we want to touch the parent table just incase we have any triggers asscoiated with it
+                'change get DateReader to getdataset and update.
                 oDr = getDataReader(sSql)
 
                 While oDr.Read
@@ -965,6 +967,12 @@ Partial Public Class Cms
                 ' we could test the current status to see if the change is a valid one. I.E. live can only be hidden not moved back to approval or InProgress, but the workflow should ensure this doesn't happen.
                 sSql = "UPDATE tblAudit SET nStatus = " & status & " WHERE nAuditKey =" & nAuditId
                 sResult = ExeProcessSql(sSql)
+
+                'update query to fire triggers if any. This query does not change any data values.
+                If nAuditId > 0 Then
+                    sSql = "UPDATE " & getTable(objecttype) & " SET nAuditId = " & nAuditId & " WHERE nAuditId =" & nAuditId
+                    sResult = ExeProcessSql(sSql)
+                End If
 
                 If objecttype = objectTypes.ContentStructure Then
                     clearStructureCacheAll()

@@ -16,29 +16,32 @@ Public Class ewAjaxAdmin : Implements IHttpHandler, IRequiresSessionState
         System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
         Dim oEwCom As Protean.proteancms.com.ewAdminProxySoapClient = New Protean.proteancms.com.ewAdminProxySoapClient
         Dim sProcessInfo As String = ""
+        Dim xReader As XmlReader
+        Dim oTransform As Protean.XmlHelper.Transform
+        Dim textWriter As StringWriterWithEncoding
         Try
             oEw.InitializeVariables()
             oEw.moPageXml.CreateXmlDeclaration("1.0", "UTF-8", "yes")
-            Dim xReader As XmlReader = oEwCom.GetPageXml(context.Request("fRef")).CreateReader()
+            xReader = oEwCom.GetPageXml(context.Request("fRef")).CreateReader()
             xReader.MoveToContent()
             oEw.moPageXml.LoadXml(xReader.ReadOuterXml())
             oEw.mcEwSiteXsl = "/ewcommon/xsl/admin/guidePage.xsl"
             oEw.mbAdminMode = False
             oEw.bPageCache = False
             Dim styleFile As String = CStr(oEw.goServer.MapPath(oEw.mcEwSiteXsl))
-            Dim oTransform As New Protean.XmlHelper.Transform(oEw, styleFile, False, , False)
-
-            Dim textWriter As New StringWriterWithEncoding(System.Text.Encoding.UTF8)
-
+            oTransform = New Protean.XmlHelper.Transform(oEw, styleFile, False, , False)
+            textWriter = New StringWriterWithEncoding(System.Text.Encoding.UTF8)
             oTransform.ProcessTimed(oEw.moPageXml, textWriter)
-
             oEw.moResponse.Write(textWriter.ToString())
 
-
-            ' oEw.GetPageHTML()
-            oEw = Nothing
         Catch ex As Exception
             context.Response.Write(ex.Message & ex.StackTrace)
+        Finally
+            oEwCom = Nothing
+            xReader = Nothing
+            textWriter = Nothing
+            oTransform = Nothing
+            oEw = Nothing
         End Try
 
 

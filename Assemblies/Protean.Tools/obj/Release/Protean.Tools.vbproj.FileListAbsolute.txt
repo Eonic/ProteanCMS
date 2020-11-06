@@ -85,9 +85,7 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pd
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\tidy.x86.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\DocumentFormat.OpenXml.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-x64.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\tidy.x64.dll
@@ -146,3 +144,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.v
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Tinify.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET-Q8-AnyCPU.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Release\Magick.NET.Core.xml

@@ -794,9 +794,7 @@
   <!--   ################################################   User Guide  ##################################################   -->
   <!-- -->
     <xsl:template match="Page" mode="UserGuide">
-    <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
-    <xsl:variable name="cContentSchemaName" select="/Page/ContentDetail/descendant::cContentSchemaName/node()"/>
-    <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
+
       <button id="btnHelpEditing">
         <i class="fas fa-graduation-cap fa-lg">
           <xsl:text> </xsl:text>
@@ -813,7 +811,19 @@
       <div id="helpBox">
         <div class="scroll-pane-arrows">
           <p>
-            <a target="_new" id="userGuideURL">
+            <xsl:apply-templates select="." mode="UserGuideContent"/>
+          </p>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
+  
+  
+  <xsl:template match="Page" mode="UserGuideContent">
+    <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
+    <xsl:variable name="cContentSchemaName" select="/Page/ContentDetail/descendant::cContentSchemaName/node()"/>
+    <xsl:variable name="moduleType" select="/Page/ContentDetail/descendant::Content/@moduleType"/>
+    <a target="_new" id="userGuideURL">
               <xsl:attribute name="href">
                 <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
                 <xsl:choose>
@@ -840,10 +850,7 @@
               </xsl:attribute>
               <xsl:text>User Guide</xsl:text>
             </a>
-          </p>
-        </div>
-      </div>
-    </div>
+  
   </xsl:template>
 
   <!-- -->
@@ -4651,7 +4658,7 @@
                                                 </xsl:call-template>
                                             </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
-                                            <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+                                            <img src="/ewcommon/images/loadingImage.png" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
                                               <span class="image-description-name">
                                                 <xsl:value-of select="@name"/>

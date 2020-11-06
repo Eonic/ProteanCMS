@@ -2003,16 +2003,21 @@ Partial Public Module xmlTools
 
                         Dim br As Optimization.BundleResponse = Bundles.GetBundleFor(TargetFile).GenerateBundleResponse(BundlesCtx)
                         Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(br.Content)
-                        fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
+                        'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile.TrimStart("~")))
 
-                        scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & fsh.SaveFile("script.js", TargetFile, info)
+                        scriptFile = fsh.SaveFile("script.js", TargetFile, info)
 
-                        If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "js" & TargetFile.TrimStart("~")) Then
+                        If scriptFile.StartsWith("ERROR: ") Then
+                            myWeb.bPageCache = False
+                        End If
+
+                        If scriptFile.StartsWith(TargetFile.TrimStart("~")) Then
                             'file has been saved successfully.
+                            scriptFile = "/" & myWeb.moConfig("ProjectPath") & "js" & scriptFile
                             myWeb.moCtx.Application.Set(TargetFile, scriptFile)
                         Else
                             'we have a file save error we should try again next request.
-
+                            myWeb.bPageCache = False
                         End If
 
                         sReturnString = scriptFile
@@ -2095,13 +2100,18 @@ Partial Public Module xmlTools
                             'sReturnError = "error getting " & oCssWebClient.FullCssFile
 
                             Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
-                            fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
+                            'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
+                            'TS commented out as modified save file to overwrite by using WriteAllBytes
+
                             scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+
+                            If scriptFile.StartsWith("ERROR: ") Then
+                                myWeb.bPageCache = False
+                            End If
 
                             If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                 sReturnString += scriptFile
                             Else
-
                                 myWeb.bPageCache = False
                                 sReturnString += "/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile
                             End If
@@ -2112,9 +2122,13 @@ Partial Public Module xmlTools
                                 scriptFile = String.Format("{0}/style{1}.css", TargetFile, i)
 
                                 info = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.CssSplits(i))
-                                fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
-
+                                'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~") & "/" & String.Format("style{0}.css", i)))
+                                'TS commented out as modified save file to overwrite by using WriteAllBytes
                                 scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
+
+                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
+                                    myWeb.bPageCache = False
+                                End If
 
                                 If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
                                     'file has been saved successfully.
@@ -2124,6 +2138,7 @@ Partial Public Module xmlTools
                                     sReturnError += scriptFile
                                 End If
                             Next
+
                             If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then
                                 myWeb.moCtx.Application.Set(TargetFile, sReturnString)
                             Else
@@ -2139,7 +2154,6 @@ Partial Public Module xmlTools
                         Else
                             sReturnString = "Admin Account logon Failure"
                         End If
-
                     End If
                 End If
 

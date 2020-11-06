@@ -24,14 +24,14 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         oPcms = New Protean.Cms
         oPcms.mbAdminMode = True
         Dim oXsltExt As Protean.xsltExtensions = New Protean.xsltExtensions(oPcms)
-
+        Dim xFilePath As System.IO.FileInfo
         Try
             If sPrefix = "" Then
                 sPrefix = "/" & maxWidth & "x" & maxHeight & "/"
             End If
             Dim src As String = oXsltExt.ResizeImage(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop)
             context.Response.ContentType = "application/jpeg"
-            Dim xFilePath As New System.IO.FileInfo(context.Server.MapPath(src))
+            xFilePath = New System.IO.FileInfo(context.Server.MapPath(src))
             Select Case xFilePath.Extension
                 Case ".png"
                     context.Response.ContentType = "application/png"
@@ -41,17 +41,15 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
             context.Response.ContentType = "application/jpeg"
             context.Response.AddHeader("Content-Disposition", "inline;filename=" & xFilePath.Name)
             context.Response.WriteFile(context.Server.MapPath(src))
-            context.Response.End()
-	    
-xFilePath = nothing
-oPcms = Nothing
-
         Catch ex As Exception
-
             context.Response.Write(ex.InnerException)
-
+        Finally
+            context.Response.Flush()
+            context.Response.SuppressContent = True
+            context.ApplicationInstance.CompleteRequest()
+            xFilePath = Nothing
+            oPcms = Nothing
         End Try
-
 
     End Sub
 
