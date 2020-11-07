@@ -362,6 +362,11 @@ Public Class IndexerAsync
 
                 oIndexWriter = New IndexWriter(indexDir, New StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen) 'create the index writer
 
+                'TS added to limit memory usage
+                oIndexWriter.SetRAMBufferSizeMB(500)
+                oIndexWriter.SetMaxBufferedDeleteTerms(50)
+                oIndexWriter.SetMaxBufferedDocs(100)
+
             Else
                 Err.Raise(108, , "Indexer did not validate")
 
@@ -438,6 +443,7 @@ Public Class IndexerAsync
             EmptyFolder(mcIndexReadFolder)
             CopyFolderContents(mcIndexWriteFolder, mcIndexReadFolder)
             oImp.UndoImpersonation()
+            oIndexWriter = Nothing
         Catch ex As Exception
             cExError &= ex.ToString & vbCrLf
             returnException(myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug)

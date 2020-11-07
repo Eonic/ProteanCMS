@@ -823,11 +823,15 @@ Public Class XmlHelper
                     Dim oXmlNodeReader As XmlNodeReader = New XmlNodeReader(oXml)
                     Dim xpathDoc As XPath.XPathDocument = New XPath.XPathDocument(oXmlNodeReader)
 
-                    If myWeb.msException = "" Then
-                        'Run transformation
+                    If myWeb Is Nothing Then
                         oStyle.Transform(xpathDoc, xsltArgs, oResponse.OutputStream, Nothing)
                     Else
-                        oResponse.Write(myWeb.msException)
+                        If myWeb.msException = "" Then
+                            'Run transformation
+                            oStyle.Transform(xpathDoc, xsltArgs, oResponse.OutputStream, Nothing)
+                        Else
+                            oResponse.Write(myWeb.msException)
+                        End If
                     End If
 
                     oXmlNodeReader.Close()

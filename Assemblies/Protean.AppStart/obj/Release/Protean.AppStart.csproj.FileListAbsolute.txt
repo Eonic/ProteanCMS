@@ -27,3 +27,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\bin\Release\ru-ru\JavaSc
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.AppStart\obj\Release\Protean.AppStart.csprojAssemblyReference.cache
