@@ -559,15 +559,20 @@ Partial Public Class fsHelper
             If Not dir.Exists Then
                 CreatePath(cFolderPath)
             End If
-            File.WriteAllBytes(mcStartFolder & cFolderPath & "\" & FileName, FileData)
+            'this saves the entire file to memory and kills the server occasionaly.
+            'File.WriteAllBytes(mcStartFolder & cFolderPath & "\" & FileName, FileData)
 
-            'Dim myFile As FileStream = File.Create(mcStartFolder & cFolderPath & "\" & FileName)
-            'myFile.Write(FileData, 0, FileData.Length)
-            'myFile.Close()
-            'myFile = Nothing
-            dir = Nothing
-
-            Return cFolderPath & "/" & FileName
+            Dim myFile As FileStream = File.Create(mcStartFolder & cFolderPath & "\" & FileName)
+            Try
+                myFile.Write(FileData, 0, FileData.Length)
+                myFile.Close()
+                myFile = Nothing
+                dir = Nothing
+                Return cFolderPath & "/" & FileName
+            Catch ex As Exception
+                'We assume if failing to write then the file is being written allready by another process therefore we just return the filename as usual.
+                Return cFolderPath & "/" & FileName
+            End Try
 
         Catch ex As Exception
             Return "ERROR: " & ex.Message

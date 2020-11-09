@@ -1678,9 +1678,22 @@ Public Class Cms
 
                 Me.SetPageLanguage()
 
+                Dim specialPageId As Long = 0
+                If mnPageId = gnPageNotFoundId Or
+                    mnPageId = gnPageAccessDeniedId Or
+                    mnPageId = gnPageLoginRequiredId Or
+                    mnPageId = gnPageErrorId Then
+                    specialPageId = mnPageId
+                End If
+
                 'add the page content
                 'TS moved this above setting page attributes as it now sets page id on page versions.
                 GetStructureXML("Site")
+
+                'if specialPageId then reset.
+                If specialPageId > 0 Then
+                    mnPageId = specialPageId
+                End If
 
                 If msException = "" Then
 
