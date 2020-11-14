@@ -19,3 +19,11 @@ D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\ReplaceProvide
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
 D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\ReplaceProvider.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\ReplaceProvider.pdb
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Release\Microsoft.Web.Iis.Rewrite.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csprojAssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CopyComplete
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb

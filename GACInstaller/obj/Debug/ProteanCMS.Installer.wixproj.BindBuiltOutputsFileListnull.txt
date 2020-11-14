@@ -1,2 +1,2 @@
-D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Debug\ProteanCMSInstaller.msi
-D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Debug\ProteanCMSInstaller.wixpdb
+C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Debug\ProteanCMSInstaller.msi
+C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Debug\ProteanCMSInstaller.wixpdb
