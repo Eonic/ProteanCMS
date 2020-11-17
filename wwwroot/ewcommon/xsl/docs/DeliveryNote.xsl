@@ -155,6 +155,7 @@
               <fo:table-row border-bottom-color="#000000" border-bottom-width=".25cm" border-bottom-style="solid">
                 <fo:table-cell padding="6pt" border-bottom="0.5pt solid black">
                   <fo:block text-align="left" color="#000000">
+                    Shipping:
                   </fo:block>
                 </fo:table-cell>
                 <fo:table-cell padding="6pt" border-bottom="0.5pt solid black">

@@ -49,7 +49,9 @@
             </xsl:for-each>
             <xsl:if test="@shippingCost &gt; 0">
                 <tr>
-                    <td colspan="4">&#160;</td>
+                    <td colspan="3">
+                      <xsl:value-of select="@shippingDesc"/>
+                    </td>
                     <td class="shipping heading" align="right">
                         <font face="verdana" size="2">
                             <xsl:choose>
