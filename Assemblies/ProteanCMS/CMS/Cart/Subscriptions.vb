@@ -1461,7 +1461,7 @@ RedoCheck:
                 End Try
             End Sub
 
-            Public Sub CancelSubscription(ByVal nId As Integer, Optional cReason As String = "")
+            Public Sub CancelSubscription(ByVal nId As Integer, Optional cReason As String = "", Optional bEmailCustomer As Boolean = True)
                 Try
 
                     Dim SubInstance As New XmlDocument()
@@ -1491,7 +1491,7 @@ RedoCheck:
                     ExpireSubscriptionGroups(nId)
 
                     'Email the site owner to inform of cancelation !!!
-                    If oSubConfig("CancellationXSL") <> "" Then
+                    If oSubConfig("CancellationXSL") <> "" And bEmailCustomer Then
                         Dim oMessager As New Protean.Messaging(myWeb.msException)
                         Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
                         Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText

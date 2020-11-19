@@ -7838,6 +7838,10 @@ Public Class Cms
                                     mcPageLanguage = oElmt.GetAttribute("code")
                                     mcPageLanguageUrlPrefix = httpPrefix & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
                                     sCurrency = oElmt.GetAttribute("currency")
+
+                                    'remove lang from path
+                                    mcPagePath = mcPagePath.Replace("/" & oElmt.GetAttribute("identifier"), "/")
+                                    mcPagePath = mcPagePath.Replace("//", "/")
                                 End If
                             End If
                         Case "page"
@@ -8307,17 +8311,24 @@ Public Class Cms
 
             If sError = "1" Then
 
-                Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
-                '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
 
-                'Else
-                '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                '  Err.Raise(1001, "File not saved", cProcessInfo)
-                '   End If
+                    Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+
+                    '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
+
+                    'Else
+                    '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    '  Err.Raise(1001, "File not saved", cProcessInfo)
+                    '   End If
+                Else
+                    cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                End If
 
             Else
-                cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If
 
             oFS = Nothing
@@ -8334,7 +8345,7 @@ Public Class Cms
         Dim cProcessInfo As String = ""
         Try
 
-            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
+            moFSHelper.DeleteFolderContents(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)

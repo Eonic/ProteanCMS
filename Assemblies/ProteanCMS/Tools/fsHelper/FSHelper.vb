@@ -325,54 +325,69 @@ Partial Public Class fsHelper
         cFolderPath = Replace(cFolderPath, "\", "/")
         Dim aFolderNames() As String = cFolderPath.Split("/")
         Dim i As Integer
-
+        Dim tempFolder As String = ""
         Try
-            Dim startDir As String
-            If mcRoot = "../" Then
-                mcRoot = ""
-                startDir = goServer.MapPath("/")
-                Dim newDir As New DirectoryInfo(startDir)
-                startDir = newDir.Parent.FullName
-            Else
-                startDir = goServer.MapPath("/" & mcRoot)
-            End If
 
-            'check startfolder exists
-            Dim rootDir As New DirectoryInfo(startDir)
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-            If Not rootDir.Exists Then
-                Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
-                rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
-            End If
 
-            If mcStartFolder = "" Then mcStartFolder = startDir
-            Dim workingFolder As String = mcStartFolder
-            Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
-            startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
-            Dim startfld As New DirectoryInfo(mcStartFolder)
-            If Not startfld.Exists Then
-                rootDir.CreateSubdirectory(startFolderName)
-            End If
 
-            For i = 0 To UBound(aFolderNames)
-                If aFolderNames(i) <> "" Then
-                    Dim dir1 As New DirectoryInfo(workingFolder)
-                    If dir1.Exists Then
-                        Dim dir2 As New DirectoryInfo(workingFolder.TrimEnd("\") & "\" & aFolderNames(i))
-                        If Not dir2.Exists Then
-                            dir1.CreateSubdirectory(CStr(aFolderNames(i)))
-                        End If
-                    End If
-                    workingFolder = workingFolder & "\" & aFolderNames(i)
+
+                Dim startDir As String
+                If mcRoot = "../" Then
+                    mcRoot = ""
+                    startDir = goServer.MapPath("/")
+                    Dim newDir As New DirectoryInfo(startDir)
+                    startDir = newDir.Parent.FullName
+                Else
+                    startDir = goServer.MapPath("/" & mcRoot)
                 End If
-            Next
 
-            PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+                'check startfolder exists
+                Dim rootDir As New DirectoryInfo(startDir)
 
-            Return "1"
+                If Not rootDir.Exists Then
+                    Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
+                    rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
+                End If
+
+                If mcStartFolder = "" Then mcStartFolder = startDir
+                Dim workingFolder As String = mcStartFolder
+                Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
+                startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
+                Dim startfld As New DirectoryInfo(mcStartFolder)
+                If Not startfld.Exists Then
+                    rootDir.CreateSubdirectory(startFolderName)
+                End If
+
+                For i = 0 To UBound(aFolderNames)
+                    If aFolderNames(i) <> "" Then
+                        Dim dir1 As New DirectoryInfo(workingFolder)
+                        If dir1.Exists Then
+                            tempFolder = workingFolder.TrimEnd("\") & "\" & aFolderNames(i)
+                            Dim dir2 As New DirectoryInfo(tempFolder)
+                            If Not dir2.Exists Then
+                                dir1.CreateSubdirectory(aFolderNames(i))
+                            End If
+                        End If
+                        workingFolder = workingFolder & "\" & aFolderNames(i)
+                    End If
+                Next
+
+                PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+                oImp.UndoImpersonation()
+
+                Return "1"
+
+            Else
+                Return "Server admin permissions are not configured"
+            End If
+
 
         Catch ex As Exception
-            Return ex.Message & " - " & cFolderPath
+            Return ex.Message & " - " & tempFolder & "<br/>" & ex.StackTrace
+
         End Try
 
     End Function
@@ -458,6 +473,41 @@ Partial Public Class fsHelper
         End Try
 
     End Function
+
+
+    Public Function DeleteFolderContents(ByVal cFolderName As String, ByVal cFolderPath As String) As String
+        PerfMon.Log("fsHelper", "DeleteFolder")
+        'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
+        Try
+
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                Dim FolderName As String = mcStartFolder & cFolderPath & "\" & cFolderName
+                Dim dir As New DirectoryInfo(FolderName)
+
+                If dir.Exists Then
+                    Dim f As FileInfo
+                    For Each f In dir.GetFiles()
+                        f.Delete()
+                    Next f
+                    Dim d As DirectoryInfo
+                    For Each d In dir.GetDirectories()
+                        d.Delete(True)
+                    Next d
+                Else
+                    Return "this folder does not exist"
+                End If
+                oImp.UndoImpersonation()
+            Else
+                Return "Server admin permissions are not configured"
+            End If
+            Return "1"
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+
+    End Function
+
 
     Public Function VirtualFileExists(ByVal cVirtualPath As String) As Integer
         Try
