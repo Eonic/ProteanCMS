@@ -4403,12 +4403,12 @@ Partial Public Class Cms
 
                     ' Optionally set cardholder name over billing address
                     If moCartConfig("CardholderName") = "on" Then
-                        oXform.addInput(oFrmGroup, "creditCard/cardholder", False, "Name of cardholder", "textbox required")
+                        oXform.addInput(oFrmGroup, "creditCard/cardholder", False, "Name of cardholder", "textbox required", "cc-name")
                         oXform.addNote("creditCard/cardholder", noteTypes.Hint, "<span class=""hint-trans-cardholder"">Enter name exactly as it appears on the card</span>")
 
                     End If
 
-                    oXform.addSelect1(oFrmGroup, "creditCard/type", False, "Card Type", "required", Protean.xForm.ApperanceTypes.Full)
+                    oXform.addSelect1(oFrmGroup, "creditCard/type", False, "Card Type", "required", Protean.xForm.ApperanceTypes.Full, "cc-type")
                     aCardTypes = Split(cardTypes, ",")
                     For i = 0 To UBound(aCardTypes)
                         aCardTypes2 = Split(aCardTypes(i), ":")
@@ -4417,10 +4417,10 @@ Partial Public Class Cms
                     Dim oGroup As XmlElement
                     Select Case myWeb.moConfig("cssFramework")
                         Case "bs3"
-                            oXform.addInput(oFrmGroup, "creditCard/number", False, "Card Number", "textbox required")
+                            oXform.addInput(oFrmGroup, "creditCard/number", False, "Card Number", "textbox required", "cc-number")
                             '  oGroup = oXform.addGroup(oFrmGroup, "cardDetails", "inline cardDetails")
-                            oXform.addInput(oFrmGroup, "creditCard/expireDate", False, "Expire Date", "ccExpire required")
-                            oXform.addInput(oFrmGroup, "creditCard/CV2", False, "Security Code (CV2)", "Cv2 textbox singleword required")
+                            oXform.addInput(oFrmGroup, "creditCard/expireDate", False, "Expire Date", "ccExpire required", "cc-exp")
+                            oXform.addInput(oFrmGroup, "creditCard/CV2", False, "Security Code (CV2)", "Cv2 textbox singleword required", "cc-csc")
                             oXform.addNote("creditCard/CV2", noteTypes.Hint, "Please enter the last 3 digits printed on the signature strip on the back of your card.", False, "cv2hint")
                             oXform.addInput(oFrmGroup, "creditCard/issueDate", False, "Issue Date", "ccIssue")
                             'oXform.addNote("creditCard/issueDate", noteTypes.Hint, "If required")
