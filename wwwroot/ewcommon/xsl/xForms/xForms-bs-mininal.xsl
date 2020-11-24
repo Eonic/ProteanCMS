@@ -1355,7 +1355,7 @@
     <xsl:variable name="formName">
       <xsl:value-of select="ancestor::Content/model/submission/@id"/>
     </xsl:variable>
-    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month">
+    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month" autocomplete="cc-exp-month">
       <option value="" selected=""/>
       <option value="01">01</option>
       <option value="02">02</option>
@@ -1370,7 +1370,7 @@
       <option value="11">11</option>
       <option value="12">12</option>
     </select>
-    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year">
+    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year" autocomplete="cc-exp-year">
       <option value="" selected=""/>
       <xsl:call-template name="getYearDropDown">
         <xsl:with-param name="i" select="0"/>
@@ -1379,7 +1379,7 @@
         <xsl:with-param name="year" select="substring(/Page/Request/ServerVariables/Item[@name='Date']/node(),1,4)"/>
       </xsl:call-template>
     </select>
-    <input type="hidden" name="{$ref}" value="{value/node()}"/>
+    <input type="hidden" name="{$ref}" value="{value/node()}" autocomplete="{@autocomplete}"/>
     <script type="text/javascript">
       loaddatemmyy('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
     </script>
@@ -1393,7 +1393,7 @@
     <xsl:variable name="formName">
       <xsl:value-of select="ancestor::Content/model/submission/@id"/>
     </xsl:variable>
-    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month">
+    <select name="YGJNO_{$ref}" id="month_{$ref}" onchange="makedatemmyyObfuscated('{$formName}','{$ref}')" class="form-control month" autocomplete="off">
       <option value="" selected=""/>
       <option value="01">01</option>
       <option value="02">02</option>
@@ -1408,7 +1408,7 @@
       <option value="11">11</option>
       <option value="12">12</option>
     </select>
-    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year">
+    <select name="FJFKT_{$ref}" onchange="makedatemmyyObfuscated('{$formName}','{$ref}')" class="form-control year" autocomplete="off">
       <option value="" selected=""/>
       <xsl:call-template name="getYearDropDown">
         <xsl:with-param name="i" select="0"/>
@@ -1417,9 +1417,9 @@
         <xsl:with-param name="year" select="substring(/Page/Request/ServerVariables/Item[@name='Date']/node(),1,4)"/>
       </xsl:call-template>
     </select>
-    <input type="hidden" name="{$ref}" value="{value/node()}"/>
+    <input type="hidden" name="{$ref}" value="{value/node()}" autocomplete="off"/>
     <script type="text/javascript">
-      loaddatemmyy('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
+      loaddatemmyyObfuscated('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
     </script>
   </xsl:template>
 
