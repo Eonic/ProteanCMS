@@ -9,7 +9,7 @@
         <cStructName/>
         <cStructDescription>
           <!-- SEE COMMENTS IN BIND -->
-          <DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true"/>
+          <DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false"/>
           <Images>
             <img class="icon" />
             <img class="thumbnail" />

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+				xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" 
+				xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew" 
+				xmlns:v-if="http://example.com/xml/v-if" xmlns:v-on="http://example.com/xml/v-on">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -163,7 +166,13 @@
         <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js</xsl:text>
+        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+
+		<!--vue js-->
+		<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+		<xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -3848,10 +3857,61 @@
   <!-- -->
   <!--   ##################  PageSettings  ##############################   -->
   <!-- -->
-  <xsl:template match="Page[@layout='PageSettings']" mode="Admin">
-    <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>  
-    <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
-  </xsl:template>
+	<xsl:template match="Page[@layout='PageSettings']" mode="Admin">
+		<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+		<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+		<div id="redirectModal" class="redirectModal hidden">
+			<div v-if="showRedirectModal">
+				<transition name="modal">
+					<div class="modal-mask">
+						<div class="modal-wrapper">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" v-on:click="showRedirectModal=false">
+											<span aria-hidden="true">&#215;</span>
+										</button>
+										<h4 class="modal-title">Do you want to create a redirect ?</h4>
+									</div>
+									<div class="modal-body">
+										<div>
+											<ul>
+												<li class="md-radio">
+													<input name="redirectType" type="radio" value="301" checked="true"/>
+													<label> We will perminently redirect</label>
+												</li>
+												<li class="md-radio">
+													<input name="redirectType" type="radio" value="302" />
+													<label> We will temporarily redirect</label>
+												</li>
+												<li class="md-radio">
+													<input name="redirectType" type="radio" value="404" />
+													<label> No, the old url will show page not found</label>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<div>
+											<h4>
+												Are you sure you want to continue ?
+											</h4>
+										</div>
+										<button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>
+										<button type="button" id="addRedirectbtn" name="addRedirectbtn"
+										    onClick="editPage.createRedirects();" 
+											class="btn btn-primary">
+											Yes
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</transition>
+			</div>
+		</div>
+	</xsl:template>
 
   <!-- -->
   <!--   ##################  PageSettings  ##############################   -->

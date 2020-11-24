@@ -1645,7 +1645,7 @@ Partial Public Class Cms
                         End If
                     End If
 
-
+                    cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
@@ -1665,6 +1665,9 @@ Partial Public Class Cms
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
 
+                                If cName <> MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText Then
+                                    myWeb.mcBehaviourEditPageCommand = "ManageRedirects"
+                                End If
                                 'Insert code to create redirects if required.
 
                                 'Options to be 

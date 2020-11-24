@@ -1369,7 +1369,7 @@ ProcessFlow:
                                     oPageDetail.RemoveAll()
                                 End If
 
-                            Else
+                            ElseIf myWeb.mcBehaviourEditPageCommand <> "ManageRedirects" Then
 
                                 ' Bespoke behaviour - is it edit or add
                                 If myWeb.moRequest("pgid") > 0 Then
@@ -1383,7 +1383,6 @@ ProcessFlow:
                                 Dim nCloneId As Long = Tools.Xml.getNodeValueByType(moAdXfm.Instance, "//nCloneStructId", Tools.Xml.XmlDataType.TypeNumber, 0)
 
                                 ' Force a redirect
-
                                 myWeb.moSession("ewCmd") = mcEwCmd
                                 myWeb.moSession("pgid") = myWeb.mnPageId
 
