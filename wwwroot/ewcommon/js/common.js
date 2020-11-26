@@ -1067,15 +1067,28 @@ function makedatemmyy(formName, dateField) {
     document.forms[formName].elements[dateField].value = document.forms[formName].elements['month_' + dateField].value + " " + document.forms[formName].elements['year_' + dateField].value;
 }
 
-function loaddatemmyy(formName, dateField) {
-    dateStr = document.forms[formName].elements[dateField].value
-    dateArr = dateStr.split(" ", 4)
+function makedatemmyyObfuscated(formName, dateField) {
+    document.forms[formName].elements[dateField].value = document.forms[formName].elements['YGJNO_' + dateField].value + " " + document.forms[formName].elements['FJFKT_' + dateField].value;
+}
 
-    document.forms[formName].elements['month_' + dateField].value = dateArr[0]
-    document.forms[formName].elements['year_' + dateField].value = dateArr[1]
+function loaddatemmyy(formName, dateField) {
+    dateStr = document.forms[formName].elements[dateField].value;
+    dateArr = dateStr.split(" ", 4);
+
+    document.forms[formName].elements['month_' + dateField].value = dateArr[0];
+    document.forms[formName].elements['year_' + dateField].value = dateArr[1];
     // alert(document.forms[formName].elements['month_' + dateField].selectedIndex)
 }
 
+
+function loaddatemmyyObfuscated(formName, dateField) {
+    dateStr = document.forms[formName].elements[dateField].value;
+    dateArr = dateStr.split(" ", 4);
+
+    document.forms[formName].elements['YGJNO_' + dateField].value = dateArr[0];
+    document.forms[formName].elements['FJFKT_' + dateField].value = dateArr[1];
+    // alert(document.forms[formName].elements['month_' + dateField].selectedIndex)
+}
 
 //define objects for the main list
 function ListItem(nvalue, description) {

@@ -1894,8 +1894,20 @@ Public Class xForm
         End Try
     End Function
 
-
     Function addInput(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal sClass As String) As XmlElement
+
+        Dim cProcessInfo As String = ""
+        Try
+
+            Return addInput(oContextNode, sRef, bBound, sLabel, sClass, "")
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+
+    Function addInput(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal sClass As String, ByVal sAutoComplete As String) As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -1908,6 +1920,9 @@ Public Class xForm
             End If
             If sClass <> "" Then
                 oIptElmt.SetAttribute("class", sClass)
+            End If
+            If sAutoComplete <> "" Then
+                oIptElmt.SetAttribute("autocomplete", sAutoComplete)
             End If
             If sLabel <> "" Then
                 oLabelElmt = moPageXML.CreateElement("label")
@@ -2142,6 +2157,39 @@ Public Class xForm
     End Function
 
     Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByVal sClass As String = "", Optional ByVal nAppearance As ApperanceTypes = ApperanceTypes.Minimal) As XmlElement
+        Dim cProcessInfo As String = ""
+        Try
+            Return addSelect1(oContextNode, sRef, bBound, sLabel, sClass, nAppearance, "")
+
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+    Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, Optional ByVal sClass As String = "") As XmlElement
+        Dim cProcessInfo As String = ""
+        Try
+            Return addSelect1(oContextNode, sRef, bBound, sLabel, sClass, ApperanceTypes.Minimal, "")
+
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+    Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String) As XmlElement
+        Dim cProcessInfo As String = ""
+        Try
+            Return addSelect1(oContextNode, sRef, bBound, sLabel, "", ApperanceTypes.Minimal, "")
+
+        Catch ex As Exception
+            returnException(msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug)
+            Return Nothing
+        End Try
+    End Function
+
+    Function addSelect1(ByRef oContextNode As XmlElement, ByVal sRef As String, ByVal bBound As Boolean, ByVal sLabel As String, ByVal sClass As String, ByVal nAppearance As ApperanceTypes, ByVal sAutoComplete As String) As XmlElement
         Dim oIptElmt As XmlElement
         Dim oLabelElmt As XmlElement
         Dim cProcessInfo As String = ""
@@ -2154,6 +2202,9 @@ Public Class xForm
             End If
             If sClass <> "" Then
                 oIptElmt.SetAttribute("class", sClass)
+            End If
+            If sAutoComplete <> "" Then
+                oIptElmt.SetAttribute("autocomplete", sClass)
             End If
             Select Case (nAppearance)
                 Case ApperanceTypes.Full

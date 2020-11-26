@@ -7083,27 +7083,44 @@ Partial Public Class Cms
                     Dim oFrmElmt As XmlElement
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "CancelSubscription")
-
+                    MyBase.Instance.InnerXml = "<CancelSub><bSendEmail>1</bSendEmail></CancelSub>"
                     MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
 
                     MyBase.addInput(oFrmElmt, "cStatedReason", False, "Reason for cancelation")
 
+                    'Checkbox
+                    If nUserId <> nCurrentUser Then
+
+
+                        Dim oSelElmt2 As XmlElement
+                        oSelElmt2 = MyBase.addSelect1(oFrmElmt, "bSendEmail", True, "Send Email", "", ApperanceTypes.Full)
+                        MyBase.addOption(oSelElmt2, "Yes", "1")
+                        MyBase.addOption(oSelElmt2, "No", "0")
+                        MyBase.addBind("bSendEmail", "CancelSub/bSendEmail", "false()")
+                    End If
+
+
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Are you sure you wish to cancel this subscription", True)
 
                     MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
                     MyBase.addSubmit(oFrmElmt, "Cancel", "Cancel Subscription", "Cancel", "btn-warning principle", "fa-stop")
+                    MyBase.addValues()
 
                     If Me.isSubmitted Then
                         If MyBase.getSubmitted = "Back" Then
                             Return MyBase.moXformElmt
                         ElseIf MyBase.getSubmitted = "Cancel" Then
                             Dim oSub As New Cart.Subscriptions(myWeb)
-                            oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"))
+                            Dim bSendEmail As Boolean = True
+                            If myWeb.moRequest("bSendEmail") = "0" Then
+                                bSendEmail = False
+                            End If
+                            oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"), bSendEmail)
                             MyBase.valid = True
-                            Return MyBase.moXformElmt
+                                Return MyBase.moXformElmt
+                            End If
                         End If
-                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)

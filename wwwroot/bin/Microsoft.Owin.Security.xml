@@ -81,18 +81,6 @@
             Used by middleware extension methods to coordinate the default value Options property SignInAsAuthenticationType
             </summary>
         </member>
-        <member name="T:Microsoft.Owin.Security.DataProtection.IDataProtectionProvider">
-            <summary>
-            Factory used to create IDataProtection instances
-            </summary>
-        </member>
-        <member name="M:Microsoft.Owin.Security.DataProtection.IDataProtectionProvider.Create(System.String[])">
-            <summary>
-            Returns a new instance of IDataProtection for the provider.
-            </summary>
-            <param name="purposes">Additional entropy used to ensure protected data may only be unprotected for the correct purposes.</param>
-            <returns>An instance of a data protection service</returns>
-        </member>
         <member name="T:Microsoft.Owin.Security.DataProtection.IDataProtector">
             <summary>
             Service used to protect and unprotect data
@@ -113,11 +101,60 @@
             <param name="protectedData">The byte array returned by a call to Protect on an identical IDataProtection service.</param>
             <returns>The byte array identical to the original userData passed to Protect.</returns>
         </member>
+        <member name="T:Microsoft.Owin.Security.DataProtection.IDataProtectionProvider">
+            <summary>
+            Factory used to create IDataProtection instances
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Security.DataProtection.IDataProtectionProvider.Create(System.String[])">
+            <summary>
+            Returns a new instance of IDataProtection for the provider.
+            </summary>
+            <param name="purposes">Additional entropy used to ensure protected data may only be unprotected for the correct purposes.</param>
+            <returns>An instance of a data protection service</returns>
+        </member>
+        <member name="T:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider">
+            <summary>
+            Used to provide the data protection services that are derived from the Data Protection API. It is the best choice of
+            data protection when you application is not hosted by ASP.NET and all processes are running as the same domain identity. 
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.#ctor">
+            <summary>
+            Initializes a new DpapiDataProtectionProvider with a random application
+            name. This is only useful to protect data for the duration of the
+            current application execution.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new DpapiDataProtectionProvider which uses the given
+            appName as part of the protection algorithm
+            </summary>
+            <param name="appName">A user provided value needed to round-trip secured
+            data. The default value comes from the IAppBuilder.Properties["owin.AppName"] 
+            when self-hosted.</param>
+        </member>
+        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.Create(System.String[])">
+            <summary>
+            Returns a new instance of IDataProtection for the provider.
+            </summary>
+            <param name="purposes">Additional entropy used to ensure protected data may only be unprotected for the correct purposes.</param>
+            <returns>An instance of a data protection service</returns>
+        </member>
         <member name="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler`1">
             <summary>
             Base class for the per-request work performed by most authentication middleware.
             </summary>
             <typeparam name="TOptions">Specifies which type for of AuthenticationOptions property</typeparam>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler`1.Initialize(`0,Microsoft.Owin.IOwinContext)">
+            <summary>
+            Initialize is called once per request to contextualize this instance with appropriate state.
+            </summary>
+            <param name="options">The original options passed by the application control behavior</param>
+            <param name="context">The utility object to observe the current request and response</param>
+            <returns>async completion</returns>
         </member>
         <member name="T:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler">
             <summary>
@@ -187,13 +224,45 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.AuthenticationHandler`1.Initialize(`0,Microsoft.Owin.IOwinContext)">
+        <member name="T:Microsoft.Owin.Security.Infrastructure.SecurityHelper">
             <summary>
-            Initialize is called once per request to contextualize this instance with appropriate state.
+            Helper code used when implementing authentication middleware
             </summary>
-            <param name="options">The original options passed by the application control behavior</param>
-            <param name="context">The utility object to observe the current request and response</param>
-            <returns>async completion</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.#ctor(Microsoft.Owin.IOwinContext)">
+            <summary>
+            Helper code used when implementing authentication middleware
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.AddUserIdentity(System.Security.Principal.IIdentity)">
+            <summary>
+            Add an additional ClaimsIdentity to the ClaimsPrincipal in the "server.User" environment key
+            </summary>
+            <param name="identity"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupChallenge(System.String,Microsoft.Owin.Security.AuthenticationMode)">
+            <summary>
+            Find response challenge details for a specific authentication middleware
+            </summary>
+            <param name="authenticationType">The authentication type to look for</param>
+            <param name="authenticationMode">The authentication mode the middleware is running under</param>
+            <returns>The information instructing the middleware how it should behave</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupSignIn(System.String)">
+            <summary>
+            Find response sign-in details for a specific authentication middleware
+            </summary>
+            <param name="authenticationType">The authentication type to look for</param>
+            <returns>The information instructing the middleware how it should behave</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupSignOut(System.String,Microsoft.Owin.Security.AuthenticationMode)">
+            <summary>
+            Find response sign-out details for a specific authentication middleware
+            </summary>
+            <param name="authenticationType">The authentication type to look for</param>
+            <param name="authenticationMode">The authentication mode the middleware is running under</param>
+            <returns>The information instructing the middleware how it should behave</returns>
         </member>
         <member name="T:Microsoft.Owin.Security.AuthenticationTicket">
             <summary>
@@ -256,11 +325,6 @@
             <param name="sslPolicyErrors">One or more errors associated with the remote certificate.</param>
             <returns>A Boolean value that determines whether the specified certificate is accepted for authentication.</returns>
         </member>
-        <member name="T:Microsoft.Owin.Security.Provider.BaseContext`1">
-            <summary>
-            Base class used for certain event contexts
-            </summary>
-        </member>
         <member name="M:Microsoft.Owin.Security.Notifications.BaseNotification`1.HandleResponse">
             <summary>
             Discontinue all processing for this request and return to the client.
@@ -303,74 +367,10 @@
             Gets or sets the Protocol message
             </summary>
         </member>
-        <member name="T:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider">
+        <member name="T:Microsoft.Owin.Security.Provider.BaseContext`1">
             <summary>
-            Used to provide the data protection services that are derived from the Data Protection API. It is the best choice of
-            data protection when you application is not hosted by ASP.NET and all processes are running as the same domain identity. 
+            Base class used for certain event contexts
             </summary>
-        </member>
-        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.#ctor">
-            <summary>
-            Initializes a new DpapiDataProtectionProvider with a random application
-            name. This is only useful to protect data for the duration of the
-            current application execution.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.#ctor(System.String)">
-            <summary>
-            Initializes a new DpapiDataProtectionProvider which uses the given
-            appName as part of the protection algorithm
-            </summary>
-            <param name="appName">A user provided value needed to round-trip secured
-            data. The default value comes from the IAppBuilder.Properties["owin.AppName"] 
-            when self-hosted.</param>
-        </member>
-        <member name="M:Microsoft.Owin.Security.DataProtection.DpapiDataProtectionProvider.Create(System.String[])">
-            <summary>
-            Returns a new instance of IDataProtection for the provider.
-            </summary>
-            <param name="purposes">Additional entropy used to ensure protected data may only be unprotected for the correct purposes.</param>
-            <returns>An instance of a data protection service</returns>
-        </member>
-        <member name="T:Microsoft.Owin.Security.Infrastructure.SecurityHelper">
-            <summary>
-            Helper code used when implementing authentication middleware
-            </summary>
-        </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.#ctor(Microsoft.Owin.IOwinContext)">
-            <summary>
-            Helper code used when implementing authentication middleware
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.AddUserIdentity(System.Security.Principal.IIdentity)">
-            <summary>
-            Add an additional ClaimsIdentity to the ClaimsPrincipal in the "server.User" environment key
-            </summary>
-            <param name="identity"></param>
-        </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupChallenge(System.String,Microsoft.Owin.Security.AuthenticationMode)">
-            <summary>
-            Find response challenge details for a specific authentication middleware
-            </summary>
-            <param name="authenticationType">The authentication type to look for</param>
-            <param name="authenticationMode">The authentication mode the middleware is running under</param>
-            <returns>The information instructing the middleware how it should behave</returns>
-        </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupSignIn(System.String)">
-            <summary>
-            Find response sign-in details for a specific authentication middleware
-            </summary>
-            <param name="authenticationType">The authentication type to look for</param>
-            <returns>The information instructing the middleware how it should behave</returns>
-        </member>
-        <member name="M:Microsoft.Owin.Security.Infrastructure.SecurityHelper.LookupSignOut(System.String,Microsoft.Owin.Security.AuthenticationMode)">
-            <summary>
-            Find response sign-out details for a specific authentication middleware
-            </summary>
-            <param name="authenticationType">The authentication type to look for</param>
-            <param name="authenticationMode">The authentication mode the middleware is running under</param>
-            <returns>The information instructing the middleware how it should behave</returns>
         </member>
         <member name="T:Microsoft.Owin.Security.Provider.EndpointContext`1">
             <summary>
@@ -382,15 +382,15 @@
             Creates an instance of this context
             </summary>
         </member>
+        <member name="P:Microsoft.Owin.Security.Provider.EndpointContext`1.IsRequestCompleted">
+            <summary>
+            True if the request should not be processed further by other components.
+            </summary>
+        </member>
         <member name="M:Microsoft.Owin.Security.Provider.EndpointContext`1.RequestCompleted">
             <summary>
             Prevents the request from being processed further by other components. 
             IsRequestCompleted becomes true after calling.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Owin.Security.Provider.EndpointContext`1.IsRequestCompleted">
-            <summary>
-            True if the request should not be processed further by other components.
             </summary>
         </member>
         <member name="T:Microsoft.Owin.Security.Resources">

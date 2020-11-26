@@ -1,7 +1,9 @@
 obj\\Debug\Product.wixobj
-obj\\Debug\pthED1D509EAB2D6FA4FF776606458D5705\Product.Generated.wixobj
 D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Debug\ProteanCMSInstaller.msi
 D:\HostingSpaces\DevOpsGit\GACInstaller\bin\Debug\ProteanCMSInstaller.wixpdb
 obj\\Debug\ProteanCMS.Installer.wixproj.BindContentsFileListnull.txt
 obj\\Debug\ProteanCMS.Installer.wixproj.BindOutputsFileListnull.txt
 obj\\Debug\ProteanCMS.Installer.wixproj.BindBuiltOutputsFileListnull.txt
+C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Debug\ProteanCMSInstaller.msi
+C:\HostingSpaces\ProteanCMS\GACInstaller\bin\Debug\ProteanCMSInstaller.wixpdb
+obj\\Debug\pth20AD4052A8DC51AC0B3F3AAF07227C3D\Product.Generated.wixobj

@@ -7373,7 +7373,7 @@
       </xsl:choose>
 
           <xsl:attribute name="srcset">
-            <xsl:value-of select="translate($imageUrl,' ','-')"/>
+            <xsl:value-of select="$imageUrl"/>
               <xsl:if test="imageRetinaUrl!=''">
                   <xsl:text> 1x, </xsl:text>
                 <xsl:value-of select="$imageUrl"/>

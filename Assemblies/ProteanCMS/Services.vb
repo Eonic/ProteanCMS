@@ -143,6 +143,8 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerXMLAttach"
         Try
+
+            Dim myWeb As New Protean.Cms(moCtx)
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, , , , ccRecipient, bccRecipient, cSeperator)
@@ -164,6 +166,7 @@ Public Class Services
         Dim cProcessInfo As String = "multiEmailer"
         Try
 
+            Dim myWeb As New Protean.Cms(moCtx)
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             sMessage = oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine)
@@ -210,6 +213,7 @@ Public Class Services
 
         Dim cProcessInfo As String = "emailerWithAttachment"
         Try
+            Dim myWeb As New Protean.Cms(moCtx)
             Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
             oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)

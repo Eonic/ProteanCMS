@@ -13,3 +13,11 @@ D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.d
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
 D:\HostingSpaces\DevOpsGit\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\ReplaceProvider.pdb
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\bin\Debug\Microsoft.Web.Iis.Rewrite.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csprojAssemblyReference.cache
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CoreCompileInputs.cache
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.csproj.CopyComplete
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.dll
+C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Debug\ReplaceProvider.pdb
