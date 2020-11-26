@@ -109,7 +109,7 @@ Public Class API
                 classPath = moPrvConfig.Providers(ProviderName).Parameters("className") & ".JSONActions"
                 calledType = assemblyInstance.GetType(classPath, True)
             Else
-                'case for methods within EonicWeb Core DLL
+                'case for methods within ProteanCMS Core DLL
                 calledType = System.Type.GetType("Protean." & Replace(classPath, ".", "+"), True)
             End If
 

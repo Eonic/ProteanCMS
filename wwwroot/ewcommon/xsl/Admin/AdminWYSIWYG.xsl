@@ -1286,6 +1286,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
+    TEST
     <xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $adminMode">
       <xsl:attribute name="class">
         <xsl:text>moduleContainer</xsl:text>
