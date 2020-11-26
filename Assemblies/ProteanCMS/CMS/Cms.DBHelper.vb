@@ -10318,7 +10318,7 @@ ReturnMe:
             Try
                 Select Case datatype.Name
                     Case "Boolean"
-                        If value = "true" Then
+                        If value = "true" Or value = "True" Or value = "1" Then
                             Return True
                         Else
                             Return False
