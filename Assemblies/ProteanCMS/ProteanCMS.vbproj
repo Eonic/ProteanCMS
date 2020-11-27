@@ -74,7 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.44.2</AssemblyVersion>
+    <AssemblyVersion>6.0.44.10</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -500,7 +500,6 @@
     <Compile Include="Tools\JsStart.vb" />
     <Compile Include="Tools\Configuration.vb" />
     <Compile Include="Tools\CSVHelper.vb" />
-    <Compile Include="Tools\dbTools.vb" />
     <Compile Include="Tools\Encryption.vb" />
     <Compile Include="Tools\FeedHandler.vb" />
     <Compile Include="Tools\FLVHandler.vb" />

@@ -1345,48 +1345,67 @@ Public Class Cms
                                             'If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
                                             Dim dir As New DirectoryInfo(goServer.MapPath("/") & "/fonts")
-                                            Dim subDirs As DirectoryInfo() = dir.GetDirectories()
-                                            Dim files As FileInfo() = dir.GetFiles()
-                                            Dim fi As FileInfo
 
-                                            For Each fi In files
-                                                Dim cExt As String = LCase(fi.Extension)
-                                                Select Case cExt
-                                                    Case ".otf"
-                                                        rendererOpts.AddPrivateFont(fi)
-                                                End Select
-                                            Next fi
+                                            If dir.Exists Then
+                                                Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                                                Dim files As FileInfo() = dir.GetFiles()
+                                                Dim fi As FileInfo
+
+                                                For Each fi In files
+                                                    Dim cExt As String = LCase(fi.Extension)
+                                                    Select Case cExt
+                                                        Case ".otf"
+                                                            rendererOpts.AddPrivateFont(fi)
+                                                    End Select
+                                                Next fi
+                                            End If
+
+                                            dir = New DirectoryInfo(goServer.MapPath("/ewcommon") & "/fonts")
+
+                                            If dir.Exists Then
+                                                Dim subDirs As DirectoryInfo() = dir.GetDirectories()
+                                                Dim files As FileInfo() = dir.GetFiles()
+                                                Dim fi As FileInfo
+
+                                                For Each fi In files
+                                                    Dim cExt As String = LCase(fi.Extension)
+                                                    Select Case cExt
+                                                        Case ".otf"
+                                                            rendererOpts.AddPrivateFont(fi)
+                                                    End Select
+                                                Next fi
+                                            End If
 
                                             oFoNet.Options = rendererOpts
-                                            oFoNet.Render(oTxtReader, ofileStream)
+                                                oFoNet.Render(oTxtReader, ofileStream)
 
-                                            moResponse.Buffer = True
-                                            moResponse.Expires = 0
-                                            goServer.ScriptTimeout = 10000
+                                                moResponse.Buffer = True
+                                                moResponse.Expires = 0
+                                                goServer.ScriptTimeout = 10000
 
-                                            Dim strFileSize As String = ofileStream.Length
-                                            Dim Buffer() As Byte = ofileStream.ToArray
+                                                Dim strFileSize As String = ofileStream.Length
+                                                Dim Buffer() As Byte = ofileStream.ToArray
 
-                                            moCtx.Response.Clear()
-                                            'Const adTypeBinary = 1
-                                            moCtx.Response.AddHeader("Connection", "keep-alive")
-                                            If moCtx.Request.QueryString("mode") = "open" Then
-                                                moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
-                                            Else
-                                                moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                                moCtx.Response.Clear()
+                                                'Const adTypeBinary = 1
+                                                moCtx.Response.AddHeader("Connection", "keep-alive")
+                                                If moCtx.Request.QueryString("mode") = "open" Then
+                                                    moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
+                                                Else
+                                                    moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                                End If
+                                                moCtx.Response.AddHeader("Content-Length", strFileSize)
+                                                'ctx.Response.Charset = "UTF-8"
+                                                moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
+                                                moCtx.Response.BinaryWrite(Buffer)
+                                                moCtx.Response.Flush()
+
+                                                ' objStream = Nothing
+                                                oFoNet = Nothing
+                                                oTxtReader = Nothing
+                                                ofileStream = Nothing
                                             End If
-                                            moCtx.Response.AddHeader("Content-Length", strFileSize)
-                                            'ctx.Response.Charset = "UTF-8"
-                                            moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
-                                            moCtx.Response.BinaryWrite(Buffer)
-                                            moCtx.Response.Flush()
-
-                                            ' objStream = Nothing
-                                            oFoNet = Nothing
-                                            oTxtReader = Nothing
-                                            ofileStream = Nothing
-                                        End If
-                                    Else
+                                            Else
                                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                         oTransform.ProcessTimed(moPageXml, moResponse)
                                     End If
@@ -7838,6 +7857,10 @@ Public Class Cms
                                     mcPageLanguage = oElmt.GetAttribute("code")
                                     mcPageLanguageUrlPrefix = httpPrefix & goLangConfig.GetAttribute("defaultDomain") & "/" & oElmt.GetAttribute("identifier")
                                     sCurrency = oElmt.GetAttribute("currency")
+
+                                    'remove lang from path
+                                    mcPagePath = mcPagePath.Replace("/" & oElmt.GetAttribute("identifier"), "/")
+                                    mcPagePath = mcPagePath.Replace("//", "/")
                                 End If
                             End If
                         Case "page"
@@ -8307,17 +8330,24 @@ Public Class Cms
 
             If sError = "1" Then
 
-                Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+                Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                If oImp.ImpersonateValidUser(moConfig("AdminAcct"), moConfig("AdminDomain"), moConfig("AdminPassword"), , moConfig("AdminGroup")) Then
 
-                '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
 
-                'Else
-                '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
-                '  Err.Raise(1001, "File not saved", cProcessInfo)
-                '   End If
+                    Alphaleonis.Win32.Filesystem.File.WriteAllText("\\?\" & goServer.MapPath("/" & gcProjectPath) & FullFilePath, cBody, System.Text.Encoding.UTF8)
+
+                    '   If oFS.VirtualFileExistsAndRecent(FullFilePath, 10) Then
+
+                    'Else
+                    '   cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    '  Err.Raise(1001, "File not saved", cProcessInfo)
+                    '   End If
+                Else
+                    cProcessInfo &= "<Error>Create File: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                End If
 
             Else
-                cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                    cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If
 
             oFS = Nothing
@@ -8334,7 +8364,7 @@ Public Class Cms
         Dim cProcessInfo As String = ""
         Try
 
-            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
+            moFSHelper.DeleteFolderContents(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
