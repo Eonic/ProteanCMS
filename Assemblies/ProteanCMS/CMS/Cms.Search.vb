@@ -428,8 +428,12 @@ Partial Public Class Cms
                         addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
                         addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
                     End If
-
-                    Dim HitsLimit As Integer = 300
+                    Dim HitsLimit As Integer
+                    If (myWeb.moRequest("hitlimit") > 0) Then
+                        HitsLimit = myWeb.moRequest("hitlimit")
+                    Else
+                        HitsLimit = 300
+                    End If
 
                     If livePages Is Nothing Then
                         results = searcher.Search(searchQuery, HitsLimit)
