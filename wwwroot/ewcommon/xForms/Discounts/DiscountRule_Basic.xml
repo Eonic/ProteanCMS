@@ -176,11 +176,11 @@
            <choices/> 
           <item>
             <label>Selected Product groups</label>
-            <value>0</value>
+            <value>False</value>
           </item>
           <item>
             <label>ALL Products/SKUS - Excluding Linked Product Groups</label>
-            <value>1</value>
+            <value>True</value>
           </item>
         </select1>
         <select bind="bApplyToOrder" appearance="full" class="required vshort">
