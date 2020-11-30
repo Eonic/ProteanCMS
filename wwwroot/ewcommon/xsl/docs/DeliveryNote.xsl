@@ -19,8 +19,25 @@
                       margin-right="0cm">
           <fo:region-body margin-top="0cm"/>
           <fo:region-before extent="0cm"/>
-          <fo:region-after extent="0cm"/>
+		  <fo:region-after extent="0cm"/>
         </fo:simple-page-master>
+        <fo:simple-page-master master-name="pageWithFooter"
+                      page-height="29.7cm"
+                      page-width="21cm"
+                      margin-top="1.0cm"
+                      margin-bottom="0cm"
+                      margin-left="0.4cm"
+                      margin-right="0cm">
+          <fo:region-body margin-top="0cm"/>
+          <fo:region-before extent="0cm"/>
+		  <fo:region-after region-name="page-footer" extent="7cm"></fo:region-after>
+        </fo:simple-page-master>
+		<fo:page-sequence-master master-name="allPages">
+			<fo:repeatable-page-master-alternatives>
+				<fo:conditional-page-master-reference page-position="any" master-reference="pageWithFooter"/>
+				<!--<fo:conditional-page-master-reference page-position="any" master-reference="simple"/>-->
+			</fo:repeatable-page-master-alternatives>
+		</fo:page-sequence-master>
       </fo:layout-master-set>
       <xsl:for-each select="descendant-or-self::*[name()='Order']">
         <xsl:apply-templates select="." mode="documentPage"/>
@@ -69,7 +86,7 @@
 			<xsl:value-of select="$page/descendant-or-self::Order[1]/@cartId"/>
 		</xsl:variable>
 		<fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format">
-			<fo:block padding-top="3.5cm">
+			<fo:block padding-top="1.5cm">
 				<fo:block font-size="16pt" text-align="left" font-family="{$headingfont}" font-weight="bold" color="{$headingcolor}">
 					Delivery Note
 				</fo:block>
@@ -109,7 +126,7 @@
 				</fo:block>
 			</fo:block>
 
-			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="2.5cm">
+			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="5.5cm">
 				<fo:block>
 					<fo:table>
 						<fo:table-column column-width="0.5cm"/>
@@ -230,47 +247,6 @@
 				</fo:block>
 			</fo:block>
 
-			<fo:block>
-				<fo:block font-size="10pt" font-family="{$bodyfont}" margin-bottom="0.5pt" space-after="2mm" margin-right="1cm">
-					Any shortages or damages must be reported to us within 4 days of delivery. Goods must have been signed for as unchecked if any damage or tampering is
-					visible to outer packaging. All goods remain the property of <xsl:value-of select="$CompanyName"/> until paid for in full. Tel: <xsl:value-of select="$CompanyTel"/>, Email: <xsl:value-of select="$CompanyEmail"/>
-				</fo:block>
-				<fo:block font-size="10pt" font-family="{$bodyfont}" space-after="2mm">
-				</fo:block>
-			</fo:block>
-			<fo:block>
-				<fo:table table-layout="fixed">
-					<fo:table-column column-width="9.5cm"/>
-					<fo:table-column column-width="9.5cm"/>
-					<fo:table-body>
-						<fo:table-row>
-							<fo:table-cell padding="6pt">
-								<fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									<xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
-								</fo:block>
-								<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									Ref: <xsl:value-of select="@InvoiceRef"/>
-								</fo:block>
-								<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									RETURN TO: <xsl:value-of select="$CompanyAddress"/>
-								</fo:block>
-							</fo:table-cell>
-							<fo:table-cell padding="6pt">
-								<fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									<xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
-								</fo:block>
-								<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									Ref: <xsl:value-of select="@InvoiceRef"/>
-								</fo:block>
-								<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-									RETURN TO: <xsl:value-of select="$CompanyAddress"/>
-								</fo:block>
-							</fo:table-cell>
-						</fo:table-row>
-					</fo:table-body>
-				</fo:table>
-
-			</fo:block>
 		</fo:block>
 	</xsl:template>
 </xsl:stylesheet>
