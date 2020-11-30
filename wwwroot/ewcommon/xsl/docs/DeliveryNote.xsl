@@ -109,7 +109,7 @@
 				</fo:block>
 			</fo:block>
 
-			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="1.5cm">
+			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="2.5cm">
 				<fo:block>
 					<fo:table>
 						<fo:table-column column-width="0.5cm"/>
