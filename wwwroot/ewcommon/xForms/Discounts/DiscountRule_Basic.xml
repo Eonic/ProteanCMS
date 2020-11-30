@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Content type="xform" name="EditContent">
+<Content type="xform" name="EditDiscount">
   <model>
     <instance>
       <tblCartDiscountRules>
@@ -72,7 +72,7 @@
       <bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>
-      <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="false()" type="number"/>
+      <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="false()" type="string"/>
       <!--<bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" constraint="(//nDiscountCodeType='3' and //nDiscountCodeBank!='')" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>-->
