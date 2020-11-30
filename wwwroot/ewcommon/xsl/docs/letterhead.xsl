@@ -89,8 +89,54 @@
 
 
 	<xsl:template match="*" mode="documentPage">
-		<fo:page-sequence master-reference="simple"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+		<fo:page-sequence master-reference="allPages"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
 			<xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
+			<fo:static-content flow-name="page-footer">
+				<fo:block>
+					<fo:block margin-left="0.5cm">
+						<fo:block font-size="10pt" font-family="{$bodyfont}" margin-bottom="0.5pt" space-after="2mm" margin-right="1cm">
+							Any shortages or damages must be reported to us within 4 days of delivery. Goods must have been signed for as unchecked if any damage or tampering is
+							visible to outer packaging. All goods remain the property of <xsl:value-of select="$CompanyName"/> until paid for in full. Tel: <xsl:value-of select="$CompanyTel"/>, Email: <xsl:value-of select="$CompanyEmail"/>
+						</fo:block>
+						<fo:block font-size="10pt" font-family="{$bodyfont}" space-after="2mm">
+						</fo:block>
+					</fo:block>
+					<fo:block margin-left="1cm">
+						<fo:table table-layout="fixed">
+							<fo:table-column column-width="9.5cm"/>
+							<fo:table-column column-width="9.5cm"/>
+							<fo:table-body>
+								<fo:table-row>
+									<fo:table-cell padding="6pt">
+										<fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											<xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
+										</fo:block>
+										<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											Ref: <xsl:value-of select="@InvoiceRef"/>
+										</fo:block>
+										<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											RETURN TO: <xsl:value-of select="$CompanyAddress"/>
+										</fo:block>
+									</fo:table-cell>
+									<fo:table-cell padding="6pt" keep-together.within-page="always">
+										<fo:block font-size="5pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											<xsl:apply-templates select="Contact[@type='Delivery Address']" mode="AddressBlock"/>
+										</fo:block>
+										<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											Ref: <xsl:value-of select="@InvoiceRef"/>
+										</fo:block>
+										<fo:block font-size="8pt" text-align="left" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+											RETURN TO: <xsl:value-of select="$CompanyAddress"/>
+										</fo:block>
+									</fo:table-cell>
+								</fo:table-row>
+							</fo:table-body>
+						</fo:table>
+
+					</fo:block>
+
+				</fo:block>
+			</fo:static-content>
 			<fo:flow flow-name="xsl-region-body">
 				<xsl:if test="$DocLogo!=''">
 					<fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="10cm">
@@ -116,7 +162,7 @@
 						</fo:block>
 					</fo:block>
 				</fo:block-container>
-				<fo:block margin-left="0.5cm">
+				<fo:block margin-left="0.5cm" padding-bottom="2.5cm" padding-top="2cm">
 					<xsl:apply-templates select="." mode="PageBody"/>
 					<xsl:apply-templates select="." mode="documentFooter"/>
 				</fo:block>
