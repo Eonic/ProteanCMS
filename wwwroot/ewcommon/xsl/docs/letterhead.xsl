@@ -86,42 +86,43 @@
       <xsl:apply-templates select="." mode="documentPage"/>
     </fo:root>
   </xsl:template>
-  
 
-  <xsl:template match="*" mode="documentPage">
-    <fo:page-sequence master-reference="simple"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
-      <xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
-      <fo:flow flow-name="xsl-region-body">
-        <xsl:if test="$DocLogo!=''">
-          <fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="10cm">
-            <fo:block>
-              <fo:external-graphic src="{$DocLogo}"></fo:external-graphic>
-            </fo:block>
-          </fo:block-container>
-        </xsl:if>
-        <fo:block-container position="absolute" top="0cm" right="0cm" left="10.5cm" height="10.7cm" width="9cm">
-          <fo:block>
-            <fo:block font-size="14pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-              <xsl:value-of select="$CompanyName"/>
-            </fo:block>
-          </fo:block>
-        </fo:block-container>
-        <fo:block-container position="absolute" top="1.0cm" right="0cm" left="11.5cm" height="10.7cm" width="8cm">
-          <fo:block>
-            <fo:block font-size="10pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
-              <xsl:value-of select="$CompanyAddress"/>
-            </fo:block>
-            <fo:block font-size="10pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" padding-left="5mm">
-              tel: <xsl:value-of select="$CompanyTel"/>
-            </fo:block>
-          </fo:block>
-        </fo:block-container>
-        <xsl:apply-templates select="." mode="PageBody"/>
-        <xsl:apply-templates select="." mode="documentFooter"/>
-        
-      </fo:flow>
-    </fo:page-sequence>
-  </xsl:template>
+
+	<xsl:template match="*" mode="documentPage">
+		<fo:page-sequence master-reference="simple"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
+			<xsl:apply-templates select="descendant-or-self::*[name()='Order'][1]" mode="PageTitle"/>
+			<fo:flow flow-name="xsl-region-body">
+				<xsl:if test="$DocLogo!=''">
+					<fo:block-container position="absolute" top="0cm" right="0cm" left="0.5cm" height="10.7cm" width="10cm">
+						<fo:block>
+							<fo:external-graphic src="{$DocLogo}"></fo:external-graphic>
+						</fo:block>
+					</fo:block-container>
+				</xsl:if>
+				<fo:block-container position="absolute" top="0cm" right="0cm" left="10.5cm" height="10.7cm" width="9cm">
+					<fo:block>
+						<fo:block font-size="14pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+							<xsl:value-of select="$CompanyName"/>
+						</fo:block>
+					</fo:block>
+				</fo:block-container>
+				<fo:block-container position="absolute" top="1.0cm" right="0cm" left="11.5cm" height="10.7cm" width="8cm">
+					<fo:block>
+						<fo:block font-size="10pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" space-after="2mm" padding-top="2mm">
+							<xsl:value-of select="$CompanyAddress"/>
+						</fo:block>
+						<fo:block font-size="10pt" text-align="right" font-family="{$bodyfont}" color="#000000" linefeed-treatment="preserve" padding-left="5mm">
+							tel: <xsl:value-of select="$CompanyTel"/>
+						</fo:block>
+					</fo:block>
+				</fo:block-container>
+				<fo:block margin-left="0.5cm">
+					<xsl:apply-templates select="." mode="PageBody"/>
+					<xsl:apply-templates select="." mode="documentFooter"/>
+				</fo:block>
+			</fo:flow>
+		</fo:page-sequence>
+	</xsl:template>
 
   <xsl:template match="*" mode="documentFooter">
     <fo:block-container position="absolute" top="26cm" right="0cm" left="0cm" height="1.66cm" width="20cm" border-top-color="#000000" border-top-style="solid" border-top-width="0.2mm"  xmlns:fo="http://www.w3.org/1999/XSL/Format">
