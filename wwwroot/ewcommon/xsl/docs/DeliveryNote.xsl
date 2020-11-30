@@ -24,6 +24,7 @@
       </fo:layout-master-set>
       <xsl:for-each select="descendant-or-self::*[name()='Order']">
         <xsl:apply-templates select="." mode="documentPage"/>
+		<xsl:apply-templates select="." mode="documentPage"/>
       </xsl:for-each>
     </fo:root>
   </xsl:template>
