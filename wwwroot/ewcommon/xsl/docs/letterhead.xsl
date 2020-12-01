@@ -101,7 +101,7 @@
 						<fo:block font-size="10pt" font-family="{$bodyfont}" space-after="2mm">
 						</fo:block>
 					</fo:block>
-					<fo:block margin-left="1cm">
+					<fo:block margin-left="1cm" padding-top="0.5cm">
 						<fo:table table-layout="fixed">
 							<fo:table-column column-width="9.5cm"/>
 							<fo:table-column column-width="9.5cm"/>
