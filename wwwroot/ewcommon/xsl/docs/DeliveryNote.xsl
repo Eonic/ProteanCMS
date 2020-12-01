@@ -30,7 +30,7 @@
                       margin-right="0cm">
           <fo:region-body margin-top="0cm"/>
           <fo:region-before extent="0cm"/>
-		  <fo:region-after region-name="page-footer" extent="7cm"></fo:region-after>
+		  <fo:region-after region-name="page-footer" extent="8.5cm"></fo:region-after>
         </fo:simple-page-master>
 		<fo:page-sequence-master master-name="allPages">
 			<fo:repeatable-page-master-alternatives>
@@ -126,7 +126,7 @@
 				</fo:block>
 			</fo:block>
 
-			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="5.5cm">
+			<fo:block font-size="10pt" font-family="{$headingfont}" padding-top="0.5cm" padding-bottom="6.5cm">
 				<fo:block>
 					<fo:table>
 						<fo:table-column column-width="0.5cm"/>
