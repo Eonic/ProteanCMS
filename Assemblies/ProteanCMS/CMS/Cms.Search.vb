@@ -1873,7 +1873,14 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' In other words if you include this option, you will need to update your index to 
                 ' index the name field under qsname lowercased untokenized.
                 ' e.g. <meta name="qsname" content="{$displayNameToLower}" tokenize="false" />
-                Dim keywordQuery As Query = parser.Parse(queryToBeParsed.ToString())
+                Dim keywordQuery As Query
+                If moConfig("SiteWildCardSearch") = "on" Then
+                    parser.AllowLeadingWildcard = True
+                    keywordQuery = parser.Parse($"*{keywordsToSearch}*")
+                Else
+                    keywordQuery = parser.Parse(queryToBeParsed.ToString())
+                End If
+
 
                 If _includePrefixNameSearch And Not _overrideQueryBuilder Then
                     Dim booleanQ As New BooleanQuery()
