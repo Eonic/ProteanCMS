@@ -22,71 +22,6 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
-<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
- <summary>
- This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
- Only works if 3rd party messaging provider enabled.
- </summary>
- <param name="StepName"></param>
- <param name="oCartElmt"></param>
-</member>
-<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
- <summary>
- This does the same as get cart without the item information, so we call get cart and delete any items we find
- </summary>
- <param name="oCartElmt"></param>
- <param name="nSelCartId"></param>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
- <summary>
- Each user need only have a single active billing address
- </summary>
- <param name="UserId"></param>
- <param name="ContactId"></param>
- <returns>If Contact ID = 0 then uses last updated</returns>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.EmptyCart">
- <summary>
- Empties all items in a shopping cart.
- </summary>
- <remarks></remarks>
-</member>
-<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
- <summary>
- Calculates and updates the tax rate.
- </summary>
- <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
- <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
-</member>
-<member name="M:Protean.Cms.Cart.SelectCurrency">
- <summary>
- Select currency deals with the workflow around choosing a currency when an item is added to the cart.
- </summary>
- <returns></returns>
-</member>
-<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
- <summary>
- takes the mcCurrencyRef and sets the currency for the current order 
- </summary>
-</member>
-<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
- <summary>
- Returns an XML contain information about all of the discounts on the site.
- Only used to inumberate discounts to display to customers. 
- WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
- </summary>
- <param name="PageElmt"></param>
- <remarks></remarks>
-</member>
-<member name="T:Protean.Cms.Synchronisation">
- <summary>
- Class for sync methods that are specific to Protean.Cms
- e.g. syncing fle lists as content to modules
- </summary>
- <remarks></remarks>
-</member>
 <member name="M:Protean.Cms.Admin.MemberCodesProcess(System.Xml.XmlElement@,System.String@)">
  <summary>
  The Member code management process.
@@ -187,6 +122,71 @@ ProteanCMS
  </summary>
  <param name="ref"></param>
  <param name="position"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.AddToLists(System.String,System.Xml.XmlElement@,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+ <summary>
+ This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
+ Only works if 3rd party messaging provider enabled.
+ </summary>
+ <param name="StepName"></param>
+ <param name="oCartElmt"></param>
+</member>
+<member name="M:Protean.Cms.Cart.GetCartSummary(System.Xml.XmlElement@,System.Int32)">
+ <summary>
+ This does the same as get cart without the item information, so we call get cart and delete any items we find
+ </summary>
+ <param name="oCartElmt"></param>
+ <param name="nSelCartId"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.setCurrentBillingAddress(System.Int64,System.Int64)">
+ <summary>
+ Each user need only have a single active billing address
+ </summary>
+ <param name="UserId"></param>
+ <param name="ContactId"></param>
+ <returns>If Contact ID = 0 then uses last updated</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.EmptyCart">
+ <summary>
+ Empties all items in a shopping cart.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.Cart.UpdateTaxRate(System.String@)">
+ <summary>
+ Calculates and updates the tax rate.
+ </summary>
+ <param name="cContactCountry">Optional: The name of the current current to work out the tax rate for.  If empty, then the default tax rate is assumed.</param>
+ <remarks>If customer is logged on user and they are in a specified group, then void their tax rate</remarks>
+</member>
+<member name="M:Protean.Cms.Cart.SelectCurrency">
+ <summary>
+ Select currency deals with the workflow around choosing a currency when an item is added to the cart.
+ </summary>
+ <returns></returns>
+</member>
+<member name="M:Protean.Cms.Cart.GetCurrencyDefinition">
+ <summary>
+ takes the mcCurrencyRef and sets the currency for the current order 
+ </summary>
+</member>
+<member name="M:Protean.Cms.Cart.Discount.getDiscountXML(System.Xml.XmlElement@)">
+ <summary>
+ Returns an XML contain information about all of the discounts on the site.
+ Only used to inumberate discounts to display to customers. 
+ WE DO NOT WANT TO CALL THIS ON EVERY PAGE as it suffers from poor performance once a lot of discounts are enabled.
+ </summary>
+ <param name="PageElmt"></param>
+ <remarks></remarks>
+</member>
+<member name="T:Protean.Cms.Synchronisation">
+ <summary>
+ Class for sync methods that are specific to Protean.Cms
+ e.g. syncing fle lists as content to modules
+ </summary>
  <remarks></remarks>
 </member>
 <member name="M:Protean.Cms.Calendar.#ctor(Protean.Cms@)">
