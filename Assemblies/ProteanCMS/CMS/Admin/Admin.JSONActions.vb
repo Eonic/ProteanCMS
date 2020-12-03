@@ -52,11 +52,12 @@ Partial Public Class Cms
                         Dim rewriteXml As New XmlDocument
                         rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
-                        'Check we do not have a redirect for the OLD URL allready. Remove if exists
-                        Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap/add/@key='" & OldURL & "'")
+                        ''Check we do not have a redirect for the OLD URL allready. Remove if exists
+                        Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & RedirectType & "Redirect']/add[@key='" & OldURL & "']")
                         If Not existingRedirects Is Nothing Then
                             For Each existingNode As XmlNode In existingRedirects
-                                rewriteXml.RemoveChild(existingNode)
+                                existingNode.RemoveAll()
+                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                             Next
                         End If
 
@@ -67,12 +68,13 @@ Partial Public Class Cms
                             Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
                             replacingElement.InnerXml = $"<add key='{OldURL}' value='{NewURL}'/>"
 
-                            rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                            rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
                             rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                         End If
 
                         'Determine all the paths that need to be redirected
-                        If RedirectType = "301Redirect" Then
+                        If RedirectType = "301" Then
                             'step through and create rules to deal with paths
                             Dim folderRules As New ArrayList
                             Dim rulesXml As New XmlDocument

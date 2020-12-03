@@ -23,8 +23,8 @@ if (editPageElement) {
         methods: {
             createRedirects: function () {
                 debugger;
-                var redirectTypeElement = document.querySelector("input[name='redirectType']")
-                var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
+                var redirectType = $(".redirectStatus:checked").val();
+                //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
                     return;
                 }
@@ -41,8 +41,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
-                        //handle success.
+                       cess.
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
                     });
@@ -51,17 +50,18 @@ if (editPageElement) {
         watch: {
             // whenever StructName changes, this function will run
             structName: function (newStructName) {
-                debugger;                
+                              
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                     redirectModal.toggleModal();
                 } else {
                     redirectModal.showRedirectModal = false;
+                    localStorage.originalStructName = newStructName;
                 }
-                localStorage.originalStructName = newStructName;
+                
             }
         },
         mounted: function () {
-            debugger;
+            
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;

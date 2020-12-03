@@ -3877,15 +3877,15 @@
 										<div>
 											<ul>
 												<li class="md-radio">
-													<input name="redirectType" type="radio" value="301" checked="true"/>
+													<input name="redirectType" type="radio" value="301" class="redirectStatus"/>
 													<label> We will perminently redirect</label>
 												</li>
 												<li class="md-radio">
-													<input name="redirectType" type="radio" value="302" />
+													<input name="redirectType" type="radio" value="302" class="redirectStatus"/>
 													<label> We will temporarily redirect</label>
 												</li>
 												<li class="md-radio">
-													<input name="redirectType" type="radio" value="404" />
+													<input name="redirectType" type="radio" value="404" class="redirectStatus"/>
 													<label> No, the old url will show page not found</label>
 												</li>
 											</ul>
