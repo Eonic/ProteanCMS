@@ -1391,23 +1391,38 @@ NoDiscount:
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                         sXmlContent = oDs.Tables(0).Rows(0)("cCartXml") & ""
                         docOrder.LoadXml(sXmlContent)
+
                         Dim orderTotal As Double = docOrder.SelectSingleNode("Order").Attributes("total").Value
 
-                        strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName,  ")
-                        strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, tblCartDiscountRules.nDiscountCompoundBehaviour,  ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountValue, tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity,  ")
-                        strSQL.Append("  tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId,  ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountCodeType, tblCartDiscountRules.cDiscountUserCode  ")
-                        strSQL.Append("FROM tblCartDiscountRules  ")
-                        strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey AND (tblAudit.nStatus = 1) ")
-                        If sCode <> "" Then
-                            strSQL.Append("WHERE tblCartDiscountRules.cDiscountCode= '" & sCode & "'")
+                        If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
+                            '' call stored procedure else existing code.
+                            '' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                            Dim param As New Hashtable
+                            param.Add("PromoCodeEntered", sCode)
+                            param.Add("UserGroupIds", cUserGroupIds)
+                            param.Add("CartOrderId", myCart.mnCartId)
+                            param.Add("CartOrderDate", DiscountApplyDate)
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet("spCheckDiscounts", "Discount", "Discounts", False, param, CommandType.StoredProcedure)
+
+                        Else
+
+                            strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName,  ")
+                            strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, tblCartDiscountRules.nDiscountCompoundBehaviour,  ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountValue, tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity,  ")
+                            strSQL.Append("  tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId,  ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCodeType, tblCartDiscountRules.cDiscountUserCode  ")
+                            strSQL.Append("FROM tblCartDiscountRules  ")
+                            strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey AND (tblAudit.nStatus = 1) ")
+                            If sCode <> "" Then
+                                strSQL.Append("WHERE tblCartDiscountRules.cDiscountCode= '" & sCode & "'")
+                            End If
+                            strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
+                            strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
+
+
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
                         End If
-                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
-                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
 
-
-                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
                         If oDsDiscounts.Tables(0).Rows.Count = 0 Then
                             If sCode <> "" Then
                                 oDsDiscounts.Clear()
@@ -1458,7 +1473,7 @@ NoDiscount:
 
                             'load existing notes from Cart
                             sXmlContent = oRow("cClientNotes") & ""
-                            If sXmlContent = "" Then
+                            If sXmlContent = "" Or Not sXmlContent.Contains("<Notes>") Then
                                 sXmlContent = "<Notes><PromotionalCode/></Notes>"
                             End If
                             Dim NotesXml As New XmlDocument

@@ -1654,6 +1654,8 @@ processFlow:
                         mcCartCmd = "RedirectSecure"
                     Case "brief"
                         mcCartCmd = "Brief"
+                    Case "logon"
+                        mcCartCmd = "Logon"
                     Case Else
                         'do nothing
                 End Select

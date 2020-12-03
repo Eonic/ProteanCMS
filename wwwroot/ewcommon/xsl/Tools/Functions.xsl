@@ -6585,40 +6585,40 @@
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 575px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xxs-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xxs-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xxs-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 767px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xs-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xs-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 991px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-sm-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-sm-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-md-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-md-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-lg-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-lg-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
@@ -6626,40 +6626,40 @@
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 575px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xxs"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xxs-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 767px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xs"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xs-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 991px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-sm"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-sm-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-md"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-md-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-lg"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-lg-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
