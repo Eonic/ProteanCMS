@@ -396,8 +396,7 @@
       </Sub2>
         <Sub2 Number="44">
         <Sub3 Number="0">
-          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/UpdateCompatibilityLevel.sql"/>
-          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/spCheckDiscounts.sql"/>
+          <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/spCheckDiscounts.sql"/>
         </Sub3>
       </Sub2>
     </Sub1>
