@@ -453,7 +453,7 @@ Partial Public Class Cms
 
                 'try to get it from cart xml
                 If cPromotionalCode = "" Then
-                    Dim oPromoElmt As XmlElement = xmlNotes.SelectSingleNode("//Notes/PromotionalCode")
+                    Dim oPromoElmt As XmlElement = xmlNotes.SelectSingleNode("Notes/PromotionalCode")
                     If Not oPromoElmt Is Nothing Then cPromotionalCode = oPromoElmt.InnerText
                 End If
 
@@ -461,7 +461,7 @@ Partial Public Class Cms
                 If cPromotionalCode = "" Then
                     'Dim oXform As xForm = New xForm
                     'oXform.moPageXML = myWeb.moPageXml
-                    cPromotionalCode = myWeb.moRequest("//Notes/PromotionalCode")
+                    cPromotionalCode = myWeb.moRequest("Notes/PromotionalCode")
                     'If Not oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") Is Nothing Then
                     '    cPromotionalCode = oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode").InnerText
                     'End If
@@ -1473,32 +1473,26 @@ NoDiscount:
 
                             'load existing notes from Cart
                             sXmlContent = oRow("cClientNotes") & ""
-                            If sXmlContent = "" Then
+                            If sXmlContent = "" Or Not sXmlContent.Contains("<Notes>") Then
                                 sXmlContent = "<Notes><PromotionalCode/></Notes>"
                             End If
                             Dim NotesXml As New XmlDocument
                             NotesXml.LoadXml(sXmlContent)
 
-                            If NotesXml.SelectSingleNode("Notes") Is Nothing Then
-                                Dim notesElement As XmlElement = NotesXml.CreateElement("NoteInfo")
-                                notesElement.InnerXml = "<Notes><PromotionalCode/></Notes>"
-                                NotesXml.FirstChild.AppendChild(notesElement.FirstChild)
-                            End If
-
-                            If Not NotesXml.SelectSingleNode("//Notes/PromotionalCode[node()='" & sCode & "']") Is Nothing Then
+                            If Not NotesXml.SelectSingleNode("Notes/PromotionalCode[node()='" & sCode & "']") Is Nothing Then
                                 'do nothing code exists
                             Else
-                                If NotesXml.SelectSingleNode("//Notes/PromotionalCode") Is Nothing Then
+                                If NotesXml.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
                                     'add another promotional code
                                     Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
-                                    NotesXml.SelectSingleNode("//Notes").AppendChild(newElmt)
+                                    NotesXml.SelectSingleNode("Notes").AppendChild(newElmt)
                                 Else
-                                    If NotesXml.SelectSingleNode("//Notes/PromotionalCode").InnerText = "" Then
-                                        NotesXml.SelectSingleNode("//Notes/PromotionalCode").InnerText = sCode
+                                    If NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = "" Then
+                                        NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = sCode
                                     Else
                                         'add another promotional code
                                         Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
-                                        NotesXml.SelectSingleNode("//Notes").AppendChild(newElmt)
+                                        NotesXml.SelectSingleNode("Notes").AppendChild(newElmt)
                                     End If
                                 End If
                             End If
