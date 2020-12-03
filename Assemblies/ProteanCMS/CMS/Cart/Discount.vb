@@ -1458,7 +1458,7 @@ NoDiscount:
 
                             'load existing notes from Cart
                             sXmlContent = oRow("cClientNotes") & ""
-                            If sXmlContent = "" Then
+                            If sXmlContent = "" Or Not sXmlContent.Contains("<Notes>") Then
                                 sXmlContent = "<Notes><PromotionalCode/></Notes>"
                             End If
                             Dim NotesXml As New XmlDocument
