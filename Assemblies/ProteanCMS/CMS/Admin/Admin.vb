@@ -768,7 +768,8 @@ ProcessFlow:
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
                                     Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-"(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey inner join tblAudit a on a.nAuditKey = c.nAuditId " &
+                                    "where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
