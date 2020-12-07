@@ -768,7 +768,8 @@ ProcessFlow:
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
                                     Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-"(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey inner join tblAudit a on a.nAuditKey = c.nAuditId " &
+                                    "where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
@@ -1548,6 +1549,20 @@ ProcessFlow:
                             oPageDetail.RemoveAll()
                             mcEwCmd = "ListUserContacts"
                             myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
+                            GoTo ProcessFlow
+                        End If
+                    Case "EditOrderContact"
+
+                        sAdminLayout = "EditUserContact"
+                        Dim sSql = "Select nContactKey from tblCartContact where cContactType = " &
+                            $"'{myWeb.moRequest("contacttype")} Address' and nContactCartid=" & myWeb.moRequest("orderid")
+                        Dim sContactKey As String = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & sContactKey)))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "Orders"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("orderid")
                             GoTo ProcessFlow
                         End If
                     Case "AddUserContact"
