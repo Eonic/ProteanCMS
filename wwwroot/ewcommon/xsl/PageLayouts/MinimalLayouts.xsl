@@ -2119,7 +2119,8 @@
             <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
             <i class="fa fa-caret-down">
               <xsl:text> </xsl:text>
-            </i>&#160;
+            </i>
+            <span class="space">&#160;</span>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
           </h3>
