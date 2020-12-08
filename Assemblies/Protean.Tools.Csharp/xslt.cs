@@ -130,6 +130,20 @@ namespace Protean.Tools.Xslt
             }
         }
 
+        public string getGUID()
+        {
+            try
+            {
+
+                return System.Guid.NewGuid().ToString();
+            }
+            catch (Exception ex)
+            {
+                return "noguid";
+            }
+        }
+
+
         public string datediff(string date1String, string date2String, string datePart)
         {
             string nDiff = "";

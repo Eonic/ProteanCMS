@@ -315,6 +315,14 @@ Partial Public Module xmlTools
             End Try
         End Function
 
+        Public Function getGUID() As String
+            Try
+                Return System.Guid.NewGuid().ToString()
+            Catch ex As Exception
+                Return "noguid"
+            End Try
+        End Function
+
 
         Public Function getdate(ByVal dateString As String) As String
             Try

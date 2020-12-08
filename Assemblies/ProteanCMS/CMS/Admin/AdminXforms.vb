@@ -6200,11 +6200,12 @@ Partial Public Class Cms
                         End If
                     End If
 
+                    Dim existingInstance As XmlElement = MyBase.moXformElmt.OwnerDocument.CreateElement("instance")
+
+
                     If nDiscountId > 0 Then
-                        MyBase.Instance = Nothing
-
-                        MyBase.Instance = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartDiscountRules, nDiscountId)
-
+                        existingInstance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartDiscountRules, nDiscountId)
+                        LoadInstanceFromInnerXml(existingInstance.InnerXml)
                     End If
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
