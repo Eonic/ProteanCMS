@@ -41,19 +41,17 @@ $(document).ready(function () {
     }
     // Give the first form element focus
     // $('#mainLayout').find(':input:visible:enabled:first:').focus();
-    if (typeof popover == 'function') {
-        if ($(".mypopover").exists()) {
-            $(".mypopover").popover({ trigger: 'hover' })
-        }
 
-        $('[rel=frmPopover]').popover({
-            html: true,
-            trigger: 'hover',
-            content: function () {
-                return $($(this).data('contentwrapper')).html();
-            }
-        });
+    if ($(".mypopover").exists()) {
+        $(".mypopover").popover({ trigger: 'hover' })
     }
+
+    $('[rel="frmPopover"]').popover({
+        html: true,
+        content: function () {
+            return $($(this).data('contentwrapper')).html();
+        }
+    });
 
     $('.accordion-module .panel-heading a').click(function () {
         $(this).removeClass('accordion-load');
