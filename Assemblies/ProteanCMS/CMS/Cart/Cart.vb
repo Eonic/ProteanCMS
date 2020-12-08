@@ -2526,21 +2526,24 @@ processFlow:
                                         If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
 
                                             Dim revisedPrice As Double
-                                            If oRow("contentId") > 0 Then
-                                                revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
-                                            Else
-                                                oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
-                                                nCheckPrice = oCheckPrice.InnerText
-                                                nTaxRate = getProductTaxRate(oCheckPrice)
-                                            End If
-                                            If revisedPrice < nCheckPrice Then
-                                                'nCheckPrice = revisedPrice
-                                                Discount = nCheckPrice - revisedPrice
-                                                nCheckPrice = revisedPrice
+                                            If moSubscription.mbOveridePrices = False Then
+                                                'TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
+                                                If oRow("contentId") > 0 Then
+                                                    revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                                Else
+                                                    oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
+                                                    nCheckPrice = oCheckPrice.InnerText
+                                                    nTaxRate = getProductTaxRate(oCheckPrice)
+                                                End If
+                                                If revisedPrice < nCheckPrice Then
+                                                    'nCheckPrice = revisedPrice
+                                                    Discount = nCheckPrice - revisedPrice
+                                                    nCheckPrice = revisedPrice
+                                                End If
                                             End If
 
                                         End If
-                                    Else
+                                        Else
                                         bOverridePrice = True
                                     End If
 

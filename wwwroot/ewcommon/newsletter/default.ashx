@@ -8,7 +8,7 @@ Imports System.Web.Configuration
 Public Class ewNewsletterDefault : Implements IHttpHandler, IRequiresSessionState
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
-        dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("eonic/mailinglist")
+        Dim moConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/mailinglist")
 
         Dim oEw As Protean.Cms = New Protean.Cms()
 
