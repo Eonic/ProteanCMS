@@ -2,7 +2,8 @@
 	DECLARE @StructWIthInvalidAuditIds TABLE
 	(
 		nStructKey INT,
-		nAuditId INT
+		nAuditId INT,
+		isDuplicate BIT		
 	)
 
 ---------------------------------------------------------------------------------------
@@ -23,14 +24,14 @@
 	FROM 
 	(
 		--No AuditId
-		SELECT nStructKey, nAuditId
+		SELECT nStructKey, nAuditId, 0 AS isDuplicate
 		FROM tblContentStructure c 
 		WHERE nAuditId IS NULL OR nAuditId = 0
 
 		UNION
 
 		--Invalid AuditId's. Does not exist in the tblAudit table.
-		SELECT nStructKey, nAuditId
+		SELECT nStructKey, nAuditId, 0 AS isDuplicate
 		FROM tblContentStructure C
 		WHERE NOT EXISTS
 		(
@@ -41,7 +42,7 @@
 
 		UNION
 
-		SELECT nStructKey, nAuditId
+		SELECT nStructKey, nAuditId, 1 AS isDuplicate
 		FROM TEMP
 		WHERE Row_Num > 1
 	) C
@@ -56,7 +57,10 @@
 --Fix AuditIds
 
 	DECLARE @nStructKey INT
-	DECLARE @AuditId INT
+	DECLARE @originalAuditId INT
+	DECLARE @newAuditId INT
+	DECLARE @isDuplicate BIT
+	DECLARE @auditStatus BIT
 
     BEGIN TRY
         BEGIN TRAN
@@ -68,18 +72,29 @@
 
 			FOR
 				SELECT
-					nStructKey
+					nStructKey,
+					nAuditId,
+					isDuplicate					
 				FROM @StructWIthInvalidAuditIds
 
 			OPEN Cur
 			FETCH NEXT FROM Cur INTO
-			@nStructKey
+			@nStructKey, @originalAuditId, @isDuplicate
 			-- Assigns values to variables declared at the top
 
 
 			WHILE @@FETCH_STATUS = 0
 			BEGIN
-				SET @AuditId = 0
+				SET @newAuditId = 0
+				SET @auditStatus = 0 -- Default Audit status would be Hidden
+
+				--For duplicate records - set the status of new audit record to what it was originally.
+				IF @isDuplicate = 1
+				BEGIN
+					SELECT @auditStatus = nStatus
+					FROM tblAudit
+					WHERE nAuditKey = @originalAuditId
+				END
 	
 				-- Inserts the Audit record 
 				INSERT INTO tblAudit 
@@ -90,14 +105,14 @@
 					0 AS nInsertDirId, 
 					GETDATE() AS dUpdateDate, 
 					0 AS nUpdateDirId, 
-					0 AS nStatus, 
+					@auditStatus AS nStatus, 
 					NULL AS cDescription
 
-				SET @AuditId = SCOPE_IDENTITY()
+				SET @newAuditId = SCOPE_IDENTITY()
 
 
 				UPDATE tblContentStructure
-				SET nAuditId = @AuditId
+				SET nAuditId = newAuditId
 				WHERE nStructKey = @nStructKey
 
 				FETCH NEXT FROM Cur INTO @nStructKey
