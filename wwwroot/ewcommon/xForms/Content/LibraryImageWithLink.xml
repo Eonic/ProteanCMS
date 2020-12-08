@@ -66,7 +66,9 @@
 				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
 				<bind id="cContentDetail" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
-        <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+
+        <bind id="cContentLink" nodeset="@externalLink" required="false()" type="string"/>
+        <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
         <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
         <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			</bind>
@@ -173,12 +175,12 @@
         </select1>
         <switch class="disable">
           <case id="cLinkType_1">
-            <select1 bind="cModuleLink" class="siteTree">
+            <select1 bind="cContentPage" class="siteTree">
               <label>Link to page</label>
             </select1>
           </case>
           <case id="cLinkType_2">
-            <input bind="cModuleLink" class="short">
+            <input bind="cContentLink" class="short">
               <label>Link to URL</label>
             </input>
           </case>
