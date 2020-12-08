@@ -1,5 +1,4 @@
-USE [ptn_intotheblue_co_uk]
-GO
+
 
 /****** Object:  View [dbo].[vw_VersionControl_GetPendingContent]    Script Date: 16/05/2020 11:04:18 ******/
 SET ANSI_NULLS ON
