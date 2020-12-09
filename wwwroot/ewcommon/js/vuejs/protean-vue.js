@@ -41,7 +41,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                       cess.
+                        debugger;
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
                     });
