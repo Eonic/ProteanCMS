@@ -20,7 +20,7 @@
 
 	--Get all content records with invalid Audit Ids
 	INSERT INTO @StructWIthInvalidAuditIds
-	SELECT C.nStructKey, C.nAuditId
+	SELECT C.nStructKey, C.nAuditId, C.isDuplicate
 	FROM 
 	(
 		--No AuditId
@@ -62,8 +62,8 @@
 	DECLARE @isDuplicate BIT
 	DECLARE @auditStatus BIT
 
-    BEGIN TRY
-        BEGIN TRAN
+    --BEGIN TRY
+    --    BEGIN TRAN
 
 			DECLARE Cur CURSOR -- Create the cursor
 			LOCAL FAST_FORWARD 
@@ -112,10 +112,10 @@
 
 
 				UPDATE tblContentStructure
-				SET nAuditId = newAuditId
+				SET nAuditId = @newAuditId
 				WHERE nStructKey = @nStructKey
 
-				FETCH NEXT FROM Cur INTO @nStructKey
+				FETCH NEXT FROM Cur INTO @nStructKey, @originalAuditId, @isDuplicate
 
 			END
 
@@ -123,12 +123,12 @@
 			DEALLOCATE Cur
 
 
-        COMMIT TRAN
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRAN
-        THROW
-    END CATCH
+    --    COMMIT TRAN
+    --END TRY
+    --BEGIN CATCH
+    --    ROLLBACK TRAN
+    --    THROW
+    --END CATCH
 
 
 
