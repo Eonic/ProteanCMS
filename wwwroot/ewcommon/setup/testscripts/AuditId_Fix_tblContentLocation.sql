@@ -20,7 +20,7 @@
 
 	--Get all content records with invalid Audit Ids
 	INSERT INTO @LocationWIthInvalidAuditIds
-	SELECT C.nContentLocationKey, C.nAuditId
+	SELECT C.nContentLocationKey, C.nAuditId, C.isDuplicate
 	FROM 
 	(
 		--No AuditId
@@ -62,8 +62,8 @@
 	DECLARE @isDuplicate BIT
 	DECLARE @auditStatus BIT
 
-    BEGIN TRY
-        BEGIN TRAN
+    --BEGIN TRY
+    --    BEGIN TRAN
 
 			DECLARE Cur CURSOR -- Create the cursor
 			LOCAL FAST_FORWARD 
@@ -115,7 +115,7 @@
 				SET nAuditId = @newAuditId
 				WHERE nContentLocationKey = @nContentLocationKey
 
-				FETCH NEXT FROM Cur INTO @nContentLocationKey
+				FETCH NEXT FROM Cur INTO @nContentLocationKey, @originalAuditId, @isDuplicate
 
 			END
 
@@ -123,12 +123,12 @@
 			DEALLOCATE Cur
 
 
-        COMMIT TRAN
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRAN
-        THROW
-    END CATCH
+    --    COMMIT TRAN
+    --END TRY
+    --BEGIN CATCH
+    --    ROLLBACK TRAN
+    --    THROW
+    --END CATCH
 
 
 
