@@ -116,7 +116,7 @@
       <bind nodeset="cContentXmlDetail/Content">
         <bind id="VenueType" nodeset="@venueType" required="false()" type="string"/>
         <bind id="dEventDate" nodeset="StartDate" required="true()" type="string"/>
-        <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-','')">
+        <bind id="dEventEndDate" nodeset="EndDate" required="false()" type="string" constraint="(//cContentXmlDetail/Content/EndDate = '') or ( (//cContentXmlDetail/Content/EndDate != '') and translate(//cContentXmlDetail/Content/EndDate,'-','') &gt;= translate(//cContentXmlDetail/Content/StartDate,'-',''))">
           <alert>End date must be the same day or later than the Start date</alert>
         </bind>
         <!--<bind id="cContentTimes" nodeset="Times" required="false()" type="string"/>-->
