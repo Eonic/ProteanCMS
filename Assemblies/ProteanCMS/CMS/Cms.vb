@@ -1817,9 +1817,14 @@ Public Class Cms
                                 End If
 
                                 If RequestedContentName <> cContentDetailName Then
-                                    mnPageId = gnPageNotFoundId
-                                    oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                    mnProteanCMSError = 1005
+
+                                    'Change to redirect to correct URL, automatic redirects for content name changes
+                                    Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length)
+                                    Me.msRedirectOnEnd = PathBefore & cContentDetailName
+
+                                    '  mnPageId = gnPageNotFoundId
+                                    '  oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                    '  mnProteanCMSError = 1005
                                 End If
                             End If
                         End If
@@ -8313,11 +8318,15 @@ Public Class Cms
 
             Dim cleanfilename As String = goServer.UrlDecode(filename)
 
-            If cleanfilename.Length > 260 Then
-                cleanfilename = Left(cleanfilename, 260)
+            'Limit the file length to 255
+            Dim Extension As String = Right(cleanfilename, cleanfilename.Length - InStr(cleanfilename, "."))
+            cleanfilename = Left(cleanfilename, InStr(cleanfilename, ".") - 1)
+            Dim FilenameLength As Int16 = 255 - Extension.Length
+            If cleanfilename.Length > FilenameLength Then
+                cleanfilename = Left(cleanfilename, FilenameLength)
             End If
 
-            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & goServer.UrlDecode(cleanfilename)
+            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & goServer.UrlDecode(cleanfilename & "." & Extension)
 
             ' If FullFilePath.Length > 255 Then
             ' FullFilePath = Left(FullFilePath, 240) & Ext
@@ -8364,7 +8373,7 @@ Public Class Cms
         Dim cProcessInfo As String = ""
         Try
 
-            moFSHelper.DeleteFolderContents(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
+            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
