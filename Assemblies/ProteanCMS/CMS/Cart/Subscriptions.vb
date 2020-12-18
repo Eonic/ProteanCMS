@@ -22,16 +22,20 @@ Partial Public Class Cms
             Public Sub New(ByRef aWeb As Cms)
                 myWeb = aWeb
                 myCart = myWeb.moCart
-                If oSubConfig("OveridePrices") = "on" Then
-                    mbOveridePrices = True
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
                 End If
             End Sub
 
             Public Sub New(ByRef aCart As Cms.Cart)
                 myCart = aCart
                 myWeb = myCart.myWeb
-                If oSubConfig("OveridePrices") = "on" Then
-                    mbOveridePrices = True
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
                 End If
             End Sub
 
