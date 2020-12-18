@@ -1848,48 +1848,69 @@ processFlow:
                             lastName = fullName(2)
                         End If
 
-                        valDict.Add("Email", Email)
-                        valDict.Add("FirstName", firstName)
-                        valDict.Add("LastName", lastName)
-
-                        If Not oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']") Is Nothing Then
-                            valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
-                            valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Telephone").InnerText)
-                            valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/City").InnerText)
-                            valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/State").InnerText)
-                            valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/PostalCode").InnerText)
+                        Dim xsltPath As String = moMailConfig("Pure360InvoiceList")
+                        If (xsltPath <> "") Then
+                            valDict = GetDisctionaryForCampaigning(xsltPath, oCartElmt, valDict)
+                        Else
+                            valDict.Add("Email", Email)
+                            valDict.Add("FirstName", firstName)
+                            valDict.Add("LastName", lastName)
                         End If
+
+
 
                         Dim ListId As String = ""
-                        Select Case StepName
-                            Case "Invoice"
-                                ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                            Select Case StepName
+                                Case "Invoice"
+                                    ListId = moMailConfig("InvoiceList")
+                                If moMailConfig("InvoiceList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
                                 End If
                             Case "Quote"
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                End If
-                                ListId = moMailConfig("QuoteList")
-                            Case "Newsletter"
-                                If moMailConfig("NewsletterList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
-                                End If
-                                ListId = moMailConfig("NewsletterList")
-                        End Select
-                        If ListId <> "" Then
-                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
-                        End If
-                    End If
-                End If
+                                    If moMailConfig("QuoteList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                    End If
+                                    ListId = moMailConfig("QuoteList")
+                                Case "Newsletter"
+                                    If moMailConfig("NewsletterList") <> "" Then
+                                        oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                    End If
+                                    ListId = moMailConfig("NewsletterList")
+                            End Select
+                            If ListId <> "" Then
+                                oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
+                            End If
 
+                        End If
+                End If
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
 
+        Private Function GetDisctionaryForCampaigning(xsltPath As String, ByRef oCartElmt As XmlElement, Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing) As System.Collections.Generic.Dictionary(Of String, String)
+            Dim styleFile As String
+            Dim messageHtml As String = ""
+            Dim sWriter As IO.TextWriter = New IO.StringWriter
+            Dim oXml As XmlDocument = New XmlDocument
+            Dim oTransform As New Protean.XmlHelper.Transform()
+            Dim XmlString As String = oCartElmt.OuterXml
+            oXml.LoadXml(XmlString)
+            styleFile = moServer.MapPath(xsltPath)
+            oTransform.Compiled = False
+            oTransform.XSLFile = styleFile
+            oTransform.Process(oXml, sWriter)
+            If oTransform.HasError Then
+                Throw New Exception("There was an error transforming the email (Output: HTML).")
+            End If
+            messageHtml = sWriter.ToString()
+            sWriter.Close()
+            Dim xMailingListDoc As XmlDocument = htmlToXmlDoc(messageHtml)
+            Dim xListElement As XmlElement = xMailingListDoc.DocumentElement
+            valDict = XmltoDictionary(xListElement, True)
+            Return valDict
+        End Function
         Private Sub RemoveDeliveryOption(ByVal nOrderId As Integer)
             Try
                 Dim cSQL As String = "UPDATE tblCartOrder SET nShippingMethodId = 0, cShippingDesc = NULL, nShippingCost = 0 WHERE nCartOrderKey = " & nOrderId
