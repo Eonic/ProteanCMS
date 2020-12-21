@@ -461,6 +461,7 @@
           <xsl:if test="@iconStyle='Centre'"> module-centred</xsl:if>
           <xsl:if test="@iconStyle='CentreSmall'"> module-centred</xsl:if>
           <xsl:if test="@iconStyle='Right'"> module-right</xsl:if>
+          <xsl:if test="@iconStyle='Left'"> module-left</xsl:if>
         </xsl:variable>
         <div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>

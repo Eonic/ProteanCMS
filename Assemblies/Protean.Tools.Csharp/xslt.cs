@@ -143,6 +143,17 @@ namespace Protean.Tools.Xslt
             }
         }
 
+        public string cleanname(string name)
+        {
+            try
+            {
+                return Protean.Tools.Text.CleanName(name, true, true);
+            }
+            catch (Exception ex)
+            {
+                return "error";
+            }
+        }
 
         public string datediff(string date1String, string date2String, string datePart)
         {

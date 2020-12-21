@@ -1806,20 +1806,36 @@ Public Class Cms
                             End If
                         End If
 
-                        If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And mcOriginalURL.Contains("-/") Then
+                        If LCase(moConfig("CheckDetailPath")) = "on" And mbAdminMode = False And mnArtId > 0 And (mcOriginalURL.Contains("-/") Or mcOriginalURL.Contains("/Item")) Then
                             If Not oPageElmt.SelectSingleNode("ContentDetail/Content/@name") Is Nothing Then
                                 Dim cContentDetailName As String = oPageElmt.SelectSingleNode("ContentDetail/Content/@name").InnerText
                                 cContentDetailName = Protean.Tools.Text.CleanName(cContentDetailName, False, True)
-                                Dim RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
-                                If RequestedContentName.contains("?") Then
+                                Dim RequestedContentName As String = ""
+                                If mcOriginalURL.Contains("-/") Then
+                                    RequestedContentName = Right(mcOriginalURL, mcOriginalURL.Length - InStr(mcOriginalURL, "-/") - 1)
+                                End If
+
+                                If RequestedContentName.Contains("?") Then
                                     RequestedContentName = RequestedContentName.Substring(0, RequestedContentName.IndexOf("?"))
                                     'myQueryString = RequestedContentName.Substring(mcOriginalURL.LastIndexOf("?"))
                                 End If
 
                                 If RequestedContentName <> cContentDetailName Then
-                                    mnPageId = gnPageNotFoundId
-                                    oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
-                                    mnProteanCMSError = 1005
+
+                                    'Change to redirect to correct URL, automatic redirects for content name changes
+
+                                    If RequestedContentName = "" Then
+                                        Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"))
+                                        Me.msRedirectOnEnd = PathBefore & "/" & mnArtId & "-/" & cContentDetailName
+                                    Else
+                                        Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length)
+                                        Me.msRedirectOnEnd = PathBefore & cContentDetailName
+                                    End If
+
+
+                                    '  mnPageId = gnPageNotFoundId
+                                    '  oPageElmt.RemoveChild(oPageElmt.SelectSingleNode("ContentDetail"))
+                                    '  mnProteanCMSError = 1005
                                 End If
                             End If
                         End If
@@ -5763,7 +5779,7 @@ Public Class Cms
                         If pageDict.ContainsKey(oDR(2)) Then
                             cURL = pageDict.Item(oDR(2))
                             'If moConfig("LegacyRedirect") = "on" Then
-                            cURL &= "/" & oDR(0).ToString & "-/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                            cURL &= "/" & oDR(0).ToString & "-/" & Tools.Text.CleanName(oDR(1).ToString, False, True)
                             ' Else
                             '     cURL &= "/Item" & oDR(0).ToString
                             ' End If
@@ -8313,11 +8329,15 @@ Public Class Cms
 
             Dim cleanfilename As String = goServer.UrlDecode(filename)
 
-            If cleanfilename.Length > 260 Then
-                cleanfilename = Left(cleanfilename, 260)
+            'Limit the file length to 255
+            Dim Extension As String = Right(cleanfilename, cleanfilename.Length - InStr(cleanfilename, "."))
+            cleanfilename = Left(cleanfilename, InStr(cleanfilename, ".") - 1)
+            Dim FilenameLength As Int16 = 255 - Extension.Length
+            If cleanfilename.Length > FilenameLength Then
+                cleanfilename = Left(cleanfilename, FilenameLength)
             End If
 
-            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & goServer.UrlDecode(cleanfilename)
+            Dim FullFilePath As String = mcPageCacheFolder & filepath & "\" & goServer.UrlDecode(cleanfilename & "." & Extension)
 
             ' If FullFilePath.Length > 255 Then
             ' FullFilePath = Left(FullFilePath, 240) & Ext
@@ -8364,7 +8384,7 @@ Public Class Cms
         Dim cProcessInfo As String = ""
         Try
 
-            moFSHelper.DeleteFolderContents(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
+            moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" & gcProjectPath))
 
         Catch ex As Exception
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)

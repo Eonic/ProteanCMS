@@ -323,6 +323,14 @@ Partial Public Module xmlTools
             End Try
         End Function
 
+        Public Function cleanname(name As String) As String
+            Try
+                Return Protean.Tools.Text.CleanName(name, False, True)
+            Catch ex As Exception
+                Return "error"
+            End Try
+        End Function
+
 
         Public Function getdate(ByVal dateString As String) As String
             Try
