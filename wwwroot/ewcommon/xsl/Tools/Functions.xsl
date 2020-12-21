@@ -1700,6 +1700,14 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- splits a string into XML items -->
+  <xsl:template name="cleanname">
+    <xsl:param name="string" />
+    <xsl:if test="$string!=''">
+      <xsl:copy-of select="ew:cleanname($string)"/>
+    </xsl:if>
+  </xsl:template>
+
   <!-- -->
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
@@ -3824,10 +3832,7 @@
   <!-- -->
 
   <xsl:template match="Content" mode="getSafeURLName">
-    <xsl:variable name="strippedName">
-      <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
-    </xsl:variable>
-    <xsl:value-of select="translate(translate($strippedName,' ','-'),'+','-')"/>
+    <xsl:value-of select="ew:cleanname(@name)"/>
   </xsl:template>
 
 

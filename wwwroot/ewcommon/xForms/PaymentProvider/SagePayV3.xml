@@ -31,7 +31,7 @@
 	</model>
 	<group ref="EditContent">
 		<label>SagePay V3 Settings</label>
-    <hint>To sign up for a Sagepay account <a href="https://applications.sagepay.com/apply/C1B0075E-F99D-4E5D-8AE0-E66F13FD081E">click here</a></hint>
+    <hint>To sign up for a Sagepay/Opayo account <a href="https://applications.sagepay.com/apply/C1B0075E-F99D-4E5D-8AE0-E66F13FD081E">click here</a></hint>
     <input bind="description">
 			<label>Description</label>
 		</input>
