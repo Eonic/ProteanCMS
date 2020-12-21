@@ -3,7 +3,7 @@
 	<model>
 		<instance>
 			<provider name="SecPay" validGroups="all" validCurrencies="GBP">
-				<description value="Pay by Credit Card (Paypoint.Net)"/>
+				<description value="Pay by Credit Card (Pay360)"/>
 				<currency value="GBP"/>
 				<cardsAccepted value="MasterCard:Master Card,VISA:Visa,Delta:Delta,Solo:Solo,Switch/Maestro:Switch"/>
 				<accountId value="secpay"/>

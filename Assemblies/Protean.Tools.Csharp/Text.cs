@@ -464,27 +464,43 @@ public static class Text
         cValids += " -&";
         try
         {
-            cName = Strings.Replace(cName, "'", "");
-            cName = Strings.Replace(cName, "&amp;", "&");
-            if (!bLeaveAmp)
-                cName = Strings.Replace(cName, "&", "and");
-            int i;
-            string cBuilt = "";
-            var loopTo = cName.Length;
-            for (i = 0; i <= loopTo; i++)
-            {
-                string cTest = Strings.Right(Strings.Left(cName, i), 1);
-                if (cValids.Contains(cTest))
-                    cBuilt += cTest;
+           if (cName != null) { 
+
+                cName = Strings.Replace(cName, "'", "");
+                cName = Strings.Replace(cName, "&amp;", "&");
+                if (!bLeaveAmp)
+                    cName = Strings.Replace(cName, "&", "and");
+                int i;
+                string cBuilt = "";
+                var loopTo = cName.Length;
+                for (i = 0; i <= loopTo; i++)
+                {
+                    string cTest = Strings.Right(Strings.Left(cName, i), 1);
+                    if (cValids.Contains(cTest))
+                        cBuilt += cTest;
+                }
+                cName = cBuilt;
+                // replace double spaces a few times
+                cName = Strings.Replace(cName, "  ", " ");
+                cName = Strings.Replace(cName, "  ", " ");
+                cName = Strings.Replace(cName, "  ", " ");
+
+
+
+                if (bURLSafe) { 
+                    cName = cName.Replace(" ", "-");
+                    // replace double hyphens a few times
+                    cName = Strings.Replace(cName, "---", "-");
+                    cName = Strings.Replace(cName, "--", "-");
+                    //trim to max filename length with .html
+                    if (cName.Length > 249) {
+                            cName = cName.Substring(0, 249);
+                    }
+                }
+
             }
-            cName = cBuilt;
-            // replace double spaces a few times
-            cName = Strings.Replace(cName, "  ", " ");
-            cName = Strings.Replace(cName, "  ", " ");
-            cName = Strings.Replace(cName, "  ", " ");
-            if (bURLSafe)
-                cName = cName.Replace(" ", "-");
             return cName;
+
         }
         catch (Exception ex)
         {

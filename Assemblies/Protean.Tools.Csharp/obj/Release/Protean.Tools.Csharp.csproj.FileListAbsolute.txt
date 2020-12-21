@@ -80,3 +80,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Release\Renci.Ssh
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools.Csharp\obj\Release\Protean.Tools.Csharp.csprojAssemblyReference.cache

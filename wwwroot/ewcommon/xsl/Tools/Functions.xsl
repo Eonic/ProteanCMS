@@ -237,6 +237,33 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+  
+  <xsl:variable name="BingTrackingID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'BingTrackingID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+  
+   <xsl:variable name="FacebookTrackingID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'FacebookTrackingID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+  
+  <xsl:variable name="FeedOptimiseID">
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'FeedOptimiseID'"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
 
   <!-- Cal Cmd for Calendars -->
   <xsl:variable name="calendarMonth">
@@ -1673,6 +1700,14 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- splits a string into XML items -->
+  <xsl:template name="cleanname">
+    <xsl:param name="string" />
+    <xsl:if test="$string!=''">
+      <xsl:copy-of select="ew:cleanname($string)"/>
+    </xsl:if>
+  </xsl:template>
+
   <!-- -->
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
@@ -2353,6 +2388,54 @@
 
     </xsl:if>
   </xsl:template>
+  
+  <xsl:template match="Page" mode="BingTrackingCode">
+    <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
+      <xsl:if test="$BingTagManagerID!=''">
+            <script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTagManagerID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');</script>
+            <script>window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@totalNet"/>' }); </script>
+      </xsl:if>
+    </xsl:if>
+  </xsl:template>
+  
+    <xsl:template match="Page" mode="FacebookTrackingCode">
+    <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
+      <xsl:if test="$FacebookTrackingID!=''">
+        <xsl:variable name="total"
+            select="sum(Cart/Order/Item/@itemTotal)">
+        </xsl:variable>
+       
+        <script> (function () 
+                var _fbq = window._fbq || (window._fbq = []);
+                if (!_fbq.loaded) {
+                 var fbds = document.createElement('script');
+                fbds.async = true;
+                fbds.src = '//connect.facebook.net/en_US/fbds.js';
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(fbds, s);
+                 _fbq.loaded = true;
+                 }})();
+                 window._fbq = window._fbq || [];
+                  window._fbq.push(['track', '<xsl:value-of select="$FacebookTrackingID"/>', { 'value': '<xsl:value-of select="$total"/>', 'currency': 'GBP' }]);
+                 </script>
+       </xsl:if>
+    </xsl:if>
+  </xsl:template>
+  
+   <xsl:template match="Page" mode="FeedOptimiseCode">
+     <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
+       <xsl:if test="$FeedOptimiseID!=''">
+         <!--<script async="async" type="text/javascript" src='//cdn.feedoptimise.com/fo.js#'<xsl:value-of select="$FeedOptimiseID"/>'/></script>-->
+         <script type="text/javascript">
+           var _fo = _fo || [];");
+           _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@totalNet"/>" ]);
+           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
+         </script> 
+       </xsl:if>
+     </xsl:if>
+  </xsl:template>
+  
+         
 
   <xsl:template match="Content" mode="A1WebStatsCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -3749,10 +3832,7 @@
   <!-- -->
 
   <xsl:template match="Content" mode="getSafeURLName">
-    <xsl:variable name="strippedName">
-      <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
-    </xsl:variable>
-    <xsl:value-of select="translate(translate($strippedName,' ','-'),'+','-')"/>
+    <xsl:value-of select="ew:cleanname(@name)"/>
   </xsl:template>
 
 
@@ -6585,40 +6665,40 @@
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 575px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xxs-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xxs-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xxs-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 767px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xs-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xs-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 991px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-sm-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-sm-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-md-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-md-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
                   <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-lg-webp"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-lg-x2-webp"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg-webp"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
@@ -6626,40 +6706,40 @@
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 575px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xxs"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xxs-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xxs-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 767px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-xs"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-xs-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-xs"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-xs-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 991px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-sm"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-sm-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-sm"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-sm-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(max-width: 1199px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-md"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-md-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-md"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-md-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
                   <xsl:with-param name="media" select="'(min-width: 1200px)'"/>
-                  <xsl:with-param name="imageUrl" select="$ewSrc-lg"/>
-                  <xsl:with-param name="imageRetinaUrl" select="$ewSrc-lg-x2"/>
+                  <xsl:with-param name="imageUrl" select="$newSrc-lg"/>
+                  <xsl:with-param name="imageRetinaUrl" select="$newSrc-lg-x2"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
                 </xsl:call-template>

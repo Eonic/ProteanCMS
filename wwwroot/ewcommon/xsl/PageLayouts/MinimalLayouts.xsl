@@ -461,6 +461,7 @@
           <xsl:if test="@iconStyle='Centre'"> module-centred</xsl:if>
           <xsl:if test="@iconStyle='CentreSmall'"> module-centred</xsl:if>
           <xsl:if test="@iconStyle='Right'"> module-right</xsl:if>
+          <xsl:if test="@iconStyle='Left'"> module-left</xsl:if>
         </xsl:variable>
         <div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
@@ -2119,7 +2120,8 @@
             <!--<i class="fa fa-ellipsis-v">&#160;</i>-->
             <i class="fa fa-caret-down">
               <xsl:text> </xsl:text>
-            </i>&#160;
+            </i>
+            <span class="space">&#160;</span>
             <!--<xsl:apply-templates select="." mode="getDisplayName"/>-->
             <xsl:value-of select="@title"/>
           </h3>

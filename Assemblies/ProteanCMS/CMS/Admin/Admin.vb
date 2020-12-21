@@ -1550,6 +1550,20 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
                             GoTo ProcessFlow
                         End If
+                    Case "EditOrderContact"
+
+                        sAdminLayout = "EditUserContact"
+                        Dim sSql = "Select nContactKey from tblCartContact where cContactType = " &
+                            $"'{myWeb.moRequest("contacttype")} Address' and nContactCartid=" & myWeb.moRequest("orderid")
+                        Dim sContactKey As String = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & sContactKey)))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "Orders"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("orderid")
+                            GoTo ProcessFlow
+                        End If
                     Case "AddUserContact"
 
                         sAdminLayout = mcEwCmd

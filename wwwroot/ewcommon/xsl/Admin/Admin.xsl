@@ -6429,7 +6429,7 @@
   </xsl:template>
   <!-- -->
 
-  <xsl:template match="Page[@layout='AddUserContact'] | Page[@layout='EditUserContact'] | Page[@layout='AddDirContact'] | Page[@layout='EditDirContact']" mode="Admin">
+  <xsl:template match="Page[@layout='AddUserContact'] | Page[@layout='EditUserContact'] | Page[@layout='AddDirContact'] | Page[@layout='EditDirContact'] | Page[@layout='EditOrderContact']" mode="Admin">
     <div class="adminTemplate" id="template_AdminXForm">
       <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
     </div>
@@ -6886,7 +6886,7 @@
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
-          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-edit"> </i>
             Edit
           </a>
@@ -6895,7 +6895,7 @@
       </xsl:if>
       <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
         <div id="deliveryAddress" class="cartAddress col-md-3">
-          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-edit"> </i>
             Edit
           </a>
