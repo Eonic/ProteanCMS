@@ -10532,7 +10532,7 @@
       <xsl:apply-templates select="$currentPage" mode="getHref"/>
     </xsl:variable>
     <li>
-      <a href="{$currentUrl}#{@id}" title="{@name}">
+      <a href="#faq-{@id}" title="{@name}">
         <xsl:choose>
           <!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
           <xsl:when test="DisplayName/node()!=''">
@@ -10561,7 +10561,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="{@id}">
+        <a name="faq-{@id}">
           &#160;
         </a>
         <h3>
