@@ -400,7 +400,9 @@
           <Action Order="0" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/UpdateCompatibilityLevel.sql"/>
           <Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
           <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/spCheckDiscounts.sql"/>
-		  <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spOrderDownload"/>
+		  <Action Order="3" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/AuditId_Check_And_Unique_Constraints.sql"/>
+		  <Action Order="4" Type="Drop" ObjectType="Procedure" ObjectName="spOrderDownload"/>
+		  <Action Order="5" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/spOrderDownload.sql"/>
         </Sub3>
       </Sub2>
     </Sub1>
