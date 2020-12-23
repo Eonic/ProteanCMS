@@ -769,7 +769,7 @@ Partial Public Class Cms
 
 
                 resultsXML.SetAttribute("SearchString", cQuery)
-                    resultsXML.SetAttribute("searchType", "INDEX")
+                resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
 
 
