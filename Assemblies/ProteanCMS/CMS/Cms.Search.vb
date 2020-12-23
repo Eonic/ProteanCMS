@@ -505,6 +505,13 @@ Partial Public Class Cms
                     If totalResults > 0 And pageCount > 0 Then
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
+                    Dim PerPageCount As Integer
+                    If (myWeb.moRequest("PerPageCount") > 0) Then
+                        PerPageCount = myWeb.moRequest("PerPageCount")
+                    Else
+                        PerPageCount = 12
+                    End If
+
 
 
 
@@ -544,9 +551,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("Hits", HitsLimit)
-
-                    resultsXML.SetAttribute("PerPageCount", PerPageCount)
-
+                    resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
 
                     Dim artIdResults As New List(Of Long)
                     Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
@@ -700,7 +705,7 @@ Partial Public Class Cms
 
 
                 resultsXML.SetAttribute("SearchString", cQuery)
-                    resultsXML.SetAttribute("searchType", "INDEX")
+                resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
 
 
