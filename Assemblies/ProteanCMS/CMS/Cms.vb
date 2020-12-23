@@ -4487,7 +4487,7 @@ Public Class Cms
 
                 'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
-                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
+                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 
@@ -6751,7 +6751,6 @@ Public Class Cms
                             contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
                         End If
 
-                        Dim getSafeURLName As String = contentElmt.GetAttribute("name")
 
                         AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
 
@@ -6772,22 +6771,7 @@ Public Class Cms
 
                         If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
 
-                            'get SAFE URL NAME
-                            'getSafeURLName
-                            ' <xsl:variable name="illegalString">
-                            '  <xsl:text> /\.:£%&#34;&#147;&#148;&#39;&#8220;&#8221;&#8216;&#8217;</xsl:text>
-                            '   </xsl:variable>
-                            '<xsl:value-of select="translate(@name,$illegalString,'----')"/>
-
-                            getSafeURLName = getSafeURLName.Replace(" ", "-")
-                            getSafeURLName = getSafeURLName.Replace("/", "-")
-                            getSafeURLName = getSafeURLName.Replace("\", "-")
-                            getSafeURLName = getSafeURLName.Replace(".", "-")
-
-                            getSafeURLName = getSafeURLName.Replace("+", "-")
-                            getSafeURLName = getSafeURLName.Replace("""", "")
-                            getSafeURLName = getSafeURLName.Replace("'", "")
-
+                            Dim SafeURLName As String = Protean.Tools.Text.CleanName(contentElmt.GetAttribute("name"), False, True)
                             Dim myOrigURL As String
                             Dim myQueryString As String = ""
 
@@ -6798,11 +6782,12 @@ Public Class Cms
                                 myOrigURL = mcOriginalURL
                             End If
 
-                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
+                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & SafeURLName Then
                                 'we redirect perminently
                                 mbRedirectPerm = True
-                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName & myQueryString
+                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & SafeURLName & myQueryString
                             End If
+
                         End If
                         moContentDetail = oRoot.FirstChild
 

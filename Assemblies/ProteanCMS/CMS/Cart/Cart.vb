@@ -5946,7 +5946,7 @@ processFlow:
                     addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
                     addNewTextNode("cCartForiegnRef", oElmt)
                     addNewTextNode("nCartStatus", oElmt, "1")
-                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType) '-----BJR----cCartSchemaName)
+                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType)
                     addNewTextNode("cCartSessionId", oElmt, mcSessionId)
                     ' MEMB - add userid to oRs if we are logged on
                     If mnEwUserId > 0 Then
@@ -5960,7 +5960,7 @@ processFlow:
                     addNewTextNode("nShippingMethodId", oElmt, "0")
                     addNewTextNode("cShippingDesc", oElmt, moCartConfig("DefaultShippingDesc"))
                     addNewTextNode("nShippingCost", oElmt, CLng(moCartConfig("DefaultShippingCost") & "0"))
-                    addNewTextNode("cClientNotes", oElmt, cOrderReference) '----BJR
+                    addNewTextNode("cClientNotes", oElmt, cOrderReference)
                     addNewTextNode("cSellerNotes", oElmt, "referer:" & myWeb.moSession("previousPage") & "/n")
                     If Not (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") Is Nothing) Then
                         addElement(oElmt, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, True)
