@@ -729,15 +729,7 @@ Partial Public Class Cms
 
 
                     For Each oelmt In oCartXml.SelectNodes("descendant-or-self::Item[productDetail/SubscriptionPrices]")
-                        If Not oelmt.SelectSingleNode("productDetail/StartDate") Is Nothing Then
-                            If IsDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText) Then
-                                startDate = xmlDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText)
-                            Else
-                                startDate = xmlDate(Now())
-                            End If
-                        Else
-                            startDate = xmlDate(Now())
-                        End If
+                        startDate = oelmt.SelectSingleNode("productDetail/Policy/Schedule/StartDate").InnerText
                         repeatPrice = repeatPrice + CDbl("0" & oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText)
                         repeatInterval = oelmt.SelectSingleNode("productDetail/PaymentUnit").InnerText
                         repeatFrequency = 1
@@ -764,7 +756,7 @@ Partial Public Class Cms
                     oCartXml.SetAttribute("repeatMinimumTerm", minimumTerm)
                     oCartXml.SetAttribute("repeatRenewalTerm", renewalTerm)
                     oCartXml.SetAttribute("delayStart", delayStart)
-                    oCartXml.SetAttribute("startDate", startDate)
+                    oCartXml.SetAttribute("startDate", xmlDate(startDate))
 
                     'oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
                     'Payable amount should be the setup cost TS commented out the above line 01/11/2017
@@ -1161,7 +1153,7 @@ RedoCheck:
                 End Try
             End Function
 
-            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0, Optional ByRef oCartXml As XmlElement = Nothing)
+            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0)
 
                 Dim cLastSubXml As String = ""
                 Dim oSubConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/subscriptions")
@@ -1205,16 +1197,6 @@ RedoCheck:
                                 xItemDoc.FirstChild.AppendChild(oNotes)
 
                                 AddUserSubscription(oDR("nContentKey"), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId)
-
-                                'Hustle in the renewal end so we can show on receipt.
-                                If Not oCartXml Is Nothing Then
-                                    Dim contentId As Long = xItemDoc.DocumentElement.GetAttribute("id")
-                                    Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[@contentId='" & contentId & "']")
-                                    If Not ItemXml Is Nothing Then
-                                        Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
-                                        ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
-                                    End If
-                                End If
 
                                 cLastSubXml = xItemDoc.OuterXml 'oDR("cContentXmlBrief")
                             Next
@@ -1345,9 +1327,6 @@ RedoCheck:
                     End If
 
                     Dim SubEndDate As Date = SubscriptionEndDate(SubStartDate, oCurSubElmt)
-                    If Not cartItemXml Is Nothing Then
-                        cartItemXml.SetAttribute("renewalEnd", xmlDate(SubEndDate))
-                    End If
 
                     oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
 
