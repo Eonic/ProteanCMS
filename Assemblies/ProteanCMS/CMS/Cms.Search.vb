@@ -491,6 +491,13 @@ Partial Public Class Cms
                     If totalResults > 0 And pageCount > 0 Then
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
+                    Dim PerPageCount As Integer
+                    If (myWeb.moRequest("PerPageCount") > 0) Then
+                        PerPageCount = myWeb.moRequest("PerPageCount")
+                    Else
+                        PerPageCount = 12
+                    End If
+
 
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("pageStart", pageStart)
@@ -501,11 +508,11 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("Hits", HitsLimit)
-                    resultsXML.SetAttribute("satrtCount", HitsLimit - 12)
+                    resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
 
                     Dim artIdResults As New List(Of Long)
-                    Dim skipRecords As Integer = (myWeb.moRequest("page")) * 12
-                    Dim takeRecord As Integer = 12
+                    Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
+                    Dim takeRecord As Integer = PerPageCount
                     'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
                     Dim scoreDocs As ScoreDoc() = results.ScoreDocs
                     For i As Integer = skipRecords To results.TotalHits - 1
