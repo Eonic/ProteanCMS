@@ -7611,8 +7611,6 @@
     </xsl:if>
   </xsl:template>
 
-
-
   <xsl:template match="Content | MenuItem | Company | Item" mode="displayDetailImage">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
@@ -7885,12 +7883,6 @@
     </xsl:variable>
     <xsl:variable name="max-height">
       <xsl:apply-templates select="." mode="getDisplayHeight"/>
-    </xsl:variable>
-    <xsl:variable name="lg-max-width">
-      <xsl:apply-templates select="." mode="getFullSizeWidth"/>
-    </xsl:variable>
-    <xsl:variable name="lg-max-height">
-      <xsl:apply-templates select="." mode="getFullSizeHeight"/>
     </xsl:variable>
     <!-- IF Image to resize -->
     <xsl:choose>
