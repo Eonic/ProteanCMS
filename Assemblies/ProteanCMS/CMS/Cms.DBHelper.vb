@@ -5999,7 +5999,7 @@ restart:
 
                     ' Automatically clear up historical caches
                     If bAuth Then
-                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
+                        ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '" & IIf(bAuth, Protean.SqlFmt(goSession.SessionID), "") & "' ") 'AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     Else
                         ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache WHERE DATEDIFF(hh,dCacheDate,GETDATE()) > 12")
                     End If
