@@ -29,10 +29,10 @@ Partial Public Class Cms
 
 #Region "Declarations"
 
-
+        Public WithEvents moDbHelper As Cms.dbHelper
         Public moPageXML As XmlDocument = New XmlDocument
 
-        Public Shadows mcModuleName As String = "Protea.Admin"
+        Public Shadows mcModuleName As String = "Eonic.Admin"
         Public mcEwCmd As String
         Public mcEwCmd2 As String
         Public mcEwCmd3 As String
@@ -639,8 +639,8 @@ ProcessFlow:
                             myWeb.moCtx.Application("ewSettings") = Nothing
                             mcEwCmd = "Normal"
                             myWeb.msRedirectOnEnd = "/?rebundle=true"
-                            '' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
-                            'moDbHelper.clearStructureCacheAll()
+                            ' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
+                            moDbHelper.clearStructureCacheAll()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -1360,19 +1360,7 @@ ProcessFlow:
                             If String.IsNullOrEmpty(myWeb.mcBehaviourAddPageCommand) And String.IsNullOrEmpty(myWeb.mcBehaviourEditPageCommand) Then
 
                                 ' Default behaviour
-                                If myWeb.moRequest("returnCmd") <> "" Then
-                                    Dim returnPageId As Integer
-                                    If mcEwCmd = "EditPage" And myWeb.moRequest("pgid") <> "" Then
-                                        returnPageId = myWeb.moRequest("pgid")
-                                    ElseIf mcEwCmd = "AddPage" And myWeb.moRequest("parid") <> "" Then
-                                        returnPageId = myWeb.moRequest("parid")
-                                    End If
-                                    If returnPageId > 0 Then
-                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd") & "&pgid=" & returnPageId
-                                    Else
-                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd")
-                                    End If
-                                ElseIf myWeb.moSession("lastPage") <> "" Then
+                                If myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                     myWeb.moSession("lastPage") = ""
                                 Else
@@ -1382,7 +1370,7 @@ ProcessFlow:
                                     oPageDetail.RemoveAll()
                                 End If
 
-                            ElseIf myWeb.mcBehaviourEditPageCommand <> "ManageRedirects" Then
+                            Else
 
                                 ' Bespoke behaviour - is it edit or add
                                 If myWeb.moRequest("pgid") > 0 Then
@@ -1396,6 +1384,7 @@ ProcessFlow:
                                 Dim nCloneId As Long = Tools.Xml.getNodeValueByType(moAdXfm.Instance, "//nCloneStructId", Tools.Xml.XmlDataType.TypeNumber, 0)
 
                                 ' Force a redirect
+
                                 myWeb.moSession("ewCmd") = mcEwCmd
                                 myWeb.moSession("pgid") = myWeb.mnPageId
 
@@ -1669,16 +1658,7 @@ ProcessFlow:
                             'return to process flow
                             mcEwCmd = myWeb.moSession("ewCmd")
                             mcEwCmd2 = myWeb.moSession("ewCmd2")
-                            'Select Case myWeb.moRequest("dirType")
-                            '    Case "User"
-                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
-                            '    Case "Group"
-                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
-                            '    Case "Group"
-                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
-                            '    Case Else
-                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
-                            'End Select
+                            myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies&pgid=1"
                             GoTo ProcessFlow
 
                         Else
