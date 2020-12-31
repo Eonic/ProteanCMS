@@ -115,7 +115,7 @@ Public Class Cms
     Public Shared gbSingleLoginSessionPerUser As Boolean = False
     Public Shared gnSingleLoginSessionTimeout As Int16 = 900
     ' Site cache
-    Public Shared gbSiteCacheMode As Boolean = False
+    Public Shared gbSiteCacheMode As Boolean = True
 
     Public sessionRootPageId As Integer = 0
 
@@ -1377,35 +1377,35 @@ Public Class Cms
                                             End If
 
                                             oFoNet.Options = rendererOpts
-                                                oFoNet.Render(oTxtReader, ofileStream)
+                                            oFoNet.Render(oTxtReader, ofileStream)
 
-                                                moResponse.Buffer = True
-                                                moResponse.Expires = 0
-                                                goServer.ScriptTimeout = 10000
+                                            moResponse.Buffer = True
+                                            moResponse.Expires = 0
+                                            goServer.ScriptTimeout = 10000
 
-                                                Dim strFileSize As String = ofileStream.Length
-                                                Dim Buffer() As Byte = ofileStream.ToArray
+                                            Dim strFileSize As String = ofileStream.Length
+                                            Dim Buffer() As Byte = ofileStream.ToArray
 
-                                                moCtx.Response.Clear()
-                                                'Const adTypeBinary = 1
-                                                moCtx.Response.AddHeader("Connection", "keep-alive")
-                                                If moCtx.Request.QueryString("mode") = "open" Then
-                                                    moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
-                                                Else
-                                                    moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
-                                                End If
-                                                moCtx.Response.AddHeader("Content-Length", strFileSize)
-                                                'ctx.Response.Charset = "UTF-8"
-                                                moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
-                                                moCtx.Response.BinaryWrite(Buffer)
-                                                moCtx.Response.Flush()
-
-                                                ' objStream = Nothing
-                                                oFoNet = Nothing
-                                                oTxtReader = Nothing
-                                                ofileStream = Nothing
-                                            End If
+                                            moCtx.Response.Clear()
+                                            'Const adTypeBinary = 1
+                                            moCtx.Response.AddHeader("Connection", "keep-alive")
+                                            If moCtx.Request.QueryString("mode") = "open" Then
+                                                moCtx.Response.AddHeader("Content-Disposition", "filename=" & Replace(strFileName, ",", ""))
                                             Else
+                                                moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" & Replace(strFileName, ",", ""))
+                                            End If
+                                            moCtx.Response.AddHeader("Content-Length", strFileSize)
+                                            'ctx.Response.Charset = "UTF-8"
+                                            moCtx.Response.ContentType = Protean.Tools.FileHelper.GetMIMEType("PDF")
+                                            moCtx.Response.BinaryWrite(Buffer)
+                                            moCtx.Response.Flush()
+
+                                            ' objStream = Nothing
+                                            oFoNet = Nothing
+                                            oTxtReader = Nothing
+                                            ofileStream = Nothing
+                                        End If
+                                    Else
                                         moResponse.AddHeader("Last-Modified", Protean.Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate) & ",")
                                         oTransform.ProcessTimed(moPageXml, moResponse)
                                     End If
@@ -5192,7 +5192,9 @@ Public Class Cms
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
                     Protean.PerfMon.Log("Web", sProcessInfo)
-
+                    If Not moRequest("reBundle") Is Nothing Then
+                        moDbHelper.clearStructureCacheAll()
+                    End If
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
                         If mbAdminMode Then
