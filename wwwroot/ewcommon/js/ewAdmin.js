@@ -77,7 +77,7 @@ $(document).ready(function () {
                 var option = $('<option />').val(value.Code).text(value.Title);
                 $("select.jobOccupationDropdown").append(option);
             });
-            $('select.jobOccupationDropdown').on('change', function () {              
+            $('select.jobOccupationDropdown').on('change', function () {
                 var thisVal = $(this).val()
                 $.each(obj, function (key, value) {
                     if (thisVal == value.Code) {
@@ -142,11 +142,11 @@ $(document).ready(function () {
             '<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
             '<div class="modal-dialog modal-m">' +
             '<div class="modal-content">' +
-                '<div class="modal-header"><h3 style="margin:0;"><i class="fa fa-coffee"> </i> <span><span></h3></div>' +
-                '<div class="modal-body">' +
-                    '<p></p>' +
-                    '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
-                '</div>' +
+            '<div class="modal-header"><h3 style="margin:0;"><i class="fa fa-coffee"> </i> <span><span></h3></div>' +
+            '<div class="modal-body">' +
+            '<p></p>' +
+            '<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+            '</div>' +
             '</div></div></div>');
 
         return {
@@ -254,11 +254,11 @@ $(document).ready(function () {
         hide: true
     });
 
- //   $('#tpltDeliveryMethodLocations #MenuTree').ajaxtreeview({
- //       loadPath: treeviewPath,
- //       ajaxCmd: 'GetLocateNode',
- //       hide: true
- //   });
+    //   $('#tpltDeliveryMethodLocations #MenuTree').ajaxtreeview({
+    //       loadPath: treeviewPath,
+    //       ajaxCmd: 'GetLocateNode',
+    //       hide: true
+    //   });
 
     $('#template_permissions #MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
@@ -342,7 +342,7 @@ $(document).ready(function () {
                 return $(this).prev('.popoverContent').html();
             }
         });
- 
+
         $(this).find('a[data-toggle!="popover"]').click(function (ev) {
             ev.preventDefault();
             $('.modal-dialog').addClass('loading')
@@ -352,7 +352,7 @@ $(document).ready(function () {
             currentModal.load(target, function () {
                 $('.modal-dialog').removeClass('loading')
                 currentModal.modal("show");
-                
+
             });
         });
 
@@ -403,7 +403,7 @@ $(document).ready(function () {
                 }
             });
             return false;
-            });
+        });
     });
 
     $('#files .item-image .panel').prepareLibImages();
@@ -444,8 +444,8 @@ function setEditImage() {
         imgtag = encodeURIComponent(imgtag);
         var targetField = $(this).parents('.input-group').children('textarea').attr('id');
         var cName = "";
-        var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&ewCmd2=editImage&imgHtml=' + imgtag + '&targetField=' + targetField 
-       // alert(linkUrl);
+        var linkUrl = '?contentType=popup&ewCmd=ImageLib&targetForm=' + targetForm + '&ewCmd2=editImage&imgHtml=' + imgtag + '&targetField=' + targetField
+        // alert(linkUrl);
         // $(this).attr("href", linkUrl); 
         $('#modal-' + targetField).load(linkUrl, function (e) { $('#modal-' + targetField).modal('show'); });
         return false;
@@ -455,15 +455,15 @@ function setEditImage() {
 
 function initialiseHelptips() {
 
-        $(".helpTip").tooltip({
-            track: true,
-            relative:true,
-            hide: { duration: 1000000 } ,
-            content: function () {
-                var element = $(this);
-                return element.attr("title");
-            }
-        });
+    $(".helpTip").tooltip({
+        track: true,
+        relative: true,
+        hide: { duration: 1000000 },
+        content: function () {
+            var element = $(this);
+            return element.attr("title");
+        }
+    });
 
 };
 
@@ -533,7 +533,7 @@ function acceptModule($drag, $drop) {
 
 function shinkModuleContents($drag) {
     $drag.children(':not(.editable)').slideUp('slow');
-    $drag.css("width", 200); 
+    $drag.css("width", 200);
     $drag.css("float", "right");
     $drag.addClass("dragging");
 };
@@ -552,9 +552,9 @@ function modalOpen(dialog) {
         });
     });
 }
-(function ( $ ) {
+(function ($) {
     $.fn.prepareLibImages = function () {
-        return this.each(function() {
+        return this.each(function () {
             var thisButton = $(this)
             thisButton.hover(function () {
                 thisButton.closest('.panel').find('.description').show()
@@ -619,24 +619,23 @@ $.fn.prepareAdminXform = function () {
             var startEventDate = $("#EditContent #dEventDate-alt").val();
             var endEventDate = $("#EditContent #dEventEndDate-alt").val();
             if (Date.parse(endEventDate) < Date.parse(startEventDate)) {
-                $("#EditContent #dEventEndDate").val('');
                 $("#EditContent #dEventEndDate-alt").val('');
             }
         });
     }
 
-   // $('.ewXform label').each(function () {
-   //     if ($(this).parent().is('span.radiocheckbox')) {
+    // $('.ewXform label').each(function () {
+    //     if ($(this).parent().is('span.radiocheckbox')) {
 
-  //      }
-   //     else {
-            // think of a better method, this screws design when there is HTML in a label, 
-            //typically: 
-            //      <p>TEXT</p>
-            //      :
-            //$(this).append(':')
-   //     }
-  //  });
+    //      }
+    //     else {
+    // think of a better method, this screws design when there is HTML in a label, 
+    //typically: 
+    //      <p>TEXT</p>
+    //      :
+    //$(this).append(':')
+    //     }
+    //  });
 
 };
 
@@ -646,30 +645,30 @@ function passImgToForm(targetForm, targetField) {
     cWidth = document.forms['imageDetailsForm'].elements['nWidth'].value
     cHeight = document.forms['imageDetailsForm'].elements['nHeight'].value
     cName = document.forms['imageDetailsForm'].elements['cName'].value
-    
-    cImgHtml = '<img src="' + cUrl.replace(/ /g,"%20") + '" width="' + '75' + '" height="' + ((cHeight / cWidth) * 75) + '" alt="' + cAlt + '"'
+
+    cImgHtml = '<img src="' + cUrl.replace(/ /g, "%20") + '" width="' + '75' + '" height="' + ((cHeight / cWidth) * 75) + '" alt="' + cAlt + '"'
     if (cName != '') {
         cImgHtml = cImgHtml + ' class="' + cName + '"'
     }
     cImgHtml = cImgHtml + '/>'
 
-    imgtag = '<img src="' + cUrl.replace(/ /g,"%20") + '" width="' + cWidth + '" height="' + cHeight + '" alt="' + cAlt + '"'
+    imgtag = '<img src="' + cUrl.replace(/ /g, "%20") + '" width="' + cWidth + '" height="' + cHeight + '" alt="' + cAlt + '"'
     if (cName != '') {
         imgtag = imgtag + ' class="' + cName + '"'
     }
     imgtag = imgtag + '/>'
 
-   // alert(targetField + '-' + $('#' + targetField).hasClass('xhtml'));
+    // alert(targetField + '-' + $('#' + targetField).hasClass('xhtml'));
 
     if ($('#' + targetField).hasClass('xhtml')) {
         tinymce.activeEditor.insertContent(imgtag);
     }
-    else { 
-    
+    else {
+
         $('#' + targetField).val(imgtag);
         editDiv = $('#editImage_' + targetField);
         previewDiv = $('#previewImage_' + targetField);
-       // previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + targetField + '()" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"> </i> Edit image</a><br/><a href="#" onclick="xfrmClearImage(\'EditContent\',\'' + targetField + '\',\'' + cName + '\');return false" title="Clear Image" class="btn btn-sm btn-danger"><i class="icon-remove-circle icon-white"> </i> Clear image</a>';
+        // previewDiv.innerHTML = '<a href="#" onclick="OpenWindow_edit_' + targetField + '()" title="edit an image from the image library" class="btn btn-sm btn-primary"><i class="icon-edit icon-white"> </i> Edit image</a><br/><a href="#" onclick="xfrmClearImage(\'EditContent\',\'' + targetField + '\',\'' + cName + '\');return false" title="Clear Image" class="btn btn-sm btn-danger"><i class="icon-remove-circle icon-white"> </i> Clear image</a>';
         $(editDiv).find('.editpick').html('<a title="edit an image from the image library" class="btn btn-primary editImage"><i class="fa fa-edit fa-white"> </i> Edit</a>');
         $(editDiv).find('a.editImage').click(function () {
             $(this).attr("href", '?contentType=popup&ewCmd=ImageLib&amp;targetForm=' + targetForm + '&amp;ewCmd2=editImage&amp;imgHtml=' + imgtag + '&amp;targetField=' + targetField + '&amp;targetClass=' + cName);
@@ -680,7 +679,7 @@ function passImgToForm(targetForm, targetField) {
         previewDiv.remove();
     }
     $(".pickImageModal").modal("hide").removeData();
-   // $(".pickImageModal").html("");
+    // $(".pickImageModal").html("");
     setEditImage();
 }
 
@@ -754,7 +753,7 @@ function updatePreviewImage(formRef, fieldRef) {
 }
 
 
-function markAsRead(userId,artId) {
+function markAsRead(userId, artId) {
     var logActivityAPIUrl = "/ewapi/Cms.Content/LogActivity";
 
     var jsObj = { 'type': 'PageViewed', 'userId': userId, 'pageId': '', 'artId': artId };
@@ -767,7 +766,7 @@ function markAsRead(userId,artId) {
         $('#hide-' + artId).remove();
 
     });
-    
+
 }
 
 /*
@@ -816,7 +815,7 @@ Original preload function has been kept but is unused.
 
                 // Add the control classes to the tree
                 $(this).find('li').each(function () {
-                   // alert($(this).attr('id') + '==' + 'node' + $(this).next().data("tree-parent"))
+                    // alert($(this).attr('id') + '==' + 'node' + $(this).next().data("tree-parent"))
                     if ($(this).attr('id') == 'node' + $(this).next().data("tree-parent")) {
                         $(this).removeClass('expandable').addClass('collapsable');
                     }
@@ -825,9 +824,9 @@ Original preload function has been kept but is unused.
                     }
                 });
 
-               // $(this).find('li:has(ul):has(".activeParent,.inactiveParent")').addClass('collapsable');
-               // $(this).find('li:not(:has(ul)):has(".activeParent,.inactiveParent")').addClass('expandable');
-                
+                // $(this).find('li:has(ul):has(".activeParent,.inactiveParent")').addClass('collapsable');
+                // $(this).find('li:not(:has(ul)):has(".activeParent,.inactiveParent")').addClass('expandable');
+
                 // Call buildtree
                 // New (Hide) Version (v1.0.8)
                 if (settings.hide) {
@@ -847,7 +846,7 @@ Original preload function has been kept but is unused.
         },
 
         startLevel: function (settings) {
-        
+
             $("#MenuTree li[data-tree-level='" + settings.openLevel + "']").each(function () {
                 //unless you have an active descendant
                 if ($(this).activeChild() == false) {
@@ -908,7 +907,7 @@ Original preload function has been kept but is unused.
                 alert('empty');
 
                 // Remove the child tree
-              
+
                 $(this).parent().find('ul').empty();
 
                 // Reset Class Status
@@ -934,7 +933,7 @@ Original preload function has been kept but is unused.
                 // Sort the parent node's class
                 $(this).parent().removeClass('expandable').addClass('collapsable');
                 // Append the loading line
-              //  $(this).parent().find('ul').append('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-2x fa-fw"> </i></div>')
+                //  $(this).parent().find('ul').append('<div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-2x fa-fw"> </i></div>')
                 var ewCloneContextId = 0;
 
                 // Test for context (cloned pages)
@@ -955,7 +954,7 @@ Original preload function has been kept but is unused.
                         $(this).children().find('li').has('i.activeParent').addClass('expandable');
                         // Rebuild the tree
                         $("#MenuTree").buildTree(settings)
-          
+
                     });
                 }
                 // Else for everything use, use the regular loading sequence
@@ -987,23 +986,23 @@ Original preload function has been kept but is unused.
             $('#MenuTree').applyLast();
             // Remove any mouse bindings currently on the hitarea's
             $('#MenuTree li div.hitarea').unbind("click");
-            
-         // alert('treeload');
+
+            // alert('treeload');
 
             //Mouse binding for open nodes
-             $('#MenuTree').find('.collapsable-hitarea').unbind("click").click(function () {
-            
-                
+            $('#MenuTree').find('.collapsable-hitarea').unbind("click").click(function () {
+
+
                 $(this).parent().hideChildren();
 
                 // Reset Class Status
-              
+
                 // Set kids to be closed again
                 ///////////////////////////// !!! what happens here? assume that they aren't open?
                 //$(this).children().find('li:has(".activeParent,.inactiveParent")').addClass('expandable');			
                 // Calling a rebuild assings the correct functionality
                 $("#MenuTree").buildTree_noreload(settings)
-             });
+            });
 
 
             //Mouse binding for closed nodes (First Time)
@@ -1018,11 +1017,11 @@ Original preload function has been kept but is unused.
 
                 // Get the node's ID (used in load)
                 var ewPageId = (this.parentNode.getAttribute('id').replace(/node/, ""));
-               
+
                 // Append the loading line
                 var parentNode = $(this).parent()
                 $('<li id="loading-node" class="list-group-item"><div class="loadnode">Loading <i class="fa fa-cog fa-spin fa-fw"></i></div></li>').insertAfter(parentNode);
-              
+
                 // If move has been flagged then use a different load
                 var ewCloneContextId = 0;
 
@@ -1046,10 +1045,10 @@ Original preload function has been kept but is unused.
                     });
                 }
                 else {
-               
+
                     var loadNode = $(this).parent().next()
                     loadNode.load(settings.loadPath, { ajaxCmd: settings.ajaxCmd, pgid: ewPageId, context: ewCloneContextId }, function (data) {
-                        
+
                         var $results = $(loadNode).find('ul .list-group-item');
                         if ($results.length == 0) {
                             alert($(loadNode).html());
@@ -1065,7 +1064,7 @@ Original preload function has been kept but is unused.
                         $("#MenuTree").buildTree_noreload(settings)
                     });
 
-                  
+
                 }
 
             });
@@ -1089,9 +1088,9 @@ Original preload function has been kept but is unused.
         hideChildren: function () {
             $(this).find('.hitarea').removeClass('collapsable-hitarea').addClass('expandable-hitarea');
             $(this).find('.hitarea').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-           // alert($(this).html)
+            // alert($(this).html)
             var ewPageId = ($(this).attr('id').replace(/node/, ""));
-           // alert(ewPageId);
+            // alert(ewPageId);
             $(this).parent().find('li[data-tree-parent="' + ewPageId + '"]').each(function (index) {
                 $(this).find('.hitarea').removeClass('collapsable-hitarea').addClass('expandable-hitarea');
                 $(this).find('.hitarea').removeClass('fa-chevron-down').addClass('fa-chevron-right');
@@ -1101,7 +1100,7 @@ Original preload function has been kept but is unused.
             });
 
             $(this).removeClass('collapsable').removeClass('expandable').addClass('expandable_loaded');
-           
+
         },
 
         checkChildren: function () {
@@ -1114,7 +1113,7 @@ Original preload function has been kept but is unused.
                         //if incorrect parent
                         if ($('#MenuTree li[id="node' + thisParentId + '"] li[data-tree-parent="' + thisParentId + '"]').length == 0) {
                             //no siblings moved allready
-                           // $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
+                            // $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
                             $(this).nextAll('li[data-tree-parent="' + thisParentId + '"]').reverse().each(function () {
                                 $('#MenuTree li[id="node' + thisParentId + '"]').after($(this))
                             });
@@ -1124,13 +1123,13 @@ Original preload function has been kept but is unused.
                 }
             })
         },
- 
+
 
         //This function sorts the flagging of "last" nodes (used for the gfx)
         applyLast: function () {
             //Hide and show Up Down Buttons
             $('#MenuTree li').each(function () {
-  
+
                 var thisParentId = $(this).data('tree-parent')
                 //if this not has a previous sibling with the same data-tree-parent then hide the up arrows
                 if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length == 0) {
@@ -1176,8 +1175,8 @@ Original preload function has been kept but is unused.
                         $('#MenuTree').checkChildren();
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
                         $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                       // alert('move up');
-                       
+                        // alert('move up');
+
                     }
                 });
 
@@ -1205,8 +1204,8 @@ Original preload function has been kept but is unused.
                         $('#MenuTree').checkChildren();
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
                         $('#MenuTree li#' + moveIdNode).removeClass("locked");
-                       // alert('move down');
-                      
+                        // alert('move down');
+
                     }
                 });
             }
@@ -1231,7 +1230,7 @@ Original preload function has been kept but is unused.
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
                         $('#MenuTree li#' + moveIdNode).removeClass("locked");
 
-                      
+
                     }
                 });
             }
@@ -1253,7 +1252,7 @@ Original preload function has been kept but is unused.
                         $('#MenuTree').applyLast();
                         $('#MenuTree').checkChildren();
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
-                        $('#MenuTree li#' + moveIdNode).removeClass("locked");                      
+                        $('#MenuTree li#' + moveIdNode).removeClass("locked");
                     }
                 });
             }
@@ -1347,8 +1346,8 @@ Original preload function has been kept but is unused.
                 $(this).parents('td.optionsButton').css('zIndex', 10000)
                 $(this).children('a.popup').addClass('popupOpen')
                 $(this).children('a.popup').removeClass('popup')
-                                $(this).children('div.ewPopMenu').show();
-               // $(this).children('div.ewPopMenu').dialog({ modal: true });
+                $(this).children('div.ewPopMenu').show();
+                // $(this).children('div.ewPopMenu').dialog({ modal: true });
             }
             );
             $(this).parent().mouseout(function () {
@@ -1411,12 +1410,12 @@ function initialiseGeocoderButton() {
 
         // Create an array of address details
         var address = [
-			$('#cContentLocationNo').val(),
-			$('#cContentLocationStreet').val(),
-			$('#cContentLocationTown').val(),
-			$('#cContentLocationRegion').val(),
-			$('#cContentLocationPostCode').val(),
-		];
+            $('#cContentLocationNo').val(),
+            $('#cContentLocationStreet').val(),
+            $('#cContentLocationTown').val(),
+            $('#cContentLocationRegion').val(),
+            $('#cContentLocationPostCode').val(),
+        ];
 
         // Turn address array into a comma separated string
         var addressString = address.join(',');
@@ -1455,12 +1454,12 @@ function initialiseGeocoderButton() {
 
         // Create an array of address details
         var address = [
-			$('#cLocationName').val(),
-			$('#cLocationStreet').val(),
-			$('#cLocationTown').val(),
-			$('#cLocationRegion').val(),
-			$('#cLocationPostCode').val(),
-		];
+            $('#cLocationName').val(),
+            $('#cLocationStreet').val(),
+            $('#cLocationTown').val(),
+            $('#cLocationRegion').val(),
+            $('#cLocationPostCode').val(),
+        ];
 
         // Turn address array into a comma separated string
         var addressString = address.join(',');
@@ -1497,21 +1496,21 @@ function initialiseGeocoderButton() {
 $(function () {
     //$('#btnHelpEditing span i').addClass('fa-chevron-up');
     $('#btnHelpEditing').click(function () {
-        
+
         $('#helpBox p').load($('#userGuideURL').attr('href'), afterLoad); // Load in userGuideURL defined in admin.xsl
         if ($('#divHelpBox').hasClass('open')) // Animation of the user guide pane and button (sliding)
         { $('#divHelpBox').animate({ right: -350 }, { duration: 500 }).removeClass('open'); }
         else
             $('#divHelpBox').animate({ right: 0 }, { duration: 500 }).addClass('open');
         if ($('#btnHelpEditing').hasClass('open')) {
-           $('#btnHelpEditing').animate({ right: 0 }, { duration: 500 }).css({ backgroundPosition: '0 0' }).removeClass('open');
+            $('#btnHelpEditing').animate({ right: 0 }, { duration: 500 }).css({ backgroundPosition: '0 0' }).removeClass('open');
         }
         else
             $('#btnHelpEditing').animate({ right: 350 }, { duration: 500 }).css({ backgroundPosition: '-34px 0' }).addClass('open');
-            $('#btnHelpEditing span i').toggleClass('fa-chevron-down');
-        });
+        $('#btnHelpEditing span i').toggleClass('fa-chevron-down');
+    });
 
-        
+
     $(window).scroll(resizeHelpBox);
     $(window).resize(resizeHelpBox);
     //    $(window).scroll(resizeScroll);
@@ -1520,9 +1519,9 @@ $(function () {
 });
 function resizeHelpBox() { // Resizes the user guide pane to always fill the height of the window
     var top = $('#adminHeader').height() - $(window).scrollTop(),
-		top = top > 0 ? top : 0, // Don't want top to be less than zero
-		height = $(window).height() - top - 5,
-		$btn = $('#btnHelpEditing');
+        top = top > 0 ? top : 0, // Don't want top to be less than zero
+        height = $(window).height() - top - 5,
+        $btn = $('#btnHelpEditing');
     $('#divHelpBox').css('top', top);
     $btn.css('top', top + (height - $btn.outerHeight()) / 2);
     $('.scroll-pane-arrows').css('height', height);
@@ -1586,12 +1585,12 @@ function afterLoad() { // After the content from the user guide is loaded
     * ========================= */
 
     var toggle = '[data-toggle=bfh-selectbox]',
-      BFHSelectBox = function (element, options) {
-          this.options = $.extend({}, $.fn.bfhselectbox.defaults, options);
-          this.$element = $(element);
+        BFHSelectBox = function (element, options) {
+            this.options = $.extend({}, $.fn.bfhselectbox.defaults, options);
+            this.$element = $(element);
 
-          this.initSelectBox();
-      };
+            this.initSelectBox();
+        };
 
     BFHSelectBox.prototype = {
 
@@ -1606,18 +1605,18 @@ function afterLoad() { // After the content from the user guide is loaded
             });
 
             this.$element.html(
-        '<input type="hidden" name="' + this.options.name + '" value="">' +
-		'<a class="bfh-selectbox-toggle ' + this.options.input + '" role="button" data-toggle="bfh-selectbox" href="#">' +
-		'<span class="bfh-selectbox-option"></span>' +
-		'<span class="' + this.options.icon + ' selectbox-caret"></span>' +
-		'</a>' +
-		'<div class="bfh-selectbox-options">' +
-		'<div role="listbox">' +
-		'<ul role="option">' +
-		'</ul>' +
-		'</div>' +
-		'</div>'
-      );
+                '<input type="hidden" name="' + this.options.name + '" value="">' +
+                '<a class="bfh-selectbox-toggle ' + this.options.input + '" role="button" data-toggle="bfh-selectbox" href="#">' +
+                '<span class="bfh-selectbox-option"></span>' +
+                '<span class="' + this.options.icon + ' selectbox-caret"></span>' +
+                '</a>' +
+                '<div class="bfh-selectbox-options">' +
+                '<div role="listbox">' +
+                '<ul role="option">' +
+                '</ul>' +
+                '</div>' +
+                '</div>'
+            );
 
             this.$element.find('[role=option]').html(options);
 
@@ -1628,18 +1627,18 @@ function afterLoad() { // After the content from the user guide is loaded
             this.$element.val(this.options.value);
 
             this.$element
-        .on('click.bfhselectbox.data-api touchstart.bfhselectbox.data-api', toggle, BFHSelectBox.prototype.toggle)
-		.on('keydown.bfhselectbox.data-api', toggle + ', [role=option]', BFHSelectBox.prototype.keydown)
-		.on('mouseenter.bfhselectbox.data-api', '[role=option] > li > a', BFHSelectBox.prototype.mouseenter)
-		.on('click.bfhselectbox.data-api', '[role=option] > li > a', BFHSelectBox.prototype.select)
-		.on('click.bfhselectbox.data-api', '.bfh-selectbox-filter', function () { return false; })
-		.on('propertychange.bfhselectbox.data-api change.bfhselectbox.data-api input.bfhselectbox.data-api paste.bfhselectbox.data-api', '.bfh-selectbox-filter', BFHSelectBox.prototype.filter);
+                .on('click.bfhselectbox.data-api touchstart.bfhselectbox.data-api', toggle, BFHSelectBox.prototype.toggle)
+                .on('keydown.bfhselectbox.data-api', toggle + ', [role=option]', BFHSelectBox.prototype.keydown)
+                .on('mouseenter.bfhselectbox.data-api', '[role=option] > li > a', BFHSelectBox.prototype.mouseenter)
+                .on('click.bfhselectbox.data-api', '[role=option] > li > a', BFHSelectBox.prototype.select)
+                .on('click.bfhselectbox.data-api', '.bfh-selectbox-filter', function () { return false; })
+                .on('propertychange.bfhselectbox.data-api change.bfhselectbox.data-api input.bfhselectbox.data-api paste.bfhselectbox.data-api', '.bfh-selectbox-filter', BFHSelectBox.prototype.filter);
         },
 
         toggle: function (e) {
             var $this,
-          $parent,
-          isActive;
+                $parent,
+                isActive;
 
             $this = $(this);
             $parent = getParent($this);
@@ -1660,9 +1659,9 @@ function afterLoad() { // After the content from the user guide is loaded
                 }
 
                 $parent
-          .toggleClass('open')
-          .trigger('shown.bfhselectbox')
-          .find('[role=option] > li > [data-option="' + $parent.val() + '"]').focus();
+                    .toggleClass('open')
+                    .trigger('shown.bfhselectbox')
+                    .find('[role=option] > li > [data-option="' + $parent.val() + '"]').focus();
             }
 
             return false;
@@ -1670,29 +1669,29 @@ function afterLoad() { // After the content from the user guide is loaded
 
         filter: function () {
             var $this,
-          $parent,
-          $items;
+                $parent,
+                $items;
 
             $this = $(this);
             $parent = getParent($this);
 
             $items = $('[role=option] li a', $parent);
             $items
-        .hide()
-        .filter(function () {
-            return ($(this).text().toUpperCase().indexOf($this.val().toUpperCase()) !== -1);
-        })
-        .show();
+                .hide()
+                .filter(function () {
+                    return ($(this).text().toUpperCase().indexOf($this.val().toUpperCase()) !== -1);
+                })
+                .show();
         },
 
         keydown: function (e) {
             var $this,
-          $items,
-          $parent,
-          $subItems,
-          isActive,
-          index,
-          selectedIndex;
+                $items,
+                $parent,
+                $subItems,
+                isActive,
+                index,
+                selectedIndex;
 
             if (!/(38|40|27)/.test(e.keyCode)) {
                 return true;
@@ -1749,9 +1748,9 @@ function afterLoad() { // After the content from the user guide is loaded
 
         select: function (e) {
             var $this,
-          $parent,
-          $span,
-          $input;
+                $parent,
+                $span,
+                $input;
 
             $this = $(this);
 
@@ -1789,8 +1788,8 @@ function afterLoad() { // After the content from the user guide is loaded
             }
 
             $parent
-        .removeClass('open')
-        .trigger('hidden.bfhselectbox');
+                .removeClass('open')
+                .trigger('hidden.bfhselectbox');
         });
     }
 
@@ -1807,8 +1806,8 @@ function afterLoad() { // After the content from the user guide is loaded
     $.fn.bfhselectbox = function (option) {
         return this.each(function () {
             var $this,
-          data,
-          options;
+                data,
+                options;
 
             $this = $(this);
             data = $this.data('bfhselectbox');
@@ -1861,7 +1860,7 @@ function afterLoad() { // After the content from the user guide is loaded
         },
         set: function (el, val) {
             var $el,
-          html;
+                html;
 
             if ($(el).hasClass('bfh-selectbox')) {
 
@@ -1902,14 +1901,14 @@ function afterLoad() { // After the content from the user guide is loaded
     * =================================== */
 
     $(document)
-    .on('click.bfhselectbox.data-api', clearMenus);
+        .on('click.bfhselectbox.data-api', clearMenus);
 
 }(window.jQuery);
 
 
-    jQuery.fn.reverse = function() {
-        return this.pushStack(this.get().reverse(), arguments);
-    }; 
+jQuery.fn.reverse = function () {
+    return this.pushStack(this.get().reverse(), arguments);
+};
 
 function unescapeHTML(escapedHTML) {
     return escapedHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
@@ -2007,10 +2006,10 @@ function formatXml2(xml) {
     return out;
 }
 
-function checkTextAreaMaxLength(textBoxRef, e) { 
-    var myTextBox = $("#" + textBoxRef);
+function checkTextAreaMaxLength(textBoxRef, e) {
+    var myTextBox = $("input#" + textBoxRef);
     var maxLength = parseInt(myTextBox.data("length"));
-  
+
     if (!checkSpecialKeys(e)) {
         // if (myTextBox.value.val() > maxLength - 1) {
         //    $("#" + textBoxRef + "-char-count").
@@ -2021,13 +2020,10 @@ function checkTextAreaMaxLength(textBoxRef, e) {
 }
 
 function setDefaultEventEndDate() {
-    var startEventDateAlt = $("#EditContent #dEventDate-alt").val();
-    var startEventDate = $("#EditContent #dEventDate").val();
-
+    var startEventDate = $("#EditContent #dEventDate-alt").val();
     var endEventDate = $("#EditContent #dEventEndDate-alt").val();
-    if ((startEventDateAlt != null && startEventDateAlt != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDateAlt))) {
-        $("#EditContent #dEventEndDate").val(startEventDate);
-        $("#EditContent #dEventEndDate-alt").val(startEventDateAlt);
+    if ((startEventDate != null && startEventDate != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDate))) {
+        $("#EditContent #dEventEndDate-alt").val(startEventDate);
     }
 }
 
@@ -2050,4 +2046,69 @@ function checkSpecialKeys(e) {
 
 !function (t) { function e() { function e(t) { "remove" === t && this.each(function (t, e) { var n = r(e); n && n.remove() }), this.find("span.mceEditor,div.mceEditor").each(function (t, e) { var n = tinymce.get(e.id.replace(/_parent$/, "")); n && n.remove() }) } function i(t) { var n, i = this; if (null != t) e.call(i), i.each(function (e, n) { var i; (i = tinymce.get(n.id)) && i.setContent(t) }); else if (i.length > 0 && (n = tinymce.get(i[0].id))) return n.getContent() } function r(t) { var e = null; return t && t.id && a.tinymce && (e = tinymce.get(t.id)), e } function c(t) { return !!(t && t.length && a.tinymce && t.is(":tinymce")) } var u = {}; t.each(["text", "html", "val"], function (e, a) { var o = u[a] = t.fn[a], s = "text" === a; t.fn[a] = function (e) { var a = this; if (!c(a)) return o.apply(a, arguments); if (e !== n) return i.call(a.filter(":tinymce"), e), o.apply(a.not(":tinymce"), arguments), a; var u = "", l = arguments; return (s ? a : a.eq(0)).each(function (e, n) { var i = r(n); u += i ? s ? i.getContent().replace(/<(?:"[^"]*"|'[^']*'|[^'">])*>/g, "") : i.getContent({ save: !0 }) : o.apply(t(n), l) }), u } }), t.each(["append", "prepend"], function (e, i) { var a = u[i] = t.fn[i], o = "prepend" === i; t.fn[i] = function (t) { var e = this; return c(e) ? t !== n ? (e.filter(":tinymce").each(function (e, n) { var i = r(n); i && i.setContent(o ? t + i.getContent() : i.getContent() + t) }), a.apply(e.not(":tinymce"), arguments), e) : void 0 : a.apply(e, arguments) } }), t.each(["remove", "replaceWith", "replaceAll", "empty"], function (n, i) { var r = u[i] = t.fn[i]; t.fn[i] = function () { return e.call(this, i), r.apply(this, arguments) } }), u.attr = t.fn.attr, t.fn.attr = function (e, a) { var o = this, s = arguments; if (!e || "value" !== e || !c(o)) return a !== n ? u.attr.apply(o, s) : u.attr.apply(o, s); if (a !== n) return i.call(o.filter(":tinymce"), a), u.attr.apply(o.not(":tinymce"), s), o; var l = o[0], p = r(l); return p ? p.getContent({ save: !0 }) : u.attr.apply(t(l), s) } } var n, i, r = [], a = window; t.fn.tinymce = function (n) { function c() { var i = [], r = 0; e && (e(), e = null), l.each(function (t, e) { var a, c = e.id, u = n.oninit; c || (e.id = c = tinymce.DOM.uniqueId()), tinymce.get(c) || (a = new tinymce.Editor(c, n, tinymce.EditorManager), i.push(a), a.on("init", function () { var t, e = u; l.css("visibility", ""), u && ++r == i.length && ("string" == typeof e && (t = -1 === e.indexOf(".") ? null : tinymce.resolve(e.replace(/\.\w+$/, "")), e = tinymce.resolve(e)), e.apply(t || tinymce, i)) })) }), t.each(i, function (t, e) { e.render() }) } var u, o, s, l = this, p = ""; if (!l.length) return l; if (!n) return tinymce.get(l[0].id); if (l.css("visibility", "hidden"), a.tinymce || i || !(u = n.script_url)) 1 === i ? r.push(c) : c(); else { i = 1, o = u.substring(0, u.lastIndexOf("/")), -1 != u.indexOf(".min") && (p = ".min"), a.tinymce = a.tinyMCEPreInit || { base: o, suffix: p }, -1 != u.indexOf("gzip") && (s = n.language || "en", u = u + (/\?/.test(u) ? "&" : "?") + "js=true&core=true&suffix=" + escape(p) + "&themes=" + escape(n.theme || "") + "&plugins=" + escape(n.plugins || "") + "&languages=" + (s || ""), a.tinyMCE_GZ || (a.tinyMCE_GZ = { start: function () { function e(t) { tinymce.ScriptLoader.markDone(tinymce.baseURI.toAbsolute(t)) } e("langs/" + s + ".js"), e("themes/" + n.theme + "/theme" + p + ".js"), e("themes/" + n.theme + "/langs/" + s + ".js"), t.each(n.plugins.split(","), function (t, n) { n && (e("plugins/" + n + "/plugin" + p + ".js"), e("plugins/" + n + "/langs/" + s + ".js")) }) }, end: function () { } })); var f = document.createElement("script"); f.type = "text/javascript", f.onload = f.onreadystatechange = function (e) { e = e || event, ("load" == e.type || /complete|loaded/.test(f.readyState)) && (tinymce.dom.Event.domLoaded = 1, i = 2, n.script_loaded && n.script_loaded(), c(), t.each(r, function (t, e) { e() })) }, f.src = u, document.body.appendChild(f) } return l }, t.extend(t.expr[":"], { tinymce: function (t) { return !!(t.id && "tinymce" in window && tinymce.get(t.id)) } }) }(jQuery);
 
+$(document).ready(function () {
 
+    if (window.location.href.indexOf("PerPageCount") > -1) {
+        $(".PrevPage").show();
+    }
+    else {
+        $(".PrevPage").hide();
+    }
+});
+
+$(document).on('click', '.nextPage', function () {
+
+
+    var strUrl = window.location.href;
+    var rangeForSearchForpage = 0;
+    if (strUrl.indexOf("PerPageCount") > -1) {
+        var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < url.length; i++) {
+            var urlparam = url[i].split('=');
+
+            if (urlparam[0] == "page") {
+                rangeForSearchForpage = urlparam[1];
+            }
+        }
+        strUrl = strUrl.replace("page=" + rangeForSearchForpage, "page=" + (parseInt(rangeForSearchForpage) + 1));
+        $(".PrevPage").show();
+        window.document.location = strUrl;
+    }
+    else {
+        strUrl = strUrl + "&page=1&PerPageCount=10";
+        $(".PrevPage").show();
+        window.document.location = strUrl;
+    }
+});
+
+$(document).on('click', '.PrevPage', function () {
+
+
+    var strUrl = window.location.href;
+
+    var rangeForSearchForpage = 0;
+    if (strUrl.indexOf("PerPageCount") > -1) {
+        var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for (var i = 0; i < url.length; i++) {
+            var urlparam = url[i].split('=');
+
+            if (urlparam[0] == "page") {
+                rangeForSearchForpage = urlparam[1];
+            }
+        }
+        if (rangeForSearchForpage > 0) {
+            strUrl = strUrl.replace("page=" + rangeForSearchForpage, "page=" + (parseInt(rangeForSearchForpage) - 1));
+            if (rangeForSearchForpage == 1) {
+                strUrl = strUrl.substring(0, strUrl.indexOf('&page'));
+                $(".PrevPage").hide();
+            }
+        }
+        else {
+            strUrl = strUrl.replace("&page", "");
+            $(".PrevPage").hide();
+        }
+        window.document.location = strUrl;
+    }
+
+
+});
