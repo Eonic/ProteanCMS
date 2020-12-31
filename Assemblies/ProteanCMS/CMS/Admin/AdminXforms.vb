@@ -9,7 +9,7 @@
 '***********************************************************************
 
 Option Strict Off
-Option Explicit On 
+Option Explicit On
 
 Imports System.Xml
 Imports System.Web.HttpUtility
@@ -7158,9 +7158,9 @@ Partial Public Class Cms
                             End If
                             oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"), bSendEmail)
                             MyBase.valid = True
-                                Return MyBase.moXformElmt
-                            End If
+                            Return MyBase.moXformElmt
                         End If
+                    End If
                     Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", , gbDebug)
