@@ -2602,6 +2602,12 @@ processFlow:
                                         End If
 
                                     End If
+                                Else
+                                    If (moCartConfig("ProductOptionOverideQuantity") = "on") Then
+                                        nOpPrices += (oOpRow("price") * oOpRow("quantity"))
+                                    Else
+                                        nOpPrices += (oOpRow("price"))
+                                    End If
                                 End If
                             Next
 
