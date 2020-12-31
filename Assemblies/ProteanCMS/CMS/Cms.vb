@@ -115,7 +115,7 @@ Public Class Cms
     Public Shared gbSingleLoginSessionPerUser As Boolean = False
     Public Shared gnSingleLoginSessionTimeout As Int16 = 900
     ' Site cache
-    Public Shared gbSiteCacheMode As Boolean = False
+    Public Shared gbSiteCacheMode As Boolean = True
 
     Public sessionRootPageId As Integer = 0
 
@@ -8384,7 +8384,7 @@ Public Class Cms
                 End If
 
             Else
-                    cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
+                cProcessInfo &= "<Error>Create Path: " & filepath & " - " & sError & "</Error>" & vbCrLf
             End If
 
             oFS = Nothing
