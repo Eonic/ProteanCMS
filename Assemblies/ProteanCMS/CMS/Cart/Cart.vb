@@ -1860,28 +1860,28 @@ processFlow:
 
 
                         Dim ListId As String = ""
-                            Select Case StepName
-                                Case "Invoice"
-                                    ListId = moMailConfig("InvoiceList")
+                        Select Case StepName
+                            Case "Invoice"
+                                ListId = moMailConfig("InvoiceList")
                                 If moMailConfig("InvoiceList") <> "" Then
                                     oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
                                 End If
                             Case "Quote"
-                                    If moMailConfig("QuoteList") <> "" Then
-                                        oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
-                                    End If
-                                    ListId = moMailConfig("QuoteList")
-                                Case "Newsletter"
-                                    If moMailConfig("NewsletterList") <> "" Then
-                                        oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
-                                    End If
-                                    ListId = moMailConfig("NewsletterList")
-                            End Select
-                            If ListId <> "" Then
-                                oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
-                            End If
-
+                                If moMailConfig("QuoteList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                End If
+                                ListId = moMailConfig("QuoteList")
+                            Case "Newsletter"
+                                If moMailConfig("NewsletterList") <> "" Then
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("NewsletterList"), Email)
+                                End If
+                                ListId = moMailConfig("NewsletterList")
+                        End Select
+                        If ListId <> "" Then
+                            oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
                         End If
+
+                    End If
                 End If
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
@@ -2564,7 +2564,7 @@ processFlow:
                                             End If
 
                                         End If
-                                        Else
+                                    Else
                                         bOverridePrice = True
                                     End If
 
@@ -2649,11 +2649,11 @@ processFlow:
                             If oRow("price") <> Nothing Then
                                 ' If oRow("price") <> 0 Then
                                 Dim discountSQL As String = ""
-                                    If Discount <> 0 Then
-                                        '     discountSQL = ", nDiscountValue = " & Discount & " "
-                                    End If
-                                    Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
-                                    moDBHelper.ExeProcessSql(cUpdtSQL)
+                                If Discount <> 0 Then
+                                    '     discountSQL = ", nDiscountValue = " & Discount & " "
+                                End If
+                                Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
+                                moDBHelper.ExeProcessSql(cUpdtSQL)
                                 '  End If
                             End If
 
@@ -6141,52 +6141,52 @@ processFlow:
                                 oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
                             End If
                             If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
-                                If cProductText = "" Then
-                                    cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
-                                End If
-
-                                If nPrice = 0 Then
-                                    oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
-                                End If
-
-                                If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
-                                    mbOveridePrice = True
-                                End If
-
-                                'lets add the discount to the cart if supplied
-                                If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
-                                    Dim strDiscount1 As String = oProdXml.SelectSingleNode(
-                                                    "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
-                                                    ).InnerText
-                                    addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
-                                End If
-
-                                If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
-                                    nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
-                                End If
-
-                                If (UniqueProduct) Then
-
-                                    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                        oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                    Else
-                                        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                    End If
-                                End If
-
-                                'Add Parent Product to cart if SKU.
-                                If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                    'Then we need to add the Xml for the ParentProduct.
-                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
-
-                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                                End If
-
-
+                            If cProductText = "" Then
+                                cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
                             End If
+
+                            If nPrice = 0 Then
+                                oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                            End If
+
+                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
+                                mbOveridePrice = True
+                            End If
+
+                            'lets add the discount to the cart if supplied
+                            If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
+                                Dim strDiscount1 As String = oProdXml.SelectSingleNode(
+                                                "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
+                                                ).InnerText
+                                addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
+                            End If
+
+                            If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
+                                nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
+                            End If
+
+                            If (UniqueProduct) Then
+
+                                If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                Else
+                                    ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                End If
+                            End If
+
+                            'Add Parent Product to cart if SKU.
+                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                            End If
+
+
+                        End If
                     End If
 
 
@@ -6409,8 +6409,8 @@ processFlow:
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
-                                    End If
-                                End If 'end check for previously added
+                                End If
+                            End If 'end check for previously added
                         End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
