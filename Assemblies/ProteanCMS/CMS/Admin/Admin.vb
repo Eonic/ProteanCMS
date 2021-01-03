@@ -2784,6 +2784,28 @@ AfterProcessFlow:
                                 End If
                             Next
 
+                            Dim currentModule As String
+                            Dim parentModule As String
+                            For Each oElmt In oTempMenuRoot.SelectNodes("descendant-or-self::Module[@jsonURL!='']")
+                                currentModule = oElmt.GetAttribute("name")
+                                Dim oParentElmt As XmlElement = oElmt.ParentNode
+                                parentModule = oParentElmt.GetAttribute("name")
+                                If oMenuRoot.SelectSingleNode("descendant-or-self::Module[@name ='" & currentModule & "' ]") Is Nothing Then
+                                    'we can't find it lets add it
+                                    If Not (oParentElmt.GetAttribute("name") = "" And oMenuRoot.SelectSingleNode("descendant-or-self::Module[@name ='" & oParentElmt.GetAttribute("name") & "' ]") Is Nothing) Then
+                                        If Not oMenuRoot.SelectSingleNode("descendant-or-self::MenuItem[@name ='" & parentModule & "' ]") Is Nothing Then
+                                            oMenuRoot.SelectSingleNode("descendant-or-self::MenuItem[@name ='" & parentModule & "' ]").AppendChild(oElmt.CloneNode(True))
+                                        Else
+                                            oMenuRoot.FirstChild.AppendChild(oElmt.CloneNode(True))
+                                        End If
+                                    Else
+                                        sProcessInfo &= "cannot add " & currentModule
+                                    End If
+                                Else
+                                    sProcessInfo &= "cannot add " & currentModule
+                                End If
+                            Next
+
                             For Each oElmt In oTempMenuRoot.SelectNodes("descendant-or-self::MenuItem[@replacePath!='']")
 
                                 Dim oParentElmt As XmlElement = oElmt.ParentNode

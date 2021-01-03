@@ -92,3 +92,70 @@ if (redirectModalElement) {
         }
     });
 }
+
+//Insights
+const insightsSectionElement = document.querySelector("#insights-section");
+if (insightsSectionElement) {
+    window.insightsSection = new Vue({
+        el: "#insights-section",
+        data: {
+        },
+        methods: {
+             getMetricData: async function (metricId, apiUrl) {
+                //debugger;
+                let self = this;
+                let inputJson = this.getParamObject(apiUrl);
+                let metricElement = document.getElementById(metricId);
+                let valueSpanElement = metricElement.getElementsByClassName("metric-value");
+
+                //counter
+                var counter = 0;
+                var counterHandle = setInterval(function () {
+                    valueSpanElement[0].innerText = counter;
+                    counter++;
+                }, 0);
+
+                await axios.post(apiUrl, inputJson)
+                    .then(function (response) {
+                        //debugger;
+                        //handle success.
+                        let metricElement = document.getElementById(metricId);
+                        let valueSpanElement = metricElement.getElementsByClassName("metric-value");
+                        if (valueSpanElement != null && valueSpanElement.length > 0) {
+                            valueSpanElement[0].innerText = response.data;                            
+                        }
+                        clearInterval(counterHandle);
+                    });
+            },
+            getParamObject: function (apiUrl) {
+                let paramCollection = apiUrl.substring(apiUrl.indexOf('?') + 1);
+                let paramArray = paramCollection.split('&');
+
+                var inputJson = {};
+
+                for (var arrIndex = 0; arrIndex < paramArray.length; arrIndex++) {
+                    var param = paramArray[arrIndex]
+                    if (param != null) {
+                        var paramKeyValue = param.split('=');
+                        inputJson[paramKeyValue[0]] = paramKeyValue[1];
+                    }
+                }
+                return inputJson;
+            }
+        },
+        mounted: function () {
+            //debugger;
+            let metricsList = document.getElementsByClassName("metric");
+            if (metricsList != null && metricsList.length > 0) {
+                for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {
+                    let metric = metricsList[metricIndex];
+                    let apiUrl = metric.getAttribute("data-json-url");
+                    if (apiUrl != null && apiUrl.length > 0) {
+                        let metricElementId = metric.getAttribute("id");
+                        this.getMetricData(metricElementId, apiUrl);
+                    }
+                }
+            }
+        }
+    });
+}
