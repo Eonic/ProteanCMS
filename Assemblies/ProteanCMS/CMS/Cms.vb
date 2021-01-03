@@ -7356,12 +7356,10 @@ Public Class Cms
 
                 'put this in to prevent a redirect if we are calling this from somewhere strange.
                 If gnPageNotFoundId > 1 Then
-                    msRedirectOnEnd = NotFoundPagePath
+                    Redirect404(NotFoundPagePath)
                 Else
-                    msRedirectOnEnd = moConfig("BaseUrl")
+                    Redirect404(moConfig("BaseUrl"))
                 End If
-                moResponse.StatusCode = 404
-                moResponse.Redirect(msRedirectOnEnd, False)
 
                 '  ctx.Response.StatusCode = 404
                 '  ctx.Response.Flush()
