@@ -4513,7 +4513,7 @@
               <p>
                 <strong>
                   <xsl:call-template name="term2009" />
-                  <xsl:text>:&#160;</xsl:text>
+                  <xsl:text>: </xsl:text>
                 </strong>
                 <a href="mailto:{Email/node()}" class="email">
                   <xsl:apply-templates select="Email" mode="displayBrief"/>
@@ -4739,7 +4739,7 @@
             <p>
               <span class="label">
                 <xsl:call-template name="term2009" />
-                <xsl:text>:&#160;</xsl:text>
+                <xsl:text>: </xsl:text>
               </span>
               <a href="mailto:{Email/node()}">
                 <span class="email">
