@@ -2525,7 +2525,61 @@
       
     </div>
   </xsl:template>
-  
-  
-  
+
+  <xsl:template match="group[@class='redirect-modal']" mode="xform">
+    <xsl:param name="class"/>
+    <div id="redirectModal" class="redirectModal hidden">
+      <div v-if="showRedirectModal">
+        <transition name="modal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" v-on:click="showRedirectModal=false">
+                      <span aria-hidden="true">&#215;</span>
+                    </button>
+                    <h4 class="modal-title">Do you want to create a redirect ?</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div>
+                      <ul>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="301" class="redirectStatus"/>
+                          <label> We will perminently redirect</label>
+                        </li>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="302" class="redirectStatus"/>
+                          <label> We will temporarily redirect</label>
+                        </li>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="404" class="redirectStatus"/>
+                          <label> No, the old url will show page not found</label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <div>
+                      <h4>
+                        Are you sure you want to continue ?
+                      </h4>
+                    </div>
+                    <button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>
+                    <button type="button" id="addRedirectbtn" name="addRedirectbtn"
+										    onClick="editPage.createRedirects();"
+											class="btn btn-primary">
+                      Yes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </div>
+  </xsl:template>
+
+
 </xsl:stylesheet>
