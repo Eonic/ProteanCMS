@@ -5949,10 +5949,10 @@
                 </xsl:call-template>
               </xsl:if>
               <xsl:text>&#160;</xsl:text>
-              <xsl:if test="Times/@start!=''">
+              <xsl:if test="Times/@start!='' and Times/@start!=','">
                 <span class="times">
                   <xsl:value-of select="translate(Times/@start,',',':')"/>
-                  <xsl:if test="Times/@end!=''">
+                  <xsl:if test="Times/@end!='' and Times/@end!=','">
                     <xsl:text> - </xsl:text>
                     <xsl:value-of select="translate(Times/@end,',',':')"/>
                   </xsl:if>
