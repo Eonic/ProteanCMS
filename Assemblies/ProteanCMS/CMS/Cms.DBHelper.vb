@@ -7569,7 +7569,7 @@ restart:
                                         If sPrimary = 1 Then
                                             'does the item have a primary location that does not match the fRef ?
                                             ' if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
-                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
+                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & SqlFmt(cleanFref) & "'"
                                             If ExeProcessSqlScalar(sSQL) > 0 Then
                                                 'this item has an alternate primary location, then make sure we don't add it 
                                                 updateLocation = False
