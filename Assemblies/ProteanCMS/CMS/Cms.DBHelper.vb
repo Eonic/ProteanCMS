@@ -4543,7 +4543,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -4800,7 +4800,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -6823,7 +6823,7 @@ restart:
             PerfMon.Log("DBHelper", "FindDirectoryByForiegn")
             Try
 
-                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & ForiegnRef & "'"
+                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & SqlFmt(ForiegnRef) & "'"
                 Dim iID As Integer
                 iID = CInt(ExeProcessSqlScalar(strSQL))
                 Return iID
@@ -7799,7 +7799,7 @@ restart:
         Public Function setContentRelationByRef(ByVal nContentId As Integer, ByVal cContentFRef As String, Optional ByVal b2Way As Boolean = False, Optional ByVal rType As String = "", Optional ByVal bHaltRecursion As Boolean = False) As String
             Try
 
-                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & cContentFRef & "')", , , 0)
+                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & SqlFmt(cContentFRef) & "')", , , 0)
 
                 If Not nRefId = 0 Then
                     Return insertContentRelation(nContentId, nRefId, b2Way, rType, bHaltRecursion)
