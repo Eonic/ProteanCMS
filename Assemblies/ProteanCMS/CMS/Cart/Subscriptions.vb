@@ -729,7 +729,15 @@ Partial Public Class Cms
 
 
                     For Each oelmt In oCartXml.SelectNodes("descendant-or-self::Item[productDetail/SubscriptionPrices]")
-                        startDate = oelmt.SelectSingleNode("productDetail/Policy/Schedule/StartDate").InnerText
+                        If Not oelmt.SelectSingleNode("productDetail/StartDate") Is Nothing Then
+                            If IsDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText) Then
+                                startDate = xmlDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText)
+                            Else
+                                startDate = xmlDate(Now())
+                            End If
+                        Else
+                            startDate = xmlDate(Now())
+                        End If
                         repeatPrice = repeatPrice + CDbl("0" & oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText)
                         repeatInterval = oelmt.SelectSingleNode("productDetail/PaymentUnit").InnerText
                         repeatFrequency = 1
@@ -756,7 +764,7 @@ Partial Public Class Cms
                     oCartXml.SetAttribute("repeatMinimumTerm", minimumTerm)
                     oCartXml.SetAttribute("repeatRenewalTerm", renewalTerm)
                     oCartXml.SetAttribute("delayStart", delayStart)
-                    oCartXml.SetAttribute("startDate", xmlDate(startDate))
+                    oCartXml.SetAttribute("startDate", startDate)
 
                     'oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
                     'Payable amount should be the setup cost TS commented out the above line 01/11/2017
