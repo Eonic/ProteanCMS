@@ -2488,28 +2488,33 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='FormattedText']" mode="displayBrief">
-    <xsl:if test="node()">
-		<div class="FormattedText">
-			<xsl:if test="@maxWidth!=''">
-				<xsl:choose>
-					<xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
-						<xsl:attribute name="class">FormattedText central-text</xsl:attribute>
-						<xsl:attribute name='style'>
-							<xsl:text>max-width:</xsl:text>
-							<xsl:value-of select="@maxWidth"/>
-						</xsl:attribute>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:attribute name='style'>
-							<xsl:text>max-width:</xsl:text>
-							<xsl:value-of select="@maxWidth"/>
-						</xsl:attribute>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:apply-templates select="node()" mode="cleanXhtml"/>
-		</div>
-	</xsl:if>
+    <div class="FormattedText">
+      <xsl:if test="@maxWidth!=''">
+        <xsl:choose>
+          <xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
+            <xsl:attribute name="class">FormattedText central-text</xsl:attribute>
+            <xsl:attribute name='style'>
+              <xsl:text>max-width:</xsl:text>
+              <xsl:value-of select="@maxWidth"/>
+            </xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name='style'>
+              <xsl:text>max-width:</xsl:text>
+              <xsl:value-of select="@maxWidth"/>
+            </xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+      <xsl:choose>
+        <xsl:when test="node()">
+          <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>&#160;</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </div>
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='Image']" mode="moduleTitle">
