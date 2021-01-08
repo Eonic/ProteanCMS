@@ -609,21 +609,6 @@ $.fn.prepareAdminXform = function () {
         });
     }
 
-    if ($(this).find("#dEventDate-alt").exists() && $(this).find("#dEventEndDate-alt").exists()) {
-
-        $(document).on("change", "#dEventDate-alt", function () {
-            setDefaultEventEndDate();
-        });
-
-        $(document).on("change", "#dEventEndDate-alt", function () {
-            var startEventDate = $("#EditContent #dEventDate-alt").val();
-            var endEventDate = $("#EditContent #dEventEndDate-alt").val();
-            if (Date.parse(endEventDate) < Date.parse(startEventDate)) {
-                $("#EditContent #dEventEndDate-alt").val('');
-            }
-        });
-    }
-
     // $('.ewXform label').each(function () {
     //     if ($(this).parent().is('span.radiocheckbox')) {
 
