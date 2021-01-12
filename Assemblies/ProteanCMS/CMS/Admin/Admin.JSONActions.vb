@@ -118,7 +118,78 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function redirectPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
+                Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
+                Dim oFrmElmt As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim oFsh As fsHelper
+                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                Try
+                    Dim JsonResult As String = ""
+                    Dim rewriteXml As New XmlDocument
+
+                    rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+
+                    Dim oCgfSectName As String = "system.webServer"
+                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                    ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                    cProcessInfo = "Getting Section Name:" & oCgfSectPath
+                    Dim sectionMissing As Boolean = False
+
+                    If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
+                        ' MyBase.bProcessRepeats = True
+
+                        Dim PerPageCount As Integer
+                        Dim TotalCount As Integer = 0
+                        If (myWeb.moRequest("PerPageCount") > 0) Then
+                            PerPageCount = myWeb.moRequest("PerPageCount")
+                        Else
+                            PerPageCount = 10
+                        End If
+
+                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
+                        Dim takeRecord As Integer = PerPageCount
+
+                        Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
+
+                        Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                        TotalCount = props.ChildNodes.Count
+
+                        If props.ChildNodes.Count >= PerPageCount Then
+                            Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                            Dim xmlstringend As String = "</rewriteMap>"
+                            Dim count As Integer = 0
+
+                            For i As Integer = skipRecords To props.ChildNodes.Count - 1
+                                If i > (skipRecords + takeRecord) - 1 Then
+                                    Exit For
+                                Else
+                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                End If
+
+                            Next
+
+                            JsonResult = xmlstring
+                        Else
+                            JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                        End If
+
+
+                    Else
+                        Dim oTempInstance As XmlElement = myWeb.moPageXml.CreateElement("instance")
+                        'oTempInstance = myWeb.goSession("oTempInstance")
+                        ' MyBase.updateInstance(oTempInstance)
+                    End If
+
+
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+            End Function
         End Class
 
 #End Region
