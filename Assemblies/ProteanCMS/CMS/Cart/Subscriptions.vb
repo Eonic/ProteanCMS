@@ -17,20 +17,32 @@ Partial Public Class Cms
 
             Dim myWeb As Cms
             Dim myCart As Cms.Cart
+            Public mbOveridePrices As Boolean = False
 
             Public Sub New(ByRef aWeb As Cms)
                 myWeb = aWeb
                 myCart = myWeb.moCart
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
+                End If
             End Sub
 
             Public Sub New(ByRef aCart As Cms.Cart)
                 myCart = aCart
                 myWeb = myCart.myWeb
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
+                End If
             End Sub
 
             Public Sub New()
                 'wont do anything here
             End Sub
+
 
 #Region "Admin"
 

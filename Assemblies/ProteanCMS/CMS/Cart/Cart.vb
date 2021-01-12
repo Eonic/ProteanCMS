@@ -2547,21 +2547,24 @@ processFlow:
                                         If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
 
                                             Dim revisedPrice As Double
-                                            If oRow("contentId") > 0 Then
-                                                revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
-                                            Else
-                                                oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
-                                                nCheckPrice = oCheckPrice.InnerText
-                                                nTaxRate = getProductTaxRate(oCheckPrice)
-                                            End If
-                                            If revisedPrice < nCheckPrice Then
-                                                'nCheckPrice = revisedPrice
-                                                Discount = nCheckPrice - revisedPrice
-                                                nCheckPrice = revisedPrice
+                                            If moSubscription.mbOveridePrices = False Then
+                                                'TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
+                                                If oRow("contentId") > 0 Then
+                                                    revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                                Else
+                                                    oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
+                                                    nCheckPrice = oCheckPrice.InnerText
+                                                    nTaxRate = getProductTaxRate(oCheckPrice)
+                                                End If
+                                                If revisedPrice < nCheckPrice Then
+                                                    'nCheckPrice = revisedPrice
+                                                    Discount = nCheckPrice - revisedPrice
+                                                    nCheckPrice = revisedPrice
+                                                End If
                                             End If
 
                                         End If
-                                    Else
+                                        Else
                                         bOverridePrice = True
                                     End If
 
@@ -2603,7 +2606,7 @@ processFlow:
 
                                     End If
                                 Else
-                                    If (moCartConfig("ProductOptionOverideQuantity") = "on") Then
+                                    If (moCartConfig("ProductOptionOverideQuantity") = "on" And oOpRow("quantity") > 1) Then
                                         nOpPrices += (oOpRow("price") * oOpRow("quantity"))
                                     Else
                                         nOpPrices += (oOpRow("price"))
@@ -5970,7 +5973,7 @@ processFlow:
                     addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
                     addNewTextNode("cCartForiegnRef", oElmt)
                     addNewTextNode("nCartStatus", oElmt, "1")
-                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType) '-----BJR----cCartSchemaName)
+                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType)
                     addNewTextNode("cCartSessionId", oElmt, mcSessionId)
                     ' MEMB - add userid to oRs if we are logged on
                     If mnEwUserId > 0 Then
@@ -5984,7 +5987,7 @@ processFlow:
                     addNewTextNode("nShippingMethodId", oElmt, "0")
                     addNewTextNode("cShippingDesc", oElmt, moCartConfig("DefaultShippingDesc"))
                     addNewTextNode("nShippingCost", oElmt, CLng(moCartConfig("DefaultShippingCost") & "0"))
-                    addNewTextNode("cClientNotes", oElmt, cOrderReference) '----BJR
+                    addNewTextNode("cClientNotes", oElmt, cOrderReference)
                     addNewTextNode("cSellerNotes", oElmt, "referer:" & myWeb.moSession("previousPage") & "/n")
                     If Not (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") Is Nothing) Then
                         addElement(oElmt, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, True)

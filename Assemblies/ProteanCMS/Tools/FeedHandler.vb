@@ -353,7 +353,7 @@ Public Class FeedHandler
             Dim oTW As IO.TextWriter = New StringWriter()
             Dim oTR As IO.TextReader
             oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "Start transform url: " & cFeedURL)
-            oTransform.XSLFile = cXSLTransformPath
+            oTransform.XslFilePath = cXSLTransformPath
             oTransform.Compiled = False
             oTransform.Process(oResXML, oTW)
             oTR = New StringReader(oTW.ToString())

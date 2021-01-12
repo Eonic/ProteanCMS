@@ -2003,6 +2003,15 @@ function checkTextAreaMaxLength(textBoxRef, e) {
     $("#" + textBoxRef + "-char-count").html(myTextBox.val().length);
     return true;
 }
+
+function setDefaultEventEndDate() {
+    var startEventDate = $("#EditContent #dEventDate-alt").val();
+    var endEventDate = $("#EditContent #dEventEndDate-alt").val();
+    if ((startEventDate != null && startEventDate != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDate))) {
+        $("#EditContent #dEventEndDate-alt").val(startEventDate);
+    }
+}
+
 /*
 Checks if the keyCode pressed is inside special chars
 -------------------------------------------------------

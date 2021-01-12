@@ -1048,7 +1048,7 @@ namespace Protean.Tools
             try
             {
                 string startString = sString;
-                if (sString == null)
+                if (sString == null | sString == "")
                     return "";
                 else
                 {

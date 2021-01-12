@@ -64,7 +64,10 @@
         <add key="ExpireAtEndOfDay" value="off" />
         <add key="GoogleAnalyticsUniversalID" value="" />
          <add key="GoogleTagManagerID" value="" />
-          <add key="PayPalTagManagerID" value="" />
+         <add key="PayPalTagManagerID" value="" />
+         <add key="BingTrackingID" value="" />
+         <add key="FacebookTrackingID" value="" />
+         <add key="FeedOptimiseID" value="" />
          <add key="ReCaptchaKey" value="" />
          <add key="ReCaptchaKeySecret" value="" />
         <add key="XmlSettings" value="" />
@@ -127,6 +130,12 @@
      <bind id="ewGoogleAnalyticsUniversalID" nodeset="web/add[@key='GoogleAnalyticsUniversalID']/@value" required="false()" type="string" />
      <bind id="ewGoogleTagManagerID" nodeset="web/add[@key='GoogleTagManagerID']/@value" required="false()" type="string" />
      <bind id="ewPayPalTagManagerID" nodeset="web/add[@key='PayPalTagManagerID']/@value" required="false()" type="string" />
+     <bind id="ewBingTrackingID" nodeset="web/add[@key='BingTrackingID']/@value" required="false()" type="string" />
+     <bind id="ewFacebookTrackingID" nodeset="web/add[@key='FacebookTrackingID']/@value" required="false()" type="string" />
+     <bind id="ewFeedOptimiseID" nodeset="web/add[@key='FeedOptimiseID']/@value" required="false()" type="string" />
+
+
+
      <bind id="ewReCaptchaKey" nodeset="web/add[@key='ReCaptchaKey']/@value" required="false()" type="string" />
      <bind id="ewReCaptchaKeySecret" nodeset="web/add[@key='ReCaptchaKeySecret']/@value" required="false()" type="string" />
      <bind id="ewXslTimeout" nodeset="web/add[@key='XslTimeout']/@value" required="false()" type="string" />
@@ -299,6 +308,15 @@
        </input>
         <input bind="ewPayPalTagManagerID">
          <label>PayPal Tag Manager ID</label>
+       </input>
+       <input bind="ewBingTrackingID">
+         <label>Bing Tracking ID</label>
+       </input>
+       <input bind="ewFacebookTrackingID">
+         <label>Facebook Tracking ID</label>
+       </input>
+       <input bind="ewFeedOptimiseID">
+         <label>Feed Optimise ID</label>
        </input>
 	   </group>
 	   <group ref="Paths" class="inline">
