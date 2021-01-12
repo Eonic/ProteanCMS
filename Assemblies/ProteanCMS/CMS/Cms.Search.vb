@@ -384,6 +384,25 @@ Partial Public Class Cms
 
                 Dim resultsCount As Integer = 0
                 Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                Dim HitsLimit As Integer
+                If (myWeb.moRequest("hitlimit") > 0) Then
+                    HitsLimit = myWeb.moRequest("hitlimit")
+                Else
+                    HitsLimit = 300
+                End If
+                Dim PerPageCount As Integer
+                If (myWeb.moRequest("PerPageCount") > 0) Then
+                    PerPageCount = myWeb.moRequest("PerPageCount")
+                Else
+                    PerPageCount = 12
+                End If
+                Dim command As Integer
+                If (myWeb.moRequest("command") > 0) Then
+                    command = myWeb.moRequest("command")
+                Else
+                    command = 0
+                End If
+
 
                 If Not cQuery.Equals("") Then
 
@@ -428,12 +447,7 @@ Partial Public Class Cms
                         addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
                         addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
                     End If
-                    Dim HitsLimit As Integer
-                    If (myWeb.moRequest("hitlimit") > 0) Then
-                        HitsLimit = myWeb.moRequest("hitlimit")
-                    Else
-                        HitsLimit = 300
-                    End If
+
 
 
                     If livePages Is Nothing Then
@@ -491,12 +505,6 @@ Partial Public Class Cms
                     If totalResults > 0 And pageCount > 0 Then
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
-                    Dim PerPageCount As Integer
-                    If (myWeb.moRequest("PerPageCount") > 0) Then
-                        PerPageCount = myWeb.moRequest("PerPageCount")
-                    Else
-                        PerPageCount = 12
-                    End If
 
 
                     resultsXML.SetAttribute("TotalResult", totalResults)
@@ -508,7 +516,9 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("Hits", HitsLimit)
-                    resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
+
+                    resultsXML.SetAttribute("PerPageCount", PerPageCount)
+
 
                     Dim artIdResults As New List(Of Long)
                     Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
@@ -638,8 +648,31 @@ Partial Public Class Cms
 
                 'Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
 
+                'Dim prop As XmlNode = moContextNode.SelectSingleNode("Content[@type='SearchResult']")
+                ' myWeb.moSession("lastResultCount") = Nothing
+                Dim lodedResultCount As String = moContextNode.ChildNodes.Count.ToString()
+                If (myWeb.moRequest("page") = 0) Then
+                    myWeb.moSession("lastResultCount") = Nothing
+                End If
+
+                If myWeb.moSession("lastResultCount") Is Nothing Then
+
+                    myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
+                    resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
+                    resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
+                Else
+                    If (PerPageCount > myWeb.moSession("lastResultCount") And command = 0) Then
+                        resultsXML.SetAttribute("satrtCount", HitsLimit - Convert.ToInt32(myWeb.moSession("lastResultCount") + 1))
+                    Else
+                        resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
+                    End If
+                    resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
+                    myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
+                End If
+
+
                 resultsXML.SetAttribute("SearchString", cQuery)
-                resultsXML.SetAttribute("searchType", "INDEX")
+                    resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
 
 
