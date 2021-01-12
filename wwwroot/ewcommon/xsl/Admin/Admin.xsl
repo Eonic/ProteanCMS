@@ -1562,7 +1562,7 @@
 										</h5>
 									</div>
 								</div>
-
+								
 							</div>
 						</div>
 						<div class="col-md-4">
@@ -1585,7 +1585,7 @@
 										<xsl:for-each select="$page/AdminMenu/MenuItem/Module">
 											<xsl:if test="@name != ''">
 												<xsl:variable name="id" select="@id"/>
-												<xsl:variable name="jsonURL" select="@jsonURL"/>												
+												<xsl:variable name="jsonURL" select="@jsonURL"/>	
 												<div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
 													<div class="metric-inner">
 														<header class="metric-header">
@@ -1594,7 +1594,6 @@
 														<div class="metric-body">
 															<div class="value">
 																<h1 class="metric-value">--</h1>
-																<h2>products</h2>
 															</div>
 														</div>
 													</div>

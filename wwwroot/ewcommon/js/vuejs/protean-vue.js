@@ -108,12 +108,8 @@ if (insightsSectionElement) {
                 let metricElement = document.getElementById(metricId);
                 let valueSpanElement = metricElement.getElementsByClassName("metric-value");
 
-                //counter
-                var counter = 0;
-                var counterHandle = setInterval(function () {
-                    valueSpanElement[0].innerText = counter;
-                    counter++;
-                }, 0);
+                //add loader
+                metricElement.classList.add("metric-loader");
 
                 await axios.post(apiUrl, inputJson)
                     .then(function (response) {
@@ -124,7 +120,7 @@ if (insightsSectionElement) {
                         if (valueSpanElement != null && valueSpanElement.length > 0) {
                             valueSpanElement[0].innerText = response.data;                            
                         }
-                        clearInterval(counterHandle);
+                        metricElement.classList.remove("metric-loader");
                     });
             },
             getParamObject: function (apiUrl) {
