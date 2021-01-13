@@ -610,7 +610,6 @@ $.fn.prepareAdminXform = function () {
     }
 
     if ($(this).find("#dEventDate-alt").exists() && $(this).find("#dEventEndDate-alt").exists()) {
-        setDefaultEventEndDate();
 
         $(document).on("change", "#dEventDate-alt", function () {
             setDefaultEventEndDate();

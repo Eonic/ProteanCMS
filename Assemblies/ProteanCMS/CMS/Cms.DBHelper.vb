@@ -4533,7 +4533,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -4790,7 +4790,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -6813,7 +6813,7 @@ restart:
             PerfMon.Log("DBHelper", "FindDirectoryByForiegn")
             Try
 
-                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & ForiegnRef & "'"
+                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & SqlFmt(ForiegnRef) & "'"
                 Dim iID As Integer
                 iID = CInt(ExeProcessSqlScalar(strSQL))
                 Return iID
@@ -7569,7 +7569,7 @@ restart:
                                         If sPrimary = 1 Then
                                             'does the item have a primary location that does not match the fRef ?
                                             ' if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
-                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
+                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & SqlFmt(cleanFref) & "'"
                                             If ExeProcessSqlScalar(sSQL) > 0 Then
                                                 'this item has an alternate primary location, then make sure we don't add it 
                                                 updateLocation = False
@@ -7789,7 +7789,7 @@ restart:
         Public Function setContentRelationByRef(ByVal nContentId As Integer, ByVal cContentFRef As String, Optional ByVal b2Way As Boolean = False, Optional ByVal rType As String = "", Optional ByVal bHaltRecursion As Boolean = False) As String
             Try
 
-                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & cContentFRef & "')", , , 0)
+                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & SqlFmt(cContentFRef) & "')", , , 0)
 
                 If Not nRefId = 0 Then
                     Return insertContentRelation(nContentId, nRefId, b2Way, rType, bHaltRecursion)
