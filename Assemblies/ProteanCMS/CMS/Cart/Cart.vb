@@ -7074,9 +7074,6 @@ processFlow:
                         aVatRates = Split(sCountryList, "','")
                         Array.Reverse(aVatRates)
 
-
-
-
                         ' go backwards through the list, and use the last non-zero tax rate
                         bAllZero = True
 
@@ -7087,8 +7084,16 @@ processFlow:
                             End If
                         Next
                     End If
-                    ' If all the countries are 0 then we need to set the tax rate accordingly
-                    If bAllZero Then nUpdateTaxRate = 0
+                    ' If all the countries are 0 then get the tax rate for default country, otherwise set the zero
+                    If bAllZero Then
+                        Dim cDefaultCountry As String = moCartConfig("DefaultCountry")
+                        If Not String.IsNullOrEmpty(cDefaultCountry) Then
+                            sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'"
+                            nUpdateTaxRate = moDBHelper.ExeProcessSqlScalar(sSql)
+                        Else
+                            nUpdateTaxRate = 0
+                        End If
+                    End If
                 End If
 
 
