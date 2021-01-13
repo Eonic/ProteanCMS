@@ -17,7 +17,7 @@
    </model>
    <group ref="WebSettings">
     <label>301 (Perminent) Page Redirects</label>
-     <group>
+     <group class="301RedirectBody">
        <repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
            <label>Old URL</label>

@@ -2025,39 +2025,39 @@ function checkSpecialKeys(e) {
 
 var position = $(window).scrollTop();
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
-$(window).scroll(function (event) {
+$('.301RedirectBody').on('DOMMouseScroll mousewheel', function (event) {
+   
+    if (event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0) {
+        var totalCountOfLoad = $(".repeat-group").length;
 
-    var scroll = $(window).scrollTop();
-    if (scroll > position) {
-        // downscroll code
-        //debugger;
         var type = "301Redirect";
         var inputJson = {
-            redirectType: type
+            redirectType: type,
+            loadCount: totalCountOfLoad
 
         };
-        var self = this;
+       
         axios.post(paginationRedirectsAPIUrl, inputJson)
             .then(function (response) {
-                //debugger;
+                debugger;
+                var xmlString = response.data;
+                var xmlDocument = $.parseXML(xmlString);
+                var $xml = $(xmlDocument);
 
-                alert(response);
+                var stringToBind = "<div class='form-group repeat-group'><fieldset class='row repeated rpt-10'><div class='form-group input-containing col-md-5'>";
+                stringToBind = stringToBind + "<label for='OldUrl_11' class=''>Old URL</label><div class='control-wrapper input-wrapper appearance-'>";
+                stringToBind = stringToBind + "<input type='text' name='OldUrl_11' id='OldUrl_11' class='col-md-5 textbox form-control' value='/Home'></div></div>";
+                stringToBind = stringToBind + "<div class='form-group input-containing col-md-5'><label for='NewUrl_11' class=''>New URL</label><div class='control-wrapper input- wrapper appearance-'>";
+                stringToBind = stringToBind + "<input type='text' name='NewUrl_11' id='NewUrl_11' class='col-md-5 textbox form-control' value=' / '></div></div>";
+                stringToBind = stringToBind + "<div class='form-group trigger-group col-md-2'> <button type='submit' name='delete:urlRepeat_11' value='Del' class='btn btn-danger btn-delete' onclick='disableButton(this);'><i class='fa fa-times fa-white'> </i> Del</button></div ></fieldset ></div >";
+                $(".301RedirectBody").append(stringToBind);
+                
             });
-
-        //$.ajax({
-        //    type: 'get',
-        //    url: paginationRedirectsAPIUrl,
-        //    data: {
-        //        type: "301Redirect"
-        //    },
-        //    success: function (response) {
-
-        //    }
-        //});
+       
     }
 
     else {
         // upscroll code
     }
-    position = scroll;
+    return false;
 });

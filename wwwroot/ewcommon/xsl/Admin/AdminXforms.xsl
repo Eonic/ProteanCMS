@@ -2536,9 +2536,9 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <button type="button" class="close" v-on:click="showRedirectModal=false">
+                    <!--<button type="button" class="close" v-on:click="showRedirectModal=false">
                       <span aria-hidden="true">&#215;</span>
-                    </button>
+                    </button>-->
                     <h4 class="modal-title">Do you want to create a redirect ?</h4>
                   </div>
                   <div class="modal-body">
@@ -2565,7 +2565,7 @@
                         Are you sure you want to continue ?
                       </h4>
                     </div>
-                    <button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>
+                    <!--<button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>-->
                     <button type="button" id="addRedirectbtn" name="addRedirectbtn"
 										    onClick="editPage.createRedirects();"
 											class="btn btn-primary">

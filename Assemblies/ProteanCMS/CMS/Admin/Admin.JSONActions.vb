@@ -121,6 +121,7 @@ Partial Public Class Cms
             Public Function redirectPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
+                Dim loadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
@@ -141,15 +142,15 @@ Partial Public Class Cms
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
                         ' MyBase.bProcessRepeats = True
 
-                        Dim PerPageCount As Integer
+                        Dim PerPageCount As Integer = 10
                         Dim TotalCount As Integer = 0
-                        If (myWeb.moRequest("PerPageCount") > 0) Then
-                            PerPageCount = myWeb.moRequest("PerPageCount")
-                        Else
-                            PerPageCount = 10
-                        End If
+                        'If (myWeb.moRequest("PerPageCount") > 0) Then
+                        '    PerPageCount = myWeb.moRequest("PerPageCount")
+                        'Else
+                        '    PerPageCount = 10
+                        'End If
 
-                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
+                        Dim skipRecords As Integer = loadCount
                         Dim takeRecord As Integer = PerPageCount
 
                         Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
@@ -170,7 +171,7 @@ Partial Public Class Cms
                                 End If
 
                             Next
-
+                            ' MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
                             JsonResult = xmlstring
                         Else
                             JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
