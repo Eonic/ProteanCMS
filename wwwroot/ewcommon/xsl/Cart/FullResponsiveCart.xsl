@@ -567,17 +567,14 @@
 
         <xsl:if test="$anySub=''">
           <div class="account-btns-top clearfix">
-            <!--<button href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
-                Proceed without creating an account
-                <i class="fa fa-chevron-right">
-                  <xsl:text></xsl:text>
-                </i>
-              </button>-->
-            <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
-              Continue with my order <i class="fa fa-chevron-right">
-                <xsl:text> </xsl:text>
-              </i>
-            </a>
+            <xsl:if test="not($page/Cart/Order/Item/productDetail/UserGroups)">
+              <!--Remove for subscritpions-->
+               <a href="?pgid={/Page/@id}&amp;cartCmd=Notes" class="btn pull-right btn-action">
+                  Continue with my order <i class="fa fa-chevron-right">
+                    <xsl:text> </xsl:text>
+                  </i>
+                </a>
+            </xsl:if>
           </div>
         </xsl:if>
         <div class="row">
