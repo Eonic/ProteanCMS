@@ -172,7 +172,7 @@ Partial Public Class Cms
 
                             Next
                             ' MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
-                            JsonResult = xmlstring
+                            JsonResult = xmlstring & xmlstringend
                         Else
                             JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
                         End If

@@ -2025,11 +2025,11 @@ function checkSpecialKeys(e) {
 
 var position = $(window).scrollTop();
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
-$('.301RedirectBody').on('DOMMouseScroll mousewheel', function (event) {
-   
+$('.301RedirectBody').on('mousewheel MouseDown keydown scroll', function (event) {
+    debugger;
     if (event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0) {
         var totalCountOfLoad = $(".repeat-group").length;
-
+       
         var type = "301Redirect";
         var inputJson = {
             redirectType: type,
@@ -2039,19 +2039,26 @@ $('.301RedirectBody').on('DOMMouseScroll mousewheel', function (event) {
        
         axios.post(paginationRedirectsAPIUrl, inputJson)
             .then(function (response) {
-                debugger;
+                //debugger;
                 var xmlString = response.data;
                 var xmlDocument = $.parseXML(xmlString);
-                var $xml = $(xmlDocument);
+                var xml = $(xmlDocument);
+                var count = $(".repeat-group").length;
+                for (i = 0; i <= xml[0].childNodes[0].childNodes.length; i++) {
+                   
+                    var key = xml[0].childNodes[0].childNodes[i].attributes.key.nodeValue
+                    var value = xml[0].childNodes[0].childNodes[i].attributes.value.nodeValue
 
-                var stringToBind = "<div class='form-group repeat-group'><fieldset class='row repeated rpt-10'><div class='form-group input-containing col-md-5'>";
-                stringToBind = stringToBind + "<label for='OldUrl_11' class=''>Old URL</label><div class='control-wrapper input-wrapper appearance-'>";
-                stringToBind = stringToBind + "<input type='text' name='OldUrl_11' id='OldUrl_11' class='col-md-5 textbox form-control' value='/Home'></div></div>";
-                stringToBind = stringToBind + "<div class='form-group input-containing col-md-5'><label for='NewUrl_11' class=''>New URL</label><div class='control-wrapper input- wrapper appearance-'>";
-                stringToBind = stringToBind + "<input type='text' name='NewUrl_11' id='NewUrl_11' class='col-md-5 textbox form-control' value=' / '></div></div>";
-                stringToBind = stringToBind + "<div class='form-group trigger-group col-md-2'> <button type='submit' name='delete:urlRepeat_11' value='Del' class='btn btn-danger btn-delete' onclick='disableButton(this);'><i class='fa fa-times fa-white'> </i> Del</button></div ></fieldset ></div >";
-                $(".301RedirectBody").append(stringToBind);
-                
+                    var stringToBind = "<div class='form-group repeat-group'><fieldset class='row repeated rpt-" + count+"'><div class='form-group input-containing col-md-5'>";
+                    stringToBind = stringToBind + "<label for='OldUrl_" + count+"' class=''>Old URL</label><div class='control-wrapper input-wrapper appearance-'>";
+                    stringToBind = stringToBind + "<input type='text' name='OldUrl_" + count + "' id='OldUrl_" + count + "' class='col-md-5 textbox form-control' value='" + key+"'></div></div>";
+                    stringToBind = stringToBind + "<div class='form-group input-containing col-md-5'><label for='NewUrl_"+count+"' class=''>New URL</label><div class='control-wrapper input- wrapper appearance-'>";
+                    stringToBind = stringToBind + "<input type='text' name='NewUrl_"+count+"' id='NewUrl_"+count+"' class='col-md-5 textbox form-control' value=' "+value+" '></div></div>";
+                    stringToBind = stringToBind + "<div class='form-group trigger-group col-md-2'> <button type='submit' name='delete:urlRepeat_"+count+"' value='Del' class='btn btn-danger btn-delete' onclick='disableButton(this);'><i class='fa fa-times fa-white'> </i> Del</button></div ></fieldset ></div >";
+                    $(".301RedirectBody").append(stringToBind);
+                    count++;
+                }
+
             });
        
     }
