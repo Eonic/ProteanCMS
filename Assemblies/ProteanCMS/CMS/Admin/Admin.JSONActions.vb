@@ -121,7 +121,7 @@ Partial Public Class Cms
             Public Function redirectPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
-                Dim loadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
+                'Dim loadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
@@ -142,15 +142,25 @@ Partial Public Class Cms
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
                         ' MyBase.bProcessRepeats = True
 
-                        Dim PerPageCount As Integer = 10
+                        Dim PerPageCount As Integer = 50
                         Dim TotalCount As Integer = 0
                         'If (myWeb.moRequest("PerPageCount") > 0) Then
                         '    PerPageCount = myWeb.moRequest("PerPageCount")
                         'Else
                         '    PerPageCount = 10
                         'End If
+                        Dim skipRecords As Integer = 0
+                        If (myWeb.moSession("loadCount") Is Nothing) Then
 
-                        Dim skipRecords As Integer = loadCount
+                            myWeb.moSession("loadCount") = PerPageCount
+                            skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                        Else
+                            myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
+                            skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                        End If
+
+
+
                         Dim takeRecord As Integer = PerPageCount
 
                         Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri

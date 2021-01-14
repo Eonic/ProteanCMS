@@ -2025,8 +2025,13 @@ function checkSpecialKeys(e) {
 
 var position = $(window).scrollTop();
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
+var scrolled = false;
 $('.301RedirectBody').on('mousewheel MouseDown keydown scroll', function (event) {
-    debugger;
+//$(window).bind('scroll', function () {
+  
+    //if ($(window).scrollTop() >= $('.301RedirectBody').offset().top + $('.301RedirectBody').outerHeight() - window.innerHeight && !scrolled) {
+    //     scrolled = true;
+       
     if (event.originalEvent.detail > 0 || event.originalEvent.wheelDelta < 0) {
         var totalCountOfLoad = $(".repeat-group").length;
        
@@ -2039,7 +2044,7 @@ $('.301RedirectBody').on('mousewheel MouseDown keydown scroll', function (event)
        
         axios.post(paginationRedirectsAPIUrl, inputJson)
             .then(function (response) {
-                //debugger;
+               
                 var xmlString = response.data;
                 var xmlDocument = $.parseXML(xmlString);
                 var xml = $(xmlDocument);
@@ -2060,11 +2065,11 @@ $('.301RedirectBody').on('mousewheel MouseDown keydown scroll', function (event)
                 }
 
             });
-       
+        scrolled = false;
     }
 
     else {
         // upscroll code
     }
-    return false;
+    
 });
