@@ -3860,7 +3860,7 @@
 	<xsl:template match="Page[@layout='PageSettings']" mode="Admin">
 		<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
 		<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
-		<div id="redirectModal" class="redirectModal hidden">
+		<!--<div id="redirectModal" class="redirectModal hidden">
 			<div v-if="showRedirectModal">
 				<transition name="modal">
 					<div class="modal-mask">
@@ -3910,7 +3910,7 @@
 					</div>
 				</transition>
 			</div>
-		</div>
+		</div>-->
 	</xsl:template>
 
   <!-- -->

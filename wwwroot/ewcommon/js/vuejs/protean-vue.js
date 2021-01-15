@@ -22,7 +22,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                debugger;
+               
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -50,18 +50,21 @@ if (editPageElement) {
         watch: {
             // whenever StructName changes, this function will run
             structName: function (newStructName) {
-                              
+               
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+                   
                     redirectModal.toggleModal();
+                    
                 } else {
                     redirectModal.showRedirectModal = false;
                     localStorage.originalStructName = newStructName;
+                    
                 }
                 
             }
         },
         mounted: function () {
-            
+            //debugger;
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -92,3 +95,9 @@ if (redirectModalElement) {
         }
     });
 }
+//$("#cStructName").change(function () {
+//    debugger;
+//    //$(".modal").removeClass("hidden");
+//    $(".redirect-modal").removeClass("hidden");
+    
+//});

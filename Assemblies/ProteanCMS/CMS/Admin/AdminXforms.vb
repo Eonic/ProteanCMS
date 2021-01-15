@@ -9,7 +9,7 @@
 '***********************************************************************
 
 Option Strict Off
-Option Explicit On 
+Option Explicit On
 
 Imports System.Xml
 Imports System.Web.HttpUtility
@@ -18,7 +18,7 @@ Imports System.Configuration
 Imports System.IO
 Imports System.Collections
 Imports System.Data
-Imports System.Data.sqlClient
+Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports System.Collections.Specialized
@@ -1702,19 +1702,73 @@ Partial Public Class Cms
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
 
                                 If cName <> MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText Then
-                                    myWeb.mcBehaviourEditPageCommand = "ManageRedirects"
+                                    'myWeb.mcBehaviourEditPageCommand = "ManageRedirects"
+
+                                    'Insert code to create redirects if required.
+
+                                    'Options to be 
+
+                                    '301 perminent
+                                    '302 tempory
+                                    '404 page not found (do not add redirect)
+                                    Dim rewriteXml As New XmlDocument
+                                    rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                    Dim RedirectType As String = "302"
+                                    Dim OldURL As String = cName
+                                    Dim NewURL As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                    Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & RedirectType & "Redirect']/add[@key='" & OldURL & "']")
+                                    If Not existingRedirects Is Nothing Then
+                                        For Each existingNode As XmlNode In existingRedirects
+                                            existingNode.RemoveAll()
+                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                        Next
+                                    End If
+                                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & RedirectType & "Redirect']"
+                                    Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    If Not redirectSectionXmlNode Is Nothing Then
+                                        Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                        replacingElement.InnerXml = $"<add key='{OldURL}' value='{NewURL}'/>"
+
+                                        ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                        rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
+                                        rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                    End If
+                                    If RedirectType = "301" Then
+                                        'step through and create rules to deal with paths
+                                        Dim folderRules As New ArrayList
+                                        Dim rulesXml As New XmlDocument
+                                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
+                                        Dim oRule As XmlElement
+
+                                        'For Each oRule In replacerNode.SelectNodes("add")
+                                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldURL & "']")
+                                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                                        Dim matchString As String = OldURL
+                                        If matchString.StartsWith("/") Then
+                                            matchString = matchString.TrimStart("/")
+                                        End If
+                                        folderRules.Add("Folder: " & OldURL)
+                                        newRule.InnerXml = "<rule name=""Folder: " & OldURL & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewURL & "{R:1}"" /></rule>"
+                                        If CurrentRule Is Nothing Then
+                                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                                        Else
+                                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
+                                        End If
+                                        'Next
+
+                                        For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                                            If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                                                oRule.ParentNode.RemoveChild(oRule)
+                                            End If
+                                        Next
+
+                                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                        myWeb.bRestartApp = True
+                                    End If
+                                    'if the page has child pages we should also create a redirect rule for all children.
+
                                 End If
-                                'Insert code to create redirects if required.
-
-                                'Options to be 
-
-                                '301 perminent
-                                '302 tempory
-                                '404 page not found (do not add redirect)
-
-                                'if the page has child pages we should also create a redirect rule for all children.
-
-
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
