@@ -1713,7 +1713,7 @@ Partial Public Class Cms
                                     '404 page not found (do not add redirect)
                                     Dim rewriteXml As New XmlDocument
                                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                                    Dim RedirectType As String = "302"
+                                    Dim RedirectType As String = "301"
                                     Dim OldURL As String = cName
                                     Dim NewURL As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                     Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & RedirectType & "Redirect']/add[@key='" & OldURL & "']")
@@ -1733,42 +1733,46 @@ Partial Public Class Cms
                                         rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
                                         rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                                     End If
-                                    If RedirectType = "301" Then
-                                        'step through and create rules to deal with paths
+                                    Dim IsParent As Boolean = moDbHelper.IsChildPage(dbHelper.objectTypes.ContentStructure, pgid)
+
+                                    If IsParent Then
+
+                                        'If RedirectType = "301" Then
+                                        ' step through And create rules to deal with paths
                                         Dim folderRules As New ArrayList
-                                        Dim rulesXml As New XmlDocument
-                                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
-                                        Dim oRule As XmlElement
+                                            Dim rulesXml As New XmlDocument
+                                            rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                            Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
+                                            Dim oRule As XmlElement
 
-                                        'For Each oRule In replacerNode.SelectNodes("add")
-                                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldURL & "']")
-                                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                                        Dim matchString As String = OldURL
-                                        If matchString.StartsWith("/") Then
-                                            matchString = matchString.TrimStart("/")
-                                        End If
-                                        folderRules.Add("Folder: " & OldURL)
-                                        newRule.InnerXml = "<rule name=""Folder: " & OldURL & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewURL & "{R:1}"" /></rule>"
-                                        If CurrentRule Is Nothing Then
-                                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                                        Else
-                                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                                        End If
-                                        'Next
-
-                                        For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                                            If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                                                oRule.ParentNode.RemoveChild(oRule)
+                                            'For Each oRule In replacerNode.SelectNodes("add")
+                                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldURL & "']")
+                                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                                            Dim matchString As String = OldURL
+                                            If matchString.StartsWith("/") Then
+                                                matchString = matchString.TrimStart("/")
                                             End If
-                                        Next
+                                            folderRules.Add("Folder: " & OldURL)
+                                            newRule.InnerXml = "<rule name=""Folder: " & OldURL & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewURL & "{R:1}"" /></rule>"
+                                            If CurrentRule Is Nothing Then
+                                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                                            Else
+                                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
+                                            End If
+                                            'Next
 
-                                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                                        myWeb.bRestartApp = True
+                                            For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                                                If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                                                    oRule.ParentNode.RemoveChild(oRule)
+                                                End If
+                                            Next
+
+                                            rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                                            myWeb.bRestartApp = True
+                                        End If
+                                        'if the page has child pages we should also create a redirect rule for all children.
+
                                     End If
-                                    'if the page has child pages we should also create a redirect rule for all children.
-
-                                End If
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
