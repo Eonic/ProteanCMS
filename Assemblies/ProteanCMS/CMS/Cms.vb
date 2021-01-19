@@ -5449,7 +5449,19 @@ Public Class Cms
                                 If Replace(sUrl, DomainURL, "") = moRequest("path") Or Replace(sUrl, DomainURL, "") & "/" = moRequest("path") Then
                                     If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
                                         'case for if newsletter has same page name as menu item
-                                        mnPageId = oMenuItem.GetAttribute("id")
+                                        If Features.ContainsKey("PageVersions") Then
+                                            'catch for page version
+                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                        Else
+                                            mnPageId = oMenuItem.GetAttribute("id")
+                                        End If
+
+                                        If mnUserId <> 0 Or mbAdminMode <> True Then
+                                            'case for personalisation and admin TS 14/02/2021
+                                            mnPageId = oMenuItem.GetAttribute("id")
+                                        End If
                                     End If
 
                                 End If
