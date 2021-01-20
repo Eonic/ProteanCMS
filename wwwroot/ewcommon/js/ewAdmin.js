@@ -619,6 +619,7 @@ $.fn.prepareAdminXform = function () {
             var startEventDate = $("#EditContent #dEventDate-alt").val();
             var endEventDate = $("#EditContent #dEventEndDate-alt").val();
             if (Date.parse(endEventDate) < Date.parse(startEventDate)) {
+                $("#EditContent #dEventEndDate").val('');
                 $("#EditContent #dEventEndDate-alt").val('');
             }
         });
@@ -2020,10 +2021,13 @@ function checkTextAreaMaxLength(textBoxRef, e) {
 }
 
 function setDefaultEventEndDate() {
-    var startEventDate = $("#EditContent #dEventDate-alt").val();
+    var startEventDateAlt = $("#EditContent #dEventDate-alt").val();
+    var startEventDate = $("#EditContent #dEventDate").val();
+
     var endEventDate = $("#EditContent #dEventEndDate-alt").val();
-    if ((startEventDate != null && startEventDate != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDate))) {
-        $("#EditContent #dEventEndDate-alt").val(startEventDate);
+    if ((startEventDateAlt != null && startEventDateAlt != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDateAlt))) {
+        $("#EditContent #dEventEndDate").val(startEventDate);
+        $("#EditContent #dEventEndDate-alt").val(startEventDateAlt);
     }
 }
 
