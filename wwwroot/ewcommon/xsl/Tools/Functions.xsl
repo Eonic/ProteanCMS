@@ -1091,7 +1091,7 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
     <xsl:apply-templates select="." mode="JSONLD"/>
-    
+
     <!--  Google analytics javascript  -->
     <xsl:choose>
       <xsl:when test="$GoogleAnalyticsUniversalID!=''">
@@ -1153,6 +1153,8 @@
       <xsl:value-of select="node()"/>
     </xsl:if>
   </xsl:template>
+
+
 
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
