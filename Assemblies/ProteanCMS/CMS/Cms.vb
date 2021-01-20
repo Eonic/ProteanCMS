@@ -5285,11 +5285,13 @@ Public Class Cms
 
                             'Case if we are on the current page then we reset the mnPageId so we pull in the right content
                             If mnPageId = oMenuItem.GetAttribute("id") Then
-                                If verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "" Then
+                                If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") And verNode.GetAttribute("verType") <> 1 Then
 
                                     mnPageId = verNode.GetAttribute("id")
+
                                 End If
                             End If
+
 
                             'create a version for the default we are replacing
                             Dim newVerNode As XmlElement = moPageXml.CreateElement("PageVersion")
@@ -5878,7 +5880,9 @@ Public Class Cms
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
-                    GetPageContentXml(oElmt.GetAttribute("id"))
+                    Dim nPageId As Long = oElmt.GetAttribute("id")
+                    GetPageContentXml(nPageId)
+                    nPageId = Nothing
                     IsInTree = True
                 Next
 
