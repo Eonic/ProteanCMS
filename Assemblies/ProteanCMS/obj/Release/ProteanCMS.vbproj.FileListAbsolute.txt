@@ -346,3 +346,4 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.G
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CopyComplete
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Release\ProteanCMS.vbproj.CoreCompileInputs.cache
