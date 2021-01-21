@@ -1044,7 +1044,6 @@
     </xsl:if>
   </xsl:template>
 
-
   <xsl:template match="MenuItem[@cmd='PageVersions']" mode="adminLink2">
     <xsl:if test="@display='true'">
       <!-- Clone Parent Context-->
@@ -1056,13 +1055,26 @@
           <xsl:value-of select="/Page/@id"/>
         </xsl:if>
       </xsl:variable>
+      <xsl:variable name="VersionParentId">
+        <xsl:choose>
+          <xsl:when test="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]">
+            <xsl:value-of select="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]/parent::MenuItem/@id"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="/Page/@id"/>
+          </xsl:otherwise>
+        </xsl:choose>
+
+      </xsl:variable>
+
+
       <xsl:variable name="verCount">
         <xsl:choose>
           <xsl:when test="/Page/@ewCmd='PageVersions'">
             <xsl:value-of select="count(/Page/ContentDetail/PageVersions/Version[@id!=/Page/@id])"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/PageVersion)"/>
+            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=$VersionParentId]/PageVersion)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -1084,7 +1096,7 @@
           </a>
         </xsl:when>
         <xsl:otherwise>
-          <a href="?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}">
+          <a href="{$appPath}?ewCmd=NewPageVersion&amp;pgid={/Page/@id}&amp;vParId={/Page/@id}" title="{Description}">
             <xsl:if test="/Page[@ewCmd='NewPageVersion']">
               <xsl:attribute name="class">active on</xsl:attribute>
             </xsl:if>
