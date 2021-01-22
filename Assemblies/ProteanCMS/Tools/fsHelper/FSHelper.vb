@@ -955,13 +955,13 @@ Partial Public Class fsHelper
                 '    If Not (SizeInMB > 4.0) Then
                 file.SaveAs(mcStartFolder & fileNameFixed)
 
-                        If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
-                            Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
-                            Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                            eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
-                        End If
-                        Dim fullName As String = Path.GetFileName(file.FileName)
-                        statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+                If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
+                    Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
+                    Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                    eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
+                End If
+                Dim fullName As String = Path.GetFileName(file.FileName)
+                statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
                 '    Else
                 '        'alert: image size is bigger than 4 MB
                 '    End If
