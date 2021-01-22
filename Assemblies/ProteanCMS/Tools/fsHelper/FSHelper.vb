@@ -40,15 +40,15 @@ Partial Public Class fsHelper
     Public mcRoot As String = ""
     Shared msException As String
 
-    Shared _libraryTypeExtensions()() As String = { _
-                                                 New String() {}, _
-                                                 New String() {"png", "jpg", "gif", "jpeg", "bmp"}, _
-                                                 New String() {"doc", "docx", "xls", "xlsx", "pdf"}, _
+    Shared _libraryTypeExtensions()() As String = {
+                                                 New String() {},
+                                                 New String() {"png", "jpg", "gif", "jpeg", "bmp"},
+                                                 New String() {"doc", "docx", "xls", "xlsx", "pdf"},
                                                  New String() {"avi", "flv", "swf", "ppt"}}
 
-    Shared _defaultLibraryTypeContentSchemaNames() As String = {"PlainText", _
-                                                                "LibraryImage", _
-                                                                "Document", _
+    Shared _defaultLibraryTypeContentSchemaNames() As String = {"PlainText",
+                                                                "LibraryImage",
+                                                                "Document",
                                                                 "Video,FlashMovie"}
 
 
@@ -944,22 +944,31 @@ Partial Public Class fsHelper
     Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
+
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
                 Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
 
+                If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
+                    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
+                    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
+                    If Not (SizeInMB > 4.0) Then
+                        file.SaveAs(mcStartFolder & fileNameFixed)
 
+                        If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
+                            Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
+                            Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
+                            eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
+                        End If
+                        Dim fullName As String = Path.GetFileName(file.FileName)
+                        statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+                    Else
+                        'alert: image size is bigger than 4 MB
+                    End If
+                Else
+                    'alert: Image with Same  name already exist
 
-                file.SaveAs(mcStartFolder & fileNameFixed)
-
-                If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
-                    Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
-                    Dim moWebCfg As Object = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                    eImg.UploadProcessing(moWebCfg("WatermarkText"), mcRoot & moWebCfg("WatermarkImage"))
                 End If
-                Dim fullName As String = Path.GetFileName(file.FileName)
-                statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
-
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
