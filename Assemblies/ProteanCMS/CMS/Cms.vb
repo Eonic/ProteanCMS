@@ -4487,7 +4487,7 @@ Public Class Cms
 
                 'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
-                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
+                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 
@@ -5285,10 +5285,21 @@ Public Class Cms
 
                             'Case if we are on the current page then we reset the mnPageId so we pull in the right content
                             If mnPageId = oMenuItem.GetAttribute("id") Then
-                                If verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "" Then
-
-                                    mnPageId = verNode.GetAttribute("id")
-                                End If
+                                '  If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") And verNode.GetAttribute("verType") <> 1 Then
+                                '   If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") Then
+                                Select Case CInt(verNode.GetAttribute("verType"))
+                                    Case 1 ' case for permission version
+                                        ' Dim permLevel As dbHelper.PermissionLevel = moDbHelper.getPagePermissionLevel(verNode.GetAttribute("id"))
+                                        If Not (mbAdminMode) Then
+                                            mnPageId = verNode.GetAttribute("id")
+                                        End If
+                                    Case 3 ' case for language version
+                                        If (verNode.GetAttribute("lang") = gcLang) Then
+                                            mnPageId = verNode.GetAttribute("id")
+                                        End If
+                                    Case Else
+                                        mnPageId = verNode.GetAttribute("id")
+                                End Select
                             End If
 
                             'create a version for the default we are replacing
@@ -5878,7 +5889,9 @@ Public Class Cms
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
-                    GetPageContentXml(oElmt.GetAttribute("id"))
+                    Dim nPageId As Long = oElmt.GetAttribute("id")
+                    GetPageContentXml(nPageId)
+                    nPageId = Nothing
                     IsInTree = True
                 Next
 

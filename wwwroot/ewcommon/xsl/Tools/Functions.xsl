@@ -228,6 +228,15 @@
         </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+  
+  <xsl:variable name="GoogleOptimizeID">
+  <!--  <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+        <xsl:call-template name="getXmlSettings">
+          <xsl:with-param name="sectionName" select="'web'"/>
+          <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
+        </xsl:call-template>
+    </xsl:if>-->
+  </xsl:variable>
 
   <xsl:variable name="PayPalTagManagerID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -339,9 +348,14 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
+        
+        <xsl:if test="$GoogleOptimizeID!=''">
+        	  <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
+        </xsl:if>
+        
         <xsl:if test="$GoogleTagManagerID!=''">
           <!-- Google Tag Manager -->
-          <script>
+	        <script>
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
@@ -1091,7 +1105,7 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
     <xsl:apply-templates select="." mode="JSONLD"/>
-    
+
     <!--  Google analytics javascript  -->
     <xsl:choose>
       <xsl:when test="$GoogleAnalyticsUniversalID!=''">
@@ -1153,6 +1167,8 @@
       <xsl:value-of select="node()"/>
     </xsl:if>
   </xsl:template>
+
+
 
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
