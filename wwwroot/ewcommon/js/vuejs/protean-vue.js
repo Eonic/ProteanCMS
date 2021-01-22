@@ -22,7 +22,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                debugger;
+                //debugger;
                 var redirectTypeElement = document.querySelector("input[name='redirectType']")
                 var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -41,7 +41,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                        //debugger;
                         //handle success.
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
@@ -51,7 +51,7 @@ if (editPageElement) {
         watch: {
             // whenever StructName changes, this function will run
             structName: function (newStructName) {
-                debugger;                
+                //debugger;                
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                     redirectModal.toggleModal();
                 } else {
@@ -61,7 +61,7 @@ if (editPageElement) {
             }
         },
         mounted: function () {
-            debugger;
+            //debugger;
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -99,27 +99,23 @@ if (insightsSectionElement) {
     window.insightsSection = new Vue({
         el: "#insights-section",
         data: {
+            resultArray: {}
         },
         methods: {
-             getMetricData: async function (metricId, apiUrl) {
-                //debugger;
+             getMetricData: function (metricId, apiUrl) {
                 let self = this;
                 let inputJson = this.getParamObject(apiUrl);
                 let metricElement = document.getElementById(metricId);
-                let valueSpanElement = metricElement.getElementsByClassName("metric-value");
 
                 //add loader
                 metricElement.classList.add("metric-loader");
 
-                await axios.post(apiUrl, inputJson)
+                axios.post(apiUrl, inputJson)
                     .then(function (response) {
-                        //debugger;
                         //handle success.
                         let metricElement = document.getElementById(metricId);
-                        let valueSpanElement = metricElement.getElementsByClassName("metric-value");
-                        if (valueSpanElement != null && valueSpanElement.length > 0) {
-                            valueSpanElement[0].innerText = response.data;                            
-                        }
+                        Vue.set(self.resultArray, metricId, response.data);
+
                         metricElement.classList.remove("metric-loader");
                     });
             },
@@ -137,10 +133,12 @@ if (insightsSectionElement) {
                     }
                 }
                 return inputJson;
+            },
+            filterResultArray: function (metricId) {
+                return this.resultArray[metricId];
             }
         },
         mounted: function () {
-            //debugger;
             let metricsList = document.getElementsByClassName("metric");
             if (metricsList != null && metricsList.length > 0) {
                 for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {

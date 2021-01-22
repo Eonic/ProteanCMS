@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" 
+	xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew"	xmlns:v-for="https://vuejs.org/v2/api/v-for">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -1593,7 +1594,9 @@
 														</header>
 														<div class="metric-body">
 															<div class="value">
-																<h1 class="metric-value">--</h1>
+																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+																	{{result.Key}}: {{result.Value}}                                                                        
+                                                                </h1>
 															</div>
 														</div>
 													</div>
