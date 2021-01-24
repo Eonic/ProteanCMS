@@ -10636,7 +10636,7 @@
 
 
   <xsl:template match="Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD">
-    <xsl:if test="Content[@type='FAQ']&gt;0">
+    <xsl:if test="Content[@type='FAQ']">
       {
       "@context": "https://schema.org",
       "@type": "FAQPage",

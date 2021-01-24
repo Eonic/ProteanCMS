@@ -22,7 +22,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                debugger;
+                //debugger;
                 var redirectTypeElement = document.querySelector("input[name='redirectType']")
                 var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -41,7 +41,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                        //debugger;
                         //handle success.
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
@@ -51,7 +51,7 @@ if (editPageElement) {
         watch: {
             // whenever StructName changes, this function will run
             structName: function (newStructName) {
-                debugger;                
+                //debugger;                
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
                     redirectModal.toggleModal();
                 } else {
@@ -61,7 +61,7 @@ if (editPageElement) {
             }
         },
         mounted: function () {
-            debugger;
+            //debugger;
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -88,6 +88,67 @@ if (redirectModalElement) {
             toggleModal: function () {
                 $("#redirectModal").removeClass("hidden");
                 this.showRedirectModal = !this.showRedirectModal;
+            }
+        }
+    });
+}
+
+//Insights
+const insightsSectionElement = document.querySelector("#insights-section");
+if (insightsSectionElement) {
+    window.insightsSection = new Vue({
+        el: "#insights-section",
+        data: {
+            resultArray: {}
+        },
+        methods: {
+             getMetricData: function (metricId, apiUrl) {
+                let self = this;
+                let inputJson = this.getParamObject(apiUrl);
+                let metricElement = document.getElementById(metricId);
+
+                //add loader
+                metricElement.classList.add("metric-loader");
+
+                axios.post(apiUrl, inputJson)
+                    .then(function (response) {
+                        //handle success.
+                        let metricElement = document.getElementById(metricId);
+                        Vue.set(self.resultArray, metricId, response.data);
+
+                        metricElement.classList.remove("metric-loader");
+                    });
+            },
+            getParamObject: function (apiUrl) {
+                let paramCollection = apiUrl.substring(apiUrl.indexOf('?') + 1);
+                let paramArray = paramCollection.split('&');
+
+                var inputJson = {};
+
+                for (var arrIndex = 0; arrIndex < paramArray.length; arrIndex++) {
+                    var param = paramArray[arrIndex]
+                    if (param != null) {
+                        var paramKeyValue = param.split('=');
+                        inputJson[paramKeyValue[0]] = paramKeyValue[1];
+                    }
+                }
+                return inputJson;
+            },
+            filterResultArray: function (metricId) {
+                return this.resultArray[metricId];
+            }
+        },
+        mounted: function () {
+            let metricsList = document.getElementsByClassName("metric");
+            if (metricsList != null && metricsList.length > 0) {
+                for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {
+                    let metric = metricsList[metricIndex];
+                    let apiUrl = metric.getAttribute("data-json-url");
+                    if (apiUrl != null && apiUrl.length > 0) {
+                        let metricElementId = metric.getAttribute("id");
+                        this.getMetricData(metricElementId, apiUrl);
+                    }
+                }
             }
         }
     });
