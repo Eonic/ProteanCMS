@@ -505,6 +505,8 @@ Partial Public Class Cms
                     If totalResults > 0 And pageCount > 0 Then
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
+
+
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
@@ -572,7 +574,7 @@ Partial Public Class Cms
 
 
                                         If resultDoc.GetField("contenttype") IsNot Nothing _
-                                            AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
+                                                AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
                                             url = resultDoc.GetField("url").StringValue
                                         Else
                                             If moConfig("LegacyRedirect") = "on" Then
