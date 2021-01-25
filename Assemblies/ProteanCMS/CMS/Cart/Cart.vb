@@ -7087,7 +7087,7 @@ processFlow:
                     ' If all the countries are 0 then get the tax rate for default country, otherwise set the zero
                     If bAllZero Then
                         Dim cDefaultCountry As String = moCartConfig("DefaultCountry")
-                        If Not String.IsNullOrEmpty(cDefaultCountry) Then
+                        If String.IsNullOrWhiteSpace(sCountryList) And Not String.IsNullOrEmpty(cDefaultCountry) Then
                             sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'"
                             nUpdateTaxRate = moDBHelper.ExeProcessSqlScalar(sSql)
                         Else
