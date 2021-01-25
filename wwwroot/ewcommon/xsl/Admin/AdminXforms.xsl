@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
-
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+                  xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
+                  xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
+                  xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
+                  xmlns:v-model="http://example.com/xml/v-model">
 
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
@@ -2536,9 +2541,9 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <!--<button type="button" class="close" v-on:click="showRedirectModal=false">
+                    <button type="button" class="close" v-on:click="showRedirectModal=false">
                       <span aria-hidden="true">&#215;</span>
-                    </button>-->
+                    </button>
                     <h4 class="modal-title">Do you want to create a redirect ?</h4>
                   </div>
                   <div class="modal-body">
@@ -2565,7 +2570,7 @@
                         Are you sure you want to continue ?
                       </h4>
                     </div>
-                    <!--<button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>-->
+                    <button class="btn btn-primary" v-on:click="showRedirectModal=false">Cancel</button>
                     <button type="button" id="addRedirectbtn" name="addRedirectbtn"
 										    onClick="editPage.createRedirects();"
 											class="btn btn-primary">

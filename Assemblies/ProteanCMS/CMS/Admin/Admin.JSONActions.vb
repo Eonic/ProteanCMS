@@ -19,6 +19,7 @@ Partial Public Class Cms
 
     Partial Public Class Admin
 
+
 #Region "JSON Actions"
 
         Public Class JSONActions
@@ -27,6 +28,9 @@ Partial Public Class Cms
             Private moLmsConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/lms")
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
+            Public moAdXfm As Protean.Cms.xForm
+
+
 
             Public Sub New()
                 Dim ctest As String = "this constructor is being hit" 'for testing
@@ -34,6 +38,17 @@ Partial Public Class Cms
                 myWeb.InitializeVariables()
                 myWeb.Open()
                 myCart = New Protean.Cms.Cart(myWeb)
+                moAdXfm = New Protean.Cms.xForm(myWeb)
+            End Sub
+
+            Public Shadows Sub open(ByVal oPageXml As XmlDocument)
+                Dim cProcessInfo As String = ""
+                Try
+                    moAdXfm.moPageXML = oPageXml
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug)
+                End Try
             End Sub
 
             Public Function ManageRedirects(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
@@ -121,7 +136,7 @@ Partial Public Class Cms
             Public Function redirectPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
-                'Dim loadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
+                Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
@@ -132,7 +147,8 @@ Partial Public Class Cms
 
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
-
+                    Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
+                    oTemplateInstance.InnerXml = moAdXfm.Instance.InnerXml
                     Dim oCgfSectName As String = "system.webServer"
                     Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
                     ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
@@ -149,17 +165,22 @@ Partial Public Class Cms
                         'Else
                         '    PerPageCount = 10
                         'End If
+
+
                         Dim skipRecords As Integer = 0
                         If (myWeb.moSession("loadCount") Is Nothing) Then
 
                             myWeb.moSession("loadCount") = PerPageCount
-                            skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
                         Else
-                            myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
-                            skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                            If (pageloadCount = 0) Then
+                                myWeb.moSession("loadCount") = PerPageCount
+                            Else
+                                skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                                myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
+
+                            End If
+
                         End If
-
-
 
                         Dim takeRecord As Integer = PerPageCount
 
@@ -181,7 +202,7 @@ Partial Public Class Cms
                                 End If
 
                             Next
-                            ' MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
+                            moAdXfm.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
                             JsonResult = xmlstring & xmlstringend
                         Else
                             JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
@@ -191,7 +212,7 @@ Partial Public Class Cms
                     Else
                         Dim oTempInstance As XmlElement = myWeb.moPageXml.CreateElement("instance")
                         'oTempInstance = myWeb.goSession("oTempInstance")
-                        ' MyBase.updateInstance(oTempInstance)
+                        'MyBase.updateInstance(oTempInstance)
                     End If
 
 

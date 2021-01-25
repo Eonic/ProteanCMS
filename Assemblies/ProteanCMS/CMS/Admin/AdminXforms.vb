@@ -1052,7 +1052,7 @@ Partial Public Class Cms
                                     If (myWeb.moRequest("PerPageCount") > 0) Then
                                         PerPageCount = myWeb.moRequest("PerPageCount")
                                     Else
-                                        PerPageCount = 50
+                                        PerPageCount = 100
                                     End If
 
                                     Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
