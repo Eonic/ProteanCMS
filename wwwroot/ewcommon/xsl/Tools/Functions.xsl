@@ -228,6 +228,15 @@
         </xsl:call-template>
     </xsl:if>
   </xsl:variable>
+  
+  <xsl:variable name="GoogleOptimizeID">
+  <!--  <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+        <xsl:call-template name="getXmlSettings">
+          <xsl:with-param name="sectionName" select="'web'"/>
+          <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
+        </xsl:call-template>
+    </xsl:if>-->
+  </xsl:variable>
 
   <xsl:variable name="PayPalTagManagerID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -339,9 +348,14 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
+        
+        <xsl:if test="$GoogleOptimizeID!=''">
+        	  <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
+        </xsl:if>
+        
         <xsl:if test="$GoogleTagManagerID!=''">
           <!-- Google Tag Manager -->
-          <script>
+	        <script>
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
@@ -1091,7 +1105,7 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='FacebookChat' and @name='FacebookChat']" mode="FacebookChatCode"/>
 
     <xsl:apply-templates select="." mode="JSONLD"/>
-    
+
     <!--  Google analytics javascript  -->
     <xsl:choose>
       <xsl:when test="$GoogleAnalyticsUniversalID!=''">
@@ -1104,7 +1118,10 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>  
     
-  
+    <xsl:apply-templates select="." mode="BingTrackingCode"/>
+    <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
+    <xsl:apply-templates select="." mode="FeedOptimiseCode"/>
+
     <!-- pull in site specific js in footer -->
     <xsl:apply-templates select="." mode="siteFooterJs"/>
 
@@ -1150,6 +1167,8 @@
       <xsl:value-of select="node()"/>
     </xsl:if>
   </xsl:template>
+
+
 
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
@@ -1700,7 +1719,6 @@
     </xsl:if>
   </xsl:template>
 
-  <!-- splits a string into XML items -->
   <xsl:template name="cleanname">
     <xsl:param name="string" />
     <xsl:if test="$string!=''">
@@ -1815,6 +1833,7 @@
               <xsl:apply-templates select="/Page/Cart/Order/Item" mode="googleanalytics_addItem" />
               <!-- Track trans object to ANALytics.-->
               <xsl:apply-templates select="/" mode="googleanalytics_trackTrans" />
+              <xsl:apply-templates select="/" mode="bespoke_trackTrans" />
             </xsl:if>
             <xsl:text>_gaq.push(['_setDomainName', 'none']);</xsl:text>
             <xsl:text>_gaq.push(['_setAllowLinker', true]);</xsl:text>
@@ -2018,6 +2037,10 @@
   </xsl:template>
   <xsl:template match="/" mode="googleanalytics_trackTrans">
     <xsl:text>_gaq.push(['_trackTrans']);</xsl:text>
+  </xsl:template>
+
+
+  <xsl:template match="/" mode="bespoke_trackTrans">
   </xsl:template>
 
   <!-- Calculates Item price - inc any price additional options.-->
@@ -2390,16 +2413,16 @@
   </xsl:template>
   
   <xsl:template match="Page" mode="BingTrackingCode">
-    <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
-      <xsl:if test="$BingTagManagerID!=''">
-            <script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTagManagerID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');</script>
-            <script>window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@totalNet"/>' }); </script>
+    <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+      <xsl:if test="$BingTrackingID!=''">
+            <script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');</script>
+            <script>window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' }); </script>
       </xsl:if>
     </xsl:if>
   </xsl:template>
   
     <xsl:template match="Page" mode="FacebookTrackingCode">
-    <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
+    <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
       <xsl:if test="$FacebookTrackingID!=''">
         <xsl:variable name="total"
             select="sum(Cart/Order/Item/@itemTotal)">
@@ -2422,17 +2445,17 @@
     </xsl:if>
   </xsl:template>
   
-   <xsl:template match="Page" mode="FeedOptimiseCode">
-     <xsl:if test="/Page/Cart/Order/@cmd='ShowInvoice'">
+   <xsl:template match="Page" mode="FeedOptimiseCode">  
        <xsl:if test="$FeedOptimiseID!=''">
-         <!--<script async="async" type="text/javascript" src='//cdn.feedoptimise.com/fo.js#'<xsl:value-of select="$FeedOptimiseID"/>'/></script>-->
-         <script type="text/javascript">
-           var _fo = _fo || [];");
-           _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@totalNet"/>" ]);
-           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
-         </script> 
+             <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+		 <script type="text/javascript">
+	           var _fo = _fo || [];");
+	           _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
+	           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
+	         </script> 
+	     </xsl:if>
+	     <script async="async" type="text/javascript" src="//cdn.feedoptimise.com/fo.js#{$FeedOptimiseID}">&#160;</script>
        </xsl:if>
-     </xsl:if>
   </xsl:template>
   
          
@@ -7604,8 +7627,6 @@
     </xsl:if>
   </xsl:template>
 
-
-
   <xsl:template match="Content | MenuItem | Company | Item" mode="displayDetailImage">
     <xsl:param name="crop" select="false()" />
     <xsl:param name="no-stretch" select="true()" />
@@ -7878,12 +7899,6 @@
     </xsl:variable>
     <xsl:variable name="max-height">
       <xsl:apply-templates select="." mode="getDisplayHeight"/>
-    </xsl:variable>
-    <xsl:variable name="lg-max-width">
-      <xsl:apply-templates select="." mode="getFullSizeWidth"/>
-    </xsl:variable>
-    <xsl:variable name="lg-max-height">
-      <xsl:apply-templates select="." mode="getFullSizeHeight"/>
     </xsl:variable>
     <!-- IF Image to resize -->
     <xsl:choose>

@@ -4487,7 +4487,7 @@ Public Class Cms
 
                 'Please never add any setting here you do not want to be publicly accessible.
                 Dim s = "web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;"
-                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
+                s = s + "web.eonicwebProductName;web.eonicwebCMSName;web.eonicwebAdminSystemName;web.eonicwebCopyright;web.eonicwebSupportTelephone;web.eonicwebWebsite;web.eonicwebSupportEmail;web.eonicwebLogo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookTrackingCode;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;"
                 s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;"
                 s = s + moConfig("XmlSettings") & ";"
 
@@ -5285,10 +5285,21 @@ Public Class Cms
 
                             'Case if we are on the current page then we reset the mnPageId so we pull in the right content
                             If mnPageId = oMenuItem.GetAttribute("id") Then
-                                If verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "" Then
-
-                                    mnPageId = verNode.GetAttribute("id")
-                                End If
+                                '  If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") And verNode.GetAttribute("verType") <> 1 Then
+                                '   If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") Then
+                                Select Case CInt(verNode.GetAttribute("verType"))
+                                    Case 1 ' case for permission version
+                                        ' Dim permLevel As dbHelper.PermissionLevel = moDbHelper.getPagePermissionLevel(verNode.GetAttribute("id"))
+                                        If Not (mbAdminMode) Then
+                                            mnPageId = verNode.GetAttribute("id")
+                                        End If
+                                    Case 3 ' case for language version
+                                        If (verNode.GetAttribute("lang") = gcLang) Then
+                                            mnPageId = verNode.GetAttribute("id")
+                                        End If
+                                    Case Else
+                                        mnPageId = verNode.GetAttribute("id")
+                                End Select
                             End If
 
                             'create a version for the default we are replacing
@@ -5449,7 +5460,19 @@ Public Class Cms
                                 If Replace(sUrl, DomainURL, "") = moRequest("path") Or Replace(sUrl, DomainURL, "") & "/" = moRequest("path") Then
                                     If Not oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" & nRootId & "]") Is Nothing Then
                                         'case for if newsletter has same page name as menu item
-                                        mnPageId = oMenuItem.GetAttribute("id")
+                                        If Features.ContainsKey("PageVersions") Then
+                                            'catch for page version
+                                            If oMenuItem.SelectSingleNode("PageVersion[@id='" & mnPageId & "']") Is Nothing Then
+                                                mnPageId = oMenuItem.GetAttribute("id")
+                                            End If
+                                        Else
+                                            mnPageId = oMenuItem.GetAttribute("id")
+                                        End If
+
+                                        If mnUserId <> 0 Or mbAdminMode <> True Then
+                                            'case for personalisation and admin TS 14/02/2021
+                                            mnPageId = oMenuItem.GetAttribute("id")
+                                        End If
                                     End If
 
                                 End If
@@ -5866,7 +5889,9 @@ Public Class Cms
                 oPageElmt.SetAttribute("blockedContent", gcBlockContentType)
                 'step through the tree from home to our current page
                 For Each oElmt In oPageElmt.SelectNodes("/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" & mnPageId & "'" & cXPathModifier & "]]")
-                    GetPageContentXml(oElmt.GetAttribute("id"))
+                    Dim nPageId As Long = oElmt.GetAttribute("id")
+                    GetPageContentXml(nPageId)
+                    nPageId = Nothing
                     IsInTree = True
                 Next
 
@@ -6751,7 +6776,6 @@ Public Class Cms
                             contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId, moConfig("SharedKey")))
                         End If
 
-                        Dim getSafeURLName As String = contentElmt.GetAttribute("name")
 
                         AddGroupsToContent(oRoot.SelectSingleNode("/ContentDetail"))
 
@@ -6772,22 +6796,7 @@ Public Class Cms
 
                         If mbAdminMode = False And LCase(moConfig("RedirectToDescriptiveContentURLs")) = "true" Then
 
-                            'get SAFE URL NAME
-                            'getSafeURLName
-                            ' <xsl:variable name="illegalString">
-                            '  <xsl:text> /\.:£%&#34;&#147;&#148;&#39;&#8220;&#8221;&#8216;&#8217;</xsl:text>
-                            '   </xsl:variable>
-                            '<xsl:value-of select="translate(@name,$illegalString,'----')"/>
-
-                            getSafeURLName = getSafeURLName.Replace(" ", "-")
-                            getSafeURLName = getSafeURLName.Replace("/", "-")
-                            getSafeURLName = getSafeURLName.Replace("\", "-")
-                            getSafeURLName = getSafeURLName.Replace(".", "-")
-
-                            getSafeURLName = getSafeURLName.Replace("+", "-")
-                            getSafeURLName = getSafeURLName.Replace("""", "")
-                            getSafeURLName = getSafeURLName.Replace("'", "")
-
+                            Dim SafeURLName As String = Protean.Tools.Text.CleanName(contentElmt.GetAttribute("name"), False, True)
                             Dim myOrigURL As String
                             Dim myQueryString As String = ""
 
@@ -6798,11 +6807,12 @@ Public Class Cms
                                 myOrigURL = mcOriginalURL
                             End If
 
-                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & getSafeURLName Then
+                            If myOrigURL <> mcPageURL & "/" & mnArtId & "-/" & SafeURLName Then
                                 'we redirect perminently
                                 mbRedirectPerm = True
-                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & getSafeURLName & myQueryString
+                                msRedirectOnEnd = mcPageURL & "/" & mnArtId & "-/" & SafeURLName & myQueryString
                             End If
+
                         End If
                         moContentDetail = oRoot.FirstChild
 

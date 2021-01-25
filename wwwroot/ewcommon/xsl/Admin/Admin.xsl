@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" 
+	xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew"	xmlns:v-for="https://vuejs.org/v2/api/v-for">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -163,7 +164,11 @@
         <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js</xsl:text>
+        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -1371,6 +1376,7 @@
 
   <xsl:template match="MenuItem[@cmd='PageVersions']" mode="adminLink2">
     <xsl:if test="@display='true'">
+      
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
         <xsl:text>?ewCmd=</xsl:text>
@@ -1380,16 +1386,30 @@
           <xsl:value-of select="/Page/@id"/>
         </xsl:if>
       </xsl:variable>
+      
+      <xsl:variable name="VersionParentId">
+        <xsl:choose>
+          <xsl:when test="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]">
+            <xsl:value-of select="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]/parent::MenuItem/@id"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="/Page/@id"/>
+          </xsl:otherwise>
+        </xsl:choose>        
+      </xsl:variable>
+      
+      
       <xsl:variable name="verCount">
         <xsl:choose>
           <xsl:when test="/Page/@ewCmd='PageVersions'">
-            <xsl:value-of select="count(/Page/ContentDetail/PageVersions/Version[@id!=/Page/@id])"/>
+            <xsl:value-of select="count(/Page/ContentDetail/PageVersions/Version)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/PageVersion)"/>
+            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=$VersionParentId]/PageVersion)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="$verCount &gt; 0 ">
           <a href="{$href}" title="{Description}">
@@ -1421,7 +1441,7 @@
       </xsl:choose>
 
     </xsl:if>
-  </xsl:template>
+    </xsl:template>
   <!-- -->
   <!--   ##############################   submenu for Advanced Mode   ##############################   -->
   <!-- -->
@@ -1484,258 +1504,302 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='AdmHome']" mode="Admin">
-    <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
-    </xsl:variable>
-    <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
-    </xsl:variable>
+	<xsl:template match="Page[@layout='AdmHome']" mode="Admin">
+		<xsl:variable name="supportEmail">
+			<xsl:call-template name="eonicwebSupportEmail"/>
+		</xsl:variable>
+		<xsl:variable name="supportWebsite">
+			<xsl:call-template name="eonicwebWebsite"/>
+		</xsl:variable>
 
-    <section>
-      
-      <div class="row">
-        <div class="col-md-9">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">What's New</h3>
-                </div>
-                <div class="panel-body">
-                      <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
-      </xsl:when>
-      <xsl:otherwise>
-            <h3><strong>ProteanCMS</strong></h3>
-              <p>ProteanCMS is fully opensource.</p>
-            <a href="https://www.proteancms.com">For more information click here.</a>
-      </xsl:otherwise>
-    </xsl:choose>
-                  
-              </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Performance Tips</h3>
-                </div>
-                <div class="panel-body">
-                  <p>Have you checked Google Analytics recently ?</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Get Help</h3>
-                </div>
-                <div class="panel-body">
-                  <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
-                    <h5>
-                    <a href="https://www.facebook.com/proteancms" class="" target="_new">
-                      <i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
-                    </a>
-                    </h5>
-                    <h5>
-                    <a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
-                      <i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
-                    </a></h5>
-                     
-                  
-                  </xsl:if>
-                       <h5>
-                      <i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
-                    </h5>
-                  <h5>
-                      <i class="fa fa-envelope">&#160;</i>&#160;<a href="mailto:{$supportEmail}" title="Email Support">
-                    <xsl:value-of select="$supportEmail"/>
-                  </a>
-                  </h5>
-                  <h5>
-                      <i class="fa fa-globe">&#160;</i>&#160;	<a title="view the latest news">
-                      <xsl:attribute name="href">
-                        <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
-                        <xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="$supportWebsite"/>
-                    </a>
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="panel panel-default matchHeight">
-            <div class="panel-heading">
-              <h3 class="panel-title">Features Enabled</h3>
-            </div>
-              <ul class="nav nav-stacked featuresEnabled">
-               
-                <li>
-              <a href="" class="btn btn-success">
-                <i class="fa fa-ok">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>
-                Content Management<br/>
-                <span class="btnNotes">
-                  <xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
-                  <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects</span>
-                <br/><strong>
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
-                    Lite Licence
-                  </xsl:when>
-                  <xsl:otherwise>
-                    Pro Licence
-                  </xsl:otherwise>
-                </xsl:choose></strong>
-              </a></li>
-                <li><a href="" class="btn btn-default">
-                <i class="fa fa-plus">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Multi-Language</a>
-                </li>
-                <li><a href="" class="btn btn-default">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Page Versions</a>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>eCommerce
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>eCommerce
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Membership
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Membership
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Email Marketing
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Email Marketing
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li class="active"><a href="" class="btn btn-default">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>SEO Reporting</a>
-                </li>
-                <li>
-                  <!--Not working--> 
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Page Cache
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Page Cache
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <xsl:choose>
-                  
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
-                <li class="active">
-                  <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
-                    <i class="fa fa-bug">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Debug Mode Enabled
-                  </a>
-                </li>
-                <div class="bg-danger small well-sm">Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.</div>
-                </xsl:when>
-                  <xsl:otherwise>
-                  <li>
-                    <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                      <i class="fa fa-recycle">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Rebundle JS / CSS files
-                    </a>
-                  </li>
-                  </xsl:otherwise>
-                </xsl:choose>
-                <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
-                <li>
-                  <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
-                    <i class="fa fa-refresh">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
-                  </a>
-                </li>
-                </xsl:if>
-              </ul>
-          </div>
+		<section>
 
-        </div>
-      </div>
-      
-    </section>
-  </xsl:template>
+			<div class="row">
+				<div class="col-md-9">					
+					<div class="row">
+						<div class="col-md-4">
+							<div class="matchHeight dashboard-first-column">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">What's New</h3>
+									</div>
+									<div class="panel-body">
+										<xsl:choose>
+											<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+												<!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+											</xsl:when>
+											<xsl:otherwise>
+												<h3>
+													<strong>ProteanCMS</strong>
+												</h3>
+												<p>ProteanCMS is fully opensource.</p>
+												<a href="https://www.proteancms.com">For more information click here.</a>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+								</div>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">Get Help</h3>
+									</div>
+									<div class="panel-body">
+										<xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+											<h5>
+												<a href="https://www.facebook.com/proteancms" class="" target="_new">
+													<i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
+												</a>
+											</h5>
+											<h5>
+												<a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
+													<i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
+												</a>
+											</h5>
+
+
+										</xsl:if>
+										<h5>
+											<i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
+										</h5>
+										<h5>
+											<i class="fa fa-envelope">&#160;</i>&#160;<a href="mailto:{$supportEmail}" title="Email Support">
+												<xsl:value-of select="$supportEmail"/>
+											</a>
+										</h5>
+										<h5>
+											<i class="fa fa-globe">&#160;</i>&#160;	<a title="view the latest news">
+												<xsl:attribute name="href">
+													<xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
+													<xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
+												</xsl:attribute>
+												<xsl:value-of select="$supportWebsite"/>
+											</a>
+										</h5>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="panel panel-default matchHeight">
+								<div class="panel-heading">
+									<h3 class="panel-title">Performance Tips</h3>
+								</div>
+								<div class="panel-body">
+									<p>Have you checked Google Analytics recently ?</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="panel panel-default matchHeight">
+								<div class="panel-heading">
+									<h3 class="panel-title">Insights</h3>
+								</div>
+								<div class="panel-body">
+									<div id="insights-section">
+										<xsl:for-each select="$page/AdminMenu/MenuItem/Module">
+											<xsl:if test="@name != ''">
+												<xsl:variable name="id" select="@id"/>
+												<xsl:variable name="jsonURL" select="@jsonURL"/>	
+												<div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
+													<div class="metric-inner">
+														<header class="metric-header">
+															<h1 class="metric-title"><xsl:value-of select="@name"/></h1>
+														</header>
+														<div class="metric-body">
+															<div class="value">
+																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+																	{{result.Key}}: {{result.Value}}                                                                        
+                                                                </h1>
+															</div>
+														</div>
+													</div>
+												</div>
+											</xsl:if>
+										</xsl:for-each>
+									</div>							
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default matchHeight">
+						<div class="panel-heading">
+							<h3 class="panel-title">Features Enabled</h3>
+						</div>
+						<ul class="nav nav-stacked featuresEnabled">
+
+							<li>
+								<a href="" class="btn btn-success">
+									<i class="fa fa-ok">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>
+									Content Management<br/>
+									<span class="btnNotes">
+										<xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
+										<xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects
+									</span>
+									<br/><strong>
+										<xsl:choose>
+											<xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
+												Lite Licence
+											</xsl:when>
+											<xsl:otherwise>
+												Pro Licence
+											</xsl:otherwise>
+										</xsl:choose>
+									</strong>
+								</a>
+							</li>
+							<li>
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Multi-Language
+								</a>
+							</li>
+							<li>
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Page Versions
+								</a>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>eCommerce
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>eCommerce
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Membership
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Membership
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Email Marketing
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Email Marketing
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li class="active">
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>SEO Reporting
+								</a>
+							</li>
+							<li>
+								<!--Not working-->
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Page Cache
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Page Cache
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<xsl:choose>
+
+								<xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
+									<li class="active">
+										<a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+											<i class="fa fa-bug">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Debug Mode Enabled
+										</a>
+									</li>
+									<div class="bg-danger small well-sm">
+										Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<li>
+										<a href="{$appPath}?rebundle=true" class="btn btn-warning">
+											<i class="fa fa-recycle">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Rebundle JS / CSS files
+										</a>
+									</li>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
+								<li>
+									<a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
+										<i class="fa fa-refresh">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
+									</a>
+								</li>
+							</xsl:if>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</xsl:template>
 
   <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="row">

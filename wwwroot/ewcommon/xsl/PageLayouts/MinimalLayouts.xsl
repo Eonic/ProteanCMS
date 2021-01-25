@@ -2488,33 +2488,28 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='FormattedText']" mode="displayBrief">
-    <div class="FormattedText">
-      <xsl:if test="@maxWidth!=''">
-        <xsl:choose>
-          <xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
-            <xsl:attribute name="class">FormattedText central-text</xsl:attribute>
-            <xsl:attribute name='style'>
-              <xsl:text>max-width:</xsl:text>
-              <xsl:value-of select="@maxWidth"/>
-            </xsl:attribute>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:attribute name='style'>
-              <xsl:text>max-width:</xsl:text>
-              <xsl:value-of select="@maxWidth"/>
-            </xsl:attribute>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="node()">
-          <xsl:apply-templates select="node()" mode="cleanXhtml"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>&#160;</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
+    <xsl:if test="node()">
+		<div class="FormattedText">
+			<xsl:if test="@maxWidth!=''">
+				<xsl:choose>
+					<xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
+						<xsl:attribute name="class">FormattedText central-text</xsl:attribute>
+						<xsl:attribute name='style'>
+							<xsl:text>max-width:</xsl:text>
+							<xsl:value-of select="@maxWidth"/>
+						</xsl:attribute>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name='style'>
+							<xsl:text>max-width:</xsl:text>
+							<xsl:value-of select="@maxWidth"/>
+						</xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+		</div>
+	</xsl:if>
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='Image']" mode="moduleTitle">
@@ -4518,7 +4513,7 @@
               <p>
                 <strong>
                   <xsl:call-template name="term2009" />
-                  <xsl:text>:&#160;</xsl:text>
+                  <xsl:text>: </xsl:text>
                 </strong>
                 <a href="mailto:{Email/node()}" class="email">
                   <xsl:apply-templates select="Email" mode="displayBrief"/>
@@ -4744,7 +4739,7 @@
             <p>
               <span class="label">
                 <xsl:call-template name="term2009" />
-                <xsl:text>:&#160;</xsl:text>
+                <xsl:text>: </xsl:text>
               </span>
               <a href="mailto:{Email/node()}">
                 <span class="email">
@@ -6248,10 +6243,10 @@
                 </xsl:call-template>
               </xsl:if>
               <xsl:text>&#160;</xsl:text>
-              <xsl:if test="Times/@start!=''">
+              <xsl:if test="Times/@start!='' and Times/@start!=','">
                 <span class="times">
                   <xsl:value-of select="translate(Times/@start,',',':')"/>
-                  <xsl:if test="Times/@end!=''">
+                  <xsl:if test="Times/@end!='' and Times/@end!=','">
                     <xsl:text> - </xsl:text>
                     <xsl:value-of select="translate(Times/@end,',',':')"/>
                   </xsl:if>
@@ -8433,8 +8428,56 @@
     <xsl:variable name="idsList">
       <xsl:apply-templates select="ms:node-set($contentList)/*" mode="idList" />
     </xsl:variable>
+    <!--responsive columns variables-->
+    <xsl:variable name="xsColsToShow">
+      <xsl:choose>
+        <xsl:when test="@xsCol='2'">2</xsl:when>
+        <xsl:otherwise>1</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="smColsToShow">
+      <xsl:choose>
+        <xsl:when test="@smCol and @smCol!=''">
+          <xsl:value-of select="@smCol"/>
+        </xsl:when>
+        <xsl:otherwise>2</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="mdColsToShow">
+      <xsl:choose>
+        <xsl:when test="@mdCol and @mdCol!=''">
+          <xsl:value-of select="@mdCol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@cols"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <!--end responsive columns variables-->
     <div class="Documents">
       <div class="cols{@cols}">
+        <!--responsive columns-->
+        <xsl:attribute name="class">
+          <xsl:text>cols</xsl:text>
+          <xsl:choose>
+            <xsl:when test="@xsCol='2'"> mobile-2-col-content</xsl:when>
+            <xsl:otherwise> mobile-1-col-content</xsl:otherwise>
+          </xsl:choose>
+          <xsl:if test="@smCol and @smCol!=''">
+            <xsl:text> sm-content-</xsl:text>
+            <xsl:value-of select="@smCol"/>
+          </xsl:if>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> md-content-</xsl:text>
+            <xsl:value-of select="@mdCol"/>
+          </xsl:if>
+          <xsl:text> cols</xsl:text>
+          <xsl:value-of select="@cols"/>
+          <xsl:if test="@mdCol and @mdCol!=''">
+            <xsl:text> content-cols-responsive</xsl:text>
+          </xsl:if>
+        </xsl:attribute>
+        <!--end responsive columns-->
         <xsl:if test="@stepCount != '0'">
           <xsl:apply-templates select="/" mode="genericStepper">
             <xsl:with-param name="documentList" select="$contentList"/>
@@ -10532,7 +10575,7 @@
       <xsl:apply-templates select="$currentPage" mode="getHref"/>
     </xsl:variable>
     <li>
-      <a href="{$currentUrl}#{@id}" title="{@name}">
+      <a href="#faq-{@id}" title="{@name}">
         <xsl:choose>
           <!-- Older sites might not have the DisplayName Field, had to be introduced to allow ? when used as an FAQ page. -->
           <xsl:when test="DisplayName/node()!=''">
@@ -10561,7 +10604,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="{@id}">
+        <a name="faq-{@id}">
           &#160;
         </a>
         <h3>
@@ -10593,7 +10636,7 @@
 
 
   <xsl:template match="Content[@type='Module' and @moduleType='FAQList']" mode="JSONLD">
-    <xsl:if test="Content[@type='FAQ']&gt;0">
+    <xsl:if test="Content[@type='FAQ']">
       {
       "@context": "https://schema.org",
       "@type": "FAQPage",

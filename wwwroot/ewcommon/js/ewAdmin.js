@@ -609,6 +609,22 @@ $.fn.prepareAdminXform = function () {
         });
     }
 
+    if ($(this).find("#dEventDate-alt").exists() && $(this).find("#dEventEndDate-alt").exists()) {
+
+        $(document).on("change", "#dEventDate-alt", function () {
+            setDefaultEventEndDate();
+        });
+
+        $(document).on("change", "#dEventEndDate-alt", function () {
+            var startEventDate = $("#EditContent #dEventDate-alt").val();
+            var endEventDate = $("#EditContent #dEventEndDate-alt").val();
+            if (Date.parse(endEventDate) < Date.parse(startEventDate)) {
+                $("#EditContent #dEventEndDate").val('');
+                $("#EditContent #dEventEndDate-alt").val('');
+            }
+        });
+    }
+
    // $('.ewXform label').each(function () {
    //     if ($(this).parent().is('span.radiocheckbox')) {
 
@@ -2003,6 +2019,18 @@ function checkTextAreaMaxLength(textBoxRef, e) {
     $("#" + textBoxRef + "-char-count").html(myTextBox.val().length);
     return true;
 }
+
+function setDefaultEventEndDate() {
+    var startEventDateAlt = $("#EditContent #dEventDate-alt").val();
+    var startEventDate = $("#EditContent #dEventDate").val();
+
+    var endEventDate = $("#EditContent #dEventEndDate-alt").val();
+    if ((startEventDateAlt != null && startEventDateAlt != "") && (endEventDate == null || endEventDate == "" || Date.parse(endEventDate) < Date.parse(startEventDateAlt))) {
+        $("#EditContent #dEventEndDate").val(startEventDate);
+        $("#EditContent #dEventEndDate-alt").val(startEventDateAlt);
+    }
+}
+
 /*
 Checks if the keyCode pressed is inside special chars
 -------------------------------------------------------

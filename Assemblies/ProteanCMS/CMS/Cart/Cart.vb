@@ -5946,7 +5946,7 @@ processFlow:
                     addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
                     addNewTextNode("cCartForiegnRef", oElmt)
                     addNewTextNode("nCartStatus", oElmt, "1")
-                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType) '-----BJR----cCartSchemaName)
+                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType)
                     addNewTextNode("cCartSessionId", oElmt, mcSessionId)
                     ' MEMB - add userid to oRs if we are logged on
                     If mnEwUserId > 0 Then
@@ -5960,7 +5960,7 @@ processFlow:
                     addNewTextNode("nShippingMethodId", oElmt, "0")
                     addNewTextNode("cShippingDesc", oElmt, moCartConfig("DefaultShippingDesc"))
                     addNewTextNode("nShippingCost", oElmt, CLng(moCartConfig("DefaultShippingCost") & "0"))
-                    addNewTextNode("cClientNotes", oElmt, cOrderReference) '----BJR
+                    addNewTextNode("cClientNotes", oElmt, cOrderReference)
                     addNewTextNode("cSellerNotes", oElmt, "referer:" & myWeb.moSession("previousPage") & "/n")
                     If Not (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") Is Nothing) Then
                         addElement(oElmt, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, True)
@@ -7077,9 +7077,6 @@ processFlow:
                         aVatRates = Split(sCountryList, "','")
                         Array.Reverse(aVatRates)
 
-
-
-
                         ' go backwards through the list, and use the last non-zero tax rate
                         bAllZero = True
 
@@ -7090,8 +7087,16 @@ processFlow:
                             End If
                         Next
                     End If
-                    ' If all the countries are 0 then we need to set the tax rate accordingly
-                    If bAllZero Then nUpdateTaxRate = 0
+                    ' If all the countries are 0 then get the tax rate for default country, otherwise set the zero
+                    If bAllZero Then
+                        Dim cDefaultCountry As String = moCartConfig("DefaultCountry")
+                        If String.IsNullOrWhiteSpace(sCountryList) And Not String.IsNullOrEmpty(cDefaultCountry) Then
+                            sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'"
+                            nUpdateTaxRate = moDBHelper.ExeProcessSqlScalar(sSql)
+                        Else
+                            nUpdateTaxRate = 0
+                        End If
+                    End If
                 End If
 
 
