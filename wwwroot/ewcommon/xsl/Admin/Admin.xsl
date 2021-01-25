@@ -7925,15 +7925,16 @@
   </xsl:template>
 
   <xsl:template match="TreeItem" mode="ListLocationsForm">
-    <li id="node{@id}">
-      <span class="treeNode">
-        <xsl:value-of select="@Name"/>
-      </span>
-      <input type="checkbox" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
+    <li id="node{@id}" class="checkbox">
+  
+      <input type="checkbox" id="loc-{@id}" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
         <xsl:if test="@selected = '1'">
           <xsl:attribute name="checked">true</xsl:attribute>
         </xsl:if>
       </input>
+      <label class="treeNode" for="loc-{@id}">
+        <xsl:value-of select="@Name"/>
+      </label>
       <xsl:if test="TreeItem">
         <ul>
           <xsl:apply-templates select="TreeItem" mode="ListLocationsForm"/>

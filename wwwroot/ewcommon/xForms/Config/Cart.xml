@@ -37,6 +37,7 @@
         <add key="ShippedValidation" value="on" />
         <add key="PaymentTypeButtons" value="off" />
         <add key="ProductOptionOverideQuantity" value="off"/>
+        <add key="EmailReceipts" value="on"/>
       </cart>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -56,7 +57,7 @@
     <bind id="ewBillingAddressXForm" nodeset="cart/add[@key='BillingAddressXForm']/@value" required="false()" type="string" />
     <bind id="ewDeliveryAddressXForm" nodeset="cart/add[@key='DeliveryAddressXForm']/@value" required="false()" type="string" />
     <bind id="ewNoDeliveryAddress" nodeset="cart/add[@key='NoDeliveryAddress']/@value" required="true()" type="string" />
-    <bind id="ewEmailReceipts" nodeset="cart/add[@key='EmailReceipts']/@value" required="true()" type="string" />
+    <bind id="ewEmailReceipts" nodeset="cart/add[@key='EmailReceipts']/@value" required="false()" type="string" />
     <bind id="ewMerchantEmailTemplatePath" nodeset="cart/add[@key='MerchantEmailTemplatePath']/@value" required="false()" type="string" />
     <bind id="ewCustomerEmailTemplatePath" nodeset="cart/add[@key='CustomerEmailTemplatePath']/@value" required="false()" type="string" />
     <bind id="CustomerEmailShippedTemplatePath" nodeset="cart/add[@key='CustomerEmailShippedTemplatePath']/@value" required="false()" type="string" />
@@ -102,7 +103,7 @@
       <value />
     </input>
       <select1 bind="ewEmailReceipts" appearance="full">
-        <label>Email Receipts</label>
+        <label>Email Receipts test</label>
         <item>
           <label>Yes</label>
           <value>on</value>

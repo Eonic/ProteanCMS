@@ -941,3 +941,11 @@ C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Cop
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\SendGrid.dll
+C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\StarkbankEcdsa.dll
+C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\SendGrid.pdb
+C:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\SendGrid.xml
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\SendGrid.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\StarkbankEcdsa.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\SendGrid.pdb
+C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\SendGrid.xml

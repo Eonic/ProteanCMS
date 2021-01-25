@@ -1731,12 +1731,14 @@
     <xsl:variable name="hValue" select="substring-before(value/node(),',')"/>
     <xsl:variable name="mValue" select="substring-after(value/node(),',')"/>
     <!-- HOURS -->
+
+    <div class="input-group">
     <select name="{$ref}" id="{$ref}">
       <xsl:attribute name="class">
         <xsl:value-of select="@class"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
-        <xsl:text>hours</xsl:text>
+        <xsl:text>hours form-control</xsl:text>
       </xsl:attribute>
       <xsl:call-template name="getHourOptions">
         <xsl:with-param name="value" select="$hValue"/>
@@ -1749,12 +1751,13 @@
         <xsl:value-of select="@class"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
-        <xsl:text>minutes</xsl:text>
+        <xsl:text>minutes form-control</xsl:text>
       </xsl:attribute>
       <xsl:call-template name="getMinuteOptions">
         <xsl:with-param name="value" select="$mValue"/>
       </xsl:call-template>
     </select>
+      </div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : Time ========================== -->
