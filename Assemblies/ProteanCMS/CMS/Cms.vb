@@ -115,7 +115,7 @@ Public Class Cms
     Public Shared gbSingleLoginSessionPerUser As Boolean = False
     Public Shared gnSingleLoginSessionTimeout As Int16 = 900
     ' Site cache
-    Public Shared gbSiteCacheMode As Boolean = True
+    Public Shared gbSiteCacheMode As Boolean = False
 
     Public sessionRootPageId As Integer = 0
 
@@ -5218,9 +5218,9 @@ Public Class Cms
                 If bUseCache And cCacheMode = "on" Then
                     sProcessInfo = "GetStructureXML-addCacheToStructure"
                     Protean.PerfMon.Log("Web", sProcessInfo)
-                    If Not moRequest("reBundle") Is Nothing Then
-                        moDbHelper.clearStructureCacheAll()
-                    End If
+                    'If Not moRequest("reBundle") Is Nothing Then
+                    '    moDbHelper.clearStructureCacheAll()
+                    'End If
                     'only cache if MenuItem / Menu
                     If cMenuItemNodeName = "MenuItem" And cRootNodeName = "Menu" Then
                         If mbAdminMode Then
