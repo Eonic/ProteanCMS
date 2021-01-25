@@ -505,12 +505,6 @@ Partial Public Class Cms
                     If totalResults > 0 And pageCount > 0 Then
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
-                    Dim PerPageCount As Integer
-                    If (myWeb.moRequest("PerPageCount") > 0) Then
-                        PerPageCount = myWeb.moRequest("PerPageCount")
-                    Else
-                        PerPageCount = 12
-                    End If
 
 
 
