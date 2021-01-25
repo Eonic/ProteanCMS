@@ -359,7 +359,13 @@ Public Class Conversion
                 End If
                 'keep reading till no of seps are hit.
                 Do While (sLine.Split(_separator).Length - 1) < nSepCount
-                    sLine = sLine + sr.ReadLine
+                    Dim nextLine = sr.ReadLine
+                    'exit the loop if reached end of the file.
+                    If IsNothing(nextLine) Then
+                        Exit Do
+                    End If
+
+                    sLine = sLine + nextLine
                     sLine = sLine.Replace(vbCrLf, "")
                 Loop
 
