@@ -29,7 +29,7 @@ Partial Public Class Cms
 
 #Region "Declarations"
 
-        Public WithEvents moDbHelper As Cms.dbHelper
+
         Public moPageXML As XmlDocument = New XmlDocument
 
         Public Shadows mcModuleName As String = "Protea.Admin"
