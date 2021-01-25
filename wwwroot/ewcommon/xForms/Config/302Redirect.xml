@@ -16,7 +16,8 @@
      </bind>
    </model>
    <group ref="WebSettings">
-    <label>302 (Temporary) Page Redirects</label>
+    
+     <label>302 (Temporary) Page Redirects</label>
      <group>
        <repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
