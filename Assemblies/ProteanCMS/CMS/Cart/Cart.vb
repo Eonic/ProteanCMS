@@ -2530,8 +2530,21 @@ processFlow:
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
                             If Not mbOveridePrice Then ' for openquote
-                                ' Go get the lowest price based on user and group
-                                If Not IsDBNull(oRow("productDetail")) Then
+
+                                If (Not (myWeb.moSession("overridePriceSession") Is Nothing) And Not (myWeb.moConfig("overridePriceKey") Is Nothing)) Then
+                                    'get the string value from session
+
+                                    Dim sSessionKey As String = Convert.ToString(myWeb.moSession("overridePriceSession"))
+                                    Dim sKey As String = Convert.ToString(myWeb.moConfig("overridePriceKey"))
+                                    'create the key with the current user
+                                    Dim sSessionId As String = Convert.ToString(myWeb.moSession.SessionID)
+                                    'generate the key with current session id
+                                    Dim sEncryptedKey As String = Protean.Tools.RC4.Encrypt(sSessionId, sKey)
+                                    If (sEncryptedKey = sSessionKey) Then 'if both matches allow to overrdide price
+                                        bOverridePrice = True
+                                    End If
+                                    ' Go get the lowest price based on user and group
+                                ElseIf Not IsDBNull(oRow("productDetail")) Then
 
                                     Dim oProd As XmlElement = moPageXml.CreateElement("product")
                                     oProd.InnerXml = oRow("productDetail")
@@ -2605,8 +2618,8 @@ processFlow:
                                 Else
                                     If (moCartConfig("ProductOptionOverideQuantity") = "on" And oOpRow("quantity") > 1) Then
                                         nOpPrices += (oOpRow("price") * oOpRow("quantity"))
-                                    Else
-                                        nOpPrices += (oOpRow("price"))
+                                        'Else
+                                        '    nOpPrices += (oOpRow("price"))
                                     End If
                                 End If
                             Next
