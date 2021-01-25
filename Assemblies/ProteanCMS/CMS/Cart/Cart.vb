@@ -6966,17 +6966,20 @@ processFlow:
 
 
                 dir = New DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"))
-                files = dir.GetFiles()
+                If dir.Exists Then
+                    files = dir.GetFiles()
 
-                For Each fi In files
-                    If fi.Extension = ".xml" Then
-                        ProviderName = Replace(fi.Name, fi.Extension, "")
-                        oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
-                        If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
-                            oElmt2.SetAttribute("active", "true")
+                    For Each fi In files
+                        If fi.Extension = ".xml" Then
+                            ProviderName = Replace(fi.Name, fi.Extension, "")
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
                         End If
-                    End If
-                Next
+                    Next
+                End If
+
 
                 oContentsXML.AppendChild(oElmt)
 
