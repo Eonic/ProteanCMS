@@ -1047,40 +1047,40 @@ Partial Public Class Cms
                                 If goSession("oTempInstance") Is Nothing Then
 
 
-                                    Dim PerPageCount As Integer
-                                    Dim TotalCount As Integer = 0
-                                    If (myWeb.moRequest("PerPageCount") > 0) Then
-                                        PerPageCount = myWeb.moRequest("PerPageCount")
-                                    Else
-                                        PerPageCount = 10
-                                    End If
+                                    'Dim PerPageCount As Integer
+                                    'Dim TotalCount As Integer = 0
+                                    'If (myWeb.moRequest("PerPageCount") > 0) Then
+                                    '    PerPageCount = myWeb.moRequest("PerPageCount")
+                                    'Else
+                                    '    PerPageCount = 10
+                                    'End If
 
-                                    Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
-                                    Dim takeRecord As Integer = PerPageCount
+                                    'Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
+                                    'Dim takeRecord As Integer = PerPageCount
 
-                                    Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
+                                    'Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
 
-                                    Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    TotalCount = props.ChildNodes.Count
+                                    'Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    'TotalCount = props.ChildNodes.Count
 
-                                    If props.ChildNodes.Count >= PerPageCount Then
-                                        Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
-                                        Dim xmlstringend As String = "</rewriteMap>"
-                                        Dim count As Integer = 0
+                                    'If props.ChildNodes.Count >= PerPageCount Then
+                                    '    Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                    '    Dim xmlstringend As String = "</rewriteMap>"
+                                    '    Dim count As Integer = 0
 
-                                        For i As Integer = skipRecords To props.ChildNodes.Count - 1
-                                            If i > (skipRecords + takeRecord) - 1 Then
-                                                Exit For
-                                            Else
-                                                xmlstring = xmlstring & props.ChildNodes(i).OuterXml
-                                            End If
+                                    '    For i As Integer = skipRecords To props.ChildNodes.Count - 1
+                                    '        If i > (skipRecords + takeRecord) - 1 Then
+                                    '            Exit For
+                                    '        Else
+                                    '            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                    '        End If
 
-                                        Next
+                                    '    Next
 
-                                        MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
-                                    Else
-                                        MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
-                                    End If
+                                    '    MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
+                                    'Else
+                                    MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+                                    'End If
 
                                     Me.bProcessRepeats = False
                                 Else

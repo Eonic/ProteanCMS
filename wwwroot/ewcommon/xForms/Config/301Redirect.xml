@@ -16,14 +16,7 @@
      </bind>
    </model>
    <group ref="WebSettings">
-   
-     <input type="button" class=" PrevPage">
-       <label>Prev</label>
-     </input>
-     <input type="button" class=" nextPage">
-       <label>Next</label>
-     </input>
-     
+       
     <label>301 (Perminent) Page Redirects</label>
    
      <group>

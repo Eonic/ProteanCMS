@@ -2150,8 +2150,21 @@ Partial Public Module xmlTools
                             Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
                             'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
                             'TS commented out as modified save file to overwrite by using WriteAllBytes
+                            Dim cnt As Integer
+                            Dim maxAttempt As String = 3
+                            Try
+                                For cnt = 1 To maxAttempt
+                                    scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+                                    If Not scriptFile.StartsWith("ERROR: ") Then
+                                        Exit For
+                                    End If
+                                Next
 
-                            scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+                            Catch ex As Exception
+                                If (cnt < maxAttempt) Then
+                                    Threading.Thread.Sleep(500 * cnt)
+                                End If
+                            End Try
 
                             If scriptFile.StartsWith("ERROR: ") Then
                                 myWeb.bPageCache = False

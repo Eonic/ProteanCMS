@@ -949,11 +949,11 @@ Partial Public Class fsHelper
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
                 Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
 
-                If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
-                    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
-                    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
-                    If Not (SizeInMB > 4.0) Then
-                        file.SaveAs(mcStartFolder & fileNameFixed)
+                'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
+                '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
+                '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
+                '    If Not (SizeInMB > 4.0) Then
+                file.SaveAs(mcStartFolder & fileNameFixed)
 
                         If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
                             Dim eImg As New Protean.Tools.Image(mcStartFolder & fileNameFixed)
@@ -962,13 +962,13 @@ Partial Public Class fsHelper
                         End If
                         Dim fullName As String = Path.GetFileName(file.FileName)
                         statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
-                    Else
-                        'alert: image size is bigger than 4 MB
-                    End If
-                Else
-                    'alert: Image with Same  name already exist
+                '    Else
+                '        'alert: image size is bigger than 4 MB
+                '    End If
+                'Else
+                '    'alert: Image with Same  name already exist
 
-                End If
+                'End If
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))

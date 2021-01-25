@@ -29,7 +29,7 @@ Partial Public Class Cms
 
 #Region "Declarations"
 
-        Public WithEvents moDbHelper As Cms.dbHelper
+
         Public moPageXML As XmlDocument = New XmlDocument
 
         Public Shadows mcModuleName As String = "Eonic.Admin"
@@ -639,8 +639,8 @@ ProcessFlow:
                             myWeb.moCtx.Application("ewSettings") = Nothing
                             mcEwCmd = "Normal"
                             myWeb.msRedirectOnEnd = "/?rebundle=true"
-                            ' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
-                            moDbHelper.clearStructureCacheAll()
+                            '' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
+                            'moDbHelper.clearStructureCacheAll()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
