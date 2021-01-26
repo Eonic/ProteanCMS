@@ -1608,7 +1608,7 @@
 														<div class="metric-body">
 															<div class="value">
 																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-																	{{result.Key}}: {{result.Value}}                                                                        
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>                                                                        
                                                                 </h1>
 															</div>
 														</div>
