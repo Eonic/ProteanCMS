@@ -639,7 +639,8 @@ ProcessFlow:
                             myWeb.moCtx.Application("ewSettings") = Nothing
                             mcEwCmd = "Normal"
                             myWeb.msRedirectOnEnd = "/?rebundle=true"
-
+                            '' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
+                            'moDbHelper.clearStructureCacheAll()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If

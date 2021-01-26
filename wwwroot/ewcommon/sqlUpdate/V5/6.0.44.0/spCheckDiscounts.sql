@@ -2,7 +2,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[spCheckDiscounts]  
+CREATE PROCEDURE [dbo].[spCheckDiscounts]  
  @PromoCodeEntered VARCHAR(15)  
  ,@UserGroupIds VARCHAR(50)  
  ,@CartOrderId INT  

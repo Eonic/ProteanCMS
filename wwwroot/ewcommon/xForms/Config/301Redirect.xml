@@ -16,7 +16,9 @@
      </bind>
    </model>
    <group ref="WebSettings">
+       
     <label>301 (Perminent) Page Redirects</label>
+   
      <group>
        <repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
@@ -37,7 +39,6 @@
          <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add"/>
        </trigger>
      </group>
-
      
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
