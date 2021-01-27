@@ -4291,9 +4291,22 @@
   <xsl:template match="Page" mode="MaxUploadWidth">0</xsl:template>
   <xsl:template match="Page" mode="MaxUploadHeight">0</xsl:template>
   
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2700</xsl:template>
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2700</xsl:template>
-
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">
+	  <xsl:choose>
+		  <xsl:when test="$page/Settings/add[@key='web.MaxUploadWidth']/@value!=''">
+			  <xsl:value-of select="$page/Settings/add[@key='web.MaxUploadWidth']/@value"/>
+		  </xsl:when>
+		  <xsl:otherwise>3000</xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">
+	  <xsl:choose>
+		  <xsl:when test="$page/Settings/add[@key='web.MaxUploadHeight']/@value!=''">
+			  <xsl:value-of select="$page/Settings/add[@key='web.MaxUploadHeight']/@value"/>
+		  </xsl:when>
+		  <xsl:otherwise>3000</xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="adminPageHeader">
     <h1 class="page-header">
