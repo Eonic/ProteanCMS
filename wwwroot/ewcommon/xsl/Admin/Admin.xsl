@@ -1608,7 +1608,7 @@
 														<div class="metric-body">
 															<div class="value">
 																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-																	{{result.Key}}: {{result.Value}}                                                                        
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>                                                                        
                                                                 </h1>
 															</div>
 														</div>
@@ -8002,15 +8002,16 @@
   </xsl:template>
 
   <xsl:template match="TreeItem" mode="ListLocationsForm">
-    <li id="node{@id}">
-      <span class="treeNode">
-        <xsl:value-of select="@Name"/>
-      </span>
-      <input type="checkbox" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
+    <li id="node{@id}" class="checkbox">
+  
+      <input type="checkbox" id="loc-{@id}" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
         <xsl:if test="@selected = '1'">
           <xsl:attribute name="checked">true</xsl:attribute>
         </xsl:if>
       </input>
+      <label class="treeNode" for="loc-{@id}">
+        <xsl:value-of select="@Name"/>
+      </label>
       <xsl:if test="TreeItem">
         <ul>
           <xsl:apply-templates select="TreeItem" mode="ListLocationsForm"/>

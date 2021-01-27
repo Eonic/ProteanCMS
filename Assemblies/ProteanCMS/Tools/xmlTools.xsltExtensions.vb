@@ -1990,9 +1990,40 @@ Partial Public Module xmlTools
                         Dim scriptTransformer As New ScriptTransformer()
                         Dim nullOrderer As New NullOrderer()
                         Dim Bundles As New Optimization.BundleCollection()
+                        Dim url As String
+                        Dim fileNameToSave As String = ""
+                        Dim cmd As String = ""
+                        Dim cntFile As Integer = 0
+
+
+                        For cntFile = 0 To bundleFilePaths.Length - 1
+                            url = Convert.ToString(bundleFilePaths(cntFile))
+
+
+                            If (url <> String.Empty And url.Contains("https")) Then
+                                fileNameToSave = url.Substring(url.LastIndexOf("/") + 1)
+                                If Not (fileNameToSave.Contains(".js")) Then
+                                    fileNameToSave = fileNameToSave + ".js"
+                                End If
+                                If Not (Directory.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))) Then
+                                    Directory.CreateDirectory(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/"))
+                                End If
+                                If Not (File.Exists(goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)) Then
+
+                                    Using wc As New System.Net.WebClient()
+                                        Net.ServicePointManager.SecurityProtocol = Net.SecurityProtocolType.Tls12
+                                        wc.DownloadFile(url, goServer.MapPath("~/" & myWeb.moConfig("ProjectPath") & "js/external/") + fileNameToSave)
+                                    End Using
+                                End If
+                                bundleFilePaths(cntFile) = "~/" & myWeb.moConfig("ProjectPath") & "js/external/" + fileNameToSave
+                            End If
+
+
+                        Next
+
 
                         Dim CtxBase As New System.Web.HttpContextWrapper(myWeb.moCtx)
-                        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js/")
+                        Dim BundlesCtx As New Optimization.BundleContext(CtxBase, Bundles, "~/" & myWeb.moConfig("ProjectPath") & "js//")
                         Dim jsBundle As New BundleTransformer.Core.Bundles.CustomScriptBundle(TargetFile)
 
                         BundlesCtx.EnableInstrumentation = False
@@ -2109,6 +2140,7 @@ Partial Public Module xmlTools
 
                             Dim scriptFile As String = ""
                             Dim fsh As New Protean.fsHelper(myWeb.moCtx)
+
                             fsh.initialiseVariables(fsHelper.LibraryType.Style)
 
                             scriptFile = String.Format("{0}/style.css", TargetFile)
@@ -2118,8 +2150,21 @@ Partial Public Module xmlTools
                             Dim info As Byte() = New System.Text.UTF8Encoding(True).GetBytes(oCssWebClient.FullCssFile)
                             'fsh.DeleteFile(goServer.MapPath("/" & myWeb.moConfig("ProjectPath") & "css" & scriptFile.TrimStart("~")))
                             'TS commented out as modified save file to overwrite by using WriteAllBytes
+                            Dim cnt As Integer
+                            Dim maxAttempt As String = 3
+                            Try
+                                For cnt = 1 To maxAttempt
+                                    scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+                                    If Not scriptFile.StartsWith("ERROR: ") Then
+                                        Exit For
+                                    End If
+                                Next
 
-                            scriptFile = fsh.SaveFile("style.css", TargetFile, info)
+                            Catch ex As Exception
+                                If (cnt < maxAttempt) Then
+                                    Threading.Thread.Sleep(500 * cnt)
+                                End If
+                            End Try
 
                             If scriptFile.StartsWith("ERROR: ") Then
                                 myWeb.bPageCache = False
@@ -2142,17 +2187,19 @@ Partial Public Module xmlTools
                                 'TS commented out as modified save file to overwrite by using WriteAllBytes
                                 scriptFile = "/" & myWeb.moConfig("ProjectPath") & "css" & fsh.SaveFile(String.Format("style{0}.css", i), TargetFile, info)
 
-                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
-                                    myWeb.bPageCache = False
-                                End If
+                                    If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & "ERROR: ") Then
+                                        myWeb.bPageCache = False
+                                    End If
 
-                                If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
-                                    'file has been saved successfully.
-                                    sReturnString += "," & scriptFile
-                                Else
-                                    'we have a file save error we should try again next request.
-                                    sReturnError += scriptFile
-                                End If
+                                    If scriptFile.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css" & TargetFile.TrimStart("~")) Then
+                                        'file has been saved successfully.
+                                        sReturnString += "," & scriptFile
+                                    Else
+                                        'we have a file save error we should try again next request.
+                                        sReturnError += scriptFile
+                                    End If
+
+
                             Next
 
                             If sReturnString.StartsWith("/" & myWeb.moConfig("ProjectPath") & "css") Then

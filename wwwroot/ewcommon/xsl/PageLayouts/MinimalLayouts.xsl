@@ -13126,6 +13126,13 @@
               </i>
             </a>
           </xsl:if>
+          <xsl:if test="@spotifyURL!=''">
+            <a href="{@spotifyURL}" title="{$myName} on Spotify" id="social-id-ig">
+              <i class="fa fa-3x fa-spotify">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:when test="$iconSet='icons-circle'">
           <xsl:if test="@facebookURL!=''">
@@ -13212,6 +13219,18 @@
               </span>
             </a>
           </xsl:if>
+          <xsl:if test="@spotifyURL!=''">
+            <a href="{@spotifyURL}" title="{$myName} on Spotify" id="social-id-ig">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x">
+                  <xsl:text> </xsl:text>
+                </i>
+                <i class="fa fa-spotify fa-stack-1x fa-inverse">
+                  <xsl:text> </xsl:text>
+                </i>
+              </span>
+            </a>
+          </xsl:if>
         </xsl:when>
         <xsl:when test="$iconSet='plain'">
           <xsl:if test="@facebookURL!=''">
@@ -13259,6 +13278,13 @@
           <xsl:if test="@instagramURL!=''">
             <a href="{@instagramURL}" title="{$myName} on Instagram" id="social-id-ig">
               <i class="fa fa-instagram">
+                <xsl:text> </xsl:text>
+              </i>
+            </a>
+          </xsl:if>
+          <xsl:if test="@spotifyURL!=''">
+            <a href="{@spotifyURL}" title="{$myName} on Spotify" id="social-id-ig">
+              <i class="fa fa-spotify">
                 <xsl:text> </xsl:text>
               </i>
             </a>
