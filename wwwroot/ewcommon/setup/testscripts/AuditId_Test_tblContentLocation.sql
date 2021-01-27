@@ -32,5 +32,6 @@
 	)
 	
 	SELECT nContentLocationKey, nAuditId
-	FROM TEMP
+	FROM TEMP T
+	JOIN tblAudit A ON A.nAuditKey = T.nAuditId --Duplicate should not consider not existent audit ids
 	WHERE Row_Num > 1
