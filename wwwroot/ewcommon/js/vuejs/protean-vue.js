@@ -121,21 +121,8 @@ if (addNewUrlModalElement) {
     });
 }
 $(".btnaddNewUrl").click(function () {
-    //RedirectPage.getPerminentList();
-  
     addNewUrl.toggleModal();
-    //$("#divAddNewUrl").removeClass("hidden");
-    
-    //var totalCountOfLoad = $(".repeat-group").length;
-    //totalCountOfLoad = totalCountOfLoad - 1;
-    //$(".oldUrl").attr("id", "OldUrl_" + totalCountOfLoad);
-    //$(".newUrl").attr("id", "NewUrl_" + totalCountOfLoad);
-    //$(".oldUrl").attr("name", "OldUrl_" + totalCountOfLoad);
-    //$(".newUrl").attr("name", "NewUrl_" + totalCountOfLoad);
-    //$("#divAddNewUrl button[value=Del]").attr("name", "delete:urlRepeat_" + totalCountOfLoad);
-    //$("#fieldsetId").attr("class", "rpt_" + totalCountOfLoad);
-    //var div = $("#divAddNewUrl").html();
-    //$("#parentDivOfRedirect").append(div);
+   
 });
 $('.addRedirectbtn').on('click', function (event) {
 
@@ -187,6 +174,7 @@ if (rediectElement) {
                         if (that.urlList != '') {
                             var tempUrlList = xml[0].childNodes[0].childNodes;
                             that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
+                           
                         }
                         else {
                            
@@ -219,7 +207,7 @@ if (rediectElement) {
         },
         mounted: function () {
             this.getPerminentList();
-
+           
         }
         //}
     });
@@ -229,4 +217,9 @@ $('.301RedirectBody').on('mousewheel', function (event) {
     RedirectPage.getPerminentList();
 });
 
+$(document).ready(function () {
+   
+    $(".parentDivOfRedirect span #OldUrl_0").removeClass("hidden");
+    $(".parentDivOfRedirect span #NewUrl_0").removeClass("hidden");
+});
 

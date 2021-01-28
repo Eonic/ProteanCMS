@@ -41,10 +41,13 @@
       </trigger>
       
     </group>-->
-    <group class="addNewUrl-modal">
-    </group>
+   
+    
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>
+    <group class="addNewUrl-modal">
+      <input type="hidden" bind=""></input>
+    </group>
   </group>
 </Content>
