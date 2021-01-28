@@ -3952,15 +3952,15 @@
                     <div class="form-group repeat-group ">
                       <fieldset class=" row repeated rpt-00">
                         <div class="form-group input-containing col-md-5">
-                          <label  class="">Old URL</label>
+                          <label>Old URL</label>
                           <div class="control-wrapper input-wrapper appearance-">
-                            <input type="text" name="OldUrl_" id="OldUrl_" class="col-md-5 textbox form-control"/>
+                            <input type="text" name="OldUrl" id="OldUrlmodal" class="col-md-5 textbox form-control"/>
                           </div>
                         </div>
                         <div class="form-group input-containing col-md-5">
-                          <label  class="">New URL</label>
+                          <label>New URL</label>
                           <div class="control-wrapper input-wrapper appearance-">
-                            <input type="text" name="NewUrl_" id="NewUrl_" class="col-md-5 textbox form-control"/>
+                            <input type="text" name="NewUrl" id="NewUrlModal" class="col-md-5 textbox form-control"/>
                           </div>
                         </div>
                       </fieldset>
@@ -3969,9 +3969,8 @@
                   <div class="modal-footer">
 
                     <button class="btn btn-primary" v-on:click="showAddNewUrl=false">Cancel</button>
-                    <button type="button" id="addRedirectbtn" name="addRedirectbtn"
-										    onClick="editPage.createRedirects();"
-											class="btn btn-primary">
+                    <button type="button"  v-on:click="SaveNewUrl()"
+											class="btn btn-primary addRedirectbtn">
                       save
                     </button>
                   </div>
@@ -12516,13 +12515,13 @@
   <!-- -->
 
   <xsl:template match="input[@class='RedirectPage']" mode="xform" >
-    <!--<button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl">
+    <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
-    </button>-->
+    </button>
    
 
     <div class="control-wrapper RedirectPage" id="RedirectPage">
-      <div class="form-group repeat-group hidden" id="divAddNewUrl">
+      <!--<div class="form-group repeat-group hidden" id="divAddNewUrl">
         <fieldset class="row repeated " id="fieldsetId">
           <div class="form-group input-containing col-md-5">
             <label  class="">Old URL</label>
@@ -12542,7 +12541,7 @@
             </button>
           </div>
         </fieldset>
-      </div>
+      </div>-->
       <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
 
         <fieldset v-bind:class="'row repeated rpt_'+ index">

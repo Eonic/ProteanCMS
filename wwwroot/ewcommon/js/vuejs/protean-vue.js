@@ -104,33 +104,54 @@ if (addNewUrlModalElement) {
         },
         methods: {
             toggleModal: function () {
-                debugger;
+               
                 $("#addNewUrl").removeClass("hidden");
                 this.showAddNewUrl = !this.showAddNewUrl;
+            },
+            SaveNewUrl: function () {
+                debugger;
+                var oldUrl = $("#OldUrlmodal").val();
+                var NewUrl = $("#NewUrlModal").val();
+                if (oldUrl != "") {
+                    RedirectPage.addNewUrl(oldUrl, NewUrl);
+                }
+
             }
         }
     });
 }
 $(".btnaddNewUrl").click(function () {
+    //RedirectPage.getPerminentList();
+  
+    addNewUrl.toggleModal();
+    //$("#divAddNewUrl").removeClass("hidden");
     
-    debugger;
-    //addNewUrl.toggleModal();
-    $("#divAddNewUrl").removeClass("hidden");
-    
-    var totalCountOfLoad = $(".repeat-group").length;
-    totalCountOfLoad = totalCountOfLoad - 1;
-    $(".oldUrl").attr("id", "OldUrl_" + totalCountOfLoad);
-    $(".newUrl").attr("id", "NewUrl_" + totalCountOfLoad);
-    $(".oldUrl").attr("name", "OldUrl_" + totalCountOfLoad);
-    $(".newUrl").attr("name", "NewUrl_" + totalCountOfLoad);
-    $("#divAddNewUrl button[value=Del]").attr("name", "delete:urlRepeat_" + totalCountOfLoad);
-    $("#fieldsetId").attr("class", "rpt_" + totalCountOfLoad);
-    var div = $("#divAddNewUrl").html();
+    //var totalCountOfLoad = $(".repeat-group").length;
+    //totalCountOfLoad = totalCountOfLoad - 1;
+    //$(".oldUrl").attr("id", "OldUrl_" + totalCountOfLoad);
+    //$(".newUrl").attr("id", "NewUrl_" + totalCountOfLoad);
+    //$(".oldUrl").attr("name", "OldUrl_" + totalCountOfLoad);
+    //$(".newUrl").attr("name", "NewUrl_" + totalCountOfLoad);
+    //$("#divAddNewUrl button[value=Del]").attr("name", "delete:urlRepeat_" + totalCountOfLoad);
+    //$("#fieldsetId").attr("class", "rpt_" + totalCountOfLoad);
+    //var div = $("#divAddNewUrl").html();
     //$("#parentDivOfRedirect").append(div);
+});
+$('.addRedirectbtn').on('click', function (event) {
+
+    debugger;
+    var oldUrl = $("#OldUrlmodal").val();
+    var NewUrl = $("#NewUrlModal").val();
+    if (oldUrl != "") {
+        RedirectPage.addNewUrl(oldUrl, NewUrl);
+    }
+
 });
 
 
+
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
+var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
 const rediectElement = document.querySelector("#RedirectPage");
 if (rediectElement) {
     window.RedirectPage = new Vue({
@@ -174,6 +195,27 @@ if (rediectElement) {
 
                     });
             },
+
+            addNewUrl: function (oldUrl,NewUrl) {
+               
+                var that = this;
+                var strUrl = window.location.href;
+                if (strUrl.indexOf("ewCmd") > -1) {
+                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < url.length; i++) {
+                        var urlparam = url[i].split('=');
+                        if (urlparam[0] == "ewCmd") {
+                            type = urlparam[1];
+                        }
+                    }
+                }
+
+                var inputJson = { redirectType: type, oldUrl: oldUrl, newUrl: NewUrl };
+                axios.post(paginationAddNewUrlAPIUrl, inputJson)
+                    .then(function (response) {
+                        addNewUrl.toggleModal();
+                    });
+            },
         },
         mounted: function () {
             this.getPerminentList();
@@ -186,25 +228,5 @@ if (rediectElement) {
 $('.301RedirectBody').on('mousewheel', function (event) {
     RedirectPage.getPerminentList();
 });
-
-//function loadConfirmation(id) {
-
-   
-//    var data = "/ewcommon/tools/ajaxContentForm.ashx?ajaxCmd=BespokeProvider&provider=IntoTheBlue&method=IntoTheBlue.Web.Forms.SaveCSRConfirmation&Id=" + id;
-//    $.ajax({
-//        url: data,
-//        type: 'GET',
-//        success: function (AjaxResponse) {
-
-//            $("#ConfirmationModal").html(AjaxResponse);
-//            $('#ConfirmationModal').modal('show');
-//            $('#prodid').val(id);
-//            $("#strSalesource").attr("disabled", "disabled");
-
-//        }
-//    });
-
-//}
-
 
 

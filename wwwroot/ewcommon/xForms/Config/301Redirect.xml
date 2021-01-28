@@ -34,15 +34,15 @@
          </trigger>
        </repeat>-->
      </group>
-    <group>
+    <!--<group>
       <trigger>
         <label>Add New URL</label>
         <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add "/>
       </trigger>
       
+    </group>-->
+    <group class="addNewUrl-modal">
     </group>
-    <!--<group class="addNewUrl-modal">-->
-    <!--</group>-->
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>
