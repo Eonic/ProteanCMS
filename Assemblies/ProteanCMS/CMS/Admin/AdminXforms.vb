@@ -1154,11 +1154,15 @@ Partial Public Class Cms
                                     End If
 
                                     Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    If replacingNode Is Nothing Then
-                                        rewriteXml.FirstChild.AppendChild(replacerNode)
-                                    Else
-                                        rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
+                                    Dim rewriteMapsNode As XmlElement = rewriteXml.SelectSingleNode("/rewriteMaps")
+                                    If Not rewriteMapsNode Is Nothing Then
+                                        If replacingNode Is Nothing Then
+                                            rewriteMapsNode.AppendChild(replacerNode)
+                                        Else
+                                            rewriteMapsNode.ReplaceChild(replacerNode, replacingNode)
+                                        End If
                                     End If
+
                                     rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
                                     Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
                                     MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "Settings Saved")
