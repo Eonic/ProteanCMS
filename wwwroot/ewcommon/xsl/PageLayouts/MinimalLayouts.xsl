@@ -10547,7 +10547,7 @@
       <a name="pageTop" class="pageTop">&#160;</a>
       <div id="pageMenu">
         <ul>
-          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQMenu"/>
+          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQMenu2"/>
         </ul>
         <div class="terminus">&#160;</div>
       </div>
@@ -10570,7 +10570,7 @@
   </xsl:template>
 
   <!-- FAQ Menu -->
-  <xsl:template match="Content[@type='FAQ']" mode="displayFAQMenu">
+  <xsl:template match="Content[@type='FAQ']" mode="displayFAQMenu2">
     <xsl:variable name="currentUrl">
       <xsl:apply-templates select="$currentPage" mode="getHref"/>
     </xsl:variable>

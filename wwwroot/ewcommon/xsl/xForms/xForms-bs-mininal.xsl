@@ -3040,9 +3040,9 @@
   <xsl:template match="label">
     <xsl:param name="cLabel"/>
     <xsl:param name="bRequired"/>
-    <xsl:if test="parent::input[@data-length!='']">
+    <xsl:if test="parent::*[@data-length!='']">
       <span class="field-char-count badge" data-fieldref="{$cLabel}">
-        <span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::input/@data-length"/> characters
+        <span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::*/@data-length"/> characters
       </span>
     </xsl:if>
     <xsl:if test ="./node()!='' or span[contains(@class,'term')]">

@@ -758,7 +758,7 @@
   <xsl:template match="textarea" mode="tinymceStyles"></xsl:template>
 
   <xsl:template match="textarea" mode="tinymceValidElements">
-    "a[href|target|title|style|class|onmouseover|onmouseout|onclick],"
+    "a[href|target|title|style|class|onmouseover|onmouseout|onclick|id|name],"
     + "img[class|src|border=0|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style],"
     + "table[cellspacing|cellpadding|border|height|width|style|class],"
     + "p[align|style|class],"

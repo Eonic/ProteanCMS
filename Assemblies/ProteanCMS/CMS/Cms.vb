@@ -3722,7 +3722,12 @@ Public Class Cms
             ' add "and" if clause before
             If sPrimarySql <> "" Or sMembershipSql <> "" Or sFilterSql <> "" Then sWhereSql = " and " & sWhereSql
 
-            sSql = sSql & " where (" & sPrimarySql & sMembershipSql & sFilterSql & sWhereSql & ")"
+            Dim combinedWhereSQL As String = sPrimarySql & sMembershipSql & sFilterSql & sWhereSql
+            If Trim(combinedWhereSQL).StartsWith("and") Then
+                combinedWhereSQL = combinedWhereSQL.Substring(4)
+            End If
+
+            sSql = sSql & " where (" & combinedWhereSQL & ")"
             If cOrderBy <> "" Then sSql &= " ORDER BY " & cOrderBy
             sSql = Replace(sSql, "&lt;", "<")
 

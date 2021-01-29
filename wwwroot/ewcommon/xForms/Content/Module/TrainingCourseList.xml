@@ -103,8 +103,8 @@
         <switch class="disable">
           <case id="cDisplay_1"/>
           <case id="cDisplay_2">
-            <relatedContent search="find add" type="Ticket" relationType="" direction="1way">
-              <label>Events</label>
+            <relatedContent search="find add" type="TrainingCourse" relationType="" direction="1way">
+              <label>Training Courses</label>
             </relatedContent>
           </case>
           <case id="cDisplay_3">
