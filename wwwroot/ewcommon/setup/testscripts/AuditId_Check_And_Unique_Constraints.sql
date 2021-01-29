@@ -2,33 +2,33 @@
 
 --Check Constraints
 ALTER TABLE tblContent 
-ADD CHECK (nAuditId > 0)
+ADD CONSTRAINT CK_tblContent_nAuditId CHECK (nAuditId > 0)
 
 ALTER TABLE tblContentStructure 
-ADD CHECK (nAuditId > 0)
+ADD CONSTRAINT CK_tblContentStructure_nAuditId CHECK (nAuditId > 0)
 
 ALTER TABLE tblContentLocation
-ADD CHECK (nAuditId > 0)
+ADD CONSTRAINT CK_tblContentLocation_nAuditId CHECK (nAuditId > 0)
 
 ALTER TABLE tblCartItem 
-ADD CHECK (nAuditId > 0)
+ADD CONSTRAINT CK_tblCartItem_nAuditId CHECK (nAuditId > 0)
 
 ALTER TABLE tblDirectory
-ADD CHECK (nAuditId > 0)
+ADD CONSTRAINT CK_tblDirectory_nAuditId CHECK (nAuditId > 0)
 
 
 --Unique Keys
 ALTER TABLE tblContent 
-ADD UNIQUE(nAuditId)
+ADD CONSTRAINT UQ_tblContent_nAuditId UNIQUE(nAuditId)
 
 ALTER TABLE tblContentStructure 
-ADD UNIQUE(nAuditId)
+ADD CONSTRAINT UQ_tblContentStructure_nAuditId UNIQUE(nAuditId)
 
 ALTER TABLE tblContentLocation 
-ADD UNIQUE(nAuditId)
+ADD CONSTRAINT UQ_tblContentLocation_nAuditId UNIQUE(nAuditId)
 
 ALTER TABLE tblCartItem 
-ADD UNIQUE(nAuditId)
+ADD CONSTRAINT UQ_tblCartItem_nAuditId UNIQUE(nAuditId)
 
 ALTER TABLE tblDirectory 
-ADD UNIQUE(nAuditId)
+ADD CONSTRAINT UQ_tblDirectory_nAuditId UNIQUE(nAuditId)
