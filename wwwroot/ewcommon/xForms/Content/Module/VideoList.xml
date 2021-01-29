@@ -181,8 +181,8 @@
             </group>
           </case>
           <case id="cDisplay_2">
-            <relatedContent search="find add" type="NewsArticle" relationType="" direction="1way">
-              <label>News articles</label>
+            <relatedContent search="find add" type="Video" relationType="" direction="1way">
+              <label>Videos</label>
             </relatedContent>
           </case>
           <case id="cDisplay_3">

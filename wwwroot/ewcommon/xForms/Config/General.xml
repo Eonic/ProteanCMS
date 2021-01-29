@@ -304,7 +304,7 @@
          <label>Google Tag Manager ID</label>
        </input>       
        <input bind="ewGoogleOptimizeID">
-         <label>Google Tag Manager ID</label>
+         <label>Google Optimize ID</label>
        </input>
        <input bind="ewReCaptchaKey">
          <label>Google ReCaptcha Key</label>

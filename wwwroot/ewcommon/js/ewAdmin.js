@@ -587,7 +587,7 @@ $.fn.prepareAdminXform = function () {
                 $('input#' + myname + '-import').val(myvalue.substr(myvalue.indexOf('|') + 1, myvalue.length))
             });
         });
-    }
+    };
 
     if ($(this).find('textarea.pickImage').exists()) {
         $(this).find('textarea.pickImage').each(function (i) {
@@ -1401,6 +1401,7 @@ function getParameterByName(qStringName) {
 * Adds an event to the "get geocode" button on Location edit page
 */
 function initialiseGeocoderButton() {
+    //alert('hi');
     $('.getGeocodeButton').click(function (e) {
         // Prevent form submission
         e.preventDefault();
@@ -1420,7 +1421,7 @@ function initialiseGeocoderButton() {
 
         // Turn address array into a comma separated string
         var addressString = address.join(',');
-        //alert(addressString);
+        alert(addressString);
         // Change label
         $this.val('Please wait...');
 
@@ -1436,7 +1437,7 @@ function initialiseGeocoderButton() {
 
             } else {
 
-                alert('Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
+                alert(status + 'Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
 
             }
 
@@ -1468,6 +1469,8 @@ function initialiseGeocoderButton() {
         // Change label
         $this.val('Please wait...');
 
+        alert(addressString); 
+
         var geocoder = new google.maps.Geocoder();
 
         geocoder.geocode({ address: addressString }, function (results, status) {
@@ -1480,7 +1483,7 @@ function initialiseGeocoderButton() {
 
             } else {
 
-                alert('Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
+                alert(status + '111 Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
 
             }
 

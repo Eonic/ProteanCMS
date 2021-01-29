@@ -613,7 +613,7 @@
               <xsl:attribute name="href">
                 <xsl:text>/ewcommon/tools/UserGuide.ashx?fRef=</xsl:text>
                 <xsl:choose>
-                  <xsl:when test="$ewCmd='EditContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
+                  <xsl:when test="$ewCmd='EditContent' or $ewCmd='CopyContent' or $ewCmd='AddModule' or $ewCmd='AddContent'">
                     <xsl:choose>
                       <xsl:when test="not($cContentSchemaName)">
                         <xsl:value-of select="$ewCmd"/>
