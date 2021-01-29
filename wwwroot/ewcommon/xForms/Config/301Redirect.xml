@@ -16,11 +16,11 @@
        </bind>
      </bind>
    </model>
-  <group class="addNewUrl-modal">
+  <!--<group class="addNewUrl-modal">
     <input type="hidden" bind=""></input>
-  </group>
+  </group>-->
   <group ref="WebSettings">
-    <label>301 (Perminent) Page Redirects</label>
+    <label>301 (Permanent) Page Redirects</label>
    
      <group class="301RedirectBody">
        <input class="RedirectPage"/>

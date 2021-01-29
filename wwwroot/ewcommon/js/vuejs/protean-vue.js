@@ -105,7 +105,7 @@ if (addNewUrlModalElement) {
         methods: {
             toggleModal: function () {
                
-                $("#addNewUrl").removeClass("hidden");
+                //$("#addNewUrl").attr("data-dismiss","modal");
                 this.showAddNewUrl = !this.showAddNewUrl;
             },
             SaveNewUrl: function () {
@@ -124,6 +124,9 @@ $(".btnaddNewUrl").click(function () {
     addNewUrl.toggleModal();
    
 });
+$(".close").click(function () {
+    $('#addNewUrl').modal('hide');
+})
 $('.addRedirectbtn').on('click', function (event) {
 
     debugger;
@@ -201,7 +204,9 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, newUrl: NewUrl };
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        addNewUrl.toggleModal();
+                        $('#addNewUrl').modal('hide');
+                       // addNewUrl.toggleModal();
+
                     });
             },
         },

@@ -163,7 +163,7 @@
       </MenuItem>
       <MenuItem name="Redirects" cmd="RewriteRules" display="true" icon="fa-share">
           <MenuItem name="Rules" cmd="RewriteRules" display="true" icon="fa-share"/>
-          <MenuItem name="Perminent Redirects" cmd="301Redirect" display="true" icon="fa-share"/>
+          <MenuItem name="Permanent Redirects" cmd="301Redirect" display="true" icon="fa-share"/>
           <MenuItem name="Temporary Redirects" cmd="302Redirect" display="true" icon="fa-share"/>
         <MenuItem name="Static Rewrites" cmd="StaticRewrites" display="true" icon="fa-share"/>
       </MenuItem>

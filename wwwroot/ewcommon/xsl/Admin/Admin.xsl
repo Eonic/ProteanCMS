@@ -3935,8 +3935,8 @@
     <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 
   </xsl:template>
-  <xsl:template match="group[@class='addNewUrl-modal']" mode="xform">
-    <div id="addNewUrl" class="addNewUrl hidden">
+  <!--<xsl:template match="group[@class='addNewUrl-modal']" mode="xform">-->
+    <!--<div id="addNewUrl" class="addNewUrl hidden" data-toggle="modal">
       <div v-if="showAddNewUrl" >
         <transition name="modal">
           <div class="modal-mask">
@@ -3983,9 +3983,9 @@
           </div>
         </transition>
       </div>
-    </div>
+    </div>-->
 
-  </xsl:template>
+  <!--</xsl:template>-->
 
   <!-- -->
   <!--   ##################  PageSettings  ##############################   -->
@@ -12518,22 +12518,71 @@
   <!-- -->
 
   <xsl:template match="input[@class='RedirectPage']" mode="xform" >
-    <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl">
+    <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
-   
-    <div class="control-wrapper RedirectPage" id="RedirectPage">
-      <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+    <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
+     
+              <div class="modal-dialog"  v-if="showAddNewUrl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <label>301 (PERMANENT) PAGE REDIRECTS</label>
+                    <button type="button" class="close" data-dismiss="modal" >
+                      <span aria-hidden="true">&#215;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group repeat-group ">
+                      <fieldset class="rpt-00">
+                        <div class="form-group input-containing col-md-5">
 
+                          <div class="control-wrapper input-wrapper appearance-">
+                            <label>Old URL</label>
+                            <input type="text" name="OldUrl" id="OldUrlmodal" class="col-md-5 textbox form-control"/>
+                          </div>
+                        </div>
+                        <div class="form-group input-containing col-md-5">
+
+                          <div class="control-wrapper input-wrapper appearance-">
+                            <label>New URL</label>
+                            <input type="text" name="NewUrl" id="NewUrlModal" class="col-md-5 textbox form-control"/>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary " data-dismiss="modal" >Cancel</button>
+                    <button type="button"  v-on:click="SaveNewUrl()"
+											class="btn btn-primary addRedirectbtn">
+                      save
+                    </button>
+                  </div>
+                </div>
+              </div>
+          
+      
+    </div>
+    <div class="control-wrapper RedirectPage" id="RedirectPage">
+      <div class="form-group">
+        <div class="form-group input-containing col-md-6">
+          <label >Old URL</label>
+        </div>
+        <div class="form-group input-containing col-md-6">
+          <label  >New URL</label>
+        </div>
+       
+      </div>
+     
+      <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
         <fieldset v-bind:class="'row repeated rpt_'+ index">
           <div class="form-group input-containing col-md-5">
-            <label v-bind:ID="'OldUrl_'+ index" >Old URL</label>
             <div class="control-wrapper input-wrapper appearance-">
               <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.key.nodeValue" />
             </div>
           </div>
           <div class="form-group input-containing col-md-5">
-            <label v-bind:ID="'NewUrl_' + index" >New URL</label>
+           
             <div class="control-wrapper input-wrapper appearance-">
               <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.value.nodeValue" />
             </div>
