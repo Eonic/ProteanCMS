@@ -3944,6 +3944,7 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
+                    <label>301 (PERMINENT) PAGE REDIRECTS</label>
                     <button type="button" class="close" v-on:click="showAddNewUrl=false">
                       <span aria-hidden="true">&#215;</span>
                     </button>
@@ -12526,13 +12527,13 @@
 
         <fieldset v-bind:class="'row repeated rpt_'+ index">
           <div class="form-group input-containing col-md-5">
-            <span v-bind:ID="'OldUrl_'+ index" >Old URL</span>
+            <label v-bind:ID="'OldUrl_'+ index" >Old URL</label>
             <div class="control-wrapper input-wrapper appearance-">
               <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.key.nodeValue" />
             </div>
           </div>
           <div class="form-group input-containing col-md-5">
-            <span v-bind:ID="'NewUrl_' + index" >New URL</span>
+            <label v-bind:ID="'NewUrl_' + index" >New URL</label>
             <div class="control-wrapper input-wrapper appearance-">
               <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.value.nodeValue" />
             </div>

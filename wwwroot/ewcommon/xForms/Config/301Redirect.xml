@@ -8,6 +8,7 @@
        </rewriteMap>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+     
      <bind nodeset="rewriteMap">
        <bind id="urlRepeat" nodeset="add">
          <bind id="OldUrl" nodeset="@key" required="true()" type="string" />
@@ -15,7 +16,9 @@
        </bind>
      </bind>
    </model>
-  
+  <group class="addNewUrl-modal">
+    <input type="hidden" bind=""></input>
+  </group>
   <group ref="WebSettings">
     <label>301 (Perminent) Page Redirects</label>
    
@@ -46,8 +49,6 @@
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>
-    <group class="addNewUrl-modal">
-      <input type="hidden" bind=""></input>
-    </group>
+   
   </group>
 </Content>
