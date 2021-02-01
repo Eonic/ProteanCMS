@@ -50,7 +50,7 @@ if (editPageElement) {
         watch: {
             // whenever StructName changes, this function will run
             structName: function (newStructName) {
-
+                debugger;
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
 
                     redirectModal.toggleModal();
@@ -127,16 +127,16 @@ $(".btnaddNewUrl").click(function () {
 $(".close").click(function () {
     $('#addNewUrl').modal('hide');
 })
-$('.addRedirectbtn').on('click', function (event) {
+//$('.addRedirectbtn').on('click', function (event) {
 
-    debugger;
-    var oldUrl = $("#OldUrlmodal").val();
-    var NewUrl = $("#NewUrlModal").val();
-    if (oldUrl != "") {
-        RedirectPage.addNewUrl(oldUrl, NewUrl);
-    }
+//    debugger;
+//    var oldUrl = $("#OldUrlmodal").val();
+//    var NewUrl = $("#NewUrlModal").val();
+//    if (oldUrl != "") {
+//        RedirectPage.addNewUrl(oldUrl, NewUrl);
+//    }
 
-});
+//});
 
 
 
@@ -222,9 +222,5 @@ $('.301RedirectBody').on('mousewheel', function (event) {
     RedirectPage.getPerminentList();
 });
 
-$(document).ready(function () {
-   
-    $(".parentDivOfRedirect span #OldUrl_0").removeClass("hidden");
-    $(".parentDivOfRedirect span #NewUrl_0").removeClass("hidden");
-});
+
 

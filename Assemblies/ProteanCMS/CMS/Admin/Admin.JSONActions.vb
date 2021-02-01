@@ -29,6 +29,7 @@ Partial Public Class Cms
             Private myWeb As Protean.Cms
             Private myCart As Protean.Cms.Cart
             Public moAdXfm As Protean.Cms.xForm
+            Public moAdminXfm As Protean.Cms.Admin.AdminXforms
 
 
 
@@ -39,6 +40,7 @@ Partial Public Class Cms
                 myWeb.Open()
                 myCart = New Protean.Cms.Cart(myWeb)
                 moAdXfm = New Protean.Cms.xForm(myWeb)
+                moAdminXfm = myWeb.getAdminXform()
             End Sub
 
             Public Shadows Sub open(ByVal oPageXml As XmlDocument)
@@ -242,10 +244,14 @@ Partial Public Class Cms
                 Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
                 Dim renderedCount As Integer = Convert.ToInt32(moAdXfm.goSession("totalCountTobeLoad"))
                 Dim urlStringOfLoded As String = ""
+                'Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
                 Dim xmlstringend As String = "</rewriteMap>"
                 Dim oFsh As fsHelper
                 oFsh = New fsHelper
                 oFsh.open(moAdXfm.moPageXML)
+
+                moAdXfm.isTriggered = True
+                moAdminXfm.xFrmRewriteMaps(ConfigType)
 
                 moAdXfm.NewFrm("WebSettings")
                 moAdXfm.bProcessRepeats = False

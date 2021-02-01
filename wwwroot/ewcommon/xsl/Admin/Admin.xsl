@@ -12523,7 +12523,7 @@
     </button>
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
      
-              <div class="modal-dialog"  v-if="showAddNewUrl">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <label>301 (PERMANENT) PAGE REDIRECTS</label>
