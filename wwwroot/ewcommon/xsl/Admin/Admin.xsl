@@ -12521,6 +12521,11 @@
     <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
+         <input type="text" name="SearchURL" id="SearchURLText" class="form-control"/>
+        <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl" >
+      <i class="fa fa-plus fa-white"> </i> Search
+    </button>
+      
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
      
               <div class="modal-dialog">
@@ -12575,6 +12580,7 @@
       </div>
      
       <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+        
         <fieldset v-bind:class="'row repeated rpt_'+ index">
           <div class="form-group input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">

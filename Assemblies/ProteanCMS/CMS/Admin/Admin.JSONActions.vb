@@ -143,98 +143,106 @@ Partial Public Class Cms
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
                 Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
-                Try
-                    oFsh = New fsHelper
-                    oFsh.open(moAdXfm.moPageXML)
+                If Not moAdXfm.load(xFormPath, myWeb.maCommonFolders) Then
 
-                    moAdXfm.NewFrm("WebSettings")
-                    moAdXfm.bProcessRepeats = False
+                    oFrmElmt = moAdXfm.addGroup(moAdXfm.moXformElmt, "Config", "", "ConfigSettings")
+                    moAdXfm.addNote(oFrmElmt, xForm.noteTypes.Alert, xFormPath & " could not be found. - ")
 
-                    Dim JsonResult As String = ""
-                    Dim rewriteXml As New XmlDocument
+                Else
+                    Try
+                        oFsh = New fsHelper
+                        oFsh.open(moAdXfm.moPageXML)
 
-                    rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                        moAdXfm.NewFrm("WebSettings")
+                        moAdXfm.bProcessRepeats = False
 
-                    Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
-                    oTemplateInstance.InnerXml = "<rewriteMap name='" & ConfigType & "' defaultValue=""""><add key="""" value="""" /></rewriteMap>"
-                    Dim oCgfSectName As String = "system.webServer"
-                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
-                    ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
-                    cProcessInfo = "Getting Section Name:" & oCgfSectPath
-                    Dim sectionMissing As Boolean = False
+                        Dim JsonResult As String = ""
+                        Dim rewriteXml As New XmlDocument
 
-                    If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
-                        moAdXfm.bProcessRepeats = True
+                        rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
-                        Dim PerPageCount As Integer = 50
-                        Dim TotalCount As Integer = 0
+                        Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
+                        oTemplateInstance.InnerXml = moAdXfm.Instance.InnerXml
 
-                        Dim skipRecords As Integer = 0
-                        If (myWeb.moSession("loadCount") Is Nothing) Then
+                        Dim oCgfSectName As String = "system.webServer"
+                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                        ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                        cProcessInfo = "Getting Section Name:" & oCgfSectPath
+                        Dim sectionMissing As Boolean = False
 
-                            myWeb.moSession("loadCount") = PerPageCount
+                        If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
+                            moAdXfm.bProcessRepeats = True
 
+                            Dim PerPageCount As Integer = 50
+                            Dim TotalCount As Integer = 0
 
-                        Else
-                            If (pageloadCount = 0) Then
+                            Dim skipRecords As Integer = 0
+                            If (myWeb.moSession("loadCount") Is Nothing) Then
+
                                 myWeb.moSession("loadCount") = PerPageCount
-                                moAdXfm.goSession("oTempInstance") = Nothing
+
+
                             Else
-                                skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
-                                myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
+                                If (pageloadCount = 0) Then
+                                    myWeb.moSession("loadCount") = PerPageCount
+                                    moAdXfm.goSession("oTempInstance") = Nothing
+                                Else
+                                    skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                                    myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
+
+                                End If
 
                             End If
 
-                        End If
+                            Dim takeRecord As Integer = PerPageCount
 
-                        Dim takeRecord As Integer = PerPageCount
+                            Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
 
-                        Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
+                            Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                            TotalCount = props.ChildNodes.Count
 
-                        Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                        TotalCount = props.ChildNodes.Count
+                            If props.ChildNodes.Count >= PerPageCount Then
+                                Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                Dim xmlstringend As String = "</rewriteMap>"
 
-                        If props.ChildNodes.Count >= PerPageCount Then
-                            Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
-                            Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
-                            Dim xmlstringend As String = "</rewriteMap>"
+                                Dim count As Integer = 0
 
-                            Dim count As Integer = 0
+                                For i As Integer = skipRecords To props.ChildNodes.Count - 1
+                                    If i > (skipRecords + takeRecord) - 1 Then
+                                        Exit For
+                                    Else
+                                        xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                    End If
 
-                            For i As Integer = skipRecords To props.ChildNodes.Count - 1
-                                If i > (skipRecords + takeRecord) - 1 Then
-                                    Exit For
-                                Else
-                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
-                                End If
+                                Next
 
-                            Next
+                                For i As Integer = 0 To (skipRecords + takeRecord) - 1
 
-                            For i As Integer = 0 To (skipRecords + takeRecord) - 1
+                                    xmlWholestring = xmlWholestring & props.ChildNodes(i).OuterXml
+                                Next
+                                moAdXfm.goSession("totalCountTobeLoad") = skipRecords + takeRecord
+                                moAdXfm.LoadInstanceFromInnerXml(xmlWholestring & xmlstringend)
+                                moAdXfm.goSession("urlStringOfLoded") = xmlWholestring
+                                JsonResult = xmlstring & xmlstringend
 
-                                xmlWholestring = xmlWholestring & props.ChildNodes(i).OuterXml
-                            Next
-                            moAdXfm.goSession("totalCountTobeLoad") = skipRecords + takeRecord
-                            moAdXfm.LoadInstanceFromInnerXml(xmlWholestring & xmlstringend)
-                            moAdXfm.goSession("urlStringOfLoded") = xmlWholestring
-                            JsonResult = xmlstring & xmlstringend
-
+                            Else
+                                JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                            End If
                         Else
-                            JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                            Dim oTempInstance As XmlElement = moAdXfm.moPageXML.CreateElement("instance")
+                            oTempInstance = moAdXfm.goSession("oTempInstance")
+                            moAdXfm.updateInstance(oTempInstance)
                         End If
-                    Else
-                        Dim oTempInstance As XmlElement = moAdXfm.moPageXML.CreateElement("instance")
-                        oTempInstance = moAdXfm.goSession("oTempInstance")
-                        moAdXfm.updateInstance(oTempInstance)
-                    End If
 
-                    moAdXfm.addValues()
+                        moAdXfm.addValues()
 
-                    Return JsonResult
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
-                End Try
+                        Return JsonResult
+                    Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return ex.Message
+                    End Try
+                End If
             End Function
 
             Public Function AddNewUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
@@ -244,42 +252,92 @@ Partial Public Class Cms
                 Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
                 Dim renderedCount As Integer = Convert.ToInt32(moAdXfm.goSession("totalCountTobeLoad"))
                 Dim urlStringOfLoded As String = ""
-                'Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
+                Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
                 Dim xmlstringend As String = "</rewriteMap>"
+                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                Dim oFrmElmt As XmlElement
                 Dim oFsh As fsHelper
                 oFsh = New fsHelper
                 oFsh.open(moAdXfm.moPageXML)
 
-                moAdXfm.isTriggered = True
-                moAdminXfm.xFrmRewriteMaps(ConfigType)
 
                 moAdXfm.NewFrm("WebSettings")
                 moAdXfm.bProcessRepeats = False
-                Try
-                    Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
-                    oTemplateInstance.InnerXml = "<rewriteMap name='" & ConfigType & "' defaultValue=""""><add key="""" value="""" /></rewriteMap>"
-                    urlStringOfLoded = moAdXfm.goSession("urlStringOfLoded")
+                If Not moAdXfm.load(xFormPath, myWeb.maCommonFolders) Then
 
-                    Dim stringExtraNode As String = "<add key=""" & oldUrl & """ value=""" & newUrl & " "" />"
+                    oFrmElmt = moAdXfm.addGroup(moAdXfm.moXformElmt, "Config", "", "ConfigSettings")
+                    moAdXfm.addNote(oFrmElmt, xForm.noteTypes.Alert, xFormPath & " could not be found. - ")
 
-                    moAdXfm.LoadInstanceFromInnerXml(urlStringOfLoded & stringExtraNode & xmlstringend)
-                    moAdXfm.goSession("urlStringOfLoded") = urlStringOfLoded & stringExtraNode
-                    moAdXfm.goSession("totalCountTobeLoad") = Convert.ToInt32(moAdXfm.goSession("totalCountTobeLoad")) + 1
-                    If moAdXfm.goSession("oTempInstance") Is Nothing Then
-                        moAdXfm.updateInstanceFromRequest()
-                        moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
-                    Else
-                        Dim oTempInstance As XmlElement = moAdXfm.Instance
-                        'oTempInstance = moAdXfm.goSession("oTempInstance")
-                        moAdXfm.updateInstance(oTempInstance)
-                        moAdXfm.updateInstanceFromRequest()
-                        moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
-                    End If
-                    Return JsonResult
-                Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
-                End Try
+                Else
+                    Try
+                        Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
+                        oTemplateInstance.InnerXml = moAdXfm.Instance.InnerXml
+                        urlStringOfLoded = moAdXfm.goSession("urlStringOfLoded")
+
+                        Dim stringExtraNode As String = "<add key=""" & oldUrl & """ value=""" & newUrl & " "" />"
+
+                        moAdXfm.LoadInstanceFromInnerXml(xmlWholestring & stringExtraNode & xmlstringend)
+                        ' moAdXfm.goSession("urlStringOfLoded") = urlStringOfLoded & stringExtraNode
+                        moAdXfm.goSession("totalCountTobeLoad") = 1
+                        If moAdXfm.goSession("oTempInstance") Is Nothing Then
+                            moAdXfm.updateInstanceFromRequest()
+                            moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
+                        End If
+
+                        Return JsonResult
+                    Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return ex.Message
+                    End Try
+                End If
+                Return JsonResult
+            End Function
+
+            Public Function searchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
+
+                Dim oFrmElmt As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim oFsh As fsHelper
+                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                If Not moAdXfm.load(xFormPath, myWeb.maCommonFolders) Then
+
+                    oFrmElmt = moAdXfm.addGroup(moAdXfm.moXformElmt, "Config", "", "ConfigSettings")
+                    moAdXfm.addNote(oFrmElmt, xForm.noteTypes.Alert, xFormPath & " could not be found. - ")
+
+                Else
+                    Try
+                        oFsh = New fsHelper
+                        oFsh.open(moAdXfm.moPageXML)
+
+                        moAdXfm.NewFrm("WebSettings")
+                        moAdXfm.bProcessRepeats = False
+
+                        Dim JsonResult As String = ""
+                        Dim rewriteXml As New XmlDocument
+
+                        rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                        Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
+                        oTemplateInstance.InnerXml = moAdXfm.Instance.InnerXml
+                        Dim oCgfSectName As String = "system.webServer"
+                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                        ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
+                        cProcessInfo = "Getting Section Name:" & oCgfSectPath
+                        Dim sectionMissing As Boolean = False
+
+                        If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
+
+                            Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                            JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                        End If
+
+                        Return JsonResult
+                    Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return ex.Message
+                    End Try
+                End If
             End Function
 
         End Class

@@ -1001,6 +1001,7 @@ Partial Public Class Cms
             End Function
 
 
+
             Public Function xFrmRewriteMaps(ByVal ConfigType As String) As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
@@ -1052,25 +1053,25 @@ Partial Public Class Cms
                                         PerPageCount = goSession("totalCountTobeLoad")
                                     End If
                                     Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                        Dim TotalCount As Integer = props.ChildNodes.Count
+                                    Dim TotalCount As Integer = props.ChildNodes.Count
 
-                                        If props.ChildNodes.Count >= PerPageCount Then
-                                            Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
-                                            Dim xmlstringend As String = "</rewriteMap>"
-                                            Dim count As Integer = 0
+                                    If props.ChildNodes.Count >= PerPageCount Then
+                                        Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                        Dim xmlstringend As String = "</rewriteMap>"
+                                        Dim count As Integer = 0
 
-                                            For i As Integer = 0 To (PerPageCount) - 1
-                                                xmlstring = xmlstring & props.ChildNodes(i).OuterXml
-                                            Next
+                                        For i As Integer = 0 To (PerPageCount) - 1
+                                            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                        Next
 
-                                            MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
-                                        Else
-                                            MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
-                                        End If
-
-                                        Me.bProcessRepeats = False
+                                        MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
                                     Else
-                                        Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
+                                        MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+                                    End If
+
+                                    Me.bProcessRepeats = False
+                                Else
+                                    Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
                                     oTempInstance = goSession("oTempInstance")
                                     MyBase.updateInstance(oTempInstance)
                                 End If
