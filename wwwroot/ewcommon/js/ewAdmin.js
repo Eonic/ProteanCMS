@@ -2011,7 +2011,7 @@ function formatXml2(xml) {
 }
 
 function checkTextAreaMaxLength(textBoxRef, e) {
-    var myTextBox = $("input#" + textBoxRef);
+    var myTextBox = $("#" + textBoxRef);
     var maxLength = parseInt(myTextBox.data("length"));
 
     if (!checkSpecialKeys(e)) {
