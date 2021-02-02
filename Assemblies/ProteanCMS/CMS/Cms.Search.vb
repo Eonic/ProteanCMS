@@ -512,11 +512,6 @@ Partial Public Class Cms
 
 
 
-
-
-
-
-
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
