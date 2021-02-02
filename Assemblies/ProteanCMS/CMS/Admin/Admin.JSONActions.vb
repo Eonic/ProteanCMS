@@ -355,7 +355,50 @@ Partial Public Class Cms
                     End Try
                 End If
             End Function
+            Public Function saveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
+                Dim urls As ArrayList = inputJson("urls").ToObject(Of ArrayList)
 
+                Dim oFrmElmt As XmlElement
+                Dim cProcessInfo As String = ""
+                Dim oFsh As fsHelper
+                Dim JsonResult As String = ""
+                Dim xFormPath As String = "/xforms/config/" & ConfigType & ".xml"
+                If Not moAdXfm.load(xFormPath, myWeb.maCommonFolders) Then
+
+                    oFrmElmt = moAdXfm.addGroup(moAdXfm.moXformElmt, "Config", "", "ConfigSettings")
+                    moAdXfm.addNote(oFrmElmt, xForm.noteTypes.Alert, xFormPath & " could not be found. - ")
+
+                Else
+
+                    Try
+
+                        If moAdXfm.goSession("oTempInstance") Is Nothing Then
+                            Dim oTemplateInstance As XmlElement = moAdXfm.moPageXML.CreateElement("Instance")
+                            oTemplateInstance.InnerXml = moAdXfm.Instance.InnerXml
+                            Dim xmlWholestring As String = "<rewriteMap name='" & ConfigType & "'>"
+                            Dim xmlstringend As String = "</rewriteMap>"
+                            Dim stringAddNode As String = ""
+
+                            For i As Integer = 0 To urls.Count - 1
+                                Dim oldURL As String = urls.Item(i).First
+                                Dim newUrl As String = urls.Item(i).last
+                                stringAddNode = stringAddNode & "<add key=""" & oldURL & """ value=""" & newUrl & " "" />"
+
+                            Next
+
+                            moAdXfm.LoadInstanceFromInnerXml(xmlWholestring & stringAddNode & xmlstringend)
+                            moAdXfm.updateInstanceFromRequest()
+                            moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
+                        End If
+                        Return JsonResult
+                    Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return ex.Message
+                    End Try
+                End If
+                Return JsonResult
+            End Function
         End Class
 
 

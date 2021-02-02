@@ -7,7 +7,7 @@
          <add key="" value=""/>
        </rewriteMap>
     </instance>
-    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+    <submission id="WebSettings" action="" method="post" />
     
      <bind nodeset="rewriteMap">
        <bind id="urlRepeat" nodeset="add">
@@ -22,9 +22,9 @@
    
     <label>301 (Permanent) Page Redirects</label>
     <group>
-      <input type="button"  ref="submit" class="principle save301RedirectForm" id="">
+      <submit submission="" ref="submit" class="principle save301RedirectForm" id="">
         <label>Save Settings</label>
-      </input>
+      </submit>
 
     </group>
      <group class="301RedirectBody">
