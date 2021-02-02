@@ -139,6 +139,7 @@ $('.addRedirectbtn').on('click', function (event) {
 });
 $('.btnSearchUrl').on('click', function (event) {
     debugger;
+   
     RedirectPage.getSearchList();
     
 });
@@ -221,6 +222,7 @@ if (rediectElement) {
             getSearchList: function () {
                 debugger;
                 var that = this;
+                var searchObj = $("#SearchURLText").val();
                 var strUrl = window.location.href;
                 if (strUrl.indexOf("ewCmd") > -1) {
                     var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -232,7 +234,7 @@ if (rediectElement) {
                     }
                 }
 
-                var inputJson = { redirectType: type };
+                var inputJson = { redirectType: type, searchObj: searchObj};
                 axios.post(SearchUrlAPIUrl, inputJson)
                     .then(function (response) {
                         debugger;
@@ -240,19 +242,9 @@ if (rediectElement) {
                         var xmlString = response.data;
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
+                        that.urlList = xml[0].childNodes[0].childNodes;
                        
-                        var searchObj = $("#SearchURLText").val();
-                        for (i = 0; i < xml.length; ++i) {
-                            debugger;
-                            var tempUrlList = xml[i].childNodes[0].attribute
-                          
-                            if ($.inArray(searchObj, arr) > -1) {
-                                
-                            }
-                            alert(tempUrlList);
-                            //that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
-                        }
-
+                       
                     });
             },
         },
@@ -264,9 +256,9 @@ if (rediectElement) {
     });
 }
 
-$('.301RedirectBody').on('mousewheel', function (event) {
-    RedirectPage.getPerminentList();
-});
+//$('.301RedirectBody').on('mousewheel', function (event) {
+//    RedirectPage.getPerminentList();
+//});
 
 
 

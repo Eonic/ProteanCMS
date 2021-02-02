@@ -295,7 +295,7 @@ Partial Public Class Cms
 
             Public Function searchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
-
+                Dim searchObj As String = inputJson("searchObj").ToObject(Of String)
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
                 Dim oFsh As fsHelper
@@ -325,14 +325,30 @@ Partial Public Class Cms
                         ' Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection(oCgfSectName)
                         cProcessInfo = "Getting Section Name:" & oCgfSectPath
                         Dim sectionMissing As Boolean = False
-
+                        Dim props As XmlNode
                         If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 
-                            Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                            JsonResult = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                            props = rewriteXml.SelectSingleNode(oCgfSectPath)
+                            Dim searchString As String = "<rewriteMap name='" & ConfigType & "'>"
+                            Dim xmlstringend As String = "</rewriteMap>"
+                            For i As Integer = 0 To props.ChildNodes.Count - 1
+                                'If ((props.ChildNodes(i).OuterXml).Contains(searchObj)) Then
+                                If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+                                    searchString = searchString & props.ChildNodes(i).OuterXml
+                                End If
+                            Next
+                            moAdXfm.LoadInstanceFromInnerXml(searchString & xmlstringend)
+                            moAdXfm.updateInstanceFromRequest()
+                            moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
+
+                            JsonResult = searchString & xmlstringend
                         End If
+                        'Dim doc As New XmlDocument()
+                        'doc.LoadXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+
 
                         Return JsonResult
+
                     Catch ex As Exception
                         RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                         Return ex.Message
