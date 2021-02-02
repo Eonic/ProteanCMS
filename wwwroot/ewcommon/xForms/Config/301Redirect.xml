@@ -22,9 +22,9 @@
    
     <label>301 (Permanent) Page Redirects</label>
     <group>
-      <submit submission="" ref="submit" class="principle save301RedirectForm" id="">
+      <input type="button"  ref="submit" class="principle save301RedirectForm" id="">
         <label>Save Settings</label>
-      </submit>
+      </input>
 
     </group>
      <group class="301RedirectBody">

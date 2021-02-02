@@ -143,6 +143,33 @@ $('.btnSearchUrl').on('click', function (event) {
     RedirectPage.getSearchList();
     
 });
+$('.save301RedirectForm').on('click', function (event) {
+    debugger;
+    var oldUrl = "";
+    var NewUrl = "";
+    var obj = {};
+    var total = $(".parentDivOfRedirect").length();
+    alert(total);
+    $(".parentDivOfRedirect").each(function (index, element) {
+        alert(index);
+        var input = $(this).find('input[type="text"]');
+        alert(input.length);
+        for (var i = 0; i < input.length; i++) {
+            if (i = 0) {
+                oldUrl = $(input[0]).val();
+                alert(oldUrl);
+            }
+            if (i = 1) {
+                NewUrl = $(input[1]).val();
+                alert(NewUrl);
+            }
+
+        }
+        obj.push([oldUrl, NewUrl]); 
+
+    });
+});
+
 
 
 
