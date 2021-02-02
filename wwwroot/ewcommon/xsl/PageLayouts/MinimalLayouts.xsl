@@ -10547,7 +10547,7 @@
       <a name="pageTop" class="pageTop">&#160;</a>
       <div id="pageMenu">
         <ul>
-          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQMenu2"/>
+          <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayFAQMenu"/>
         </ul>
         <div class="terminus">&#160;</div>
       </div>
@@ -10570,7 +10570,7 @@
   </xsl:template>
 
   <!-- FAQ Menu -->
-  <xsl:template match="Content[@type='FAQ']" mode="displayFAQMenu2">
+  <xsl:template match="Content[@type='FAQ']" mode="displayFAQMenu">
     <xsl:variable name="currentUrl">
       <xsl:apply-templates select="$currentPage" mode="getHref"/>
     </xsl:variable>
@@ -10626,7 +10626,7 @@
         </div>
         <div class="terminus">&#160;</div>
         <div class="backTop">
-          <a href="{$currentPage/@url}#pageTop" title="Back to Top">Back To Top</a>
+          <a href="#pageTop" title="Back to Top">Back To Top</a>
         </div>
         <!-- Terminus class fix to floating columns -->
         <div class="terminus">&#160;</div>
