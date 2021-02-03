@@ -12594,7 +12594,7 @@
             </div>
           </div>
           <div class="form-group trigger-group col-md-2">
-            <button type="submit" v-bind:name="'delete:urlRepeat_'+index" value="Del" class="btn btn-danger btn-delete" onclick="disableButton(this);">
+            <button type="button" v-bind:name="'delete:urlRepeat_'+index" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
               <i class="fa fa-times fa-white"> </i> Del
             </button>
           </div>

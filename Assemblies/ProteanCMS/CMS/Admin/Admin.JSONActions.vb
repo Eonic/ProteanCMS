@@ -338,8 +338,8 @@ Partial Public Class Cms
                                 End If
                             Next
                             moAdXfm.LoadInstanceFromInnerXml(searchString & xmlstringend)
-                            moAdXfm.updateInstanceFromRequest()
-                            moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
+                            'moAdXfm.updateInstanceFromRequest()
+                            'moAdXfm.goSession("oTempInstance") = moAdXfm.Instance
 
                             JsonResult = searchString & xmlstringend
                         End If
@@ -397,6 +397,34 @@ Partial Public Class Cms
                         Return ex.Message
                     End Try
                 End If
+                Return JsonResult
+            End Function
+
+            Public Function deleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
+                Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
+                Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
+                Dim JsonResult As String = ""
+                Dim rewriteXml As New XmlDocument
+                rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                Try
+
+                    Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
+                    If Not existingRedirects Is Nothing Then
+
+                        For Each existingNode As XmlNode In existingRedirects
+                            existingNode.ParentNode.RemoveChild(existingNode)
+
+                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                        Next
+                    End If
+                    Return JsonResult = "success"
+                Catch ex As Exception
+                        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return ex.Message
+                    End Try
+
                 Return JsonResult
             End Function
         End Class

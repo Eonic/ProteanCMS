@@ -162,6 +162,17 @@ $('.save301RedirectForm').on('click', function (event) {
     var save = "true";
     RedirectPage.submitForm(obj,save);
 });
+$(document).on("click", ".btn-delete", function (event) {
+
+    var oldUrl = "";
+    var NewUrl = "";
+    var parentDiv = $(this).closest('.parentDivOfRedirect'); 
+    var input = $(parentDiv).find('input[type="text"]');
+    oldUrl = $(input[0]).val();
+    NewUrl = $(input[1]).val();
+   
+    RedirectPage.DeleteUrl(oldUrl, NewUrl);
+});
 
 
 
@@ -169,7 +180,8 @@ $('.save301RedirectForm').on('click', function (event) {
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
 var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
 var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
-var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
+var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls'; 
+var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
 
 const rediectElement = document.querySelector("#RedirectPage");
 if (rediectElement) {
@@ -288,6 +300,28 @@ if (rediectElement) {
                     .then(function (response) {
                        
 
+                    });
+            },
+            DeleteUrl: function (oldUrl,NewUrl) {
+                debugger;
+                var that = this;
+
+                var strUrl = window.location.href;
+                if (strUrl.indexOf("ewCmd") > -1) {
+                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < url.length; i++) {
+                        var urlparam = url[i].split('=');
+                        if (urlparam[0] == "ewCmd") {
+                            type = urlparam[1];
+                        }
+                    }
+                }
+
+                var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
+                axios.post(deleteUrlsAPIUrl, inputJson)
+                    .then(function (response) {
+                        location.reload();
+                       
                     });
             },
         },

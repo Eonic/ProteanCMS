@@ -1146,28 +1146,38 @@ Partial Public Class Cms
                                     'rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
 
                                     ''Check we do not have a redirect for the OLD URL allready. Remove if exists
-                                    Dim addValue As XmlElement
-                                    For Each addValue In MyBase.Instance.ChildNodes
-                                        Dim oldUrl As String = addValue.InnerXml
+                                    ' Dim addValue As XmlElement
+
+
+                                    For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                        Dim oldUrl = oElmt.GetAttribute("key")
+
+                                        'If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
                                         Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
                                         If Not existingRedirects Is Nothing Then
+
                                             For Each existingNode As XmlNode In existingRedirects
-                                                existingNode.RemoveAll()
+                                                existingNode.ParentNode.RemoveChild(existingNode)
+                                                'existingNode.RemoveAll()
                                                 rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                                             Next
                                         End If
                                     Next
-                                    'Add redirect
-                                    'Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "Redirect']"
-                                    'Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    'If Not redirectSectionXmlNode Is Nothing Then
-                                    '    Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
-                                    '    replacingElement.InnerXml = $"<add key='{OldURL}' value='{NewURL}'/>"
 
-                                    '    ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
-                                    '    rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
-                                    '    rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                                    'End If
+                                    'Add redirect
+                                    Dim oCgfSectPathobj As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                                    Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPathobj)
+                                    If Not redirectSectionXmlNode Is Nothing Then
+                                        For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                            replacingElement.InnerXml = oElmt.OuterXml
+
+                                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                            rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
+
+                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                        Next
+                                    End If
 
 
 
