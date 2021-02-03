@@ -12521,7 +12521,7 @@
     <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
-         <input type="text" name="SearchURL" id="SearchURLText" class="form-control"/>
+         <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
         <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl" >
       <i class="fa fa-plus fa-white"> </i> Search
     </button>
