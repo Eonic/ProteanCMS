@@ -215,71 +215,73 @@ Public Class FeedHandler
                         Else
                             If Not reader.EOF And reader.NodeType <> XmlNodeType.EndElement Then
                                 origInstance = TryCast(XElement.ReadFrom(reader), XElement)
-                                Dim oWriter As TextWriter = New StringWriter
-                                Dim xWriter As XmlWriter = XmlWriter.Create(oWriter, settings)
-                                Try
+                                If Not IsNothing(origInstance) Then
+                                    Dim oWriter As TextWriter = New StringWriter
+                                    Dim xWriter As XmlWriter = XmlWriter.Create(oWriter, settings)
+                                    Try
 
-                                    Dim xreader As XmlReader = origInstance.CreateReader()
-                                    xreader.MoveToContent()
-                                    oTransform.Process(xreader, xWriter)
+                                        Dim xreader As XmlReader = origInstance.CreateReader()
+                                        xreader.MoveToContent()
+                                        oTransform.Process(xreader, xWriter)
 
-                                    sDoc = oWriter.ToString()
+                                        sDoc = oWriter.ToString()
 
-                                    sDocBefore = sDoc
-                                    ' sDoc = Regex.Replace(sDoc, "&gt;", ">")
-                                    ' sDoc = Regex.Replace(sDoc, "&lt;", "<")
-                                    sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc)
-                                    Dim filename As String
-                                    Dim xDoc As New XmlDocument
+                                        sDocBefore = sDoc
+                                        ' sDoc = Regex.Replace(sDoc, "&gt;", ">")
+                                        ' sDoc = Regex.Replace(sDoc, "&lt;", "<")
+                                        sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc)
+                                        Dim filename As String
+                                        Dim xDoc As New XmlDocument
 
-                                    xDoc.LoadXml(sDoc)
-                                    Dim oInstance As XmlElement
-                                    For Each oInstance In xDoc.DocumentElement.SelectNodes("descendant-or-self::instance")
-                                        Dim stateObj As New Protean.Cms.dbImport.ImportStateObj()
-                                        stateObj.oInstance = oInstance
-                                        stateObj.LogId = logId
-                                        stateObj.FeedRef = cFeedURL
-                                        stateObj.CompleteCount = completeCount
-                                        stateObj.totalInstances = 0
-                                        stateObj.bSkipExisting = False
-                                        stateObj.bResetLocations = True
-                                        stateObj.nResetLocationIfHere = 0
-                                        stateObj.bOrphan = False
-                                        stateObj.bDeleteNonEntries = False
-                                        stateObj.cDeleteTempTableName = cDeleteTempTableName
-                                        stateObj.moTransform = oTransform
+                                        xDoc.LoadXml(sDoc)
+                                        Dim oInstance As XmlElement
+                                        For Each oInstance In xDoc.DocumentElement.SelectNodes("descendant-or-self::instance")
+                                            Dim stateObj As New Protean.Cms.dbImport.ImportStateObj()
+                                            stateObj.oInstance = oInstance
+                                            stateObj.LogId = logId
+                                            stateObj.FeedRef = cFeedURL
+                                            stateObj.CompleteCount = completeCount
+                                            stateObj.totalInstances = 0
+                                            stateObj.bSkipExisting = False
+                                            stateObj.bResetLocations = True
+                                            stateObj.nResetLocationIfHere = 0
+                                            stateObj.bOrphan = False
+                                            stateObj.bDeleteNonEntries = False
+                                            stateObj.cDeleteTempTableName = cDeleteTempTableName
+                                            stateObj.moTransform = oTransform
 
-                                        ' If oInstance.NextSibling Is Nothing Then
-                                        '     cProcessInfo = "Is Last"
-                                        '      eventsDoneEvt.Set()
-                                        ' End If
+                                            ' If oInstance.NextSibling Is Nothing Then
+                                            '     cProcessInfo = "Is Last"
+                                            '      eventsDoneEvt.Set()
+                                            ' End If
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
-                                        stateObj = Nothing
-                                        completeCount = completeCount + 1
-                                    Next
+                                            System.Threading.ThreadPool.QueueUserWorkItem(New System.Threading.WaitCallback(AddressOf Tasks.ImportSingleObject), stateObj)
+                                            stateObj = Nothing
+                                            completeCount = completeCount + 1
+                                        Next
 
-                                    If LCase(oConfig("Debug")) = "on" Then
-                                        If xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]") Is Nothing Then
-                                            filename = "ImportStreamFile"
-                                        Else
-                                            filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-")
+                                        If LCase(oConfig("Debug")) = "on" Then
+                                            If xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]") Is Nothing Then
+                                                filename = "ImportStreamFile"
+                                            Else
+                                                filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-")
+                                            End If
+                                            xDoc.Save(debugFolder & filename & ".xml")
                                         End If
-                                        xDoc.Save(debugFolder & filename & ".xml")
-                                    End If
 
-                                    xDoc = Nothing
-                                    origInstance = Nothing
-                                    oWriter = Nothing
-                                    xWriter = Nothing
+                                        xDoc = Nothing
+                                        origInstance = Nothing
+                                        oWriter = Nothing
+                                        xWriter = Nothing
 
-                                Catch ex2 As Exception
-                                    processInfo = sDoc
+                                    Catch ex2 As Exception
+                                        processInfo = sDoc
 
-                                    AddExternalMessage(ex2.ToString & ex2.StackTrace.ToString & " DOC {" & sDocBefore & "} EndDoc")
-                                    bResult = False
-                                    ' AddExternalError(ex2)
-                                End Try
+                                        AddExternalMessage(ex2.ToString & ex2.StackTrace.ToString & " DOC {" & sDocBefore & "} EndDoc")
+                                        bResult = False
+                                        ' AddExternalError(ex2)
+                                    End Try
+                                End If
                             Else
                                 reader.Read()
                             End If
