@@ -341,6 +341,10 @@ Public Class Conversion
                 For ii As Integer = 0 To afieldsTitles.Count - 1
                     Dim _fName As String = ""
                     _fName = afieldsTitles(ii).Replace(_separator, "")
+                    _fName = _fName.Replace("""", "")
+                    _fName = _fName.Replace("?", "")
+                    _fName = String.Concat(_fName.Where(Function(c) Not Char.IsWhiteSpace(c)))
+
                     rowTemplate.AppendChild(ResponseXml.CreateElement(_fName))
                 Next
                 firstRow = False
@@ -358,7 +362,7 @@ Public Class Conversion
                     nSepCount = sLine.Split(_separator).Length - 1
                 End If
                 'keep reading till no of seps are hit.
-                Do While (sLine.Split(_separator).Length - 1) < nSepCount
+                Do While (sLine.Split(_separator).Length - 1) < nSepCount Or ProcessNextLine(sLine, _separator, nSepCount)
                     Dim nextLine = sr.ReadLine
                     'exit the loop if reached end of the file.
                     If IsNothing(nextLine) Then
@@ -449,6 +453,26 @@ Public Class Conversion
 #End Region
 
 #Region "    Private Functions"
+
+    Private Function ProcessNextLine(sLine As String, _separator As Char, nSepCount As Integer) As Boolean
+        'check for comma as separator
+        If _separator = Chr(44) Then
+            sLine = sLine.Replace("\""", String.Empty)
+            Dim countDoubleQuotes As Integer = Split(sLine, """").Length - 1
+            If countDoubleQuotes > 0 Then
+                Dim result = (countDoubleQuotes Mod 2)
+                If result > 0 Then 'Odd number of quotes ..consider next line
+                    Return True
+                ElseIf result = 0 Then 'Even number of quotes but number of fields are less than expected..consider next line
+                    Dim csvPreservingQuotedStrings As New Regex(String.Format("(?:^|{0})(\""(?:[^\""]+|\""\"")*\""|[^{0}]*)", _separator))
+                    If csvPreservingQuotedStrings.Matches(sLine).Count - 1 < nSepCount Then
+                        Return True
+                    End If
+                End If
+            End If
+        End If
+        Return False
+    End Function
 
     Private Function SplitWhilePreservingQuotedValues(value As String, delimiter As Char) As IEnumerable(Of String)
         Try

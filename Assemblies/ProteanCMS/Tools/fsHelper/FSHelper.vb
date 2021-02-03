@@ -660,6 +660,9 @@ Partial Public Class fsHelper
         Try
             httpURL = httpURL.Replace("\", "/")
             Dim filename As String = Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1)
+            If filename.IndexOf("?") > -1 Then
+                filename = Right(filename, filename.Length - filename.LastIndexOf("=") - 1)
+            End If
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
 
