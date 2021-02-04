@@ -12533,19 +12533,18 @@
                   </div>
                   <div class="modal-body">
                     <div class="form-group repeat-group ">
-                      <fieldset class="rpt-00">
-                        <div class="form-group input-containing col-md-5">
-
+                      <fieldset class="rpt-00 row">
+                        <div class="form-group input-containing col-md-6">
+                          <label>Old URL</label>
                           <div class="control-wrapper input-wrapper appearance-">
-                            <label>Old URL</label>
-                            <input type="text" name="OldUrl" id="OldUrlmodal" class="col-md-5 textbox form-control"/>
+                            
+                            <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
                           </div>
                         </div>
-                        <div class="form-group input-containing col-md-5">
-
-                          <div class="control-wrapper input-wrapper appearance-">
+                        <div class="form-group input-containing col-md-6">
                             <label>New URL</label>
-                            <input type="text" name="NewUrl" id="NewUrlModal" class="col-md-5 textbox form-control"/>
+                          <div class="control-wrapper input-wrapper appearance-">
+                            <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
                           </div>
                         </div>
                       </fieldset>
@@ -12555,7 +12554,7 @@
                     <button class="btn btn-primary " data-dismiss="modal" >Cancel</button>
                     <button type="button"  v-on:click="SaveNewUrl()"
 											class="btn btn-primary addRedirectbtn">
-                      save
+                      Save
                     </button>
                   </div>
                 </div>

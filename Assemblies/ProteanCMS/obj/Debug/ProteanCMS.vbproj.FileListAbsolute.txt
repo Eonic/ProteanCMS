@@ -1047,3 +1047,4 @@ D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngine
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
+D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CoreCompileInputs.cache

@@ -464,3 +464,4 @@ D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache

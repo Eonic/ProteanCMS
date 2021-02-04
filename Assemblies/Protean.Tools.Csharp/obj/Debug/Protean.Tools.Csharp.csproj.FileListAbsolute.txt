@@ -174,3 +174,4 @@ D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protea
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\_Sonali_WorkPlace\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
