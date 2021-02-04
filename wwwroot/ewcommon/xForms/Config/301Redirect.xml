@@ -7,8 +7,8 @@
          <add key="" value=""/>
        </rewriteMap>
     </instance>
-    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
-     
+    <submission id="WebSettings" action="" method="post" />
+    
      <bind nodeset="rewriteMap">
        <bind id="urlRepeat" nodeset="add">
          <bind id="OldUrl" nodeset="@key" required="true()" type="string" />
@@ -16,12 +16,17 @@
        </bind>
      </bind>
    </model>
-  <!--<group class="addNewUrl-modal">
-    <input type="hidden" bind=""></input>
-  </group>-->
+ 
+ 
   <group ref="WebSettings">
-    <label>301 (Permanent) Page Redirects</label>
    
+    <label>301 (Permanent) Page Redirects</label>
+    <group>
+      <submit submission="" ref="submit" class="principle save301RedirectForm" id="">
+        <label>Save Settings</label>
+      </submit>
+
+    </group>
      <group class="301RedirectBody">
        <input class="RedirectPage"/>
        <!--<repeat bind="urlRepeat" class="row">
@@ -44,11 +49,8 @@
       </trigger>
       
     </group>-->
-   
-    
-     <submit submission="" ref="submit" class="principle">
-      <label>Save Settings</label>
-    </submit>
+
+  
    
   </group>
 </Content>

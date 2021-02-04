@@ -12521,9 +12521,14 @@
     <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
+         <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
+        <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl" >
+      <i class="fa fa-plus fa-white"> </i> Search
+    </button>
+      
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
      
-              <div class="modal-dialog"  v-if="showAddNewUrl">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <label>301 (PERMANENT) PAGE REDIRECTS</label>
@@ -12574,6 +12579,7 @@
       </div>
      
       <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+        
         <fieldset v-bind:class="'row repeated rpt_'+ index">
           <div class="form-group input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
@@ -12587,7 +12593,7 @@
             </div>
           </div>
           <div class="form-group trigger-group col-md-2">
-            <button type="submit" v-bind:name="'delete:urlRepeat_'+index" value="Del" class="btn btn-danger btn-delete" onclick="disableButton(this);">
+            <button type="button" v-bind:name="'delete:urlRepeat_'+index" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
               <i class="fa fa-times fa-white"> </i> Del
             </button>
           </div>
