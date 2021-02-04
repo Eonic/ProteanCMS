@@ -355,6 +355,9 @@ Partial Public Class Cms
                     End Try
                 End If
             End Function
+
+
+
             Public Function saveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim ConfigType As String = inputJson("redirectType").ToObject(Of String)
                 Dim urls As ArrayList = inputJson("urls").ToObject(Of ArrayList)
