@@ -8264,67 +8264,87 @@
     <xsl:param name="label"/>
     <xsl:param name="querystringAmendment"/>
 
-        <div class="btn-toolbar">
-          <div class="btn-group">
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
-        <xsl:text>All </xsl:text>
-        <xsl:value-of select="$label"/>
-      </a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
-      <xsl:text> </xsl:text>
+    <div class="btn-toolbar">
+      <div class="btn-group">
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
+          <xsl:text>All </xsl:text>
+          <xsl:value-of select="$label"/>
+        </a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=0&amp;{$querystringAmendment}" class="btn btn-default btn-sm">0</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=1&amp;{$querystringAmendment}" class="btn btn-default btn-sm">1</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=2&amp;{$querystringAmendment}" class="btn btn-default btn-sm">2</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=3&amp;{$querystringAmendment}" class="btn btn-default btn-sm">3</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=4&amp;{$querystringAmendment}" class="btn btn-default btn-sm">4</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=5&amp;{$querystringAmendment}" class="btn btn-default btn-sm">5</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=6&amp;{$querystringAmendment}" class="btn btn-default btn-sm">6</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=7&amp;{$querystringAmendment}" class="btn btn-default btn-sm">7</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=8&amp;{$querystringAmendment}" class="btn btn-default btn-sm">8</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=9&amp;{$querystringAmendment}" class="btn btn-default btn-sm">9</a>
+        <xsl:text> </xsl:text>
       </div>
-        </div>
+    </div>
   </xsl:template>
   <!-- -->
   <xsl:template match="/" mode="adminStepper">
