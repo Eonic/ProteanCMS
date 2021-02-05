@@ -792,6 +792,10 @@ function showDependant(dependant, allDependants) {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
         //  alert("enable " + tempFieldName);
         //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
     });
