@@ -21,12 +21,12 @@
   <group ref="WebSettings">
    
     <label>301 (Permanent) Page Redirects</label>
-    <group>
+    <!--<group>
       <submit submission="" ref="submit" class="principle save301RedirectForm" id="">
         <label>Save Settings</label>
       </submit>
 
-    </group>
+    </group>-->
      <group class="301RedirectBody">
        <input class="RedirectPage"/>
        <!--<repeat bind="urlRepeat" class="row">
@@ -50,7 +50,5 @@
       
     </group>-->
 
-  
-   
   </group>
 </Content>

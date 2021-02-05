@@ -3936,7 +3936,7 @@
 
   </xsl:template>
   <!--<xsl:template match="group[@class='addNewUrl-modal']" mode="xform">-->
-    <!--<div id="addNewUrl" class="addNewUrl hidden" data-toggle="modal">
+  <!--<div id="addNewUrl" class="addNewUrl hidden" data-toggle="modal">
       <div v-if="showAddNewUrl" >
         <transition name="modal">
           <div class="modal-mask">
@@ -12521,51 +12521,49 @@
     <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
-         <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
-        <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl" >
-      <i class="fa fa-plus fa-white"> </i> Search
-    </button>
-      
+    <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
+    <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl">Search </button>
+    
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
-     
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <label>301 (PERMANENT) PAGE REDIRECTS</label>
-                    <button type="button" class="close" data-dismiss="modal" >
-                      <span aria-hidden="true">&#215;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group repeat-group ">
-                      <fieldset class="rpt-00 row">
-                        <div class="form-group input-containing col-md-6">
-                          <label>Old URL</label>
-                          <div class="control-wrapper input-wrapper appearance-">
-                            
-                            <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
-                          </div>
-                        </div>
-                        <div class="form-group input-containing col-md-6">
-                            <label>New URL</label>
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
-                          </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button class="btn btn-primary " data-dismiss="modal" >Cancel</button>
-                    <button type="button"  v-on:click="SaveNewUrl()"
-											class="btn btn-primary addRedirectbtn">
-                      Save
-                    </button>
+
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <label>301 (PERMANENT) PAGE REDIRECTS</label>
+            <button type="button" class="close" data-dismiss="modal" >
+              <span aria-hidden="true">&#215;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group repeat-group ">
+              <fieldset class="rpt-00 row">
+                <div class="form-group input-containing col-md-6">
+                  <label>Old URL</label>
+                  <div class="control-wrapper input-wrapper appearance-">
+
+                    <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
                   </div>
                 </div>
-              </div>
-          
-      
+                <div class="form-group input-containing col-md-6">
+                  <label>New URL</label>
+                  <div class="control-wrapper input-wrapper appearance-">
+                    <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary " data-dismiss="modal" >Cancel</button>
+            <button type="button"  v-on:click="SaveNewUrl()"
+              class="btn btn-primary addRedirectbtn">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
+
     </div>
     <div class="control-wrapper RedirectPage" id="RedirectPage">
       <div class="form-group">
@@ -12575,28 +12573,35 @@
         <div class="form-group input-containing col-md-6">
           <label  >New URL</label>
         </div>
-       
+
       </div>
-     
+
       <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
-        
+
         <fieldset v-bind:class="'row repeated rpt_'+ index">
           <div class="form-group input-containing col-md-5">
             <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.key.nodeValue" />
-            </div>
+              <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.key.nodeValue" />
+             <input type="hidden"  class="col-md-5 textbox form-control hiddenOldUrlText" v-bind:value="urls.attributes.key.nodeValue" /> 
+          </div>
           </div>
           <div class="form-group input-containing col-md-5">
-           
+
             <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control" v-bind:value="urls.attributes.value.nodeValue" />
+              <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
             </div>
           </div>
-          <div class="form-group trigger-group col-md-2">
-            <button type="button" v-bind:name="'delete:urlRepeat_'+index" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
+          <div class="form-group trigger-group col-md-1">
+            <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
+              Update
+            </button>
+          </div>
+          <div class="form-group trigger-group col-md-1">
+            <button type="button" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
               <i class="fa fa-times fa-white"> </i> Del
             </button>
           </div>
+          
         </fieldset>
       </div>
 

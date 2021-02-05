@@ -1,4 +1,10 @@
 ﻿var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
+var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/loadUrlsForPagination';
+var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
+var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
+var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
+var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
+var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
 
 
 Vue.mixin({
@@ -104,16 +110,38 @@ if (addNewUrlModalElement) {
         },
         methods: {
             toggleModal: function () {
-               
+
                 //$("#addNewUrl").attr("data-dismiss","modal");
                 this.showAddNewUrl = !this.showAddNewUrl;
             },
             SaveNewUrl: function () {
+                $('#addNewUrl').modal('hide');
                 debugger;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
+                type = RedirectPage.redirectType();
                 if (oldUrl != "") {
-                    RedirectPage.addNewUrl(oldUrl, NewUrl);
+                    var inputJson = { redirectType: type, oldUrl: oldUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+                                    RedirectPage.addNewUrl(oldUrl, NewUrl);
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            else {
+                                RedirectPage.addNewUrl(oldUrl, NewUrl);
+
+                            }
+                            $("#OldUrlmodal").text("");
+                            $("#NewUrlModal").text("");
+                        });
+
+
                 }
 
             }
@@ -122,66 +150,84 @@ if (addNewUrlModalElement) {
 }
 $(".btnaddNewUrl").click(function () {
     addNewUrl.toggleModal();
-   
+
 });
 $(".close").click(function () {
     $('#addNewUrl').modal('hide');
 })
-$('.addRedirectbtn').on('click', function (event) {
 
-    debugger;
-    var oldUrl = $("#OldUrlmodal").val();
-    var NewUrl = $("#NewUrlModal").val();
-    if (oldUrl != "") {
-        RedirectPage.addNewUrl(oldUrl, NewUrl);
-    }
-
-});
 $('.btnSearchUrl').on('click', function (event) {
-    debugger;
-   
-    RedirectPage.getSearchList();
-    
+    var searchObj = $("#SearchURLText").val();
+    if (searchObj == "") {
+        location.reload();
+
+    }
+    else { RedirectPage.getSearchList(searchObj); }
+
+
 });
-$('.save301RedirectForm').on('click', function (event) {
-   
+$(document).on("click", ".btn-update", function (event) {
+
+    debugger;
     var oldUrl = "";
     var NewUrl = "";
-    var obj = [];
-    var total = $(".parentDivOfRedirect").length;
-  
-    $(".parentDivOfRedirect").each(function (index, element) {
-        var input = $(element).find('input[type="text"]');
-        oldUrl = $(input[0]).val();
-        NewUrl = $(input[1]).val();
-       
-        obj.push([oldUrl, NewUrl]); 
-      
 
-    });
-    var save = "true";
-    RedirectPage.submitForm(obj,save);
+    var parentDiv = $(this).closest('.parentDivOfRedirect');
+    var input = $(parentDiv).find('input[type="text"]');
+    oldUrl = $(input[0]).val();
+    NewUrl = $(input[1]).val();
+    hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
+    type = RedirectPage.redirectType();
+    if (oldUrl != "") {
+        var inputJson = { redirectType: type, oldUrl: oldUrl };
+        axios.post(IsUrlPResentAPI, inputJson)
+            .then(function (response) {
+                debugger;
+                if (response.data == "True") {
+                    if (confirm("Old url is already exist. Do you want to replace it?")) {
+                        RedirectPage.addNewUrl(oldUrl, NewUrl);
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl);
+
+                }
+               
+            });
+
+
+    }
+
+
+   
+
 });
 $(document).on("click", ".btn-delete", function (event) {
 
     var oldUrl = "";
     var NewUrl = "";
-    var parentDiv = $(this).closest('.parentDivOfRedirect'); 
+    var parentDiv = $(this).closest('.parentDivOfRedirect');
     var input = $(parentDiv).find('input[type="text"]');
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
-   
+
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
+});
+
+$(document).on("mouseup", ".redirecttext", function (event) {
+
+    var parentDiv = $(this).closest('.parentDivOfRedirect');
+    var button = $(parentDiv).find('button[type="button"]');
+    $(".btn-update").addClass("hidden");
+    $(button[0]).removeClass("hidden");
 });
 
 
 
 
-var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/redirectPagination';
-var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
-var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
-var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls'; 
-var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
 
 const rediectElement = document.querySelector("#RedirectPage");
 if (rediectElement) {
@@ -193,148 +239,135 @@ if (rediectElement) {
             type: ''
         },
         methods: {
-            getPerminentList: function () {
+            getPermanentList: function () {
+
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var that = this;
-                var strUrl = window.location.href;
-                if (strUrl.indexOf("ewCmd") > -1) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0] == "ewCmd") {
-                            type = urlparam[1];
-                        }
-                    }
-                }
-
-                var inputJson = { redirectType: type, loadCount: totalCountOfLoad};
+                type = this.redirectType();
+                var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                       
                         
                         var xmlString = response.data;
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
+                       
                         if (that.urlList != '') {
                             var tempUrlList = xml[0].childNodes[0].childNodes;
                             that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
-                           
+                            
                         }
                         else {
-                           
+
                             that.urlList = xml[0].childNodes[0].childNodes;
                         }
 
                     });
             },
 
-            addNewUrl: function (oldUrl,NewUrl) {
-               
+            addNewUrl: function (oldUrl, NewUrl) {
+
                 var that = this;
-                var strUrl = window.location.href;
-                if (strUrl.indexOf("ewCmd") > -1) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0] == "ewCmd") {
-                            type = urlparam[1];
-                        }
-                    }
-                }
+                type = this.redirectType();
 
                 var inputJson = { redirectType: type, oldUrl: oldUrl, newUrl: NewUrl };
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
-                        $('#addNewUrl').modal('hide');
-                        $(".save301RedirectForm").click();
-
+                        if (response.data == "success") {
+                            alert("Url saved successfully!");
+                        }
+                        location.reload();
                     });
             },
 
-            getSearchList: function () {
-                debugger;
-                var that = this;
-                var searchObj = $("#SearchURLText").val();
-                var strUrl = window.location.href;
-                if (strUrl.indexOf("ewCmd") > -1) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0] == "ewCmd") {
-                            type = urlparam[1];
-                        }
-                    }
-                }
+            getSearchList: function (searchObj) {
 
-                var inputJson = { redirectType: type, searchObj: searchObj};
+                var that = this;
+                type = this.redirectType();
+                var inputJson = { redirectType: type, searchObj: searchObj };
                 axios.post(SearchUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
-                       
+
                         var xmlString = response.data;
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
                         that.urlList = xml[0].childNodes[0].childNodes;
-                       
-                       
+
+
                     });
+
             },
-            submitForm: function (arrayObj) {
-                debugger;
+            saveUrl: function (oldUrl, newUrl) {
+
                 var that = this;
-               
-                var strUrl = window.location.href;
-                if (strUrl.indexOf("ewCmd") > -1) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0] == "ewCmd") {
-                            type = urlparam[1];
-                        }
-                    }
-                }
-               
-                var inputJson = { redirectType: type, urls: arrayObj };
+                type = this.redirectType();
+                var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                       
+                        if (response.data == "success") {
+                            alert("Saved successfully")
+                        }
+                        location.reload();
 
                     });
             },
-            DeleteUrl: function (oldUrl,NewUrl) {
+            DeleteUrl: function (oldUrl, NewUrl) {
                 debugger;
                 var that = this;
-
-                var strUrl = window.location.href;
-                if (strUrl.indexOf("ewCmd") > -1) {
-                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                    for (var i = 0; i < url.length; i++) {
-                        var urlparam = url[i].split('=');
-                        if (urlparam[0] == "ewCmd") {
-                            type = urlparam[1];
-                        }
-                    }
-                }
-
+                type = this.redirectType();
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
+                        debugger;
+                        if (response.data == "success") {
+                            alert("Deleted successfully")
+                        }
                         location.reload();
-                       
+
                     });
+            },
+            redirectType: function () {
+
+                var that = this;
+                var strUrl = window.location.href;
+                if (strUrl.indexOf("ewCmd") > -1) {
+                    var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < url.length; i++) {
+                        var urlparam = url[i].split('=');
+                        if (urlparam[0] == "ewCmd") {
+                            type = urlparam[1];
+                            if (type == "301Redirect") {
+                                type = 301;
+                            } else {
+                                if (type == "302Redirect") {
+                                    type = 302;
+                                }
+
+                            }
+                        }
+                    }
+                }
+                return type
+
             },
         },
         mounted: function () {
-            this.getPerminentList();
-           
+            this.getPermanentList();
+
         }
         //}
     });
 }
 
-$('.301RedirectBody').on('mousewheel', function (event) {
-    RedirectPage.getPerminentList();
+$(window).bind('scroll', function () {
+    var totalCountOfLoad = $(".parentDivOfRedirect").length;
+     if ($(window).scrollTop() >= $('.301RedirectBody').offset().top + $('.301RedirectBody').outerHeight() - window.innerHeight) {
+        
+             alert(totalCountOfLoad + ' url loaded..next 50 will loaded');
+             RedirectPage.getPermanentList();
+        
+    }
+
 });
 
 
