@@ -12609,7 +12609,7 @@
             </div>
             <div class="form-group trigger-group col-md-1">
               <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
-                Update
+                Saved
               </button>
             </div>
             <div class="form-group trigger-group col-md-1">
