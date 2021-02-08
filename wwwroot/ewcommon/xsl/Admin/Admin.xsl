@@ -12518,14 +12518,26 @@
   <!-- -->
 
   <xsl:template match="input[@class='RedirectPage']" mode="xform" >
-    <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
+
+    <div class="row">
+      <div class="col-md-8">
+            <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
       <i class="fa fa-plus fa-white"> </i> Add New URL
     </button>
-    <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
-    <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl">Search </button>
-    <div id="redirectLoad" v-if="loading" class="vueloadimgforModal hidden" v-show="true" >
-      <i class="fas fa-spinner fa-spin"> </i>
-    </div>
+      &#160;
+        </div>
+      <div class="col-md-4">
+       <div class="input-group col-md-4">
+         <span class="input-group-btn">
+            <button type="button"  value="Clear" class="btn btn-default"><i class="fa fa-times"/> </button>
+            </span>
+            <input type="text" name="SearchURL" id="SearchURLText" class="form-control" />
+             <span class="input-group-btn">
+            <button type="button"  value="Search" class="btn btn-primary btnSearchUrl">Search </button>
+            </span>
+         </div>
+      </div>
+      </div>
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
      
       <div class="modal-dialog">
@@ -12581,36 +12593,33 @@
         </div>
 
       </div>
-     
-      <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
-
-        <fieldset v-bind:class="'row repeated rpt_'+ index">
-          <div class="form-group input-containing col-md-5">
-            <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.key.nodeValue" />
-             <input type="hidden"  class="col-md-5 textbox form-control hiddenOldUrlText" v-bind:value="urls.attributes.key.nodeValue" /> 
-          </div>
-          </div>
-          <div class="form-group input-containing col-md-5">
-
-            <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+      <div class="scolling-pane">
+        <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+          <fieldset v-bind:class="'row repeated rpt_'+ index">
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text" v-bind:name="'OldUrl_' + index" v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.key.nodeValue" />
+               <input type="hidden"  class="col-md-5 textbox form-control hiddenOldUrlText" v-bind:value="urls.attributes.key.nodeValue" /> 
             </div>
-          </div>
-          <div class="form-group trigger-group col-md-1">
-            <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
-              Saved
-            </button>
-          </div>
-          <div class="form-group trigger-group col-md-1">
-            <button type="button" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
-              <i class="fa fa-times fa-white"> </i> Del
-            </button>
-          </div>
-          
-        </fieldset>
-      </div>
-
+            </div>
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text" v-bind:name="'NewUrl_'+index" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+              </div>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
+                Update
+              </button>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
+                <i class="fa fa-times fa-white"> </i> Del
+              </button>
+            </div>          
+          </fieldset>
+        </div>
+</div>
     </div>
 
 
