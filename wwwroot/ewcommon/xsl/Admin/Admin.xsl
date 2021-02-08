@@ -12529,7 +12529,7 @@
       <div class="col-md-4">
        <div class="input-group col-md-4">
          <span class="input-group-btn">
-            <button type="button"  value="Clear" class="btn btn-default"><i class="fa fa-times"/> </button>
+            <button type="button"  value="Clear" class="btn btn-default btnClear"><i class="fa fa-times"/> </button>
             </span>
             <input type="text" name="SearchURL" id="SearchURLText" class="form-control" />
              <span class="input-group-btn">
@@ -12619,7 +12619,11 @@
             </div>          
           </fieldset>
         </div>
+     
 </div>
+      <div id="redirectLoad" v-if="loadingscroll" class="vueloadimg" v-show="true" >
+        <i class="fas fa-spinner fa-spin"> </i>
+      </div>
     </div>
 
 

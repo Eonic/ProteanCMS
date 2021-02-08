@@ -172,9 +172,16 @@ $('.btnSearchUrl').on('click', function (event) {
 
 
 });
+$('.btnClear').on('click', function (event) {
+   
+        location.reload();
+
+});
+
+
 $(document).on("click", ".btn-update", function (event) {
 
-    debugger;
+   
     var oldUrl = "";
     var NewUrl = "";
 
@@ -247,11 +254,12 @@ if (rediectElement) {
             urlList: [],
             type: '',
             show: false,
-            loading : false
+            loading: false,
+            loadingscroll: false
         },
         methods: {
             getPermanentList: function () {
-
+               
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var that = this;
                 type = this.redirectType();
@@ -377,6 +385,25 @@ if (rediectElement) {
                 return type
 
             },
+            scrollEvent: function () {
+               
+                var that = this;
+                that.show = true;
+                that.loading = true;
+                if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
+                    
+                    //var lastDiv = $(".parentDivOfRedirect").last();
+                    //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
+                   
+                    window.setTimeout(function () {
+                        //$(lastDiv).after(span);
+                        that.getPermanentList();
+                    }, 1000);
+                    that.show = false;
+                    that.loading = false;
+                }
+
+            },
         },
         mounted: function () {
             this.getPermanentList();
@@ -386,16 +413,13 @@ if (rediectElement) {
     });
 }
 
-$(window).bind('scroll', function () {
-    var totalCountOfLoad = $(".parentDivOfRedirect").length;
-     if ($(window).scrollTop() >= $('.301RedirectBody').offset().top + $('.301RedirectBody').outerHeight() - window.innerHeight) {
-        
-             alert(totalCountOfLoad + ' url loaded..next 50 will loaded');
-             RedirectPage.getPermanentList();
-        
-    }
 
+$(window).bind('scroll', function () {
+    
+    RedirectPage.scrollEvent();
 });
+
+
 
 
 
