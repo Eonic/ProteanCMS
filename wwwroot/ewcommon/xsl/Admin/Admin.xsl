@@ -12523,9 +12523,11 @@
     </button>
     <input type="text" name="SearchURL" id="SearchURLText" class="form-control" style="width:auto"/>
     <button type="button"  value="Saerch" class="btn btn-primary btnSearchUrl">Search </button>
-    
+    <div id="redirectLoad" v-if="loading" class="vueloadimgforModal hidden" v-show="true" >
+      <i class="fas fa-spinner fa-spin"> </i>
+    </div>
     <div id="addNewUrl" class="addNewUrl modal fade" tabindex="-1" >
-
+     
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -12562,10 +12564,14 @@
           </div>
         </div>
       </div>
-
+     
 
     </div>
+    
     <div class="control-wrapper RedirectPage" id="RedirectPage">
+      <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
+        <i class="fas fa-spinner fa-spin"> </i>
+      </div>
       <div class="form-group">
         <div class="form-group input-containing col-md-6">
           <label >Old URL</label>
@@ -12575,7 +12581,7 @@
         </div>
 
       </div>
-
+     
       <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
 
         <fieldset v-bind:class="'row repeated rpt_'+ index">
@@ -12593,7 +12599,7 @@
           </div>
           <div class="form-group trigger-group col-md-1">
             <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
-              Update
+              Saved
             </button>
           </div>
           <div class="form-group trigger-group col-md-1">

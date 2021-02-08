@@ -106,7 +106,9 @@ if (addNewUrlModalElement) {
     window.addNewUrl = new Vue({
         el: "#addNewUrl",
         data: {
-            showAddNewUrl: false
+            showAddNewUrl: false,
+            show: false,
+            loading: false
         },
         methods: {
             toggleModal: function () {
@@ -116,6 +118,7 @@ if (addNewUrlModalElement) {
             },
             SaveNewUrl: function () {
                 $('#addNewUrl').modal('hide');
+                $(".vueloadimgforModal").removeClass("hidden");
                 debugger;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
@@ -127,13 +130,16 @@ if (addNewUrlModalElement) {
 
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
+                                    $(".vueloadimgforModal").addClass("hidden");
                                     RedirectPage.addNewUrl(oldUrl, NewUrl);
                                 }
                                 else {
+                                    $(".vueloadimgforModal").addClass("hidden");
                                     return false;
                                 }
                             }
                             else {
+                                $(".vueloadimgforModal").addClass("hidden");
                                 RedirectPage.addNewUrl(oldUrl, NewUrl);
 
                             }
@@ -178,7 +184,7 @@ $(document).on("click", ".btn-update", function (event) {
     NewUrl = $(input[1]).val();
     hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
     type = RedirectPage.redirectType();
-    if (oldUrl != "") {
+    if (oldUrl != "" && oldUrl!= hiddenOldUrl) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
@@ -201,9 +207,12 @@ $(document).on("click", ".btn-update", function (event) {
 
     }
 
+    else {
+        RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl);
 
+    }
    
-
+    $(this).hide();
 });
 $(document).on("click", ".btn-delete", function (event) {
 
@@ -236,7 +245,9 @@ if (rediectElement) {
         data: {
             position: 0,
             urlList: [],
-            type: ''
+            type: '',
+            show: false,
+            loading : false
         },
         methods: {
             getPermanentList: function () {
@@ -268,13 +279,17 @@ if (rediectElement) {
             addNewUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
+                that.show = true;
+                that.loading = true;
                 type = this.redirectType();
 
                 var inputJson = { redirectType: type, oldUrl: oldUrl, newUrl: NewUrl };
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
-                            alert("Url saved successfully!");
+                            that.show = false;
+                            that.loading = false;
+                            //alert("Url saved successfully!");
                         }
                         location.reload();
                     });
@@ -283,6 +298,8 @@ if (rediectElement) {
             getSearchList: function (searchObj) {
 
                 var that = this;
+                that.show = true;
+                that.loading = true;
                 type = this.redirectType();
                 var inputJson = { redirectType: type, searchObj: searchObj };
                 axios.post(SearchUrlAPIUrl, inputJson)
@@ -292,35 +309,45 @@ if (rediectElement) {
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
                         that.urlList = xml[0].childNodes[0].childNodes;
-
+                        that.show = false;
+                        that.loading = false;
 
                     });
 
             },
-            saveUrl: function (oldUrl, newUrl) {
+            saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
 
                 var that = this;
+                that.show = true;
+                that.loading = true;
                 type = this.redirectType();
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
-                            alert("Saved successfully")
+                            that.show = false;
+                            that.loading = false;
+                            //alert("Saved successfully")
                         }
                         location.reload();
 
                     });
             },
             DeleteUrl: function (oldUrl, NewUrl) {
-                debugger;
+               
                 var that = this;
+                that.show = true;
+                that.loading = true;
+                
                 type = this.redirectType();
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                        
                         if (response.data == "success") {
-                            alert("Deleted successfully")
+                            that.loading = false;
+                            that.show = false;
+                            //alert("Deleted successfully")
                         }
                         location.reload();
 
