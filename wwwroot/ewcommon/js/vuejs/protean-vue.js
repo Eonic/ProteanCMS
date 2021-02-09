@@ -190,6 +190,8 @@ $(document).on("click", ".btn-update", function (event) {
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
     hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
+    RedirectPage.loading = true;
+    RedirectPage.show = true;
     type = RedirectPage.redirectType();
     if (oldUrl != "" && oldUrl!= hiddenOldUrl) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
@@ -218,8 +220,11 @@ $(document).on("click", ".btn-update", function (event) {
         RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl);
 
     }
-   
     $(this).hide();
+    //setTimeout(function () {
+       
+    //}, 1000);
+   
 });
 $(document).on("click", ".btn-delete", function (event) {
 
@@ -262,6 +267,8 @@ if (rediectElement) {
                
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var that = this;
+                that.loading = true;
+                that.show = true;
                 type = this.redirectType();
                 var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
                 axios.post(paginationRedirectsAPIUrl, inputJson)
@@ -274,13 +281,15 @@ if (rediectElement) {
                         if (that.urlList != '') {
                             var tempUrlList = xml[0].childNodes[0].childNodes;
                             that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
+
                             
                         }
                         else {
 
                             that.urlList = xml[0].childNodes[0].childNodes;
                         }
-
+                        that.loading = false;
+                        that.show = false;
                     });
             },
 
@@ -390,18 +399,20 @@ if (rediectElement) {
                 var that = this;
                 that.show = true;
                 that.loading = true;
+                window.setTimeout(function () {
                 if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
-                    
+                    debugger;
                     //var lastDiv = $(".parentDivOfRedirect").last();
-                    //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
-                   
-                    window.setTimeout(function () {
-                        //$(lastDiv).after(span);
-                        that.getPermanentList();
+                    //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg' v-if='loadingscroll' v-show='true'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
+                    //$(lastDiv).after(span);
+                    that.getPermanentList();
+                }
+                      
                     }, 1000);
+                   
                     that.show = false;
                     that.loading = false;
-                }
+               
 
             },
         },
@@ -413,11 +424,17 @@ if (rediectElement) {
     });
 }
 
-
-$(window).bind('scroll', function () {
-    
-    RedirectPage.scrollEvent();
+$('.scolling-pane').on('scroll', function () {
+    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+       
+        RedirectPage.getPermanentList();
+       
+    }
 });
+//$(window).bind('scroll', function () {
+    
+//    RedirectPage.scrollEvent();
+//});
 
 
 
