@@ -10626,7 +10626,7 @@
         </div>
         <div class="terminus">&#160;</div>
         <div class="backTop">
-          <a href="{$currentPage/@url}#pageTop" title="Back to Top">Back To Top</a>
+          <a href="#pageTop" title="Back to Top">Back To Top</a>
         </div>
         <!-- Terminus class fix to floating columns -->
         <div class="terminus">&#160;</div>

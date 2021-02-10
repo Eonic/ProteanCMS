@@ -103,7 +103,7 @@
       <value />
     </input>
       <select1 bind="ewEmailReceipts" appearance="full">
-        <label>Email Receipts test</label>
+        <label>Email Receipts</label>
         <item>
           <label>Yes</label>
           <value>on</value>

@@ -32,7 +32,7 @@ Partial Public Class Cms
 
         Public moPageXML As XmlDocument = New XmlDocument
 
-        Public Shadows mcModuleName As String = "Eonic.Admin"
+        Public Shadows mcModuleName As String = "Protea.Admin"
         Public mcEwCmd As String
         Public mcEwCmd2 As String
         Public mcEwCmd3 As String
@@ -1658,7 +1658,16 @@ ProcessFlow:
                             'return to process flow
                             mcEwCmd = myWeb.moSession("ewCmd")
                             mcEwCmd2 = myWeb.moSession("ewCmd2")
-                            myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies&pgid=1"
+                            'Select Case myWeb.moRequest("dirType")
+                            '    Case "User"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
+                            '    Case "Group"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
+                            '    Case "Group"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
+                            '    Case Else
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
+                            'End Select
                             GoTo ProcessFlow
 
                         Else

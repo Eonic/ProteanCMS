@@ -230,12 +230,12 @@
   </xsl:variable>
   
   <xsl:variable name="GoogleOptimizeID">
-  <!--  <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+  <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
         <xsl:call-template name="getXmlSettings">
           <xsl:with-param name="sectionName" select="'web'"/>
-          <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
+          <xsl:with-param name="valueName" select="'GoogleOptimizeID'"/>
         </xsl:call-template>
-    </xsl:if>-->
+    </xsl:if>
   </xsl:variable>
 
   <xsl:variable name="PayPalTagManagerID">
@@ -618,7 +618,7 @@
       <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
         <link rel="stylesheet" href="/ewcommon/css/Admin/skins/ie8.less"/>
       </xsl:if>
-      <xsl:if test="@ewCmd='EditContent' or @ewCmd='AddContent'">
+      <xsl:if test="@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='CopyContent'">
         <xsl:apply-templates select="." mode="siteStyle"/>
       </xsl:if>
     </xsl:if>
