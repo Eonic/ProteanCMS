@@ -1825,8 +1825,13 @@ Public Class Cms
                                     'Change to redirect to correct URL, automatic redirects for content name changes
 
                                     If RequestedContentName = "" Then
-                                        Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"))
-                                        Me.msRedirectOnEnd = PathBefore & "/" & mnArtId & "-/" & cContentDetailName
+                                        If mcOriginalURL.EndsWith("-/") Then
+                                            Me.msRedirectOnEnd = mcOriginalURL & cContentDetailName
+                                        Else
+                                            Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"))
+                                            Me.msRedirectOnEnd = PathBefore & "/" & mnArtId & "-/" & cContentDetailName
+                                        End If
+
                                     Else
                                         Dim PathBefore As String = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length)
                                         Me.msRedirectOnEnd = PathBefore & cContentDetailName
