@@ -2182,6 +2182,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
+  <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+    ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+     </xsl:if>
+  <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+    ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+  
+  </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
