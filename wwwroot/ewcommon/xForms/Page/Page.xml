@@ -307,7 +307,6 @@
     </submit>
     <group class="redirect-modal">
       <input type="hidden" bind=""></input>
-      
     </group>
   </group>   
 </Content>

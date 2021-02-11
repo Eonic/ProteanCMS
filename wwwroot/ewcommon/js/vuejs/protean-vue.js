@@ -18,17 +18,24 @@ Vue.mixin({
     }
 });
 
+$(document).on("change", "#cStructName", function (event) {
+    var newStructName = $(this).val();
+    editPage.structNameOnChange(newStructName);
+   
+});
+
 //Edit Page
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
     window.editPage = new Vue({
         el: "#EditPage",
         data: {
-            structName: ""
+            structName: "",
+            originalStructureName: ""
         },
         methods: {
             createRedirects: function () {
-
+                debugger;
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -51,26 +58,37 @@ if (editPageElement) {
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
                     });
-            }
-        },
-        watch: {
-            // whenever StructName changes, this function will run
-            structName: function (newStructName) {
-                debugger;
+            },
+            structNameOnChange: function (newStructName) {
+               
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
 
                     redirectModal.toggleModal();
-
-                } else {
-                    redirectModal.showRedirectModal = false;
-                    localStorage.originalStructName = newStructName;
+                    $("#OldPageName").val(localStorage.originalStructName);
+                    $("#NewPageName").val(newStructName);
 
                 }
 
             }
         },
+        watch: {
+            // whenever StructName changes, this function will run
+            //structName: function (newStructName) {
+            //    debugger;
+            //    if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+
+            //        redirectModal.toggleModal();
+
+            //    } else {
+            //        redirectModal.showRedirectModal = false;
+            //        localStorage.originalStructName = newStructName;
+
+            //    }
+
+            //}
+        },
         mounted: function () {
-            //debugger;
+           
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -82,6 +100,7 @@ if (editPageElement) {
                 localStorage.removeItem('originalStructName');
             }
             localStorage.pageId = pageId;
+            localStorage.originalStructName = this.structName;
         }
     });
 }
@@ -95,8 +114,9 @@ if (redirectModalElement) {
         },
         methods: {
             toggleModal: function () {
-                $("#redirectModal").removeClass("hidden");
-                this.showRedirectModal = !this.showRedirectModal;
+               
+                $("#redirectModal").modal("show");
+                
             }
         }
     });
