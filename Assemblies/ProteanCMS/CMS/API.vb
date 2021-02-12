@@ -43,6 +43,10 @@ Public Class API
                 Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
                 mnUserId = oMembershipProv.Activities.GetUserId(Me)
 
+                If moSession("adminMode") = "true" Then
+                    mbAdminMode = True
+                    ' moDbHelper.gbAdminMode = mbAdminMode
+                End If
             End If
 
             'We need the userId placed into dbhelper.
