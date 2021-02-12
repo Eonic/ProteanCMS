@@ -3935,57 +3935,7 @@
     <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 
   </xsl:template>
-  <!--<xsl:template match="group[@class='addNewUrl-modal']" mode="xform">-->
-  <!--<div id="addNewUrl" class="addNewUrl hidden" data-toggle="modal">
-      <div v-if="showAddNewUrl" >
-        <transition name="modal">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <label>301 (PERMINENT) PAGE REDIRECTS</label>
-                    <button type="button" class="close" v-on:click="showAddNewUrl=false">
-                      <span aria-hidden="true">&#215;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group repeat-group ">
-                      <fieldset class="rpt-00">
-                        <div class="form-group input-containing col-md-5">
-                        
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <label>Old URL</label>
-                            <input type="text" name="OldUrl" id="OldUrlmodal" class="col-md-5 textbox form-control"/>
-                          </div>
-                        </div>
-                        <div class="form-group input-containing col-md-5">
-                          
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <label>New URL</label>
-                            <input type="text" name="NewUrl" id="NewUrlModal" class="col-md-5 textbox form-control"/>
-                          </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-
-                    <button class="btn btn-primary" v-on:click="showAddNewUrl=false">Cancel</button>
-                    <button type="button"  v-on:click="SaveNewUrl()"
-											class="btn btn-primary addRedirectbtn">
-                      save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </transition>
-      </div>
-    </div>-->
-
-  <!--</xsl:template>-->
+  
 
   <!-- -->
   <!--   ##################  PageSettings  ##############################   -->
@@ -12520,12 +12470,12 @@
   <xsl:template match="input[@class='RedirectPage']" mode="xform" >
 
     <div class="row">
-      <div class="col-md-8">
-        <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
+      <!--<div class="col-md-8">
+        <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" >
           <i class="fa fa-plus fa-white"> </i> Add New URL
         </button>
         &#160;
-      </div>
+      </div>-->
       <div class="col-md-4">
         <div class="input-group col-md-4">
           <span class="input-group-btn">
@@ -12555,7 +12505,7 @@
         </div>
 
       </div>
-      <!--<div class="form-group  repeat-group newAddFormInline hidden">
+      <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
         <fieldset class="rpt-00 row">
           <div class="form-group input-containing col-md-5">
 
@@ -12573,14 +12523,40 @@
           <div class="form-group input-containing col-md-2">
 
             <div class="control-wrapper input-wrapper appearance-">
-              <button type="button"  v-on:click="SaveNewUrl()" class="btn btn-primary addRedirectbtn">
-                Save
+              <button type="button"  class="btn btn-primary addRedirectbtn">
+                Add new Url
               </button>
             </div>
           </div>
 
         </fieldset>
-      </div>-->
+      </div>
+      <div  class="form-group  repeat-group ListOfNewAddedUrls hidden" v-for="urls in newAddedUrlList" >
+        <fieldset class="rpt-00 row">
+          <div class="form-group input-containing col-md-5" >
+
+            <div class="control-wrapper input-wrapper appearance-">
+
+              <input type="text" name="OldUrl"  class="textbox form-control" v-bind:value="urls.oldUrl"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <input type="text" name="NewUrl"  class="textbox form-control" v-bind:value="urls.NewUrl"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-2">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <button type="button"  class="btn btn-danger delAddNewUrl">
+                Del
+              </button>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
       <div class="scolling-pane">
         <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
           <fieldset v-bind:class="'row repeated rpt_'+ index">

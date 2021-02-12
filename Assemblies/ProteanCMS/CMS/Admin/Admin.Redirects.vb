@@ -256,7 +256,7 @@ Partial Public Class Cms
                         Dim TotalCount As Integer = 0
                         Dim skipRecords As Integer = 0
 
-                        myWeb.moSession("loadCount") = pageloadCount
+
 
                         Dim takeRecord As Integer = pageloadCount
                         Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)

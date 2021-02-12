@@ -122,62 +122,14 @@ if (redirectModalElement) {
         }
     });
 }
-const addNewUrlModalElement = document.querySelector("#addNewUrl");
-if (addNewUrlModalElement) {
-    window.addNewUrl = new Vue({
-        el: "#addNewUrl",
-        data: {
-            showAddNewUrl: false,
-            show: false,
-            loading: false
-        },
-        methods: {
-            toggleModal: function () {
+//$(".btnaddNewUrl").click(function () {
+//    //addNewUrl.toggleModal();
+//    $(".newAddFormInline").removeClass("hidden");
+//});
+$(document).on("click", ".addRedirectbtn", function (event) {
 
-                //$("#addNewUrl").attr("data-dismiss","modal");
-                this.showAddNewUrl = !this.showAddNewUrl;
-            },
-            SaveNewUrl: function () {
-                $('#addNewUrl').modal('hide');
-                $(".vueloadimgforModal").removeClass("hidden");
-
-                var oldUrl = $("#OldUrlmodal").val();
-                var NewUrl = $("#NewUrlModal").val();
-                type = RedirectPage.redirectType();
-                if (oldUrl != "") {
-                    var inputJson = { redirectType: type, oldUrl: oldUrl };
-                    axios.post(IsUrlPResentAPI, inputJson)
-                        .then(function (response) {
-
-                            if (response.data == "True") {
-                                if (confirm("Old url is already exist. Do you want to replace it?")) {
-                                    $(".vueloadimgforModal").addClass("hidden");
-                                    RedirectPage.addNewUrl(oldUrl, NewUrl);
-                                }
-                                else {
-                                    $(".vueloadimgforModal").addClass("hidden");
-                                    return false;
-                                }
-                            }
-                            else {
-                                $(".vueloadimgforModal").addClass("hidden");
-                                RedirectPage.addNewUrl(oldUrl, NewUrl);
-
-                            }
-                            $("#OldUrlmodal").text("");
-                            $("#NewUrlModal").text("");
-                        });
-
-
-                }
-
-            }
-        }
-    });
-}
-$(".btnaddNewUrl").click(function () {
-    //addNewUrl.toggleModal();
-    $(".newAddFormInline").removeClass("hidden");
+    debugger;
+    RedirectPage.SaveNewUrl();
 });
 $(".close").click(function () {
     $('#addNewUrl').modal('hide');
@@ -293,11 +245,12 @@ if (rediectElement) {
             type: '',
             show: false,
             loading: false,
-            loadingscroll: false
+            loadingscroll:false,
+            newAddedUrlList: [],
         },
         methods: {
             getPermanentList: function () {
-                debugger;
+               
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
 
@@ -364,6 +317,7 @@ if (rediectElement) {
                         that.urlList = xml[0].childNodes[0].childNodes;
                         that.show = false;
                         that.loading = false;
+                        $(".newAddFormInline").addClass("hidden");
 
                     });
 
@@ -377,7 +331,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                       
                         if (response.data == "success") {
                             that.show = false;
                             that.loading = false;
@@ -465,7 +419,11 @@ if (rediectElement) {
 
 
                     var that = this;
+
                     var totalCountOfLoad = ($(".parentDivOfRedirect").length);
+                    if (totalCountOfLoad < 50) {
+                        totalCountOfLoad = 50;
+                    }
                     if (flag == "saveURL") {
                         that.urlList = [];
 
@@ -496,6 +454,57 @@ if (rediectElement) {
                         });
                 }
             },
+            SaveNewUrl: function () {
+                debugger;
+                var that = this;
+                var oldUrl = $("#OldUrlmodal").val();
+                var NewUrl = $("#NewUrlModal").val();
+                that.loading = true;
+                that.show = true;
+                type = RedirectPage.redirectType();
+                if (oldUrl != "") {
+                    var inputJson = { redirectType: type, oldUrl: oldUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+
+                                    that.addNewUrl(oldUrl, NewUrl);
+                                }
+                                else {
+
+                                    return false;
+                                }
+                            }
+                            else {
+
+                                that.addNewUrl(oldUrl, NewUrl);
+
+                            }
+                            debugger;
+                            if (that.newAddedUrlList != '') {
+                                var tempUrlList = { 'oldUrl': oldUrl,'NewUrl': NewUrl }
+                                that.newAddedUrlList = tempUrlList;//$.merge($.merge([], that.newAddedUrlList), tempUrlList);
+
+
+                            }
+                            else {
+
+                                that.newAddedUrlList = { 'oldUrl': oldUrl, 'NewUrl': NewUrl }
+                            }
+                           
+                            $("#OldUrlmodal").val("");
+                            $("#NewUrlModal").val("");
+                            that.loading = true;
+                            that.show = true;
+                            $(".ListOfNewAddedUrls").removeClass("hidden");
+                        });
+
+
+                }
+
+            }
         },
         mounted: function () {
             this.getPermanentList();

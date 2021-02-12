@@ -57,14 +57,9 @@ Partial Public Class Cms
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim JsonResult As String = ""
                 Try
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-
-                    JsonResult = moAdminRedirect.urlsForPegination(redirectType, pageloadCount)
-                    ' End If
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.urlsForPegination(redirectType, pageloadCount)
+                    End If
                     Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -79,15 +74,10 @@ Partial Public Class Cms
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
                 Try
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
                     If myApi.mbAdminMode Then
                         JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl)
                     End If
 
-                    ' End If
                     Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -101,14 +91,9 @@ Partial Public Class Cms
                 Dim searchObj As String = inputJson("searchObj").ToObject(Of String)
                 Try
                     Dim JsonResult As String = ""
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-
-                    JsonResult = moAdminRedirect.searchUrl(redirectType, searchObj)
-                    'End If
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.searchUrl(redirectType, searchObj)
+                    End If
                     Return JsonResult
 
                 Catch ex As Exception
@@ -128,13 +113,9 @@ Partial Public Class Cms
                 Dim JsonResult As String = ""
 
                 Try
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                    JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl, hiddenOldUrl)
-                    'End If
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl, hiddenOldUrl)
+                    End If
                     Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -151,13 +132,9 @@ Partial Public Class Cms
                 Dim JsonResult As String = ""
 
                 Try
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                    JsonResult = moAdminRedirect.deleteUrls(redirectType, oldUrl, newUrl)
-                    'End If
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.deleteUrls(redirectType, oldUrl, newUrl)
+                    End If
 
                     Return JsonResult
                 Catch ex As Exception
@@ -170,9 +147,9 @@ Partial Public Class Cms
                 Dim JsonResult As String = ""
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of Integer)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
-
-                JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)
-
+                If myApi.mbAdminMode Then
+                    JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)
+                End If
                 Return JsonResult
             End Function
 
@@ -184,14 +161,10 @@ Partial Public Class Cms
                 Dim index As String = inputJson("index").ToObject(Of String)
                 Dim JsonResult As String = ""
                 Try
-                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
+                    If myApi.mbAdminMode Then
 
-                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
-                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-
-                    JsonResult = moAdminRedirect.LoadAllurls(redirectType, pageloadCount, actionFlag)
-                    ' End If
+                        JsonResult = moAdminRedirect.LoadAllurls(redirectType, pageloadCount, actionFlag)
+                    End If
                     Return JsonResult
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
