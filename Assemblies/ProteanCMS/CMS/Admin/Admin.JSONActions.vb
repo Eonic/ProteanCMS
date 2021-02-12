@@ -174,9 +174,31 @@ Partial Public Class Cms
 
                 Return JsonResult
             End Function
+
+            Public Function loadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+
+                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
+                Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
+                Dim actionFlag As String = inputJson("flag").ToObject(Of String)
+                Dim index As String = inputJson("index").ToObject(Of String)
+                Dim JsonResult As String = ""
+                Try
+                    'Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
+
+                    'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+                    'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+
+
+                    JsonResult = moAdminRedirect.LoadAllurls(redirectType, pageloadCount, actionFlag)
+                    ' End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+
+            End Function
         End Class
-
-
 #End Region
 
     End Class

@@ -5,6 +5,7 @@ var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
 var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
 var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
 var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
+var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
 
 
 Vue.mixin({
@@ -21,7 +22,7 @@ Vue.mixin({
 $(document).on("change", "#cStructName", function (event) {
     var newStructName = $(this).val();
     editPage.structNameOnChange(newStructName);
-   
+
 });
 
 //Edit Page
@@ -60,7 +61,7 @@ if (editPageElement) {
                     });
             },
             structNameOnChange: function (newStructName) {
-               
+
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
 
                     redirectModal.toggleModal();
@@ -88,7 +89,7 @@ if (editPageElement) {
             //}
         },
         mounted: function () {
-           
+
             var cStructName = document.getElementById('cStructName');
             if (cStructName != null) {
                 this.structName = cStructName.value;
@@ -114,9 +115,9 @@ if (redirectModalElement) {
         },
         methods: {
             toggleModal: function () {
-               
+
                 $("#redirectModal").modal("show");
-                
+
             }
         }
     });
@@ -139,7 +140,7 @@ if (addNewUrlModalElement) {
             SaveNewUrl: function () {
                 $('#addNewUrl').modal('hide');
                 $(".vueloadimgforModal").removeClass("hidden");
-               
+
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
                 type = RedirectPage.redirectType();
@@ -193,18 +194,18 @@ $('.btnSearchUrl').on('click', function (event) {
 
 });
 $('.btnClear').on('click', function (event) {
-   
-        location.reload();
+
+    location.reload();
 
 });
 
 
 $(document).on("click", ".btn-update", function (event) {
-   
+
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
-   
+
     $(savedlbl).removeClass("hidden");
     var oldUrl = "";
     var NewUrl = "";
@@ -213,24 +214,20 @@ $(document).on("click", ".btn-update", function (event) {
     var input = $(parentDiv).find('input[type="text"]');
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
-    $(input[0]).removeAttr("value");
-    $(input[1]).removeAttr("value");
-    $(input[0]).val("");
-    $(input[1]).val("");
-    
+    var index = $(input[0]).attr("id").split('_').pop();;
 
 
 
-   
+
     hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
     RedirectPage.loading = true;
     RedirectPage.show = true;
     type = RedirectPage.redirectType();
-    if (oldUrl != "" && oldUrl!= hiddenOldUrl) {
+    if (oldUrl != "" && oldUrl != hiddenOldUrl) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-               
+
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
@@ -240,24 +237,24 @@ $(document).on("click", ".btn-update", function (event) {
                     }
                 }
                 else {
-                    RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl);
+                    RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
 
                 }
-               
+
             });
 
 
     }
 
     else {
-        RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl);
+        RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
 
     }
-   // $(this).hide();
+    // $(this).hide();
     setTimeout(function () {
         $(savedlbl).addClass("hidden");
     }, 10000);
-    
+
 });
 $(document).on("click", ".btn-delete", function (event) {
 
@@ -272,10 +269,10 @@ $(document).on("click", ".btn-delete", function (event) {
 });
 
 $(document).on("mouseup", ".redirecttext", function (event) {
-   
+
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var button = $(parentDiv).find('button[type="button"]');
-   
+
     $(".btn-update").addClass("hidden");
     $(".tempLableSave").addClass("hidden");
     $(button[0]).removeClass("hidden");
@@ -299,32 +296,28 @@ if (rediectElement) {
             loadingscroll: false
         },
         methods: {
-            getPermanentList: function (flag) {
+            getPermanentList: function () {
                 debugger;
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
-                if (flag == "saveURL") {
-                    that.urlList = [];
-                     totalCountOfLoad = ($(".parentDivOfRedirect").length)-50;
-                }
-               
-               
+
+
                 that.loading = true;
                 that.show = true;
                 type = this.redirectType();
                 var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                      
+
                         var xmlString = response.data;
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
-                       
+
                         if (that.urlList != '') {
                             var tempUrlList = xml[0].childNodes[0].childNodes;
                             that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
 
-                            
+
                         }
                         else {
 
@@ -375,7 +368,7 @@ if (rediectElement) {
                     });
 
             },
-            saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
+            saveUrl: function (oldUrl, newUrl, hiddenOldUrl, index) {
 
                 var that = this;
                 that.show = true;
@@ -384,28 +377,28 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        
+                        debugger;
                         if (response.data == "success") {
                             that.show = false;
                             that.loading = false;
                             var flag = "saveURL";
-                            that.getPermanentList(flag);
+                            that.reloadPermanentList(flag, index);
 
                         }
-                      
+
                     });
             },
             DeleteUrl: function (oldUrl, NewUrl) {
-               
+
                 var that = this;
                 that.show = true;
                 that.loading = true;
-                
+
                 type = this.redirectType();
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-                        
+
                         if (response.data == "success") {
                             that.loading = false;
                             that.show = false;
@@ -440,57 +433,68 @@ if (rediectElement) {
 
             },
             scrollEvent: function () {
-               
+
                 var that = this;
                 that.show = true;
                 that.loading = true;
                 window.setTimeout(function () {
-                if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
-                    debugger;
-                    //var lastDiv = $(".parentDivOfRedirect").last();
-                    //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg' v-if='loadingscroll' v-show='true'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
-                    //$(lastDiv).after(span);
-                    that.getPermanentList();
-                }
-                      
-                    }, 1000);
-                   
-                    that.show = false;
-                    that.loading = false;
-               
+                    if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
+                        debugger;
+                        //var lastDiv = $(".parentDivOfRedirect").last();
+                        //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg' v-if='loadingscroll' v-show='true'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
+                        //$(lastDiv).after(span);
+                        that.getPermanentList();
+                    }
+
+                }, 1000);
+
+                that.show = false;
+                that.loading = false;
+
 
             },
 
-            reloadPermanentList: function (flag) {
-                debugger;
-                var that = this;
-                var totalCountOfLoad = $(".parentDivOfRedirect").length;
-               
+            reloadPermanentList: function (flag, index) {
 
-                that.loading = true;
-                that.show = true;
-                type = this.redirectType();
-                var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag};
-                axios.post(paginationRedirectsAPIUrl, inputJson)
-                    .then(function (response) {
+                var searchObj = $("#SearchURLText").val();
+                if (searchObj != "") {
 
-                        var xmlString = response.data;
-                        var xmlDocument = $.parseXML(xmlString);
-                        var xml = $(xmlDocument);
-
-                        if (that.urlList != '') {
-                            var tempUrlList = xml[0].childNodes[0].childNodes;
-                            that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
+                    RedirectPage.getSearchList(searchObj);
+                }
+                else {
 
 
-                        }
-                        else {
+                    var that = this;
+                    var totalCountOfLoad = ($(".parentDivOfRedirect").length);
+                    if (flag == "saveURL") {
+                        that.urlList = [];
 
-                            that.urlList = xml[0].childNodes[0].childNodes;
-                        }
-                        that.loading = false;
-                        that.show = false;
-                    });
+                    }
+                    that.loading = true;
+                    that.show = true;
+                    type = this.redirectType();
+                    var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag, index: index };
+                    axios.post(LoadAllURLAPI, inputJson)
+                        .then(function (response) {
+                           
+                            var xmlString = response.data;
+                            var xmlDocument = $.parseXML(xmlString);
+                            var xml = $(xmlDocument);
+
+                            if (that.urlList != '') {
+                                var tempUrlList = xml[0].childNodes[0].childNodes;
+                                that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
+
+
+                            }
+                            else {
+
+                                that.urlList = xml[0].childNodes[0].childNodes;
+                            }
+                            that.loading = false;
+                            that.show = false;
+                        });
+                }
             },
         },
         mounted: function () {
@@ -503,9 +507,9 @@ if (rediectElement) {
 
 $('.scolling-pane').on('scroll', function () {
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-       
+
         RedirectPage.getPermanentList();
-       
+
     }
 });
 

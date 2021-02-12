@@ -41,63 +41,63 @@ Partial Public Class Cms
                     End If
 
                     If existingRedirects.Count > 0 Then
-                            For Each existingNode As XmlNode In existingRedirects
-                                Dim newNode As XmlNode = existingNode
-                                newNode.Attributes.Item(0).InnerXml = OldUrl
-                                newNode.Attributes.Item(1).InnerXml = NewUrl
-                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                            Next
+                        For Each existingNode As XmlNode In existingRedirects
+                            Dim newNode As XmlNode = existingNode
+                            newNode.Attributes.Item(0).InnerXml = OldUrl
+                            newNode.Attributes.Item(1).InnerXml = NewUrl
+                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                        Next
+                    Else
+
+                        'Add redirect
+                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+                        Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                        If Not redirectSectionXmlNode Is Nothing Then
+                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                            replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
+
+                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                            rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
+                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                        End If
+                    End If
+                    'Determine all the paths that need to be redirected
+                    If redirectType = 301 Then
+                        'step through and create rules to deal with paths
+                        Dim folderRules As New ArrayList
+                        Dim rulesXml As New XmlDocument
+                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
+                        Dim oRule As XmlElement
+
+                        'For Each oRule In replacerNode.SelectNodes("add")
+                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
+                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                        Dim matchString As String = OldUrl
+                        If matchString.StartsWith("/") Then
+                            matchString = matchString.TrimStart("/")
+                        End If
+                        folderRules.Add("Folder: " & OldUrl)
+                        newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
+                        If CurrentRule Is Nothing Then
+                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
                         Else
-
-                            'Add redirect
-                            Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
-                            Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                            If Not redirectSectionXmlNode Is Nothing Then
-                                Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
-                                replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
-
-                                ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
-                                rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
-                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
-                            End If
+                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
                         End If
-                        'Determine all the paths that need to be redirected
-                        If redirectType = 301 Then
-                            'step through and create rules to deal with paths
-                            Dim folderRules As New ArrayList
-                            Dim rulesXml As New XmlDocument
-                            rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                            Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: 301 Redirects']")
-                            Dim oRule As XmlElement
+                        'Next
 
-                            'For Each oRule In replacerNode.SelectNodes("add")
-                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
-                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                            Dim matchString As String = OldUrl
-                            If matchString.StartsWith("/") Then
-                                matchString = matchString.TrimStart("/")
+                        For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                            If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                                oRule.ParentNode.RemoveChild(oRule)
                             End If
-                            folderRules.Add("Folder: " & OldUrl)
-                            newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
-                            If CurrentRule Is Nothing Then
-                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                            Else
-                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                            End If
-                            'Next
+                        Next
 
-                            For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                                If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                                    oRule.ParentNode.RemoveChild(oRule)
-                                End If
-                            Next
+                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                        myWeb.bRestartApp = True
+                    End If
 
-                            rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                            myWeb.bRestartApp = True
-                        End If
-
-                        Dim Result As String = "success"
-                        Return Result
+                    Dim Result As String = "success"
+                    Return Result
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CreateRedirect", ex, ""))
@@ -238,6 +238,58 @@ Partial Public Class Cms
                     Result = "false"
                 End If
                 Return Result
+            End Function
+
+            Public Function LoadAllurls(ByRef redirectType As RedirectType, ByRef pageloadCount As Integer, ByRef flag As String) As String
+                Try
+
+                    Dim Result As String = ""
+                    Dim rewriteXml As New XmlDocument
+                    rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                    Dim oCgfSectName As String = "system.webServer"
+                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+
+                    If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
+
+                        Dim PerPageCount As Integer = 50
+                        Dim TotalCount As Integer = 0
+                        Dim skipRecords As Integer = 0
+
+                        myWeb.moSession("loadCount") = pageloadCount
+
+                        Dim takeRecord As Integer = pageloadCount
+                        Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                        TotalCount = props.ChildNodes.Count
+
+                        If props.ChildNodes.Count >= PerPageCount Then
+                            Dim xmlstring As String = "<rewriteMap name='" & redirectType & "Redirect'>"
+                            Dim xmlstringend As String = "</rewriteMap>"
+
+                            Dim count As Integer = 0
+
+                            For i As Integer = skipRecords To props.ChildNodes.Count - 1
+                                If i > (skipRecords + takeRecord) - 1 Then
+                                    Exit For
+                                Else
+                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                End If
+
+                            Next
+                            Result = xmlstring & xmlstringend
+
+                        Else
+                            Result = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                        End If
+
+                    End If
+
+                    Return Result
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+
             End Function
         End Class
     End Class
