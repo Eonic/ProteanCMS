@@ -2504,7 +2504,7 @@
   
   <xsl:template match="group[@class='modal-confirm']" mode="xform">
     <xsl:param name="class"/>
-    <div class="modal hidden">
+    <div id="modal-confirm" class="modal fade" tabindex="-1">
       <xsl:if test=" @id!='' ">
         <xsl:attribute name="id">
           <xsl:value-of select="@id"/>

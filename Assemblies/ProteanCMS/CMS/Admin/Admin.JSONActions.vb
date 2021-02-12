@@ -83,8 +83,9 @@ Partial Public Class Cms
 
                     'Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
                     'If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
-
-                    JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl)
+                    If myApi.mbAdminMode Then
+                        JsonResult = moAdminRedirect.CreateRedirect(redirectType, oldUrl, newUrl)
+                    End If
 
                     ' End If
                     Return JsonResult
