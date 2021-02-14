@@ -1832,6 +1832,7 @@ processFlow:
 
                     If sMessagingProvider <> "" Or (moMailConfig("InvoiceList") <> "" And moMailConfig("QuoteList") <> "") Then
                         Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                        Dim xsltPath As String = String.Empty
                         If Email = "" Then Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText
                         If Name = "" Then Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText
                         If valDict Is Nothing Then valDict = New System.Collections.Generic.Dictionary(Of String, String)
@@ -1848,14 +1849,7 @@ processFlow:
                             lastName = fullName(2)
                         End If
 
-                        Dim xsltPath As String = moMailConfig("Pure360InvoiceList")
-                        If (xsltPath <> "") Then
-                            valDict = GetDisctionaryForCampaigning(xsltPath, oCartElmt, valDict)
-                        Else
-                            valDict.Add("Email", Email)
-                            valDict.Add("FirstName", firstName)
-                            valDict.Add("LastName", lastName)
-                        End If
+
 
 
 
@@ -1864,10 +1858,12 @@ processFlow:
                             Case "Invoice"
                                 ListId = moMailConfig("InvoiceList")
                                 If moMailConfig("InvoiceList") <> "" Then
+                                    xsltPath = moMailConfig("Pure360InvoiceList")
                                     oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
                                 End If
                             Case "Quote"
                                 If moMailConfig("QuoteList") <> "" Then
+                                    xsltPath = moMailConfig("Pure360QuoteList")
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
                                 ListId = moMailConfig("QuoteList")
@@ -1878,6 +1874,14 @@ processFlow:
                                 ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
+
+                            If (xsltPath <> "") Then
+                                valDict = GetDisctionaryForCampaigning(xsltPath, oCartElmt, valDict)
+                            Else
+                                valDict.Add("Email", Email)
+                                valDict.Add("FirstName", firstName)
+                                valDict.Add("LastName", lastName)
+                            End If
                             oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
                         End If
 
