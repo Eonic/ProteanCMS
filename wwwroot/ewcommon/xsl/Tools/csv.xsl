@@ -4,7 +4,7 @@
 	
   <xsl:template match="Page">
 
-		<xsl:for-each select="ContentDetail/Report | ContentDetail/Content[@type='Report']/Report"">
+		<xsl:for-each select="ContentDetail/Report | ContentDetail/Content[@type='Report']/Report">
 			<xsl:apply-templates select="." mode="reportTitles"/>
 			<xsl:apply-templates select="Item" mode="reportRow"/>
 		</xsl:for-each>
