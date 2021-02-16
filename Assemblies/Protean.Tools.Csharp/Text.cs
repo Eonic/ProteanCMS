@@ -472,7 +472,10 @@ public static class Text
                     cName = Strings.Replace(cName, "&", "and");
                 int i;
                 string cBuilt = "";
-                var loopTo = cName.Length;
+                    var loopTo = 0;
+                        if (cName!= null) {                         
+                        loopTo = loopTo + cName.Length;
+                    }
                 for (i = 0; i <= loopTo; i++)
                 {
                     string cTest = Strings.Right(Strings.Left(cName, i), 1);
@@ -481,19 +484,18 @@ public static class Text
                 }
                 cName = cBuilt;
                 // replace double spaces a few times
-                cName = Strings.Replace(cName, "  ", " ");
-                cName = Strings.Replace(cName, "  ", " ");
-                cName = Strings.Replace(cName, "  ", " ");
-
-
+                cName = "" + Strings.Replace(cName, "  ", " ");
+                cName = "" + Strings.Replace(cName, "  ", " ");
+                cName = "" + Strings.Replace(cName, "  ", " ");
 
                 if (bURLSafe) { 
-                    cName = cName.Replace(" ", "-");
+                    cName = "" + cName.Replace(" ", "-");
                     // replace double hyphens a few times
-                    cName = Strings.Replace(cName, "---", "-");
-                    cName = Strings.Replace(cName, "--", "-");
-                    //trim to max filename length with .html
-                    if (cName.Length > 249) {
+                    cName = "" + Strings.Replace(cName, "---", "-");
+                    cName = "" + Strings.Replace(cName, "--", "-");
+                        //trim to max filename length with .html
+
+                        if (cName.Length > 249) {
                             cName = cName.Substring(0, 249);
                     }
                 }
