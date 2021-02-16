@@ -175,6 +175,11 @@ Public Class Cms
     Private _workingSetPrivateMemoryCounter As PerformanceCounter
     Public mcOutputFileName As String = "FileName.pdf"
 
+    Private Const NotFoundPagePath As String = "/System-Pages/Page-Not-Found"
+    Private Const AccessDeniedPagePath As String = "/System-Pages/Access-Denied"
+    Private Const LoginRequiredPagePath As String = "/System-Pages/Login-Required"
+    Private Const ProteanErrorPagePath As String = "/System-Pages/Protean-Error"
+
 #End Region
 #Region "Enums"
     Enum pageResponseType
@@ -534,16 +539,16 @@ Public Class Cms
                 End If
                 'Get system page ID's for application level
                 If goApp("PageNotFoundId") Is Nothing Then
-                    goApp("PageNotFoundId") = moDbHelper.getPageIdFromPath("System+Pages/Page+Not+Found", False, False)
+                    goApp("PageNotFoundId") = moDbHelper.getPageIdFromPath(NotFoundPagePath, False, False)
                 End If
                 If goApp("PageAccessDeniedId") Is Nothing Then
-                    goApp("PageAccessDeniedId") = moDbHelper.getPageIdFromPath("System+Pages/Access+Denied", False, False)
+                    goApp("PageAccessDeniedId") = moDbHelper.getPageIdFromPath(AccessDeniedPagePath, False, False)
                 End If
                 If goApp("PageLoginRequiredId") Is Nothing Then
-                    goApp("PageLoginRequiredId") = moDbHelper.getPageIdFromPath("System+Pages/Login+Required", False, False)
+                    goApp("PageLoginRequiredId") = moDbHelper.getPageIdFromPath(LoginRequiredPagePath, False, False)
                 End If
                 If goApp("PageErrorId") Is Nothing Then
-                    goApp("PageErrorId") = moDbHelper.getPageIdFromPath("System+Pages/Protean+Error", False, False)
+                    goApp("PageErrorId") = moDbHelper.getPageIdFromPath(ProteanErrorPagePath, False, False)
                 End If
 
                 gnPageNotFoundId = goApp("PageNotFoundId")
@@ -7243,10 +7248,7 @@ Public Class Cms
 
                         ' If nothing is found then display an error
                         If documentPaths.Count = 0 Then
-
-                            sProcessInfo = "File(s) Not Found: " & filesNotFound & "; Content Id(s) requested:" & moRequest("docId")
-                            Err.Raise(1007)
-
+                            Redirect404(NotFoundPagePath)
                         End If
 
                     End If
@@ -7257,8 +7259,8 @@ Public Class Cms
                     sSql = "select * from tblContent where nContentKey = " & aDocId(0)
                     oDS = moDbHelper.GetDataSet(sSql, "Item")
 
-                    If oDS.Tables.Count = 0 Then
-                        'ErrorDoc("Document was not found in database", moRequest("docId"), "")
+                    If IsNothing(oDS) Or oDS.Tables.Count = 0 Then
+                        Redirect404(NotFoundPagePath)
                     Else
 
                         Dim allowAccess As Boolean = True
@@ -7284,7 +7286,9 @@ Public Class Cms
 
                         If allowAccess Then
 
-                            strFilePath = moDbHelper.getContentFilePath(oDS.Tables("Item").Rows(0), moRequest("xPath"))
+                            If oDS.Tables("Item")?.Rows?.Count > 0 Then
+                                strFilePath = moDbHelper.getContentFilePath(oDS.Tables("Item").Rows(0), moRequest("xPath"))
+                            End If
 
                             If strFilePath <> "" Then
                                 'lets clear up the file name
@@ -7353,9 +7357,8 @@ Public Class Cms
                                     End If
 
                                     If goApp("PageNotFoundId") <> RootPageId Then
-                                        Me.msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                        moResponse.Redirect(msRedirectOnEnd, False)
                                         moCtx.ApplicationInstance.CompleteRequest()
+                                        Redirect404(NotFoundPagePath)
                                     Else
                                         ' Kept for follow up window, however does this send original mail out?
                                         sProcessInfo = "File Not Found:" & strFilePath
@@ -7367,18 +7370,16 @@ Public Class Cms
                             Else
                                 ' Content ID exists but is does not contain an xPath so is not a valid document
                                 If gnPageNotFoundId > 1 Then
-                                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                    moResponse.StatusCode = 404
+                                    Redirect404(NotFoundPagePath)
                                 Else
-                                    msRedirectOnEnd = moConfig("BaseUrl")
-                                    moResponse.StatusCode = 404
+                                    Redirect404(moConfig("BaseUrl"))
                                 End If
                             End If
 
 
                         Else
                             moSession("LogonRedirect") = moRequest.ServerVariables("PATH_INFO") & "?" & moRequest.ServerVariables("QUERY_STRING")
-                            Me.msRedirectOnEnd = "/System+Pages/Access+Denied"
+                            Me.msRedirectOnEnd = AccessDeniedPagePath
 
                             moResponse.Redirect(msRedirectOnEnd, False)
                             moCtx.ApplicationInstance.CompleteRequest()
@@ -7392,11 +7393,9 @@ Public Class Cms
 
                 'put this in to prevent a redirect if we are calling this from somewhere strange.
                 If gnPageNotFoundId > 1 Then
-                    msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                    moResponse.StatusCode = 404
+                    Redirect404(NotFoundPagePath)
                 Else
-                    msRedirectOnEnd = moConfig("BaseUrl")
-                    moResponse.StatusCode = 404
+                    Redirect404(moConfig("BaseUrl"))
                 End If
 
                 '  ctx.Response.StatusCode = 404
@@ -7411,6 +7410,12 @@ Public Class Cms
             moResponse.Write(msException)
         End Try
 
+    End Sub
+
+    Public Sub Redirect404(ByVal PagePath As String)
+        msRedirectOnEnd = PagePath
+        moResponse.StatusCode = 404
+        moResponse.Redirect(msRedirectOnEnd, False)
     End Sub
 
     Public Sub returnPageAsPDF(ByRef ctx As System.Web.HttpContext)
@@ -7553,7 +7558,7 @@ Public Class Cms
         Catch ex As Exception
 
             'returnException(msException, mcModuleName, "returnDocumentFromItem", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "returnDocumentFromItem", ex, sProcessInfo))
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "returnPageAsPDF", ex, sProcessInfo))
             moResponse.Write(msException)
         End Try
 
