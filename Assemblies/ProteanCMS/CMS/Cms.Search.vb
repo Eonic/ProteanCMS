@@ -507,6 +507,86 @@ Partial Public Class Cms
                     End If
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
@@ -516,9 +596,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("Hits", HitsLimit)
-
-                    resultsXML.SetAttribute("PerPageCount", PerPageCount)
-
+                    resultsXML.SetAttribute("satrtCount", HitsLimit - PerPageCount)
 
                     Dim artIdResults As New List(Of Long)
                     Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount

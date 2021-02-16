@@ -1360,7 +1360,19 @@ ProcessFlow:
                             If String.IsNullOrEmpty(myWeb.mcBehaviourAddPageCommand) And String.IsNullOrEmpty(myWeb.mcBehaviourEditPageCommand) Then
 
                                 ' Default behaviour
-                                If myWeb.moSession("lastPage") <> "" Then
+                                If myWeb.moRequest("returnCmd") <> "" Then
+                                    Dim returnPageId As Integer
+                                    If mcEwCmd = "EditPage" And myWeb.moRequest("pgid") <> "" Then
+                                        returnPageId = myWeb.moRequest("pgid")
+                                    ElseIf mcEwCmd = "AddPage" And myWeb.moRequest("parid") <> "" Then
+                                        returnPageId = myWeb.moRequest("parid")
+                                    End If
+                                    If returnPageId > 0 Then
+                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd") & "&pgid=" & returnPageId
+                                    Else
+                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd")
+                                    End If
+                                ElseIf myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                     myWeb.moSession("lastPage") = ""
                                 Else
