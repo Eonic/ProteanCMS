@@ -37,29 +37,33 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-              
+                
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
-                if (redirectType == "" || redirectType == "404") {
+                if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
                     return;
                 }
+                else {
 
-                let urlParams = new URLSearchParams(window.location.search);
-                let pageId = this.getQueryStringParam('pgid');
+                    let urlParams = new URLSearchParams(window.location.search);
+                    let pageId = this.getQueryStringParam('pgid');
 
-                var inputJson = {
-                    pageId: pageId,
-                    redirectType: redirectType,
-                    oldUrl: localStorage.originalStructName,
-                    newUrl: this.structName
-                };
-                var self = this;
-                axios.post(manageRedirectsAPIUrl, inputJson)
-                    .then(function (response) {
-                      
-                        redirectModal.showRedirectModal = false;
-                        window.location.href = "?ewCmd=Normal";
-                    });
+                    var inputJson = {
+                        redirectType: redirectType,
+                        oldUrl: localStorage.originalStructName,
+                        NewUrl: this.structName,
+                        hiddenOldUrl: ""
+                    };
+                    var self = this;
+                    axios.post(SaveUrlAPIUrl, inputJson)
+                        .then(function (response) {
+                            if (response.data == "success") {
+                                $("#redirectModal").modal("hide");
+                               // window.location.href = "?ewCmd=Normal";
+                            }
+
+                        });
+                }
             },
             structNameOnChange: function (newStructName) {
 
@@ -68,7 +72,7 @@ if (editPageElement) {
                     redirectModal.toggleModal();
                     $("#OldPageName").val(localStorage.originalStructName);
                     $("#NewPageName").val(newStructName);
-
+                    this.structName = newStructName;
                 }
 
             }
@@ -127,6 +131,9 @@ if (redirectModalElement) {
 //    //addNewUrl.toggleModal();
 //    $(".newAddFormInline").removeClass("hidden");
 //});
+
+
+
 $(document).on("click", ".addRedirectbtn", function (event) {
 
     RedirectPage.SaveNewUrl();
