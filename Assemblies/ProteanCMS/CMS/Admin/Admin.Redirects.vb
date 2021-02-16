@@ -26,7 +26,7 @@ Partial Public Class Cms
                 moAdXfm = New Protean.Cms.xForm(myWeb)
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As RedirectType, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -35,9 +35,9 @@ Partial Public Class Cms
                     ''Check we do not have a redirect for the OLD URL allready. Remove if exists
                     Dim existingRedirects As XmlNodeList
                     If (hiddenOldUrl = "") Then
-                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']/add[@key='" & OldUrl & "']")
+                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & OldUrl & "']")
                     Else
-                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']/add[@key='" & hiddenOldUrl & "']")
+                        existingRedirects = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & hiddenOldUrl & "']")
                     End If
 
                     If existingRedirects.Count > 0 Then
@@ -50,7 +50,7 @@ Partial Public Class Cms
                     Else
 
                         'Add redirect
-                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
                         Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
                         If Not redirectSectionXmlNode Is Nothing Then
                             Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
@@ -62,7 +62,7 @@ Partial Public Class Cms
                         End If
                     End If
                     'Determine all the paths that need to be redirected
-                    If redirectType = 301 Then
+                    If redirectType = "301Redirect" Then
                         'step through and create rules to deal with paths
                         Dim folderRules As New ArrayList
                         Dim rulesXml As New XmlDocument
@@ -106,7 +106,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function urlsForPegination(ByRef redirectType As RedirectType, ByRef pageloadCount As Integer) As String
+            Public Function urlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
                 Try
 
                     Dim Result As String = ""
@@ -114,7 +114,7 @@ Partial Public Class Cms
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     Dim oCgfSectName As String = "system.webServer"
-                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
 
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 
@@ -138,7 +138,7 @@ Partial Public Class Cms
                         TotalCount = props.ChildNodes.Count
 
                         If props.ChildNodes.Count >= PerPageCount Then
-                            Dim xmlstring As String = "<rewriteMap name='" & redirectType & "Redirect'>"
+                            Dim xmlstring As String = "<rewriteMap name='" & redirectType & "'>"
                             Dim xmlstringend As String = "</rewriteMap>"
 
                             Dim count As Integer = 0
@@ -152,6 +152,7 @@ Partial Public Class Cms
 
                             Next
                             Result = xmlstring & xmlstringend
+
 
                         Else
                             Result = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
@@ -167,7 +168,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef redirectType As RedirectType, ByRef searchObj As String) As String
+            Public Function searchUrl(ByRef redirectType As String, ByRef searchObj As String) As String
 
                 Try
 
@@ -177,12 +178,12 @@ Partial Public Class Cms
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     Dim oCgfSectName As String = "system.webServer"
-                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
                     Dim props As XmlNode
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 
                         props = rewriteXml.SelectSingleNode(oCgfSectPath)
-                        Dim searchString As String = "<rewriteMap name='" & redirectType & "Redirect'>"
+                        Dim searchString As String = "<rewriteMap name='" & redirectType & "'>"
                         Dim xmlstringend As String = "</rewriteMap>"
                         For i As Integer = 0 To props.ChildNodes.Count - 1
                             If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
@@ -201,14 +202,14 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function deleteUrls(ByRef redirectType As RedirectType, ByRef oldUrl As String, ByRef newUrl As String) As String
+            Public Function deleteUrls(ByRef redirectType As String, ByRef oldUrl As String, ByRef newUrl As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
                 rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
                 Try
 
-                    Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']/add[@key='" & oldUrl & "']")
+                    Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & oldUrl & "']")
                     If existingRedirects.Count > 0 Then
 
                         For Each existingNode As XmlNode In existingRedirects
@@ -224,14 +225,14 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function IsUrlPresent(ByRef redirectType As RedirectType, ByRef oldUrl As String) As String
+            Public Function IsUrlPresent(ByRef redirectType As String, ByRef oldUrl As String) As String
                 Dim Result As String = ""
 
                 Dim rewriteXml As New XmlDocument
                 rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                 ''Check we do not have a redirect for the OLD URL allready. Remove if exists
-                Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']/add[@key='" & oldUrl & "']")
+                Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & redirectType & "']/add[@key='" & oldUrl & "']")
                 If (existingRedirects.Count > 0) Then
                     Result = "True"
                 Else
@@ -239,8 +240,24 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
+            Public Function getTotalNumberOfUrls(ByRef redirectType As String) As String
 
-            Public Function LoadAllurls(ByRef redirectType As RedirectType, ByRef pageloadCount As Integer, ByRef flag As String) As String
+                Dim Result As String = ""
+                Dim rewriteXml As New XmlDocument
+                rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                Dim oCgfSectName As String = "system.webServer"
+                Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
+
+                Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                Dim TotalCount As Integer = props.ChildNodes.Count
+
+                Result = TotalCount.ToString()
+
+                Return Result
+            End Function
+
+            Public Function LoadAllurls(ByRef redirectType As String, ByRef pageloadCount As Integer, ByRef flag As String) As String
                 Try
 
                     Dim Result As String = ""
@@ -248,7 +265,7 @@ Partial Public Class Cms
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     Dim oCgfSectName As String = "system.webServer"
-                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "Redirect']"
+                    Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
 
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 

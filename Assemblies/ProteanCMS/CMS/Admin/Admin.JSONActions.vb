@@ -70,7 +70,7 @@ Partial Public Class Cms
 
             Public Function AddNewUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of Integer)
+                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("newUrl").ToObject(Of String)
                 Try
@@ -145,10 +145,19 @@ Partial Public Class Cms
 
             Public Function IsUrlPresent(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
-                Dim redirectType As String = inputJson("redirectType").ToObject(Of Integer)
+                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 If myApi.mbAdminMode Then
                     JsonResult = moAdminRedirect.IsUrlPresent(redirectType, oldUrl)
+                End If
+                Return JsonResult
+            End Function
+            Public Function getTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
+
+                If myApi.mbAdminMode Then
+                    JsonResult = moAdminRedirect.getTotalNumberOfUrls(redirectType)
                 End If
                 Return JsonResult
             End Function
@@ -158,7 +167,7 @@ Partial Public Class Cms
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim actionFlag As String = inputJson("flag").ToObject(Of String)
-                Dim index As String = inputJson("index").ToObject(Of String)
+
                 Dim JsonResult As String = ""
                 Try
                     If myApi.mbAdminMode Then

@@ -5,7 +5,8 @@ var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
 var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
 var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
 var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
-var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
+var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls'; 
+var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
 
 
 Vue.mixin({
@@ -36,7 +37,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                debugger;
+              
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -55,7 +56,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                      
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
                     });
@@ -128,7 +129,6 @@ if (redirectModalElement) {
 //});
 $(document).on("click", ".addRedirectbtn", function (event) {
 
-    debugger;
     RedirectPage.SaveNewUrl();
 });
 $(".close").click(function () {
@@ -153,7 +153,8 @@ $('.btnClear').on('click', function (event) {
 
 
 $(document).on("click", ".btn-update", function (event) {
-
+   
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
@@ -166,10 +167,7 @@ $(document).on("click", ".btn-update", function (event) {
     var input = $(parentDiv).find('input[type="text"]');
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
-    var index = $(input[0]).attr("id").split('_').pop();;
-
-
-
+    var index = $(input[0]).attr("id").split('_').pop();
 
     hiddenOldUrl = $(parentDiv).find('input[type="hidden"]').val();
     RedirectPage.loading = true;
@@ -179,10 +177,12 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-
+              
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
+                        RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
+                        RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
                     }
                     else {
                         return false;
@@ -190,9 +190,11 @@ $(document).on("click", ".btn-update", function (event) {
                 }
                 else {
                     RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
+                    RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
+                    RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
 
                 }
-
+               
             });
 
 
@@ -200,8 +202,10 @@ $(document).on("click", ".btn-update", function (event) {
 
     else {
         RedirectPage.saveUrl(oldUrl, NewUrl, hiddenOldUrl, index);
-
+        RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
+        RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
     }
+  
     // $(this).hide();
     setTimeout(function () {
         $(savedlbl).addClass("hidden");
@@ -220,18 +224,92 @@ $(document).on("click", ".btn-delete", function (event) {
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
 });
 
+
+$(document).on("click", ".delAddNewUrl", function (event) {
+   
+    var oldUrl = "";
+    var NewUrl = "";
+    var parentDiv = $(this).closest('.ListOfNewAddedUrls');
+    var input = $(parentDiv).find('input[type="text"]');
+    oldUrl = $(input[0]).val();
+    NewUrl = $(input[1]).val();
+    var index = $(input[0]).attr("id").split('_').pop();
+    RedirectPage.DeleteUrl(oldUrl, NewUrl);
+
+    RedirectPage.newAddedUrlList.splice(index, 1);
+   
+});
+
 $(document).on("mouseup", ".redirecttext", function (event) {
 
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var button = $(parentDiv).find('button[type="button"]');
 
     $(".btn-update").addClass("hidden");
+    $(".btn-updateNewUrl").addClass("hidden");
     $(".tempLableSave").addClass("hidden");
     $(button[0]).removeClass("hidden");
 
 });
+$(document).on("mouseup", ".addUrlText", function (event) {
+
+    var parentDiv = $(this).closest('.ListOfNewAddedUrls');
+    var button = $(parentDiv).find('button[type="button"]');
+
+    $(".btn-updateNewUrl").addClass("hidden");
+    $(".btn-update").addClass("hidden");
+    $(".tempLableSaveNew").addClass("hidden");
+    $(button[0]).removeClass("hidden");
+
+});
+
+$(document).on("click", ".btn-updateNewUrl", function (event) {
+  
+    $(".modalLable").addClass("hidden");
+    $(this).addClass("hidden")
+    var parentDiv = $(this).closest('.ListOfNewAddedUrls');
+    var savedlbl = $(parentDiv).find('.tempLableSaveNew');
+
+    $(savedlbl).removeClass("hidden");
+    var oldUrl = "";
+    var NewUrl = "";
+
+    var parentDiv = $(this).closest('.ListOfNewAddedUrls');
+    var input = $(parentDiv).find('input[type="text"]');
+    oldUrl = $(input[0]).val();
+    NewUrl = $(input[1]).val();
+    var index = $(input[0]).attr("id").split('_').pop();
+    type = RedirectPage.redirectType();
+    if (oldUrl != "") {
+        var inputJson = { redirectType: type, oldUrl: oldUrl };
+        axios.post(IsUrlPResentAPI, inputJson)
+            .then(function (response) {
+              
+                if (response.data == "True") {
+                    if (confirm("Old url is already exist. Do you want to replace it?")) {
+                        RedirectPage.addNewUrl(oldUrl, NewUrl);
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    RedirectPage.saveUrl(oldUrl, NewUrl,"");
 
 
+                }
+               
+                RedirectPage.newAddedUrlList[index] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+            });
+
+
+    }
+
+    setTimeout(function () {
+        $(savedlbl).addClass("hidden");
+    }, 10000);
+
+});
 
 
 
@@ -247,25 +325,32 @@ if (rediectElement) {
             loading: false,
             loadingscroll:false,
             newAddedUrlList: [],
+            totalCountofUrl:'',
         },
         methods: {
             getPermanentList: function () {
                
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
-
-
+               var totalToDispaly = $("#totalUrlCount").val();
+                $("#loadSpin").modal("show");
+              
+                var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
+                $(".modalLable").text(lableDisplay);
                 that.loading = true;
                 that.show = true;
                 type = this.redirectType();
+             
                 var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-
+                       
+                       
+                        if (response.data != "") {
                         var xmlString = response.data;
                         var xmlDocument = $.parseXML(xmlString);
-                        var xml = $(xmlDocument);
-
+                            var xml = $(xmlDocument);
+                          
                         if (that.urlList != '') {
                             var tempUrlList = xml[0].childNodes[0].childNodes;
                             that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
@@ -275,23 +360,35 @@ if (rediectElement) {
                         else {
 
                             that.urlList = xml[0].childNodes[0].childNodes;
+                            }
+
                         }
+                       
+                        $("#loadSpin").modal("hide");
                         that.loading = false;
                         that.show = false;
+                       
+                        var totalCountOfLoad1 = that.urlList.length;
+                        var totalToDispaly1 = $("#totalUrlCount").val();
+                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
                     });
             },
 
             addNewUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
+                $(".modalLable").addClass("hidden");
+                $("#loadSpin").modal("show");
+               
                 that.show = true;
                 that.loading = true;
                 type = this.redirectType();
-
+              
                 var inputJson = { redirectType: type, oldUrl: oldUrl, newUrl: NewUrl };
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
+                            $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
                             //alert("Url saved successfully!");
@@ -304,6 +401,8 @@ if (rediectElement) {
             getSearchList: function (searchObj) {
 
                 var that = this;
+                $(".modalLable").addClass("hidden");
+                $("#loadSpin").modal("show");
                 that.show = true;
                 that.loading = true;
                 type = this.redirectType();
@@ -315,28 +414,35 @@ if (rediectElement) {
                         var xmlDocument = $.parseXML(xmlString);
                         var xml = $(xmlDocument);
                         that.urlList = xml[0].childNodes[0].childNodes;
+                      
+                        $(".newAddFormInline").addClass("hidden");
+                        var totalCountOfLoad1 = that.urlList.length;
+                        var totalToDispaly1 = $("#totalUrlCount").val();
+                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
+                        $("#loadSpin").modal("hide");
                         that.show = false;
                         that.loading = false;
-                        $(".newAddFormInline").addClass("hidden");
 
                     });
 
             },
-            saveUrl: function (oldUrl, newUrl, hiddenOldUrl, index) {
-
+            saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
+             
                 var that = this;
+                $("#loadSpin").modal("show");
                 that.show = true;
                 that.loading = true;
                 type = this.redirectType();
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                       
+                        debugger;
                         if (response.data == "success") {
+                            $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
                             var flag = "saveURL";
-                            that.reloadPermanentList(flag, index);
+                            //that.reloadPermanentList(flag);
 
                         }
 
@@ -345,6 +451,10 @@ if (rediectElement) {
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
+                $(".modalLable").addClass("hidden");
+                $("#loadSpin").modal("show");
+                that.show = false;
+                that.loading = false;
                 that.show = true;
                 that.loading = true;
 
@@ -354,11 +464,13 @@ if (rediectElement) {
                     .then(function (response) {
 
                         if (response.data == "success") {
-                            that.loading = false;
+                            $("#loadSpin").modal("hide");
                             that.show = false;
-                            //alert("Deleted successfully")
+                            that.loading = false;
+                            that.reloadPermanentList("deleteUrl");
+                           
                         }
-                        location.reload();
+                        //location.reload();
 
                     });
             },
@@ -372,44 +484,26 @@ if (rediectElement) {
                         var urlparam = url[i].split('=');
                         if (urlparam[0] == "ewCmd") {
                             type = urlparam[1];
-                            if (type == "301Redirect") {
-                                type = 301;
-                            } else {
-                                if (type == "302Redirect") {
-                                    type = 302;
-                                }
+                            //if (type == "301Redirect") {
+                            //    type = 301;
+                            //} else {
+                            //    if (type == "302Redirect") {
+                            //        type = 302;
+                            //    }
 
-                            }
+                            //}
                         }
                     }
                 }
                 return type
 
             },
-            scrollEvent: function () {
+       
 
-                var that = this;
-                that.show = true;
-                that.loading = true;
-                window.setTimeout(function () {
-                    if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
-                        debugger;
-                        //var lastDiv = $(".parentDivOfRedirect").last();
-                        //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg' v-if='loadingscroll' v-show='true'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
-                        //$(lastDiv).after(span);
-                        that.getPermanentList();
-                    }
-
-                }, 1000);
-
-                that.show = false;
-                that.loading = false;
-
-
-            },
-
-            reloadPermanentList: function (flag, index) {
-
+            reloadPermanentList: function (flag) {
+                //var scroll_l = $('.scolling-pane').scrollLeft();
+                //var scroll_t = $('.scolling-pane').scrollTop();
+               
                 var searchObj = $("#SearchURLText").val();
                 if (searchObj != "") {
 
@@ -424,17 +518,18 @@ if (rediectElement) {
                     if (totalCountOfLoad < 50) {
                         totalCountOfLoad = 50;
                     }
-                    if (flag == "saveURL") {
+                    if (flag == "saveURL" || flag =="deleteUrl") {
                         that.urlList = [];
 
                     }
+                    $("#loadSpin").modal("show");
                     that.loading = true;
                     that.show = true;
                     type = this.redirectType();
-                    var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag, index: index };
+                    var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag };
                     axios.post(LoadAllURLAPI, inputJson)
                         .then(function (response) {
-                           
+                         
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
                             var xml = $(xmlDocument);
@@ -449,16 +544,23 @@ if (rediectElement) {
 
                                 that.urlList = xml[0].childNodes[0].childNodes;
                             }
+                            //$('.scolling-pane').scrollLeft(scroll_l);
+                            //$('.scolling-pane').scrollTop(scroll_t);
+                           
+                            that.getTotalUrlCount();
+                            
+                            $("#loadSpin").modal("hide");
                             that.loading = false;
                             that.show = false;
                         });
                 }
             },
             SaveNewUrl: function () {
-                debugger;
+             
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
+                $("#loadSpin").modal("show");
                 that.loading = true;
                 that.show = true;
                 type = RedirectPage.redirectType();
@@ -482,44 +584,74 @@ if (rediectElement) {
                                 that.addNewUrl(oldUrl, NewUrl);
 
                             }
-                            debugger;
+                          
                             if (that.newAddedUrlList != '') {
-                                var tempUrlList = { 'oldUrl': oldUrl,'NewUrl': NewUrl }
-                                that.newAddedUrlList = tempUrlList;//$.merge($.merge([], that.newAddedUrlList), tempUrlList);
+                                var index = that.newAddedUrlList.length;
+                                var tempUrlList = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                that.newAddedUrlList[index] = tempUrlList; //$.merge($.merge([], that.newAddedUrlList), tempUrlList);
 
 
                             }
                             else {
-
-                                that.newAddedUrlList = { 'oldUrl': oldUrl, 'NewUrl': NewUrl }
+                               
+                                that.newAddedUrlList[0] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
                             }
-                           
+                            that.getTotalUrlCount();
                             $("#OldUrlmodal").val("");
                             $("#NewUrlModal").val("");
+                            $("#loadSpin").modal("hide");
                             that.loading = true;
                             that.show = true;
-                            $(".ListOfNewAddedUrls").removeClass("hidden");
+                           
                         });
 
 
                 }
 
-            }
+            },
+
+             getTotalUrlCount: function () {
+             
+                 var that = this;
+                 $("#loadSpin").modal("show");
+                that.show = true;
+                that.loading = true;
+                type = this.redirectType();
+                var inputJson = { redirectType: type };
+                 axios.post(getTotalNumberOfUrls, inputJson)
+                    .then(function (response) {
+                       
+                        if (response.data != "") {
+                            that.totalCount = response.data;
+                            $("#totalUrlCount").val(response.data);
+                            var totalCountOfLoad1 = that.urlList.length  + that.newAddedUrlList.length;
+                            $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
+                        }
+                       
+                    });
+                 
+            },
         },
         mounted: function () {
+            this.getTotalUrlCount();
             this.getPermanentList();
-
+        
         }
-        //}
+       
     });
 }
 
 $('.scolling-pane').on('scroll', function () {
-    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+    var searchObj = $("#SearchURLText").val();
+    if (searchObj == "") {
+        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+            $(".modalLable").removeClass("hidden");
+            RedirectPage.getPermanentList();
 
-        RedirectPage.getPermanentList();
-
+        }
     }
+   
+  
 });
 
 
