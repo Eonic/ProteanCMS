@@ -7465,7 +7465,7 @@
     <xsl:param name="imageUrl"/>
     <xsl:param name="imageRetinaUrl"/>
     <!--New image tags-->
-    <source type="{$type}" media="{$media}" srcset="{$imageUrl} 1x, {$imageRetinaUrl} 2x" >
+    <source type="{$type}" media="{$media}" srcset="{ew:replacestring($imageUrl,' ','%20')} 1x, {$imageRetinaUrl} 2x" >
       <xsl:choose>
         <xsl:when test="$lazy='on'">
           <xsl:attribute name="data-src">
@@ -7483,10 +7483,10 @@
       </xsl:choose>
 
           <xsl:attribute name="srcset">
-            <xsl:value-of select="$imageUrl"/>
+            <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
               <xsl:if test="imageRetinaUrl!=''">
                   <xsl:text> 1x, </xsl:text>
-                <xsl:value-of select="$imageUrl"/>
+                <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
                 <xsl:text> 2x</xsl:text>
               </xsl:if>
           </xsl:attribute>
