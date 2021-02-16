@@ -1225,13 +1225,11 @@ Original preload function has been kept but is unused.
                     url: '?ewCmd=MoveTop' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
                         $('#MenuTree li#' + moveIdNode).prev('li[data-tree-parent="' + thisParentId + '"]').hide().fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]:first-child').before($('#MenuTree li#' + moveIdNode));
+                        $('#MenuTree li#' + moveIdNode).prevAll('li[data-tree-parent="' + thisParentId + '"]:first').before($('#MenuTree li#' + moveIdNode));
                         $('#MenuTree').applyLast();
                         $('#MenuTree').checkChildren();
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
                         $('#MenuTree li#' + moveIdNode).removeClass("locked");
-
-
                     }
                 });
             }
@@ -1249,7 +1247,7 @@ Original preload function has been kept but is unused.
                     url: '?ewCmd=MoveBottom' + decodeURIComponent("%26") + 'pgid=' + moveId + '&a=' + i,
                     success: function () {
                         $('#MenuTree li#' + moveIdNode).next().hide('li[data-tree-parent="' + thisParentId + '"]').fadeIn("fast");
-                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]:last-child').after($('#MenuTree li#' + moveIdNode));
+                        $('#MenuTree li#' + moveIdNode).nextAll('li[data-tree-parent="' + thisParentId + '"]:last').after($('#MenuTree li#' + moveIdNode));
                         $('#MenuTree').applyLast();
                         $('#MenuTree').checkChildren();
                         $('#MenuTree li#' + moveIdNode).fadeTo("fast", 1.0);
