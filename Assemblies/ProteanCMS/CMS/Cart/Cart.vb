@@ -1525,7 +1525,7 @@ processFlow:
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
-                                        moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId)
+                                        moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId, oContentElmt)
                                     End If
                                 End If
 
