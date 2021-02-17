@@ -2563,15 +2563,15 @@
                     </div>
                       <ul>
                         <li class="md-radio">
-                          <input name="redirectType" type="radio" value="301" class="redirectStatus"/>
+                          <input name="redirectType" type="radio" value="301Redirect" class="redirectStatus" checked="checked"/>
                           <label>301:  We will Permanently redirect</label>
                         </li>
                         <li class="md-radio">
-                          <input name="redirectType" type="radio" value="302" class="redirectStatus"/>
+                          <input name="redirectType" type="radio" value="302Redirect" class="redirectStatus"/>
                           <label>302: We will temporarily redirect</label>
                         </li>
                         <li class="md-radio">
-                          <input name="redirectType" type="radio" value="404" class="redirectStatus"/>
+                          <input name="redirectType" type="radio" value="404Redirect" class="redirectStatus"/>
                           <label>404: No, the old url will show page not found</label>
                         </li>
                       </ul>
@@ -2584,7 +2584,7 @@
                       </h4>
                     </div>
                     <button class="btn btn-primary" data-dismiss="modal" >Cancel</button>
-                    <button type="button" id="addRedirectbtn" name="addRedirectbtn"
+                    <button type="button" id="btnRedirectSave" name="addRedirectbtn"
 										    onClick="editPage.createRedirects();"
 											class="btn btn-primary">
                       Yes

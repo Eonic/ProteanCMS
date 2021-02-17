@@ -3935,57 +3935,7 @@
     <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 
   </xsl:template>
-  <!--<xsl:template match="group[@class='addNewUrl-modal']" mode="xform">-->
-  <!--<div id="addNewUrl" class="addNewUrl hidden" data-toggle="modal">
-      <div v-if="showAddNewUrl" >
-        <transition name="modal">
-          <div class="modal-mask">
-            <div class="modal-wrapper">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <label>301 (PERMINENT) PAGE REDIRECTS</label>
-                    <button type="button" class="close" v-on:click="showAddNewUrl=false">
-                      <span aria-hidden="true">&#215;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group repeat-group ">
-                      <fieldset class="rpt-00">
-                        <div class="form-group input-containing col-md-5">
-                        
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <label>Old URL</label>
-                            <input type="text" name="OldUrl" id="OldUrlmodal" class="col-md-5 textbox form-control"/>
-                          </div>
-                        </div>
-                        <div class="form-group input-containing col-md-5">
-                          
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <label>New URL</label>
-                            <input type="text" name="NewUrl" id="NewUrlModal" class="col-md-5 textbox form-control"/>
-                          </div>
-                        </div>
-                      </fieldset>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-
-                    <button class="btn btn-primary" v-on:click="showAddNewUrl=false">Cancel</button>
-                    <button type="button"  v-on:click="SaveNewUrl()"
-											class="btn btn-primary addRedirectbtn">
-                      save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </transition>
-      </div>
-    </div>-->
-
-  <!--</xsl:template>-->
+  
 
   <!-- -->
   <!--   ##################  PageSettings  ##############################   -->
@@ -12520,12 +12470,7 @@
   <xsl:template match="input[@class='RedirectPage']" mode="xform" >
 
     <div class="row">
-      <div class="col-md-8">
-        <button type="button"  value="Add New URL" class="btn btn-primary btnaddNewUrl" data-toggle="modal" data-target="#addNewUrl">
-          <i class="fa fa-plus fa-white"> </i> Add New URL
-        </button>
-        &#160;
-      </div>
+     
       <div class="col-md-4">
         <div class="input-group col-md-4">
           <span class="input-group-btn">
@@ -12534,17 +12479,34 @@
             </button>
           </span>
           <input type="text" name="SearchURL" id="SearchURLText" class="form-control" />
+          <input type="hidden"  id="totalUrlCount" class="form-control" />
           <span class="input-group-btn">
             <button type="button"  value="Search" class="btn btn-primary btnSearchUrl">Search </button>
           </span>
         </div>
+       &#160;   &#160;   &#160;
+      </div>
+    
+     <div class="col-md-4">
+       <lable class="countLable"></lable>
       </div>
     </div>
-
+   
 
     <div class="control-wrapper RedirectPage" id="RedirectPage">
-      <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
-        <i class="fas fa-spinner fa-spin"> </i>
+      <div id="loadSpin" class="loadSpin modal " tabindex="-1" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!--<div class="modal-body">-->
+              <lable class="modalLable hidden"></lable>
+               <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
+                <i class="fas fa-spinner fa-spin"> </i>
+              </div>
+              
+             
+            <!--</div>-->
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <div class="form-group input-containing col-md-6">
@@ -12555,7 +12517,7 @@
         </div>
 
       </div>
-      <!--<div class="form-group  repeat-group newAddFormInline hidden">
+      <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
         <fieldset class="rpt-00 row">
           <div class="form-group input-containing col-md-5">
 
@@ -12573,14 +12535,48 @@
           <div class="form-group input-containing col-md-2">
 
             <div class="control-wrapper input-wrapper appearance-">
-              <button type="button"  v-on:click="SaveNewUrl()" class="btn btn-primary addRedirectbtn">
-                Save
+              <button type="button"  class="btn btn-primary addRedirectbtn">
+                Add new Url
               </button>
             </div>
           </div>
 
         </fieldset>
-      </div>-->
+      </div>
+      <div>
+      <div class="form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
+        <fieldset>
+          <div class="form-group input-containing col-md-5" >
+
+            <div class="control-wrapper input-wrapper">
+
+              <input type="text" name="OldUrl" v-bind:id="'Old_' + index"  class="form-control addUrlText" v-bind:value="urls.oldUrl"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper">
+              <input type="text" name="NewUrl" v-bind:id="'New_' + index"  class="form-control addUrlText" v-bind:value="urls.NewUrl"/>
+            </div>
+          </div>
+           <div class="form-group input-containing col-md-1">
+              <button type="button"  class="btn btn-primary btn-updateNewUrl hidden" >
+                Update
+              </button>
+              <lable class="tempLableSaveNew hidden">Saved..</lable>
+            </div>
+          <div class="form-group input-containing col-md-1">
+
+            <div class="control-wrapper input-wrapper">
+              <button type="button"  class="btn btn-danger delAddNewUrl">
+                 <i class="fa fa-times fa-white"> </i> Del
+              </button>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+      </div>
       <div class="scolling-pane">
         <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
           <fieldset v-bind:class="'row repeated rpt_'+ index">
