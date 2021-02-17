@@ -257,6 +257,7 @@ Public Module stdTools
                     End If
 
                     sProcessInfo = "Loading XSLT"
+
                     If LCase(xsltTemplatePath).StartsWith("c:\") Or LCase(xsltTemplatePath).StartsWith("d:\") Then
                         styleFile = CType(xsltTemplatePath, String)
                     Else
