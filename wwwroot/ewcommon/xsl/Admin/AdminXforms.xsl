@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
-
+<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+                  xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
+                  xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
+                  xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
+                  xmlns:v-model="http://example.com/xml/v-model">
 
   <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
@@ -2499,7 +2504,7 @@
   
   <xsl:template match="group[@class='modal-confirm']" mode="xform">
     <xsl:param name="class"/>
-    <div class="modal hidden">
+    <div id="modal-confirm" class="modal fade" tabindex="-1">
       <xsl:if test=" @id!='' ">
         <xsl:attribute name="id">
           <xsl:value-of select="@id"/>
@@ -2525,7 +2530,72 @@
       
     </div>
   </xsl:template>
-  
-  
-  
+
+  <xsl:template match="group[@class='redirect-modal']" mode="xform">
+    <xsl:param name="class"/>
+    <div id="redirectModal" class="redirectModal modal fade" tabindex="-1">
+      
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <label>Do you want to create a redirect?</label>
+              <button type="button" class="close" data-dismiss="modal" >
+                <span aria-hidden="true">&#215;</span>
+              </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group repeat-group ">
+                      <fieldset class="rpt-00 row">
+                        <div class="form-group input-containing col-md-6">
+                          <label>Old URL</label>
+                          <div class="control-wrapper input-wrapper appearance-">
+
+                            <input type="text" name="OldUrl" id="OldPageName" class="textbox form-control"/>
+                          </div>
+                        </div>
+                        <div class="form-group input-containing col-md-6">
+                          <label>New URL</label>
+                          <div class="control-wrapper input-wrapper appearance-">
+                            <input type="text" name="NewUrl" id="NewPageName" class="textbox form-control"/>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                      <ul>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="301Redirect" class="redirectStatus" checked="checked"/>
+                          <label>301:  We will Permanently redirect</label>
+                        </li>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="302Redirect" class="redirectStatus"/>
+                          <label>302: We will temporarily redirect</label>
+                        </li>
+                        <li class="md-radio">
+                          <input name="redirectType" type="radio" value="404Redirect" class="redirectStatus"/>
+                          <label>404: No, the old url will show page not found</label>
+                        </li>
+                      </ul>
+                    </div>
+                 
+                  <div class="modal-footer">
+                    <div>
+                      <h4>
+                        Are you sure you want to continue ?
+                      </h4>
+                    </div>
+                    <button class="btn btn-primary" data-dismiss="modal" >Cancel</button>
+                    <button type="button" id="btnRedirectSave" name="addRedirectbtn"
+										    onClick="editPage.createRedirects();"
+											class="btn btn-primary">
+                      Yes
+                    </button>
+                  </div>
+                </div>
+        </div>
+          
+            </div>
+         
+  </xsl:template>
+
+
 </xsl:stylesheet>

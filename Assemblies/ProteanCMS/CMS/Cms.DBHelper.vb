@@ -2393,6 +2393,16 @@ Partial Public Class Cms
             End Try
         End Function
 
+        Public Function IsChildPage(ByVal pageid As objectTypes, ByVal objectKey As Long) As Boolean
+
+            Try
+                Dim query As String = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" & objectKey
+                Return GetDataValue(query, , , 0) > 0
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+
         Public Function isCascade(ByVal ContentId As Long) As Boolean
             PerfMon.Log("DBHelper", "isCascade")
             Dim nCount As Long

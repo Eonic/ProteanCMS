@@ -51,7 +51,7 @@ Public Class Cms
     Private mbSystemPage As Boolean = False
     Private mnUserPagePermission As dbHelper.PermissionLevel = dbHelper.PermissionLevel.Open
 
-    Public mbAdminMode As Boolean = False
+
     Public mbPopupMode As Boolean = False
 
     Public moPageXml As New XmlDocument

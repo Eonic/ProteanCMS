@@ -16,9 +16,11 @@
      </bind>
    </model>
    <group ref="WebSettings">
-    
-     <label>302 (Temporary) Page Redirects</label>
-     <group>
+    <label>302 (Temporary) Page Redirects</label>
+     <group class="302RedirectBody">
+       <input class="RedirectPage"/>
+     </group>
+     <!--<group>
        <repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
            <label>Old URL</label>
@@ -32,8 +34,8 @@
          </trigger>
        </repeat>
      </group>
-     <group>
-       <trigger>
+     <group>-->
+       <!--<trigger>
          <label>Add New URL</label>
          <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add"/>
        </trigger>
@@ -42,6 +44,6 @@
      
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
-    </submit>
+    </submit>-->
   </group>
 </Content>

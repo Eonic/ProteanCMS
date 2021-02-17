@@ -9,7 +9,7 @@
         <cStructName/>
         <cStructDescription>
           <!-- SEE COMMENTS IN BIND -->
-          <DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true"/>
+          <DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false"/>
           <Images>
             <img class="icon" />
             <img class="thumbnail" />
@@ -32,6 +32,7 @@
         <nStatus>0</nStatus>
         <cDescription/>
       </tblContentStructure>
+      <CreateRedirect type="" oldUrl="" newUrl=""/>
     </instance>
     <submission id="EditPage" action="" method="post" event="form_check(this)"/>
     <bind id="nStructParId" nodeset="tblContentStructure/nStructParId" required="true()" type="string"/>
@@ -304,5 +305,8 @@
     <submit submission="" ref="submit" class="principle">
       <label>Save Page</label>
     </submit>
+    <group class="redirect-modal">
+      <input type="hidden" bind=""></input>
+    </group>
   </group>   
 </Content>

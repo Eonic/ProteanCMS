@@ -43,6 +43,10 @@ Public Class API
                 Dim oMembershipProv As New Providers.Membership.BaseProvider(Me, moConfig("MembershipProvider"))
                 mnUserId = oMembershipProv.Activities.GetUserId(Me)
 
+                If moSession("adminMode") = "true" Then
+                    mbAdminMode = True
+                    ' moDbHelper.gbAdminMode = mbAdminMode
+                End If
             End If
 
             'We need the userId placed into dbhelper.
@@ -99,7 +103,7 @@ Public Class API
 
             Dim calledType As Type
 
-            If LCase(ProviderName) = "cms.cart" Or LCase(ProviderName) = "cms.content" Then ProviderName = ""
+            If LCase(ProviderName) = "cms.cart" Or LCase(ProviderName) = "cms.content" Or LCase(ProviderName) = "cms.admin" Then ProviderName = ""
 
             If ProviderName <> "" Then
                 'case for external Providers
