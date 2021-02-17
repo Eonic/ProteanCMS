@@ -45,26 +45,27 @@ if (editPageElement) {
                 }
                 else {
 
-                    let urlParams = new URLSearchParams(window.location.search);
-                    let pageId = this.getQueryStringParam('pgid');
+                let urlParams = new URLSearchParams(window.location.search);
+                let pageId = this.getQueryStringParam('pgid');
                     $("#cRedirect").val(redirectType);
-                    var inputJson = {
-                        redirectType: redirectType,
-                        oldUrl: localStorage.originalStructName,
+                var inputJson = {
+                    pageId: pageId,
+                    redirectType: redirectType,
+                    oldUrl: localStorage.originalStructName,
                         NewUrl: this.structName,
                         hiddenOldUrl: ""
-                    };
-                    var self = this;
+                };
+                var self = this;
                     axios.post(SaveUrlAPIUrl, inputJson)
-                        .then(function (response) {
+                    .then(function (response) {
                             if (response.data == "success") {
                                 $("#redirectModal").modal("hide");
                                // window.location.href = "?ewCmd=Normal";
                             }
 
-                        });
-                }
-            },
+                    });
+            }
+        },
             structNameOnChange: function (newStructName) {
 
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
@@ -103,7 +104,7 @@ if (editPageElement) {
             //clean the storage for struct name when page changes.
             let pageId = this.getQueryStringParam('pgid');
             if (!localStorage.pageId || localStorage.pageId != pageId) {
-                localStorage.removeItem('originalStructName');
+                localStorage.removeItem('originalStructName');                
             }
             localStorage.pageId = pageId;
             localStorage.originalStructName = this.structName;
@@ -535,7 +536,7 @@ if (rediectElement) {
                     type = this.redirectType();
                     var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag };
                     axios.post(LoadAllURLAPI, inputJson)
-                        .then(function (response) {
+                    .then(function (response) {
                          
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
@@ -555,11 +556,11 @@ if (rediectElement) {
                             //$('.scolling-pane').scrollTop(scroll_t);
                            
                             that.getTotalUrlCount();
-                            
+
                             $("#loadSpin").modal("hide");
                             that.loading = false;
                             that.show = false;
-                        });
+                    });
                 }
             },
             SaveNewUrl: function () {
@@ -600,9 +601,9 @@ if (rediectElement) {
 
                             }
                             else {
-                               
+
                                 that.newAddedUrlList[0] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
-                            }
+                    }
                             that.getTotalUrlCount();
                             $("#OldUrlmodal").val("");
                             $("#NewUrlModal").val("");
@@ -633,7 +634,7 @@ if (rediectElement) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoad1 = that.urlList.length  + that.newAddedUrlList.length;
                             $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
-                        }
+            }
                        
                     });
                  
@@ -643,10 +644,10 @@ if (rediectElement) {
             this.getTotalUrlCount();
             this.getPermanentList();
         
-        }
+                    }
        
     });
-}
+                }
 
 $('.scolling-pane').on('scroll', function () {
     var searchObj = $("#SearchURLText").val();
@@ -655,11 +656,11 @@ $('.scolling-pane').on('scroll', function () {
             $(".modalLable").removeClass("hidden");
             RedirectPage.getPermanentList();
 
+            }
         }
-    }
    
   
-});
+    });
 
 
 

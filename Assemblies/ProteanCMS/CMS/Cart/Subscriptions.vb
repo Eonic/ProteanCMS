@@ -1161,7 +1161,7 @@ RedoCheck:
                 End Try
             End Function
 
-            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0)
+            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0, Optional ByRef oCartXml As XmlElement = Nothing)
 
                 Dim cLastSubXml As String = ""
                 Dim oSubConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/subscriptions")
@@ -1205,6 +1205,16 @@ RedoCheck:
                                 xItemDoc.FirstChild.AppendChild(oNotes)
 
                                 AddUserSubscription(oDR("nContentKey"), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId)
+
+                                'Hustle in the renewal end so we can show on receipt.
+                                If Not oCartXml Is Nothing Then
+                                    Dim contentId As Long = xItemDoc.DocumentElement.GetAttribute("id")
+                                    Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[@contentId='" & contentId & "']")
+                                    If Not ItemXml Is Nothing Then
+                                        Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
+                                        ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
+                                    End If
+                                End If
 
                                 cLastSubXml = xItemDoc.OuterXml 'oDR("cContentXmlBrief")
                             Next
@@ -1335,6 +1345,9 @@ RedoCheck:
                     End If
 
                     Dim SubEndDate As Date = SubscriptionEndDate(SubStartDate, oCurSubElmt)
+                    If Not cartItemXml Is Nothing Then
+                        cartItemXml.SetAttribute("renewalEnd", xmlDate(SubEndDate))
+                    End If
 
                     oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
 
