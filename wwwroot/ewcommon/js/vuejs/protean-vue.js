@@ -37,7 +37,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                
+                $("#redirectModal").modal("hide");
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
@@ -47,7 +47,7 @@ if (editPageElement) {
 
                     let urlParams = new URLSearchParams(window.location.search);
                     let pageId = this.getQueryStringParam('pgid');
-
+                    $("#cRedirect").val(redirectType);
                     var inputJson = {
                         redirectType: redirectType,
                         oldUrl: localStorage.originalStructName,
