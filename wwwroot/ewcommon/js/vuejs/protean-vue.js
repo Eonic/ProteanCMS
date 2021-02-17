@@ -35,7 +35,7 @@ if (editPageElement) {
         },
         methods: {
             createRedirects: function () {
-                debugger;
+              //  debugger;
                 var redirectType = $(".redirectStatus:checked").val();
                 //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
                 if (redirectType == "" || redirectType == "404") {
@@ -54,7 +54,7 @@ if (editPageElement) {
                 var self = this;
                 axios.post(manageRedirectsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                    //    debugger;
                         redirectModal.showRedirectModal = false;
                         window.location.href = "?ewCmd=Normal";
                     });
@@ -300,7 +300,7 @@ if (rediectElement) {
         },
         methods: {
             getPermanentList: function (flag) {
-                debugger;
+              //  debugger;
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 if (flag == "saveURL") {
@@ -446,7 +446,7 @@ if (rediectElement) {
                 that.loading = true;
                 window.setTimeout(function () {
                 if ($(window).scrollTop() >= $('.scolling-pane').offset().top + $('.scolling-pane').outerHeight() - window.innerHeight) {
-                    debugger;
+                 //   debugger;
                     //var lastDiv = $(".parentDivOfRedirect").last();
                     //var span = "<br></br><span><div id='redirectLoad' class='vueloadimg' v-if='loadingscroll' v-show='true'><i class='fas fa-spinner fa-spin'> </i></div ></span>"
                     //$(lastDiv).after(span);
@@ -462,7 +462,7 @@ if (rediectElement) {
             },
 
             reloadPermanentList: function (flag) {
-                debugger;
+               // debugger;
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                
