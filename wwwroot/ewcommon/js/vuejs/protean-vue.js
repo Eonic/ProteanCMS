@@ -73,6 +73,14 @@ if (editPageElement) {
                     return false;
                 }
                 else {
+                    debugger;
+                    var newUrl = $("#cStructName").val();
+                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+                            debugger;
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
