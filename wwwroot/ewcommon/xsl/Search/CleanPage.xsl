@@ -61,7 +61,7 @@
     <meta name="abstract">
       <xsl:attribute name="content">
         <xsl:variable name="content">
-          <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText']">
+          <xsl:for-each select="/Page/Contents/Content[@moduleType='FormattedText' and @parId!='1']">
             <xsl:apply-templates select="*" mode="getValues"/>
           </xsl:for-each>
         </xsl:variable>

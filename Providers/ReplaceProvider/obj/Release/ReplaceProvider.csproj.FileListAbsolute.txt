@@ -27,3 +27,4 @@ C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvide
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CopyComplete
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.dll
 C:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.pdb
+D:\HostingSpaces\ProteanCMS\Providers\ReplaceProvider\obj\Release\ReplaceProvider.csproj.CoreCompileInputs.cache
