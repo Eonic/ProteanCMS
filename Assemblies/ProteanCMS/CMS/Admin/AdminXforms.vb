@@ -41,7 +41,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
-
+            Public moAdminRedirect As Protean.Cms.Admin.Redirects
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
@@ -60,7 +60,7 @@ Partial Public Class Cms
                     goConfig = myWeb.moConfig
                     moDbHelper = myWeb.moDbHelper
                     moRequest = myWeb.moRequest
-
+                    moAdminRedirect = New Protean.Cms.Admin.Redirects()
                     MyBase.cLanguage = myWeb.mcPageLanguage
 
                 Catch ex As Exception
@@ -1685,7 +1685,7 @@ Partial Public Class Cms
                         End If
                     End If
 
-
+                    cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
@@ -1704,21 +1704,21 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
+                                Dim redirectType As String = moRequest("redirectType").ToString()
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
 
-                                'Insert code to create redirects if required.
+                                Select Case redirectType
+                                    Case "301Redirect"
 
-                                'Options to be 
+                                        moAdminRedirect.CreateRedirect(redirectType, cName, newUrl)
 
-                                '301 perminent
-                                '302 tempory
-                                '404 page not found (do not add redirect)
-
-                                'if the page has child pages we should also create a redirect rule for all children.
-
+                                    Case "302Redirect"
+                                        moAdminRedirect.CreateRedirect(redirectType, cName, newUrl)
+                                End Select
 
                             Else
 
-                                pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                    pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
                                 ' If the site wants to, by default, restrict new pages to a given group or directory item, then
@@ -1785,7 +1785,6 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
-
             ''' <summary>
             ''' Page xform validation:
             ''' <list>

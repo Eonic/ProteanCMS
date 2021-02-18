@@ -20,11 +20,23 @@ Vue.mixin({
     }
 });
 
-$(document).on("change", "#cStructName", function (event) {
-    var newStructName = $(this).val();
+$(document).on("click", ".btnSavePage", function (event) {
+   
+    var newStructName = $("#cStructName").val();
     editPage.structNameOnChange(newStructName);
 
 });
+$(document).on("click", "#btnRedirectSave", function (event) {
+   
+    $(".btnSubmit").click();
+
+});
+$(document).on("click", "#btnRedirectDontSave", function (event) {
+    
+    $(".btnSubmit").click();
+
+});
+
 
 //Edit Page
 const editPageElement = document.querySelector("#EditPage");
@@ -39,32 +51,65 @@ if (editPageElement) {
             createRedirects: function () {
                 $("#redirectModal").modal("hide");
                 var redirectType = $(".redirectStatus:checked").val();
-                //var redirectType = redirectTypeElement != null ? redirectTypeElement.value : "";
+                
                 if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
-                    return;
+                    return false;
                 }
                 else {
-
-                    let urlParams = new URLSearchParams(window.location.search);
-                    let pageId = this.getQueryStringParam('pgid');
-                    $("#cRedirect").val(redirectType);
-                    var inputJson = {
-                        redirectType: redirectType,
-                        oldUrl: localStorage.originalStructName,
-                        NewUrl: this.structName,
-                        hiddenOldUrl: ""
-                    };
-                    var self = this;
-                    axios.post(SaveUrlAPIUrl, inputJson)
+                    debugger;
+                    var newUrl = $("#cStructName").val();
+                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                            if (response.data == "success") {
-                                $("#redirectModal").modal("hide");
-                                // window.location.href = "?ewCmd=Normal";
-                            }
+                            debugger;
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
 
+                                    $("#cRedirect").val(redirectType);
+                                    
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl};
+                                    axios.post(paginationAddNewUrlAPIUrl, inputJson)
+                                        .then(function (response) {
+                                            if (response.data == "success") {
+                                                $("#redirectModal").modal("hide");
+                                                // window.location.href = "?ewCmd=Normal";
+                                            }
+
+                                        });
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            else {
+                                debugger;
+                                $("#cRedirect").val(redirectType);
+                                $("#redirectModal").modal("hide");
+                                //var inputJson = {
+                                //    redirectType: redirectType,
+                                //    oldUrl: localStorage.originalStructName,
+                                //    NewUrl: newUrl,
+                                //    hiddenOldUrl: ""
+                                //};
+                                //var self = this;
+                                //axios.post(SaveUrlAPIUrl, inputJson)
+                                //    .then(function (response) {
+                                //        if (response.data == "success") {
+                                            
+                                //            // window.location.href = "?ewCmd=Normal";
+                                //        }
+
+                                //    });
+                            }
                         });
-                }
-            },
+
+
+                 }
+                   
+                },
+           
+          
+          
             structNameOnChange: function (newStructName) {
 
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
@@ -73,6 +118,9 @@ if (editPageElement) {
                     $("#OldPageName").val(localStorage.originalStructName);
                     $("#NewPageName").val(newStructName);
                     this.structName = newStructName;
+                }
+                else {
+                    $(".btnSubmit").click();
                 }
 
             }
