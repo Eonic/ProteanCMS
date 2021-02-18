@@ -23,39 +23,25 @@ Vue.mixin({
     }
 });
 
-
-
-////Edit Page
-
 $(document).on("click", ".btnSavePage", function (event) {
-
+   
     var newStructName = $("#cStructName").val();
     editPage.structNameOnChange(newStructName);
 
 });
-
 $(document).on("click", "#btnRedirectSave", function (event) {
+   
+    $(".btnSubmit").click();
 
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
-    }
-
-    $("#redirectModal").modal("hide");
 });
-
 $(document).on("click", "#btnRedirectDontSave", function (event) {
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
-    }
-    $("#redirectModal").modal("hide");
+    
+    $(".btnSubmit").click();
+
 });
 
+
+//Edit Page
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
     window.editPage = new Vue({
@@ -68,23 +54,23 @@ if (editPageElement) {
             createRedirects: function () {
                 $("#redirectModal").modal("hide");
                 var redirectType = $(".redirectStatus:checked").val();
-
+                
                 if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
                     return false;
                 }
                 else {
-
+                    debugger;
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-
+                            debugger;
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     $("#cRedirect").val(redirectType);
-
-                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
+                                    
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl};
                                     axios.post(paginationAddNewUrlAPIUrl, inputJson)
                                         .then(function (response) {
                                             if (response.data == "success") {
@@ -99,20 +85,34 @@ if (editPageElement) {
                                 }
                             }
                             else {
-
+                                debugger;
                                 $("#cRedirect").val(redirectType);
                                 $("#redirectModal").modal("hide");
+                                //var inputJson = {
+                                //    redirectType: redirectType,
+                                //    oldUrl: localStorage.originalStructName,
+                                //    NewUrl: newUrl,
+                                //    hiddenOldUrl: ""
+                                //};
+                                //var self = this;
+                                //axios.post(SaveUrlAPIUrl, inputJson)
+                                //    .then(function (response) {
+                                //        if (response.data == "success") {
+                                            
+                                //            // window.location.href = "?ewCmd=Normal";
+                                //        }
 
+                                //    });
                             }
                         });
 
 
-                }
-
-            },
-
-
-
+                 }
+                   
+                },
+           
+          
+          
             structNameOnChange: function (newStructName) {
 
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
@@ -124,7 +124,7 @@ if (editPageElement) {
                     $(".hiddenpageId").val(localStorage.pageId);
                 }
                 else {
-                    $(".btnSubmitPage").click();
+                    $(".btnSubmit").click();
                 }
 
             }
