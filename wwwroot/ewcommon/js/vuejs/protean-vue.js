@@ -127,17 +127,17 @@ if (redirectModalElement) {
         }
     });
 }
+
 //$(".btnaddNewUrl").click(function () {
 //    //addNewUrl.toggleModal();
 //    $(".newAddFormInline").removeClass("hidden");
 //});
 
-
-
 $(document).on("click", ".addRedirectbtn", function (event) {
 
     RedirectPage.SaveNewUrl();
 });
+
 $(".close").click(function () {
     $('#addNewUrl').modal('hide');
 })
@@ -152,6 +152,7 @@ $('.btnSearchUrl').on('click', function (event) {
 
 
 });
+
 $('.btnClear').on('click', function (event) {
 
     location.reload();
@@ -203,8 +204,6 @@ $(document).on("click", ".btn-update", function (event) {
                 }
 
             });
-
-
     }
 
     else {
@@ -219,6 +218,7 @@ $(document).on("click", ".btn-update", function (event) {
     }, 10000);
 
 });
+
 $(document).on("click", ".btn-delete", function (event) {
 
     var oldUrl = "";
@@ -230,7 +230,6 @@ $(document).on("click", ".btn-delete", function (event) {
 
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
 });
-
 
 $(document).on("click", ".delAddNewUrl", function (event) {
 
@@ -258,6 +257,7 @@ $(document).on("mouseup", ".redirecttext", function (event) {
     $(button[0]).removeClass("hidden");
 
 });
+
 $(document).on("mouseup", ".addUrlText", function (event) {
 
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
@@ -433,6 +433,7 @@ if (rediectElement) {
                     });
 
             },
+
             saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
 
                 var that = this;
@@ -443,7 +444,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                       
+
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
@@ -455,6 +456,7 @@ if (rediectElement) {
 
                     });
             },
+
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
@@ -481,6 +483,7 @@ if (rediectElement) {
 
                     });
             },
+
             redirectType: function () {
 
                 var that = this;
@@ -505,7 +508,6 @@ if (rediectElement) {
                 return type
 
             },
-
 
             reloadPermanentList: function (flag) {
                 //var scroll_l = $('.scolling-pane').scrollLeft();
@@ -611,8 +613,6 @@ if (rediectElement) {
                             that.show = true;
 
                         });
-
-
                 }
 
             },
@@ -644,7 +644,6 @@ if (rediectElement) {
             this.getPermanentList();
 
         }
-
     });
 }
 
@@ -657,6 +656,65 @@ $('.scolling-pane').on('scroll', function () {
 
         }
     }
-
-
 });
+
+//Insights
+const insightsSectionElement = document.querySelector("#insights-section");
+if (insightsSectionElement) {
+    window.insightsSection = new Vue({
+        el: "#insights-section",
+        data: {
+            resultArray: {}
+        },
+        methods: {
+            getMetricData: function (metricId, apiUrl) {
+                let self = this;
+                let inputJson = this.getParamObject(apiUrl);
+                let metricElement = document.getElementById(metricId);
+
+                //add loader
+                metricElement.classList.add("metric-loader");
+
+                axios.post(apiUrl, inputJson)
+                    .then(function (response) {
+                        //handle success.
+                        let metricElement = document.getElementById(metricId);
+                        Vue.set(self.resultArray, metricId, response.data);
+
+                        metricElement.classList.remove("metric-loader");
+                    });
+            },
+            getParamObject: function (apiUrl) {
+                let paramCollection = apiUrl.substring(apiUrl.indexOf('?') + 1);
+                let paramArray = paramCollection.split('&');
+
+                var inputJson = {};
+
+                for (var arrIndex = 0; arrIndex < paramArray.length; arrIndex++) {
+                    var param = paramArray[arrIndex]
+                    if (param != null) {
+                        var paramKeyValue = param.split('=');
+                        inputJson[paramKeyValue[0]] = paramKeyValue[1];
+                    }
+                }
+                return inputJson;
+            },
+            filterResultArray: function (metricId) {
+                return this.resultArray[metricId];
+            }
+        },
+        mounted: function () {
+            let metricsList = document.getElementsByClassName("metric");
+            if (metricsList != null && metricsList.length > 0) {
+                for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {
+                    let metric = metricsList[metricIndex];
+                    let apiUrl = metric.getAttribute("data-json-url");
+                    if (apiUrl != null && apiUrl.length > 0) {
+                        let metricElementId = metric.getAttribute("id");
+                        this.getMetricData(metricElementId, apiUrl);
+                    }
+                }
+            }
+        }
+    });
+}
