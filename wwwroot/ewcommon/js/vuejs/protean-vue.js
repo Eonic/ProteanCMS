@@ -118,6 +118,7 @@ if (editPageElement) {
                     $("#OldPageName").val(localStorage.originalStructName);
                     $("#NewPageName").val(newStructName);
                     this.structName = newStructName;
+                    $(".hiddenpageId").val(localStorage.pageId);
                 }
                 else {
                     $(".btnSubmit").click();
@@ -233,7 +234,7 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-
+                debugger;
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
@@ -241,6 +242,9 @@ $(document).on("click", ".btn-update", function (event) {
                         RedirectPage.urlList[index].attributes[1].nodeValue = NewUrl;
                     }
                     else {
+                        $("#loadSpin").modal("hide");
+                        that.show = false;
+                        that.loading = false;
                         return false;
                     }
                 }
@@ -339,12 +343,15 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-
+                debugger;
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
                     }
                     else {
+                        $("#loadSpin").modal("hide");
+                        that.show = false;
+                        that.loading = false;
                         return false;
                     }
                 }
@@ -498,7 +505,7 @@ if (rediectElement) {
                             that.show = false;
                             that.loading = false;
                             var flag = "saveURL";
-                            //that.reloadPermanentList(flag);
+                            that.reloadPermanentList(flag);
 
                         }
 
@@ -630,9 +637,13 @@ if (rediectElement) {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
+                                    var flag = "saveURL";
+                                    that.reloadPermanentList(flag);
                                 }
                                 else {
-
+                                    $("#loadSpin").modal("hide");
+                                    that.loading = false;
+                                    that.show = false;
                                     return false;
                                 }
                             }
@@ -643,10 +654,24 @@ if (rediectElement) {
                             }
 
                             if (that.newAddedUrlList != '') {
-                                var index = that.newAddedUrlList.length;
-                                var tempUrlList = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
-                                that.newAddedUrlList[index] = tempUrlList; //$.merge($.merge([], that.newAddedUrlList), tempUrlList);
+                                newListindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
+                                mainListindex = that.urlList.findIndex(x => x.oldUrl === oldUrl);
+                               // alert(mainListindex);
+                                if (mainListindex >= 0) {
 
+                                }
+                                else {
+                                    if (newListindex == -1) {
+                                        var index = that.newAddedUrlList.length;
+                                        var tempUrlList = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                        that.newAddedUrlList[index] = tempUrlList;
+
+                                    }
+                                    else {
+                                        
+                                        that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                    }
+                                }
 
                             }
                             else {
@@ -657,8 +682,8 @@ if (rediectElement) {
                             $("#OldUrlmodal").val("");
                             $("#NewUrlModal").val("");
                             $("#loadSpin").modal("hide");
-                            that.loading = true;
-                            that.show = true;
+                            that.loading = false;
+                            that.show = false;
 
                         });
                 }
