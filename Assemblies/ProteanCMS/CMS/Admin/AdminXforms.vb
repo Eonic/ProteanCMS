@@ -42,7 +42,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
-            Public moAdminRedirect As Protean.Cms.Admin.Redirects
+
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
@@ -61,7 +61,7 @@ Partial Public Class Cms
                     goConfig = myWeb.moConfig
                     moDbHelper = myWeb.moDbHelper
                     moRequest = myWeb.moRequest
-                    moAdminRedirect = New Protean.Cms.Admin.Redirects()
+
                     MyBase.cLanguage = myWeb.mcPageLanguage
 
                 Catch ex As Exception
@@ -1733,22 +1733,6 @@ Partial Public Class Cms
                                 strarr = strOldurl.Split("?"c)
                                 strOldurl = strarr(0)
 
-                                Dim strarr2() As String
-                                Dim strTempNewUrl As String = strarr(0).TrimEnd("/")
-                                strarr2 = strTempNewUrl.Split("/"c)
-                                'Dim replacerString As String = strarr2(1)
-                                newUrl = newUrl.Replace(" ", "-")
-                                If strarr2.Length = 3 Then
-                                    newUrl = "/" & strarr2(1) & "/" & newUrl & "/"
-                                Else
-                                    If strarr2.Length = 4 Then
-                                        newUrl = "/" & strarr2(1) & "/" & strarr2(2) & "/" & newUrl & "/"
-                                    Else
-
-                                        newUrl = strarr2(0) & "/" & newUrl & "/"
-                                    End If
-                                End If
-
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
@@ -1827,6 +1811,7 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
             ''' <summary>
             ''' Page xform validation:
             ''' <list>
