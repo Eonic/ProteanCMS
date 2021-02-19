@@ -1,3 +1,4 @@
+
 '***********************************************************************
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
@@ -18,7 +19,7 @@ Imports System.Configuration
 Imports System.IO
 Imports System.Collections
 Imports System.Data
-Imports System.Data.sqlClient
+Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports System.Collections.Specialized
@@ -41,7 +42,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
-            Public moAdminRedirect As Protean.Cms.Admin.Redirects
+
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
@@ -60,7 +61,7 @@ Partial Public Class Cms
                     goConfig = myWeb.moConfig
                     moDbHelper = myWeb.moDbHelper
                     moRequest = myWeb.moRequest
-                    moAdminRedirect = New Protean.Cms.Admin.Redirects()
+
                     MyBase.cLanguage = myWeb.mcPageLanguage
 
                 Catch ex As Exception
@@ -1001,6 +1002,7 @@ Partial Public Class Cms
             End Function
 
 
+
             Public Function xFrmRewriteMaps(ByVal ConfigType As String) As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
@@ -1047,40 +1049,26 @@ Partial Public Class Cms
                                 If goSession("oTempInstance") Is Nothing Then
 
 
-                                    'Dim PerPageCount As Integer
-                                    'Dim TotalCount As Integer = 0
-                                    'If (myWeb.moRequest("PerPageCount") > 0) Then
-                                    '    PerPageCount = myWeb.moRequest("PerPageCount")
-                                    'Else
-                                    '    PerPageCount = 10
-                                    'End If
+                                    Dim PerPageCount As Integer = 50
+                                    If goSession("totalCountTobeLoad") IsNot Nothing Then
+                                        PerPageCount = goSession("totalCountTobeLoad")
+                                    End If
+                                    Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    Dim TotalCount As Integer = props.ChildNodes.Count
 
-                                    'Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
-                                    'Dim takeRecord As Integer = PerPageCount
+                                    If props.ChildNodes.Count >= PerPageCount Then
+                                        Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                        Dim xmlstringend As String = "</rewriteMap>"
+                                        Dim count As Integer = 0
 
-                                    'Dim url As String = System.Web.HttpContext.Current.Request.Url.AbsoluteUri
+                                        For i As Integer = 0 To (PerPageCount) - 1
+                                            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                        Next
 
-                                    'Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    'TotalCount = props.ChildNodes.Count
-
-                                    'If props.ChildNodes.Count >= PerPageCount Then
-                                    '    Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
-                                    '    Dim xmlstringend As String = "</rewriteMap>"
-                                    '    Dim count As Integer = 0
-
-                                    '    For i As Integer = skipRecords To props.ChildNodes.Count - 1
-                                    '        If i > (skipRecords + takeRecord) - 1 Then
-                                    '            Exit For
-                                    '        Else
-                                    '            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
-                                    '        End If
-
-                                    '    Next
-
-                                    '    MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
-                                    'Else
-                                    MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
-                                    'End If
+                                        MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
+                                    Else
+                                        MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+                                    End If
 
                                     Me.bProcessRepeats = False
                                 Else
@@ -1112,9 +1100,6 @@ Partial Public Class Cms
                                         MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "<strong>" & newURL & "</strong> cannot match an old URL")
                                     End If
                                 Next
-
-
-
 
 
                                 If MyBase.valid Then
@@ -1153,17 +1138,53 @@ Partial Public Class Cms
 
                                     End If
 
-                                    Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    Dim rewriteMapsNode As XmlElement = rewriteXml.SelectSingleNode("/rewriteMaps")
-                                    If Not rewriteMapsNode Is Nothing Then
-                                        If replacingNode Is Nothing Then
-                                            rewriteMapsNode.AppendChild(replacerNode)
-                                        Else
-                                            rewriteMapsNode.ReplaceChild(replacerNode, replacingNode)
+                                    'Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    'If replacingNode Is Nothing Then
+                                    '    rewriteXml.FirstChild.AppendChild(replacerNode)
+                                    'Else
+                                    '    rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
+                                    'End If
+                                    'rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
+
+                                    ''Check we do not have a redirect for the OLD URL allready. Remove if exists
+                                    ' Dim addValue As XmlElement
+
+
+                                    For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                        Dim oldUrl = oElmt.GetAttribute("key")
+
+                                        'If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
+                                        Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
+                                        If Not existingRedirects Is Nothing Then
+
+                                            For Each existingNode As XmlNode In existingRedirects
+                                                existingNode.ParentNode.RemoveChild(existingNode)
+                                                'existingNode.RemoveAll()
+                                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                            Next
                                         End If
+                                    Next
+
+                                    'Add redirect
+                                    Dim oCgfSectPathobj As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                                    Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPathobj)
+                                    If Not redirectSectionXmlNode Is Nothing Then
+                                        For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                            replacingElement.InnerXml = oElmt.OuterXml
+
+                                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                            rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
+
+                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                        Next
                                     End If
 
-                                    rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
+
+
+
+
+
                                     Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
                                     MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "Settings Saved")
                                     goSession("oTempInstance") = Nothing
@@ -1706,19 +1727,24 @@ Partial Public Class Cms
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
                                 Dim redirectType As String = moRequest("redirectType").ToString()
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                Dim obj As Admin.Redirects = New Admin.Redirects()
+                                Dim strOldurl As String = moRequest("pageOldUrl").ToString()
+                                Dim strarr() As String
+                                strarr = strOldurl.Split("?"c)
+                                strOldurl = strarr(0)
 
-                                Select Case redirectType
+                                Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        moAdminRedirect.CreateRedirect(redirectType, cName, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
                                     Case "302Redirect"
-                                        moAdminRedirect.CreateRedirect(redirectType, cName, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
                                 End Select
 
                             Else
 
-                                    pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
                                 ' If the site wants to, by default, restrict new pages to a given group or directory item, then
@@ -1785,6 +1811,7 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
             ''' <summary>
             ''' Page xform validation:
             ''' <list>
@@ -7122,40 +7149,23 @@ Partial Public Class Cms
                     Dim oFrmElmt As XmlElement
 
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "CancelSubscription")
-                    MyBase.Instance.InnerXml = "<CancelSub><bSendEmail>1</bSendEmail></CancelSub>"
+
                     MyBase.addInput(oFrmElmt, "nUserID", False, "UserId", "hidden")
                     MyBase.addInput(oFrmElmt, "nSubscriptionId", False, "SubscriptionId", "hidden")
 
                     MyBase.addInput(oFrmElmt, "cStatedReason", False, "Reason for cancelation")
 
-                    'Checkbox
-                    If nUserId <> nCurrentUser Then
-
-
-                        Dim oSelElmt2 As XmlElement
-                        oSelElmt2 = MyBase.addSelect1(oFrmElmt, "bSendEmail", True, "Send Email", "", ApperanceTypes.Full)
-                        MyBase.addOption(oSelElmt2, "Yes", "1")
-                        MyBase.addOption(oSelElmt2, "No", "0")
-                        MyBase.addBind("bSendEmail", "CancelSub/bSendEmail", "false()")
-                    End If
-
-
                     MyBase.addNote(oFrmElmt, noteTypes.Hint, "Are you sure you wish to cancel this subscription", True)
 
                     MyBase.addSubmit(oFrmElmt, "Back", "Back", "Back", "btn-default", "fa-chevron-left")
                     MyBase.addSubmit(oFrmElmt, "Cancel", "Cancel Subscription", "Cancel", "btn-warning principle", "fa-stop")
-                    MyBase.addValues()
 
                     If Me.isSubmitted Then
                         If MyBase.getSubmitted = "Back" Then
                             Return MyBase.moXformElmt
                         ElseIf MyBase.getSubmitted = "Cancel" Then
                             Dim oSub As New Cart.Subscriptions(myWeb)
-                            Dim bSendEmail As Boolean = True
-                            If myWeb.moRequest("bSendEmail") = "0" Then
-                                bSendEmail = False
-                            End If
-                            oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"), bSendEmail)
+                            oSub.CancelSubscription(nSubscriptionId, myWeb.moRequest("cStatedReason"))
                             MyBase.valid = True
                             Return MyBase.moXformElmt
                         End If
@@ -10063,3 +10073,4 @@ Partial Public Class Cms
         End Sub
     End Class
 End Class
+

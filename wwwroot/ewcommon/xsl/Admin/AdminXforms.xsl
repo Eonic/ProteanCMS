@@ -2543,43 +2543,48 @@
                 <span aria-hidden="true">&#215;</span>
               </button>
                   </div>
-                  <div class="modal-body">
-                    <div class="form-group repeat-group ">
-                      <fieldset class="rpt-00 row">
-                        <div class="form-group input-containing col-md-6">
-                          <label>Old URL</label>
-                          <div class="control-wrapper input-wrapper appearance-">
+            <div class="modal-body">
+              <div class="form-group repeat-group ">
+                <fieldset class="rpt-00 row">
+                  <div class="form-group input-containing col-md-6">
+                    <label>Old URL</label>
+                    <div class="control-wrapper input-wrapper appearance-">
 
-                            <input type="text" name="OldUrl" id="OldPageName" class="textbox form-control"/>
-                          </div>
-                        </div>
-                        <div class="form-group input-containing col-md-6">
-                          <label>New URL</label>
-                          <div class="control-wrapper input-wrapper appearance-">
-                            <input type="text" name="NewUrl" id="NewPageName" class="textbox form-control"/>
-                          </div>
-                        </div>
-                      </fieldset>
+                      <input type="text" name="OldUrl" id="OldPageName" class="textbox form-control"/>
                     </div>
-                      <ul>
-                        <li class="md-radio">
-                          <input name="redirectType" type="radio" value="301Redirect" class="redirectStatus" />
-                          <label>301:  We will Permanently redirect</label>
-                        </li>
-                        <li class="md-radio">
-                          <input name="redirectType" type="radio" value="302Redirect" class="redirectStatus"/>
-                          <label>302: We will temporarily redirect</label>
-                        </li>
-                        <li class="md-radio">
-                          <input name="redirectType" type="radio" value="404Redirect" class="redirectStatus"/>
-                          <label>404: No, the old url will show page not found</label>
-                        </li>
-                         <li class="md-radio">
-                          <input name="redirectType" type="radio" value="none" class="redirectStatus" checked="checked"/>
-                          <label>None</label>
-                        </li>
-                      </ul>
+                  </div>
+                  <div class="form-group input-containing col-md-6">
+                    <label>New URL</label>
+                    <div class="control-wrapper input-wrapper appearance-">
+                      <input type="text" name="NewUrl" id="NewPageName" class="textbox form-control"/>
                     </div>
+                  </div>
+                </fieldset>
+              </div>
+              <ul>
+                <li class="md-radio">
+                  <input name="redirectType" type="radio" value="301Redirect" class="redirectStatus" />
+                  <label>301:  We will Permanently redirect</label>
+                </li>
+                <li class="md-radio">
+                  <input name="redirectType" type="radio" value="302Redirect" class="redirectStatus"/>
+                  <label>302: We will temporarily redirect</label>
+                </li>
+                <li class="md-radio">
+                  <input name="redirectType" type="radio" value="404Redirect" class="redirectStatus"/>
+                  <label>404: No, the old url will show page not found</label>
+                </li>
+                <li class="md-radio">
+                  <input name="redirectType" type="radio" value="none" class="redirectStatus" checked="checked"/>
+                  <label>None</label>
+                </li>
+              </ul>
+
+            <xsl:variable name="objOldUrl" select="/Page/Menu/MenuItem/MenuItem[@id=/Page/@id]/@url" />
+              <!--a href="?ewCmd=EditXForm&amp;artid={/Page/Request/QueryString/Item[@name='id']/node()}" class="textButton">Click Here to Edit this Form</a-->
+              <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
+              <input name="pageId" type="hidden"  class="hiddenpageId" />
+            </div>
                  
                   <div class="modal-footer">
                     <div>
