@@ -42,7 +42,7 @@ Partial Public Class Cms
             Public goConfig As System.Collections.Specialized.NameValueCollection ' = WebConfigurationManager.GetWebApplicationSection("protean/web")
             Public mbAdminMode As Boolean = False
             Public moRequest As System.Web.HttpRequest
-            Public moAdminRedirect As Protean.Cms.Admin.Redirects
+
             ' Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
             Shadows Event OnError(ByVal sender As Object, ByVal e As Protean.Tools.Errors.ErrorEventArgs)
 
@@ -61,7 +61,7 @@ Partial Public Class Cms
                     goConfig = myWeb.moConfig
                     moDbHelper = myWeb.moDbHelper
                     moRequest = myWeb.moRequest
-                    moAdminRedirect = New Protean.Cms.Admin.Redirects()
+
                     MyBase.cLanguage = myWeb.mcPageLanguage
 
                 Catch ex As Exception
@@ -1827,6 +1827,7 @@ Partial Public Class Cms
                     Return Nothing
                 End Try
             End Function
+
             ''' <summary>
             ''' Page xform validation:
             ''' <list>
