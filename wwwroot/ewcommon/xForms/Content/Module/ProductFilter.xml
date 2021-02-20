@@ -10,7 +10,15 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="ProductFilter" contentType="FilterType" box="" title="" link="" linkType="filter" sortBy="Name" order="Position" cols="1" stepBy="" stepCount="0" display="all" position="" listGroup="true" carouselBullets="false"/>
+          <Content moduleType="ProductFilter" contentType="FilterType" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="0" display="all" position="" action="Protean.Cms+Content+Modules.ProductFilter">
+            <Filter type="PageFilter" parentPageId="" active=""/>
+            <Filter type="PriceRangeFilter" lower="" upper="" step="" active=""/>
+            <Filter type="StarRatingFilter" active=""/>
+            <Filter type="AgeRangeFilter" active=""/>
+            <Filter type="GroupSizeFilter" active=""/>
+            <Filter type="OfferFilter" active=""/>
+            <Filter type="OccasionFilter" active=""/>
+          </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -44,6 +52,9 @@
       <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
       <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="cFilterRpt" nodeset="Filter">
+        <bind id="cFilterType" nodeset="@type" required="false()" type="string"/>
+      </bind>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -72,10 +83,25 @@
         <label>Content</label>
         <input bind="cModuleTitle" class="long">
           <label>Title or Name</label>
-        </input>        
-         <relatedContent search="add" type="Filters" relationType="" direction="1way">
-           <label>Filters</label>
-         </relatedContent>
+        </input>
+        <group>
+          <label>Filters</label>
+          <group>
+            <repeat bind="cFilterRpt" class="horizontal">
+              <input bind="cFilterType" class="short">
+                <label>Option</label>
+              </input>
+              <trigger>
+                <label>Del</label>
+                <delete bind="cOptRpt1" at="index('cOptRpt1')"/>
+              </trigger>
+            </repeat>
+          </group>
+          <trigger>
+            <label>Add Filter</label>
+            <insert position="after" bind="cFilterRpt" at="index('cFilterRpt')" class="add"/>
+          </trigger>
+        </group>
       </group>
       <group class="inline">
         <label>Display Settings</label>
