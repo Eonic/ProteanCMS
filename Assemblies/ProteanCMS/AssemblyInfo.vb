@@ -12,9 +12,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("ProteanCMS")>
 <Assembly: AssemblyDescription("ProteanCMS")>
-<Assembly: AssemblyCompany("Eonic Digital LLP")>
+<Assembly: AssemblyCompany("Eonic Associates LLP")>
 <Assembly: AssemblyProduct("ProteanCMS")>
-<Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")>
+<Assembly: AssemblyCopyright("Eonic Associates LLP 2002-2020")>
 <Assembly: AssemblyTrademark("ProteanCMS")>
 <Assembly: CLSCompliant(True)> 
 
@@ -33,13 +33,11 @@ Imports System.Runtime.InteropServices
 ' You can specify all the values or you can default the Build and Revision Numbers 
 ' by using the '*' as shown below:
 
-
-<Assembly: AssemblyVersion("6.0.49.31")>
-
+<Assembly: AssemblyVersion("6.0.45.4")>
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.49.30")>
-<Assembly: NeutralResourcesLanguageAttribute("en")>
+<Assembly: AssemblyFileVersion("6.0.45.4")>
+<Assembly: NeutralResourcesLanguageAttribute("en")> 
 

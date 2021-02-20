@@ -303,6 +303,30 @@ where cl.nStructId = " & myWeb.mnPageId)
             End Sub
 
 
+            Public Sub ProductFilter(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
+
+                Dim oFilterElmt As XmlElement
+
+                Try
+
+                    For Each oFilterElmt In oContentNode.SelectNodes("Content")
+
+                        Select Case oFilterElmt.GetAttribute("filterType")
+                            Case "PageFilter"
+
+                            Case Else
+
+                        End Select
+
+                    Next
+
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""))
+                End Try
+            End Sub
+
+
             Public Sub Conditional(ByRef myWeb As Protean.Cms, ByRef oContentNode As XmlElement)
                 Try
                     If Not myWeb.mbAdminMode Then

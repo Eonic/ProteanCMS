@@ -83,6 +83,8 @@
       <Module type="TrainingCourseList" name="Training Course List">Training Course List</Module>
       <Module type="ProductList" name="Product List">List of Products</Module>
       <Module type="ProductGallery" name="Product Gallery">Gallery of Products</Module>
+      <Module type="ProductFilter" name="Product Filter">Product Filtering</Module>
+
       <!-- Pants, needs more dev -->
       <!--<Module type="TagCloud" name="Tag Cloud">Tag Cloud</Module>-->
       <Module type="BookList" name="Book List">BookList</Module>
