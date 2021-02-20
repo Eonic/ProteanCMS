@@ -10,7 +10,7 @@
         <cContentName>PageFilter</cContentName>
 				<cContentSchemaName>PageFilter</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content filterType="PageFilter" action="Protean.Cms+Content+Modules.PageFilter" parentPageId=""/>
+					<Content filterType="PageFilter" parentPageId=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
