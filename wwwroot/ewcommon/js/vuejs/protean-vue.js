@@ -29,12 +29,12 @@ $(document).on("click", ".btnSavePage", function (event) {
 $(document).on("click", "#btnRedirectSave", function (event) {
    
     $(".btnSubmit").click();
-
+    $("#redirectModal").modal("hide");
 });
 $(document).on("click", "#btnRedirectDontSave", function (event) {
     
     $(".btnSubmit").click();
-
+    $("#redirectModal").modal("hide");
 });
 
 

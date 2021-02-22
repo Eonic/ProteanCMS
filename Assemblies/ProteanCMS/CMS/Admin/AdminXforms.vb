@@ -1733,6 +1733,22 @@ Partial Public Class Cms
                                 strarr = strOldurl.Split("?"c)
                                 strOldurl = strarr(0)
 
+                                Dim strarr2() As String
+                                Dim strTempNewUrl As String = strarr(0).TrimEnd("/")
+                                strarr2 = strTempNewUrl.Split("/"c)
+                                'Dim replacerString As String = strarr2(1)
+                                newUrl = newUrl.Replace(" ", "-")
+                                If strarr2.Length = 3 Then
+                                    newUrl = "/" & strarr2(1) & "/" & newUrl & "/"
+                                Else
+                                    If strarr2.Length = 4 Then
+                                        newUrl = "/" & strarr2(1) & "/" & strarr2(2) & "/" & newUrl & "/"
+                                    Else
+
+                                        newUrl = strarr2(0) & "/" & newUrl & "/"
+                                    End If
+                                End If
+
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
