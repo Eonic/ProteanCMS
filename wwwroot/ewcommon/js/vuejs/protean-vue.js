@@ -23,25 +23,27 @@ Vue.mixin({
     }
 });
 
+
+
+////Edit Page
+
 $(document).on("click", ".btnSavePage", function (event) {
-   
+
     var newStructName = $("#cStructName").val();
     editPage.structNameOnChange(newStructName);
 
 });
+
 $(document).on("click", "#btnRedirectSave", function (event) {
-   
+
     $(".btnSubmit").click();
     $("#redirectModal").modal("hide");
 });
 $(document).on("click", "#btnRedirectDontSave", function (event) {
-    
+
     $(".btnSubmit").click();
     $("#redirectModal").modal("hide");
 });
-
-
-//Edit Page
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
     window.editPage = new Vue({
@@ -88,21 +90,7 @@ if (editPageElement) {
                                 debugger;
                                 $("#cRedirect").val(redirectType);
                                 $("#redirectModal").modal("hide");
-                                //var inputJson = {
-                                //    redirectType: redirectType,
-                                //    oldUrl: localStorage.originalStructName,
-                                //    NewUrl: newUrl,
-                                //    hiddenOldUrl: ""
-                                //};
-                                //var self = this;
-                                //axios.post(SaveUrlAPIUrl, inputJson)
-                                //    .then(function (response) {
-                                //        if (response.data == "success") {
-                                            
-                                //            // window.location.href = "?ewCmd=Normal";
-                                //        }
-
-                                //    });
+                                
                             }
                         });
 
@@ -912,31 +900,61 @@ if (insightsSectionElement) {
 
                 var inputJson = {};
 
-                for (var arrIndex = 0; arrIndex < paramArray.length; arrIndex++) {
-                    var param = paramArray[arrIndex]
-                    if (param != null) {
-                        var paramKeyValue = param.split('=');
-                        inputJson[paramKeyValue[0]] = paramKeyValue[1];
-                    }
+});
+
+//Edit Product
+const editProductElement = $(".ProductSub").length;
+if (editProductElement>0) {
+    window.editProduct = new Vue({
+        el: ".ProductSub",
+        data: {
+            urlPathInput: "",
+            originalPathName: ""
+        },
+        methods: {
+            storedPath: function () {
+               
+                var cContentPath = $("#cContentPath").val();
+                if (cContentPath != null) {
+                    this.urlPathInput = cContentPath;
                 }
-                return inputJson;
+
+                //clean the storage for struct name when page changes.
+                let pageId = this.getQueryStringParam('pgid');
+                if (!localStorage.pageId || localStorage.pageId != pageId) {
+                    localStorage.removeItem('originalPathName');
+                }
+                localStorage.pageId = pageId;
+                localStorage.originalPathName = this.urlPathInput;
             },
-            filterResultArray: function (metricId) {
-                return this.resultArray[metricId];
-            }
+            UrlPathOnChange: function (newContentPath) {
+                debugger;
+                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+
+                    redirectModal.toggleModal();
+                    $("#OldPageName").val(localStorage.originalPathName);
+                    $("#NewPageName").val(newContentPath);
+                    this.cContentPath = newContentPath;
+                   
+                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
+                    $(".hiddenProductNewUrl").val(newContentPath);
+                }
+                else {
+                    //$(".btnSubmit").click();
+                }
+
+            },
         },
         mounted: function () {
-            let metricsList = document.getElementsByClassName("metric");
-            if (metricsList != null && metricsList.length > 0) {
-                for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {
-                    let metric = metricsList[metricIndex];
-                    let apiUrl = metric.getAttribute("data-json-url");
-                    if (apiUrl != null && apiUrl.length > 0) {
-                        let metricElementId = metric.getAttribute("id");
-                        this.getMetricData(metricElementId, apiUrl);
-                    }
-                }
-            }
+            this.storedPath();
         }
     });
 }
+
+$(document).on("click", ".btnSaveProduct", function (event) {
+    debugger;
+    var newContentPath = $("#cContentPath").val();
+    editProduct.UrlPathOnChange(newContentPath);
+
+
+});
