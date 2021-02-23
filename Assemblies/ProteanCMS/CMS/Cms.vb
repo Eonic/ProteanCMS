@@ -557,6 +557,7 @@ Public Class Cms
                 gnPageErrorId = goApp("PageErrorId")
 
                 mcPagePath = CStr(moRequest("path") & "")
+                mcPagePath = mcPagePath.Replace("//", "/")
 
                 InitialiseJSEngine()
 
