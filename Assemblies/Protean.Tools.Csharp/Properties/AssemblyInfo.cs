@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Protean.Tools.Csharp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Eonic Digital LLP.")]
-[assembly: AssemblyProduct("ProteanCMS")]
-[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")]
+[assembly: AssemblyCompany("Eonic Associates LLP.")]
+[assembly: AssemblyProduct("Protean.Tools.Csharp")]
+[assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-
-[assembly: AssemblyVersion("6.0.49.17")]
-[assembly: AssemblyFileVersion("6.0.49.16")]
-
+[assembly: AssemblyVersion("6.0.45.2")]
+[assembly: AssemblyFileVersion("6.0.45.2")]

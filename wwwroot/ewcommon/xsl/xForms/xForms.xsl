@@ -3,8 +3,8 @@
 
   <xsl:template match="Page" mode="xform_control_scripts">
 
-    <xsl:if test="descendant-or-self::instance">
-      <!--################################################ modal for alert-->
+    <!--################################################ modal for alert-->
+    <!--xsl:if test="descendant-or-self::instance">
       <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-    </xsl:if>
+    </xsl:if-->
 
     <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
       <script type="text/javascript">
