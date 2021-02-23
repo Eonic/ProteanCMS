@@ -2600,7 +2600,8 @@
                 <input name="pageOldUrl" type="hidden" value="{$objOldUrlCatpage}" class="hiddenOldUrl" />
               </xsl:otherwise>
             </xsl:choose>
-              
+                <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
+             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
 
             <!--a href="?ewCmd=EditXForm&amp;artid={/Page/Request/QueryString/Item[@name='id']/node()}" class="textButton">Click Here to Edit this Form</a-->
 
