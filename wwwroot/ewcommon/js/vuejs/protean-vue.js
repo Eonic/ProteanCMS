@@ -32,15 +32,27 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-
-    $(".btnSubmit").click();
+   
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
+    
     $("#redirectModal").modal("hide");
 });
+
 $(document).on("click", "#btnRedirectDontSave", function (event) {
-
-    $(".btnSubmit").click();
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
     $("#redirectModal").modal("hide");
 });
+
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
     window.editPage = new Vue({
@@ -109,7 +121,7 @@ if (editPageElement) {
                     $(".hiddenpageId").val(localStorage.pageId);
                 }
                 else {
-                    $(".btnSubmit").click();
+                    $(".btnSubmitPage").click();
                 }
 
             }
@@ -760,7 +772,7 @@ if (editProductElement>0) {
                     $(".hiddenProductNewUrl").val(newContentPath);
                 }
                 else {
-                    //$(".btnSubmit").click();
+                    $(".btnSubmitProduct").click();
                 }
 
             },
