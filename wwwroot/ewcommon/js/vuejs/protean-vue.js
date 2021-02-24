@@ -1026,7 +1026,7 @@ if (editProductElement>0) {
                     $(".hiddenProductNewUrl").val(newContentPath);
                 }
                 else {
-                    //$(".btnSubmit").click();
+                    $(".btnSubmitProduct").click();
                 }
 
             },
