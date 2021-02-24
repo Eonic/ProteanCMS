@@ -2837,6 +2837,10 @@ Partial Public Class Cms
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
 
+
+
+
+
                         If MyBase.valid Then
 
                             Dim bPreviewRedirect As Boolean = False
@@ -2876,6 +2880,33 @@ Partial Public Class Cms
                                 Dim updatedVersionId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
+                                'Redirection 
+
+                                Dim redirectType As String = moRequest("redirectType").ToString()
+                                Dim newUrl As String = moRequest("productNewUrl").ToString()
+                                Dim strOldurl As String = moRequest("productOldUrl").ToString()
+                                Dim obj As Admin.Redirects = New Admin.Redirects()
+                                newUrl = newUrl.Replace(" ", "-")
+                                newUrl = "/experience/" & newUrl
+
+                                strOldurl = strOldurl.Replace(" ", "-")
+                                strOldurl = "/experience/" & strOldurl
+
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
+
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                End Select
+
+
+
+
+
+
+
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
