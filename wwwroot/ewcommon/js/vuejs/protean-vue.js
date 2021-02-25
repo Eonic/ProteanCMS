@@ -184,7 +184,7 @@ if (redirectModalElement) {
 
 
 $(document).on("click", ".addRedirectbtn", function (event) {
-
+    $(".countLable").addClass("hidden");
     RedirectPage.SaveNewUrl();
 });
 $(".close").click(function () {
@@ -210,7 +210,7 @@ $('.btnClear').on('click', function (event) {
 
 $(document).on("click", ".btn-update", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
@@ -233,8 +233,9 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-              
+                
                 if (response.data == "True") {
+                   
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
                         RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
@@ -243,6 +244,8 @@ $(document).on("click", ".btn-update", function (event) {
                         RedirectPage.reloadPermanentList(flag);
                     }
                     else {
+                        $(input[0]).val(RedirectPage.urlList[index].attributes[0].nodeValue);
+                        $(input[1]).val(RedirectPage.urlList[index].attributes[1].nodeValue);
                         $("#loadSpin").modal("hide");
                         that.show = false;
                         that.loading = false;
@@ -274,20 +277,21 @@ $(document).on("click", ".btn-update", function (event) {
 
 });
 $(document).on("click", ".btn-delete", function (event) {
-
+    $(".countLable").addClass("hidden");
     var oldUrl = "";
     var NewUrl = "";
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var input = $(parentDiv).find('input[type="text"]');
     oldUrl = $(input[0]).val();
     NewUrl = $(input[1]).val();
-
+    var index = $(input[0]).attr("id").split('_').pop();
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
+   
 });
 
 
 $(document).on("click", ".delAddNewUrl", function (event) {
-
+    $(".countLable").addClass("hidden");
     var oldUrl = "";
     var NewUrl = "";
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
@@ -301,7 +305,7 @@ $(document).on("click", ".delAddNewUrl", function (event) {
 
 });
 
-$(document).on("mouseup", ".redirecttext", function (event) {
+$(document).on("focus", ".redirecttext", function (event) {
 
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var button = $(parentDiv).find('button[type="button"]');
@@ -312,7 +316,7 @@ $(document).on("mouseup", ".redirecttext", function (event) {
     $(button[0]).removeClass("hidden");
 
 });
-$(document).on("mouseup", ".addUrlText", function (event) {
+$(document).on("focus", ".addUrlText", function (event) {
 
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
     var button = $(parentDiv).find('button[type="button"]');
@@ -326,7 +330,7 @@ $(document).on("mouseup", ".addUrlText", function (event) {
 
 $(document).on("click", ".btn-updateNewUrl", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
     var savedlbl = $(parentDiv).find('.tempLableSaveNew');
@@ -400,9 +404,9 @@ if (rediectElement) {
                 $("#loadSpin").modal("show");
 
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
-                //$(".modalLable").text(lableDisplay);
-                that.loading = true;
-                that.show = true;
+                $(".modalLable").text(lableDisplay);
+                //that.loading = true;
+                //that.show = true;
                 type = this.redirectType();
 
                 var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
@@ -429,19 +433,21 @@ if (rediectElement) {
                         }
 
                         $("#loadSpin").modal("hide");
-                        that.loading = false;
-                        that.show = false;
+                        //that.loading = false;
+                        //that.show = false;
 
                         var totalCountOfLoad1 = that.urlList.length;
                         var totalToDispaly1 = $("#totalUrlCount").val();
+                       
                         $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
+                        $(".countLable").removeClass("hidden");
                     });
             },
 
             addNewUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 //$("#loadSpin").modal("show");
 
                 //that.show = true;
@@ -465,7 +471,7 @@ if (rediectElement) {
             getSearchList: function (searchObj) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = true;
                 that.loading = true;
@@ -482,7 +488,7 @@ if (rediectElement) {
                         $(".newAddFormInline").addClass("hidden");
                         var totalCountOfLoad1 = that.urlList.length;
                         var totalToDispaly1 = $("#totalUrlCount").val();
-                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
+                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalCountOfLoad1 + " lines");
                         that.newAddedUrlList = [];
                         $("#loadSpin").modal("hide");
                         that.show = false;
@@ -517,7 +523,7 @@ if (rediectElement) {
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = false;
                 that.loading = false;
@@ -533,6 +539,7 @@ if (rediectElement) {
                             $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
+
                             that.reloadPermanentList("deleteUrl");
 
                         }
@@ -569,7 +576,7 @@ if (rediectElement) {
             reloadPermanentList: function (flag) {
                 //var scroll_l = $('.scolling-pane').scrollLeft();
                 //var scroll_t = $('.scolling-pane').scrollTop();
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 var searchObj = $("#SearchURLText").val();
                 if (searchObj != "") {
 
@@ -586,6 +593,9 @@ if (rediectElement) {
                     }
                     if (flag == "saveURL" || flag == "deleteUrl") {
                         that.urlList = [];
+                        if (flag == "deleteUrl") {
+                            var totalCountOfLoad = ($(".parentDivOfRedirect").length-1);
+                        }
 
                     }
                     $("#loadSpin").modal("show");
@@ -610,9 +620,7 @@ if (rediectElement) {
 
                                 that.urlList = xml[0].childNodes[0].childNodes;
                             }
-                            //$('.scolling-pane').scrollLeft(scroll_l);
-                            //$('.scolling-pane').scrollTop(scroll_t);
-
+                           
                             that.getTotalUrlCount();
 
                             $("#loadSpin").modal("hide");
@@ -640,7 +648,7 @@ if (rediectElement) {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
                                    
                                     that.addNewUrl(oldUrl, NewUrl);
-
+                                   
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
                                        
@@ -648,7 +656,7 @@ if (rediectElement) {
                                                 that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
                                             }
                                     }
-                                   
+                                  
                                     
                                 }
                                 else {
@@ -661,7 +669,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -675,7 +683,7 @@ if (rediectElement) {
                                     that.newAddedUrlList[0] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
                                 }
                                
-
+                               
                             }
 
                            
@@ -683,7 +691,7 @@ if (rediectElement) {
                             that.getTotalUrlCount();
                             $("#OldUrlmodal").val("");
                             $("#NewUrlModal").val("");
-                            //$("#loadSpin").modal("hide");
+                            $("#loadSpin").modal("hide");
                             //that.loading = false;
                             //that.show = false;
                            
@@ -710,6 +718,7 @@ if (rediectElement) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
                             $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
+                            $(".countLable").removeClass("hidden");
                         }
 
                     });
@@ -731,13 +740,12 @@ $('.scolling-pane').on('scroll', function () {
     if (searchObj == "") {
         if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
             
-            //$(".modalLable").removeClass("hidden");
+            $(".modalLable").removeClass("hidden");
+            $(".countLable").addClass("hidden");
             RedirectPage.getPermanentList();
 
         }
     }
-
-
 });
 
 //Edit Product
