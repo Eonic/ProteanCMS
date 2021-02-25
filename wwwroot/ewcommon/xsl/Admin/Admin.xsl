@@ -12345,7 +12345,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <!--<div class="modal-body">-->
-            <lable class="modalLable hidden"></lable>
+            <!--<lable class="modalLable hidden"></lable>-->
             <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
               <i class="fas fa-spinner fa-spin"> </i>
             </div>
