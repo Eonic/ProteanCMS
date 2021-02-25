@@ -73,12 +73,12 @@ if (editPageElement) {
                     return false;
                 }
                 else {
-                    debugger;
+                 
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                            debugger;
+                          
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
@@ -230,7 +230,7 @@ $('.btnClear').on('click', function (event) {
 
 $(document).on("click", ".btn-update", function (event) {
 
-    $(".modalLable").addClass("hidden");
+    //$(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
@@ -253,7 +253,7 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-                debugger;
+              
                 if (response.data == "True") {
 
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
@@ -352,7 +352,7 @@ $(document).on("focus", ".addUrlText", function (event) {
 
 $(document).on("click", ".btn-updateNewUrl", function (event) {
 
-    $(".modalLable").addClass("hidden");
+    //$(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
     var savedlbl = $(parentDiv).find('.tempLableSaveNew');
@@ -371,7 +371,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-                debugger;
+               
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
@@ -541,11 +541,12 @@ if (rediectElement) {
 
 
 
+
                     });
 
             },
             saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
-
+               
                 var that = this;
                 $("#loadSpin").modal("show");
                 that.show = true;
@@ -569,7 +570,7 @@ if (rediectElement) {
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                $(".modalLable").addClass("hidden");
+                //$(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = false;
                 that.loading = false;
@@ -651,7 +652,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag };
                     axios.post(LoadAllURLAPI, inputJson)
                         .then(function (response) {
-
+                            
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
                             var xml = $(xmlDocument);
@@ -692,7 +693,7 @@ if (rediectElement) {
                           
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
-
+                                   
                                     that.addNewUrl(oldUrl, NewUrl);
                                    
                                     if (that.newAddedUrlList != '') {
@@ -1014,7 +1015,7 @@ if (editProductElement>0) {
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-                debugger;
+               
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
 
                     redirectModal.toggleModal();
@@ -1038,7 +1039,7 @@ if (editProductElement>0) {
 }
 
 $(document).on("click", ".btnSaveProduct", function (event) {
-    debugger;
+  
     var newContentPath = $("#cContentPath").val();
     editProduct.UrlPathOnChange(newContentPath);
 
