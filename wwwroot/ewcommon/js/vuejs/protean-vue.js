@@ -214,7 +214,7 @@ $('.btnClear').on('click', function (event) {
 
 $(document).on("click", ".btn-update", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
@@ -237,7 +237,7 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-              
+                
                 if (response.data == "True") {
 
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
@@ -336,7 +336,7 @@ $(document).on("focus", ".addUrlText", function (event) {
 
 $(document).on("click", ".btn-updateNewUrl", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
     var savedlbl = $(parentDiv).find('.tempLableSaveNew');
@@ -411,9 +411,9 @@ if (rediectElement) {
                 $("#loadSpin").modal("show");
 
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
-                //$(".modalLable").text(lableDisplay);
-                that.loading = true;
-                that.show = true;
+                $(".modalLable").text(lableDisplay);
+                //that.loading = true;
+                //that.show = true;
                 type = this.redirectType();
 
                 var inputJson = { redirectType: type, loadCount: totalCountOfLoad };
@@ -456,7 +456,7 @@ if (rediectElement) {
             addNewUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 //$("#loadSpin").modal("show");
 
                 //that.show = true;
@@ -481,7 +481,7 @@ if (rediectElement) {
             getSearchList: function (searchObj, searchLoadCount) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = true;
                 that.loading = true;
@@ -551,7 +551,7 @@ if (rediectElement) {
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = false;
                 that.loading = false;
@@ -676,7 +676,7 @@ if (rediectElement) {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
                                    
                                     that.addNewUrl(oldUrl, NewUrl);
-
+                                   
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -696,7 +696,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
