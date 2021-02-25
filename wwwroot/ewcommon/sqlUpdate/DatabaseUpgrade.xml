@@ -417,6 +417,12 @@
 		  <Action Order="2" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.44.0/AuditId_Check_And_Unique_Constraints.sql"/>
         </Sub3>
       </Sub2>
+      <Sub2 Number="45">
+        <Sub3 Number="0">
+          <Action Order="0" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/ewcommon/sqlUpdate/v5/6.0.45.0/spCheckDiscounts.sql"/>
+        </Sub3>
+      </Sub2>
     </Sub1>
   </Version>
 </DatabaseUpgrade>
