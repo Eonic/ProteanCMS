@@ -230,7 +230,7 @@ $('.btnClear').on('click', function (event) {
 
 $(document).on("click", ".btn-update", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.parentDivOfRedirect');
     var savedlbl = $(parentDiv).find('.tempLableSave');
@@ -253,7 +253,7 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-              
+                
                 if (response.data == "True") {
 
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
@@ -352,7 +352,7 @@ $(document).on("focus", ".addUrlText", function (event) {
 
 $(document).on("click", ".btn-updateNewUrl", function (event) {
 
-    //$(".modalLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     $(this).addClass("hidden")
     var parentDiv = $(this).closest('.ListOfNewAddedUrls');
     var savedlbl = $(parentDiv).find('.tempLableSaveNew');
@@ -570,7 +570,7 @@ if (rediectElement) {
             DeleteUrl: function (oldUrl, NewUrl) {
 
                 var that = this;
-                //$(".modalLable").addClass("hidden");
+                $(".modalLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = false;
                 that.loading = false;
