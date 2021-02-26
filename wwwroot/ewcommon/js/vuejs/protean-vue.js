@@ -73,12 +73,12 @@ if (editPageElement) {
                     return false;
                 }
                 else {
-                 
+
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                          
+
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
@@ -253,7 +253,7 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-                
+
                 if (response.data == "True") {
 
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
@@ -371,7 +371,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-               
+
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
@@ -546,7 +546,7 @@ if (rediectElement) {
 
             },
             saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
-               
+
                 var that = this;
                 $("#loadSpin").modal("show");
                 that.show = true;
@@ -652,7 +652,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag };
                     axios.post(LoadAllURLAPI, inputJson)
                         .then(function (response) {
-                            
+
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
                             var xml = $(xmlDocument);
@@ -693,9 +693,9 @@ if (rediectElement) {
                           
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
-                                   
+
                                     that.addNewUrl(oldUrl, NewUrl);
-                                   
+
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -715,7 +715,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-                               
+
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -815,7 +815,7 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-   
+
     var searchObj = $("#SearchURLText").val();
 
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
@@ -991,7 +991,7 @@ $(document).on("click", ".btnSaveProduct", function (event) {
 
 //Edit Product
 const editProductElement = $(".ProductSub").length;
-if (editProductElement>0) {
+if (editProductElement > 0) {
     window.editProduct = new Vue({
         el: ".ProductSub",
         data: {
@@ -1000,7 +1000,7 @@ if (editProductElement>0) {
         },
         methods: {
             storedPath: function () {
-               
+
                 var cContentPath = $("#cContentPath").val();
                 if (cContentPath != null) {
                     this.urlPathInput = cContentPath;
@@ -1015,14 +1015,14 @@ if (editProductElement>0) {
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-               
+
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
 
                     redirectModal.toggleModal();
                     $("#OldPageName").val(localStorage.originalPathName);
                     $("#NewPageName").val(newContentPath);
                     this.cContentPath = newContentPath;
-                   
+
                     $(".hiddenProductOldUrl").val(localStorage.originalPathName);
                     $(".hiddenProductNewUrl").val(newContentPath);
                 }
@@ -1039,7 +1039,7 @@ if (editProductElement>0) {
 }
 
 $(document).on("click", ".btnSaveProduct", function (event) {
-  
+
     var newContentPath = $("#cContentPath").val();
     editProduct.UrlPathOnChange(newContentPath);
 
