@@ -7,6 +7,7 @@ var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
 var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
 var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
 var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
+var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/getTotalNumberOfSearchUrls';
 
 
 Vue.mixin({
@@ -32,14 +33,14 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-   
+
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
     if ($(".btnSubmitPage").length > 0) {
         $(".btnSubmitPage").click();
     }
-    
+
     $("#redirectModal").modal("hide");
 });
 
@@ -65,23 +66,23 @@ if (editPageElement) {
             createRedirects: function () {
                 $("#redirectModal").modal("hide");
                 var redirectType = $(".redirectStatus:checked").val();
-                
+
                 if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
                     return false;
                 }
                 else {
-                 
+
                     var newUrl = $("#cStructName").val();
                     var inputJson = { redirectType: redirectType, oldUrl: newUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                          
+
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     $("#cRedirect").val(redirectType);
-                                    
-                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl};
+
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
                                     axios.post(paginationAddNewUrlAPIUrl, inputJson)
                                         .then(function (response) {
                                             if (response.data == "success") {
@@ -96,20 +97,20 @@ if (editPageElement) {
                                 }
                             }
                             else {
-                             
+
                                 $("#cRedirect").val(redirectType);
                                 $("#redirectModal").modal("hide");
-                                
+
                             }
                         });
 
 
-                 }
-                   
-                },
-           
-          
-          
+                }
+
+            },
+
+
+
             structNameOnChange: function (newStructName) {
 
                 if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
@@ -185,6 +186,7 @@ if (redirectModalElement) {
 
 $(document).on("click", ".addRedirectbtn", function (event) {
     $(".countLable").addClass("hidden");
+    $(".modalLable").addClass("hidden");
     RedirectPage.SaveNewUrl();
 });
 $(".close").click(function () {
@@ -197,7 +199,7 @@ $('.btnSearchUrl').on('click', function (event) {
         location.reload();
 
     }
-    else { RedirectPage.getSearchList(searchObj); }
+    else { RedirectPage.getSearchList(searchObj, 0); }
 
 
 });
@@ -233,9 +235,9 @@ $(document).on("click", ".btn-update", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-                
+
                 if (response.data == "True") {
-                   
+
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
                         RedirectPage.urlList[index].attributes[0].nodeValue = oldUrl;
@@ -286,7 +288,7 @@ $(document).on("click", ".btn-delete", function (event) {
     NewUrl = $(input[1]).val();
     var index = $(input[0]).attr("id").split('_').pop();
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
-   
+
 });
 
 
@@ -349,7 +351,7 @@ $(document).on("click", ".btn-updateNewUrl", function (event) {
         var inputJson = { redirectType: type, oldUrl: oldUrl };
         axios.post(IsUrlPResentAPI, inputJson)
             .then(function (response) {
-               
+
                 if (response.data == "True") {
                     if (confirm("Old url is already exist. Do you want to replace it?")) {
                         RedirectPage.addNewUrl(oldUrl, NewUrl);
@@ -438,7 +440,7 @@ if (rediectElement) {
 
                         var totalCountOfLoad1 = that.urlList.length;
                         var totalToDispaly1 = $("#totalUrlCount").val();
-                       
+
                         $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
                         $(".countLable").removeClass("hidden");
                     });
@@ -468,38 +470,53 @@ if (rediectElement) {
                     });
             },
 
-            getSearchList: function (searchObj) {
+            getSearchList: function (searchObj, searchLoadCount) {
 
                 var that = this;
                 $(".modalLable").addClass("hidden");
+                $(".countLable").addClass("hidden");
                 $("#loadSpin").modal("show");
                 that.show = true;
                 that.loading = true;
                 type = this.redirectType();
-                var inputJson = { redirectType: type, searchObj: searchObj };
+                var totalCountOfLoad = searchLoadCount;
+                var inputJson = { redirectType: type, searchObj: searchObj, loadCount: totalCountOfLoad };
                 axios.post(SearchUrlAPIUrl, inputJson)
                     .then(function (response) {
+                       
+                        if (response.data != "") {
+                            if (searchLoadCount == 0) {
+                                that.urlList = [];
+                            }
+                            var xmlString = response.data;
+                            var xmlDocument = $.parseXML(xmlString);
+                            var xml = $(xmlDocument);
 
-                        var xmlString = response.data;
-                        var xmlDocument = $.parseXML(xmlString);
-                        var xml = $(xmlDocument);
-                        that.urlList = xml[0].childNodes[0].childNodes;
+                            if (that.urlList != '') {
+                                var tempUrlList = xml[0].childNodes[0].childNodes;
+                                that.urlList = $.merge($.merge([], that.urlList), tempUrlList);
+
+                            }
+                            else {
+
+                                that.urlList = xml[0].childNodes[0].childNodes;
+                            }
+
+                        }
 
                         $(".newAddFormInline").addClass("hidden");
-                        var totalCountOfLoad1 = that.urlList.length;
-                        var totalToDispaly1 = $("#totalUrlCount").val();
-                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalCountOfLoad1 + " lines");
+                       that.getTotalUrlOfSearchCount();
                         that.newAddedUrlList = [];
-                        $("#loadSpin").modal("hide");
-                        that.show = false;
-                        that.loading = false;
+                        //$("#loadSpin").modal("hide");
+                        //that.show = false;
+                        //that.loading = false;
 
 
                     });
 
             },
             saveUrl: function (oldUrl, newUrl, hiddenOldUrl) {
-               
+
                 var that = this;
                 $("#loadSpin").modal("show");
                 that.show = true;
@@ -508,7 +525,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: newUrl, hiddenOldUrl: hiddenOldUrl };
                 axios.post(SaveUrlAPIUrl, inputJson)
                     .then(function (response) {
-                       
+
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
@@ -580,7 +597,7 @@ if (rediectElement) {
                 var searchObj = $("#SearchURLText").val();
                 if (searchObj != "") {
 
-                    RedirectPage.getSearchList(searchObj);
+                    RedirectPage.getSearchList(searchObj, 0);
                 }
                 else {
 
@@ -594,7 +611,7 @@ if (rediectElement) {
                     if (flag == "saveURL" || flag == "deleteUrl") {
                         that.urlList = [];
                         if (flag == "deleteUrl") {
-                            var totalCountOfLoad = ($(".parentDivOfRedirect").length-1);
+                            var totalCountOfLoad = ($(".parentDivOfRedirect").length - 1);
                         }
 
                     }
@@ -605,7 +622,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, loadCount: totalCountOfLoad, flag: flag };
                     axios.post(LoadAllURLAPI, inputJson)
                         .then(function (response) {
-                            
+
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
                             var xml = $(xmlDocument);
@@ -620,7 +637,7 @@ if (rediectElement) {
 
                                 that.urlList = xml[0].childNodes[0].childNodes;
                             }
-                           
+
                             that.getTotalUrlCount();
 
                             $("#loadSpin").modal("hide");
@@ -630,7 +647,7 @@ if (rediectElement) {
                 }
             },
             SaveNewUrl: function () {
-
+                $(".modalLable").addClass("hidden");
                 var that = this;
                 var oldUrl = $("#OldUrlmodal").val();
                 var NewUrl = $("#NewUrlModal").val();
@@ -646,18 +663,18 @@ if (rediectElement) {
 
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
-                                   
+
                                     that.addNewUrl(oldUrl, NewUrl);
-                                   
+
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
-                                       
-                                            if (oldindex != -1) {
-                                                that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
-                                            }
+
+                                        if (oldindex != -1) {
+                                            that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                        }
                                     }
-                                  
-                                    
+
+
                                 }
                                 else {
                                     $("#loadSpin").modal("hide");
@@ -669,7 +686,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-                               
+
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -682,11 +699,11 @@ if (rediectElement) {
 
                                     that.newAddedUrlList[0] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
                                 }
-                               
-                               
+
+
                             }
 
-                           
+
                             that.reloadPermanentList(flag);
                             that.getTotalUrlCount();
                             $("#OldUrlmodal").val("");
@@ -694,7 +711,7 @@ if (rediectElement) {
                             $("#loadSpin").modal("hide");
                             //that.loading = false;
                             //that.show = false;
-                           
+
                         });
 
 
@@ -719,6 +736,35 @@ if (rediectElement) {
                             var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
                             $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
                             $(".countLable").removeClass("hidden");
+                            if (totalCountOfLoad1 == response.data) {
+                                $(".endLable").removeClass("hidden");
+                            }
+                        }
+
+                    });
+
+            },
+            getTotalUrlOfSearchCount: function () {
+                var searchObj = $("#SearchURLText").val();
+                var that = this;
+                $("#loadSpin").modal("show");
+                that.show = true;
+                that.loading = true;
+                type = this.redirectType();
+                var inputJson = { redirectType: type, searchObj: searchObj};
+                axios.post(getTotalNumberOfSearchUrls, inputJson)
+                    .then(function (response) {
+                      
+                        if (response.data != "") {
+                            $("#totalUrlCount").val(response.data);
+                            var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
+                           
+                            $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
+                            $(".countLable").removeClass("hidden");
+                            if (totalCountOfLoad1 == response.data) {
+                                $(".endLable").removeClass("hidden");
+                            }
+                            $("#loadSpin").modal("hide");
                         }
 
                     });
@@ -733,24 +779,30 @@ if (rediectElement) {
 
     });
 }
-
+$(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-   
+
     var searchObj = $("#SearchURLText").val();
-    if (searchObj == "") {
-        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-            
+
+    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+        
+        if (searchObj == "") {
             $(".modalLable").removeClass("hidden");
             $(".countLable").addClass("hidden");
             RedirectPage.getPermanentList();
 
+
+        }
+        else {
+            var totalCountOfLoad = $(".parentDivOfRedirect").length;
+            RedirectPage.getSearchList(searchObj, totalCountOfLoad);
         }
     }
 });
 
 //Edit Product
 const editProductElement = $(".ProductSub").length;
-if (editProductElement>0) {
+if (editProductElement > 0) {
     window.editProduct = new Vue({
         el: ".ProductSub",
         data: {
@@ -759,7 +811,7 @@ if (editProductElement>0) {
         },
         methods: {
             storedPath: function () {
-               
+
                 var cContentPath = $("#cContentPath").val();
                 if (cContentPath != null) {
                     this.urlPathInput = cContentPath;
@@ -774,14 +826,14 @@ if (editProductElement>0) {
                 localStorage.originalPathName = this.urlPathInput;
             },
             UrlPathOnChange: function (newContentPath) {
-               
+
                 if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
 
                     redirectModal.toggleModal();
                     $("#OldPageName").val(localStorage.originalPathName);
                     $("#NewPageName").val(newContentPath);
                     this.cContentPath = newContentPath;
-                   
+
                     $(".hiddenProductOldUrl").val(localStorage.originalPathName);
                     $(".hiddenProductNewUrl").val(newContentPath);
                 }
@@ -798,7 +850,7 @@ if (editProductElement>0) {
 }
 
 $(document).on("click", ".btnSaveProduct", function (event) {
-  
+
     var newContentPath = $("#cContentPath").val();
     editProduct.UrlPathOnChange(newContentPath);
 

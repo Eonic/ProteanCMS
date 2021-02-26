@@ -168,7 +168,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef redirectType As String, ByRef searchObj As String) As String
+            Public Function searchUrl(ByRef redirectType As String, ByRef searchObj As String, ByRef pageloadCount As Integer) As String
 
                 Try
 
@@ -179,21 +179,61 @@ Partial Public Class Cms
 
                     Dim oCgfSectName As String = "system.webServer"
                     Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
-                    Dim props As XmlNode
+
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 
-                        props = rewriteXml.SelectSingleNode(oCgfSectPath)
-                        Dim searchString As String = "<rewriteMap name='" & redirectType & "'>"
-                        Dim xmlstringend As String = "</rewriteMap>"
-                        For i As Integer = 0 To props.ChildNodes.Count - 1
-                            If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
-                                searchString = searchString & props.ChildNodes(i).OuterXml
+                        Dim PerPageCount As Integer = 50
+                        Dim TotalCount As Integer = 0
+                        Dim skipRecords As Integer = 0
+                        If (myWeb.moSession("searchLoadCount") Is Nothing) Then
+                            myWeb.moSession("searchLoadCount") = PerPageCount
+                        Else
+                            If (pageloadCount = 0) Then
+                                myWeb.moSession("searchLoadCount") = PerPageCount
+                                moAdXfm.goSession("oTempInstance") = Nothing
+                            Else
+                                skipRecords = Convert.ToInt32(myWeb.moSession("searchLoadCount"))
+                                myWeb.moSession("searchLoadCount") = Convert.ToInt32(myWeb.moSession("searchLoadCount")) + PerPageCount
                             End If
-                        Next
+                        End If
+
+                        Dim takeRecord As Integer = PerPageCount
+                        Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                        TotalCount = props.ChildNodes.Count
+
+                        Dim xmlstring As String = "<rewriteMap name='" & redirectType & "'>"
+                        Dim xmlstringend As String = "</rewriteMap>"
+                        Dim searchString As String = "<rewriteMap name='" & redirectType & "'>"
+
+                        Dim searchProps As New XmlDocument
+                            Dim count As Integer = 0
+
+                            For i As Integer = 0 To props.ChildNodes.Count - 1
+                                If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+
+                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+
+                                End If
+                            Next
+                            searchProps.LoadXml(xmlstring & xmlstringend)
+
+
+                            For i As Integer = skipRecords To searchProps.ChildNodes(0).ChildNodes.Count - 1
+
+                                If (searchProps.ChildNodes(0).ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+                                    If i > (skipRecords + takeRecord) - 1 Then
+                                        Exit For
+                                    Else
+                                        searchString = searchString & searchProps.ChildNodes(0).ChildNodes(i).OuterXml
+                                    End If
+                                End If
+                            Next
+
+
                         Result = searchString & xmlstringend
                     End If
 
-                    Return Result
+                                Return Result
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -307,6 +347,37 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
 
+            End Function
+            Public Function getTotalNumberOfSearchUrls(ByRef redirectType As String, ByRef searchObj As String) As String
+
+                Dim Result As String = ""
+                Dim rewriteXml As New XmlDocument
+                rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                Dim oCgfSectName As String = "system.webServer"
+                Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
+
+                Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+
+                Dim xmlstringend As String = "</rewriteMap>"
+                Dim searchString As String = "<rewriteMap name='" & redirectType & "'>"
+
+                Dim searchProps As New XmlDocument
+
+                For i As Integer = 0 To props.ChildNodes.Count - 1
+                    If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+
+                        searchString = searchString & props.ChildNodes(i).OuterXml
+
+                    End If
+                Next
+                searchProps.LoadXml(searchString & xmlstringend)
+
+                Dim TotalCount As Integer = searchProps.ChildNodes(0).ChildNodes.Count
+
+                Result = TotalCount.ToString()
+
+                Return Result
             End Function
         End Class
     End Class
