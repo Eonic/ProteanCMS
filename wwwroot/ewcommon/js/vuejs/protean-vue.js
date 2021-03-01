@@ -35,7 +35,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-
+    debugger;
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
@@ -563,7 +563,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-
+                        debugger;
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
