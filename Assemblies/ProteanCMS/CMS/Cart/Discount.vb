@@ -238,6 +238,10 @@ Partial Public Class Cms
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
+                        'New method introduced to just validate xml nodes values added in cAdditionalXML.
+                        'It is used for validation order total, minimum order value and  maximum order value.
+                        'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
+                        'if total crossed more or less than defined range then it will remove promocode for the user.
                         If oDsDiscounts IsNot Nothing Then
                             If cPromoCodeUserEntered <> "" Then
                                 Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
