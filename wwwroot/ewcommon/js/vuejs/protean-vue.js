@@ -33,7 +33,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-
+    debugger;
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
@@ -483,7 +483,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj, loadCount: totalCountOfLoad };
                 axios.post(SearchUrlAPIUrl, inputJson)
                     .then(function (response) {
-                       
+                        debugger;
                         if (response.data != "") {
                             if (searchLoadCount == 0) {
                                 that.urlList = [];
@@ -500,6 +500,9 @@ if (rediectElement) {
                             else {
 
                                 that.urlList = xml[0].childNodes[0].childNodes;
+                                if (that.urlList.length == 0) {
+                                    $("#loadSpin").modal("hide");
+                                }
                             }
 
                         }
@@ -507,7 +510,7 @@ if (rediectElement) {
                         $(".newAddFormInline").addClass("hidden");
                        that.getTotalUrlOfSearchCount();
                         that.newAddedUrlList = [];
-                        //$("#loadSpin").modal("hide");
+                      
                         //that.show = false;
                         //that.loading = false;
 
@@ -551,7 +554,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-
+                        debugger;
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
@@ -754,8 +757,8 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj};
                 axios.post(getTotalNumberOfSearchUrls, inputJson)
                     .then(function (response) {
-                      
-                        if (response.data != "") {
+                        debugger;
+                        if (response.data != "" || response.data==0) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
                            
@@ -764,9 +767,9 @@ if (rediectElement) {
                             if (totalCountOfLoad1 == response.data) {
                                 $(".endLable").removeClass("hidden");
                             }
-                            $("#loadSpin").modal("hide");
+                           
                         }
-
+                        $("#loadSpin").modal("hide");
                     });
 
             },
@@ -787,7 +790,7 @@ $('.scolling-pane').on('scroll', function () {
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
         
         if (searchObj == "") {
-            $(".modalLable").removeClass("hidden");
+            
             $(".countLable").addClass("hidden");
             RedirectPage.getPermanentList();
 
@@ -795,6 +798,7 @@ $('.scolling-pane').on('scroll', function () {
         }
         else {
             var totalCountOfLoad = $(".parentDivOfRedirect").length;
+            $(".modalLable").removeClass("hidden");
             RedirectPage.getSearchList(searchObj, totalCountOfLoad);
         }
     }
