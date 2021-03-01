@@ -11135,6 +11135,32 @@ ReturnMe:
             End Try
         End Function
 
+        Public Function GetCountryISOCode(ByVal sCountry As String) As String
+            Dim oDr As SqlDataReader
+            Dim sSql As String
+            Dim strReturn As String = ""
+
+            Try
+                sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
+                oDr = myWeb.moDbHelper.getDataReader(sSql)
+
+                If oDr.HasRows Then
+
+                    While oDr.Read()
+                        strReturn = oDr("cLocationISOa2").ToString()
+                    End While
+                Else
+                    strReturn = ""
+                End If
+
+                oDr.Close()
+                oDr = Nothing
+                Return strReturn
+            Catch ex As Exception
+                Return Nothing
+            End Try
+        End Function
+
 #Region "Deprecated Functions"
         Public Function doesTableExist(ByRef sTableName As String) As Boolean
             Try
