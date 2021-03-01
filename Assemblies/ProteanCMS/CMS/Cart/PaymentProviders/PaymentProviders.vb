@@ -4295,7 +4295,7 @@ Partial Public Class Cms
                     oXform.submission("Secure3DReturn", goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
                     oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn")
                     oXform.Instance.AppendChild(oFrmInstance)
-                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting...")
+                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting... Please do not refresh")
                     Dim item As Object
 
                     For Each item In myWeb.moRequest.Form
@@ -4305,7 +4305,7 @@ Partial Public Class Cms
 
                     'build the form and the binds
                     'oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
-                    oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Continue", "ewSubmit")
+                    'oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Continue", "ewSubmit")
                     oXform.addValues()
                     Return oXform
 
