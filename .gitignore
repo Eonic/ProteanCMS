@@ -17,3 +17,4 @@
 /.vs/ProteanCMS/v16/Server/sqlite3
 /.vs/ProteanCMS/v16/.suo
 /.vs/ProteanCMSInstaller/v16
+/wwwroot/bin/ProteanCMS.xml
