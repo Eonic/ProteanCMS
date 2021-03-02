@@ -4177,7 +4177,9 @@ Partial Public Class Cms
                 If cResult = "" Then cResult = 0
                 Return cResult
             End Function
-
+            '
+            'Need to move to payment.baseprovider.activities
+            'Then we can remove this function from here.
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3D")
                 Dim oXform As xForm = New xForm(myWeb.msException)
@@ -4272,7 +4274,8 @@ Partial Public Class Cms
 
             End Function
 
-
+            'We need to get rid off it once each payment provider is tested.
+            'Moved to the payment.baseprovider.activities
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                 Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
@@ -4305,7 +4308,7 @@ Partial Public Class Cms
 
                     'build the form and the binds
                     'oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
-                    'oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Continue", "ewSubmit")
+                    oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Continue", "ewSubmit")
                     oXform.addValues()
                     Return oXform
 
