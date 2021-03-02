@@ -1615,7 +1615,9 @@
 														</header>
 														<div class="metric-body">
 															<div class="value">
-																<h1 class="metric-value">--</h1>
+																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
+																</h1>
 															</div>
 														</div>
 													</div>
@@ -2567,7 +2569,7 @@
               <!--xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/-->
               </div>
             </div>
-            <xsl:apply-templates select="/" mode="ListByContentTypeNoColaspe">
+            <xsl:apply-templates select="/" mode="ListByContentTypeByPage">
                   <xsl:with-param name="contentType" select="@ewCmd2"/>
             </xsl:apply-templates>
         </div>
@@ -2575,7 +2577,7 @@
   
    <!-- -->
   <xsl:template match="/" mode="ListByContentTypeNoColaspe">
-    <xsl:param name="contentType"/>
+	<xsl:param name="contentType"/>
     <xsl:variable name="pgid">
       <xsl:choose>
         <xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
@@ -2654,7 +2656,102 @@
     </table>
    </div>
     </form>
-  </xsl:template>
+  </xsl:template>  
+	
+  <xsl:template match="/" mode="ListByContentTypeByPage">
+	<xsl:param name="contentType"/>
+	<xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
+	<xsl:variable name="itemCount" select="'100'"/>
+	<xsl:variable name="total" select="$page/ContentDetail/@total"/>
+	<xsl:variable name="queryString">
+		<xsl:text>?</xsl:text>
+		<xsl:call-template name="getQString"/>
+	</xsl:variable>
+	<xsl:variable name="title">
+		<xsl:text>Location</xsl:text>
+	</xsl:variable>
+	<xsl:variable name="pgid">
+		<xsl:choose>
+			<xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
+				<xsl:value-of select="$page/ContentDetail/Content/select1[@ref='Location']/value/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$page/@pgid"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+		<input type="hidden" name="ewCmd" value="BulkContentAction"/>
+		<input type="hidden" name="pgid" value="{$pgid}"/>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<xsl:if test="$contentType!='Module'">
+					<div class="panel-heading-buttons">
+						<div class="form-group bulk-action">
+							<div class="input-group">
+								<label class="input-group-addon">Bulk Action</label>
+								<select class="form-control" name="BulkAction" id="BulkAction">
+									<option value="Move">Move</option>
+									<option value="Locate">Locate</option>
+									<option value="Hide">Hide</option>
+									<option value="Show">Show</option>
+								</select>
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary">Go</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
+						<xsl:variable name="href">
+							<xsl:text>?ewCmd=AddContent</xsl:text>
+							<xsl:text>&amp;pgid=</xsl:text>
+							<xsl:value-of select="/Page/@id"/>
+							<xsl:text>&amp;type=</xsl:text>
+							<xsl:value-of select="$contentType"/>
+						</xsl:variable>
+						<a class="btn btn-primary btn-xs principle" href="{$href}">
+							<i class="fa fa-plus">
+								<xsl:text> </xsl:text>
+							</i>
+							<xsl:text> </xsl:text>Add
+						</a>
+					</xsl:if>
+				</xsl:if>
+				<xsl:if test="$page/ContentDetail/@total > 0">
+					<div class="pull-right-stepper">
+						<xsl:apply-templates select="/" mode="adminStepper">
+							<xsl:with-param name="itemCount" select="'100'"/>
+							<xsl:with-param name="itemTotal" select="$total"/>
+							<xsl:with-param name="startPos" select="$startPos"/>
+							<xsl:with-param name="path" select="$queryString"/>
+							<xsl:with-param name="itemName" select="$title"/>
+						</xsl:apply-templates>
+					</div>
+				</xsl:if>
+				<h6 class="panel-title">
+					<i class="fa fa-chevron-down">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>
+					<xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+				</h6>
+			</div>
+			<table class="table table-striped-2">
+				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
+					<tr>
+						<td colspan="3">
+							<xsl:text>No </xsl:text>
+							<xsl:value-of select="$contentType"/>
+							<xsl:text> on this page</xsl:text>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+			</table>
+		</div>
+	</form>
+</xsl:template>
 
   <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
     <div id="tpltAdvancedMode">
