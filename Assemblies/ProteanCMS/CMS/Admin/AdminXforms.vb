@@ -2881,60 +2881,71 @@ Partial Public Class Cms
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
+                                Dim redirectType As String = ""
+                                Dim newUrl As String = ""
+                                Dim strOldurl As String = ""
+                                If moRequest("redirectType") IsNot Nothing Then
+                                    redirectType = moRequest("redirectType").ToString()
+                                End If
 
-                                Dim redirectType As String = moRequest("redirectType").ToString()
-                                Dim newUrl As String = moRequest("productNewUrl").ToString()
-                                Dim strOldurl As String = moRequest("productOldUrl").ToString()
+                                If moRequest("productNewUrl") IsNot Nothing Then
+                                    newUrl = moRequest("productNewUrl").ToString()
+                                End If
+                                If moRequest("productOldUrl") IsNot Nothing Then
+                                    strOldurl = moRequest("productOldUrl").ToString()
+                                End If
+
+
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-                                newUrl = newUrl.Replace(" ", "-")
-                                newUrl = "/experience/" & newUrl
+                                    newUrl = newUrl.Replace(" ", "-")
+                                    newUrl = "/experience/" & newUrl
 
-                                strOldurl = strOldurl.Replace(" ", "-")
-                                strOldurl = "/experience/" & strOldurl
+                                    strOldurl = strOldurl.Replace(" ", "-")
+                                    strOldurl = "/experience/" & strOldurl
 
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
+                                    Select Case moRequest("redirectType")
+                                        Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                End Select
-
-
+                                        Case "302Redirect"
+                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                    End Select
 
 
 
 
 
 
-                                ' Individual content location set
-                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+
+                                    ' Individual content location set
+                                    ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                    If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
+
+                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                        End If
                                     End If
-                                End If
 
-                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                If bCascade And pgid > 0 Then
-                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                End If
+                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                    If bCascade And pgid > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                    End If
 
 
-                                editResult = dbHelper.ActivityType.ContentEdited
+                                    editResult = dbHelper.ActivityType.ContentEdited
 
-                                If updatedVersionId <> id Then
-                                    nReturnId = updatedVersionId
+                                    If updatedVersionId <> id Then
+                                        nReturnId = updatedVersionId
+                                    Else
+                                        nReturnId = id
+                                    End If
+
                                 Else
-                                    nReturnId = id
-                                End If
-
-                            Else
-                                Dim nContentId As Long
+                                    Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
