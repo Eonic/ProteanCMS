@@ -238,8 +238,31 @@ Partial Public Class Cms
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
+                        'New method introduced to just validate xml nodes values added in cAdditionalXML.
+                        'It is used for validation order total, minimum order value and  maximum order value.
+                        'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
+                        'if total crossed more or less than defined range then it will remove promocode for the user.
+                        If oDsDiscounts IsNot Nothing Then
+                            If cPromoCodeUserEntered <> "" Then
+                                Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                                Dim validateAddedDiscount As Boolean = True
+                                Dim totalAmount As Double = 0
+                                If oDsCart.Tables("Item").Rows.Count > 0 Then
+                                    For Each drItem As DataRow In oDsCart.Tables("Item").Rows
+                                        If (drItem(15) = 0) Then
+                                            totalAmount = totalAmount + drItem(6)
+                                        End If
+                                    Next
 
+                                End If
 
+                                validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+                                If validateAddedDiscount = False Then
+                                    RemoveDiscountCode()
+                                    oDsDiscounts = Nothing
+                                End If
+                            End If
+                        End If
 
                         If oDsDiscounts Is Nothing Then
                             If cPromoCodeUserEntered <> "" Then
@@ -250,6 +273,7 @@ Partial Public Class Cms
                             End If
                             Return 0
                         Else
+
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns
@@ -1515,6 +1539,53 @@ NoDiscount:
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Function
+
+            Public Function ValidateDiscount(ByVal orderTotal As Double, ByVal additionalInfo As String) As Boolean
+                Dim cProcessInfo As String = "ValidateDiscount"
+                Try
+                    Dim doc As New XmlDocument()
+                    Dim applyToTotal As Boolean = False
+                    Dim minimumOrderTotal As Double = 0
+                    Dim maximumOrderTotal As Double = 0
+                    If (additionalInfo <> String.Empty) Then
+
+
+                        doc.LoadXml(additionalInfo)
+
+                        If (doc.InnerXml.Contains("nMinimumOrderValue")) Then
+                            minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText)
+                        End If
+                        If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
+                            maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
+                        End If
+
+                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
+                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                applyToTotal = False
+                            Else
+                                applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
+                            End If
+                            If (maximumOrderTotal <> 0) Then
+                                If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+
+                                    Return False
+                                End If
+                            End If
+                            If (applyToTotal) Then
+                                If (maximumOrderTotal <> 0) Then
+                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                        Return False
+                                    End If
+                                End If
+                            End If
+                        End If
+                        Return True
+
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "ValidateDiscount", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 

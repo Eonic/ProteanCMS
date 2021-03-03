@@ -190,7 +190,11 @@ Public Class Indexer
             xWeb.InitializeVariables()
             xWeb.Open()
             xWeb.mnUserId = 1
-            xWeb.mbAdminMode = False
+            If (myWeb.moConfig("SiteSearchIndexHiddenDetail") = "on") Then
+                myWeb.mbAdminMode = True
+            Else
+                myWeb.mbAdminMode = False
+            End If
             xWeb.ibIndexMode = True
             xWeb.ibIndexRelatedContent = (myWeb.moConfig("SiteSearchIndexRelatedContent") = "on")
 
