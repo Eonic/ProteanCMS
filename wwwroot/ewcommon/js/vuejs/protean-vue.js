@@ -33,7 +33,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-    debugger;
+  
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
@@ -289,6 +289,8 @@ $(document).on("click", ".btn-delete", function (event) {
     var index = $(input[0]).attr("id").split('_').pop();
     RedirectPage.DeleteUrl(oldUrl, NewUrl);
 
+    RedirectPage.urlList.splice(index, 1);
+    //RedirectPage.newAddedUrlList.splice(index, 1);
 });
 
 
@@ -396,15 +398,16 @@ if (rediectElement) {
             loadingscroll: false,
             newAddedUrlList: [],
             totalCountofUrl: '',
+           scrollStatus: 0,
         },
         methods: {
             getPermanentList: function () {
-
+              
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var totalToDispaly = $("#totalUrlCount").val();
                 $("#loadSpin").modal("show");
-
+               
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
                 $(".modalLable").text(lableDisplay);
                 //that.loading = true;
@@ -415,7 +418,7 @@ if (rediectElement) {
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
 
-
+                       
                         if (response.data != "") {
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
@@ -433,14 +436,16 @@ if (rediectElement) {
                             }
 
                         }
-
+                     
                         $("#loadSpin").modal("hide");
                         //that.loading = false;
                         //that.show = false;
 
                         var totalCountOfLoad1 = that.urlList.length;
                         var totalToDispaly1 = $("#totalUrlCount").val();
-
+                        if (totalToDispaly1 == "") {
+                            totalToDispaly1 = 0;
+                        }
                         $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
                         $(".countLable").removeClass("hidden");
                     });
@@ -460,11 +465,13 @@ if (rediectElement) {
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
+                           
                             //$("#loadSpin").modal("hide");
                             //that.show = false;
                             //that.loading = false;
                             //alert("Url saved successfully!");
-                            that.urlList
+                            that.urlList;
+                           // that.getTotalUrlCount();
                         }
                         //location.reload();
                     });
@@ -483,7 +490,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj, loadCount: totalCountOfLoad };
                 axios.post(SearchUrlAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                       
                         if (response.data != "") {
                             if (searchLoadCount == 0) {
                                 that.urlList = [];
@@ -554,13 +561,13 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                       
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
 
-                            that.reloadPermanentList("deleteUrl");
+                           that.reloadPermanentList("deleteUrl");
 
                         }
                         //location.reload();
@@ -594,8 +601,7 @@ if (rediectElement) {
 
 
             reloadPermanentList: function (flag) {
-                //var scroll_l = $('.scolling-pane').scrollLeft();
-                //var scroll_t = $('.scolling-pane').scrollTop();
+                
                 $(".modalLable").addClass("hidden");
                 var searchObj = $("#SearchURLText").val();
                 if (searchObj != "") {
@@ -618,6 +624,7 @@ if (rediectElement) {
                         }
 
                     }
+                    that.scrollStatus = 1;
                     $("#loadSpin").modal("show");
                     that.loading = true;
                     that.show = true;
@@ -642,7 +649,7 @@ if (rediectElement) {
                             }
 
                             that.getTotalUrlCount();
-
+                            that.scrollStatus = 0;
                             $("#loadSpin").modal("hide");
                             that.loading = false;
                             that.show = false;
@@ -663,12 +670,12 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-
+                          
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
-
+                                   
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -676,8 +683,7 @@ if (rediectElement) {
                                             that.newAddedUrlList[oldindex] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
                                         }
                                     }
-
-
+                                    
                                 }
                                 else {
                                     $("#loadSpin").modal("hide");
@@ -689,7 +695,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -701,14 +707,12 @@ if (rediectElement) {
                                 else {
 
                                     that.newAddedUrlList[0] = { 'oldUrl': oldUrl, 'NewUrl': NewUrl };
+                                    
                                 }
-
-
+                                
                             }
-
-
                             that.reloadPermanentList(flag);
-                            that.getTotalUrlCount();
+                           // that.getTotalUrlCount();
                             $("#OldUrlmodal").val("");
                             $("#NewUrlModal").val("");
                             $("#loadSpin").modal("hide");
@@ -734,9 +738,16 @@ if (rediectElement) {
                     .then(function (response) {
 
                         if (response.data != "") {
+                           
                             that.totalCount = response.data;
                             $("#totalUrlCount").val(response.data);
-                            var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
+                            if (response.data != that.urlList.length) {
+                                var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
+                            }
+                            else {
+                                var totalCountOfLoad1 = that.urlList.length;
+                            }
+                           
                             $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
                             $(".countLable").removeClass("hidden");
                             if (totalCountOfLoad1 == response.data) {
@@ -757,7 +768,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, searchObj: searchObj};
                 axios.post(getTotalNumberOfSearchUrls, inputJson)
                     .then(function (response) {
-                        debugger;
+                       
                         if (response.data != "" || response.data==0) {
                             $("#totalUrlCount").val(response.data);
                             var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
@@ -784,23 +795,29 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-
+   
     var searchObj = $("#SearchURLText").val();
 
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-        
+       
+        var totalCount = $("#totalUrlCount").val();
+        var loadCount = $(".parentDivOfRedirect").length;
+        if (totalCount != loadCount) {
         if (searchObj == "") {
-            
-            $(".countLable").addClass("hidden");
-            RedirectPage.getPermanentList();
-
-
-        }
+            if (RedirectPage.scrollStatus == 0) {
+                
+                
+                    $(".countLable").addClass("hidden");
+                    RedirectPage.getPermanentList();
+                }
+            }
         else {
             var totalCountOfLoad = $(".parentDivOfRedirect").length;
             $(".modalLable").removeClass("hidden");
             RedirectPage.getSearchList(searchObj, totalCountOfLoad);
         }
+        }
+        
     }
 });
 

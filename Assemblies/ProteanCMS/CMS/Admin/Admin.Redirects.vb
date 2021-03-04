@@ -115,6 +115,7 @@ Partial Public Class Cms
 
                     Dim oCgfSectName As String = "system.webServer"
                     Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
+                    Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
 
                     If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
 
@@ -122,19 +123,24 @@ Partial Public Class Cms
                         Dim TotalCount As Integer = 0
                         Dim skipRecords As Integer = 0
                         If (myWeb.moSession("loadCount") Is Nothing) Then
-                            myWeb.moSession("loadCount") = PerPageCount
+                            If (PerPageCount >= props.ChildNodes.Count) Then
+                                myWeb.moSession("loadCount") = props.ChildNodes.Count
+
+                            End If
                         Else
                             If (pageloadCount = 0) Then
+
                                 myWeb.moSession("loadCount") = PerPageCount
-                                moAdXfm.goSession("oTempInstance") = Nothing
-                            Else
-                                skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                                    moAdXfm.goSession("oTempInstance") = Nothing
+
+                                Else
+                                    skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
                                 myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
                             End If
                         End If
 
                         Dim takeRecord As Integer = PerPageCount
-                        Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+
                         TotalCount = props.ChildNodes.Count
 
                         If props.ChildNodes.Count >= PerPageCount Then
@@ -153,12 +159,16 @@ Partial Public Class Cms
                             Next
                             Result = xmlstring & xmlstringend
 
-
                         Else
-                            Result = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                            If (pageloadCount = 0) Then
+                                Result = rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml
+                            Else
+                                Result = ""
+                            End If
+
                         End If
 
-                    End If
+                        End If
 
                     Return Result
                 Catch ex As Exception
