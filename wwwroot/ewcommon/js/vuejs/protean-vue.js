@@ -35,7 +35,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-    debugger;
+  
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
@@ -404,12 +404,12 @@ if (rediectElement) {
         },
         methods: {
             getPermanentList: function () {
-
+              
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var totalToDispaly = $("#totalUrlCount").val();
                 $("#loadSpin").modal("show");
-
+               
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
                 $(".modalLable").text(lableDisplay);
                 //that.loading = true;
@@ -420,7 +420,7 @@ if (rediectElement) {
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
 
-
+                       
                         if (response.data != "") {
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
@@ -438,7 +438,7 @@ if (rediectElement) {
                             }
 
                         }
-
+                     
                         $("#loadSpin").modal("hide");
                         //that.loading = false;
                         //that.show = false;
@@ -467,6 +467,7 @@ if (rediectElement) {
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
+                           
                             //$("#loadSpin").modal("hide");
                             //that.show = false;
                             //that.loading = false;
@@ -563,13 +564,13 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-                        debugger;
+                       
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
 
-                            that.reloadPermanentList("deleteUrl");
+                           that.reloadPermanentList("deleteUrl");
 
                         }
                         //location.reload();
@@ -672,12 +673,12 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-
+                          
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
-
+                                   
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -697,7 +698,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -797,7 +798,7 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-
+   
     var searchObj = $("#SearchURLText").val();
 
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
