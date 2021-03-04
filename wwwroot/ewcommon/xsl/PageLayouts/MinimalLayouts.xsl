@@ -465,6 +465,11 @@
         </xsl:variable>
         <div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
+          <xsl:if test="@mobileview!=''">
+          <xsl:attribute name="data-isMobileView">
+            <xsl:value-of select="@mobileview"/>
+          </xsl:attribute>
+          </xsl:if>
           <xsl:attribute name="class">
             <xsl:text>module nobox pos-</xsl:text>
             <xsl:value-of select="@position"/>
