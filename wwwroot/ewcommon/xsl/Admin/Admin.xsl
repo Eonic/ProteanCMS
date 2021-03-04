@@ -12372,13 +12372,13 @@
 
             <div class="control-wrapper input-wrapper appearance-">
 
-              <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
+              <input type="text" name="OldUrlform" id="OldUrlmodal" class="textbox form-control"/>
             </div>
           </div>
           <div class="form-group input-containing col-md-5">
 
             <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
+              <input type="text" name="NewUrlform" id="NewUrlModal" class="textbox form-control"/>
             </div>
           </div>
           <div class="form-group input-containing col-md-2">
