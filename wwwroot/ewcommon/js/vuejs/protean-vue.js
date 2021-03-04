@@ -695,7 +695,7 @@ if (rediectElement) {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
-
+                                   
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -715,7 +715,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -815,7 +815,7 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-
+   
     var searchObj = $("#SearchURLText").val();
 
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
