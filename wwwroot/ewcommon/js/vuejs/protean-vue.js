@@ -1,6 +1,4 @@
-﻿latest protean.vue.js
-
-var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
+﻿var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/loadUrlsForPagination';
 var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
 var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
@@ -404,12 +402,12 @@ if (rediectElement) {
         },
         methods: {
             getPermanentList: function () {
-
+              
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var totalToDispaly = $("#totalUrlCount").val();
                 $("#loadSpin").modal("show");
-
+               
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
                 $(".modalLable").text(lableDisplay);
                 //that.loading = true;
@@ -420,7 +418,7 @@ if (rediectElement) {
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
 
-
+                       
                         if (response.data != "") {
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
@@ -438,7 +436,7 @@ if (rediectElement) {
                             }
 
                         }
-
+                     
                         $("#loadSpin").modal("hide");
                         //that.loading = false;
                         //that.show = false;
@@ -563,7 +561,7 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-
+                       
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
@@ -672,7 +670,7 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-
+                          
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
@@ -697,7 +695,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-
+                               
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
