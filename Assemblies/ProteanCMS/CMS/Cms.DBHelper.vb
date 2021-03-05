@@ -2393,6 +2393,16 @@ Partial Public Class Cms
             End Try
         End Function
 
+        Public Function IsChildPage(ByVal pageid As objectTypes, ByVal objectKey As Long) As Boolean
+
+            Try
+                Dim query As String = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" & objectKey
+                Return GetDataValue(query, , , 0) > 0
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+
         Public Function isCascade(ByVal ContentId As Long) As Boolean
             PerfMon.Log("DBHelper", "isCascade")
             Dim nCount As Long
@@ -11122,6 +11132,32 @@ ReturnMe:
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, String.Empty))
                 Return False
+            End Try
+        End Function
+
+        Public Function GetCountryISOCode(ByVal sCountry As String) As String
+            Dim oDr As SqlDataReader
+            Dim sSql As String
+            Dim strReturn As String = ""
+
+            Try
+                sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
+                oDr = myWeb.moDbHelper.getDataReader(sSql)
+
+                If oDr.HasRows Then
+
+                    While oDr.Read()
+                        strReturn = oDr("cLocationISOa2").ToString()
+                    End While
+                Else
+                    strReturn = ""
+                End If
+
+                oDr.Close()
+                oDr = Nothing
+                Return strReturn
+            Catch ex As Exception
+                Return Nothing
             End Try
         End Function
 

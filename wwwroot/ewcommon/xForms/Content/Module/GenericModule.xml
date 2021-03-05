@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" />
+          <Content position="" moduleType="FormattedText" box="" title="" link="" screens="" mobileview="" linkType="internal" linkText="Read more" columns="4" />
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -45,6 +45,7 @@
       <bind nodeset="cContentXmlBrief/Content">
         <bind id="Screens" nodeset="@screens" required="false()" type="string"/>
         <bind id="marginBelow" nodeset="@marginBelow" required="false()" type="string"/>
+        <bind id="mobileview" nodeset="@mobileview" required="false()" type="string"/>
       </bind>
     </bind>
     <bind nodeset="tblContent/cContentXmlBrief/Content" id="columnBind">
@@ -188,6 +189,13 @@
             <item>
               <label>Large (desktops) 1200px or over </label>
               <value>lg</value>
+            </item>
+          </select>
+          <select bind="mobileview" appearance="full" class="multiline bs-only">
+            <label>Display Read more for  mobile view</label>
+            <item>
+              <label>Read more</label>
+              <value>true</value>
             </item>
           </select>
         </group>

@@ -351,6 +351,51 @@ Namespace Providers
 
                 End Function
 
+                Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
+                    PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
+                    Dim moCartConfig As System.Collections.Specialized.NameValueCollection = myWeb.moCart.moCartConfig
+                    Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
+                    Dim oFrmInstance As XmlElement
+                    Dim oFrmGroup As XmlElement
+                    Dim RedirectURL As String
+
+                    Dim cProcessInfo As String = "xfrmSecure3DReturn"
+                    Try
+                        oXform.moPageXML = myWeb.moPageXml
+
+                        If moCartConfig("SecureURL").EndsWith("/") Then
+                            RedirectURL = moCartConfig("SecureURL") & "?cartCmd=SubmitPaymentDetails&paymentMethod=" & myWeb.moCart.mcPaymentMethod
+                        Else
+                            RedirectURL = moCartConfig("SecureURL") & "/?cartCmd=SubmitPaymentDetails&paymentMethod=" & myWeb.moCart.mcPaymentMethod
+                        End If
+
+                        'create the instance
+                        oXform.NewFrm("Secure3DReturn")
+                        oXform.submission("Secure3DReturn", goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
+                        oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn")
+                        oXform.Instance.AppendChild(oFrmInstance)
+                        oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting... Please do not refresh")
+                        Dim item As Object
+
+                        For Each item In myWeb.moRequest.Form
+                            Dim newInput As XmlNode = oXform.addInput(oFrmGroup, CStr(item), False, CStr(item), "hidden")
+                            oXform.addValue(newInput, myWeb.moRequest.Form(CStr(item)))
+                        Next
+
+                        'build the form and the binds
+                        'oXform.addDiv(oFrmGroup, "<SCRIPT LANGUAGE=""Javascript"">function onXformLoad(){document.Secure3DReturn.submit();};appendLoader(onXformLoad);</SCRIPT>")
+                        oXform.addSubmit(oFrmGroup, "Secure3DReturn", "Continue", "ewSubmit")
+                        oXform.addValues()
+                        Return oXform
+
+                    Catch ex As Exception
+                        returnException(myWeb.msException, mcModuleName, "GetRedirect3dsForm", ex, "", cProcessInfo, gbDebug)
+                        Return Nothing
+                    End Try
+
+                End Function
+
+
                 Public Function CheckStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
                     Try

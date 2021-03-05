@@ -10604,7 +10604,7 @@
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
       <div class="lIinner">
-        <a name="{@id}">
+        <a name="faq-{@id}">
           &#160;
         </a>
         <h3>

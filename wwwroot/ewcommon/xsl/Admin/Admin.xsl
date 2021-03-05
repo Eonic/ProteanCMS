@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" 
-	xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew"	xmlns:v-for="https://vuejs.org/v2/api/v-for">
+<!--<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+				xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" 
+				xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew" 
+				xmlns:v-if="http://example.com/xml/v-if" xmlns:v-on="http://example.com/xml/v-on">-->
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
+                xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
+                xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
+                xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
+                xmlns:v-model="http://example.com/xml/v-model">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -1608,8 +1616,8 @@
 														<div class="metric-body">
 															<div class="value">
 																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
-																	<b>{{result.Key}}</b>: {{result.Value}}<br/>                                                                        
-                                                                </h1>
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
+																</h1>
 															</div>
 														</div>
 													</div>
@@ -2561,7 +2569,7 @@
               <!--xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/-->
               </div>
             </div>
-            <xsl:apply-templates select="/" mode="ListByContentTypeNoColaspe">
+            <xsl:apply-templates select="/" mode="ListByContentTypeByPage">
                   <xsl:with-param name="contentType" select="@ewCmd2"/>
             </xsl:apply-templates>
         </div>
@@ -2569,7 +2577,7 @@
   
    <!-- -->
   <xsl:template match="/" mode="ListByContentTypeNoColaspe">
-    <xsl:param name="contentType"/>
+	<xsl:param name="contentType"/>
     <xsl:variable name="pgid">
       <xsl:choose>
         <xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
@@ -2648,7 +2656,102 @@
     </table>
    </div>
     </form>
-  </xsl:template>
+  </xsl:template>  
+	
+  <xsl:template match="/" mode="ListByContentTypeByPage">
+	<xsl:param name="contentType"/>
+	<xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
+	<xsl:variable name="itemCount" select="'100'"/>
+	<xsl:variable name="total" select="$page/ContentDetail/@total"/>
+	<xsl:variable name="queryString">
+		<xsl:text>?</xsl:text>
+		<xsl:call-template name="getQString"/>
+	</xsl:variable>
+	<xsl:variable name="title">
+		<xsl:text>Location</xsl:text>
+	</xsl:variable>
+	<xsl:variable name="pgid">
+		<xsl:choose>
+			<xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
+				<xsl:value-of select="$page/ContentDetail/Content/select1[@ref='Location']/value/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$page/@pgid"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+		<input type="hidden" name="ewCmd" value="BulkContentAction"/>
+		<input type="hidden" name="pgid" value="{$pgid}"/>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<xsl:if test="$contentType!='Module'">
+					<div class="panel-heading-buttons">
+						<div class="form-group bulk-action">
+							<div class="input-group">
+								<label class="input-group-addon">Bulk Action</label>
+								<select class="form-control" name="BulkAction" id="BulkAction">
+									<option value="Move">Move</option>
+									<option value="Locate">Locate</option>
+									<option value="Hide">Hide</option>
+									<option value="Show">Show</option>
+								</select>
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary">Go</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
+						<xsl:variable name="href">
+							<xsl:text>?ewCmd=AddContent</xsl:text>
+							<xsl:text>&amp;pgid=</xsl:text>
+							<xsl:value-of select="/Page/@id"/>
+							<xsl:text>&amp;type=</xsl:text>
+							<xsl:value-of select="$contentType"/>
+						</xsl:variable>
+						<a class="btn btn-primary btn-xs principle" href="{$href}">
+							<i class="fa fa-plus">
+								<xsl:text> </xsl:text>
+							</i>
+							<xsl:text> </xsl:text>Add
+						</a>
+					</xsl:if>
+				</xsl:if>
+				<xsl:if test="$page/ContentDetail/@total > 0">
+					<div class="pull-right-stepper">
+						<xsl:apply-templates select="/" mode="adminStepper">
+							<xsl:with-param name="itemCount" select="'100'"/>
+							<xsl:with-param name="itemTotal" select="$total"/>
+							<xsl:with-param name="startPos" select="$startPos"/>
+							<xsl:with-param name="path" select="$queryString"/>
+							<xsl:with-param name="itemName" select="$title"/>
+						</xsl:apply-templates>
+					</div>
+				</xsl:if>
+				<h6 class="panel-title">
+					<i class="fa fa-chevron-down">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>
+					<xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+				</h6>
+			</div>
+			<table class="table table-striped-2">
+				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
+					<tr>
+						<td colspan="3">
+							<xsl:text>No </xsl:text>
+							<xsl:value-of select="$contentType"/>
+							<xsl:text> on this page</xsl:text>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+			</table>
+		</div>
+	</form>
+</xsl:template>
 
   <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
     <div id="tpltAdvancedMode">
@@ -12211,5 +12314,151 @@
   </xsl:template>
   <!-- -->
 
+  <xsl:template match="input[@class='RedirectPage']" mode="xform" >
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <div class="input-group col-md-4">
+          <span class="input-group-btn">
+            <button type="button"  value="Clear" class="btn btn-default btnClear">
+              <i class="fa fa-times"/>
+            </button>
+          </span>
+          <input type="text" name="SearchURL" id="SearchURLText" class="form-control" />
+          <input type="hidden"  id="totalUrlCount" class="form-control" />
+          <span class="input-group-btn">
+            <button type="button"  value="Search" class="btn btn-primary btnSearchUrl">Search </button>
+          </span>
+        </div>
+        &#160;   &#160;   &#160;
+      </div>
+
+      <div class="col-md-4">
+        <lable class="countLable"></lable>
+      </div>
+    </div>
+
+
+    <div class="control-wrapper RedirectPage" id="RedirectPage">
+      <div id="loadSpin" class="loadSpin modal " tabindex="-1" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!--<div class="modal-body">-->
+            <lable class="modalLable hidden"></lable>
+            <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
+              <i class="fas fa-spinner fa-spin"> </i>
+            </div>
+
+
+            <!--</div>-->
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-group input-containing col-md-6">
+          <label >Old URL</label>
+        </div>
+        <div class="form-group input-containing col-md-6">
+          <label  >New URL</label>
+        </div>
+
+      </div>
+      <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
+        <fieldset class="rpt-00 row">
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper appearance-">
+
+              <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-2">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <button type="button"  class="btn btn-primary addRedirectbtn">
+                Add new Url
+              </button>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+      <div>
+        <div class="form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
+          <fieldset>
+            <div class="form-group input-containing col-md-5" >
+
+              <div class="control-wrapper input-wrapper">
+
+                <input type="text" name="OldUrl" v-bind:id="'Old_' + index"  class="form-control addUrlText" v-bind:value="urls.oldUrl"/>
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-5">
+
+              <div class="control-wrapper input-wrapper">
+                <input type="text" name="NewUrl" v-bind:id="'New_' + index"  class="form-control addUrlText" v-bind:value="urls.NewUrl"/>
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-1">
+              <button type="button"  class="btn btn-primary btn-updateNewUrl hidden" >
+                Update
+              </button>
+              <lable class="tempLableSaveNew hidden">Saved..</lable>
+            </div>
+            <div class="form-group input-containing col-md-1">
+
+              <div class="control-wrapper input-wrapper">
+                <button type="button"  class="btn btn-danger delAddNewUrl">
+                  <i class="fa fa-times fa-white"> </i> Del
+                </button>
+              </div>
+            </div>
+
+          </fieldset>
+        </div>
+      </div>
+      <div class="scolling-pane">
+        <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+          <fieldset v-bind:class="'row repeated rpt_'+ index">
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text"  v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.key.nodeValue"/>
+
+                <input type="hidden"  class="col-md-5 textbox form-control hiddenOldUrlText" v-bind:value="urls.attributes.key.nodeValue" />
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+              </div>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
+                Update
+              </button>
+              <lable class="tempLableSave hidden">Saved..</lable>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
+                <i class="fa fa-times fa-white"> </i> Del
+              </button>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+      <div id="redirectLoad" v-if="loadingscroll" class="vueloadimg" v-show="true" >
+        <i class="fas fa-spinner fa-spin"> </i>
+      </div>
+    </div>
+
+  </xsl:template>
 	
 </xsl:stylesheet>

@@ -1040,7 +1040,7 @@
 			<p class="buttons">
 				<a class="btn btn-primary" href="{$currentPage/@url}?memCmd=editContact&amp;id={nContactKey}">
           <xsl:attribute name="title">
-						Edit Contact
+						<!--Edit Contact-->
 						<xsl:call-template name="term4024" />
 					</xsl:attribute>
           <i class="fa fa-pencil">
@@ -1048,20 +1048,20 @@
           </i>
           <xsl:text> </xsl:text>
 					
-					Edit
+					<!--Edit-->
 					<xsl:call-template name="term4022" />
 				</a>
 				<xsl:text>&#160;&#160;&#160;</xsl:text>
 				<a class="btn btn-danger" href="{$currentPage/@url}?memCmd=delContact&amp;id={nContactKey}" onclick="return confirm('Are you sure you want to delete this address?');">
 					<xsl:attribute name="title">
-						Delete Contact
+						<!--Delete Contact-->
 						<xsl:call-template name="term4025" />
 					</xsl:attribute>
           <i class="fa fa-trash-o">
             <xsl:text> </xsl:text>
           </i>
           <xsl:text> </xsl:text>
-					Delete
+					<!--Delete-->
 					<xsl:call-template name="term4023" />
 				</a>
 			</p>

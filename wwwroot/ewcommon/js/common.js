@@ -2746,29 +2746,3 @@ var SWFObject = deconcept.SWFObject;
 
     };
 })(jQuery);
-
-
-
-//var Files = [];
-//$(".fileUploadCheck").on('change', function () {
-   
-//    var fileInput = this.files;
-//    for (var i = 0; i < fileInput.length; i++) {
-//        Files.push($('.fileUploadCheck')[0].files[i]);
-//    }
-//    var size = 0;
-//    size = calculateTotalSize();
-//    size = size / 1024 / 1024;
-//    if (size > 4.0) {
-//        Files.length = 0;
-//        alert('File size should be less than 4MB');
-//        this.val('');
-//        return false;
-//    }
-//    Files.length = 0;
-//});
-//function calculateTotalSize() {
-//    var totalSize = 0;
-//    Files.map((file) => totalSize += file.size)
-//    return totalSize; 
-//}

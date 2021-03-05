@@ -51,7 +51,7 @@ Public Class Cms
     Private mbSystemPage As Boolean = False
     Private mnUserPagePermission As dbHelper.PermissionLevel = dbHelper.PermissionLevel.Open
 
-    Public mbAdminMode As Boolean = False
+
     Public mbPopupMode As Boolean = False
 
     Public moPageXml As New XmlDocument
@@ -557,6 +557,7 @@ Public Class Cms
                 gnPageErrorId = goApp("PageErrorId")
 
                 mcPagePath = CStr(moRequest("path") & "")
+                mcPagePath = mcPagePath.Replace("//", "/")
 
                 InitialiseJSEngine()
 
@@ -6632,6 +6633,139 @@ Public Class Cms
         Catch ex As Exception
             'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
             OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByType", ex, ""))
+        End Try
+    End Sub
+
+    Public Sub GetContentXMLByTypeAndOffset(ByRef oPageElmt As XmlElement, ByVal cContentType As String, Optional sqlFilter As String = "", Optional fullSQL As String = "", Optional ByRef oPageDetail As XmlElement = Nothing)
+        PerfMon.Log("Web", "GetContentXMLByTypeAndOffset")
+        '<add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
+        Try
+            Dim oTypeCriteria() As String = Split(cContentType, "|")
+            Dim cTop As String = ""
+            Dim cOrderDirection As String = ""
+            Dim oOrderField As String = ""
+            Dim strContentType As String = ""
+
+            Dim i As Integer
+            For i = 0 To UBound(oTypeCriteria)
+                If oTypeCriteria(i).Contains("Top_") Then
+                    cTop = Split(oTypeCriteria(i), "_")(1)
+                    If Not IsNumeric(cTop) Then cTop = ""
+                ElseIf oTypeCriteria(i).Contains("ASC_") Then
+                    cOrderDirection = ""
+                    oOrderField = Split(oTypeCriteria(i), "_")(1)
+                ElseIf oTypeCriteria(i).Contains("DESC_") Then
+                    cOrderDirection = "DESC"
+                    oOrderField = Split(oTypeCriteria(i), "_")(1)
+                Else
+                    'its the field name
+                    strContentType = oTypeCriteria(i)
+                End If
+            Next
+
+            ' Paging variables
+            Dim nStart As Integer = 0
+            Dim nRows As Integer = 100
+
+            ' Set the paging variables, if provided.
+            If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
+            If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
+
+            If nStart < 0 Then nStart = 0
+            If nRows < 1 Then nRows = 100
+
+
+            ' Quick call to get the total number of records
+            Dim cSQL As String = "select count(*) from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" &
+            " where (cContentSchemaName = '" & strContentType & "') "
+            If sqlFilter <> "" Then
+                cSQL &= sqlFilter
+            End If
+            Dim nTotal As Long = moDbHelper.GetDataValue(cSQL, , , 0)
+
+            If nTotal > 0 Then
+                cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" &
+            " where (cContentSchemaName = '" & strContentType & "') "
+
+                If sqlFilter <> "" Then
+                    cSQL &= sqlFilter
+                End If
+                cSQL &= GetStandardFilterSQLForContent()
+
+                If Not oOrderField = "" Then
+                    cSQL &= " ORDER BY " & oOrderField & " " & cOrderDirection
+                End If
+
+                If fullSQL <> "" Then
+                    cSQL = fullSQL
+                End If
+
+                cSQL &= " offset " & nStart & " rows fetch next 100 rows only"
+
+                Dim oDS As DataSet = moDbHelper.GetDataSet(cSQL, "Content1", "Contents")
+                Dim oDT As New DataTable
+                oDT = oDS.Tables("Content1").Copy()
+                oDT.Rows.Clear()
+                oDT.TableName = "Content"
+                oDS.Tables.Add(oDT)
+                Dim oDR As DataRow
+                Dim nMax As Integer = 0
+                Dim cDoneIds As String = ","
+                Dim ochkStr As String = ""
+                If IsNumeric(cTop) Then nMax = CInt(cTop)
+                For Each oDR In oDS.Tables("Content1").Rows
+                    If oDS.Tables("Content").Rows.Count < nMax Or nMax = 0 Then
+                        If IsNumeric(oDR("parId")) And Not oDR("parId").Contains(",") Then
+                            ochkStr = moDbHelper.checkPagePermission(oDR("parId"))
+                            If IsNumeric(ochkStr) Then
+                                If CInt(ochkStr) = oDR("parId") And Not cDoneIds.Contains("," & oDR("id") & ",") Then
+                                    oDS.Tables("Content").ImportRow(oDR)
+                                    cDoneIds &= oDR("id") & ","
+                                End If
+                            End If
+                        Else
+                            If mbAdminMode Then 'if in adminmode get everything regardless
+                                oDS.Tables("Content").ImportRow(oDR)
+                                cDoneIds &= oDR("id") & ","
+                            End If
+                        End If
+
+                    End If
+                Next
+                oDS.Tables.Remove(oDS.Tables("Content1"))
+                Dim oRoot As XmlElement
+                oRoot = moPageXml.DocumentElement.SelectSingleNode("Contents")
+                If oRoot Is Nothing Then
+                    oRoot = moPageXml.CreateElement("Contents")
+                    moPageXml.DocumentElement.AppendChild(oRoot)
+                End If
+                moDbHelper.AddDataSetToContent(oDS, oRoot, mnPageId, False, "", mdPageExpireDate, mdPageUpdateDate)
+
+                'Get the content Detail element
+                Dim oContentDetails As XmlElement
+                If oPageDetail Is Nothing Then
+                    oContentDetails = moPageXml.SelectSingleNode("Page/ContentDetail")
+                    If oContentDetails Is Nothing Then
+                        oContentDetails = moPageXml.CreateElement("ContentDetail")
+                        If Not moPageXml.InnerXml = "" Then
+                            moPageXml.FirstChild.AppendChild(oContentDetails)
+                        Else
+                            oPageDetail.AppendChild(oContentDetails)
+                        End If
+
+                    End If
+                Else
+                    oContentDetails = oPageDetail
+                End If
+
+                oContentDetails.SetAttribute("start", nStart)
+                oContentDetails.SetAttribute("total", nTotal)
+
+            End If
+
+        Catch ex As Exception
+            'returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
+            OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByTypeAndOffset", ex, ""))
         End Try
     End Sub
 

@@ -4177,7 +4177,9 @@ Partial Public Class Cms
                 If cResult = "" Then cResult = 0
                 Return cResult
             End Function
-
+            '
+            'Need to move to payment.baseprovider.activities
+            'Then we can remove this function from here.
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3D")
                 Dim oXform As xForm = New xForm(myWeb.msException)
@@ -4272,7 +4274,8 @@ Partial Public Class Cms
 
             End Function
 
-
+            'We need to get rid off it once each payment provider is tested.
+            'Moved to the payment.baseprovider.activities
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                 Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
@@ -4295,7 +4298,7 @@ Partial Public Class Cms
                     oXform.submission("Secure3DReturn", goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
                     oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn")
                     oXform.Instance.AppendChild(oFrmInstance)
-                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting...")
+                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting... Please do not refresh")
                     Dim item As Object
 
                     For Each item In myWeb.moRequest.Form
