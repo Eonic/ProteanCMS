@@ -13474,39 +13474,60 @@
 
   <xsl:template match="Content[@type='Video']" mode="ContentDetail">
     <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-    <div id="Video{@id}" class="Video row">
-      <div class="col-md-4">
-        <h1 class="title content-title">
-          <xsl:value-of select="Title/node()"/>
-        </h1>
-        <xsl:if test="Body/node()!=''">
-          <p class="description">
-            <span class="label">
-              <xsl:call-template name="term2092" />
-              <xsl:text>: </xsl:text>
-            </span>
-            <xsl:apply-templates select="Body" mode="cleanXhtml"/>
-          </p>
-        </xsl:if>
-        <xsl:if test="Author/node()!=''">
-          <p class="author">
-            <span class="label">
-              <xsl:call-template name="term2045" />
-              <xsl:text>: </xsl:text>
-            </span>
-            <xsl:value-of select="Author/node()"/>
-          </p>
-        </xsl:if>
-        <xsl:if test="Copyright/node()!=''">
-          <p class="copyright">
-            <span class="label">
-              <xsl:call-template name="term2046" />
-              <xsl:text>: </xsl:text>
-            </span>
-            <xsl:value-of select="Copyright/node()"/>
-          </p>
-        </xsl:if>
-        <div class="entryFooter">
+    <div id="Video{@id}" class="detail Video">
+      <div class="row">
+        <div class="col-md-4">
+          <h1 class="title content-title">
+            <xsl:value-of select="Title/node()"/>
+          </h1>
+          <xsl:if test="Body/node()!=''">
+            <p class="description">
+              <span class="label">
+                <xsl:call-template name="term2092" />
+                <xsl:text>: </xsl:text>
+              </span>
+              <xsl:apply-templates select="Body" mode="cleanXhtml"/>
+            </p>
+          </xsl:if>
+          <xsl:if test="Author/node()!=''">
+            <p class="author">
+              <span class="label">
+                <xsl:call-template name="term2045" />
+                <xsl:text>: </xsl:text>
+              </span>
+              <xsl:value-of select="Author/node()"/>
+            </p>
+          </xsl:if>
+          <xsl:if test="Copyright/node()!=''">
+            <p class="copyright">
+              <span class="label">
+                <xsl:call-template name="term2046" />
+                <xsl:text>: </xsl:text>
+              </span>
+              <xsl:value-of select="Copyright/node()"/>
+            </p>
+          </xsl:if>
+          <div class="entryFooter hidden-xs hidden-sm">
+            <div class="tags">
+              <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
+              <xsl:text> </xsl:text>
+            </div>
+            <xsl:apply-templates select="." mode="backLink">
+              <xsl:with-param name="link" select="$thisURL"/>
+              <xsl:with-param name="altText">
+                <xsl:call-template name="term2047" />
+              </xsl:with-param>
+            </xsl:apply-templates>
+          </div>
+          <div class="terminus">&#160;</div>
+        </div>
+        <div class="col-md-8">
+          <xsl:apply-templates select="." mode="VideoDetailDisplay">
+            <xsl:with-param name="classes" select="'col-md-8'"/>
+          </xsl:apply-templates>
+        </div>
+
+        <div class="entryFooter container hidden-md hidden-lg">
           <div class="tags">
             <xsl:apply-templates select="Content[@type='Tag']" mode="displayBrief"/>
             <xsl:text> </xsl:text>
@@ -13518,12 +13539,6 @@
             </xsl:with-param>
           </xsl:apply-templates>
         </div>
-        <div class="terminus">&#160;</div>
-      </div>
-      <div class="col-md-8">
-        <xsl:apply-templates select="." mode="VideoDetailDisplay">
-          <xsl:with-param name="classes" select="'col-md-8'"/>
-        </xsl:apply-templates>
       </div>
     </div>
   </xsl:template>
