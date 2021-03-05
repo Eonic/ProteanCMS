@@ -12335,7 +12335,9 @@
       </div>
 
       <div class="col-md-4">
-        <lable class="countLable"></lable>
+        <lable class="countLable hidden"></lable>
+          &#160;   &#160;   &#160;
+       <!--<lable class="endLable hidden">You reached at end</lable>-->
       </div>
     </div>
 
@@ -12346,9 +12348,9 @@
           <div class="modal-content">
             <!--<div class="modal-body">-->
             <lable class="modalLable hidden"></lable>
-            <div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
+            <!--<div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
               <i class="fas fa-spinner fa-spin"> </i>
-            </div>
+            </div>-->
 
 
             <!--</div>-->
@@ -12370,13 +12372,13 @@
 
             <div class="control-wrapper input-wrapper appearance-">
 
-              <input type="text" name="OldUrl" id="OldUrlmodal" class="textbox form-control"/>
+              <input type="text" name="OldUrlform" id="OldUrlmodal" class="textbox form-control"/>
             </div>
           </div>
           <div class="form-group input-containing col-md-5">
 
             <div class="control-wrapper input-wrapper appearance-">
-              <input type="text" name="NewUrl" id="NewUrlModal" class="textbox form-control"/>
+              <input type="text" name="NewUrlform" id="NewUrlModal" class="textbox form-control"/>
             </div>
           </div>
           <div class="form-group input-containing col-md-2">
