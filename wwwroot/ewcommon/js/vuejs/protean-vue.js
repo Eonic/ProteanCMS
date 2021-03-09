@@ -1,6 +1,4 @@
-﻿latest protean.vue.js
-
-var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
+﻿var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
 var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/loadUrlsForPagination';
 var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
 var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
@@ -35,7 +33,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-  
+
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
     }
@@ -420,12 +418,12 @@ if (rediectElement) {
         },
         methods: {
             getPermanentList: function () {
-              
+
                 var that = this;
                 var totalCountOfLoad = $(".parentDivOfRedirect").length;
                 var totalToDispaly = $("#totalUrlCount").val();
                 $("#loadSpin").modal("show");
-               
+
                 var lableDisplay = "Loading next 50 of " + totalToDispaly + " lines";
                 $(".modalLable").text(lableDisplay);
                 //that.loading = true;
@@ -436,7 +434,7 @@ if (rediectElement) {
                 axios.post(paginationRedirectsAPIUrl, inputJson)
                     .then(function (response) {
 
-                       
+
                         if (response.data != "") {
                             var xmlString = response.data;
                             var xmlDocument = $.parseXML(xmlString);
@@ -454,17 +452,17 @@ if (rediectElement) {
                             }
 
                         }
-                     
+
                         $("#loadSpin").modal("hide");
                         //that.loading = false;
                         //that.show = false;
 
-                        var totalCountOfLoad1 = that.urlList.length;
-                        var totalToDispaly1 = $("#totalUrlCount").val();
-                        if (totalToDispaly1 == "") {
-                            totalToDispaly1 = 0;
+                        var totalCountOfLoadlist = that.urlList.length;
+                        var totalToDispalyList = $("#totalUrlCount").val();
+                        if (totalToDispalyList == "") {
+                            totalToDispalyList = 0;
                         }
-                        $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + totalToDispaly1 + " lines");
+                        $(".countLable").text("Loaded " + totalCountOfLoadlist + " of " + totalToDispalyList + " lines");
                         $(".countLable").removeClass("hidden");
                     });
             },
@@ -483,7 +481,7 @@ if (rediectElement) {
                 axios.post(paginationAddNewUrlAPIUrl, inputJson)
                     .then(function (response) {
                         if (response.data == "success") {
-                           
+
                             //$("#loadSpin").modal("hide");
                             //that.show = false;
                             //that.loading = false;
@@ -538,6 +536,7 @@ if (rediectElement) {
 
                         //that.show = false;
                         //that.loading = false;
+                        $("#loadSpin").modal("hide");
 
 
 
@@ -581,13 +580,13 @@ if (rediectElement) {
                 var inputJson = { redirectType: type, oldUrl: oldUrl, NewUrl: NewUrl };
                 axios.post(deleteUrlsAPIUrl, inputJson)
                     .then(function (response) {
-                       
+
                         if (response.data == "success") {
                             $("#loadSpin").modal("hide");
                             that.show = false;
                             that.loading = false;
 
-                           that.reloadPermanentList("deleteUrl");
+                            that.reloadPermanentList("deleteUrl");
 
                         }
                         //location.reload();
@@ -690,12 +689,12 @@ if (rediectElement) {
                     var inputJson = { redirectType: type, oldUrl: oldUrl };
                     axios.post(IsUrlPResentAPI, inputJson)
                         .then(function (response) {
-                          
+
                             if (response.data == "True") {
                                 if (confirm("Old url is already exist. Do you want to replace it?")) {
 
                                     that.addNewUrl(oldUrl, NewUrl);
-                                   
+
                                     if (that.newAddedUrlList != '') {
                                         oldindex = that.newAddedUrlList.findIndex(x => x.oldUrl === oldUrl);
 
@@ -715,7 +714,7 @@ if (rediectElement) {
                                 }
                             }
                             else {
-                               
+
                                 that.addNewUrl(oldUrl, NewUrl);
 
                                 if (that.newAddedUrlList != '') {
@@ -762,15 +761,15 @@ if (rediectElement) {
                             that.totalCount = response.data;
                             $("#totalUrlCount").val(response.data);
                             if (response.data != that.urlList.length) {
-                                var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
+                                var totalCountOfLoadList = that.urlList.length + that.newAddedUrlList.length;
                             }
                             else {
-                                var totalCountOfLoad1 = that.urlList.length;
+                                var totalCountOfLoadList = that.urlList.length;
                             }
 
-                            $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
+                            $(".countLable").text("Loaded " + totalCountOfLoadList + " of " + response.data + " lines");
                             $(".countLable").removeClass("hidden");
-                            if (totalCountOfLoad1 == response.data) {
+                            if (totalCountOfLoadList == response.data) {
                                 $(".endLable").removeClass("hidden");
                             }
                         }
@@ -791,11 +790,11 @@ if (rediectElement) {
 
                         if (response.data != "" || response.data == 0) {
                             $("#totalUrlCount").val(response.data);
-                            var totalCountOfLoad1 = that.urlList.length + that.newAddedUrlList.length;
+                            var totalCountOfLoadList = that.urlList.length + that.newAddedUrlList.length;
 
-                            $(".countLable").text("Loaded " + totalCountOfLoad1 + " of " + response.data + " lines");
+                            $(".countLable").text("Loaded " + totalCountOfLoadList + " of " + response.data + " lines");
                             $(".countLable").removeClass("hidden");
-                            if (totalCountOfLoad1 == response.data) {
+                            if (totalCountOfLoadList == response.data) {
                                 $(".endLable").removeClass("hidden");
                             }
 
@@ -815,7 +814,7 @@ if (rediectElement) {
 }
 $(".endLable").addClass("hidden");
 $('.scolling-pane').on('scroll', function () {
-   
+
     var searchObj = $("#SearchURLText").val();
 
     if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
@@ -930,53 +929,31 @@ if (insightsSectionElement) {
 
                 var inputJson = {};
 
-});
-
-//Edit Product
-const editProductElement = $(".ProductSub").length;
-if (editProductElement > 0) {
-    window.editProduct = new Vue({
-        el: ".ProductSub",
-        data: {
-            urlPathInput: "",
-            originalPathName: ""
-        },
-        methods: {
-            storedPath: function () {
-
-                var cContentPath = $("#cContentPath").val();
-                if (cContentPath != null) {
-                    this.urlPathInput = cContentPath;
+                for (var arrIndex = 0; arrIndex < paramArray.length; arrIndex++) {
+                    var param = paramArray[arrIndex]
+                    if (param != null) {
+                        var paramKeyValue = param.split('=');
+                        inputJson[paramKeyValue[0]] = paramKeyValue[1];
+                    }
                 }
-
-                //clean the storage for struct name when page changes.
-                let pageId = this.getQueryStringParam('pgid');
-                if (!localStorage.pageId || localStorage.pageId != pageId) {
-                    localStorage.removeItem('originalPathName');
-                }
-                localStorage.pageId = pageId;
-                localStorage.originalPathName = this.urlPathInput;
+                return inputJson;
             },
-            UrlPathOnChange: function (newContentPath) {
-
-                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-
-                    redirectModal.toggleModal();
-                    $("#OldPageName").val(localStorage.originalPathName);
-                    $("#NewPageName").val(newContentPath);
-                    this.cContentPath = newContentPath;
-
-                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
-                    $(".hiddenProductNewUrl").val(newContentPath);
-                }
-                else {
-                    $(".btnSubmitProduct").click();
-                }
-
-            },
+            filterResultArray: function (metricId) {
+                return this.resultArray[metricId];
+            }
         },
         mounted: function () {
-            this.storedPath();
+            let metricsList = document.getElementsByClassName("metric");
+            if (metricsList != null && metricsList.length > 0) {
+                for (let metricIndex = 0; metricIndex < metricsList.length; metricIndex++) {
+                    let metric = metricsList[metricIndex];
+                    let apiUrl = metric.getAttribute("data-json-url");
+                    if (apiUrl != null && apiUrl.length > 0) {
+                        let metricElementId = metric.getAttribute("id");
+                        this.getMetricData(metricElementId, apiUrl);
+                    }
+                }
+            }
         }
     });
 }
