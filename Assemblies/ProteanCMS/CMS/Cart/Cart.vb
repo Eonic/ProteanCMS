@@ -1412,9 +1412,19 @@ processFlow:
                             'ts added because missing from session and now added to the return redirect from SagePay (may need to add to paypal pro too)
                             Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
                         End If
-                        Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                        ' Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                        ' Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
+                        'Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
                         Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
-                        Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+                        Redirect3dsXform = oPayProv.Activities.GetRedirect3dsForm(myWeb)
+
+                        If (Redirect3dsXform Is Nothing) Then
+                            Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                            Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+                        End If
+
                         moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt)
                         myWeb.moResponseType = pageResponseType.iframe
 
