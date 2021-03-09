@@ -64,6 +64,7 @@ Namespace Providers
 
 
             Public Class Activities
+                Inherits Protean.Providers.Payment.DefaultProvider.Activities
 
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
                 Private myWeb As Protean.Cms
@@ -1077,6 +1078,99 @@ Namespace Providers
 
                 End Function
 
+                Overloads Function UpdatePaymentStatus(ByRef oWeb As Protean.Cms, ByRef nPaymentMethodKey As Long) As XmlElement
+                    Dim cProcessInfo As String = ""
+                    Dim oPayPalProCfg As XmlNode
+                    Dim nTransactionMode As TransactionMode
+                    Try
+                        Dim oInstance As XmlElement = MyBase.UpdatePaymentStatus(oWeb, nPaymentMethodKey)
+
+                        Dim cPayMthdProviderRef As String
+                        cPayMthdProviderRef = oInstance.SelectSingleNode("cPayMthdProviderRef").InnerText
+
+                        moPaymentCfg = WebConfigurationManager.GetWebApplicationSection("protean/payment")
+                        oPayPalProCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayPalPro']")
+
+                        Dim ppProfile As New PayPalAPI.CustomSecurityHeaderType
+                        ppProfile.Credentials = New PayPalAPI.UserIdPasswordType
+                        ppProfile.Credentials.Username = oPayPalProCfg.SelectSingleNode("apiUsername").Attributes("value").Value()
+                        ppProfile.Credentials.Password = oPayPalProCfg.SelectSingleNode("apiPassword").Attributes("value").Value()
+                        ppProfile.Credentials.Signature = oPayPalProCfg.SelectSingleNode("apiSignature").Attributes("value").Value()
+
+
+                        Select Case CStr(oPayPalProCfg.SelectSingleNode("opperationMode").Attributes("value").Value())
+                            Case "true", "test"
+                                nTransactionMode = TransactionMode.Test
+                            Case "false"
+                                nTransactionMode = TransactionMode.Fail
+                            Case "live"
+                                nTransactionMode = TransactionMode.Live
+                        End Select
+
+                        'Create a service Binding in code
+
+                        Dim endpointAddress As String = "https://api-3t.paypal.com/2.0/"
+                        If nTransactionMode = TransactionMode.Test Then
+                            endpointAddress = "https://api-3t.sandbox.paypal.com/2.0/"
+                        End If
+                        Dim ppEndpointAddress As New System.ServiceModel.EndpointAddress(endpointAddress)
+
+                        Dim ppBinding As System.ServiceModel.BasicHttpBinding = getBinding()
+
+                        Dim ppGetRecurringPaymentsProfileDetailsReq As New PayPalAPI.GetRecurringPaymentsProfileDetailsReq
+
+                        Dim ppGetRecurringPaymentsProfileDetailsRequestType As New PayPalAPI.GetRecurringPaymentsProfileDetailsRequestType
+                        ppGetRecurringPaymentsProfileDetailsRequestType.ProfileID = cPayMthdProviderRef
+                        ppGetRecurringPaymentsProfileDetailsRequestType.Version = "51.0"
+
+                        ppGetRecurringPaymentsProfileDetailsReq.GetRecurringPaymentsProfileDetailsRequest = ppGetRecurringPaymentsProfileDetailsRequestType
+
+                        Dim ppIface As New PayPalAPI.PayPalAPIAAInterfaceClient(ppBinding, ppEndpointAddress)
+                        Dim ppRecuringResponse As PayPalAPI.GetRecurringPaymentsProfileDetailsResponseType
+                        Dim cStatus As String
+                        Try
+                            ppRecuringResponse = ppIface.GetRecurringPaymentsProfileDetails(ppProfile, ppGetRecurringPaymentsProfileDetailsReq)
+
+                            Select Case ppRecuringResponse.GetRecurringPaymentsProfileDetailsResponseDetails.ProfileStatus
+                                Case PayPalAPI.RecurringPaymentsProfileStatusType.ActiveProfile
+                                    cStatus = "active"
+                                Case PayPalAPI.RecurringPaymentsProfileStatusType.CancelledProfile
+                                    cStatus = "cancelled"
+                                Case PayPalAPI.RecurringPaymentsProfileStatusType.ExpiredProfile
+                                    cStatus = "expired"
+                                Case PayPalAPI.RecurringPaymentsProfileStatusType.PendingProfile
+                                    cStatus = "pending"
+                                Case PayPalAPI.RecurringPaymentsProfileStatusType.SuspendedProfile
+                                    cStatus = "suspended"
+                                Case Else
+                                    cStatus = "Error - no value returned"
+                            End Select
+                        Catch ex As Exception
+                            cStatus = "Error - no value returned " & ex.Message
+                        End Try
+
+                        oInstance.SelectSingleNode("cPayMthdDescription").InnerText = cStatus
+
+                        oInstance.SelectSingleNode("dUpdateDate").InnerText = xmlDate(Now())
+
+                        If cStatus = "active" Then
+                            oInstance.SelectSingleNode("nStatus").InnerText = "1"
+                        Else
+                            oInstance.SelectSingleNode("nStatus").InnerText = "0"
+                        End If
+
+                        Dim newInstance As XmlElement = oWeb.moPageXml.CreateElement("instance")
+                        newInstance.AppendChild(oInstance)
+                        oWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartPaymentMethod, newInstance)
+                        Return oInstance
+
+                    Catch ex As Exception
+                        returnException(myWeb.msException, mcModuleName, "UpdatePaymentStatus", ex, "", cProcessInfo, gbDebug)
+                        Return Nothing
+                    End Try
+
+                End Function
+
                 Public Function CancelPayments(ByRef oWeb As Protean.Cms, ByRef nPaymentProviderRef As String) As String
                     Dim cProcessInfo As String = ""
                     Dim oPayPalProCfg As XmlNode
@@ -1179,7 +1273,7 @@ Namespace Providers
 
 
                     Catch ex As Exception
-                        returnException(myWeb.msException, mcModuleName, "CheckStatus", ex, "", cProcessInfo, gbDebug)
+                        returnException(myWeb.msException, mcModuleName, "GetMethodDetail", ex, "", cProcessInfo, gbDebug)
                         Return ""
                     End Try
 

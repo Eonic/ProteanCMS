@@ -1615,7 +1615,9 @@
 														</header>
 														<div class="metric-body">
 															<div class="value">
-																<h1 class="metric-value">--</h1>
+																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
+																</h1>
 															</div>
 														</div>
 													</div>
@@ -9525,25 +9527,82 @@
                   <xsl:text>Every </xsl:text><xsl:value-of select="@period"/><xsl:text> </xsl:text><xsl:value-of select="Content/Duration/Unit/node()"/><xsl:text>s</xsl:text>
                 </dd>
               </dl>
-              
-              <xsl:if test="@paymentStatus='active' or @paymentStatus='Manual' ">
-                <div class="alert alert-success">
-                  <xsl:if test="@paymentStatus='active'">
-                    Payment be collected via <strong>
-                      <xsl:value-of select="@providerName"/>
-                    </strong>
+
+              <xsl:choose>
+                <xsl:when test="tblCartPaymentMethod/nStatus='1'">
+                  <span class="text-success">
+                    <i class="far fa-lg fa-check-circle">&#160;</i>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span>
+
+                  <br/>
+                  <small>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                  </small>
+                </xsl:when>
+                <xsl:otherwise>
+                  <span class="text-danger">
+                    <i class="far fa-lg fa-times-circle">&#160;</i>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span>
+                  <br/>
+                  <small>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                  </small>
+                </xsl:otherwise>
+              </xsl:choose>
+
+              <xsl:choose>
+                <xsl:when test="tblCartPaymentMethod/nStatus!='0' or @cancelDate!=''">
+                  <xsl:choose>
+                    <xsl:when test="@paymentStatus='cancelled' and @providerName='GoCardless' ">
+                      <div class="alert alert-danger">
+                        The customer has canceled their GoCardless Direct Debit payment directly with their bank.
+                      </div>
+                    </xsl:when>
+                    <xsl:when test="tblCartPaymentMethod/nStatus='1' or @paymentStatus='Manual' ">
+                      <div class="alert alert-success">
+                        <xsl:choose>
+                          <xsl:when test="tblCartPaymentMethod/cPayMthdAcctName/node()='WorldPay'">
+                            Credit Card Payment needs to be processed
+                          </xsl:when>
+                          <xsl:otherwise>
+                            Payment be collected via
+                          </xsl:otherwise>
+                        </xsl:choose>
+                        <strong>
+                          <xsl:value-of select="@providerName"/>
+                        </strong>
+                        <br/>
+                        <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+                        <br/>
+                        <br/>
+                        <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                          <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
+                        </a>
+                      </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <div class="alert alert-warning">
+                        We cannot collect payment as we do not have an active payment method.
+                      </div>
+                    </xsl:otherwise>
+                  </xsl:choose>
+
+                  <xsl:if test="@cancelDate!=''">
                     <br/>
-                    <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+                    <xsl:value-of select="@cancelDate"/> -
+                    <xsl:value-of select="@cancelReason"/>
                   </xsl:if>
-                  <br/>
-                  <br/>
-                  <a href="{$appPath}?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
-                    <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
-                  </a>
-                </div>
-              </xsl:if>
-  
-              <xsl:value-of select="@paymentStatus"/>
+
+
+
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="@paymentStatus"/>
+                </xsl:otherwise>
+
+              </xsl:choose>
  
               <xsl:if test="contains(@paymentStatus,'Expires')">
                 <div class="alert alert-success">
@@ -9561,6 +9620,10 @@
                   </a>
                 </div>
               </xsl:if>
+              
+              
+              
+              
             </div>
             <div class="panel-footer form-actions">
               
