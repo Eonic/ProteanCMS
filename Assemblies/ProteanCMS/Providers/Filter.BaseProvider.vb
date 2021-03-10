@@ -62,7 +62,7 @@ Namespace Providers
                     End If
 
                     If ProviderClass = "" Then
-                        ProviderClass = "Protean.Providers.Streaming.EonicProvider"
+                        ProviderClass = "Protean.Providers.Filter.DefaultProvider"
                         calledType = System.Type.GetType(ProviderClass, True)
                     Else
                         Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders")
