@@ -7469,7 +7469,7 @@
       <xsl:choose>
         <xsl:when test="$lazy='on'">
           <xsl:attribute name="data-src">
-            <xsl:value-of select="$imageUrl"/>
+            <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
           <xsl:attribute name="src">
             <xsl:value-of select="$lazyplaceholder"/>
@@ -7477,7 +7477,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:attribute name="src">
-            <xsl:value-of select="$imageUrl"/>
+            <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>

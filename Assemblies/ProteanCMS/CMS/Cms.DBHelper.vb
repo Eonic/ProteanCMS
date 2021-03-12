@@ -5464,7 +5464,9 @@ restart:
                         oElmt.InnerXml = oElmt.FirstChild.InnerXml
                         If Not cOverrideUserGroups = "on" Then
                             If Not IsDBNull(odr("Member")) Then
-                                root.AppendChild(oElmt)
+                                If (Not oElmt Is Nothing) And (Not root Is Nothing) Then
+                                    root.AppendChild(oElmt)
+                                End If
                             End If
                         Else
                             root.AppendChild(oElmt)
