@@ -32,5 +32,10 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
+<<<<<<< Updated upstream
 [assembly: AssemblyVersion("6.0.46.5")]
 [assembly: AssemblyFileVersion("6.0.46.5")]
+=======
+[assembly: AssemblyVersion("6.0.45.4")]
+[assembly: AssemblyFileVersion("6.0.45.4")]
+>>>>>>> Stashed changes
