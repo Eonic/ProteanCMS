@@ -74,11 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-<<<<<<< Updated upstream
-    <AssemblyVersion>6.0.46.13</AssemblyVersion>
-=======
-    <AssemblyVersion>6.0.45.10</AssemblyVersion>
->>>>>>> Stashed changes
+    <AssemblyVersion>6.0.46.19</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
