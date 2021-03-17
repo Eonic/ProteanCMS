@@ -43,18 +43,7 @@ Partial Public Class Cms
                 Try
                     Dim cProcessInfo As String = ""
 
-                    'Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
-                    'myCart.GetCart(CartXml.FirstChild)
-
-                    'CartXml = updateCartforJSON(CartXml)
-
-                    'Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
-                    'jsonString = jsonString.Replace("""@", """_")
-                    'jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-
-                    'Return jsonString
-                    ''persist cart
-                    'myCart.close()
+                    'does nothing yet
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
