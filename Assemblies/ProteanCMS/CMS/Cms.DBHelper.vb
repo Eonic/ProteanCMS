@@ -6856,6 +6856,7 @@ restart:
             End Try
         End Function
 
+<<<<<<< HEAD
         Public Function isParent(ByVal pageId As Integer) As Boolean
             PerfMon.Log("DBHelper", "FindpageIsParent")
             Try
@@ -6872,6 +6873,8 @@ restart:
             End Try
         End Function
 
+=======
+>>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
         Public Sub ListOrders(ByRef oContentsXML As XmlElement, ByVal ProcessId As Cart.cartProcess, ByVal cSchemaName As String)
             PerfMon.Log("DBHelper", "ListOrders")
             Dim oRoot As XmlElement
