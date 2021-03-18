@@ -29,7 +29,6 @@ Partial Public Class Cms
             End Sub
 
             Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
-
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -67,9 +66,8 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-                        Dim isParent As Boolean = moDbHelper.isParent(pageId)
 
-                        If isParent = True Then
+                        If isParentPage() = "True" Then
                             If redirectType = "301Redirect" Then
                                 redirectType = "301 Redirects"
                             End If
@@ -400,6 +398,15 @@ Partial Public Class Cms
 
                 Result = TotalCount.ToString()
 
+                Return Result
+            End Function
+
+            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
                 Return Result
             End Function
 
