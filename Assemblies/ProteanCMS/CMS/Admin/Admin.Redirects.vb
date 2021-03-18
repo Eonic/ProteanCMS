@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0) As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -66,9 +66,8 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-                        Dim isParent As Boolean = moDbHelper.isParent(pageId)
 
-                        If isParent = True Then
+                        If isParentPage = "True" Then
                             If redirectType = "301Redirect" Then
                                 redirectType = "301 Redirects"
                             End If
@@ -84,29 +83,29 @@ Partial Public Class Cms
 
                             'For Each oRule In replacerNode.SelectNodes("add")
                             Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
-                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                        Dim matchString As String = OldUrl
-                        If matchString.StartsWith("/") Then
-                            matchString = matchString.TrimStart("/")
-                        End If
-                        folderRules.Add("Folder: " & OldUrl)
-                        newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
-                        If CurrentRule Is Nothing Then
-                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                        Else
-                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                        End If
-                        'Next
+                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                            Dim matchString As String = OldUrl
+                            If matchString.StartsWith("/") Then
+                                matchString = matchString.TrimStart("/")
+                            End If
+                            folderRules.Add("Folder: " & OldUrl)
+                            newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
+                            If CurrentRule Is Nothing Then
+                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                            Else
+                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
+                            End If
+                            'Next
 
-                        'For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                        '    If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                        '        oRule.ParentNode.RemoveChild(oRule)
-                        '    End If
-                        'Next
+                            'For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                            '    If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                            '        oRule.ParentNode.RemoveChild(oRule)
+                            '    End If
+                            'Next
 
-                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        myWeb.bRestartApp = True
-                    End If
+                            rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                            myWeb.bRestartApp = True
+                        End If
                     End If
                     Dim Result As String = "success"
                     Return Result
@@ -420,8 +419,17 @@ Partial Public Class Cms
                 Return Result
             End Function
 
+            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
+                Return Result
+            End Function
+
             Dim result As String = ""
-                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
+            If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
 
 
