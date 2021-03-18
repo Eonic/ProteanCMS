@@ -2975,19 +2975,24 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-                                newUrl = newUrl.Replace(" ", "-")
-                                newUrl = "/experience/" & newUrl
+                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                    strNewUrl = strNewUrl.Replace(" ", "-")
+                                    strOldurl = strOldurl.Replace(" ", "-")
+                                End If
+                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                End If
 
-                                strOldurl = strOldurl.Replace(" ", "-")
-                                strOldurl = "/experience/" & strOldurl
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
                                 End Select
 
                                 'TS 10-01-2014 fix for cascade on saved items... To Be tested
