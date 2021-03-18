@@ -93,7 +93,6 @@ Partial Public Class Cms
                             If matchString.StartsWith("/") Then
                                 matchString = matchString.TrimStart("/")
                             End If
-
                             folderRules.Add("Folder: " & OldUrl)
                             newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
                             If CurrentRule Is Nothing Then
@@ -110,8 +109,8 @@ Partial Public Class Cms
                             'Next
 
                             rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                            myWeb.bRestartApp = True
-                        End If
+                        myWeb.bRestartApp = True
+                    End If
                     End If
                     Dim Result As String = "success"
                     Return Result
