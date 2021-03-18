@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Long = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0) As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -66,17 +66,15 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-                        If isParentPage = "True" Then
-                            Select Case redirectType
-                                Case "301Redirect"
+                        Dim isParent As Boolean = moDbHelper.isParent(pageId)
 
-                                    redirectType = "301 Redirects"
-
-                                Case "302Redirect"
-                                    redirectType = "302 Redirects"
-
-                            End Select
-
+                        If isParent = True Then
+                            If redirectType = "301Redirect" Then
+                                redirectType = "301 Redirects"
+                            End If
+                            If redirectType = "302Redirect" Then
+                                redirectType = "302 Redirects"
+                            End If
                             'step through and create rules to deal with paths
                             Dim folderRules As New ArrayList
                             Dim rulesXml As New XmlDocument
@@ -91,7 +89,6 @@ Partial Public Class Cms
                             If matchString.StartsWith("/") Then
                                 matchString = matchString.TrimStart("/")
                             End If
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
                             folderRules.Add("Folder: " & OldUrl)
                             newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
                             If CurrentRule Is Nothing Then
