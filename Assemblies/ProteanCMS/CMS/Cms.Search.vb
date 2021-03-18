@@ -771,10 +771,10 @@ Partial Public Class Cms
                 End If
                 resultsXML.SetAttribute("SearchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
-                    resultsXML.SetAttribute("type", "SearchHeader")
+                resultsXML.SetAttribute("type", "SearchHeader")
 
 
-                    moContextNode.AppendChild(resultsXML)
+                moContextNode.AppendChild(resultsXML)
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
