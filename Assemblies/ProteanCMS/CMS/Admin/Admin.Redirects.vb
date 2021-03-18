@@ -109,8 +109,8 @@ Partial Public Class Cms
                             'Next
 
                             rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                            myWeb.bRestartApp = True
-                        End If
+                        myWeb.bRestartApp = True
+                    End If
                     End If
                     Dim Result As String = "success"
                     Return Result
