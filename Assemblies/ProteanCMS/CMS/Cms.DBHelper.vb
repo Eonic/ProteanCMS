@@ -6836,6 +6836,22 @@ restart:
             End Try
         End Function
 
+        Public Function isParent(ByVal pageId As Integer) As Boolean
+            PerfMon.Log("DBHelper", "FindpageIsParent")
+            Try
+                Dim oDs As DataSet
+                Dim strSQL As String = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" & pageId & "'"
+                oDs = GetDataSet(strSQL, "page", "Page")
+                If oDs.Tables(0).Rows.Count > 0 Then
+                    Return True
+                End If
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
+                Return -1
+
+            End Try
+        End Function
+
         Public Sub ListOrders(ByRef oContentsXML As XmlElement, ByVal ProcessId As Cart.cartProcess, ByVal cSchemaName As String)
             PerfMon.Log("DBHelper", "ListOrders")
             Dim oRoot As XmlElement

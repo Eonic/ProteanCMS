@@ -1728,42 +1728,39 @@ Partial Public Class Cms
                                 'page Redirection
                                 Dim redirectType As String = ""
                                 Dim strOldurl As String = ""
+                                Dim isParentPage As String = ""
                                 If moRequest("redirectType") IsNot Nothing Then
                                     redirectType = moRequest("redirectType").ToString()
                                 End If
                                 If moRequest("pageOldUrl") IsNot Nothing Then
-                                    redirectType = moRequest("pageOldUrl").ToString()
+                                    strOldurl = moRequest("pageOldUrl").ToString()
+                                    Dim strarr() As String
+                                    strarr = strOldurl.Split("?"c)
+                                    strOldurl = strarr(0)
                                 End If
+
+                                If moRequest("IsParentPage") IsNot Nothing Then
+                                    isParentPage = moRequest("IsParentPage").ToString()
+                                End If
+
 
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                Dim strarr() As String
-                                strarr = strOldurl.Split("?"c)
-                                strOldurl = strarr(0)
-
-                                Dim strarr2() As String
-                                Dim strTempNewUrl As String = strarr(0).TrimEnd("/")
-                                strarr2 = strTempNewUrl.Split("/"c)
-                                'Dim replacerString As String = strarr2(1)
-                                newUrl = newUrl.Replace(" ", "-")
-                                If strarr2.Length = 3 Then
-                                    newUrl = "/" & strarr2(1) & "/" & newUrl & "/"
-                                Else
-                                    If strarr2.Length = 4 Then
-                                        newUrl = "/" & strarr2(1) & "/" & strarr2(2) & "/" & newUrl & "/"
-                                    Else
-
-                                        newUrl = strarr2(0) & "/" & newUrl & "/"
-                                    End If
+                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                    cName = cName.Replace(" ", "-")
+                                    newUrl = newUrl.Replace(" ", "-")
                                 End If
+                                newUrl = strOldurl.Replace(cName, newUrl)
+                                Dim obj As Admin.Redirects = New Admin.Redirects()
+
+
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
                                 End Select
 
                             Else
@@ -2837,6 +2834,18 @@ Partial Public Class Cms
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
+
+                    If (cModuleType = "FormattedText") Then
+                        If moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content/@mobileview") Is Nothing Then
+                            Dim viewElmnt As XmlElement = moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content")
+                            viewElmnt.SetAttribute("mobileview", "true")
+                            moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief").AppendChild(viewElmnt)
+
+                        End If
+                    End If
+
+
+
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2844,10 +2853,6 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
-
-
-
-
 
                         If MyBase.valid Then
 
@@ -2890,14 +2895,14 @@ Partial Public Class Cms
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
                                 Dim redirectType As String = ""
-                                Dim newUrl As String = ""
+                                Dim strNewUrl As String = ""
                                 Dim strOldurl As String = ""
                                 If moRequest("redirectType") IsNot Nothing Then
                                     redirectType = moRequest("redirectType").ToString()
                                 End If
 
                                 If moRequest("productNewUrl") IsNot Nothing Then
-                                    newUrl = moRequest("productNewUrl").ToString()
+                                    strNewUrl = moRequest("productNewUrl").ToString()
                                 End If
                                 If moRequest("productOldUrl") IsNot Nothing Then
                                     strOldurl = moRequest("productOldUrl").ToString()
@@ -2905,55 +2910,54 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
-
+                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                    strNewUrl = strNewUrl.Replace(" ", "-")
                                     strOldurl = strOldurl.Replace(" ", "-")
-                                    strOldurl = "/experience/" & strOldurl
-
-                                    Select Case moRequest("redirectType")
-                                        Case "301Redirect"
-
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                        Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                    End Select
+                                End If
+                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                End If
 
 
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
+
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
+                                End Select
 
 
+                                ' Individual content location set
+                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-
-
-
-                                    ' Individual content location set
-                                    ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                    If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
                                     End If
+                                End If
 
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
-                                    editResult = dbHelper.ActivityType.ContentEdited
+                                editResult = dbHelper.ActivityType.ContentEdited
 
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
                                 Else
-                                    Dim nContentId As Long
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3469,16 +3473,19 @@ Partial Public Class Cms
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    If Not odr Is Nothing Then
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                    Else
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
+
                     odr = Nothing
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
