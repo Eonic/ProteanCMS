@@ -2940,15 +2940,11 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
 
-
-                                    Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                        strNewUrl = strNewUrl.Replace(" ", "-")
-                                        strOldurl = strOldurl.Replace(" ", "-")
+                                    If moRequest("productNewUrl") IsNot Nothing Then
+                                        newUrl = moRequest("productNewUrl").ToString()
                                     End If
-                                    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                        strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                        strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                    If moRequest("productOldUrl") IsNot Nothing Then
+                                        strOldurl = moRequest("productOldUrl").ToString()
                                     End If
 
 
@@ -2968,23 +2964,11 @@ Partial Public Class Cms
                                             obj.CreateRedirect(redirectType, strOldurl, newUrl)
                                     End Select
 
-                                    Select Case moRequest("redirectType")
-                                        Case "301Redirect"
-
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                        Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                    End Select
 
 
 
 
 
-
-                                    Case "404Redirect"
-
-                                    End Select
 
 
                                     ' Individual content location set
