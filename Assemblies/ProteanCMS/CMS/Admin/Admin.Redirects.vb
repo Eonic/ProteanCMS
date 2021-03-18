@@ -99,7 +99,7 @@ Partial Public Class Cms
 =======
                         Dim isParent As Boolean = moDbHelper.isParent(pageId)
 
-                        If isParent = True Then
+                        If isParentPage() = "True" Then
                             If redirectType = "301Redirect" Then
                                 redirectType = "301 Redirects"
                             End If
@@ -137,8 +137,8 @@ Partial Public Class Cms
                             'Next
 
                             rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        myWeb.bRestartApp = True
-                    End If
+                            myWeb.bRestartApp = True
+                        End If
                     End If
                     Dim Result As String = "success"
                     Return Result
@@ -431,6 +431,15 @@ Partial Public Class Cms
 
                 Result = TotalCount.ToString()
 
+                Return Result
+            End Function
+
+            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
                 Return Result
             End Function
 
