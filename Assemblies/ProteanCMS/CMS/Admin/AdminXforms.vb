@@ -1733,6 +1733,9 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
                                 End If
+                                If moRequest("pageOldUrl") IsNot Nothing Then
+                                    strOldurl = moRequest("pageOldUrl").ToString()
+                                End If
 
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
@@ -2899,36 +2902,19 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    strNewUrl = strNewUrl.Replace(" ", "-")
-                                    strOldurl = strOldurl.Replace(" ", "-")
-                                End If
-                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
-                                Else
-                                    If moRequest("pageOldUrl") IsNot Nothing Then
-                                        oURL = moRequest("pageOldUrl").ToString()
-                                        Dim strarr() As String
-                                        strarr = oURL.Split("?"c)
-                                        oURL = strarr(0)
-                                    End If
-                                    Dim url As String = myWeb.GetContentUrl(pgid)
-                                    strOldurl = oURL & url & strOldurl
-                                    strNewUrl = oURL & url & strNewUrl
-                                End If
+                                newUrl = newUrl.Replace(" ", "-")
+                                newUrl = "/experience/" & newUrl
 
+                                strOldurl = strOldurl.Replace(" ", "-")
+                                strOldurl = "/experience/" & strOldurl
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "404Redirect"
-
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
                                 End Select
 
 
