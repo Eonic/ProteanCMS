@@ -422,10 +422,10 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                    HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
-                    If HitsLimit = 0 Then HitsLimit = 300
-                    pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If pageSize = 0 Then pageSize = 300
+                HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
+                If HitsLimit = 0 Then HitsLimit = 300
+                pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
+                If pageSize = 0 Then pageSize = 300
                 End If
 
                 If Not cQuery.Equals("") Then
