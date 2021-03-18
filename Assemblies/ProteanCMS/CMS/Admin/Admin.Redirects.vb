@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0) As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -66,9 +66,8 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-                        Dim isParent As Boolean = moDbHelper.isParent(pageId)
 
-                        If isParent = True Then
+                        If isParentPage = "True" Then
                             If redirectType = "301Redirect" Then
                                 redirectType = "301 Redirects"
                             End If
@@ -84,29 +83,29 @@ Partial Public Class Cms
 
                             'For Each oRule In replacerNode.SelectNodes("add")
                             Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
-                        Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                        Dim matchString As String = OldUrl
-                        If matchString.StartsWith("/") Then
-                            matchString = matchString.TrimStart("/")
-                        End If
-                        folderRules.Add("Folder: " & OldUrl)
-                        newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
-                        If CurrentRule Is Nothing Then
-                            insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
-                        Else
-                            CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
-                        End If
-                        'Next
+                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
+                            Dim matchString As String = OldUrl
+                            If matchString.StartsWith("/") Then
+                                matchString = matchString.TrimStart("/")
+                            End If
+                            folderRules.Add("Folder: " & OldUrl)
+                            newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
+                            If CurrentRule Is Nothing Then
+                                insertAfterElment.ParentNode.InsertAfter(newRule.FirstChild, insertAfterElment)
+                            Else
+                                CurrentRule.ParentNode.ReplaceChild(newRule.FirstChild, CurrentRule)
+                            End If
+                            'Next
 
-                        'For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
-                        '    If Not folderRules.Contains(oRule.GetAttribute("name")) Then
-                        '        oRule.ParentNode.RemoveChild(oRule)
-                        '    End If
-                        'Next
+                            'For Each oRule In rulesXml.SelectNodes("descendant-or-self::rule[starts-with(@name,'Folder: ')]")
+                            '    If Not folderRules.Contains(oRule.GetAttribute("name")) Then
+                            '        oRule.ParentNode.RemoveChild(oRule)
+                            '    End If
+                            'Next
 
-                        rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        myWeb.bRestartApp = True
-                    End If
+                            rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
+                            myWeb.bRestartApp = True
+                        End If
                     End If
                     Dim Result As String = "success"
                     Return Result
@@ -429,6 +428,15 @@ Partial Public Class Cms
                 Return Result
             End Function
 
+            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
+                Return Result
+            End Function
+
             ''' <summary>
             ''' This is method which validates the page to redirect in edit mode if we change page url
             ''' -if its h
@@ -468,42 +476,42 @@ Partial Public Class Cms
 
                         Case Else
 
-                ' If (sType = "Product") Then
-                If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
-                    Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
-                    Dim thisPrefix As String = ""
-                    Dim thisContentType As String = ""
+                            ' If (sType = "Product") Then
+                            If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
+                                Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
+                                Dim thisPrefix As String = ""
+                                Dim thisContentType As String = ""
 
-                    Dim i As Integer
-                    For i = 0 To prefixs.Length - 1
-                        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                        If thisContentType = sType Then
-                            sNewUrl = "/" & thisPrefix & "/" & sNewUrl
-                            sOldUrl = "/" & thisPrefix & "/" & sOldUrl
-                        End If
-                    Next
+                                Dim i As Integer
+                                For i = 0 To prefixs.Length - 1
+                                    thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                    thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                    If thisContentType = sType Then
+                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl
+                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl
+                                    End If
+                                Next
 
-                Else
+                            Else
 
-                Dim url As String = myWeb.GetContentUrl(nPageId)
-                sOldUrl = sUrl & url & "/" & sOldUrl
-                sNewUrl = sUrl & url & "/" & sNewUrl
-                End If
-                'End If
-                End Select
+                                Dim url As String = myWeb.GetContentUrl(nPageId)
+                                sOldUrl = sUrl & url & "/" & sOldUrl
+                                sNewUrl = sUrl & url & "/" & sNewUrl
+                            End If
+                            'End If
+                    End Select
 
-                Select Case sRedirectType
-                    Case "301Redirect"
+                    Select Case sRedirectType
+                        Case "301Redirect"
 
-                        CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
-                    Case "302Redirect"
-                        CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+                        Case "302Redirect"
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
-                    Case Else
-                        'do nothing
-                End Select
+                        Case Else
+                            'do nothing
+                    End Select
                 End If
                 Return result
             End Function
