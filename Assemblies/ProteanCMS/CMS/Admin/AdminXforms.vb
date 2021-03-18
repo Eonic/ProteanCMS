@@ -3473,16 +3473,19 @@ Partial Public Class Cms
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    If Not odr Is Nothing Then
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                    Else
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
+
                     odr = Nothing
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
