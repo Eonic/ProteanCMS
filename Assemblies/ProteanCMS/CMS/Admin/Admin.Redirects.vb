@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Long = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -109,8 +109,8 @@ Partial Public Class Cms
                             'Next
 
                             rulesXml.Save(myWeb.goServer.MapPath("/RewriteRules.config"))
-                        myWeb.bRestartApp = True
-                    End If
+                            myWeb.bRestartApp = True
+                        End If
                     End If
                     Dim Result As String = "success"
                     Return Result
@@ -403,6 +403,15 @@ Partial Public Class Cms
 
                 Result = TotalCount.ToString()
 
+                Return Result
+            End Function
+
+            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+
+                Dim Result As String = ""
+                If pageId > 0 Then
+                    Result = moDbHelper.isParent(pageId)
+                End If
                 Return Result
             End Function
 
