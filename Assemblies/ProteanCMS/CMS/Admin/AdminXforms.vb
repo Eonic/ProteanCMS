@@ -1725,46 +1725,7 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
-                                'page Redirection
-                                Dim redirectType As String = ""
-                                Dim strOldurl As String = ""
-                                If moRequest("redirectType") IsNot Nothing Then
-                                    redirectType = moRequest("redirectType").ToString()
-                                End If
-                                If moRequest("pageOldUrl") IsNot Nothing Then
-                                    redirectType = moRequest("pageOldUrl").ToString()
-                                End If
 
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                Dim strarr() As String
-                                strarr = strOldurl.Split("?"c)
-                                strOldurl = strarr(0)
-
-                                Dim strarr2() As String
-                                Dim strTempNewUrl As String = strarr(0).TrimEnd("/")
-                                strarr2 = strTempNewUrl.Split("/"c)
-                                'Dim replacerString As String = strarr2(1)
-                                newUrl = newUrl.Replace(" ", "-")
-                                If strarr2.Length = 3 Then
-                                    newUrl = "/" & strarr2(1) & "/" & newUrl & "/"
-                                Else
-                                    If strarr2.Length = 4 Then
-                                        newUrl = "/" & strarr2(1) & "/" & strarr2(2) & "/" & newUrl & "/"
-                                    Else
-
-                                        newUrl = strarr2(0) & "/" & newUrl & "/"
-                                    End If
-                                End If
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                End Select
 
                             Else
 
