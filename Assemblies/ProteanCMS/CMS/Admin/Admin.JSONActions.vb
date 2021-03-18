@@ -198,10 +198,7 @@ Partial Public Class Cms
             Public Function GetChartData(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim JsonResult As String = ""
-                Dim chartContentKey As Integer
-                If Not Integer.TryParse(inputJson("chartContentKey"), chartContentKey) Then
-                    chartContentKey = 0
-                End If
+                Dim pageId As String = inputJson("pageId").ToObject(Of Integer)
 
                 Try
                     If chartContentKey > 0 Then
