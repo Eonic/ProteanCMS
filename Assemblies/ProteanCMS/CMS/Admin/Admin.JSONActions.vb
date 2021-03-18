@@ -257,6 +257,16 @@ Partial Public Class Cms
                 End If
                 Return JsonResult
             End Function
+
+            Public Function IsParentPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+                Dim JsonResult As String = ""
+                Dim pageId As String = inputJson("pageId").ToObject(Of Integer)
+
+                If myApi.mbAdminMode Then
+                    JsonResult = moAdminRedirect.isParentPage(pageId)
+                End If
+                Return JsonResult
+            End Function
         End Class
 #End Region
 
