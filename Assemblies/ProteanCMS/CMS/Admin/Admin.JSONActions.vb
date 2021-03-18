@@ -198,10 +198,7 @@ Partial Public Class Cms
             Public Function GetChartData(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim JsonResult As String = ""
-                Dim chartContentKey As Integer
-                If Not Integer.TryParse(inputJson("chartContentKey"), chartContentKey) Then
-                    chartContentKey = 0
-                End If
+                Dim pageId As String = inputJson("pageId").ToObject(Of Integer)
 
                 Try
                     If chartContentKey > 0 Then
@@ -228,17 +225,17 @@ Partial Public Class Cms
                         dsChartData = myWeb.moDbHelper.GetDataSet(sSql, "ChartDataSet", "Chart")
 
                         Dim chartXml As String = dsChartData.GetXml()
-            Dim xmlDoc As New XmlDocument
+                        Dim xmlDoc As New XmlDocument
                         xmlDoc.LoadXml(chartXml)
 
                         Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-            Return jsonString.Replace("""@", """_")
-            End If
-            Return JsonResult
-            Catch ex As Exception
-            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                        Return jsonString.Replace("""@", """_")
+                    End If
+                    Return JsonResult
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
-            End Try
+                End Try
 
             End Function
             Public Function IsParentPage(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
