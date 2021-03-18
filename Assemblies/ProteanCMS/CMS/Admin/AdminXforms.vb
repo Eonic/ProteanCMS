@@ -2852,11 +2852,8 @@ Partial Public Class Cms
                         End If
                     End If
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2976,13 +2973,22 @@ Partial Public Class Cms
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                    End If
-                                End If
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
+
+                                Dim obj As Admin.Redirects = New Admin.Redirects()
+                                newUrl = newUrl.Replace(" ", "-")
+                                newUrl = "/experience/" & newUrl
+
+                                strOldurl = strOldurl.Replace(" ", "-")
+                                strOldurl = "/experience/" & strOldurl
+
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
+
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                End Select
 
                                 'TS 10-01-2014 fix for cascade on saved items... To Be tested
                                 If bCascade And pgid > 0 Then
