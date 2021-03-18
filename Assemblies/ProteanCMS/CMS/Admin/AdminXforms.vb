@@ -2852,11 +2852,8 @@ Partial Public Class Cms
                         End If
                     End If
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
