@@ -750,7 +750,6 @@ Partial Public Class Cms
                         Else
                             resultsXML.SetAttribute("Hits", resultsCount)
                         End If
-
                         resultsXML.SetAttribute("SearchString", cQuery)
                         resultsXML.SetAttribute("searchType", "INDEX")
                         resultsXML.SetAttribute("type", "SearchHeader")
