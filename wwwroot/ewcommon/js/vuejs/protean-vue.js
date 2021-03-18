@@ -8,6 +8,7 @@ var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
 var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
 var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
 var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/getTotalNumberOfSearchUrls';
+var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 
 
 Vue.mixin({
@@ -33,15 +34,43 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-
+    debugger;
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
+        $("#redirectModal").modal("hide");
     }
     if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
+
+        let pageId = $(".hiddenpageId").val(); 
+        var inputJson = { pageId: pageId };
+        axios.post(IsParentPageAPI, inputJson)
+            .then(function (response) {
+                debugger;
+                if (response.data == "True") {
+                    if (confirm("This Page have child. Do you want to redirect it?")) {
+                        $(".hiddenParentCheck").val(response.data);
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+                    }
+                    else {
+                        $(".hiddenParentCheck").val("false");
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+
+                    }
+                }
+                else {
+                    $(".hiddenParentCheck").val("false");
+                    $("#redirectModal").modal("hide");
+                    $(".btnSubmitPage").click();
+                }
+            });
+
     }
 
-    $("#redirectModal").modal("hide");
+   
 });
 
 $(document).on("click", "#btnRedirectDontSave", function (event) {
