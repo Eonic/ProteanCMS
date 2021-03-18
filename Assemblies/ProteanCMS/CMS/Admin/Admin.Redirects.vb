@@ -464,12 +464,12 @@ Partial Public Class Cms
             Select Case oRedirectType
             Case "301Redirect"
 
-                        CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
                         Case "302Redirect"
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
-                    End Select
+                End Select
             End If
             Return result
             End Function
