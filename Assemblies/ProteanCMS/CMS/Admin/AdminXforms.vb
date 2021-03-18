@@ -2904,21 +2904,6 @@ Partial Public Class Cms
                                 End If
 
 
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
-
-                                    strOldurl = strOldurl.Replace(" ", "-")
-                                    strOldurl = "/experience/" & strOldurl
-
-                                    Select Case moRequest("redirectType")
-                                        Case "301Redirect"
-
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                        Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                    End Select
 
 
 
@@ -2926,10 +2911,9 @@ Partial Public Class Cms
 
 
 
-
-                                    ' Individual content location set
-                                    ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                    If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
+                                ' Individual content location set
+                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
                                         'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
                                         'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
