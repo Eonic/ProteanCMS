@@ -35,23 +35,21 @@ $(document).on("click", ".btnSavePage", function (event) {
 
 });
 
-$(document).on("click", ".btnRedirectSave", function (event) {
+$(document).on("click", "#btnRedirectSave", function (event) {
     debugger;
-    var Rtype = $(this).val();
-    $(".hiddenRedirectType").val(Rtype);
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
         $("#redirectModal").modal("hide");
     }
     if ($(".btnSubmitPage").length > 0) {
-        
-        let pageId = $(".hiddenPageId").val(); 
+
+        let pageId = $(".hiddenpageId").val(); 
         var inputJson = { pageId: pageId };
         axios.post(IsParentPageAPI, inputJson)
             .then(function (response) {
                 debugger;
                 if (response.data == "True") {
-                    if (confirm("Current page have child/product pages beneath it, do you want to redirect them as well?")) {
+                    if (confirm("This Page have child. Do you want to redirect it?")) {
                         $(".hiddenParentCheck").val(response.data);
                         $("#redirectModal").modal("hide");
                         $(".btnSubmitPage").click();
@@ -66,12 +64,16 @@ $(document).on("click", ".btnRedirectSave", function (event) {
                     }
                 }
                 else {
-                    debugger;
                     $(".hiddenParentCheck").val("false");
                     $("#redirectModal").modal("hide");
                     $(".btnSubmitPage").click();
                 }
             });
+
+    }
+
+   
+});
 
     }
 
