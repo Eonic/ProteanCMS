@@ -2906,12 +2906,12 @@ Partial Public Class Cms
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
-
+                                Dim redirectType As String = ""
                                 Dim strNewUrl As String = ""
                                 Dim strOldurl As String = ""
                                 Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
 
-                                If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
+                                If moRequest("productNewUrl") IsNot Nothing Then
                                     strNewUrl = moRequest("productNewUrl").ToString()
                                 End If
                                 If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
@@ -2920,26 +2920,26 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
 
+
                                     Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                        strNewUrl = strNewUrl.Replace(" ", "-")
-                                        strOldurl = strOldurl.Replace(" ", "-")
-                                    End If
-                                    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                        strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                        strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
-                                    End If
+                                    newUrl = newUrl.Replace(" ", "-")
+                                    newUrl = "/experience/" & newUrl
 
 
                                     Select Case moRequest("redirectType")
                                         Case "301Redirect"
 
-                                            obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
                                         Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
+                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
                                     End Select
+
+
+
+
+
+
 
 
                                     ' Individual content location set
