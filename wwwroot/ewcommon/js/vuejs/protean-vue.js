@@ -21,6 +21,176 @@ Vue.mixin({
         }
     }
 });
+    }
+});
+
+
+
+////Edit Page
+
+$(document).on("click", ".btnSavePage", function (event) {
+
+    var newStructName = $("#cStructName").val();
+    editPage.structNameOnChange(newStructName);
+
+});
+
+$(document).on("click", "#btnRedirectSave", function (event) {
+    debugger;
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+        $("#redirectModal").modal("hide");
+    }
+    if ($(".btnSubmitPage").length > 0) {
+
+        let pageId = $(".hiddenpageId").val(); 
+        var inputJson = { pageId: pageId };
+        axios.post(IsParentPageAPI, inputJson)
+            .then(function (response) {
+                debugger;
+                if (response.data == "True") {
+                    if (confirm("This Page have child. Do you want to redirect it?")) {
+                        $(".hiddenParentCheck").val(response.data);
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+                    }
+                    else {
+                        $(".hiddenParentCheck").val("false");
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+
+                    }
+                }
+                else {
+                    $(".hiddenParentCheck").val("false");
+                    $("#redirectModal").modal("hide");
+                    $(".btnSubmitPage").click();
+                }
+            });
+
+    }
+
+   
+});
+
+$(document).on("click", "#btnRedirectDontSave", function (event) {
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
+    $("#redirectModal").modal("hide");
+});
+
+const editPageElement = document.querySelector("#EditPage");
+if (editPageElement) {
+    window.editPage = new Vue({
+        el: "#EditPage",
+        data: {
+            structName: "",
+            originalStructureName: ""
+        },
+        methods: {
+            createRedirects: function () {
+                $("#redirectModal").modal("hide");
+                var redirectType = $(".redirectStatus:checked").val();
+
+                if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
+                    return false;
+                }
+                else {
+
+                    var newUrl = $("#cStructName").val();
+                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+
+                                    $("#cRedirect").val(redirectType);
+
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
+                                    axios.post(paginationAddNewUrlAPIUrl, inputJson)
+                                        .then(function (response) {
+                                            if (response.data == "success") {
+                                                $("#redirectModal").modal("hide");
+                                                // window.location.href = "?ewCmd=Normal";
+                                            }
+
+                                        });
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            else {
+
+                                $("#cRedirect").val(redirectType);
+                                $("#redirectModal").modal("hide");
+
+                            }
+                        });
+
+
+                }
+
+            },
+
+
+
+            structNameOnChange: function (newStructName) {
+
+                if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+
+                    redirectModal.toggleModal();
+                    $("#OldPageName").val(localStorage.originalStructName);
+                    $("#NewPageName").val(newStructName);
+                    this.structName = newStructName;
+                    $(".hiddenpageId").val(localStorage.pageId);
+                }
+                else {
+                    $(".btnSubmitPage").click();
+                }
+
+            }
+        },
+        watch: {
+            // whenever StructName changes, this function will run
+            //structName: function (newStructName) {
+            //    debugger;
+            //    if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+
+            //        redirectModal.toggleModal();
+
+            //    } else {
+            //        redirectModal.showRedirectModal = false;
+            //        localStorage.originalStructName = newStructName;
+
+            //    }
+
+            //}
+        },
+        mounted: function () {
+
+            var cStructName = document.getElementById('cStructName');
+            if (cStructName != null) {
+                this.structName = cStructName.value;
+            }
+
+            //clean the storage for struct name when page changes.
+            let pageId = this.getQueryStringParam('pgid');
+            if (!localStorage.pageId || localStorage.pageId != pageId) {
+                localStorage.removeItem('originalStructName');
+            }
+            localStorage.pageId = pageId;
+            localStorage.originalStructName = this.structName;
+        }
+    });
+}
 
 
 
