@@ -1744,80 +1744,84 @@ Partial Public Class Cms
                                     isParentPage = moRequest("IsParentPage").ToString()
                                 End If
 
-                            Else
-
-                                newUrl = strarr2(0) & "/" & newUrl & "/"
-                            End If
-                        End If
-
-                        Select Case moRequest("redirectType")
-                            Case "301Redirect"
-
-                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                            Case "302Redirect"
-                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                        End Select
-
-                    Else
-
-                        pgid = moDbHelper.insertStructure(MyBase.Instance)
-                        moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
-
-                        ' If the site wants to, by default, restrict new pages to a given group or directory item, then
-                        ' read this in from the config and set the permission.
-                        If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
-                            Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
-                            moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
-                        End If
-
-                        ' We need to return the page id somehow, so we could update the instance
-                        Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
-
-                    End If
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                    cName = cName.Replace(" ", "-")
+                                    newUrl = newUrl.Replace(" ", "-")
+                                End If
+                                newUrl = strOldurl.Replace(cName, newUrl)
+                                Dim obj As Admin.Redirects = New Admin.Redirects()
 
 
-                    ' Clear the cache
-                    If gbSiteCacheMode Then
-                        moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
-                    End If
 
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
 
-                    'NB Notes: Get PgId above then process Related Content
-                    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
-                        If pgid > 0 Then
-                            Dim oContent As XmlNode
-                            Dim oDr As SqlDataReader
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
-                            oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
-                            Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                            oDr = moDbHelper.getDataReader(sSql)
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                End Select
 
+                                Else
 
-                            Dim oInstance As XmlDocument = New XmlDocument
-                            oInstance.AppendChild(oInstance.CreateElement("Instance"))
-                            oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
+                                pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
-                            nRContentId = 0
-                            While oDr.Read
-                                nRContentId = oDr(0)
-                            End While
-                            oDr.Close()
+                                ' If the site wants to, by default, restrict new pages to a given group or directory item, then
+                                ' read this in from the config and set the permission.
+                                If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
+                                    Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
+                                    moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
+                                End If
 
+                                ' We need to return the page id somehow, so we could update the instance
+                                Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
 
-                            If nRContentId > 0 Then
-                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                moDbHelper.setContentLocation(pgid, nRContentId)
-                            Else
-                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                moDbHelper.setContentLocation(pgid, nRContentId)
                             End If
 
+
+                            ' Clear the cache
+                            If gbSiteCacheMode Then
+                                moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
+                            End If
+
+
+                            'NB Notes: Get PgId above then process Related Content
+                            If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
+                                If pgid > 0 Then
+                                    Dim oContent As XmlNode
+                                    Dim oDr As SqlDataReader
+
+                                    oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
+                                    Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
+                                    oDr = moDbHelper.getDataReader(sSql)
+
+
+                                    Dim oInstance As XmlDocument = New XmlDocument
+                                    oInstance.AppendChild(oInstance.CreateElement("Instance"))
+                                    oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
+
+                                    nRContentId = 0
+                                    While oDr.Read
+                                        nRContentId = oDr(0)
+                                    End While
+                                    oDr.Close()
+
+
+                                    If nRContentId > 0 Then
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
+                                    Else
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
+                                    End If
+
+                                End If
+                            End If
                         End If
-                    End If
-                    End If
                     End If
 
                     MyBase.addValues()
@@ -2904,19 +2908,24 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-                                newUrl = newUrl.Replace(" ", "-")
-                                newUrl = "/experience/" & newUrl
+                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                    strNewUrl = strNewUrl.Replace(" ", "-")
+                                    strOldurl = strOldurl.Replace(" ", "-")
+                                End If
+                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                End If
 
-                                strOldurl = strOldurl.Replace(" ", "-")
-                                strOldurl = "/experience/" & strOldurl
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
                                 End Select
 
 
