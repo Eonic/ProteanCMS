@@ -194,6 +194,7 @@ Partial Public Class Cms
                 End Try
 
             End Function
+
             'Charts
             Public Function GetChartData(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
