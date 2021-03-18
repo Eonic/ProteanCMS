@@ -1758,63 +1758,78 @@ Partial Public Class Cms
 
                             Else
 
-                                pgid = moDbHelper.insertStructure(MyBase.Instance)
-                                moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
-
-                                ' If the site wants to, by default, restrict new pages to a given group or directory item, then
-                                ' read this in from the config and set the permission.
-                                If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
-                                    Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
-                                    moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
-                                End If
-
-                                ' We need to return the page id somehow, so we could update the instance
-                                Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
-
-                            End If
-
-
-                            ' Clear the cache
-                            If gbSiteCacheMode Then
-                                moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
-                            End If
-
-
-                            'NB Notes: Get PgId above then process Related Content
-                            If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
-                                If pgid > 0 Then
-                                    Dim oContent As XmlNode
-                                    Dim oDr As SqlDataReader
-
-                                    oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
-                                    Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                                    oDr = moDbHelper.getDataReader(sSql)
-
-
-                                    Dim oInstance As XmlDocument = New XmlDocument
-                                    oInstance.AppendChild(oInstance.CreateElement("Instance"))
-                                    oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
-
-                                    nRContentId = 0
-                                    While oDr.Read
-                                        nRContentId = oDr(0)
-                                    End While
-                                    oDr.Close()
-
-
-                                    If nRContentId > 0 Then
-                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
-                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                        moDbHelper.setContentLocation(pgid, nRContentId)
-                                    Else
-                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
-                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                        moDbHelper.setContentLocation(pgid, nRContentId)
-                                    End If
-
-                                End If
+                                newUrl = strarr2(0) & "/" & newUrl & "/"
                             End If
                         End If
+
+                        Select Case moRequest("redirectType")
+                            Case "301Redirect"
+
+                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
+
+                            Case "302Redirect"
+                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                        End Select
+
+                    Else
+
+                        pgid = moDbHelper.insertStructure(MyBase.Instance)
+                        moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
+
+                        ' If the site wants to, by default, restrict new pages to a given group or directory item, then
+                        ' read this in from the config and set the permission.
+                        If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
+                            Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
+                            moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
+                        End If
+
+                        ' We need to return the page id somehow, so we could update the instance
+                        Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
+
+                    End If
+
+
+                    ' Clear the cache
+                    If gbSiteCacheMode Then
+                        moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
+                    End If
+
+
+                    'NB Notes: Get PgId above then process Related Content
+                    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
+                        If pgid > 0 Then
+                            Dim oContent As XmlNode
+                            Dim oDr As SqlDataReader
+
+                            oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
+                            Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
+                            oDr = moDbHelper.getDataReader(sSql)
+
+
+                            Dim oInstance As XmlDocument = New XmlDocument
+                            oInstance.AppendChild(oInstance.CreateElement("Instance"))
+                            oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
+
+                            nRContentId = 0
+                            While oDr.Read
+                                nRContentId = oDr(0)
+                            End While
+                            oDr.Close()
+
+
+                            If nRContentId > 0 Then
+                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
+                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                moDbHelper.setContentLocation(pgid, nRContentId)
+                            Else
+                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
+                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                moDbHelper.setContentLocation(pgid, nRContentId)
+                            End If
+
+                        End If
+                    End If
+                    End If
                     End If
 
                     MyBase.addValues()
@@ -2837,6 +2852,11 @@ Partial Public Class Cms
                         End If
                     End If
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2899,6 +2919,7 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
+<<<<<<< HEAD
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                                     strNewUrl = strNewUrl.Replace(" ", "-")
                                     strOldurl = strOldurl.Replace(" ", "-")
@@ -2917,6 +2938,23 @@ Partial Public Class Cms
                                     strOldurl = oURL & url & strOldurl
                                     strNewUrl = oURL & url & strNewUrl
                                 End If
+=======
+                                newUrl = newUrl.Replace(" ", "-")
+                                newUrl = "/experience/" & newUrl
+
+                                strOldurl = strOldurl.Replace(" ", "-")
+                                strOldurl = "/experience/" & strOldurl
+
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
+
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                End Select
+
+>>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
 
 
                                 Select Case moRequest("redirectType")
@@ -2931,11 +2969,43 @@ Partial Public Class Cms
 
                                 End Select
 
+<<<<<<< HEAD
+
+=======
+                                ' Individual content location set
+                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
+
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                    End If
+                                End If
+>>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
+
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
+<<<<<<< HEAD
 
+=======
+                                editResult = dbHelper.ActivityType.ContentEdited
 
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
+                                Else
+                                    nReturnId = id
+                                End If
 
+                            Else
+                                Dim nContentId As Long
+                                nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
+>>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
 
                             End If
 
