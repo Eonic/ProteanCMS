@@ -42,7 +42,7 @@ $(document).on("click", "#btnRedirectSave", function (event) {
         $("#redirectModal").modal("hide");
     }
     if ($(".btnSubmitPage").length > 0) {
-
+        
         let pageId = $(".hiddenpageId").val(); 
         var inputJson = { pageId: pageId };
         axios.post(IsParentPageAPI, inputJson)
