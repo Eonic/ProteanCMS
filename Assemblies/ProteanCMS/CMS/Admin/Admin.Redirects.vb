@@ -66,14 +66,17 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-
                         If isParentPage = "True" Then
-                            If redirectType = "301Redirect" Then
-                                redirectType = "301 Redirects"
-                            End If
-                            If redirectType = "302Redirect" Then
-                                redirectType = "302 Redirects"
-                            End If
+                            Select Case redirectType
+                                Case "301Redirect"
+
+                                    redirectType = "301 Redirects"
+
+                                Case "302Redirect"
+                                    redirectType = "302 Redirects"
+
+                            End Select
+
                             'step through and create rules to deal with paths
                             Dim folderRules As New ArrayList
                             Dim rulesXml As New XmlDocument
