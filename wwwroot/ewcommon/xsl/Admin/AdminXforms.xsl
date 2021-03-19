@@ -2584,21 +2584,10 @@
               </li>
             </ul>
 
-           
-           <xsl:choose>
-             <xsl:when test="/Page/Menu/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url!=''">
-                 <xsl:variable name="objOldUrl" select="/Page/Menu/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
-              </xsl:when>
-              <xsl:when  test="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url!=''">
-                <xsl:variable name="objOldUrlCat3page" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrlCat3page}" class="hiddenOldUrl" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:variable name="objOldUrlCatpage" select="/Page/Menu/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrlCatpage}" class="hiddenOldUrl" />
-              </xsl:otherwise>
-            </xsl:choose>
+             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
+               <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
+               <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
+             </xsl:if>
                 <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
              <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
              <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
