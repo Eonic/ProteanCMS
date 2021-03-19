@@ -2879,6 +2879,7 @@ Partial Public Class Cms
                         End If
                     End If
 
+                    myWeb.GetContentXml(MyBase.Instance)
 
 
                     If MyBase.isSubmitted Then
@@ -2932,7 +2933,10 @@ Partial Public Class Cms
 
                                 Dim strNewUrl As String = ""
                                 Dim strOldurl As String = ""
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim oURL As String = ""
+                                If moRequest("redirectType") IsNot Nothing Then
+                                    redirectType = moRequest("redirectType").ToString()
+                                End If
 
                                 If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
                                     strNewUrl = moRequest("productNewUrl").ToString()
@@ -2945,8 +2949,14 @@ Partial Public Class Cms
 
 
                                     Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
+                                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                        strNewUrl = strNewUrl.Replace(" ", "-")
+                                        strOldurl = strOldurl.Replace(" ", "-")
+                                    End If
+                                    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                        strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                        strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                    End If
 
 
                                     Select Case moRequest("redirectType")
