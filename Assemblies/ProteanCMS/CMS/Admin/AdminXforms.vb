@@ -1762,6 +1762,9 @@ Partial Public Class Cms
 
                                     Case "302Redirect"
                                         obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+                                    Case "404Redirect"
+
                                 End Select
 
                             Else
@@ -2916,6 +2919,18 @@ Partial Public Class Cms
                                         strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
                                         strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
                                     End If
+
+
+                                    Select Case moRequest("redirectType")
+                                        Case "301Redirect"
+
+                                            obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
+                                        Case "302Redirect"
+                                            obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
+                                    End Select
+
 
                                     ' Individual content location set
                                     ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
