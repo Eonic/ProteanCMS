@@ -33,19 +33,21 @@ $(document).on("click", ".btnSavePage", function (event) {
 
 });
 
-$(document).on("click", "#btnRedirectSave", function (event) {
-   
+$(document).on("click", ".btnRedirectSave", function (event) {
+    debugger;
+    var Rtype = $(this).val();
+    $(".hiddenRedirectType").val(Rtype);
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
         $("#redirectModal").modal("hide");
     }
     if ($(".btnSubmitPage").length > 0) {
         
-        let pageId = $(".hiddenpageId").val(); 
+        let pageId = $(".hiddenPageId").val(); 
         var inputJson = { pageId: pageId };
         axios.post(IsParentPageAPI, inputJson)
             .then(function (response) {
-              
+                debugger;
                 if (response.data == "True") {
                     if (confirm("This Page have child. Do you want to create rule for it?")) {
                         $(".hiddenParentCheck").val(response.data);
