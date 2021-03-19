@@ -1765,62 +1765,62 @@ Partial Public Class Cms
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
-                        moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
+                                moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
-                        ' If the site wants to, by default, restrict new pages to a given group or directory item, then
-                        ' read this in from the config and set the permission.
-                        If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
-                            Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
-                            moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
-                        End If
+                                ' If the site wants to, by default, restrict new pages to a given group or directory item, then
+                                ' read this in from the config and set the permission.
+                                If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
+                                    Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
+                                    moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
+                                End If
 
-                        ' We need to return the page id somehow, so we could update the instance
-                        Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
+                                ' We need to return the page id somehow, so we could update the instance
+                                Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
 
-                    End If
-
-
-                    ' Clear the cache
-                    If gbSiteCacheMode Then
-                        moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
-                    End If
-
-
-                    'NB Notes: Get PgId above then process Related Content
-                    If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
-                        If pgid > 0 Then
-                            Dim oContent As XmlNode
-                            Dim oDr As SqlDataReader
-
-                            oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
-                            Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                            oDr = moDbHelper.getDataReader(sSql)
-
-
-                            Dim oInstance As XmlDocument = New XmlDocument
-                            oInstance.AppendChild(oInstance.CreateElement("Instance"))
-                            oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
-
-                            nRContentId = 0
-                            While oDr.Read
-                                nRContentId = oDr(0)
-                            End While
-                            oDr.Close()
-
-
-                            If nRContentId > 0 Then
-                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                moDbHelper.setContentLocation(pgid, nRContentId)
-                            Else
-                                nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                moDbHelper.setContentLocation(pgid, nRContentId)
                             End If
 
+
+                            ' Clear the cache
+                            If gbSiteCacheMode Then
+                                moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
+                            End If
+
+
+                            'NB Notes: Get PgId above then process Related Content
+                            If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
+                                If pgid > 0 Then
+                                    Dim oContent As XmlNode
+                                    Dim oDr As SqlDataReader
+
+                                    oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
+                                    Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
+                                    oDr = moDbHelper.getDataReader(sSql)
+
+
+                                    Dim oInstance As XmlDocument = New XmlDocument
+                                    oInstance.AppendChild(oInstance.CreateElement("Instance"))
+                                    oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
+
+                                    nRContentId = 0
+                                    While oDr.Read
+                                        nRContentId = oDr(0)
+                                    End While
+                                    oDr.Close()
+
+
+                                    If nRContentId > 0 Then
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
+                                    Else
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
+                                    End If
+
+                                End If
+                            End If
                         End If
-                    End If
-                    End If
                     End If
 
                     MyBase.addValues()
