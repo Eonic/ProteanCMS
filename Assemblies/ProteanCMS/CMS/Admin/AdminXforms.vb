@@ -1750,9 +1750,9 @@ Partial Public Class Cms
                                         oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "302Redirect"
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
-                                    Case "404Redirect"
+                                Case "404Redirect"
 
                                 End Select
 
