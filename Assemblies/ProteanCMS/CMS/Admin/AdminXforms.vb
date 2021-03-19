@@ -2861,8 +2861,6 @@ Partial Public Class Cms
                     End If
                     End If
 
-
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
