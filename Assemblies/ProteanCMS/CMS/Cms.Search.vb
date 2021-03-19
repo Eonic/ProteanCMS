@@ -33,7 +33,7 @@ Partial Public Class Cms
 
         Protected moPageXml As XmlDocument 'the actual page, given from the web object
         Dim mcIndexFolder As String = ""
-        Shadows mcModuleName As String = "Eonic.Search.Search" 'module name
+        Shadows mcModuleName As String = "Protean.Cms.Search" 'module name
         Public moContextNode As XmlElement
         Public myWeb As Cms
         Public moConfig As System.Collections.Specialized.NameValueCollection
@@ -773,7 +773,7 @@ Partial Public Class Cms
                 resultsXML.SetAttribute("SearchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
-
+                resultsXML.SetAttribute("Hits", resultsCount)
 
                 moContextNode.AppendChild(resultsXML)
 
@@ -2028,14 +2028,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' In other words if you include this option, you will need to update your index to 
                 ' index the name field under qsname lowercased untokenized.
                 ' e.g. <meta name="qsname" content="{$displayNameToLower}" tokenize="false" />
-                Dim keywordQuery As Query
-                If moConfig("SiteWildCardSearch") = "on" Then
-                    parser.AllowLeadingWildcard = True
-                    keywordQuery = parser.Parse($"*{keywordsToSearch}*")
-                Else
-                    keywordQuery = parser.Parse(queryToBeParsed.ToString())
-                End If
-
+                Dim keywordQuery As Query = parser.Parse(queryToBeParsed.ToString())
 
                 If _includePrefixNameSearch And Not _overrideQueryBuilder Then
                     Dim booleanQ As New BooleanQuery()

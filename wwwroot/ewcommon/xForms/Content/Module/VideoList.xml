@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="VideoList" contentType="Video" box="" title="" link="" linkType="internal" linkText="More videos" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="all" position="" />
+          <Content moduleType="VideoList" contentType="Video" box="" title="" link="" linkType="internal" linkText="More videos" sortBy="publish" order="descending" cols="1" stepBy="" carousel="false" stepCount="0" display="all" position="" />
         </cContentXmlBrief>
         <cContentXmlDetail/> 
         <nAuditId/>
@@ -37,6 +37,9 @@
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
       <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+      <bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
+      <bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
       <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
       <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
       <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
@@ -49,6 +52,8 @@
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
+    <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
@@ -64,6 +69,7 @@
         </input>
         <!-- end of hidden fields -->
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='animate']"/>
         <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='publish']"/>
       </group>
 
@@ -213,21 +219,7 @@
       </group>
       <group  class="inline">
         <label>Display Settings</label>
-        <select1 bind="nColumns" appearance="full" class="required vshort">
-          <label>Number of Columns</label>
-          <item>
-            <label>1</label>
-            <value>1</value>
-          </item>
-          <item>
-            <label>2</label>
-            <value>2</value>
-          </item>
-          <item>
-            <label>3</label>
-            <value>3</value>
-          </item>
-        </select1>
+        <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::group[@id='columns']"/>
         <select1 bind="nStepCount" appearance="full" class="required vshort">
           <label>Videos per page</label>
           <item>
@@ -323,6 +315,68 @@
           </case>
           <case id="cSortBy_3" />
         </switch>
+      </group>
+
+      <group class="">
+        <select1 bind="carousel" appearance="full"  class="form-group">
+          <label>Add articles to a carousel</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+            <toggle case="Carousel_true" event="DOMActivate"/>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+            <toggle case="Carousel_false" event="DOMActivate"/>
+          </item>
+          <help class="inline">If selected this option will display articles in a single horizontal line with arrows to scroll through to the left and right.</help>
+        </select1>
+        <switch class="disable">
+          <case id="Carousel_true" >
+            <group class="inline">
+              <select1 bind="autoplay"  appearance="full" class="form-group ">
+                <label>Auto play</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+              <input bind="autoPlaySpeed" class="form-group ">
+                <label>autoplay Speed (milliseconds) </label>
+              </input>
+
+              <select1 bind="carouselBullets" appearance="full"  class="form-group">
+                <label>Show navigation bullets for carousel</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+              <select1 bind="carouselHeight" appearance="full"  class="form-group">
+                <label>Match height of carousel items</label>
+                <item>
+                  <label>Yes</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>No</label>
+                  <value>false</value>
+                </item>
+              </select1>
+            </group>
+          </case>
+          <case id="Carousel_false"/>
+        </switch>
+
       </group>
       <group>
         <label>Module Links</label>
