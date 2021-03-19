@@ -67,7 +67,6 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-
                         If isParentPage = "True" Then
                             Select Case redirectType
                                 Case "301Redirect"
