@@ -413,56 +413,24 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
 
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
+            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
 
 
-            Dim Result As String = ""
-            If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-            Return Result
-            End Function
+            '    If oOldUrl IsNot Nothing And oOldUrl <> "" Then
+            '        Dim strarr() As String
+            '        strarr = oOldUrl.Split("?"c)
+            '        oOldUrl = strarr(0)
+            '    End If
+
+            '    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+            '        cName = cName.Replace(" ", "-")
+            '        newUrl = newUrl.Replace(" ", "-")
+            '    End If
+            '    newUrl = strOldurl.Replace(cName, newUrl)
 
 
 
-            Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
-
-                Dim result As String = ""
-                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
-
-                    Dim strurl As String = ""
-                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                        oOldUrl = oOldUrl.Replace(" ", "-")
-                        oNewUrl = oNewUrl.Replace(" ", "-")
-                    End If
-                    If pageUrl IsNot Nothing And pageUrl <> "" Then
-                        strOldurl = pageUrl
-                        Dim strarr() As String
-                        strarr = strOldurl.Split("?"c)
-                        strOldurl = strarr(0)
-                    End If
-
-                    Select Case flag
-                        Case "Page"
-                            oNewUrl = strOldurl.Replace(oOldUrl, oNewUrl)
-                            oOldUrl = strOldurl
-                        Case "Product"
-                            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
-                                oOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oOldUrl
-                            Else
-
-                                Dim url As String = myWeb.GetContentUrl(pgId)
-                                oOldUrl = strOldurl & url & oOldUrl
-                                oNewUrl = strOldurl & url & oNewUrl
-                            End If
 
             '    Select Case moRequest("redirectType")
             '        Case "301Redirect"
