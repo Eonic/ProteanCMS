@@ -1724,8 +1724,13 @@ Partial Public Class Cms
                             'NB Notes: Extract RelatedContent Nodes here - is this old now?
 
                             If pgid > 0 Then
+
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
                                 'page Redirection
+                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                oAdminRedirect.redirectPage(moRequest("redirectType"), moRequest("pageOldUrl"), newUrl, bRedirectChildPages)
                                 Dim redirectType As String = ""
                                 Dim strOldurl As String = ""
                                 Dim isParentPage As String = ""
@@ -1744,23 +1749,23 @@ Partial Public Class Cms
                                 End If
 
 
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                                     cName = cName.Replace(" ", "-")
                                     newUrl = newUrl.Replace(" ", "-")
                                 End If
                                 newUrl = strOldurl.Replace(cName, newUrl)
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
+
 
 
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "404Redirect"
 
