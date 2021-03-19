@@ -14,7 +14,7 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Dim cVirtualPath As String = context.Request("path")
         Dim maxHeight As Long = CLng(0 & context.Request("maxHeight"))
         Dim maxWidth As Long = CLng(0 & context.Request("maxWidth"))
-        Dim sPrefix As String = "~ew/tn8-"
+        Dim sPrefix As String = "~ew/tn9-"
         Dim sSuffix As String = ""
         Dim nCompression As Integer = 90
         Dim noStretch As Boolean = True
@@ -26,9 +26,14 @@ Public Class ewEnlargeImage : Implements IHttpHandler, IRequiresSessionState
         Dim oXsltExt As Protean.xsltExtensions = New Protean.xsltExtensions(oPcms)
         Dim xFilePath As System.IO.FileInfo
         Try
+
+
+            If maxHeight = 0 Then maxHeight = 125
+            If maxWidth = 0 Then maxWidth = 125
             If sPrefix = "" Then
                 sPrefix = "/" & maxWidth & "x" & maxHeight & "/"
             End If
+
             Dim src As String = oXsltExt.ResizeImage(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop)
             context.Response.ContentType = "application/jpeg"
             xFilePath = New System.IO.FileInfo(context.Server.MapPath(src))

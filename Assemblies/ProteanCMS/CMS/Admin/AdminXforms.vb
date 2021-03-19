@@ -3532,16 +3532,28 @@ Partial Public Class Cms
                     Dim oFsh As fsHelper = New fsHelper
                     oFsh.initialiseVariables(nType)
 
-                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
+                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/").Replace("//", "/")
+
+                    If fileToFind.EndsWith("/") Then
+                        fileToFind = fileToFind & cName
+                    Else
+                        fileToFind = fileToFind & "/" & cName
+                    End If
+
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
                     If odr.HasRows Then
                         Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Dim artIds As String = ""
                         Do While odr.Read
                             contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            artIds = odr("nContentKey") & ","
                         Loop
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
+                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                        MyBase.addOption(oSelUpd, "No", "0")
                     Else
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
                     End If
@@ -3551,6 +3563,8 @@ Partial Public Class Cms
                     MyBase.addOptionsFoldersFromDirectory(oSelElmt, "/" & oFsh.mcRoot)
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to move this file? - """ & cPath & "\" & cName & """", , "alert-danger")
+
+
 
                     MyBase.addSubmit(oFrmElmt, "", "Move file")
 
@@ -3567,12 +3581,14 @@ Partial Public Class Cms
 
                             If oFs.MoveFile(cName, cPath, cDestPath) Then
 
-                                Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
-                                Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
-                                moDbHelper.ExeProcessSql(sSQLUpd)
+                                If myWeb.moRequest("UpdatePaths") <> "0" And myWeb.moRequest("UpdatePaths") <> "" Then
+                                    Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
+                                    Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where nContentKey IN (" & myWeb.moRequest("UpdatePaths") & ")"
+                                    moDbHelper.ExeProcessSql(sSQLUpd)
+                                End If
 
                             Else
-                                MyBase.valid = False
+                                    MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 
