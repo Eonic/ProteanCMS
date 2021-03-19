@@ -414,134 +414,90 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
 
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
+            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
 
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
+            '    If oOldUrl IsNot Nothing And oOldUrl <> "" Then
+            '        Dim strarr() As String
+            '        strarr = oOldUrl.Split("?"c)
+            '        oOldUrl = strarr(0)
+            '    End If
 
-            ''' <summary>
-            ''' This is method which validates the page to redirect in edit mode if we change page url
-            ''' -if its h
-            ''' </summary>
-            ''' <param name="sRedirectType"></param>
-            ''' <param name="sOldUrl"></param>
-            ''' <param name="sNewUrl"></param>
-            ''' <param name="sPageUrl"></param>
-            ''' <param name="bRedirectChildPage"></param>
-            ''' <param name="sType"></param>
-            ''' <param name="nPageId"></param>
-            ''' <returns></returns>
-            ''' sRedirectType can be object type to validate.
-            Public Function RedirectPage(ByRef sRedirectType As String, ByRef sOldUrl As String, ByRef sNewUrl As String, ByRef sPageUrl As String, Optional ByVal bRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal nPageId As Integer = 0) As String
+            '    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+            '        cName = cName.Replace(" ", "-")
+            '        newUrl = newUrl.Replace(" ", "-")
+            '    End If
+            '    newUrl = strOldurl.Replace(cName, newUrl)
 
-                Dim result As String = ""
-                If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
 
-                    Dim sUrl As String = ""
-                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                        sNewUrl = sNewUrl.TrimEnd()
-                        sOldUrl = sOldUrl.Replace(" ", "-")
-                        sNewUrl = sNewUrl.Replace(" ", "-")
-                    End If
-                    If sPageUrl IsNot Nothing And sPageUrl <> String.Empty Then
-                        sUrl = sPageUrl
-                        Dim arr() As String
-                        arr = sUrl.Split("?"c)
-                        sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
-                    End If
 
-                    Select Case sType
-                        Case "Page"
-                            sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
-                            sOldUrl = sUrl
 
-                        Case Else
+            '    Select Case moRequest("redirectType")
+            '        Case "301Redirect"
 
-                            ' If (sType = "Product") Then
-                            If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
-                                Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
-                                Dim thisPrefix As String = ""
-                                Dim thisContentType As String = ""
+            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
-                                Dim i As Integer
-                                For i = 0 To prefixs.Length - 1
+            Dim i As Integer
+            For i = 0 To prefixs.Length - 1
                                     thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
                                     thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
                                     If thisContentType = sType Then
                                         sNewUrl = "/" & thisPrefix & "/" & sNewUrl
                                         sOldUrl = "/" & thisPrefix & "/" & sOldUrl
                                     End If
-                                Next
+            Next
 
-                            Else
-                                'Case "Product"
+            Else
+            'Case "Product"
 
-                                '    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                '        sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
-                                '        sOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sOldUrl
-                                '    Else
+            '    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+            '        sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
+            '        sOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sOldUrl
+            '    Else
 
-                                '        Dim url As String = myWeb.GetContentUrl(nPageId)
-                                '        sOldUrl = sUrl & url & sOldUrl
-                                '        sNewUrl = sUrl & url & sNewUrl
-                                '    End If
-                                Case Else
-                                '' check prefix condtional and then append it accordingly
-                                'If () Then
-                                '    Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-                                '    Dim thisPrefix As String = ""
-                                '    Dim thisContentType As String = ""
-                                '    Dim i As Integer
-                                '    For i = 0 To prefixs.Length - 1
-                                '        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                                '        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                                '        If thisContentType = oDR(5).ToString() Then
-                                '            cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                                '            If moConfig("DetailPathTrailingSlash") = "on" Then
-                                '                cURL = cURL + "/"
-                                '            End If
+            '        Dim url As String = myWeb.GetContentUrl(nPageId)
+            '        sOldUrl = sUrl & url & sOldUrl
+            '        sNewUrl = sUrl & url & sNewUrl
+            '    End If
+            Case Else
+            '' check prefix condtional and then append it accordingly
+            'If () Then
+            '    Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+            '    Dim thisPrefix As String = ""
+            '    Dim thisContentType As String = ""
+            '    Dim i As Integer
+            '    For i = 0 To prefixs.Length - 1
+            '        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+            '        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+            '        If thisContentType = oDR(5).ToString() Then
+            '            cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+            '            If moConfig("DetailPathTrailingSlash") = "on" Then
+            '                cURL = cURL + "/"
+            '            End If
 
-                                '        End If
-                                '    Next
+            '        End If
+            '    Next
 
 
-                                'Else
+            'Else
 
-                                Dim url As String = myWeb.GetContentUrl(nPageId)
+            Dim url As String = myWeb.GetContentUrl(nPageId)
                                 sOldUrl = sUrl & url & "/" & sOldUrl
                                 sNewUrl = sUrl & url & "/" & sNewUrl
                             End If
-                            'End If
-                    End Select
+            'End If
+            End Select
 
-                    Select Case sRedirectType
-                        Case "301Redirect"
+            Select Case sRedirectType
+            Case "301Redirect"
 
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
-                        Case "302Redirect"
-                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+            '        Case "404Redirect"
 
-                        Case Else
-                            'do nothing
-                    End Select
-                End If
-                Return result
-            End Function
+            '    End Select
+            'End Function
         End Class
     End Class
 End Class
