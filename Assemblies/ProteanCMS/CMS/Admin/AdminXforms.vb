@@ -2876,6 +2876,7 @@ Partial Public Class Cms
                         End If
                     End If
 
+                    myWeb.GetContentXml(MyBase.Instance)
 
 
                     If MyBase.isSubmitted Then
@@ -2953,285 +2954,300 @@ Partial Public Class Cms
                                     newUrl = "/experience/" & newUrl
 
                                     strOldurl = strOldurl.Replace(" ", "-")
-                                    strOldurl = "/experience/" & strOldurl
+                                End If
+                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                Else
+                                    If moRequest("pageOldUrl") IsNot Nothing Then
+                                        oURL = moRequest("pageOldUrl").ToString()
+                                        Dim strarr() As String
+                                        strarr = oURL.Split("?"c)
+                                        oURL = strarr(0)
+                                    End If
+                                    Dim url As String = myWeb.GetContentUrl(pgid)
+                                    strOldurl = oURL & url & strOldurl
+                                    strNewUrl = oURL & url & strNewUrl
+                                End If
 
-                                    Select Case moRequest("redirectType")
-                                        Case "301Redirect"
 
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
 
-                                        Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                    End Select
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
-
-
+                                    Case "302Redirect"
+                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                End Select
 
 
 
 
+
+
+
+
+                                ' Individual content location set
+                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
+
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                    End If
+                                End If
+
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
+
+
+                                editResult = dbHelper.ActivityType.ContentEdited
+
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
+                                Else
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
+                                nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
+                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
+
+
+                                'If we have an action here we need to relate the item
+                                If goSession("mcRelAction") = "Add" Or goSession("mcRelAction") = "Find" Or goSession("mcRelAction") = "Edit" Then
+                                    Dim b2Way As Boolean = IIf(moRequest("RelType") = "2way" Or moRequest("direction") = "2Way", True, False)
+                                    Dim sRelType As String = moRequest("relationType")
+                                    moDbHelper.insertContentRelation(goSession("mcRelParent"), nContentId, b2Way, sRelType)
+                                Else
+                                    'TS - Change 26/04/2016 We do not want added to the page if it is related.
 
                                     ' Individual content location set
                                     ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                     If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                        moDbHelper.setContentLocation(pgid, nContentId, True, bCascade, , moRequest("cPosition"))
                                     End If
-
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
-
-
-                                    editResult = dbHelper.ActivityType.ContentEdited
-
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
-                                Else
-                                    Dim nContentId As Long
-                                    nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
-                                    moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
-
-
-                                    'If we have an action here we need to relate the item
-                                    If goSession("mcRelAction") = "Add" Or goSession("mcRelAction") = "Find" Or goSession("mcRelAction") = "Edit" Then
-                                        Dim b2Way As Boolean = IIf(moRequest("RelType") = "2way" Or moRequest("direction") = "2Way", True, False)
-                                        Dim sRelType As String = moRequest("relationType")
-                                        moDbHelper.insertContentRelation(goSession("mcRelParent"), nContentId, b2Way, sRelType)
-                                    Else
-                                        'TS - Change 26/04/2016 We do not want added to the page if it is related.
-
-                                        ' Individual content location set
-                                        ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                        If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-                                            moDbHelper.setContentLocation(pgid, nContentId, True, bCascade, , moRequest("cPosition"))
-                                        End If
-                                    End If
-
-
-                                    editResult = dbHelper.ActivityType.ContentAdded
-                                    nReturnId = nContentId
-
-                                    'If this is a new element then we need to add the related content to the instance to be handled in processInstanceExtras
-                                    Dim item As Object
-                                    For Each item In moRequest.Form
-                                        If CStr(item).StartsWith("Relate_") Then
-                                            Dim arr() As String = CStr(item).Split("_")
-                                            Dim relateElmt As XmlElement = moPageXML.CreateElement("Relation")
-                                            relateElmt.SetAttribute("relatedContentId", moRequest.Form(CStr(item)))
-                                            relateElmt.SetAttribute("type", arr(1))
-                                            relateElmt.SetAttribute("direction", arr(2))
-                                            MyBase.Instance.AppendChild(relateElmt)
-                                        End If
-                                    Next
-
-                                End If
-
-                                'TS Added 24-11-2014 to allow content forms to add related content from dropdowns.
-                                moDbHelper.processInstanceExtras(nReturnId, MyBase.Instance, False, False)
-
-
-                                ' Check for related content redirection
-                                Dim mcRelRedirectString As String = goSession("mcRelRedirectString")
-                                If MyBase.valid AndAlso Not String.IsNullOrEmpty(mcRelRedirectString) Then
-
-                                    Dim cQueryString As String = goRequest.QueryString.ToString
-                                    If cQueryString.IndexOf("ewCmd=") > 0 Then
-                                        'here we fail because the ? is an & >=[
-                                        If cQueryString.IndexOf("&") > 0 Then
-                                            'So we have the index of the first &, how to replace?!
-                                        End If
-                                    Else
-                                        cQueryString = "?" & Replace(goRequest.QueryString.ToString, "path=", "")
-                                    End If
-                                    If cQueryString.IndexOf("ewCmd=") <> -1 Then
-                                        cQueryString = cQueryString.Substring(cQueryString.IndexOf("ewCmd="))
-                                    End If
-                                    If cQueryString.IndexOf("ajaxCmd=") <> -1 Then
-                                        cQueryString = cQueryString.Substring(cQueryString.IndexOf("ajaxCmd="))
-                                    End If
-                                    mcRelRedirectString = mcRelRedirectString.Substring(mcRelRedirectString.IndexOf("ewCmd="))
-
-                                    If mcRelRedirectString.ToLower() = cQueryString.ToLower() Then
-                                        ' Suppress last page being reset anywhere else
-                                        myWeb.mbSuppressLastPageOverrides = True
-                                        myWeb.moSession.Remove("lastPage")
-                                        myWeb.msRedirectOnEnd = goSession("mnContentRelationParent")
-                                    End If
-
                                 End If
 
 
+                                editResult = dbHelper.ActivityType.ContentAdded
+                                nReturnId = nContentId
 
-                                goSession("mnContentRelationParent") = Nothing
-                                goSession("mcRelRedirectString") = Nothing
-                                goSession("mcRelAction") = Nothing
-                                goSession("mcRelParent") = Nothing
-
-                                If goSession("EwCmd") = "" Then
-                                    goSession("EwCmd") = "Normal"
-                                End If
-
-                                ' Submitted and valid - should have a content id let's process the relationships
-                                oContentLocations.ProcessRequest(nReturnId)
-
-                                ' User Integrations check
-                                If integrationHelper.Enabled Then
-                                    integrationHelper.PostContent(nReturnId)
-                                End If
-
-
-                                ' Module content edit action handler
-                                Dim contentEditActionHandler As XmlElement
-
-                                For Each contentEditActionHandler In MyBase.Instance.SelectNodes("//Content[@editAction]")
-                                    Dim contentEditAction As String = contentEditActionHandler.GetAttribute("editAction")
-                                    If Not String.IsNullOrEmpty(contentEditAction) Then
-
-                                        Dim assemblyName As String = contentEditActionHandler.GetAttribute("assembly")
-                                        Dim assemblyType As String = contentEditActionHandler.GetAttribute("assemblyType")
-                                        Dim providerName As String = contentEditActionHandler.GetAttribute("providerName")
-                                        Dim providerType As String = contentEditActionHandler.GetAttribute("providerType")
-                                        If providerType = "" Then providerType = "messaging"
-
-
-                                        Dim methodName As String = contentEditAction
-                                        Dim classPath As String = ""
-
-                                        If methodName.Contains(".") Then
-                                            methodName = Right(contentEditAction, Len(contentEditAction) - contentEditAction.LastIndexOf(".") - 1)
-                                            classPath = Left(contentEditAction, contentEditAction.LastIndexOf("."))
-                                        End If
-
-                                        '     Dim providerSection As String = Coalesce(contentEditActionHandler.GetAttribute("providerSection"), "eonic/" & providerType & "Providers")
-
-                                        ' Edit Action method constructor follows the following format:
-                                        ' 1 - Protean.Cms
-                                        ' 2 - Content XML
-                                        ' 3 - Content ID being editted
-                                        ' 4 - Content action 
-
-                                        Try
-                                            Dim calledType As Type
-
-                                            If assemblyName <> "" Then
-                                                contentEditAction = contentEditAction & ", " & assemblyName
-                                            End If
-                                            'Dim oModules As New Protean.Cms.Membership.Modules
-
-                                            If providerName <> "" Then
-                                                'case for external Providers
-                                                Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & providerType & "Providers")
-                                                Dim assemblyInstance As [Assembly]
-
-                                                If Not moPrvConfig.Providers(providerName & "Local") Is Nothing Then
-                                                    If moPrvConfig.Providers(providerName & "Local").Parameters("path") <> "" Then
-                                                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName & "Local").Parameters("path")))
-                                                        calledType = assemblyInstance.GetType(contentEditAction, True)
-                                                    Else
-                                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName & "Local").Type)
-                                                        calledType = assemblyInstance.GetType(contentEditAction, True)
-                                                    End If
-                                                Else
-                                                    Select Case moPrvConfig.Providers(providerName).Parameters("path")
-                                                        Case ""
-                                                            assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                                            calledType = assemblyInstance.GetType(contentEditAction, True)
-                                                        Case "builtin"
-                                                            Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                                            'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                                            prepProviderName = moPrvConfig.Providers(providerName).Type
-                                                            calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
-                                                        Case Else
-                                                            assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-
-                                                            classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
-                                                            calledType = assemblyInstance.GetType(classPath, True)
-                                                    End Select
-
-                                                End If
-                                            ElseIf assemblyType <> "" Then
-                                                'case for external DLL's
-                                                Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
-                                                calledType = assemblyInstance.GetType(contentEditAction, True)
-                                            Else
-                                                'case for methods within EonicWeb Core DLL
-                                                calledType = System.Type.GetType(contentEditAction, True)
-                                            End If
-
-                                            Dim o As Object = Activator.CreateInstance(calledType)
-
-                                            Dim args(3) As Object
-                                            args(0) = myWeb
-                                            args(1) = contentEditActionHandler
-                                            args(2) = nReturnId
-                                            args(3) = editResult
-
-                                            calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
-
-                                            'Error Handling ?
-                                            'Object Clearup ?
-
-                                            calledType = Nothing
-
-                                            'Update again ?
-                                            MyBase.Instance.SelectSingleNode("*/nContentPrimaryId").InnerText = 0
-                                            moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance, nReturnId)
-
-                                        Catch ex As Exception
-                                            '  OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
-                                            cProcessInfo = assemblyName & "." & contentEditAction & " not found"
-
-                                        End Try
+                                'If this is a new element then we need to add the related content to the instance to be handled in processInstanceExtras
+                                Dim item As Object
+                                For Each item In moRequest.Form
+                                    If CStr(item).StartsWith("Relate_") Then
+                                        Dim arr() As String = CStr(item).Split("_")
+                                        Dim relateElmt As XmlElement = moPageXML.CreateElement("Relation")
+                                        relateElmt.SetAttribute("relatedContentId", moRequest.Form(CStr(item)))
+                                        relateElmt.SetAttribute("type", arr(1))
+                                        relateElmt.SetAttribute("direction", arr(2))
+                                        MyBase.Instance.AppendChild(relateElmt)
                                     End If
                                 Next
 
-                                If bPreviewRedirect Then
-                                    Dim VerId As Long = 0
-                                    myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" & pgid & "&artid=" & id & "&verId=" & nReturnId
+                            End If
+
+                            'TS Added 24-11-2014 to allow content forms to add related content from dropdowns.
+                            moDbHelper.processInstanceExtras(nReturnId, MyBase.Instance, False, False)
+
+
+                            ' Check for related content redirection
+                            Dim mcRelRedirectString As String = goSession("mcRelRedirectString")
+                            If MyBase.valid AndAlso Not String.IsNullOrEmpty(mcRelRedirectString) Then
+
+                                Dim cQueryString As String = goRequest.QueryString.ToString
+                                If cQueryString.IndexOf("ewCmd=") > 0 Then
+                                    'here we fail because the ? is an & >=[
+                                    If cQueryString.IndexOf("&") > 0 Then
+                                        'So we have the index of the first &, how to replace?!
+                                    End If
+                                Else
+                                    cQueryString = "?" & Replace(goRequest.QueryString.ToString, "path=", "")
+                                End If
+                                If cQueryString.IndexOf("ewCmd=") <> -1 Then
+                                    cQueryString = cQueryString.Substring(cQueryString.IndexOf("ewCmd="))
+                                End If
+                                If cQueryString.IndexOf("ajaxCmd=") <> -1 Then
+                                    cQueryString = cQueryString.Substring(cQueryString.IndexOf("ajaxCmd="))
+                                End If
+                                mcRelRedirectString = mcRelRedirectString.Substring(mcRelRedirectString.IndexOf("ewCmd="))
+
+                                If mcRelRedirectString.ToLower() = cQueryString.ToLower() Then
+                                    ' Suppress last page being reset anywhere else
+                                    myWeb.mbSuppressLastPageOverrides = True
+                                    myWeb.moSession.Remove("lastPage")
+                                    myWeb.msRedirectOnEnd = goSession("mnContentRelationParent")
                                 End If
 
                             End If
 
 
 
+                            goSession("mnContentRelationParent") = Nothing
+                            goSession("mcRelRedirectString") = Nothing
+                            goSession("mcRelAction") = Nothing
+                            goSession("mcRelParent") = Nothing
 
-                        ElseIf isSubmittedOther(pgid) Then ' has another specific submit button been pressed?
-                            'This should really be taken over using  xForms Triggers
-                            MyBase.updateInstanceFromRequest()
-                            If Not goSession("mcRelRedirectString") Is Nothing Or Not goSession("mcRelRedirectString") = "" Then
-                                MyBase.validate()
-                                If MyBase.valid Then
-                                    myWeb.msRedirectOnEnd = goSession("mcRelRedirectString")
-                                    MyBase.valid = False
-                                End If
-                            Else
-                                'we are re-ordering so we don't want a valid form
-                                MyBase.valid = False
+                            If goSession("EwCmd") = "" Then
+                                goSession("EwCmd") = "Normal"
                             End If
-                            goSession("oContentInstance") = Nothing
 
-                        ElseIf MyBase.isTriggered Then
-                            'we have clicked a trigger so we must update the instance
-                            MyBase.updateInstanceFromRequest()
-                            'lets save the instance
-                            goSession("oContentInstance") = MyBase.Instance
-                        Else
-                            'clear this if we are loading the first form
-                            goSession("oContentInstance") = Nothing
+                            ' Submitted and valid - should have a content id let's process the relationships
+                            oContentLocations.ProcessRequest(nReturnId)
+
+                            ' User Integrations check
+                            If integrationHelper.Enabled Then
+                                integrationHelper.PostContent(nReturnId)
+                            End If
+
+
+                            ' Module content edit action handler
+                            Dim contentEditActionHandler As XmlElement
+
+                            For Each contentEditActionHandler In MyBase.Instance.SelectNodes("//Content[@editAction]")
+                                Dim contentEditAction As String = contentEditActionHandler.GetAttribute("editAction")
+                                If Not String.IsNullOrEmpty(contentEditAction) Then
+
+                                    Dim assemblyName As String = contentEditActionHandler.GetAttribute("assembly")
+                                    Dim assemblyType As String = contentEditActionHandler.GetAttribute("assemblyType")
+                                    Dim providerName As String = contentEditActionHandler.GetAttribute("providerName")
+                                    Dim providerType As String = contentEditActionHandler.GetAttribute("providerType")
+                                    If providerType = "" Then providerType = "messaging"
+
+
+                                    Dim methodName As String = contentEditAction
+                                    Dim classPath As String = ""
+
+                                    If methodName.Contains(".") Then
+                                        methodName = Right(contentEditAction, Len(contentEditAction) - contentEditAction.LastIndexOf(".") - 1)
+                                        classPath = Left(contentEditAction, contentEditAction.LastIndexOf("."))
+                                    End If
+
+                                    '     Dim providerSection As String = Coalesce(contentEditActionHandler.GetAttribute("providerSection"), "eonic/" & providerType & "Providers")
+
+                                    ' Edit Action method constructor follows the following format:
+                                    ' 1 - Protean.Cms
+                                    ' 2 - Content XML
+                                    ' 3 - Content ID being editted
+                                    ' 4 - Content action 
+
+                                    Try
+                                        Dim calledType As Type
+
+                                        If assemblyName <> "" Then
+                                            contentEditAction = contentEditAction & ", " & assemblyName
+                                        End If
+                                        'Dim oModules As New Protean.Cms.Membership.Modules
+
+                                        If providerName <> "" Then
+                                            'case for external Providers
+                                            Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/" & providerType & "Providers")
+                                            Dim assemblyInstance As [Assembly]
+
+                                            If Not moPrvConfig.Providers(providerName & "Local") Is Nothing Then
+                                                If moPrvConfig.Providers(providerName & "Local").Parameters("path") <> "" Then
+                                                    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName & "Local").Parameters("path")))
+                                                    calledType = assemblyInstance.GetType(contentEditAction, True)
+                                                Else
+                                                    assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName & "Local").Type)
+                                                    calledType = assemblyInstance.GetType(contentEditAction, True)
+                                                End If
+                                            Else
+                                                Select Case moPrvConfig.Providers(providerName).Parameters("path")
+                                                    Case ""
+                                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                                        calledType = assemblyInstance.GetType(contentEditAction, True)
+                                                    Case "builtin"
+                                                        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                                        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                                        prepProviderName = moPrvConfig.Providers(providerName).Type
+                                                        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
+                                                    Case Else
+                                                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+
+                                                        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
+                                                        calledType = assemblyInstance.GetType(classPath, True)
+                                                End Select
+
+                                            End If
+                                        ElseIf assemblyType <> "" Then
+                                            'case for external DLL's
+                                            Dim assemblyInstance As [Assembly] = [Assembly].Load(assemblyType)
+                                            calledType = assemblyInstance.GetType(contentEditAction, True)
+                                        Else
+                                            'case for methods within EonicWeb Core DLL
+                                            calledType = System.Type.GetType(contentEditAction, True)
+                                        End If
+
+                                        Dim o As Object = Activator.CreateInstance(calledType)
+
+                                        Dim args(3) As Object
+                                        args(0) = myWeb
+                                        args(1) = contentEditActionHandler
+                                        args(2) = nReturnId
+                                        args(3) = editResult
+
+                                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
+
+                                        'Error Handling ?
+                                        'Object Clearup ?
+
+                                        calledType = Nothing
+
+                                        'Update again ?
+                                        MyBase.Instance.SelectSingleNode("*/nContentPrimaryId").InnerText = 0
+                                        moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance, nReturnId)
+
+                                    Catch ex As Exception
+                                        '  OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
+                                        cProcessInfo = assemblyName & "." & contentEditAction & " not found"
+
+                                    End Try
+                                End If
+                            Next
+
+                            If bPreviewRedirect Then
+                                Dim VerId As Long = 0
+                                myWeb.msRedirectOnEnd = "/?ewCmd=PreviewOn&pgid=" & pgid & "&artid=" & id & "&verId=" & nReturnId
+                            End If
+
                         End If
 
-                        MyBase.addValues()
-                        Return MyBase.moXformElmt
+
+
+
+                    ElseIf isSubmittedOther(pgid) Then ' has another specific submit button been pressed?
+                        'This should really be taken over using  xForms Triggers
+                        MyBase.updateInstanceFromRequest()
+                        If Not goSession("mcRelRedirectString") Is Nothing Or Not goSession("mcRelRedirectString") = "" Then
+                            MyBase.validate()
+                            If MyBase.valid Then
+                                myWeb.msRedirectOnEnd = goSession("mcRelRedirectString")
+                                MyBase.valid = False
+                            End If
+                        Else
+                            'we are re-ordering so we don't want a valid form
+                            MyBase.valid = False
+                        End If
+                        goSession("oContentInstance") = Nothing
+
+                    ElseIf MyBase.isTriggered Then
+                        'we have clicked a trigger so we must update the instance
+                        MyBase.updateInstanceFromRequest()
+                        'lets save the instance
+                        goSession("oContentInstance") = MyBase.Instance
+                    Else
+                        'clear this if we are loading the first form
+                        goSession("oContentInstance") = Nothing
+                    End If
+
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
