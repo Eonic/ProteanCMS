@@ -1725,6 +1725,19 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
+                                'page Redirection
+                                Dim redirectType As String = ""
+                                Dim strOldurl As String = ""
+                                Dim isParentPage As String = ""
+                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
+                                    redirectType = moRequest("redirectType").ToString()
+                                End If
+                                If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
+                                    strOldurl = moRequest("pageOldUrl").ToString()
+                                    Dim strarr() As String
+                                    strarr = strOldurl.Split("?"c)
+                                    strOldurl = strarr(0)
+                                End If
 
                                 'page redirection for hub
                                 Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
