@@ -1783,7 +1783,7 @@ Partial Public Class Cms
 
                                 End Select
 
-                                Else
+                            Else
 
                                 newUrl = strarr2(0) & "/" & newUrl & "/"
                             End If
