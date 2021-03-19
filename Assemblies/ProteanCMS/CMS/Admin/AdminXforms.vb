@@ -1740,17 +1740,17 @@ Partial Public Class Cms
                                     newUrl = newUrl.Replace(" ", "-")
                                 End If
                                 newUrl = strOldurl.Replace(cName, newUrl)
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
+
 
 
 
                                 Select Case moRequest("redirectType")
                                     Case "301Redirect"
 
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
                                     Case "404Redirect"
 
