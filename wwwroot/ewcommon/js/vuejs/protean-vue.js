@@ -49,7 +49,7 @@ $(document).on("click", "#btnRedirectSave", function (event) {
             .then(function (response) {
               
                 if (response.data == "True") {
-                    if (confirm("This Page have child. Do you want to redirect it?")) {
+                    if (confirm("This Page have child. Do you want to create rule for it?")) {
                         $(".hiddenParentCheck").val(response.data);
                         $("#redirectModal").modal("hide");
                         $(".btnSubmitPage").click();
