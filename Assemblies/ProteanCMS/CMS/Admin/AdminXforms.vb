@@ -1737,10 +1737,8 @@ Partial Public Class Cms
                                     strOldurl = moRequest("pageOldUrl").ToString()
                                 End If
 
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    cName = cName.Replace(" ", "-")
-                                    newUrl = newUrl.Replace(" ", "-")
+                                If moRequest("IsParentPage") IsNot Nothing And moRequest("IsParentPage") <> "" Then
+                                    isParentPage = moRequest("IsParentPage").ToString()
                                 End If
                                 newUrl = strOldurl.Replace(cName, newUrl)
 
