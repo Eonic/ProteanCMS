@@ -2852,6 +2852,7 @@ Partial Public Class Cms
                         End If
                     End If
 
+                    myWeb.GetContentXml(MyBase.Instance)
 
 
                     If MyBase.isSubmitted Then
@@ -2916,7 +2917,6 @@ Partial Public Class Cms
 
 
                                 Dim obj As Admin.Redirects = New Admin.Redirects()
-<<<<<<< HEAD
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                                     strNewUrl = strNewUrl.Replace(" ", "-")
                                     strOldurl = strOldurl.Replace(" ", "-")
@@ -2935,23 +2935,6 @@ Partial Public Class Cms
                                     strOldurl = oURL & url & strOldurl
                                     strNewUrl = oURL & url & strNewUrl
                                 End If
-=======
-                                newUrl = newUrl.Replace(" ", "-")
-                                newUrl = "/experience/" & newUrl
-
-                                strOldurl = strOldurl.Replace(" ", "-")
-                                strOldurl = "/experience/" & strOldurl
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                End Select
-
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
 
 
                                 Select Case moRequest("redirectType")
@@ -2962,67 +2945,12 @@ Partial Public Class Cms
                                     Case "302Redirect"
                                         obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
 
-                                    Case "404Redirect"
-
                                 End Select
 
-<<<<<<< HEAD
 
-=======
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-
-
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    strNewUrl = strNewUrl.Replace(" ", "-")
-                                    strOldurl = strOldurl.Replace(" ", "-")
-                                End If
-                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
-                                End If
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                End Select
-
-                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                If bCascade And pgid > 0 Then
-                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                End If
-
-
-<<<<<<< HEAD
-
-=======
-                                editResult = dbHelper.ActivityType.ContentEdited
-
-                                If updatedVersionId <> id Then
-                                    nReturnId = updatedVersionId
-                                Else
-                                    nReturnId = id
-                                End If
-
-                            Else
-                                Dim nContentId As Long
-                                nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
-                                moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
-
-                            End If
-
-                            ' Individual content location set
-                            ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                            If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
                                 'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
                                 'If not on this page i.e. being edited via search results or related content on a page we should ignore this.

@@ -28,11 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-<<<<<<< HEAD
             Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
-=======
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0) As String
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -70,7 +66,6 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-<<<<<<< HEAD
                         If isParentPage = "True" Then
                             Select Case redirectType
                                 Case "301Redirect"
@@ -82,30 +77,6 @@ Partial Public Class Cms
 
                             End Select
 
-                            'step through and create rules to deal with paths
-                            Dim folderRules As New ArrayList
-                            Dim rulesXml As New XmlDocument
-                            rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                            Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
-                            Dim oRule As XmlElement
-
-                            'For Each oRule In replacerNode.SelectNodes("add")
-                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
-                            Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
-                            Dim matchString As String = OldUrl
-                            If matchString.StartsWith("/") Then
-                                matchString = matchString.TrimStart("/")
-                            End If
-=======
-                        Dim isParent As Boolean = moDbHelper.isParent(pageId)
-
-                        If isParentPage() = "True" Then
-                            If redirectType = "301Redirect" Then
-                                redirectType = "301 Redirects"
-                            End If
-                            If redirectType = "302Redirect" Then
-                                redirectType = "302 Redirects"
-                            End If
                             'step through and create rules to deal with paths
                             Dim folderRules As New ArrayList
                             Dim rulesXml As New XmlDocument
