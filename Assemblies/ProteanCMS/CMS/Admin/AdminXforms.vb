@@ -2823,6 +2823,7 @@ Partial Public Class Cms
                         End If
                     End If
 
+                    myWeb.GetContentXml(MyBase.Instance)
 
 
                     If MyBase.isSubmitted Then
@@ -2876,6 +2877,7 @@ Partial Public Class Cms
                                 Dim redirectType As String = ""
                                 Dim strNewUrl As String = ""
                                 Dim strOldurl As String = ""
+                                Dim oURL As String = ""
                                 If moRequest("redirectType") IsNot Nothing Then
                                     redirectType = moRequest("redirectType").ToString()
                                 End If
@@ -2896,6 +2898,16 @@ Partial Public Class Cms
                                 If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
                                     strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
                                     strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                Else
+                                    If moRequest("pageOldUrl") IsNot Nothing Then
+                                        oURL = moRequest("pageOldUrl").ToString()
+                                        Dim strarr() As String
+                                        strarr = oURL.Split("?"c)
+                                        oURL = strarr(0)
+                                    End If
+                                    Dim url As String = myWeb.GetContentUrl(pgid)
+                                    strOldurl = oURL & url & strOldurl
+                                    strNewUrl = oURL & url & strNewUrl
                                 End If
 
 
