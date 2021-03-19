@@ -1748,6 +1748,9 @@ Partial Public Class Cms
                                     isParentPage = moRequest("IsParentPage").ToString()
                                 End If
 
+                                If moRequest("IsParentPage") IsNot Nothing And moRequest("IsParentPage") <> "" Then
+                                    isParentPage = moRequest("IsParentPage").ToString()
+                                End If
 
 
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
