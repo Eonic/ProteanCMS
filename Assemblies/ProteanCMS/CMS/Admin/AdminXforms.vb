@@ -1727,12 +1727,23 @@ Partial Public Class Cms
 
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
                                 'page Redirection
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                Dim redirectType As String = ""
+                                Dim strOldurl As String = ""
+                                Dim isParentPage As String = ""
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
+                                    redirectType = moRequest("redirectType").ToString()
                                 End If
+                                If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
+                                    strOldurl = moRequest("pageOldUrl").ToString()
+                                    Dim strarr() As String
+                                    strarr = strOldurl.Split("?"c)
+                                    strOldurl = strarr(0)
+                                End If
+
+                                If moRequest("IsParentPage") IsNot Nothing And moRequest("IsParentPage") <> "" Then
+                                    isParentPage = moRequest("IsParentPage").ToString()
+                                End If
+
 
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
