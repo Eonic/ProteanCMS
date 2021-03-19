@@ -110,7 +110,7 @@ Partial Public Class Cms
                             myWeb.bRestartApp = True
                         End If
                     End If
-                        Dim Result As String = "success"
+                    Dim Result As String = "success"
                     Return Result
 
                 Catch ex As Exception
@@ -413,71 +413,37 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
 
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
-
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
-
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
+            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
 
 
-            Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
+            '    If oOldUrl IsNot Nothing And oOldUrl <> "" Then
+            '        Dim strarr() As String
+            '        strarr = oOldUrl.Split("?"c)
+            '        oOldUrl = strarr(0)
+            '    End If
 
-                Dim result As String = ""
-                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
+            '    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+            '        cName = cName.Replace(" ", "-")
+            '        newUrl = newUrl.Replace(" ", "-")
+            '    End If
+            '    newUrl = strOldurl.Replace(cName, newUrl)
 
-                    Dim strurl As String = ""
-                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                        oOldUrl = oOldUrl.Replace(" ", "-")
-                        oNewUrl = oNewUrl.Replace(" ", "-")
-                    End If
-                    If pageUrl IsNot Nothing And pageUrl <> "" Then
-                        strurl = pageUrl
-                        Dim strarr() As String
-                        strarr = strurl.Split("?"c)
-                        strurl = strarr(0)
-                    End If
 
-                    Select Case flag
-                        Case "Page"
-                            oNewUrl = strurl.Replace(oOldUrl, oNewUrl)
-                            oOldUrl = strurl
-                        Case "Product"
-                            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
-                                oOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oOldUrl
-                            Else
 
-                                Dim url As String = myWeb.GetContentUrl(pgId)
-                                oOldUrl = strurl & url & oOldUrl
-                                oNewUrl = strurl & url & oNewUrl
-                            End If
 
-                    End Select
+            '    Select Case moRequest("redirectType")
+            '        Case "301Redirect"
 
-                    Select Case oRedirectType
-                        Case "301Redirect"
+            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
-                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+            '        Case "302Redirect"
+            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
 
-                        Case "302Redirect"
-                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+            '        Case "404Redirect"
 
-                    End Select
-                End If
-                Return result
-            End Function
+            '    End Select
+            'End Function
         End Class
     End Class
 End Class
