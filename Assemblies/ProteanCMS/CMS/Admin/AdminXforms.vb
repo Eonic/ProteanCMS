@@ -1795,7 +1795,10 @@ Partial Public Class Cms
                                 obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
                             Case "302Redirect"
-                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+                            Case "404Redirect"
+
                         End Select
 
                     Else
@@ -2970,6 +2973,7 @@ Partial Public Class Cms
 
 
 
+                                    End Select
 
 
                                     ' Individual content location set
