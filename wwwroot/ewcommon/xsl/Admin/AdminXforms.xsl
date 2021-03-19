@@ -2566,24 +2566,22 @@
                 </div>
               </fieldset>
             </div>
-
+            
             <ul>
-              <li>
-                <button type="button" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave">301:  We will Permanently redirect</button>
-                <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
-
+              <li class="md-radio">
+                <button name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave">301:  We will Permanently redirect</button>
+              <input name="redirectType" type="hidden" class="hiddenRedirectType" />
               </li>
               <br></br>
-              <li>
-                <button type="button" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave">302: We will temporarily redirect</button>
-
+              <li class="md-radio">
+                <button name="redirectType" type="button" value="302Redirect" class="btn btn-primary btnRedirectSave">302: We will temporarily redirect</button>
               </li>
-              <br></br>
-              <li>
-                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404: No, the old url will show 'page not found'</button>
+               <br></br>
+              <li class="md-radio">
+                <button name="redirectType" type="button" value="404Redirect" class="btn btn-primary btnRedirectSave">404: No, the old url will show 'page not found'</button>
               </li>
             </ul>
-
+            
              <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
                <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
                <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
@@ -2591,23 +2589,7 @@
                 <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
              <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
              <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
-
-            <!--a href="?ewCmd=EditXForm&amp;artid={/Page/Request/QueryString/Item[@name='id']/node()}" class="textButton">Click Here to Edit this Form</a-->
-
-            <input name="pageId" type="hidden"  class="hiddenpageId" />
-          </div>
-
-          <div class="modal-footer">
-            <div>
-              <h4>
-                Do you want to redirect?
-              </h4>
-            </div>
-            <button class="btn btn-primary" id="btnRedirectDontSave" data-dismiss="modal" >Dont save redirect</button>
-            <button type="button" id="btnRedirectSave"
-              class="btn btn-primary">
-              Save redirect
-            </button>
+            <input name="pageId" type="hidden"  class="hiddenPageId" />
           </div>
         </div>
       </div>
