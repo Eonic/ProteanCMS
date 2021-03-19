@@ -1725,19 +1725,29 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
-
-                                'page redirection for hub
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
-                                Dim sType As String = "Page"
+                                'page Redirection
+                                Dim redirectType As String = ""
+                                Dim strOldurl As String = ""
+                                Dim isParentPage As String = ""
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-
-                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
+                                    redirectType = moRequest("redirectType").ToString()
                                 End If
-                            Else
+                                If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
+                                    strOldurl = moRequest("pageOldUrl").ToString()
+                                    Dim strarr() As String
+                                    strarr = strOldurl.Split("?"c)
+                                    strOldurl = strarr(0)
+                                End If
 
-                                pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                If moRequest("IsParentPage") IsNot Nothing And moRequest("IsParentPage") <> "" Then
+                                    isParentPage = moRequest("IsParentPage").ToString()
+                                End If
+
+                                oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
+                            End If
+                        Else
+
+                            pgid = moDbHelper.insertStructure(MyBase.Instance)
                             moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
                             ' If the site wants to, by default, restrict new pages to a given group or directory item, then
