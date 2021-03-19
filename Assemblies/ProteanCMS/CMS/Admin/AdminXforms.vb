@@ -2875,9 +2875,6 @@ Partial Public Class Cms
                         End If
                     End If
 
-                    myWeb.GetContentXml(MyBase.Instance)
-
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
