@@ -1762,6 +1762,9 @@ Partial Public Class Cms
 
                                     Case "302Redirect"
                                         obj.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+                                    Case "404Redirect"
+
                                 End Select
 
                             Else
@@ -2954,6 +2957,8 @@ Partial Public Class Cms
 
                                     Case "302Redirect"
                                         obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
+
+                                    Case "404Redirect"
 
                                 End Select
 
