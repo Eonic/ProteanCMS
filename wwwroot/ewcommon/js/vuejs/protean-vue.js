@@ -21,8 +21,117 @@ Vue.mixin({
         }
     }
 });
-    }
+
+
+
+////Edit Page
+
+$(document).on("click", ".btnSavePage", function (event) {
+
+    var newStructName = $("#cStructName").val();
+    editPage.structNameOnChange(newStructName);
+
 });
+
+$(document).on("click", "#btnRedirectSave", function (event) {
+   
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+        $("#redirectModal").modal("hide");
+    }
+    if ($(".btnSubmitPage").length > 0) {
+
+        let pageId = $(".hiddenpageId").val(); 
+        var inputJson = { pageId: pageId };
+        axios.post(IsParentPageAPI, inputJson)
+            .then(function (response) {
+              
+                if (response.data == "True") {
+                    if (confirm("This Page have child. Do you want to redirect it?")) {
+                        $(".hiddenParentCheck").val(response.data);
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+                    }
+                    else {
+                        $(".hiddenParentCheck").val("false");
+                        $("#redirectModal").modal("hide");
+                        $(".btnSubmitPage").click();
+
+
+                    }
+                }
+                else {
+                    $(".hiddenParentCheck").val("false");
+                    $("#redirectModal").modal("hide");
+                    $(".btnSubmitPage").click();
+                }
+            });
+
+    }
+
+   
+});
+
+$(document).on("click", "#btnRedirectDontSave", function (event) {
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
+    $("#redirectModal").modal("hide");
+});
+
+const editPageElement = document.querySelector("#EditPage");
+if (editPageElement) {
+    window.editPage = new Vue({
+        el: "#EditPage",
+        data: {
+            structName: "",
+            originalStructureName: ""
+        },
+        methods: {
+            createRedirects: function () {
+                $("#redirectModal").modal("hide");
+                var redirectType = $(".redirectStatus:checked").val();
+
+                if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
+                    return false;
+                }
+                else {
+
+                    var newUrl = $("#cStructName").val();
+                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+
+                                    $("#cRedirect").val(redirectType);
+
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
+                                    axios.post(paginationAddNewUrlAPIUrl, inputJson)
+                                        .then(function (response) {
+                                            if (response.data == "success") {
+                                                $("#redirectModal").modal("hide");
+                                                // window.location.href = "?ewCmd=Normal";
+                                            }
+
+                                        });
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            else {
+
+                                $("#cRedirect").val(redirectType);
+                                $("#redirectModal").modal("hide");
+
+                            }
+                        });
 
 
 
