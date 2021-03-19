@@ -412,6 +412,38 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
+
+
+            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
+
+
+            '    If oOldUrl IsNot Nothing And oOldUrl <> "" Then
+            '        Dim strarr() As String
+            '        strarr = oOldUrl.Split("?"c)
+            '        oOldUrl = strarr(0)
+            '    End If
+
+            '    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+            '        cName = cName.Replace(" ", "-")
+            '        newUrl = newUrl.Replace(" ", "-")
+            '    End If
+            '    newUrl = strOldurl.Replace(cName, newUrl)
+
+
+
+
+            '    Select Case moRequest("redirectType")
+            '        Case "301Redirect"
+
+            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+            '        Case "302Redirect"
+            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+            '        Case "404Redirect"
+
+            '    End Select
+            'End Function
         End Class
     End Class
 End Class
