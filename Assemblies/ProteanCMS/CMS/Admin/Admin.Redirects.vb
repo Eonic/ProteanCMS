@@ -70,22 +70,22 @@ Partial Public Class Cms
                             Select Case redirectType
                                 Case "301Redirect"
 
-                                    If isParent = True Then
-                                        If redirectType = "301Redirect" Then
-                                            redirectType = "301 Redirects"
-                                        End If
-                                        If redirectType = "302Redirect" Then
-                                            redirectType = "302 Redirects"
-                                        End If
-                                        'step through and create rules to deal with paths
-                                        Dim folderRules As New ArrayList
-                                        Dim rulesXml As New XmlDocument
-                                        rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
-                                        Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
-                                        Dim oRule As XmlElement
+                                    redirectType = "301 Redirects"
 
-                                        'For Each oRule In replacerNode.SelectNodes("add")
-                                        Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
+                                Case "302Redirect"
+                                    redirectType = "302 Redirects"
+
+                            End Select
+
+                            'step through and create rules to deal with paths
+                            Dim folderRules As New ArrayList
+                            Dim rulesXml As New XmlDocument
+                            rulesXml.Load(myWeb.goServer.MapPath("/RewriteRules.config"))
+                            Dim insertAfterElment As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='EW: " & redirectType & "']")
+                            Dim oRule As XmlElement
+
+                            'For Each oRule In replacerNode.SelectNodes("add")
+                            Dim CurrentRule As XmlElement = rulesXml.SelectSingleNode("descendant-or-self::rule[@name='Folder: " & OldUrl & "']")
                                         Dim newRule As XmlElement = rulesXml.CreateElement("newRule")
                                         Dim matchString As String = OldUrl
                                         If matchString.StartsWith("/") Then
@@ -110,8 +110,8 @@ Partial Public Class Cms
                                         myWeb.bRestartApp = True
                                     End If
                     End If
-                        Dim Result As String = "success"
-                        Return Result
+                    Dim Result As String = "success"
+                    Return Result
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CreateRedirect", ex, ""))
