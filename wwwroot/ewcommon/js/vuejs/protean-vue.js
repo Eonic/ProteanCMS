@@ -34,7 +34,7 @@ $(document).on("click", ".btnSavePage", function (event) {
 });
 
 $(document).on("click", "#btnRedirectSave", function (event) {
-    debugger;
+   
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
         $("#redirectModal").modal("hide");
@@ -45,7 +45,7 @@ $(document).on("click", "#btnRedirectSave", function (event) {
         var inputJson = { pageId: pageId };
         axios.post(IsParentPageAPI, inputJson)
             .then(function (response) {
-                debugger;
+              
                 if (response.data == "True") {
                     if (confirm("This Page have child. Do you want to redirect it?")) {
                         $(".hiddenParentCheck").val(response.data);
