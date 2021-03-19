@@ -658,9 +658,21 @@ $('.scolling-pane').on('scroll', function () {
             }
         }
 
-    }
-});
+            },
+        },
+        mounted: function () {
+            this.storedPath();
+        }
+    });
+}
 
+$(document).on("click", ".btnSaveProduct", function (event) {
+
+    var newContentPath = $("#cContentPath").val();
+    editProduct.UrlPathOnChange(newContentPath);
+
+
+});
 
 //Insights
 const insightsSectionElement = document.querySelector("#insights-section");
