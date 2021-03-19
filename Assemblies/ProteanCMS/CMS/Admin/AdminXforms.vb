@@ -1733,7 +1733,7 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
                                 End If
-                                If moRequest("pageOldUrl") IsNot Nothing Then
+                                If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
                                     strOldurl = moRequest("pageOldUrl").ToString()
                                 End If
 
