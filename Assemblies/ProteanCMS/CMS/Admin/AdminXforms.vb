@@ -2920,9 +2920,16 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
 
+
                                     Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
+                                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                        strNewUrl = strNewUrl.Replace(" ", "-")
+                                        strOldurl = strOldurl.Replace(" ", "-")
+                                    End If
+                                    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                        strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                        strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                    End If
 
 
                                     Select Case moRequest("redirectType")
