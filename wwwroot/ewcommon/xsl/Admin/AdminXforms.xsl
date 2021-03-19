@@ -2581,7 +2581,7 @@
                 <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404: page not found</button>
               </li>
             </ul>
-
+            
              <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
                <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
                <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />

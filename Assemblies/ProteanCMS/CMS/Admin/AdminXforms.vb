@@ -1727,6 +1727,10 @@ Partial Public Class Cms
 
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
                                 'page Redirection
+                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                oAdminRedirect.redirectPage(moRequest("redirectType"), moRequest("pageOldUrl"), newUrl, bRedirectChildPages)
                                 Dim redirectType As String = ""
                                 Dim strOldurl As String = ""
                                 Dim isParentPage As String = ""
@@ -1745,12 +1749,13 @@ Partial Public Class Cms
                                 End If
 
 
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                                     cName = cName.Replace(" ", "-")
                                     newUrl = newUrl.Replace(" ", "-")
                                 End If
                                 newUrl = strOldurl.Replace(cName, newUrl)
+
 
 
 
