@@ -1724,8 +1724,13 @@ Partial Public Class Cms
                             'NB Notes: Extract RelatedContent Nodes here - is this old now?
 
                             If pgid > 0 Then
+
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
                                 'page Redirection
+                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                oAdminRedirect.redirectPage(moRequest("redirectType"), moRequest("pageOldUrl"), newUrl, bRedirectChildPages)
                                 Dim redirectType As String = ""
                                 Dim strOldurl As String = ""
                                 Dim isParentPage As String = ""
