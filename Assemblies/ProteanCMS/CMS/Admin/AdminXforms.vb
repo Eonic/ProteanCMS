@@ -2858,6 +2858,11 @@ Partial Public Class Cms
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
 
+                    End If
+                    End If
+
+
+
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2922,8 +2927,14 @@ Partial Public Class Cms
 
 
                                     Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
+                                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                                        strNewUrl = strNewUrl.Replace(" ", "-")
+                                        strOldurl = strOldurl.Replace(" ", "-")
+                                    End If
+                                    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                        strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
+                                        strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
+                                    End If
 
 
                                     Select Case moRequest("redirectType")
