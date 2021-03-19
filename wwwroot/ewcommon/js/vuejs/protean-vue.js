@@ -35,19 +35,21 @@ $(document).on("click", ".btnSavePage", function (event) {
 
 });
 
-$(document).on("click", "#btnRedirectSave", function (event) {
-   
+$(document).on("click", ".btnRedirectSave", function (event) {
+    debugger;
+    var Rtype = $(this).val();
+    $(".hiddenRedirectType").val(Rtype);
     if ($(".btnSubmitProduct").length > 0) {
         $(".btnSubmitProduct").click();
         $("#redirectModal").modal("hide");
     }
     if ($(".btnSubmitPage").length > 0) {
         
-        let pageId = $(".hiddenpageId").val(); 
+        let pageId = $(".hiddenPageId").val(); 
         var inputJson = { pageId: pageId };
         axios.post(IsParentPageAPI, inputJson)
             .then(function (response) {
-              
+                debugger;
                 if (response.data == "True") {
                     if (confirm("This Page have child. Do you want to create rule for it?")) {
                         $(".hiddenParentCheck").val(response.data);
@@ -150,7 +152,7 @@ if (editPageElement) {
                     $("#OldPageName").val(localStorage.originalStructName);
                     $("#NewPageName").val(newStructName);
                     this.structName = newStructName;
-                    $(".hiddenpageId").val(localStorage.pageId);
+                    $(".hiddenPageId").val(localStorage.pageId);
                 }
                 else {
                     $(".btnSubmitPage").click();
@@ -831,6 +833,61 @@ $('.scolling-pane').on('scroll', function () {
     }
 });
 
+//Edit Product
+const editProductElement = $(".ProductSub").length;
+if (editProductElement > 0) {
+    window.editProduct = new Vue({
+        el: ".ProductSub",
+        data: {
+            urlPathInput: "",
+            originalPathName: ""
+        },
+        methods: {
+            storedPath: function () {
+
+                var cContentPath = $("#cContentPath").val();
+                if (cContentPath != null) {
+                    this.urlPathInput = cContentPath;
+                }
+
+                //clean the storage for struct name when page changes.
+                let pageId = this.getQueryStringParam('pgid');
+                if (!localStorage.pageId || localStorage.pageId != pageId) {
+                    localStorage.removeItem('originalPathName');
+                }
+                localStorage.pageId = pageId;
+                localStorage.originalPathName = this.urlPathInput;
+            },
+            UrlPathOnChange: function (newContentPath) {
+
+                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+
+                    redirectModal.toggleModal();
+                    $("#OldPageName").val(localStorage.originalPathName);
+                    $("#NewPageName").val(newContentPath);
+                    this.cContentPath = newContentPath;
+
+                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
+                    $(".hiddenProductNewUrl").val(newContentPath);
+                }
+                else {
+                    $(".btnSubmitProduct").click();
+                }
+
+            },
+        },
+        mounted: function () {
+            this.storedPath();
+        }
+    });
+}
+
+$(document).on("click", ".btnSaveProduct", function (event) {
+
+    var newContentPath = $("#cContentPath").val();
+    editProduct.UrlPathOnChange(newContentPath);
+
+});
 
 //Insights
 const insightsSectionElement = document.querySelector("#insights-section");
