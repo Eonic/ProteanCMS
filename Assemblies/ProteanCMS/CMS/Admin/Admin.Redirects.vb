@@ -460,16 +460,15 @@ Partial Public Class Cms
                         sOldUrl = sOldUrl.Replace(" ", "-")
                         sNewUrl = sNewUrl.Replace(" ", "-")
                     End If
-                    If sPageUrl IsNot Nothing And sPageUrl <> String.Empty Then
-                        sUrl = sPageUrl
-                        Dim arr() As String
-                        arr = sUrl.Split("?"c)
-                        sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                    If pageUrl IsNot Nothing And pageUrl <> "" Then
+                        strOldurl = pageUrl
+                        Dim strarr() As String
+                        strarr = strOldurl.Split("?"c)
+                        strOldurl = strarr(0)
                     End If
 
-                    Select Case sType
-                        Case "Page"
+            Select Case sType
+            Case "Page"
                             sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
                             sOldUrl = sUrl
 
@@ -500,8 +499,8 @@ Partial Public Class Cms
                             'End If
                     End Select
 
-                    Select Case sRedirectType
-                        Case "301Redirect"
+            Select Case sRedirectType
+            Case "301Redirect"
 
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
@@ -509,10 +508,10 @@ Partial Public Class Cms
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
                         Case Else
-                            'do nothing
-                    End Select
-                End If
-                Return result
+            'do nothing
+            End Select
+            End If
+            Return result
             End Function
         End Class
     End Class
