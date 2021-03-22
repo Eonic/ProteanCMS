@@ -1731,56 +1731,9 @@ Partial Public Class Cms
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
+                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page")
                                 End If
-
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    cName = cName.Replace(" ", "-")
-                                    newUrl = newUrl.Replace(" ", "-")
-                                End If
-                                newUrl = strOldurl.Replace(cName, newUrl)
-
-
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "302Redirect"
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "404Redirect"
-
-                                End Select
-
                             Else
-
-
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    cName = cName.Replace(" ", "-")
-                                    newUrl = newUrl.Replace(" ", "-")
-                                End If
-                                newUrl = strOldurl.Replace(cName, newUrl)
-
-
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "302Redirect"
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "404Redirect"
-
-                                End Select
-
-                                Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
@@ -2920,74 +2873,9 @@ Partial Public Class Cms
                                 If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
                                     strOldurl = moRequest("productOldUrl").ToString()
                                 End If
+                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
+                                    oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
 
-
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    strNewUrl = strNewUrl.Replace(" ", "-")
-                                    strOldurl = strOldurl.Replace(" ", "-")
-                                End If
-                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
-                                Else
-                                    If moRequest("pageOldUrl") IsNot Nothing Then
-                                        oURL = moRequest("pageOldUrl").ToString()
-                                        Dim strarr() As String
-                                        strarr = oURL.Split("?"c)
-                                        oURL = strarr(0)
-                                    End If
-                                    Dim url As String = myWeb.GetContentUrl(pgid)
-                                    strOldurl = oURL & url & strOldurl
-                                    strNewUrl = oURL & url & strNewUrl
-                                End If
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "404Redirect"
-
-                                End Select
-
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, strNewUrl)
-
-                                    Case "404Redirect"
-
-                                End Select
-
-<<<<<<< HEAD
-
-=======
-                                ' Individual content location set
-                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
-
-                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                    End If
-                                End If
->>>>>>> #3318: Renaming a Page Protean - Show popup to confirm if should create a redirect from old URL to new URL.
-
-                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                If bCascade And pgid > 0 Then
-                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
                                 End If
 
                                 ' Individual content location set
