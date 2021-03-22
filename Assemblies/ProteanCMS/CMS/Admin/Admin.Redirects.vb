@@ -428,22 +428,22 @@ Partial Public Class Cms
                 Dim result As String = ""
                 If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
-                    Dim strOldurl As String = ""
+                    Dim strurl As String = ""
                     If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                         oOldUrl = oOldUrl.Replace(" ", "-")
                         oNewUrl = oNewUrl.Replace(" ", "-")
                     End If
                     If pageUrl IsNot Nothing And pageUrl <> "" Then
-                        strOldurl = pageUrl
+                        strurl = pageUrl
                         Dim strarr() As String
-                        strarr = strOldurl.Split("?"c)
-                        strOldurl = strarr(0)
+                        strarr = strurl.Split("?"c)
+                        strurl = strarr(0)
                     End If
 
                     Select Case flag
                         Case "Page"
-                            oNewUrl = strOldurl.Replace(oOldUrl, oNewUrl)
-                            oOldUrl = strOldurl
+                            oNewUrl = strurl.Replace(oOldUrl, oNewUrl)
+                            oOldUrl = strurl
                         Case "Product"
                             If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
                                 oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
@@ -451,8 +451,8 @@ Partial Public Class Cms
                             Else
 
                                 Dim url As String = myWeb.GetContentUrl(pgId)
-                                oOldUrl = strOldurl & url & oOldUrl
-                                oNewUrl = strOldurl & url & oNewUrl
+                                oOldUrl = strurl & url & oOldUrl
+                                oNewUrl = strurl & url & oNewUrl
                             End If
 
                     End Select
