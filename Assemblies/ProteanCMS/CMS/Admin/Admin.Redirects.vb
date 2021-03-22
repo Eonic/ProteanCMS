@@ -482,12 +482,11 @@ Partial Public Class Cms
                         sOldUrl = sOldUrl.Replace(" ", "-")
                         sNewUrl = sNewUrl.Replace(" ", "-")
                     End If
-                    If sPageUrl IsNot Nothing And sPageUrl <> String.Empty Then
-                        sUrl = sPageUrl
-                        Dim arr() As String
-                        arr = sUrl.Split("?"c)
-                        sUrl = arr(0)
-                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
+                    If pageUrl IsNot Nothing And pageUrl <> "" Then
+                        strurl = pageUrl
+                        Dim strarr() As String
+                        strarr = strurl.Split("?"c)
+                        strurl = strarr(0)
                     End If
 
                     Select Case sType

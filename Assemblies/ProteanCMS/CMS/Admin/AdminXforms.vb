@@ -1735,7 +1735,7 @@ Partial Public Class Cms
                                 Dim strOldurl As String = ""
                                 Dim isParentPage As String = ""
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    redirectType = moRequest("redirectType").ToString()
+                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
                                 End If
                                 If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
                                     strOldurl = moRequest("pageOldUrl").ToString()
