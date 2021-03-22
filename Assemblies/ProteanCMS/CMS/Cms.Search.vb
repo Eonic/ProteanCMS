@@ -1406,7 +1406,6 @@ Partial Public Class Cms
 
                                                 moContextNode.AppendChild(resultsXML)
 
-
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
