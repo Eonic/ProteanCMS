@@ -1782,30 +1782,6 @@ Partial Public Class Cms
 
                                 Else
 
-
-                                If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                                    cName = cName.Replace(" ", "-")
-                                    newUrl = newUrl.Replace(" ", "-")
-                                End If
-                                newUrl = strOldurl.Replace(cName, newUrl)
-
-
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "302Redirect"
-                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                    Case "404Redirect"
-
-                                End Select
-
-                                Else
-
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
@@ -2947,54 +2923,7 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
 
-                                    If moRequest("productNewUrl") IsNot Nothing Then
-                                        newUrl = moRequest("productNewUrl").ToString()
-                                    End If
-                                    If moRequest("productOldUrl") IsNot Nothing Then
-                                        strOldurl = moRequest("productOldUrl").ToString()
-                                    End If
-
-
-                                    Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
-
-                                    strOldurl = strOldurl.Replace(" ", "-")
                                 End If
-                                If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                    strNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strNewUrl
-                                    strOldurl = myWeb.moConfig("RewriteRuleForProduct").ToString() & strOldurl
-                                Else
-                                    If moRequest("pageOldUrl") IsNot Nothing Then
-                                        oURL = moRequest("pageOldUrl").ToString()
-                                        Dim strarr() As String
-                                        strarr = oURL.Split("?"c)
-                                        oURL = strarr(0)
-                                    End If
-                                    Dim url As String = myWeb.GetContentUrl(pgid)
-                                    strOldurl = oURL & url & strOldurl
-                                    strNewUrl = oURL & url & strNewUrl
-                                End If
-
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                End Select
-
-
-
-
-
-
-                                Case "404Redirect"
-
-                                End Select
-
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
