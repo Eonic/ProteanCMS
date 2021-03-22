@@ -297,7 +297,7 @@
         <xsl:otherwise>
           <span class="input-group-btn editpick">
             <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}" data-target="#modal-{$ref}" class="btn btn-primary">
+            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
               <i class="fa fa-picture-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick

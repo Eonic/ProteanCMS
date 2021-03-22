@@ -1434,7 +1434,7 @@ function initialiseGeocoderButton() {
 
             } else {
 
-                alert(status + ' Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
+                alert(status + ' Couldn\'t find the latitude and longitude for the address provided. Try including more details.(' + addressString + ')');
 
             }
 
@@ -1478,7 +1478,7 @@ function initialiseGeocoderButton() {
 
             } else {
 
-                alert('Couldn\'t find the latitude and longitude for the address provided. Try including more details.');
+                alert('Couldn\'t find the latitude and longitude for the address provided. Try including more details.(' + addressString + ')');
 
             }
 
