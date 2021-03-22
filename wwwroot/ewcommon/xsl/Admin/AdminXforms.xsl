@@ -2566,7 +2566,7 @@
                 </div>
               </fieldset>
             </div>
-            
+
             <ul>
               <li>
                 <button type="button" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave">301:  We will Permanently redirect</button>
