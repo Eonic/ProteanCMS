@@ -297,7 +297,7 @@
         <xsl:otherwise>
           <span class="input-group-btn editpick">
             <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
+            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}" data-target="#modal-{$ref}" class="btn btn-primary">
               <i class="fa fa-picture-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick
@@ -2595,10 +2595,29 @@
           </div>
         </div>
       </div>
-
     </div>
-
+    
+    <div id="RedirectionChildConfirmationModal" class="suitableForModal modal fade " tabindex="-1">
+       
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" >
+                      <span aria-hidden="true">&#215;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Current page have child/product pages beneath it, do you want to redirect them as well?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnNocreateRuleForChild" >Cancel</button>
+                    <button type="button" id="btnYescreateRuleForChild" 
+                     class="btn btn-primary">
+                      Yes
+                    </button>
+                  </div>
+                </div>
+              </div>
+    </div>
   </xsl:template>
-
-
 </xsl:stylesheet>

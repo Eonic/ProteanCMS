@@ -1731,7 +1731,7 @@ Partial Public Class Cms
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page")
+                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
                                 End If
                             Else
 
