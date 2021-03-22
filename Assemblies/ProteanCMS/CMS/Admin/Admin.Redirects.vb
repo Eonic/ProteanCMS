@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Long = 0, Optional ByVal isParentPage As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -415,6 +415,8 @@ Partial Public Class Cms
 
 
 
+            Dim result As String = ""
+            If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
 
             Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
