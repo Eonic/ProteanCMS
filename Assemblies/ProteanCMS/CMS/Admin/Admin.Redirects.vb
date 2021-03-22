@@ -458,7 +458,7 @@ Partial Public Class Cms
                 Dim result As String = ""
                 If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
 
-                    Dim sUrl As String = ""
+                    Dim strurl As String = ""
                     If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                         sNewUrl = sNewUrl.TrimEnd()
                         sOldUrl = sOldUrl.Replace(" ", "-")
