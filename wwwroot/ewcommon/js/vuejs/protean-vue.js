@@ -24,78 +24,6 @@ Vue.mixin({
 
 
 
-////Edit Page
-
-$(document).on("click", ".btnSavePage", function (event) {
-
-    var newStructName = $("#cStructName").val();
-    editPage.structNameOnChange(newStructName);
-
-});
-
-$(document).on("click", ".btnRedirectSave", function (event) {
-    debugger;
-    var Rtype = $(this).val();
-    $(".hiddenRedirectType").val(Rtype);
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-        $("#redirectModal").modal("hide");
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        
-        let pageId = $(".hiddenPageId").val(); 
-        var inputJson = { pageId: pageId };
-        axios.post(IsParentPageAPI, inputJson)
-            .then(function (response) {
-                debugger;
-                if (response.data == "True") {
-                    if (confirm("This Page have child. Do you want to create rule for it?")) {
-                        $(".hiddenParentCheck").val(response.data);
-                        $("#redirectModal").modal("hide");
-                        $(".btnSubmitPage").click();
-
-                    }
-                    else {
-                        $(".hiddenParentCheck").val("false");
-                        $("#redirectModal").modal("hide");
-                        $(".btnSubmitPage").click();
-
-
-                    }
-                }
-                else {
-                    debugger;
-                    $(".hiddenParentCheck").val("false");
-                    $("#redirectModal").modal("hide");
-                    $(".btnSubmitPage").click();
-                }
-            });
-                    }
-                }
-                else {
-                    $(".hiddenParentCheck").val("false");
-                    $("#redirectModal").modal("hide");
-                    $(".btnSubmitPage").click();
-                }
-            });
-
-    }
-
-   
-});
-
-    }
-
-   
-});
-
-
-
-
-
-
-
-
 $(document).on("click", ".addRedirectbtn", function (event) {
     $(".countLable").addClass("hidden");
     $(".modalLable").addClass("hidden");
@@ -732,7 +660,6 @@ $('.scolling-pane').on('scroll', function () {
 
     }
 });
-
 
 
 //Insights
