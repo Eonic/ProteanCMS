@@ -1733,16 +1733,6 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
                                     oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
                                 End If
-                                If moRequest("pageOldUrl") IsNot Nothing And moRequest("pageOldUrl") <> "" Then
-                                    strOldurl = moRequest("pageOldUrl").ToString()
-                                    Dim strarr() As String
-                                    strarr = strOldurl.Split("?"c)
-                                    strOldurl = strarr(0)
-                                End If
-
-                                If moRequest("IsParentPage") IsNot Nothing And moRequest("IsParentPage") <> "" Then
-                                    isParentPage = moRequest("IsParentPage").ToString()
-                                End If
 
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 If myWeb.moConfig("PageURLFormat") = "hyphens" Then
@@ -1766,7 +1756,7 @@ Partial Public Class Cms
 
                                 End Select
 
-                                Else
+                            Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
