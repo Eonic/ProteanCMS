@@ -28,7 +28,7 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Long = 0, Optional ByVal isParentPage As String = "") As String
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -415,89 +415,52 @@ Partial Public Class Cms
             End Function
 
 
-            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
+            Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
 
+                Dim result As String = ""
+                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
-            '    If oOldUrl IsNot Nothing And oOldUrl <> "" Then
-            '        Dim strarr() As String
-            '        strarr = oOldUrl.Split("?"c)
-            '        oOldUrl = strarr(0)
-            '    End If
+                    Dim strOldurl As String = ""
+                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                        oOldUrl = oOldUrl.Replace(" ", "-")
+                        oNewUrl = oNewUrl.Replace(" ", "-")
+                    End If
+                    If pageUrl IsNot Nothing And pageUrl <> "" Then
+                        strOldurl = pageUrl
+                        Dim strarr() As String
+                        strarr = strOldurl.Split("?"c)
+                        strOldurl = strarr(0)
+                    End If
 
-            '    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-            '        cName = cName.Replace(" ", "-")
-            '        newUrl = newUrl.Replace(" ", "-")
-            '    End If
-            '    newUrl = strOldurl.Replace(cName, newUrl)
+                    Select Case flag
+                        Case "Page"
+                            oNewUrl = strOldurl.Replace(oOldUrl, oNewUrl)
+                            oOldUrl = strOldurl
+                        Case "Product"
+                            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
+                                oOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oOldUrl
+                            Else
 
-
-
-
-            '    Select Case moRequest("redirectType")
-            '        Case "301Redirect"
-
-            '            oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-            Dim i As Integer
-            For i = 0 To prefixs.Length - 1
-                                    thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                                    thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                                    If thisContentType = sType Then
-                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl
-                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl
-                                    End If
-            Next
-
-            Else
-            'Case "Product"
-
-            '    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-            '        sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
-            '        sOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sOldUrl
-            '    Else
-
-            '        Dim url As String = myWeb.GetContentUrl(nPageId)
-            '        sOldUrl = sUrl & url & sOldUrl
-            '        sNewUrl = sUrl & url & sNewUrl
-            '    End If
-            Case Else
-            '' check prefix condtional and then append it accordingly
-            'If () Then
-            '    Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-            '    Dim thisPrefix As String = ""
-            '    Dim thisContentType As String = ""
-            '    Dim i As Integer
-            '    For i = 0 To prefixs.Length - 1
-            '        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-            '        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-            '        If thisContentType = oDR(5).ToString() Then
-            '            cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-            '            If moConfig("DetailPathTrailingSlash") = "on" Then
-            '                cURL = cURL + "/"
-            '            End If
-
-            '        End If
-            '    Next
-
-
-            'Else
-
-            Dim url As String = myWeb.GetContentUrl(nPageId)
-                                sOldUrl = sUrl & url & "/" & sOldUrl
-                                sNewUrl = sUrl & url & "/" & sNewUrl
+                                Dim url As String = myWeb.GetContentUrl(pgId)
+                                oOldUrl = strOldurl & url & oOldUrl
+                                oNewUrl = strOldurl & url & oNewUrl
                             End If
-            'End If
-            End Select
 
-            Select Case sRedirectType
-            Case "301Redirect"
+                    End Select
 
-                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+                    Select Case oRedirectType
+                        Case "301Redirect"
 
-            '        Case "404Redirect"
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
-            '    End Select
-            'End Function
+                        Case "302Redirect"
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+
+                    End Select
+                End If
+                Return result
+            End Function
         End Class
     End Class
 End Class
