@@ -763,7 +763,7 @@ Partial Public Class Cms
 
                                         Next
                                     End If
-                    End If
+                End If
 
                             dateFinish = Now
                             resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
@@ -778,31 +778,36 @@ Partial Public Class Cms
                             myWeb.moSession("lastResultCount") = Nothing
                         End If
 
-                        If myWeb.moSession("lastResultCount") Is Nothing Then
-
-                            myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
-                            resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
-                            resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
-                        Else
-                            If (PerPageCount > myWeb.moSession("lastResultCount") And command = 0) Then
-                                resultsXML.SetAttribute("startCount", HitsLimit - Convert.ToInt32(myWeb.moSession("lastResultCount") + 1))
-                            Else
-                                resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
+                        If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                            Dim lodedResultCount As String = moContextNode.ChildNodes.Count.ToString()
+                            If (myWeb.moRequest("page") = 0) Then
+                                myWeb.moSession("lastResultCount") = Nothing
                             End If
-                            resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
-                            myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
+
+                            If myWeb.moSession("lastResultCount") Is Nothing Then
+
+                                myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
+                                resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
+                                resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
+                            Else
+                                If (PerPageCount > myWeb.moSession("lastResultCount") And command = 0) Then
+                                    resultsXML.SetAttribute("startCount", HitsLimit - Convert.ToInt32(myWeb.moSession("lastResultCount") + 1))
+                                Else
+                                    resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
+                                End If
+                                resultsXML.SetAttribute("loadedResult", myWeb.moSession("lastResultCount").ToString())
+                                myWeb.moSession("lastResultCount") = lodedResultCount.ToString()
+                            End If
+                        Else
+                            resultsXML.SetAttribute("Hits", resultsCount)
                         End If
-                    Else
-                        resultsXML.SetAttribute("Hits", resultsCount)
-                    End If
 
-                    resultsXML.SetAttribute("SearchString", cQuery)
-                    resultsXML.SetAttribute("searchType", "INDEX")
-                    resultsXML.SetAttribute("type", "SearchHeader")
-                    resultsXML.SetAttribute("Hits", resultsCount)
+                        resultsXML.SetAttribute("SearchString", cQuery)
+                        resultsXML.SetAttribute("searchType", "INDEX")
+                        resultsXML.SetAttribute("type", "SearchHeader")
 
-                    moContextNode.AppendChild(resultsXML)
 
+                        moContextNode.AppendChild(resultsXML)
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
