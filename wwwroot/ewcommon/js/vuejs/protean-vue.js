@@ -51,7 +51,7 @@ $(document).on("click", ".btnRedirectSave", function (event) {
             .then(function (response) {
                 debugger;
                 if (response.data == "True") {
-                    if (confirm("This Page have child. Do you want to create rule for it?")) {
+                    if (confirm("Current page have child/product pages beneath it, do you want to redirect them as well?")) {
                         $(".hiddenParentCheck").val(response.data);
                         $("#redirectModal").modal("hide");
                         $(".btnSubmitPage").click();
@@ -66,6 +66,7 @@ $(document).on("click", ".btnRedirectSave", function (event) {
                     }
                 }
                 else {
+                    debugger;
                     $(".hiddenParentCheck").val("false");
                     $("#redirectModal").modal("hide");
                     $(".btnSubmitPage").click();
@@ -77,15 +78,7 @@ $(document).on("click", ".btnRedirectSave", function (event) {
    
 });
 
-$(document).on("click", "#btnRedirectDontSave", function (event) {
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
-    }
-    $("#redirectModal").modal("hide");
-});
+
 
 const editPageElement = document.querySelector("#EditPage");
 if (editPageElement) {
