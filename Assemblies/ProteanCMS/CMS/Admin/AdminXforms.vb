@@ -1725,46 +1725,7 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
-                                'page Redirection
-                                Dim redirectType As String = ""
-                                Dim strOldurl As String = ""
-                                If moRequest("redirectType") IsNot Nothing Then
-                                    redirectType = moRequest("redirectType").ToString()
-                                End If
-                                If moRequest("pageOldUrl") IsNot Nothing Then
-                                    redirectType = moRequest("pageOldUrl").ToString()
-                                End If
 
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                Dim strarr() As String
-                                strarr = strOldurl.Split("?"c)
-                                strOldurl = strarr(0)
-
-                                Dim strarr2() As String
-                                Dim strTempNewUrl As String = strarr(0).TrimEnd("/")
-                                strarr2 = strTempNewUrl.Split("/"c)
-                                'Dim replacerString As String = strarr2(1)
-                                newUrl = newUrl.Replace(" ", "-")
-                                If strarr2.Length = 3 Then
-                                    newUrl = "/" & strarr2(1) & "/" & newUrl & "/"
-                                Else
-                                    If strarr2.Length = 4 Then
-                                        newUrl = "/" & strarr2(1) & "/" & strarr2(2) & "/" & newUrl & "/"
-                                    Else
-
-                                        newUrl = strarr2(0) & "/" & newUrl & "/"
-                                    End If
-                                End If
-
-                                Select Case moRequest("redirectType")
-                                    Case "301Redirect"
-
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                    Case "302Redirect"
-                                        obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                End Select
 
                             Else
 
@@ -2904,21 +2865,6 @@ Partial Public Class Cms
                                 End If
 
 
-                                Dim obj As Admin.Redirects = New Admin.Redirects()
-                                    newUrl = newUrl.Replace(" ", "-")
-                                    newUrl = "/experience/" & newUrl
-
-                                    strOldurl = strOldurl.Replace(" ", "-")
-                                    strOldurl = "/experience/" & strOldurl
-
-                                    Select Case moRequest("redirectType")
-                                        Case "301Redirect"
-
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-
-                                        Case "302Redirect"
-                                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                                    End Select
 
 
 
@@ -2926,10 +2872,9 @@ Partial Public Class Cms
 
 
 
-
-                                    ' Individual content location set
-                                    ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
-                                    If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
+                                ' Individual content location set
+                                ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
+                                If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
                                         'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
                                         'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
@@ -3532,16 +3477,28 @@ Partial Public Class Cms
                     Dim oFsh As fsHelper = New fsHelper
                     oFsh.initialiseVariables(nType)
 
-                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
+                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/").Replace("//", "/")
+
+                    If fileToFind.EndsWith("/") Then
+                        fileToFind = fileToFind & cName
+                    Else
+                        fileToFind = fileToFind & "/" & cName
+                    End If
+
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
                     If odr.HasRows Then
                         Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Dim artIds As String = ""
                         Do While odr.Read
                             contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            artIds = odr("nContentKey") & ","
                         Loop
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
+                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                        MyBase.addOption(oSelUpd, "No", "0")
                     Else
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
                     End If
@@ -3551,6 +3508,8 @@ Partial Public Class Cms
                     MyBase.addOptionsFoldersFromDirectory(oSelElmt, "/" & oFsh.mcRoot)
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to move this file? - """ & cPath & "\" & cName & """", , "alert-danger")
+
+
 
                     MyBase.addSubmit(oFrmElmt, "", "Move file")
 
@@ -3567,12 +3526,14 @@ Partial Public Class Cms
 
                             If oFs.MoveFile(cName, cPath, cDestPath) Then
 
-                                Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
-                                Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
-                                moDbHelper.ExeProcessSql(sSQLUpd)
+                                If myWeb.moRequest("UpdatePaths") <> "0" And myWeb.moRequest("UpdatePaths") <> "" Then
+                                    Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
+                                    Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where nContentKey IN (" & myWeb.moRequest("UpdatePaths") & ")"
+                                    moDbHelper.ExeProcessSql(sSQLUpd)
+                                End If
 
                             Else
-                                MyBase.valid = False
+                                    MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 

@@ -113,7 +113,7 @@
           <xsl:apply-templates select="Contents/Content" mode="displayBrief"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:call-template name="term2003" />
+          <xsl:call-template name="term2003" />
         </xsl:otherwise>
       </xsl:choose>
     </div>
@@ -466,9 +466,9 @@
         <div id="mod_{@id}" class="module nobox pos-{@position}{$thisClass}">
           <xsl:apply-templates select="." mode="themeModuleExtras"/>
           <xsl:if test="@mobileview!=''">
-          <xsl:attribute name="data-isMobileView">
-            <xsl:value-of select="@mobileview"/>
-          </xsl:attribute>
+            <xsl:attribute name="data-isMobileView">
+              <xsl:value-of select="@mobileview"/>
+            </xsl:attribute>
           </xsl:if>
           <xsl:attribute name="class">
             <xsl:text>module nobox pos-</xsl:text>
@@ -2494,27 +2494,27 @@
 
   <xsl:template match="Content[@type='Module' and @moduleType='FormattedText']" mode="displayBrief">
     <xsl:if test="node()">
-		<div class="FormattedText">
-			<xsl:if test="@maxWidth!=''">
-				<xsl:choose>
-					<xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
-						<xsl:attribute name="class">FormattedText central-text</xsl:attribute>
-						<xsl:attribute name='style'>
-							<xsl:text>max-width:</xsl:text>
-							<xsl:value-of select="@maxWidth"/>
-						</xsl:attribute>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:attribute name='style'>
-							<xsl:text>max-width:</xsl:text>
-							<xsl:value-of select="@maxWidth"/>
-						</xsl:attribute>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:apply-templates select="node()" mode="cleanXhtml"/>
-		</div>
-	</xsl:if>
+      <div class="FormattedText">
+        <xsl:if test="@maxWidth!=''">
+          <xsl:choose>
+            <xsl:when test="@iconStyle='Centre' or @iconStyle='CentreSmall'">
+              <xsl:attribute name="class">FormattedText central-text</xsl:attribute>
+              <xsl:attribute name='style'>
+                <xsl:text>max-width:</xsl:text>
+                <xsl:value-of select="@maxWidth"/>
+              </xsl:attribute>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:attribute name='style'>
+                <xsl:text>max-width:</xsl:text>
+                <xsl:value-of select="@maxWidth"/>
+              </xsl:attribute>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:if>
+        <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+      </div>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content[@type='Module' and @moduleType='Image']" mode="moduleTitle">
@@ -2900,7 +2900,7 @@
     <!-- Initialise any Google Maps -->
     <xsl:if test="//Content[@type='Module' and @moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]">
       <xsl:variable name="apiKey" select="//Content[@type='Module' and @moduleType='GoogleMapv3']/@apiKey"/>
-      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+      <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$GoogleAPIKey}{$apiKey}">&#160;</script>
       <script type="text/javascript">
         <xsl:text>function initialiseGMaps(){</xsl:text>
         <xsl:apply-templates select="//Content[@moduleType='GoogleMapv3'] | ContentDetail/Content[@type='Organisation'] " mode="initialiseGoogleMap"/>
@@ -5090,9 +5090,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div itemscope="" itemtype="{Organization/@itemtype}" class="listItem list-group-item">
+    <div itemscope="" itemtype="{Organization/@itemtype}" class="detail organisation-detail">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
-        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+        <xsl:with-param name="class" select="'detail organisation-detail'"/>
         <xsl:with-param name="editLabel" select="@type"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
@@ -5103,88 +5103,90 @@
       </h2>
       <div class="row">
         <div class="col-md-8">
-          <div class="">
+          <span class="picture">
+            <xsl:apply-templates select="." mode="displayLogo"/>
+          </span>
+          <xsl:if test="Organization/contactPoint/ContactPoint/@facebookURL!='' or Organization/contactPoint/ContactPoint/@twitterURL!=''  or Organization/contactPoint/ContactPoint/@linkedInURL!=''  or Organization/contactPoint/ContactPoint/@googlePlusURL!=''  or Organization/contactPoint/ContactPoint/@pinterestURL!=''">
             <xsl:apply-templates select="Organization/contactPoint/ContactPoint" mode="socialLinks">
               <xsl:with-param name="iconSet" select="'icons'"/>
               <xsl:with-param name="myName" select="name"/>
             </xsl:apply-templates>
-          </div>
-          <div class="pull-right ">
-            <xsl:apply-templates select="." mode="displayLogo"/>
-          </div>
-          <dl class="dl-horizontal pull-right">
-            <xsl:if test="Organization/legalName/node()!=''">
-              <dt class="date">
-                <!--legalName-->
-                <xsl:call-template name="term2103" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/legalName" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/foundingDate/node()!=''">
-              <dt class="date">
-                <!--foundingDate-->
-                <xsl:call-template name="term2104" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/foundingDate" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/taxID/node()!=''">
-              <dt class="taxid">
-                <!--Tax ID-->
-                <xsl:call-template name="term2108" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/taxID" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/vatID/node()!=''">
-              <dt class="">
-                <!--VAT-->
-                <xsl:call-template name="term2109" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/vatID" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/localBusiness/currenciesAccepted/node()!=''">
-              <dt class="">
-                <!--currenciesAccepted-->
-                <xsl:call-template name="term2110" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/localBusiness/currenciesAccepted" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/localBusiness/priceRange/node()!=''">
-              <dt class="applyBy">
-                <!--priceRange-->
-                <xsl:call-template name="term2113" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/localBusiness/priceRange" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/duns/node()!=''">
-              <dt>
-                <!--Dun &amp; Bradstreet Number-->
-                <xsl:call-template name="term2107" />
-                <xsl:text>:&#160;</xsl:text>
-              </dt>
-              <dd>
-                <xsl:apply-templates select="Organization/duns" mode="cleanXhtml"/>
-              </dd>
-            </xsl:if>
-            <xsl:if test="Organization/@itemtype!=''"> </xsl:if>
-          </dl>
+          </xsl:if>
+          <xsl:if test="Organization/legalName/node()!='' or Organization/foundingDate/node()!='' or Organization/taxID/node()!='' or Organization/vatID/node()!='' or Organization/localBusiness/priceRange/node()!='' or Organization/duns/node()!=''">
+            <dl class="dl-horizontal">
+              <xsl:if test="Organization/legalName/node()!=''">
+                <dt class="date">
+                  <!--legalName-->
+                  <xsl:call-template name="term2103" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/legalName" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/foundingDate/node()!=''">
+                <dt class="date">
+                  <!--foundingDate-->
+                  <xsl:call-template name="term2104" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/foundingDate" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/taxID/node()!=''">
+                <dt class="taxid">
+                  <!--Tax ID-->
+                  <xsl:call-template name="term2108" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/taxID" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/vatID/node()!=''">
+                <dt class="">
+                  <!--VAT-->
+                  <xsl:call-template name="term2109" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/vatID" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/localBusiness/currenciesAccepted/node()!=''">
+                <dt class="">
+                  <!--currenciesAccepted-->
+                  <xsl:call-template name="term2110" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/localBusiness/currenciesAccepted" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/localBusiness/priceRange/node()!=''">
+                <dt class="applyBy">
+                  <!--priceRange-->
+                  <xsl:call-template name="term2113" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/localBusiness/priceRange" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/duns/node()!=''">
+                <dt>
+                  <!--Dun &amp; Bradstreet Number-->
+                  <xsl:call-template name="term2107" />
+                  <xsl:text>:&#160;</xsl:text>
+                </dt>
+                <dd>
+                  <xsl:apply-templates select="Organization/duns" mode="cleanXhtml"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Organization/@itemtype!=''"> </xsl:if>
+            </dl>
+          </xsl:if>
           <p itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
             <xsl:if test="Organization/location/PostalAddress/name!=''">
               <span itemprop="name">
@@ -5289,19 +5291,20 @@
               <xsl:apply-templates select="body" mode="cleanXhtml"/>
             </p>
           </xsl:if>
-          <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
-          <xsl:apply-templates select="." mode="backLink">
-            <xsl:with-param name="link" select="$thisURL"/>
-            <xsl:with-param name="altText">
-              <!--click here to return to the news article list-->
-              <xsl:call-template name="term2071" />
-            </xsl:with-param>
-          </xsl:apply-templates>
+
         </div>
         <div class="col-md-4">
           <xsl:apply-templates select="." mode="organizationDetailMap"/>
         </div>
       </div>
+      <xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
+      <xsl:apply-templates select="." mode="backLink">
+        <xsl:with-param name="link" select="$thisURL"/>
+        <xsl:with-param name="altText">
+          <!--click here to return to the news article list-->
+          <xsl:call-template name="term2071" />
+        </xsl:with-param>
+      </xsl:apply-templates>
     </div>
   </xsl:template>
 
@@ -8402,7 +8405,7 @@
               </h4>
             </div>
           </div>
-          
+
         </a>
       </div>
     </xsl:if>

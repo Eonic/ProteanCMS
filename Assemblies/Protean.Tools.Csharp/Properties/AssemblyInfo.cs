@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Protean.Tools.Csharp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Eonic Associates LLP.")]
-[assembly: AssemblyProduct("Protean.Tools.Csharp")]
-[assembly: AssemblyCopyright("Copyright © Eonic Associates LLP 2008-2020")]
+[assembly: AssemblyCompany("Eonic Digital LLP.")]
+[assembly: AssemblyProduct("ProteanCMS")]
+[assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("6.0.46.11")]
-[assembly: AssemblyFileVersion("6.0.46.11")]
+[assembly: AssemblyVersion("6.0.46.16")]
+[assembly: AssemblyFileVersion("6.0.46.16")]
 

@@ -4838,7 +4838,7 @@
                                                 </xsl:call-template>
                                             </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
-                                            <img src="/ewcommon/images/loadingImage.png" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+                                            <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
                                               <span class="image-description-name">
                                                 <xsl:value-of select="@name"/>
@@ -4854,7 +4854,7 @@
                                           <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                                                <xsl:choose>
                                                  <xsl:when test="@width&gt;125 and @height&gt;125">
-                                                   <img class="lazy" src="/ewcommon/images/loadingImage.png" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
+                                                   <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                   <div class="img-overflow">
