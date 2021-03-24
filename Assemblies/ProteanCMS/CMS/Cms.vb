@@ -6665,14 +6665,14 @@ Public Class Cms
 
             ' Paging variables
             Dim nStart As Integer = 0
-            Dim nRows As Integer = 100
+            Dim nRows As Integer = 500
 
             ' Set the paging variables, if provided.
             If Not (moRequest("startPos") Is Nothing) AndAlso IsNumeric(moRequest("startPos")) Then nStart = CInt(moRequest("startPos"))
             If Not (moRequest("rows") Is Nothing) AndAlso IsNumeric(moRequest("rows")) Then nRows = CInt(moRequest("rows"))
 
             If nStart < 0 Then nStart = 0
-            If nRows < 1 Then nRows = 100
+            If nRows < 1 Then nRows = 500
 
 
             ' Quick call to get the total number of records
@@ -6700,7 +6700,7 @@ Public Class Cms
                     cSQL = fullSQL
                 End If
 
-                cSQL &= " offset " & nStart & " rows fetch next 100 rows only"
+                cSQL &= " offset " & nStart & " rows fetch next " & nRows & " rows only"
 
                 Dim oDS As DataSet = moDbHelper.GetDataSet(cSQL, "Content1", "Contents")
                 Dim oDT As New DataTable
