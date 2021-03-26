@@ -1783,7 +1783,7 @@ Partial Public Class Cms
 
                                 End Select
 
-                            Else
+                                Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
@@ -2853,16 +2853,6 @@ Partial Public Class Cms
 
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
-
-
-                    If (cModuleType = "FormattedText") Then
-                        If moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content/@mobileview") Is Nothing Then
-                            Dim viewElmnt As XmlElement = moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content")
-                            viewElmnt.SetAttribute("mobileview", "true")
-                            moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief").AppendChild(viewElmnt)
-
-                        End If
-                    End If
 
                     If MyBase.isSubmitted Then
 
