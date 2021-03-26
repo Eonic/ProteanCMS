@@ -1152,11 +1152,14 @@ Partial Public Class Cms
                                 sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and cContentSchemaName like '" & thisContentType & "' " & myWeb.GetStandardFilterSQLForContent() & " order by nVersion desc"
                             End If
                             ods = GetDataSet(sSql, "Content")
-                            If ods.Tables("Content").Rows.Count = 1 Then
-                                nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
-                            Else
-                                'handling for content versions ?
+                            If Not ods Is Nothing Then
+                                If ods.Tables("Content").Rows.Count = 1 Then
+                                    nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
+                                Else
+                                    'handling for content versions ?
+                                End If
                             End If
+
                             'now get the page id 
                             If nArtId > 0 Then
                                 sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
@@ -1198,48 +1201,46 @@ Partial Public Class Cms
 
                     ods = GetDataSet(sSql, "Pages")
 
+                    If Not ods Is Nothing Then
+                        If ods.Tables("Pages").Rows.Count = 1 Then
+                            nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
+                            ' if there is just one page validate it
+                        ElseIf ods.Tables("Pages").Rows.Count = 0 Then
 
-                    If ods.Tables("Pages").Rows.Count = 1 Then
-                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
-                        ' if there is just one page validate it
-                    ElseIf ods.Tables("Pages").Rows.Count = 0 Then
+                            'do nothing nothing found
 
-                        'do nothing nothing found
-
-                    Else
-                        For Each oRow In ods.Tables("Pages").Rows
-                            ' Debug.WriteLine(oRow.Item("nStructKey"))
-                            If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
-                                'we have a language verion we need to behave differently to confirm id
-                                If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
-                                    nPageId = oRow.Item("nStructKey")
-                                    Exit For
-                                End If
-                            Else
-                                If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
-                                    If bCheckPermissions Then
-
-                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                        Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
-
-                                        If checkPermissionPageId <> 0 _
-                                            And (oRow.Item("nStructKey") = checkPermissionPageId _
-                                            Or IsSystemPage(checkPermissionPageId)) Then
-                                            nPageId = checkPermissionPageId
-                                            Exit For
-                                        End If
-                                    Else
+                        Else
+                            For Each oRow In ods.Tables("Pages").Rows
+                                ' Debug.WriteLine(oRow.Item("nStructKey"))
+                                If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
+                                    'we have a language verion we need to behave differently to confirm id
+                                    If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                         nPageId = oRow.Item("nStructKey")
                                         Exit For
                                     End If
+                                Else
+                                    If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                        If bCheckPermissions Then
+
+                                            ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                            Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                            If checkPermissionPageId <> 0 _
+                                                And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                                Or IsSystemPage(checkPermissionPageId)) Then
+                                                nPageId = checkPermissionPageId
+                                                Exit For
+                                            End If
+                                        Else
+                                            nPageId = oRow.Item("nStructKey")
+                                            Exit For
+                                        End If
+                                    End If
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
                 End If
-
-
-
 
                 ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                 If Not (nPageId > 1 And (sPath <> "")) Then
@@ -6598,13 +6599,16 @@ restart:
                 "where r.nDirChildId = " & userId & " and d.cDirSchema='" & cSchemaName & "'"
 
                 oDr = getDataReader(sSql)
-                While oDr.Read
-                    If oDr("cDirName") = cRoleName Then
-                        bValid = True
-                    End If
+                If Not oDr Is Nothing Then
+                    While oDr.Read
+                        If oDr("cDirName") = cRoleName Then
+                            bValid = True
+                        End If
 
-                End While
-                oDr.Close()
+                    End While
+                    oDr.Close()
+                End If
+
                 oDr = Nothing
 
                 Return bValid
