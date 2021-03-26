@@ -201,8 +201,6 @@ Public Class Indexer
             'full pages
             cSQL = "Select nStructKey,cStructName From tblContentStructure" 'get all structure
             If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage 'unless a specific page
-            ' If nPage > 0 Then cSQL &= " WHERE nStructKey = " & nPage & " Or nStructParId= " & nPage 'unless a specific page
-
             oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Structure")
 
             'now we loop through the different tables and index the data
@@ -251,11 +249,10 @@ Public Class Indexer
                             If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                             If Not InStr(cRules, "NOINDEX") > 0 And Not oElmtURL Is Nothing Then
                                 If Not (oElmtURL.GetAttribute("url").StartsWith("http")) Then
-                                    IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement, oElmtURL.GetAttribute("status"))
+                                    IndexPage(oElmtURL.GetAttribute("url"), oPageXml.DocumentElement)
 
                                     Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                     oPageElmt.SetAttribute("url", oElmtURL.GetAttribute("url"))
-                                    oPageElmt.SetAttribute("status", oElmtURL.GetAttribute("status"))
                                     oInfoElmt.AppendChild(oPageElmt)
 
                                     nPagesIndexed += 1
@@ -325,11 +322,8 @@ Public Class Indexer
                                                 cRules = ""
 
                                                 Dim sPageUrl As String
-                                                Dim sStatus As String = ""
                                                 If Not oElmtURL Is Nothing Then
                                                     sPageUrl = oElmtURL.GetAttribute("url")
-                                                    sStatus = oElmtURL.GetAttribute("status")
-                                                    'DirectCast(oPageXml.SelectSingleNode("/html/head/meta[@name='abstract']/Content"), System.[Xml].XmlElement).GetAttribute("status")
                                                 End If
                                                 If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                                                 If (Not InStr(cRules, "NOINDEX") > 0) And Not (sPageUrl.StartsWith("http")) Then
@@ -337,21 +331,18 @@ Public Class Indexer
                                                     'handle cannonical link tag
                                                     If Not oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") Is Nothing Then
                                                         Dim oLinkElmt As XmlElement = oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']")
-                                                        Dim oStatusElmt As XmlElement = oPageXml.SelectSingleNode("/html/head/meta[@name='abstract']/Content")
                                                         If oLinkElmt.GetAttribute("href") <> "" Then
                                                             sPageUrl = oLinkElmt.GetAttribute("href")
-                                                            sStatus = oStatusElmt.GetAttribute("status")
                                                         End If
                                                     End If
 
-                                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("status"), oElmt.GetAttribute("type"))
+                                                    IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"))
 
                                                     Dim oPageElmt As XmlElement = oInfoElmt.OwnerDocument.CreateElement("page")
                                                     oPageElmt.SetAttribute("url", sPageUrl)
-                                                    oPageElmt.SetAttribute("status", sStatus)
                                                     oInfoElmt.AppendChild(oPageElmt)
 
-                                                    nIndexed += 1S
+                                                    nIndexed += 1
                                                     nContentsIndexed += 1
                                                 Else
                                                     nContentSkipped += 1
@@ -583,7 +574,7 @@ Public Class Indexer
         End Try
     End Sub
 
-    Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, ByVal status As String, Optional ByVal pageType As String = "Page")
+    Private Sub IndexPage(ByVal url As String, ByVal pageXml As XmlElement, Optional ByVal pageType As String = "Page")
 
         Dim methodName As String = "IndexPage(String,XmlElement,[String])"
         PerfMon.Log("Indexer", methodName)
@@ -597,7 +588,6 @@ Public Class Indexer
             ' Add the basic field types
             indexDoc.Add(New Field("url", url, Field.Store.YES, Field.Index.NOT_ANALYZED))
             indexDoc.Add(New Field("type", pageType, Field.Store.YES, Field.Index.NOT_ANALYZED))
-            indexDoc.Add(New Field("status", status, Field.Store.YES, Field.Index.NOT_ANALYZED))
 
 
             If pageXml IsNot Nothing Then
