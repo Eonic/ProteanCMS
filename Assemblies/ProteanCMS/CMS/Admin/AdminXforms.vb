@@ -1735,7 +1735,7 @@ Partial Public Class Cms
                                 End If
                             Else
 
-                                    pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
                                 ' If the site wants to, by default, restrict new pages to a given group or directory item, then
@@ -2803,16 +2803,6 @@ Partial Public Class Cms
 
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
-
-
-                    If (cModuleType = "FormattedText") Then
-                        If moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content/@mobileview") Is Nothing Then
-                            Dim viewElmnt As XmlElement = moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content")
-                            viewElmnt.SetAttribute("mobileview", "true")
-                            moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief").AppendChild(viewElmnt)
-
-                        End If
-                    End If
 
                     If MyBase.isSubmitted Then
 
