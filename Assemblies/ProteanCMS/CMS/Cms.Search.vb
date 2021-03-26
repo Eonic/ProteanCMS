@@ -516,16 +516,24 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("TotalResult", totalResults)
-                    resultsXML.SetAttribute("SiteSearchIndexResultPaging", myWeb.moConfig("SiteSearchIndexResultPaging").ToString())
+                    'If Not myWeb.moConfig("SiteSearchIndexResultPaging") Is Nothing Then
+                    If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
+                    Else
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                    End If
 
-                    If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                    resultsXML.SetAttribute("PerPageCount", PerPageCount)
+                    ' If Not myWeb.moConfig("SiteSearchIndexResultPaging") Is Nothing Then 'allow paging for search index page result
+                    If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                         resultsXML.SetAttribute("Hits", HitsLimit)
                         resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
                     End If
 
 
                     Dim artIdResults As New List(Of Long)
-                    If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                    'If Not myWeb.moConfig("SiteSearchIndexResultPaging") Is Nothing Then 'allow paging for search index page result
+                    If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                         Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
                         Dim takeRecord As Integer = PerPageCount
                         'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
@@ -600,10 +608,19 @@ Partial Public Class Cms
                                     For Each docField As Field In resultDoc.GetFields()
 
                                         ' Don't add info to certain fields
+                                        'If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                        '    result.SetAttribute(docField.Name, docField.StringValue)
+                                        'End If
+                                        ' Don't add info to certain fields
                                         If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                            'check artid/product is active
+                                            ' Dim bFlag As Boolean = myWeb.CheckProductStatus(thisArtId)
+                                            '' CheckProductStatus
+                                            ' If bFlag Then
                                             result.SetAttribute(docField.Name, docField.StringValue)
-                                        End If
+                                            'End If
 
+                                        End If
                                         If docField.Name = "abstract" Then
 
                                             ' Try to output this as Xml
@@ -746,7 +763,8 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("Time", "0")
                 End If
 
-                If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                'If Not myWeb.moConfig("SiteSearchIndexResultPaging") Is Nothing Then 'allow paging for search index page result
+                If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                     Dim lodedResultCount As String = moContextNode.ChildNodes.Count.ToString()
                     If (myWeb.moRequest("page") = 0) Then
                         myWeb.moSession("lastResultCount") = Nothing
@@ -780,6 +798,7 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
+
 
 
 
