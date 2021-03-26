@@ -8552,6 +8552,29 @@ Public Class Cms
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
+    Public Function CheckProductStatus(ByVal nArtId As Long) As Boolean
+        Try
+            Dim oDr As System.Data.SqlClient.SqlDataReader
+            Dim sSQL As String = "select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
+            sSQL = sSQL & " where  c.ncontentkey = " & nArtId.ToString()
+            If moDbHelper Is Nothing Then
+                moDbHelper = GetDbHelper()
+            End If
+            oDr = moDbHelper.getDataReader(sSQL)
+            If Not oDr Is Nothing Then
+                If oDr.HasRows Then
+                    Return True
+                End If
+            Else
+                Return False
+            End If
+
+        Catch ex As Exception
+            Return False
+        End Try
+
+    End Function
+
 
 #Region " IDisposable Support "
     ' This code added by Visual Basic to correctly implement the disposable pattern.
