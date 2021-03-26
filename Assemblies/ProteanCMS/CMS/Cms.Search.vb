@@ -1292,13 +1292,19 @@ Partial Public Class Cms
                                         'End If
                                         ' Don't add info to certain fields
                                         If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                            'check whether logged in user is csuser and skip checking status
+                                            Dim nUserId As Integer = myWeb.moSession("nUserId")
+                                            Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
                                             'check artid/product is active
-                                            ' Dim bFlag As Boolean = myWeb.CheckProductStatus(thisArtId)
-                                            '' CheckProductStatus
-                                            ' If bFlag Then
-                                            result.SetAttribute(docField.Name, docField.StringValue)
-                                            'End If
-
+                                            If Not bCsUser Then
+                                                Dim bFlag As Boolean = myWeb.CheckProductStatus(thisArtId)
+                                                ' CheckProductStatus
+                                                If bFlag Then
+                                                    result.SetAttribute(docField.Name, docField.StringValue) 'search only active products
+                                                End If
+                                            Else
+                                                result.SetAttribute(docField.Name, docField.StringValue) 'search all the products
+                                            End If
                                         End If
                                         If docField.Name = "abstract" Then
 
@@ -1467,9 +1473,6 @@ Partial Public Class Cms
         '    PerfMon.Log("Search", "IndexQuery")
         '    Dim processInfo As String = "Looking for : " & cQuery
         '    Try
-        '        If myWeb Is Nothing Then
-        '            myWeb = New Cms()
-        '        End If
 
         '        Dim resultsCount As Integer = 0
         '        Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
@@ -1508,12 +1511,23 @@ Partial Public Class Cms
         '            ' Add a sort from the request
         '            Dim queryOrder As Sort = SetSortFieldFromRequest(myAPI.moRequest)
 
-        '            dateFinish = Now
-        '            resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
-        '            'resultsCount = results.TotalHits()
-        '        Else
-        '            resultsXML.SetAttribute("Time", "0")
-        '        End If
+        '            ' Perform the search
+        '            Dim results As Lucene.Net.Search.TopDocs
+
+        '            If LCase(myAPI.moConfig("SiteSearchDebug")) = "on" Then
+        '                addElement(resultsXML, "LuceneQuery", searchQuery.ToString)
+        '                If Not livePages Is Nothing Then
+        '                    addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
+        '                End If
+        '            End If
+
+        '            '  Dim HitsLimit As Integer = 300
+
+        '            If livePages Is Nothing Then
+        '                results = searcher.Search(searchQuery, HitsLimit)
+        '            Else
+        '                results = searcher.Search(searchQuery, livePages, HitsLimit, queryOrder)
+        '            End If
 
         '            ' Log the search
         '            If _logSearches Then
@@ -1542,11 +1556,11 @@ Partial Public Class Cms
         '            ' Paging settings
         '            ' Hits is so lightweight that we don't have to filter it beforehand
         '            ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-        '            Dim totalResults As Long = results.ScoreDocs.Length 'TotalHits
+        '            Dim totalResults As Long = results.TotalHits
 
         '            pageCount = 0 'myAPI.GetRequestItemAsInteger("pageCount", _pagingDefaultSize)
         '            If pageCount <= 0 Then
-        '                pageCount = results.ScoreDocs.Length 'TotalHits
+        '                pageCount = results.TotalHits
         '            End If
 
         '            If totalResults = 0 Then
@@ -1576,10 +1590,10 @@ Partial Public Class Cms
 
         '            Dim artIdResults As New List(Of Long)
 
+
         '            ' Process the results
         '            If totalResults > 0 Then
         '                Dim sDoc As ScoreDoc
-        '                Dim thisArtIdList As String = ""
         '                For Each sDoc In results.ScoreDocs()
 
         '                    resultDoc = searcher.Doc(sDoc.Doc)
@@ -1599,41 +1613,11 @@ Partial Public Class Cms
         '                    ' Only process this result if it's in the paging zone
         '                    ' pageStart - 1 To pageEnd - 1
         '                    'don't add artId more than twice to results.
-        '                    'Dim thisArtId As Long
-        '                    'If Not resultDoc.GetField("artid") Is Nothing Then
-        '                    '    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
-        '                    'End If
-
         '                    Dim thisArtId As Long
         '                    If Not resultDoc.GetField("artid") Is Nothing Then
         '                        thisArtId = CInt(resultDoc.GetField("artid").StringValue)
-
-        '                        If thisArtIdList = "" Then
-        '                            thisArtIdList = thisArtId
-        '                        Else
-        '                            thisArtIdList = thisArtIdList & "," & thisArtId
-        '                        End If
         '                    End If
 
-        '                    '  Else
-        '                    ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-        '                    ' processInfo = "not found in live page filter"
-        '                    'End If
-
-        '                Next
-        '                'check whether logged in user is csuser and skip checking status
-        '                Dim nUserId As Integer = myWeb.moSession("nUserId")
-        '                Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-        '                'check artid/product is active
-        '                If Not bCsUser Then
-        '                    thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
-        '                End If
-
-        '                Dim thisArtIdLists As String() = thisArtIdList.Split(New Char() {","c})
-
-        '                ' Use For Each loop over thisArtId and display them
-
-        '                For Each thisArtId As String In thisArtIdLists
         '                    If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
         '                        If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
@@ -1664,8 +1648,12 @@ Partial Public Class Cms
         '                                        url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
         '                                    End If
         '                                End If
+
+
         '                            End If
         '                        End If
+
+
 
         '                        result = moContextNode.OwnerDocument.CreateElement("Content")
         '                        result.SetAttribute("type", "SearchResult")
@@ -1674,6 +1662,61 @@ Partial Public Class Cms
 
         '                        For Each docField As Field In resultDoc.GetFields()
 
+        '                            ' Don't add info to certain fields
+        '                            If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+        '                                result.SetAttribute(docField.Name, docField.StringValue)
+        '                            End If
+
+        '                            If docField.Name = "abstract" Then
+
+        '                                ' Try to output this as Xml
+        '                                Dim innerString As String = docField.StringValue & ""
+        '                                processInfo = innerString
+        '                                Try
+        '                                    result.InnerXml = innerString.Trim
+        '                                Catch ex As Exception
+        '                                    innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+        '                                    processInfo = innerString
+        '                                    result.InnerText = innerString
+        '                                End Try
+
+        '                            End If
+        '                        Next
+        '                        result.SetAttribute("url", url)
+
+        '                        moContextNode.AppendChild(result)
+        '                        resultsCount = resultsCount + 1
+        '                    End If
+
+        '                    '  Else
+        '                    ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+        '                    ' processInfo = "not found in live page filter"
+        '                    'End If
+
+        '                Next
+        '            End If
+
+        '            dateFinish = Now
+        '            resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
+        '            'resultsCount = results.TotalHits()
+        '        Else
+        '            resultsXML.SetAttribute("Time", "0")
+        '        End If
+
+        '        'Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
+
+        '        resultsXML.SetAttribute("SearchString", cQuery)
+        '        resultsXML.SetAttribute("searchType", "INDEX")
+        '        resultsXML.SetAttribute("type", "SearchHeader")
+        '        resultsXML.SetAttribute("Hits", resultsCount)
+
+        '        moContextNode.AppendChild(resultsXML)
+
+
+        '    Catch ex As Exception
+        '        returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
+        '    End Try
+        'End Sub
 
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
             PerfMon.Log("Search", "IndexQuery")
@@ -1808,7 +1851,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortDir", myAPI.moRequest("sortDir"))
 
                     Dim artIdResults As New List(Of Long)
-                    Dim thisArtIdList As String = ""
+
                     ' Process the results
                     If totalResults > 0 Then
                         Dim sDoc As ScoreDoc
@@ -1988,8 +2031,12 @@ Partial Public Class Cms
                                                     url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
                                                 End If
                                             End If
+
+
                                         End If
                                     End If
+
+
 
                                     result = moContextNode.OwnerDocument.CreateElement("Content")
                                     result.SetAttribute("type", "SearchResult")
@@ -1999,30 +2046,8 @@ Partial Public Class Cms
                                     For Each docField As Field In resultDoc.GetFields()
 
                                         ' Don't add info to certain fields
-                                        'If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                        '    result.SetAttribute(docField.Name, docField.StringValue)
-                                        'End If
-
                                         If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-
-                                            'check whether logged in user is csuser and skip checking status
-                                            Dim nUserId As Integer = myWeb.moSession("nUserId")
-                                            If myWeb.moDbHelper Is Nothing Then
-                                                myWeb.moDbHelper = myWeb.GetDbHelper()
-                                            End If
-                                            'nUserId = 3324
-                                            Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                                            'check artid/product is active
-
-                                            If Not bCsUser Then
-                                                Dim bFlag As Boolean = myWeb.CheckProductStatus(thisArtId)
-                                                ' CheckProductStatus
-                                                If bFlag Then
-                                                    result.SetAttribute(docField.Name, docField.StringValue) 'search only active products
-                                                End If
-                                            Else
-                                                result.SetAttribute(docField.Name, docField.StringValue) 'search all the products
-                                            End If
+                                            result.SetAttribute(docField.Name, docField.StringValue)
                                         End If
 
                                         If docField.Name = "abstract" Then
@@ -2076,6 +2101,7 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
+
         Sub XPathQuery(ByVal sSearch As String, ByVal cContentType As String)
             PerfMon.Log("Search", "XPathQuery")
             Dim sXpath As String = ""
