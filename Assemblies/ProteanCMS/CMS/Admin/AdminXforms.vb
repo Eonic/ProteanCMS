@@ -2827,10 +2827,6 @@ Partial Public Class Cms
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
-
-                    End If
-                    End If
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
