@@ -189,6 +189,9 @@ Public Class IndexerAsync
                 If moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then
                     minInterval = moConfig("SiteSearchIndexResultPaging")
                 End If
+                'If moConfig("SiteSearchIndexResultPaging") <> "" Then
+                '    minInterval = moConfig("SiteSearchIndexResultPaging")
+                'End If
 
                 If Not oLastIndexInfo Is Nothing Then
                     Dim oLastInfoElmt As XmlElement = oLastIndexInfo.DocumentElement
