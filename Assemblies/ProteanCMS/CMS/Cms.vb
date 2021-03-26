@@ -8555,7 +8555,7 @@ Public Class Cms
         Try
             Dim oDr As System.Data.SqlClient.SqlDataReader
             Dim sSQL As String = "select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
-            sSQL = sSQL & " where  c.ncontentkey = " & nArtId.ToString()
+            sSQL = sSQL & " where A.nstatus=1 and  c.ncontentkey = " & nArtId.ToString()
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If
