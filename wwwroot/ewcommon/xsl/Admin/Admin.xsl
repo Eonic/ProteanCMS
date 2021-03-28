@@ -2536,6 +2536,7 @@
   </xsl:template>
     <!-- -->
   <xsl:template match="Page[@layout='ByType']" mode="Admin">
+    <xsl:variable name="contentType" select="@ewCmd2"/>
     <div id="tpltAdvancedMode">   
             <div class="row header-panels">
               <div class="col-md-6">
@@ -2566,6 +2567,7 @@
                     </div>
                   </div>
                 </form>
+                            
               <!--xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/-->
               </div>
             </div>
@@ -2614,6 +2616,8 @@
           </div>
 
         </div>
+
+
               <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
                 <xsl:variable name="href">
                   <xsl:text>?ewCmd=AddContent</xsl:text>
@@ -2699,36 +2703,35 @@
 								<span class="input-group-btn">
 									<button type="submit" class="btn btn-primary">Go</button>
 								</span>
-							</div>
 						</div>
-					</div>
-					<xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
-						<xsl:variable name="href">
-							<xsl:text>?ewCmd=AddContent</xsl:text>
-							<xsl:text>&amp;pgid=</xsl:text>
-							<xsl:value-of select="/Page/@id"/>
-							<xsl:text>&amp;type=</xsl:text>
-							<xsl:value-of select="$contentType"/>
-						</xsl:variable>
-						<a class="btn btn-primary btn-xs principle" href="{$href}">
-							<i class="fa fa-plus">
-								<xsl:text> </xsl:text>
-							</i>
-							<xsl:text> </xsl:text>Add
-						</a>
-					</xsl:if>
-				</xsl:if>
-				<xsl:if test="$page/ContentDetail/@total > 0">
-					<div class="pull-right-stepper">
-						<xsl:apply-templates select="/" mode="adminStepper">
-							<xsl:with-param name="itemCount" select="'100'"/>
-							<xsl:with-param name="itemTotal" select="$total"/>
-							<xsl:with-param name="startPos" select="$startPos"/>
-							<xsl:with-param name="path" select="$queryString"/>
-							<xsl:with-param name="itemName" select="$title"/>
-						</xsl:apply-templates>
-					</div>
-				</xsl:if>
+      </div>
+          
+							</div>
+
+          </xsl:if>
+
+
+        <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
+          <div class="pull-right">
+            <xsl:variable name="href">
+              <xsl:text>?ewCmd=AddContent</xsl:text>
+              <xsl:text>&amp;pgid=</xsl:text>
+              <xsl:value-of select="/Page/@id"/>
+              <xsl:text>&amp;type=</xsl:text>
+              <xsl:value-of select="$contentType"/>
+            </xsl:variable>
+            <a class="btn btn-primary" href="{$href}">
+              <i class="fa fa-plus">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Add <xsl:value-of select="$contentType"/>
+            </a>
+            &#160;
+          </div>
+        </xsl:if>
+
+
+        
 				<h6 class="panel-title">
 					<i class="fa fa-chevron-down">
 						<xsl:text> </xsl:text>
@@ -2736,6 +2739,45 @@
 					<xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
 				</h6>
 			</div>
+      <div class="list-controls row">
+        <div class="col-md-8">
+        <xsl:if test="$page/ContentDetail/@total > 0">
+
+          <div class="pull-right-stepper">
+            <xsl:apply-templates select="/" mode="adminStepper">
+              <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
+              <xsl:with-param name="itemTotal" select="$total"/>
+              <xsl:with-param name="startPos" select="$startPos"/>
+              <xsl:with-param name="path" select="$queryString"/>
+              <xsl:with-param name="itemName" select="$title"/>
+            </xsl:apply-templates>
+          </div>
+        </xsl:if>
+      </div>
+        <xsl:if test="$page/ContentDetail/@total > 0">
+          <div class="col-md-2">
+            <div class="input-group">
+              <label class="input-group-addon">Items Per Page</label>
+              <select class="form-control" name="PageCount" id="PageCount">
+                <option value="50">100</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+                <option value="All">All</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <label class="input-group-addon">Sort By</label>
+              <select class="form-control" name="SortBy" id="SortBy">
+                <option value="Name">Name A-Z</option>
+                <option value="PagePosition">Page Position</option>
+              </select>
+            </div>
+          </div>
+        </xsl:if>
+      </div>
 			<table class="table table-striped-2">
 				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
 					<tr>
@@ -2749,6 +2791,20 @@
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
 			</table>
+      <div class="panel-header">
+        
+        <xsl:if test="$page/ContentDetail/@total > 0">
+          <div class="pull-right-stepper">
+            <xsl:apply-templates select="/" mode="adminStepper">
+              <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
+              <xsl:with-param name="itemTotal" select="$total"/>
+              <xsl:with-param name="startPos" select="$startPos"/>
+              <xsl:with-param name="path" select="$queryString"/>
+              <xsl:with-param name="itemName" select="$title"/>
+            </xsl:apply-templates>
+          </div>
+        </xsl:if>
+      </div>
 		</div>
 	</form>
 </xsl:template>

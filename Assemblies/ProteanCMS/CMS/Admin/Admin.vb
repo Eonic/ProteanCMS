@@ -785,10 +785,18 @@ ProcessFlow:
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
+                                    Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                                    Select Case myWeb.moRequest("sortby")
+                                        Case "name"
+                                            cSort = "|ASC_c.cContentName"
+                                        Case Else
+                                            cSort = "|ASC_cl.nDisplayOrder"
+                                    End Select
+
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & "|ASC_cl.nDisplayOrder", FilterSQL, "", oPageDetail)
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
