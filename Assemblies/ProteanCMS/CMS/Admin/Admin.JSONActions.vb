@@ -211,29 +211,46 @@ Partial Public Class Cms
                         Dim sSql As String = "SELECT C.nContentKey,"
                         sSql &= " C.cContentName,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'int') AS lineTension,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@link)[1]', 'Varchar(100)') AS url,"
-                        sSql &= " CONVERT(XML, CL.cContentXmlBrief).value('(Content/@xLoc)[1]', 'Varchar(10)') AS xLoc,"
-                        sSql &= " CONVERT(XML, CL.cContentXmlBrief).value('(Content/@yLoc)[1]', 'Varchar(10)') AS yLoc,"
-                        sSql &= " CL.cContentName AS title"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
+                        sSql &= " '' AS url,"
+                        sSql &= " P.ProductId AS productId,"
+                        sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"
+                        sSql &= " CD.D.value('(@y)[1]', 'Varchar(10)') AS yLoc"
                         sSql &= " FROM tblContentRelation CR"
                         sSql &= " JOIN tblContent C ON C.nContentKey = CR.nContentChildId"
-                        sSql &= " OUTER APPLY ("
-                        sSql &= " SELECT CONVERT(XML, C1.cContentXmlBrief) AS cContentXmlBrief, C1.cContentName"
+                        sSql &= " OUTER APPLY"
+                        sSql &= " ("
+                        sSql &= " SELECT CR1.nContentChildId AS ProductId"
                         sSql &= " FROM tblContentRelation CR1"
                         sSql &= " JOIN tblContent C1 ON C1.nContentKey = CR1.nContentChildId"
-                        sSql &= " WHERE CR1.nContentParentId = CR.nContentChildId AND C1.cContentSchemaName = 'ChartLabel'"
-                        sSql &= " ) CL"
+                        sSql &= " WHERE CR1.nContentParentId = C.nContentKey AND C1.cContentSchemaName = 'Product'"
+                        sSql &= " ) P"
+                        sSql &= " OUTER APPLY (SELECT CAST(C.cContentXmlBrief as xml) as cContentXmlBriefxml) CB"
+                        sSql &= " OUTER APPLY CB.cContentXmlBriefxml.nodes('/Content/dataset/datapoint') as CD(D) "
                         sSql &= " WHERE nContentParentId = " & chartContentKey & " AND C.cContentSchemaName = 'ChartDataSet'"
 
                         dsChartData = myWeb.moDbHelper.GetDataSet(sSql, "ChartDataSet", "Chart")
 
-                        Dim chartXml As String = dsChartData.GetXml()
-                        Dim xmlDoc As New XmlDocument
-                        xmlDoc.LoadXml(chartXml)
+                        If Not dsChartData Is Nothing Then
+                            'Update the contentUrls
+                            If dsChartData.Tables.Count > 0 Then
+                                For Each oRow As DataRow In dsChartData.Tables(0).Rows
+                                    If Not oRow("productId") Is Nothing And Not oRow("productId") Is System.DBNull.Value Then
+                                        oRow("url") = myWeb.GetContentUrl(oRow("productId"))
+                                    End If
+                                Next
+                            End If
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-                        Return jsonString.Replace("""@", """_")
+                            Dim chartXml As String = dsChartData.GetXml()
+                            Dim xmlDoc As New XmlDocument
+                            xmlDoc.LoadXml(chartXml)
+
+                            Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                            Return jsonString.Replace("""@", """_")
+                        End If
+
+                        Return String.Empty
+
                     End If
                     Return JsonResult
                 Catch ex As Exception
