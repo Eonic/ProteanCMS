@@ -1780,7 +1780,7 @@ Partial Public Class Cms
 
                                 End Select
 
-                            Else
+                                Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
                                 moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
