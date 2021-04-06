@@ -459,8 +459,9 @@ Partial Public Class Cms
 
                         Case "302Redirect"
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
-
-                End Select
+                        Case Else
+            'do nothing
+            End Select
             End If
             Return result
             End Function
