@@ -215,9 +215,9 @@ Public Class Cms
                 PerfMon.Log("Web", "New")
             End If
 
-            ' If moDbHelper Is Nothing Then
-            ' moDbHelper = GetDbHelper()
-            '  End If
+            If moDbHelper Is Nothing Then
+                moDbHelper = GetDbHelper()
+            End If
             ' Open()
             '
         Catch ex As Exception
@@ -8552,25 +8552,41 @@ Public Class Cms
             returnException(msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug)
         End Try
     End Sub
-    Public Function CheckProductStatus(ByVal nArtId As Long) As Boolean
+    ''' <summary>
+    ''' get active productslist
+    ''' </summary>
+    ''' <param name="nArtId"></param>
+    ''' <returns></returns>
+    Public Function CheckProductStatus(ByVal nArtId As String) As String
         Try
             Dim oDr As System.Data.SqlClient.SqlDataReader
-            Dim sSQL As String = "select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
-            sSQL = sSQL & " where A.nstatus=1 and  c.ncontentkey = " & nArtId.ToString()
+            Dim sSQL As String = "DECLARE @List VARCHAR(8000)
+
+SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
+from tblcontent C 
+ inner join tblAudit A on C.nAuditId = A.nAuditKey 
+ where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
+            sSQL = sSQL & " SELECT @List "
+
+            '"select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
+            'sSQL = sSQL & " where A.nstatus=1 and  c.ncontentkey in ( " & nArtId.ToString() & " )"
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If
             oDr = moDbHelper.getDataReader(sSQL)
             If Not oDr Is Nothing Then
                 If oDr.HasRows Then
-                    Return True
+                    While oDr.Read
+                        Return oDr(0).ToString()
+                    End While
+
                 End If
             Else
-                Return False
+                Return ""
             End If
 
         Catch ex As Exception
-            Return False
+            Return ""
         End Try
 
     End Function
