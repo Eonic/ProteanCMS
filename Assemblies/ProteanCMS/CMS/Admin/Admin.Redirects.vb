@@ -497,8 +497,8 @@ Partial Public Class Cms
                         strOldurl = strarr(0)
                     End If
 
-            Select Case sType
-            Case "Page"
+                    Select Case sType
+                        Case "Page"
                             sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
                             sOldUrl = sUrl
 
@@ -529,19 +529,18 @@ Partial Public Class Cms
                             'End If
                     End Select
 
-            Select Case sRedirectType
-            Case "301Redirect"
+                    Select Case sRedirectType
+                        Case "301Redirect"
 
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
                         Case "302Redirect"
-                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
-
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case Else
-            'do nothing
-            End Select
-            End If
-            Return result
+                            'do nothing
+                    End Select
+                End If
+                Return result
             End Function
         End Class
     End Class
