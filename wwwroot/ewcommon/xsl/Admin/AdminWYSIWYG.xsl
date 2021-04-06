@@ -143,7 +143,11 @@
         <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js</xsl:text>
+        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+	<xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>

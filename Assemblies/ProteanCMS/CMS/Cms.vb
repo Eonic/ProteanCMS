@@ -6760,6 +6760,7 @@ Public Class Cms
 
                 oContentDetails.SetAttribute("start", nStart)
                 oContentDetails.SetAttribute("total", nTotal)
+                oContentDetails.SetAttribute("rows", nRows)
 
             End If
 
