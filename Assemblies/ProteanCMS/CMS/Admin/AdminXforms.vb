@@ -2805,15 +2805,6 @@ Partial Public Class Cms
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
 
-                    If (cModuleType = "FormattedText") Then
-                        If moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content/@mobileview") Is Nothing Then
-                            Dim viewElmnt As XmlElement = moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief/Content")
-                            viewElmnt.SetAttribute("mobileview", "true")
-                            moXformElmt.SelectSingleNode("model/instance/tblContent/cContentXmlBrief").AppendChild(viewElmnt)
-
-                        End If
-                    End If
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
