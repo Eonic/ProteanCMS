@@ -2566,7 +2566,6 @@
                 </div>
               </fieldset>
             </div>
-
             <ul>
               <li>
                 <button type="button" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave">301:  We will Permanently redirect</button>
@@ -2580,7 +2579,7 @@
               </li>
               <br></br>
               <li>
-                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404: No, the old url will show 'page not found'</button>
+                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404: page not found</button>
               </li>
             </ul>
 
