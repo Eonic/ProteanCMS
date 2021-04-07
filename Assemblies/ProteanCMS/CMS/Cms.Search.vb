@@ -1300,54 +1300,40 @@ Partial Public Class Cms
                             If i > (skipRecords + takeRecord) - 1 Then
                                 Exit For
                             End If
+                            resultDoc = searcher.Doc(scoreDocs(i).Doc)
+                            pageIdField = resultDoc.GetField("pgid")
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
+                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            Else
+                                pageId = 0
+                            End If
 
-                        Next
-                        ' End If
-                    Else
-                        ' Process the results
-                        If totalResults > 0 Then
-                            Dim sDoc As ScoreDoc
-                            For Each sDoc In results.ScoreDocs()
+                            url = "" ' this is the link for the page
 
-                                resultDoc = searcher.Doc(sDoc.Doc)
+                            ' Get the menuitem element from the xml
+                            If NodeState(moPageXml.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
 
-                                pageIdField = resultDoc.GetField("pgid")
-                                If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
-                                    pageId = Convert.ToInt32(pageIdField.StringValue)
-                                Else
-                                    pageId = 0
+                                ' Only process this result if it's in the paging zone
+                                ' pageStart - 1 To pageEnd - 1
+
+                                'don't add artId more than twice to results.
+                                Dim thisArtId As Long = 0
+
+                                If Not resultDoc.GetField("artid") Is Nothing Then
+                                    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
                                 End If
 
-                                url = "" ' this is the link for the page
-
-                                ' Get the menuitem element from the xml
-                                If NodeState(moPageXml.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
-
-                                    ' Only process this result if it's in the paging zone
-                                    ' pageStart - 1 To pageEnd - 1
-
-                                    'don't add artId more than twice to results.
-                                    Dim thisArtId As Long = 0
-
-                                    If Not resultDoc.GetField("artid") Is Nothing Then
-                                        thisArtId = CInt(resultDoc.GetField("artid").StringValue)
-                                    End If
-
+                                If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
                                     If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
                                         If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
-                                        If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
-                                            If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
-                                                If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
-                                                url = resultDoc.GetField("url").StringValue & ""
+                                        url = resultDoc.GetField("url").StringValue & ""
 
                                         ' Build the URL
                                         If url = "" Then
                                             url = menuItem.GetAttribute("url")
                                             ' Add the artId, if exists
                                             If Not resultDoc.GetField("artid") Is Nothing Then
-
-
                                                 If resultDoc.GetField("contenttype") IsNot Nothing _
                                                         AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
                                                     url = resultDoc.GetField("url").StringValue
@@ -1367,11 +1353,8 @@ Partial Public Class Cms
                                                     End If
                                                 End If
 
-
                                             End If
                                         End If
-
-
 
                                         result = moPageXml.CreateElement("Content")
                                         result.SetAttribute("type", "SearchResult")
@@ -1406,13 +1389,16 @@ Partial Public Class Cms
                                         resultsCount = resultsCount + 1
                                     End If
 
-                                Else
-                                    ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-                                    processInfo = "not found in live page filter"
                                 End If
 
-                            Next
-                        End If
+
+                            Else
+                                ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+                                processInfo = "not found in live page filter"
+                            End If
+
+                        Next
+
                     End If
 
                     dateFinish = Now
