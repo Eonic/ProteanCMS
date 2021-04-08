@@ -417,53 +417,57 @@ Partial Public Class Cms
 
 
 
-            'Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef oRedirectChildPage As Boolean)
+            Public Function RedirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal pgId As Integer = 0) As String
 
-            Dim result As String = ""
-            If oRedirectType IsNot Nothing And oRedirectType <> "" Then
+                Dim result As String = ""
+                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
-            Dim strOldurl As String = ""
-            If myWeb.moConfig("PageURLFormat") = "hyphens" Then
+                    Dim strOldurl As String = ""
+                    If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                         sNewUrl = sNewUrl.TrimEnd()
                         sOldUrl = sOldUrl.Replace(" ", "-")
                         sNewUrl = sNewUrl.Replace(" ", "-")
                     End If
-            If pageUrl IsNot Nothing And pageUrl <> "" Then
+                    If pageUrl IsNot Nothing And pageUrl <> "" Then
                         strurl = pageUrl
                         Dim strarr() As String
                         strarr = strurl.Split("?"c)
                         strurl = strarr(0)
                     End If
 
-            Select Case flag
-            Case "Page"
-                            oNewUrl = strOldurl.Replace(oOldUrl, oNewUrl)
-                            oOldUrl = strOldurl
+                    Select Case sType
+                        Case "Page"
+                            oNewUrl = strurl.Replace(oOldUrl, oNewUrl)
+                            oOldUrl = strurl
                         Case "Product"
-            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
                                 oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
                                 oOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oOldUrl
                             Else
 
-            Dim url As String = myWeb.GetContentUrl(pgId)
+                                Dim url As String = myWeb.GetContentUrl(pgId)
                                 oOldUrl = strOldurl & url & oOldUrl
                                 oNewUrl = strOldurl & url & oNewUrl
                             End If
-            'End If
-            End Select
+                        Case Else
+                            'do nothing
 
-            Select Case oRedirectType
-            Case "301Redirect"
+                    End Select
+
+                    Select Case oRedirectType
+                        Case "301Redirect"
 
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
                         Case "302Redirect"
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+                        Case "302Redirect"
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case Else
-            'do nothing
-            End Select
-            End If
-            Return result
+                            'do nothing
+                    End Select
+                End If
+                Return result
             End Function
         End Class
     End Class
