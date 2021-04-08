@@ -522,7 +522,9 @@ Partial Public Class Cms
                                 sOldUrl = sUrl & url & "/" & sOldUrl
                                 sNewUrl = sUrl & url & "/" & sNewUrl
                             End If
-                            'End If
+                        Case Else
+                            'do nothing
+
                     End Select
 
                     Select Case sRedirectType
@@ -530,6 +532,8 @@ Partial Public Class Cms
 
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
+                        Case "302Redirect"
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case "302Redirect"
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case Else
