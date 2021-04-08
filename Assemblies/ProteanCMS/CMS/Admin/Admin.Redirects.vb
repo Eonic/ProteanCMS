@@ -453,7 +453,7 @@ Partial Public Class Cms
             End Function
 
 
-            Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
+            Public Function RedirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal pgId As Integer = 0) As String
 
                 Dim result As String = ""
                 If oRedirectType IsNot Nothing And oRedirectType <> "" Then
@@ -470,7 +470,7 @@ Partial Public Class Cms
                         strurl = strarr(0)
                     End If
 
-                    Select Case flag
+                    Select Case sType
                         Case "Page"
                             oNewUrl = strurl.Replace(oOldUrl, oNewUrl)
                             oOldUrl = strurl
@@ -484,6 +484,8 @@ Partial Public Class Cms
                                 oOldUrl = strurl & url & oOldUrl
                                 oNewUrl = strurl & url & oNewUrl
                             End If
+                        Case Else
+                            'do nothing
 
                     End Select
 
@@ -492,6 +494,8 @@ Partial Public Class Cms
 
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
+                        Case "302Redirect"
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case "302Redirect"
                             CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
                         Case Else
