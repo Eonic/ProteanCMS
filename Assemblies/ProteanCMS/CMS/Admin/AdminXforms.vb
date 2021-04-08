@@ -1725,13 +1725,13 @@ Partial Public Class Cms
 
                             If pgid > 0 Then
 
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
-                                'page Redirection
+                                'page redirection for hub
                                 Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                                 Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                Dim sType As String = "Page"
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.redirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, "Page", pgid)
+                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
                                 End If
 
                                 Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
@@ -2882,18 +2882,18 @@ Partial Public Class Cms
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
 
-                                Dim strNewUrl As String = ""
-                                Dim strOldurl As String = ""
+                                Dim sNewUrl As String = ""
+                                Dim sOldurl As String = ""
                                 Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-
+                                Dim sType As String = "Product"
                                 If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
-                                    strNewUrl = moRequest("productNewUrl").ToString()
+                                    sNewUrl = moRequest("productNewUrl").ToString()
                                 End If
                                 If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
                                     sOldurl = moRequest("productOldUrl").ToString()
                                 End If
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.redirectPage(moRequest("redirectType"), strOldurl, strNewUrl, moRequest("pageOldUrl"), False, "Product", pgid)
+                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), sOldurl, sNewUrl, moRequest("pageOldUrl"), False, sType, pgid)
 
                                     Dim obj As Admin.Redirects = New Admin.Redirects()
                                     If myWeb.moConfig("PageURLFormat") = "hyphens" Then
