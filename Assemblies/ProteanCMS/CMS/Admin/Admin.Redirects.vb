@@ -462,7 +462,7 @@ Partial Public Class Cms
             End Function
 
             Dim result As String = ""
-                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
+            If oRedirectType IsNot Nothing And oRedirectType <> "" Then
 
 
 
