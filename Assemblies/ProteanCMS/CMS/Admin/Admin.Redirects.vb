@@ -452,15 +452,6 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
-
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
-
             ''' <summary>
             ''' This is method which validates the page to redirect in edit mode if we change page url
             ''' -if its h
@@ -517,13 +508,43 @@ Partial Public Class Cms
                                 Next
 
                             Else
+                                'Case "Product"
+
+                                '    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
+                                '        sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
+                                '        sOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sOldUrl
+                                '    Else
+
+                                '        Dim url As String = myWeb.GetContentUrl(nPageId)
+                                '        sOldUrl = sUrl & url & sOldUrl
+                                '        sNewUrl = sUrl & url & sNewUrl
+                                '    End If
+                                Case Else
+                                '' check prefix condtional and then append it accordingly
+                                'If () Then
+                                '    Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
+                                '    Dim thisPrefix As String = ""
+                                '    Dim thisContentType As String = ""
+                                '    Dim i As Integer
+                                '    For i = 0 To prefixs.Length - 1
+                                '        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                '        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                '        If thisContentType = oDR(5).ToString() Then
+                                '            cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
+                                '            If moConfig("DetailPathTrailingSlash") = "on" Then
+                                '                cURL = cURL + "/"
+                                '            End If
+
+                                '        End If
+                                '    Next
+
+
+                                'Else
 
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
-                                sOldUrl = sUrl & url & "/" & sOldUrl
-                                sNewUrl = sUrl & url & "/" & sNewUrl
-                            End If
-                        Case Else
-                            'do nothing
+                                sOldUrl = sUrl & url & sOldUrl
+                                sNewUrl = sUrl & url & sNewUrl
+                            ' End If
 
                     End Select
 
