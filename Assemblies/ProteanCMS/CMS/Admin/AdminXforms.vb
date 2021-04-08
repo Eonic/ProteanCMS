@@ -1732,6 +1732,7 @@ Partial Public Class Cms
                                 Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
                                 Dim sType As String = "Page"
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
+
                                     oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
                                 End If
                             Else
