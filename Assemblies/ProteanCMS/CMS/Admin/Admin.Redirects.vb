@@ -458,7 +458,7 @@ Partial Public Class Cms
                 Dim result As String = ""
                 If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
 
-                    Dim strOldurl As String = ""
+                    Dim sUrl As String = ""
                     If myWeb.moConfig("PageURLFormat") = "hyphens" Then
                         sOldUrl = sOldUrl.Replace(" ", "-")
                         sNewUrl = sNewUrl.Replace(" ", "-")
@@ -472,8 +472,8 @@ Partial Public Class Cms
 
                     Select Case sType
                         Case "Page"
-                            sNewUrl = strurl.Replace(sOldUrl, sNewUrl)
-                            sOldUrl = strurl
+                            sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
+                            sOldUrl = sUrl
                         Case "Product"
                             If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
                                 sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
@@ -481,8 +481,8 @@ Partial Public Class Cms
                             Else
 
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
-                                sOldUrl = strurl & url & sOldUrl
-                                sNewUrl = strurl & url & sNewUrl
+                                sOldUrl = sUrl & url & sOldUrl
+                                sNewUrl = sUrl & url & sNewUrl
                             End If
                         Case Else
                             'do nothing
