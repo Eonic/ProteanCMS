@@ -500,31 +500,27 @@ Partial Public Class Cms
                             '    End If
                         Case Else
                             '' check prefix condtional and then append it accordingly
-                            'If () Then
-                            '    Dim prefixs() As String = moConfig("DetailPrefix").Split(",")
-                            '    Dim thisPrefix As String = ""
-                            '    Dim thisContentType As String = ""
-                            '    Dim i As Integer
-                            '    For i = 0 To prefixs.Length - 1
-                            '        thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
-                            '        thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                            '        If thisContentType = oDR(5).ToString() Then
-                            '            cURL = "/" & thisPrefix & "/" & oRe.Replace(oDR(1).ToString, "-").Trim("-")
-                            '            If moConfig("DetailPathTrailingSlash") = "on" Then
-                            '                cURL = cURL + "/"
-                            '            End If
+                            If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
+                                Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
+                                Dim thisPrefix As String = ""
+                                Dim thisContentType As String = ""
 
-                            '        End If
-                            '    Next
+                                Dim i As Integer
+                                For i = 0 To prefixs.Length - 1
+                                    thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                    thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                    If thisContentType = "Product" Then
+                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl
+                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl
+                                    End If
+                                Next
 
+                            Else
 
-                            'Else
-
-                            Dim url As String = myWeb.GetContentUrl(nPageId)
-                            sOldUrl = sUrl & url & sOldUrl
-                            sNewUrl = sUrl & url & sNewUrl
-                            ' End If
-
+                                Dim url As String = myWeb.GetContentUrl(nPageId)
+                                sOldUrl = sUrl & url & sOldUrl
+                                sNewUrl = sUrl & url & sNewUrl
+                            End If
                     End Select
 
                     Select Case sRedirectType
