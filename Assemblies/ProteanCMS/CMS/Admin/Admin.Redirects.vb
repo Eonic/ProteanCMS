@@ -544,8 +544,7 @@ Partial Public Class Cms
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
                                 sOldUrl = sUrl & url & sOldUrl
                                 sNewUrl = sUrl & url & sNewUrl
-                            ' End If
-
+                            End If
                     End Select
 
                     Select Case sRedirectType
