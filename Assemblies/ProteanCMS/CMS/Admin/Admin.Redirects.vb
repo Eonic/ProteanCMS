@@ -459,7 +459,7 @@ Partial Public Class Cms
                             CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
                         Case "302Redirect"
-                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
 
                         Case Else
                             'do nothing
