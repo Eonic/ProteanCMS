@@ -481,25 +481,17 @@ Partial Public Class Cms
                         Dim arr() As String
                         arr = sUrl.Split("?"c)
                         sUrl = arr(0)
+                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
                     End If
 
                     Select Case sType
                         Case "Page"
                             sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
                             sOldUrl = sUrl
-                            'Case "Product"
 
-                            '    If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                            '        sNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sNewUrl
-                            '        sOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & sOldUrl
-                            '    Else
-
-                            '        Dim url As String = myWeb.GetContentUrl(nPageId)
-                            '        sOldUrl = sUrl & url & sOldUrl
-                            '        sNewUrl = sUrl & url & sNewUrl
-                            '    End If
                         Case Else
-                            '' check prefix condtional and then append it accordingly
+
+                            ' If (sType = "Product") Then
                             If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
                                 Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
                                 Dim thisPrefix As String = ""
@@ -509,7 +501,7 @@ Partial Public Class Cms
                                 For i = 0 To prefixs.Length - 1
                                     thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
                                     thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
-                                    If thisContentType = "Product" Then
+                                    If thisContentType = sType Then
                                         sNewUrl = "/" & thisPrefix & "/" & sNewUrl
                                         sOldUrl = "/" & thisPrefix & "/" & sOldUrl
                                     End If
@@ -518,9 +510,10 @@ Partial Public Class Cms
                             Else
 
                                 Dim url As String = myWeb.GetContentUrl(nPageId)
-                                sOldUrl = sUrl & url & sOldUrl
-                                sNewUrl = sUrl & url & sNewUrl
+                                sOldUrl = sUrl & url & "/" & sOldUrl
+                                sNewUrl = sUrl & url & "/" & sNewUrl
                             End If
+                            'End If
                     End Select
 
                     Select Case sRedirectType
