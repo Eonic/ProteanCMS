@@ -325,8 +325,11 @@ Public Class Indexer
                                                 cRules = ""
 
                                                 Dim sPageUrl As String
+                                                Dim sStatus As String = ""
                                                 If Not oElmtURL Is Nothing Then
                                                     sPageUrl = oElmtURL.GetAttribute("url")
+                                                    sStatus = oElmtURL.GetAttribute("status")
+                                                    'DirectCast(oPageXml.SelectSingleNode("/html/head/meta[@name='abstract']/Content"), System.[Xml].XmlElement).GetAttribute("status")
                                                 End If
                                                 If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                                                 If (Not InStr(cRules, "NOINDEX") > 0) And Not (sPageUrl.StartsWith("http")) Then
