@@ -183,12 +183,12 @@ Public Class IndexerAsync
                 Dim oLastIndexInfo As New XmlDocument
                 oLastIndexInfo.Load(mcIndexWriteFolder & "/indexInfo.xml")
                 Dim minInterval As Int32 = 12
-                If moConfig("SiteSearchIndexMinInterval") <> "" Then
-                    minInterval = moConfig("SiteSearchIndexMinInterval")
-                End If
-                'If moConfig("SiteSearchIndexResultPaging") <> "" Then
-                '    minInterval = moConfig("SiteSearchIndexResultPaging")
+                'If moConfig("SiteSearchIndexMinInterval") <> "" Then
+                '    minInterval = moConfig("SiteSearchIndexMinInterval")
                 'End If
+                If moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then
+                    minInterval = moConfig("SiteSearchIndexResultPaging")
+                End If
 
                 If Not oLastIndexInfo Is Nothing Then
                     Dim oLastInfoElmt As XmlElement = oLastIndexInfo.DocumentElement
@@ -432,10 +432,6 @@ Public Class IndexerAsync
         End Try
     End Sub
 
-
-
-
-
     Private Sub StopIndex()
         PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
@@ -453,7 +449,6 @@ Public Class IndexerAsync
             bIsError = True
         End Try
     End Sub
-
 
     Private Sub CopyFolderContents(ByVal cLocation As String, ByVal cDestination As String)
         PerfMon.Log("Indexer", "CopyFolderContents")
