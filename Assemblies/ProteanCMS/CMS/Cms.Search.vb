@@ -422,10 +422,10 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
-                If HitsLimit = 0 Then HitsLimit = 300
-                pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                If pageSize = 0 Then pageSize = 300
+                    HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
+                    If HitsLimit = 0 Then HitsLimit = 300
+                    pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
+                    If pageSize = 0 Then pageSize = 300
                 End If
 
                 If Not cQuery.Equals("") Then
@@ -530,6 +530,8 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
                     resultsXML.SetAttribute("pageEnd", pageEnd)
+                    resultsXML.SetAttribute("nextPage", Page + 1)
+                    resultsXML.SetAttribute("siteSearchString", cQuery)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
@@ -537,14 +539,16 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("PerPageCount", PerPageCount)
 
-                    If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
+                    ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
+                    If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
                     Else
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
                     End If
                     resultsXML.SetAttribute("Hits", HitsLimit)
-                    If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
-                        resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount)
+                    'If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                    If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then 'allow paging for search index page result
+                        resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount + 1)
                     End If
 
                     Dim artIdResults As New List(Of Long)
@@ -578,9 +582,6 @@ Partial Public Class Cms
                             ' Get the menuitem element from the xml
                             If NodeState(moPageXml.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
 
-                                ' Only process this result if it's in the paging zone
-                                ' pageStart - 1 To pageEnd - 1
-
                                 'don't add artId more than twice to results.
                                 Dim thisArtId As Long
 
@@ -593,73 +594,6 @@ Partial Public Class Cms
                                         thisArtIdList = thisArtIdList & "," & thisArtId
                                     End If
                                 End If
-                                '' If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
-                                'If thisArtId = 0 Then
-                                '    If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
-
-                                '    url = resultDoc.GetField("url").StringValue & ""
-
-                                '    ' Build the URL
-                                '    If url = "" Then
-                                '        url = menuItem.GetAttribute("url")
-                                '        ' Add the artId, if exists
-                                '        If Not resultDoc.GetField("artid") Is Nothing Then
-
-
-                                '            If resultDoc.GetField("contenttype") IsNot Nothing _
-                                '                    AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                '                url = resultDoc.GetField("url").StringValue
-                                '            Else
-                                '                If moConfig("LegacyRedirect") = "on" Then
-                                '                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
-
-                                '                    Dim artName As String = ""
-                                '                    If resultDoc.GetField("name") IsNot Nothing Then
-                                '                        artName = resultDoc.GetField("name").StringValue
-                                '                        Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                '                        artName = oRe.Replace(artName, "-").Trim("-")
-                                '                        url &= artName
-                                '                    End If
-                                '                Else
-                                '                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
-                                '                End If
-                                '            End If
-
-                                '        End If
-                                '    End If
-
-                                '    result = moPageXml.CreateElement("Content")
-                                '    result.SetAttribute("type", "SearchResult")
-                                '    'result.SetAttribute("indexId", )
-                                '    result.SetAttribute("indexRank", sDoc.Score)
-
-                                '    For Each docField As Field In resultDoc.GetFields()
-
-                                '        ' Don't add info to certain fields
-                                '        If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                '            result.SetAttribute(docField.Name, docField.StringValue)
-                                '        End If
-
-                                '        If docField.Name = "abstract" Then
-
-                                '            ' Try to output this as Xml
-                                '            Dim innerString As String = docField.StringValue & ""
-                                '            processInfo = innerString
-                                '            Try
-                                '                result.InnerXml = innerString.Trim
-                                '            Catch ex As Exception
-                                '                innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
-                                '                processInfo = innerString
-                                '                result.InnerText = innerString
-                                '            End Try
-
-                                '        End If
-                                '    Next
-                                '    result.SetAttribute("url", url)
-
-                                '    moContextNode.AppendChild(result)
-                                '    resultsCount = resultsCount + 1
-                                'End If
 
                             Else
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
@@ -669,18 +603,17 @@ Partial Public Class Cms
                         Next
 
                         'check whether logged in user is csuser and skip checking status
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                            Dim nUserId As Integer = myWeb.moSession("nUserId")
+                            bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        End If
                         'check artid/product is active
-                        If Not bCsUser Then
+                        If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        ' Dim thisArtIdLists As String() = thisArtIdList.Split(New Char() {","c})
                         skipRecords = (myWeb.moRequest("page")) * PerPageCount
-                        'For Each sDoc In results.ScoreDocs()
-
-                        '    resultDoc = searcher.Doc(sDoc.Doc)
 
                         For i As Integer = skipRecords To results.TotalHits - 1
 
@@ -788,13 +721,16 @@ Partial Public Class Cms
                                         resultsCount = resultsCount + 1
                                     End If
 
-                                Else
-                                    ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-                                    processInfo = "not found in live page filter"
                                 End If
 
-                            Next
-                        End If
+
+                                Else
+                                ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+                                processInfo = "not found in live page filter"
+                            End If
+
+                        Next
+
                     End If
 
                     dateFinish = Now
@@ -803,8 +739,6 @@ Partial Public Class Cms
                 Else
                     resultsXML.SetAttribute("Time", "0")
                 End If
-
-                'Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
 
                 resultsXML.SetAttribute("SearchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
@@ -1232,7 +1166,6 @@ Partial Public Class Cms
                                 End If
                             End If
                         Next
-
                     End If
 
                     dateFinish = Now
