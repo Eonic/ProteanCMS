@@ -66,7 +66,7 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
-                        If isParentPage(pageId) = "True" Then
+                        If isParentPage = "True" Then
                             Select Case redirectType
                                 Case "301Redirect"
 
@@ -416,48 +416,78 @@ Partial Public Class Cms
 
 
 
-
-            Public Function redirectPage(ByRef oRedirectType As String, ByRef oOldUrl As String, ByRef oNewUrl As String, ByRef pageUrl As String, Optional ByVal oRedirectChildPage As Boolean = False, Optional ByVal flag As String = "", Optional ByVal pgId As Integer = 0) As String
+            ''' <summary>
+            ''' This is method which validates the page to redirect in edit mode if we change page url
+            ''' -if its h
+            ''' </summary>
+            ''' <param name="sRedirectType"></param>
+            ''' <param name="sOldUrl"></param>
+            ''' <param name="sNewUrl"></param>
+            ''' <param name="sPageUrl"></param>
+            ''' <param name="bRedirectChildPage"></param>
+            ''' <param name="sType"></param>
+            ''' <param name="nPageId"></param>
+            ''' <returns></returns>
+            ''' sRedirectType can be object type to validate.
+            Public Function RedirectPage(ByRef sRedirectType As String, ByRef sOldUrl As String, ByRef sNewUrl As String, ByRef sPageUrl As String, Optional ByVal bRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal nPageId As Integer = 0) As String
 
                 Dim result As String = ""
-                If oRedirectType IsNot Nothing And oRedirectType <> "" Then
+                If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
 
-                    Dim strurl As String = ""
+                    Dim sUrl As String = ""
                     If myWeb.moConfig("PageURLFormat") = "hyphens" Then
-                        oOldUrl = oOldUrl.Replace(" ", "-")
-                        oNewUrl = oNewUrl.Replace(" ", "-")
+                        sNewUrl = sNewUrl.TrimEnd()
+                        sOldUrl = sOldUrl.Replace(" ", "-")
+                        sNewUrl = sNewUrl.Replace(" ", "-")
                     End If
-                    If pageUrl IsNot Nothing And pageUrl <> "" Then
-                        strurl = pageUrl
-                        Dim strarr() As String
-                        strarr = strurl.Split("?"c)
-                        strurl = strarr(0)
+                    If sPageUrl IsNot Nothing And sPageUrl <> String.Empty Then
+                        sUrl = sPageUrl
+                        Dim arr() As String
+                        arr = sUrl.Split("?"c)
+                        sUrl = arr(0)
+                        sUrl = sUrl.Substring(0, sUrl.LastIndexOf("/"))
                     End If
 
-                    Select Case flag
+                    Select Case sType
                         Case "Page"
-                            oNewUrl = strurl.Replace(oOldUrl, oNewUrl)
-                            oOldUrl = strurl
-                        Case "Product"
-                            If myWeb.moConfig("RewriteRuleForProduct") IsNot Nothing And (myWeb.moConfig("RewriteRuleForProduct") <> "") Then
-                                oNewUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oNewUrl
-                                oOldUrl = myWeb.moConfig("RewriteRuleForProduct").ToString() & oOldUrl
+                            sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
+                            sOldUrl = sUrl
+
+                        Case Else
+
+                            ' If (sType = "Product") Then
+                            If myWeb.moConfig("DetailPrefix") IsNot Nothing And (myWeb.moConfig("DetailPrefix") <> "") Then
+                                Dim prefixs() As String = myWeb.moConfig("DetailPrefix").Split(",")
+                                Dim thisPrefix As String = ""
+                                Dim thisContentType As String = ""
+
+                                Dim i As Integer
+                                For i = 0 To prefixs.Length - 1
+                                    thisPrefix = prefixs(i).Substring(0, prefixs(i).IndexOf("/"))
+                                    thisContentType = prefixs(i).Substring(prefixs(i).IndexOf("/") + 1, prefixs(i).Length - prefixs(i).IndexOf("/") - 1)
+                                    If thisContentType = sType Then
+                                        sNewUrl = "/" & thisPrefix & "/" & sNewUrl
+                                        sOldUrl = "/" & thisPrefix & "/" & sOldUrl
+                                    End If
+                                Next
+
                             Else
 
-                                Dim url As String = myWeb.GetContentUrl(pgId)
-                                oOldUrl = strurl & url & oOldUrl
-                                oNewUrl = strurl & url & oNewUrl
+                                Dim url As String = myWeb.GetContentUrl(nPageId)
+                                sOldUrl = sUrl & url & "/" & sOldUrl
+                                sNewUrl = sUrl & url & "/" & sNewUrl
                             End If
-
+                            'End If
                     End Select
 
-                    Select Case oRedirectType
+                    Select Case sRedirectType
                         Case "301Redirect"
 
-                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
 
                         Case "302Redirect"
-                            CreateRedirect(oRedirectType, oOldUrl, oNewUrl, "", pgId, oRedirectChildPage)
+                            CreateRedirect(sRedirectType, sOldUrl, sNewUrl, "", nPageId, bRedirectChildPage)
+
                         Case Else
                             'do nothing
                     End Select

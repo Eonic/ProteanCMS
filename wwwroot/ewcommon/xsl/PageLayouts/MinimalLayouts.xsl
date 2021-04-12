@@ -4986,87 +4986,87 @@
         <xsl:with-param name="class" select="'listItem list-group-item'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <h3 class="title">
-        <a href="{$parentURL}">
-          <span itemprop="name">
-            <xsl:value-of select="name"/>
-          </span>
-        </a>
-      </h3>
-      <xsl:apply-templates select="." mode="displayLogo"/>
-      <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
-        <xsl:if test="Organization/location/PostalAddress/name!='' or Organization/location/PostalAddress/streetAddress!='' or Organization/location/PostalAddress/addressLocality!='' or Organization/location/PostalAddress/addressRegion!='' or Organization/location/PostalAddress/postalCode!=''"> </xsl:if>
-        <xsl:if test="Organization/location/PostalAddress/name!=''">
-          <span itemprop="name">
-            <xsl:value-of select="Organization/location/PostalAddress/name"/>
-          </span>
-          <br />
-        </xsl:if>
-        <xsl:if test="Organization/location/PostalAddress/streetAddress!=''">
-          <span itemprop="streetAddress">
-            <xsl:value-of select="Organization/location/PostalAddress/streetAddress"/>
-          </span>
-          <br />
-        </xsl:if>
-        <xsl:if test="Organization/location/PostalAddress/addressLocality!=''">
-          <span itemprop="addressLocality">
-            <xsl:value-of select="Organization/location/PostalAddress/addressLocality"/>
-          </span>
-          <br />
-        </xsl:if>
-        <xsl:if test="Organization/location/PostalAddress/addressRegion!=''">
-          <span itemprop="addressRegion">
-            <xsl:value-of select="Organization/location/PostalAddress/addressRegion"/>
-          </span>
-          <br />
-        </xsl:if>
-        <xsl:if test="Organization/location/PostalAddress/postalCode!=''">
-          <span itemprop="postalCode">
-            <xsl:value-of select="Organization/location/PostalAddress/postalCode"/>
-          </span>
-        </xsl:if>
-      </div>
-      <xsl:if test="Organization/telephone/node()!=''">
-        <p class="tel">
-          <strong>
-            <xsl:call-template name="term2007" />
-            <xsl:text>:&#160;</xsl:text>
-          </strong>
-          <xsl:apply-templates select="Organization/telephone" mode="cleanXhtml"/>
-        </p>
-      </xsl:if>
-      <xsl:if test="url/node()!=''">
-        <p class="web">
-          <strong>
-            <xsl:call-template name="term2010" />
-            <xsl:text>:&#160;</xsl:text>
-          </strong>
-          <a href="{url/node()}">
-            <xsl:apply-templates select="url" mode="cleanXhtml"/>
+      <div class="lIinner">
+        <h3 class="title">
+          <a href="{$parentURL}">
+            <span itemprop="name">
+              <xsl:value-of select="name"/>
+            </span>
           </a>
-        </p>
-      </xsl:if>
-      <xsl:if test="description/node()!=''">
-        <p class="Description">
-          <strong>
-            <!--Description-->
-            <xsl:call-template name="term3040" />
-            <xsl:text>:&#160;</xsl:text>
-          </strong>
-          <xsl:apply-templates select="description" mode="cleanXhtml"/>
-        </p>
-      </xsl:if>
-      <div class="entryFooter">
-        <xsl:apply-templates select="." mode="moreLink">
-          <xsl:with-param name="link" select="$parentURL"/>
-          <xsl:with-param name="altText">
-            <xsl:value-of select="Headline/node()"/>
-          </xsl:with-param>
-        </xsl:apply-templates>
-        <xsl:text> </xsl:text>
+        </h3>
+        <xsl:apply-templates select="." mode="displayLogo"/>
+        <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+          <xsl:if test="Organization/location/PostalAddress/name!='' or Organization/location/PostalAddress/streetAddress!='' or Organization/location/PostalAddress/addressLocality!='' or Organization/location/PostalAddress/addressRegion!='' or Organization/location/PostalAddress/postalCode!=''"> </xsl:if>
+          <xsl:if test="Organization/location/PostalAddress/name!=''">
+            <span itemprop="name">
+              <xsl:value-of select="Organization/location/PostalAddress/name"/>
+            </span>
+            <br />
+          </xsl:if>
+          <xsl:if test="Organization/location/PostalAddress/streetAddress!=''">
+            <span itemprop="streetAddress">
+              <xsl:value-of select="Organization/location/PostalAddress/streetAddress"/>
+            </span>
+            <br />
+          </xsl:if>
+          <xsl:if test="Organization/location/PostalAddress/addressLocality!=''">
+            <span itemprop="addressLocality">
+              <xsl:value-of select="Organization/location/PostalAddress/addressLocality"/>
+            </span>
+            <br />
+          </xsl:if>
+          <xsl:if test="Organization/location/PostalAddress/addressRegion!=''">
+            <span itemprop="addressRegion">
+              <xsl:value-of select="Organization/location/PostalAddress/addressRegion"/>
+            </span>
+            <br />
+          </xsl:if>
+          <xsl:if test="Organization/location/PostalAddress/postalCode!=''">
+            <span itemprop="postalCode">
+              <xsl:value-of select="Organization/location/PostalAddress/postalCode"/>
+            </span>
+          </xsl:if>
+        </div>
+        <xsl:if test="Organization/telephone/node()!=''">
+          <p class="tel">
+            <strong>
+              <xsl:call-template name="term2007" />
+              <xsl:text>:&#160;</xsl:text>
+            </strong>
+            <xsl:apply-templates select="Organization/telephone" mode="cleanXhtml"/>
+          </p>
+        </xsl:if>
+        <xsl:if test="url/node()!=''">
+          <p class="web">
+            <strong>
+              <xsl:call-template name="term2010" />
+              <xsl:text>:&#160;</xsl:text>
+            </strong>
+            <a href="{url/node()}">
+              <xsl:apply-templates select="url" mode="cleanXhtml"/>
+            </a>
+          </p>
+        </xsl:if>
+        <xsl:if test="description/node()!=''">
+          <p class="Description">
+            <strong>
+              <!--Description-->
+              <xsl:call-template name="term3040" />
+              <xsl:text>:&#160;</xsl:text>
+            </strong>
+            <xsl:apply-templates select="description" mode="cleanXhtml"/>
+          </p>
+        </xsl:if>
+        <div class="entryFooter">
+          <xsl:apply-templates select="." mode="moreLink">
+            <xsl:with-param name="link" select="$parentURL"/>
+            <xsl:with-param name="altText">
+              <xsl:value-of select="Headline/node()"/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+          <xsl:text> </xsl:text>
+        </div>
       </div>
-      <!-- Terminus class fix to floating columns -->
-      <div class="terminus">&#160;</div>
     </div>
   </xsl:template>
 
