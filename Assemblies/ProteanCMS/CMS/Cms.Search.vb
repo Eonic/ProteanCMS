@@ -1165,6 +1165,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
                     resultsXML.SetAttribute("TotalResult", totalResults)
                     resultsXML.SetAttribute("PerPageCount", PerPageCount)
+                    resultsXML.SetAttribute("lastPage", Math.Ceiling(totalResults / PerPageCount))
 
                     If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
