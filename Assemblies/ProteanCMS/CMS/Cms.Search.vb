@@ -1080,6 +1080,12 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
 
@@ -1299,9 +1305,12 @@ Partial Public Class Cms
 
                         Next
 
-                        'check whether logged in user is csuser and skip checking status
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
                         'check artid/product is active
                         If Not bCsUser Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
@@ -1358,11 +1367,11 @@ Partial Public Class Cms
 
                                                 url = resultDoc.GetField("url").StringValue & ""
 
-                                        ' Build the URL
-                                        If url = "" Then
-                                            url = menuItem.GetAttribute("url")
-                                            ' Add the artId, if exists
-                                            If Not resultDoc.GetField("artid") Is Nothing Then
+                                                ' Build the URL
+                                                If url = "" Then
+                                                    url = menuItem.GetAttribute("url")
+                                                    ' Add the artId, if exists
+                                                    If Not resultDoc.GetField("artid") Is Nothing Then
 
 
                                                         If resultDoc.GetField("contenttype") IsNot Nothing _
@@ -1373,20 +1382,20 @@ Partial Public Class Cms
                                                                 url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
 
                                                                 Dim artName As String = ""
-                                                        If resultDoc.GetField("name") IsNot Nothing Then
-                                                            artName = resultDoc.GetField("name").StringValue
-                                                            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                                            artName = oRe.Replace(artName, "-").Trim("-")
-                                                            url &= artName
+                                                                If resultDoc.GetField("name") IsNot Nothing Then
+                                                                    artName = resultDoc.GetField("name").StringValue
+                                                                    Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                                                                    artName = oRe.Replace(artName, "-").Trim("-")
+                                                                    url &= artName
+                                                                End If
+                                                            Else
+                                                                url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                            End If
                                                         End If
-                                                    Else
-                                                        url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+
+
                                                     End If
                                                 End If
-
-
-                                            End If
-                                        End If
 
 
 
@@ -1399,34 +1408,34 @@ Partial Public Class Cms
 
                                                     ' Don't add info to certain fields
                                                     If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                                result.SetAttribute(docField.Name, docField.StringValue)
+                                                        result.SetAttribute(docField.Name, docField.StringValue)
+                                                    End If
+
+                                                    If docField.Name = "abstract" Then
+
+                                                        ' Try to output this as Xml
+                                                        Dim innerString As String = docField.StringValue & ""
+                                                        processInfo = innerString
+                                                        Try
+                                                            result.InnerXml = innerString.Trim
+                                                        Catch ex As Exception
+                                                            innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+                                                            processInfo = innerString
+                                                            result.InnerText = innerString
+                                                        End Try
+
+                                                    End If
+                                                Next
+                                                result.SetAttribute("url", url)
+
+                                                moContextNode.AppendChild(result)
+                                                resultsCount = resultsCount + 1
                                             End If
 
-                                            If docField.Name = "abstract" Then
-
-                                                ' Try to output this as Xml
-                                                Dim innerString As String = docField.StringValue & ""
-                                                processInfo = innerString
-                                                Try
-                                                    result.InnerXml = innerString.Trim
-                                                Catch ex As Exception
-                                                    innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
-                                                    processInfo = innerString
-                                                    result.InnerText = innerString
-                                                End Try
-
-                                            End If
-                                        Next
-                                        result.SetAttribute("url", url)
-
-                                        moContextNode.AppendChild(result)
-                                        resultsCount = resultsCount + 1
-                                    End If
-
-                                Else
-                                    ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-                                    processInfo = "not found in live page filter"
-                                End If
+                                        Else
+                                            ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+                                            processInfo = "not found in live page filter"
+                                        End If
 
                             Next
                         End If
@@ -3356,7 +3365,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     Next
                     ' queryBuilder.Append(") OR (")
                     ' queryBuilder.Append(queryBuilder1)
-                    queryBuilder.Append(") ")
+                    queryBuilder.Append(")")
                 End If
 
 
