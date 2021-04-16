@@ -479,8 +479,8 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
+                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
 
                     'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
                     'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
@@ -1207,11 +1207,6 @@ Partial Public Class Cms
                         Dim nUserId As Integer = myWeb.moSession("nUserId")
                         bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
                     End If
-                    If bShowHiddenForUser Then
-                        _includeFuzzySearch = False ' fuzzysearch is off 
-                    Else
-                        _includeFuzzySearch = True ' fuzzysearch is on 
-                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter(myAPI)
 
@@ -1425,9 +1420,12 @@ Partial Public Class Cms
                             'End If
 
                         Next
-                        'check whether logged in user is csuser and skip checking status
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
                         'check artid/product is active
                         If Not bCsUser Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
