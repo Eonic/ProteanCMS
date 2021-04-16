@@ -433,8 +433,8 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    If myWeb.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
-                    If myWeb.moRequest("fuzzy") = "off" Then _includeFuzzySearch = False
+                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
 
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
@@ -765,7 +765,12 @@ Partial Public Class Cms
 
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
-
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter(myAPI)
 
@@ -774,7 +779,7 @@ Partial Public Class Cms
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                     ' Generate the search query
-                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
+                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser)
 
                     ' Add a sort from the request
                     Dim queryOrder As Sort = SetSortFieldFromRequest(myAPI.moRequest)
@@ -886,12 +891,12 @@ Partial Public Class Cms
                             End If
 
                         Next
-                        'check whether logged in user is csuser and skip checking status
-                        Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                        If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                            Dim nUserId As Integer = myWeb.moSession("nUserId")
-                            bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                        End If
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
                         'check artid/product is active
                         If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
