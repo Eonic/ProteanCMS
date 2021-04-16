@@ -442,6 +442,12 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
 
@@ -450,7 +456,7 @@ Partial Public Class Cms
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                     ' Generate the search query
-                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
+                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser)
 
                     ' Add a sort from the request
                     Dim queryOrder As Sort = SetSortFieldFromRequest(myWeb.moRequest)
@@ -593,12 +599,12 @@ Partial Public Class Cms
 
                         Next
 
-                        'check whether logged in user is csuser and skip checking status
-                        Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                        If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                            Dim nUserId As Integer = myWeb.moSession("nUserId")
-                            bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                        End If
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
                         'check artid/product is active
                         If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
@@ -1951,7 +1957,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <param name="filters"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement) As Lucene.Net.Search.Query
+        Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement, Optional ByVal bShowHiddenForUser As Boolean = False) As Lucene.Net.Search.Query
 
             PerfMon.Log("Search", "BuildLuceneQuery")
             Dim processInfo As String = "Looking for : " & keywordsToSearch
@@ -1993,7 +1999,12 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     ' Default field search
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
-
+                    'apply status filter to show only active Products
+                    If Not bShowHiddenForUser Then
+                        queryToBeParsed.Append(" AND ")
+                        queryTerms = ParseKeywordsAndPhrases("1")
+                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                    End If
                 End If
 
                 ' Prefix name search is an optional hardcoded search that prefix searches the qsname field
@@ -2171,18 +2182,26 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
             PerfMon.Log("Search", "BuildLuceneKeywordQuery")
             Dim processInfo As String = ""
             Dim firstItem As Boolean = False
+            '  Dim queryBuilder1 As New StringBuilder
+            ' Dim fieldName1 As String = "status"
 
             Try
                 ' Text query 1:
                 ' Remove all quotes and put the whole thing in quotes
-                If Not String.IsNullOrEmpty(fieldName) Then queryBuilder.Append(fieldName).Append(":")
+                If Not String.IsNullOrEmpty(fieldName) Then
+                    queryBuilder.Append(fieldName).Append(":")
+                    'queryBuilder1.Append(fieldName1).Append(":")
+                End If
                 queryBuilder.Append("""")
+                ' queryBuilder1.Append("""")
                 For Each keyword As String In keywords
                     queryBuilder.Append(keyword.Replace("""", ""))
                     queryBuilder.Append(" ")
                 Next
+                ' queryBuilder1.Append("1")
+                ' queryBuilder1.Append(" ")
                 queryBuilder.Append("""^").Append((boostBase + 2).ToString)
-
+                'queryBuilder1.Append("""^").Append((boostBase + 2).ToString)
 
                 ' Text query 2 - as it comes:
                 If keywords.Length > 1 Then
@@ -2215,7 +2234,9 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         queryBuilder.Append(keyword)
                         queryBuilder.Append("~^").Append((boostBase).ToString)
                     Next
-                    queryBuilder.Append(") ")
+                    ' queryBuilder.Append(") OR (")
+                    ' queryBuilder.Append(queryBuilder1)
+                    queryBuilder.Append(")")
                 End If
 
 
