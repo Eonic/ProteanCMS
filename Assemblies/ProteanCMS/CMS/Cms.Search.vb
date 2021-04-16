@@ -1998,9 +1998,12 @@ Partial Public Class Cms
                             'End If
 
                         Next
-                        'check whether logged in user is csuser and skip checking status
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        Dim bCsUser As Boolean = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
                         'check artid/product is active
                         If Not bCsUser Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
