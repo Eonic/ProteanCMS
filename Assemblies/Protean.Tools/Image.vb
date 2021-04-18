@@ -154,7 +154,34 @@ Public Class Image
         End Try
     End Function
 
+    Public Function CreateThumbnail(VirtualPath As String) As String
+        'saves the file to designated location
+        Dim nCompression = 50
+        Try
+            Dim thumbnailVirtualPath As String = ""
+            Dim fi As New FileInfo(cLocation)
+            Dim thumbnailPath As String = cLocation.Remove(cLocation.Length - fi.Name.Length) & "~ptn\"
+            Dim thfi As New FileInfo(thumbnailPath & fi.Name)
 
+            If thfi.Exists = False Then
+
+                Me.KeepXYRelation = True
+                Me.NoStretch = True
+                Me.IsCrop = False
+                Me.SetMaxSize(195, 195)
+                Me.Save(thumbnailPath & fi.Name, 101, thumbnailPath)
+
+            End If
+            thfi = Nothing
+
+            Return "/~ptn/" & fi.Name
+
+
+        Catch ex As Exception
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Save", ex, ""))
+            Return "Error"
+        End Try
+    End Function
 
 #End Region
 

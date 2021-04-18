@@ -4867,32 +4867,6 @@
                         <xsl:choose>
                             <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
                                 <xsl:if test="@root">
-
-                                  <!--xsl:variable name="imgUrl">
-                                                <xsl:call-template name="resize-image">
-                                                    <xsl:with-param name="path" select="concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)"/>
-                                                    <xsl:with-param name="max-width" select="'165'"/>
-                                                    <xsl:with-param name="max-height" select="'165'"/>
-                                                    <xsl:with-param name="file-prefix" select="'~ew/tn8-'"/>
-                                                    <xsl:with-param name="file-suffix" select="''"/>
-                                                    <xsl:with-param name="quality" select="'99'"/>
-                                                    <xsl:with-param name="crop" select="'true'"/>
-                                                </xsl:call-template>
-                                            </xsl:variable>
-                                            <xsl:variable name="imgWidth">
-                                                <xsl:call-template name="get-image-width">
-                                                    <xsl:with-param name="path">
-                                                        <xsl:value-of select="$imgUrl"/>
-                                                    </xsl:with-param>
-                                                </xsl:call-template>
-                                            </xsl:variable>
-                                            <xsl:variable name="imgHeight">
-                                                <xsl:call-template name="get-image-height">
-                                                    <xsl:with-param name="path">
-                                                        <xsl:value-of select="$imgUrl"/>
-                                                    </xsl:with-param>
-                                                </xsl:call-template>
-                                            </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
                                             <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
@@ -4910,7 +4884,7 @@
                                           <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                                                <xsl:choose>
                                                  <xsl:when test="@width&gt;125 and @height&gt;125">
-                                                   <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
+                                                   <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                   <div class="img-overflow">
@@ -4918,7 +4892,6 @@
                                                   </div>
                                                 </xsl:otherwise>
                                               </xsl:choose>
-                                          
                                           </a>
                                 </xsl:if>
                             </xsl:when>

@@ -965,12 +965,14 @@ Partial Public Class fsHelper
                 End If
                 Dim fullName As String = Path.GetFileName(file.FileName)
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+
+
+
                 '    Else
                 '        'alert: image size is bigger than 4 MB
                 '    End If
                 'Else
                 '    'alert: Image with Same  name already exist
-
                 'End If
 
             Catch ex As Exception
@@ -1039,8 +1041,13 @@ Partial Public Class fsHelper
                                     Dim oWebFile As New WebFile(fi.FullName, sVirtualPath & "/" & fi.Name, True)
                                     fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height))
                                     fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width))
-                                Catch
-                                    'do nothin
+
+                                    'check and return the thumbnail path
+                                    Dim oImage As New Protean.Tools.Image(mcStartFolder & sVirtualPath & "\" & fi.Name)
+                                    fileElem.Attributes.Append(XmlAttribute("thumbnail", oImage.CreateThumbnail(sVirtualPath)))
+                                    oImage = Nothing
+                                Catch ex As Exception
+                                    Return XmlElement("error", ex.Message)
                                 End Try
 
                             Case Else
