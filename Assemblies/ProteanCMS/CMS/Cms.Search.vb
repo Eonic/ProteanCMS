@@ -590,6 +590,9 @@ Partial Public Class Cms
 
                     If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
+                        If bShowHiddenForUser Then
+                            resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                        End If
                     Else
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
                     End If
