@@ -22,6 +22,21 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="M:Protean.Cms.Admin.Redirects.RedirectPage(System.String@,System.String@,System.String@,System.String@,System.Boolean,System.String,System.Int32)">
+ <summary>
+ This is method which validates the page to redirect in edit mode if we change page url
+ -if its h
+ </summary>
+ <param name="sRedirectType"></param>
+ <param name="sOldUrl"></param>
+ <param name="sNewUrl"></param>
+ <param name="sPageUrl"></param>
+ <param name="bRedirectChildPage"></param>
+ <param name="sType"></param>
+ <param name="nPageId"></param>
+ <returns></returns>
+ sRedirectType can be object type to validate.
+</member>
 <member name="M:Protean.Cms.Admin.MemberCodesProcess(System.Xml.XmlElement@,System.String@)">
  <summary>
  The Member code management process.
@@ -329,7 +344,7 @@ ProteanCMS
  <returns></returns>
  <remarks></remarks>
 </member>
-<member name="M:Protean.Cms.Search.BuildLuceneQuery(System.String,System.Xml.XmlElement)">
+<member name="M:Protean.Cms.Search.BuildLuceneQuery(System.String,System.Xml.XmlElement,System.Boolean)">
  <summary>
  <para>Builds a Lucene Query Parser based on the keyword string and predefined values in the request object</para>
  <list>
@@ -640,6 +655,13 @@ ProteanCMS
  <param name="cProcessName"></param>
  <param name="cDescription"></param>
  <remarks></remarks>
+</member>
+<member name="M:Protean.Cms.CheckProductStatus(System.String)">
+ <summary>
+ get active productslist
+ </summary>
+ <param name="nArtId"></param>
+ <returns></returns>
 </member>
 <member name="M:Protean.Providers.Membership.EonicProvider.AdminXForms.maintainMembershipsFromXForm(System.Int32,System.String,System.String,System.Boolean)">
  <summary>
