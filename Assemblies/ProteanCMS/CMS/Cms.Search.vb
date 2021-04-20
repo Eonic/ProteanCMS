@@ -1018,9 +1018,14 @@ Partial Public Class Cms
                 Dim NextPage As Integer = 0
                 Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
                 Dim path As String = "intotheblue.local/"
+                'check whether logged in user is csuser and skip checking status
+                Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                End If
 
                 'allow paging as per config setting 
-                'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then 'allow paging for search index page result
                     If (myWeb.moRequest("hitlimit") > 0) Then
                         HitsLimit = myWeb.moRequest("hitlimit")
@@ -1040,7 +1045,10 @@ Partial Public Class Cms
                     If (myWeb.moRequest("page") > 0) Then
                         Page = myWeb.moRequest("page")
                     End If
-
+                    If bShowHiddenForUser Then 'for csuser no need of pagination and default paging is applicable
+                        HitsLimit = myWeb.moConfig("SiteSearchDefaultHitsLimit") '300
+                        PerPageCount = myWeb.moConfig("SiteSearchDefaultHitsLimit")
+                    End If
                 Else 'search index result will show without pagination and records will load as per config setting value
                     HitsLimit = myWeb.moConfig("SiteSearchDefaultHitsLimit") '300
                     PerPageCount = myWeb.moConfig("SiteSearchDefaultHitsLimit")
@@ -1067,8 +1075,8 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
+                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
 
                     'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
                     'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
@@ -1083,11 +1091,10 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
-                    'check whether logged in user is csuser and skip checking status
-                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    If bShowHiddenForUser Then
+                        _includeFuzzySearch = False ' fuzzysearch is off 
+                    Else
+                        _includeFuzzySearch = True ' fuzzysearch is on 
                     End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
@@ -1790,7 +1797,7 @@ Partial Public Class Cms
                     Dim searcher As New IndexSearcher(fsDir, True)
 
                     ' Check for settings
-                    If myAPI.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
+                    ' If myAPI.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
                     If (fuzzySearch <> "off") Then
                         If LCase(myAPI.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
@@ -1805,6 +1812,11 @@ Partial Public Class Cms
                     If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
                         Dim nUserId As Integer = myWeb.moSession("nUserId")
                         bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
+                    If bShowHiddenForUser Then
+                        _includeFuzzySearch = False ' fuzzysearch is off 
+                    Else
+                        _includeFuzzySearch = True ' fuzzysearch is on 
                     End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter(myAPI)
