@@ -217,8 +217,8 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\MySql.Data.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Newtonsoft.Json.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\bin\Debug\Renci.SshNet.xml
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CoreCompileInputs.cache
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
