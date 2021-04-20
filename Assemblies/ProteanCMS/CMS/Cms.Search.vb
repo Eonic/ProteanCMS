@@ -385,7 +385,7 @@ Partial Public Class Cms
                 Dim resultsCount As Integer = 0
                 Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
                 Dim HitsLimit As Integer
-                Dim PerPageCount As Integer
+                Dim PageSize As Integer
                 Dim command As Integer
                 Dim Page As Integer = 0
                 Dim NextPage As Integer = 0
@@ -394,16 +394,16 @@ Partial Public Class Cms
 
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
-                If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then 'allow paging for search index page result
+                If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
                     If (myWeb.moRequest("hitlimit") > 0) Then
                         HitsLimit = myWeb.moRequest("hitlimit")
                     Else
-                        HitsLimit = myWeb.moConfig("SiteSearchIndexResultPaging") 'first load as per page count
+                        HitsLimit = myWeb.moConfig("SearchDefaultPageSize") 'first load as per page count
                     End If
-                    If (myWeb.moRequest("PerPageCount") > 0) Then
-                        PerPageCount = myWeb.moRequest("PerPageCount")
+                    If (myWeb.moRequest("PageSize") > 0) Then
+                        PageSize = myWeb.moRequest("PageSize")
                     Else
-                        PerPageCount = myWeb.moConfig("SiteSearchIndexResultPaging")
+                        PageSize = myWeb.moConfig("SearchDefaultPageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -415,8 +415,10 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                    HitsLimit = myWeb.moConfig("SiteSearchDefaultHitsLimit") '300
-                    PerPageCount = myWeb.moConfig("SiteSearchDefaultHitsLimit")
+                    HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                    If HitsLimit = 0 Then HitsLimit = 300
+                    PageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                    If PageSize = 0 Then PageSize = 300
                 End If
 
                 If Not cQuery.Equals("") Then
@@ -526,18 +528,18 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
                     resultsXML.SetAttribute("pageEnd", pageEnd)
-                    resultsXML.SetAttribute("nextPage", Page + 1)
-                    resultsXML.SetAttribute("siteSearchString", cQuery)
+                    resultsXML.SetAttribute("nextPage", pageEnd + 1)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
-                    resultsXML.SetAttribute("TotalResult", totalResults)
-                    resultsXML.SetAttribute("PerPageCount", PerPageCount)
-                    resultsXML.SetAttribute("lastPage", Math.Ceiling(totalResults / PerPageCount))
+
+                    resultsXML.SetAttribute("totalResults", totalResults)
+                    resultsXML.SetAttribute("pageSize", PageSize)
+                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
 
                     ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
-                    If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then
+                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
                         resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
                         If bShowHiddenForUser Then
                             resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
@@ -547,16 +549,16 @@ Partial Public Class Cms
                     End If
                     resultsXML.SetAttribute("Hits", HitsLimit)
                     'If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
-                    If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then 'allow paging for search index page result
-                        resultsXML.SetAttribute("startCount", HitsLimit - PerPageCount + 1)
+                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
+                        resultsXML.SetAttribute("startCount", HitsLimit - PageSize + 1)
                     End If
 
                     Dim artIdResults As New List(Of Long)
 
                     ' Process the results
                     If totalResults > 0 Then
-                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PerPageCount
-                        Dim takeRecord As Integer = PerPageCount
+                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PageSize
+                        Dim takeRecord As Integer = PageSize
                         'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
                         Dim scoreDocs As ScoreDoc() = results.ScoreDocs
 
@@ -613,7 +615,7 @@ Partial Public Class Cms
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        skipRecords = (myWeb.moRequest("page")) * PerPageCount
+                        skipRecords = (myWeb.moRequest("page")) * PageSize
 
                         For i As Integer = skipRecords To results.TotalHits - 1
 
@@ -724,10 +726,10 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("Time", "0")
                 End If
 
-                resultsXML.SetAttribute("SearchString", cQuery)
+                resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
-                resultsXML.SetAttribute("Hits", resultsCount)
+                resultsXML.SetAttribute("resultsReturned", resultsCount)
 
                 moContextNode.AppendChild(resultsXML)
 
@@ -2008,10 +2010,12 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
                     'apply status filter to show only active Products
-                    If Not bShowHiddenForUser Then
-                        queryToBeParsed.Append(" AND ")
-                        queryTerms = ParseKeywordsAndPhrases("1")
-                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
+                        If Not bShowHiddenForUser Then
+                            queryToBeParsed.Append(" AND ")
+                            queryTerms = ParseKeywordsAndPhrases("1")
+                            BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                        End If
                     End If
                 End If
 
@@ -2244,7 +2248,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     Next
                     ' queryBuilder.Append(") OR (")
                     ' queryBuilder.Append(queryBuilder1)
-                    queryBuilder.Append(")")
+                    queryBuilder.Append(") ")
                 End If
 
 
