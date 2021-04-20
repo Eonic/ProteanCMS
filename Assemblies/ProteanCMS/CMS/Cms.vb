@@ -8562,14 +8562,12 @@ Public Class Cms
             Dim oDr As System.Data.SqlClient.SqlDataReader
             Dim sSQL As String = "DECLARE @List VARCHAR(8000)
 
-SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
-from tblcontent C 
- inner join tblAudit A on C.nAuditId = A.nAuditKey 
- where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
+            SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
+            FROM tblcontent C
+            INNER JOIN tblAudit A ON C.nAuditId = A.nAuditKey
+            WHERE A.nstatus = 1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
             sSQL = sSQL & " SELECT @List "
 
-            '"select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
-            'sSQL = sSQL & " where A.nstatus=1 and  c.ncontentkey in ( " & nArtId.ToString() & " )"
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If
