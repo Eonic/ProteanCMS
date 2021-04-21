@@ -1412,9 +1412,19 @@ processFlow:
                             'ts added because missing from session and now added to the return redirect from SagePay (may need to add to paypal pro too)
                             Me.mcPaymentMethod = myWeb.moRequest("PaymentMethod")
                         End If
-                        Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                        ' Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                        ' Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
+                        'Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, mcPaymentMethod)
                         Dim Redirect3dsXform As xForm = New xForm(myWeb.msException)
-                        Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+                        Redirect3dsXform = oPayProv.Activities.GetRedirect3dsForm(myWeb)
+
+                        If (Redirect3dsXform Is Nothing) Then
+                            Dim oEwProv As Protean.Cms.Cart.PaymentProviders = New PaymentProviders(myWeb)
+                            Redirect3dsXform = oEwProv.GetRedirect3dsForm(myWeb)
+                        End If
+
                         moPageXml.SelectSingleNode("/Page/Contents").AppendChild(Redirect3dsXform.moXformElmt)
                         myWeb.moResponseType = pageResponseType.iframe
 
@@ -1525,7 +1535,7 @@ processFlow:
 
                                 If myWeb.mnUserId > 0 Then
                                     If Not moSubscription Is Nothing Then
-                                        moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId)
+                                        moSubscription.AddUserSubscriptions(Me.mnCartId, myWeb.mnUserId, mnPaymentId, oContentElmt)
                                     End If
                                 End If
 
@@ -1654,6 +1664,8 @@ processFlow:
                         mcCartCmd = "RedirectSecure"
                     Case "brief"
                         mcCartCmd = "Brief"
+                    Case "logon"
+                        mcCartCmd = "Logon"
                     Case Else
                         'do nothing
                 End Select
@@ -1830,6 +1842,7 @@ processFlow:
 
                     If sMessagingProvider <> "" Or (moMailConfig("InvoiceList") <> "" And moMailConfig("QuoteList") <> "") Then
                         Dim oMessaging As New Protean.Providers.Messaging.BaseProvider(myWeb, sMessagingProvider)
+                        Dim xsltPath As String = String.Empty
                         If Email = "" Then Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText
                         If Name = "" Then Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText
                         If valDict Is Nothing Then valDict = New System.Collections.Generic.Dictionary(Of String, String)
@@ -1846,27 +1859,21 @@ processFlow:
                             lastName = fullName(2)
                         End If
 
-                        valDict.Add("Email", Email)
-                        valDict.Add("FirstName", firstName)
-                        valDict.Add("LastName", lastName)
 
-                        If Not oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']") Is Nothing Then
-                            valDict.Add("Address1", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Street").InnerText)
-                            valDict.Add("Mobile", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/Telephone").InnerText)
-                            valDict.Add("City", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/City").InnerText)
-                            valDict.Add("County", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/State").InnerText)
-                            valDict.Add("Postcode", oCartElmt.FirstChild.SelectSingleNode("descendant-or-self::Contact[@type='Billing Address']/PostalCode").InnerText)
-                        End If
+
+
 
                         Dim ListId As String = ""
                         Select Case StepName
                             Case "Invoice"
                                 ListId = moMailConfig("InvoiceList")
-                                If moMailConfig("QuoteList") <> "" Then
-                                    oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
+                                If moMailConfig("InvoiceList") <> "" Then
+                                    xsltPath = moMailConfig("Pure360InvoiceList")
+                                    oMessaging.Activities.RemoveFromList(moMailConfig("InvoiceList"), Email)
                                 End If
                             Case "Quote"
                                 If moMailConfig("QuoteList") <> "" Then
+                                    xsltPath = moMailConfig("Pure360QuoteList")
                                     oMessaging.Activities.RemoveFromList(moMailConfig("QuoteList"), Email)
                                 End If
                                 ListId = moMailConfig("QuoteList")
@@ -1877,17 +1884,47 @@ processFlow:
                                 ListId = moMailConfig("NewsletterList")
                         End Select
                         If ListId <> "" Then
+
+                            If (xsltPath <> "") Then
+                                valDict = GetDisctionaryForCampaigning(xsltPath, oCartElmt, valDict)
+                            Else
+                                valDict.Add("Email", Email)
+                                valDict.Add("FirstName", firstName)
+                                valDict.Add("LastName", lastName)
+                            End If
                             oMessaging.Activities.addToList(ListId, firstName, Email, valDict)
                         End If
+
                     End If
                 End If
-
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug)
             End Try
 
         End Sub
 
+        Private Function GetDisctionaryForCampaigning(xsltPath As String, ByRef oCartElmt As XmlElement, Optional valDict As System.Collections.Generic.Dictionary(Of String, String) = Nothing) As System.Collections.Generic.Dictionary(Of String, String)
+            Dim styleFile As String
+            Dim messageHtml As String = ""
+            Dim sWriter As IO.TextWriter = New IO.StringWriter
+            Dim oXml As XmlDocument = New XmlDocument
+            Dim oTransform As New Protean.XmlHelper.Transform()
+            Dim XmlString As String = oCartElmt.OuterXml
+            oXml.LoadXml(XmlString)
+            styleFile = moServer.MapPath(xsltPath)
+            oTransform.Compiled = False
+            oTransform.XSLFile = styleFile
+            oTransform.Process(oXml, sWriter)
+            If oTransform.HasError Then
+                Throw New Exception("There was an error transforming the email (Output: HTML).")
+            End If
+            messageHtml = sWriter.ToString()
+            sWriter.Close()
+            Dim xMailingListDoc As XmlDocument = htmlToXmlDoc(messageHtml)
+            Dim xListElement As XmlElement = xMailingListDoc.DocumentElement
+            valDict = XmltoDictionary(xListElement, True)
+            Return valDict
+        End Function
         Private Sub RemoveDeliveryOption(ByVal nOrderId As Integer)
             Try
                 Dim cSQL As String = "UPDATE tblCartOrder SET nShippingMethodId = 0, cShippingDesc = NULL, nShippingCost = 0 WHERE nCartOrderKey = " & nOrderId
@@ -2507,8 +2544,21 @@ processFlow:
                             Dim nTaxRate As Long = 0
                             Dim bOverridePrice As Boolean = False
                             If Not mbOveridePrice Then ' for openquote
-                                ' Go get the lowest price based on user and group
-                                If Not IsDBNull(oRow("productDetail")) Then
+
+                                If (Not (myWeb.moSession("overridePriceSession") Is Nothing) And Not (myWeb.moConfig("overridePriceKey") Is Nothing)) Then
+                                    'get the string value from session
+
+                                    Dim sSessionKey As String = Convert.ToString(myWeb.moSession("overridePriceSession"))
+                                    Dim sKey As String = Convert.ToString(myWeb.moConfig("overridePriceKey"))
+                                    'create the key with the current user
+                                    Dim sSessionId As String = Convert.ToString(myWeb.moSession.SessionID)
+                                    'generate the key with current session id
+                                    Dim sEncryptedKey As String = Protean.Tools.RC4.Encrypt(sSessionId, sKey)
+                                    If (sEncryptedKey = sSessionKey) Then 'if both matches allow to overrdide price
+                                        bOverridePrice = True
+                                    End If
+                                    ' Go get the lowest price based on user and group
+                                ElseIf Not IsDBNull(oRow("productDetail")) Then
 
                                     Dim oProd As XmlElement = moPageXml.CreateElement("product")
                                     oProd.InnerXml = oRow("productDetail")
@@ -2524,17 +2574,20 @@ processFlow:
                                         If Not moSubscription Is Nothing And CStr(oRow("contentType") & "") = "Subscription" Then
 
                                             Dim revisedPrice As Double
-                                            If oRow("contentId") > 0 Then
-                                                revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
-                                            Else
-                                                oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
-                                                nCheckPrice = oCheckPrice.InnerText
-                                                nTaxRate = getProductTaxRate(oCheckPrice)
-                                            End If
-                                            If revisedPrice < nCheckPrice Then
-                                                'nCheckPrice = revisedPrice
-                                                Discount = nCheckPrice - revisedPrice
-                                                nCheckPrice = revisedPrice
+                                            If moSubscription.mbOveridePrices = False Then
+                                                'TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
+                                                If oRow("contentId") > 0 Then
+                                                    revisedPrice = moSubscription.CartSubscriptionPrice(oRow("contentId"), myWeb.mnUserId)
+                                                Else
+                                                    oCheckPrice = getContentPricesNode(oProd, oRow("unit") & "", oRow("quantity"), "SubscriptionPrices")
+                                                    nCheckPrice = oCheckPrice.InnerText
+                                                    nTaxRate = getProductTaxRate(oCheckPrice)
+                                                End If
+                                                If revisedPrice < nCheckPrice Then
+                                                    'nCheckPrice = revisedPrice
+                                                    Discount = nCheckPrice - revisedPrice
+                                                    nCheckPrice = revisedPrice
+                                                End If
                                             End If
 
                                         End If
@@ -2579,6 +2632,12 @@ processFlow:
                                         End If
 
                                     End If
+                                Else
+                                    If (moCartConfig("ProductOptionOverideQuantity") = "on" And oOpRow("quantity") > 1) Then
+                                        nOpPrices += (oOpRow("price") * oOpRow("quantity"))
+                                        'Else
+                                        '    nOpPrices += (oOpRow("price"))
+                                    End If
                                 End If
                             Next
 
@@ -2617,11 +2676,11 @@ processFlow:
                             If oRow("price") <> Nothing Then
                                 ' If oRow("price") <> 0 Then
                                 Dim discountSQL As String = ""
-                                    If Discount <> 0 Then
-                                        '     discountSQL = ", nDiscountValue = " & Discount & " "
-                                    End If
-                                    Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
-                                    moDBHelper.ExeProcessSql(cUpdtSQL)
+                                If Discount <> 0 Then
+                                    '     discountSQL = ", nDiscountValue = " & Discount & " "
+                                End If
+                                Dim cUpdtSQL As String = "UPDATE tblCartItem Set nPrice = " & oRow("price") & discountSQL & " WHERE nCartItemKey = " & oRow("id")
+                                moDBHelper.ExeProcessSql(cUpdtSQL)
                                 '  End If
                             End If
 
@@ -5941,7 +6000,7 @@ processFlow:
                     addNewTextNode("cCartSiteRef", oElmt, moCartConfig("OrderNoPrefix"))
                     addNewTextNode("cCartForiegnRef", oElmt)
                     addNewTextNode("nCartStatus", oElmt, "1")
-                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType) '-----BJR----cCartSchemaName)
+                    addNewTextNode("cCartSchemaName", oElmt, mcOrderType)
                     addNewTextNode("cCartSessionId", oElmt, mcSessionId)
                     ' MEMB - add userid to oRs if we are logged on
                     If mnEwUserId > 0 Then
@@ -5955,7 +6014,7 @@ processFlow:
                     addNewTextNode("nShippingMethodId", oElmt, "0")
                     addNewTextNode("cShippingDesc", oElmt, moCartConfig("DefaultShippingDesc"))
                     addNewTextNode("nShippingCost", oElmt, CLng(moCartConfig("DefaultShippingCost") & "0"))
-                    addNewTextNode("cClientNotes", oElmt, cOrderReference) '----BJR
+                    addNewTextNode("cClientNotes", oElmt, cOrderReference)
                     addNewTextNode("cSellerNotes", oElmt, "referer:" & myWeb.moSession("previousPage") & "/n")
                     If Not (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") Is Nothing) Then
                         addElement(oElmt, "cCampaignCode", moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign").OuterXml, True)
@@ -6109,52 +6168,52 @@ processFlow:
                                 oProdXml.InnerXml = moDBHelper.ExeProcessSqlScalar("Select cContentXmlBrief FROM tblContent WHERE nContentKey = " & nProductId)
                             End If
                             If Not oProdXml.SelectSingleNode("/Content/StockCode") Is Nothing Then addNewTextNode("cItemRef", oElmt, oProdXml.SelectSingleNode("/Content/StockCode").InnerText) '@ Where do we get this from?
-                                If cProductText = "" Then
-                                    cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
-                                End If
-
-                                If nPrice = 0 Then
-                                    oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
-                                End If
-
-                                If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
-                                    mbOveridePrice = True
-                                End If
-
-                                'lets add the discount to the cart if supplied
-                                If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
-                                    Dim strDiscount1 As String = oProdXml.SelectSingleNode(
-                                                    "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
-                                                    ).InnerText
-                                    addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
-                                End If
-
-                                If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
-                                    nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
-                                End If
-
-                                If (UniqueProduct) Then
-
-                                    If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
-                                        giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
-                                        oProdXml.DocumentElement.AppendChild(giftMessageNode)
-                                    Else
-                                        ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
-                                    End If
-                                End If
-
-                                'Add Parent Product to cart if SKU.
-                                If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
-                                    'Then we need to add the Xml for the ParentProduct.
-                                    Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
-                                    Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
-                                    Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
-
-                                    ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
-                                End If
-
-
+                            If cProductText = "" Then
+                                cProductText = oProdXml.SelectSingleNode("/Content/*[1]").InnerText
                             End If
+
+                            If nPrice = 0 Then
+                                oPrice = getContentPricesNode(oProdXml.DocumentElement, myWeb.moRequest("unit"), nQuantity)
+                            End If
+
+                            If Not oProdXml.SelectSingleNode("/Content[@overridePrice='true']") Is Nothing Then
+                                mbOveridePrice = True
+                            End If
+
+                            'lets add the discount to the cart if supplied
+                            If Not oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" & mcCurrency & "']") Is Nothing Then
+                                Dim strDiscount1 As String = oProdXml.SelectSingleNode(
+                                                "/Content/Prices/Discount[@currency='" & mcCurrency & "']"
+                                                ).InnerText
+                                addNewTextNode("nDiscountValue", oElmt, IIf(IsNumeric(strDiscount1), strDiscount1, 0))
+                            End If
+
+                            If Not oProdXml.SelectSingleNode("/Content/ShippingWeight") Is Nothing Then
+                                nWeight = CDbl("0" & oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText)
+                            End If
+
+                            If (UniqueProduct) Then
+
+                                If oProdXml.SelectSingleNode("/Content/GiftMessage") Is Nothing Then
+                                    giftMessageNode = oProdXml.CreateNode(Xml.XmlNodeType.Element, "GiftMessage", "")
+                                    oProdXml.DocumentElement.AppendChild(giftMessageNode)
+                                Else
+                                    ' sGiftMessage = oProdXml.SelectSingleNode("/Content/GiftMessage").InnerText
+                                End If
+                            End If
+
+                            'Add Parent Product to cart if SKU.
+                            If moDBHelper.ExeProcessSqlScalar("Select cContentSchemaName FROM tblContent WHERE nContentKey = " & nProductId) = "SKU" Then
+                                'Then we need to add the Xml for the ParentProduct.
+                                Dim sSQL2 As String = "select TOP 1 nContentParentId from tblContentRelation where nContentChildId=" & nProductId
+                                Dim nParentId As Long = moDBHelper.ExeProcessSqlScalar(sSQL2)
+                                Dim ItemParent As XmlElement = addNewTextNode("ParentProduct", oProdXml.DocumentElement, "")
+
+                                ItemParent.InnerXml = moDBHelper.GetContentDetailXml(nParentId).OuterXml
+                            End If
+
+
+                        End If
                     End If
 
 
@@ -6377,8 +6436,8 @@ processFlow:
                                     End If
                                     'Add Item to "Done" List
                                     strAddedProducts &= "'" & nProductKey & "',"
-                                    End If
-                                End If 'end check for previously added
+                                End If
+                            End If 'end check for previously added
                         End If 'end check for item/quant
                     Next 'End Loop for getting products/quants
                     If qtyAdded > 0 Then
@@ -6961,17 +7020,20 @@ processFlow:
 
 
                 dir = New DirectoryInfo(moServer.MapPath("/xforms/PaymentProvider/"))
-                files = dir.GetFiles()
+                If dir.Exists Then
+                    files = dir.GetFiles()
 
-                For Each fi In files
-                    If fi.Extension = ".xml" Then
-                        ProviderName = Replace(fi.Name, fi.Extension, "")
-                        oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
-                        If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
-                            oElmt2.SetAttribute("active", "true")
+                    For Each fi In files
+                        If fi.Extension = ".xml" Then
+                            ProviderName = Replace(fi.Name, fi.Extension, "")
+                            oElmt2 = addNewTextNode("Provider", oElmt, Replace(ProviderName, "-", " "))
+                            If Not oPaymentCfg.SelectSingleNode("/payment/provider[@name='" & Replace(ProviderName, "-", "") & "']") Is Nothing Then
+                                oElmt2.SetAttribute("active", "true")
+                            End If
                         End If
-                    End If
-                Next
+                    Next
+                End If
+
 
                 oContentsXML.AppendChild(oElmt)
 
@@ -7069,9 +7131,6 @@ processFlow:
                         aVatRates = Split(sCountryList, "','")
                         Array.Reverse(aVatRates)
 
-
-
-
                         ' go backwards through the list, and use the last non-zero tax rate
                         bAllZero = True
 
@@ -7082,8 +7141,16 @@ processFlow:
                             End If
                         Next
                     End If
-                    ' If all the countries are 0 then we need to set the tax rate accordingly
-                    If bAllZero Then nUpdateTaxRate = 0
+                    ' If all the countries are 0 then get the tax rate for default country, otherwise set the zero
+                    If bAllZero Then
+                        Dim cDefaultCountry As String = moCartConfig("DefaultCountry")
+                        If String.IsNullOrWhiteSpace(sCountryList) And Not String.IsNullOrEmpty(cDefaultCountry) Then
+                            sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'"
+                            nUpdateTaxRate = moDBHelper.ExeProcessSqlScalar(sSql)
+                        Else
+                            nUpdateTaxRate = 0
+                        End If
+                    End If
                 End If
 
 

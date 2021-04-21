@@ -60,6 +60,8 @@ Namespace Providers
 
 
             Public Class Activities
+                Inherits Protean.Providers.Payment.DefaultProvider.Activities
+
                 Private Const mcModuleName As String = "Providers.Payment.PayPalPro.Activities"
                 Private myWeb As Protean.Cms
                 Protected moPaymentCfg As XmlNode

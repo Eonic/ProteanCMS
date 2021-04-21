@@ -40,15 +40,15 @@ Partial Public Class fsHelper
     Public mcRoot As String = ""
     Shared msException As String
 
-    Shared _libraryTypeExtensions()() As String = { _
-                                                 New String() {}, _
-                                                 New String() {"png", "jpg", "gif", "jpeg", "bmp"}, _
-                                                 New String() {"doc", "docx", "xls", "xlsx", "pdf"}, _
+    Shared _libraryTypeExtensions()() As String = {
+                                                 New String() {},
+                                                 New String() {"png", "jpg", "gif", "jpeg", "bmp"},
+                                                 New String() {"doc", "docx", "xls", "xlsx", "pdf"},
                                                  New String() {"avi", "flv", "swf", "ppt"}}
 
-    Shared _defaultLibraryTypeContentSchemaNames() As String = {"PlainText", _
-                                                                "LibraryImage", _
-                                                                "Document", _
+    Shared _defaultLibraryTypeContentSchemaNames() As String = {"PlainText",
+                                                                "LibraryImage",
+                                                                "Document",
                                                                 "Video,FlashMovie"}
 
 
@@ -325,54 +325,69 @@ Partial Public Class fsHelper
         cFolderPath = Replace(cFolderPath, "\", "/")
         Dim aFolderNames() As String = cFolderPath.Split("/")
         Dim i As Integer
-
+        Dim tempFolder As String = ""
         Try
-            Dim startDir As String
-            If mcRoot = "../" Then
-                mcRoot = ""
-                startDir = goServer.MapPath("/")
-                Dim newDir As New DirectoryInfo(startDir)
-                startDir = newDir.Parent.FullName
-            Else
-                startDir = goServer.MapPath("/" & mcRoot)
-            End If
 
-            'check startfolder exists
-            Dim rootDir As New DirectoryInfo(startDir)
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
 
-            If Not rootDir.Exists Then
-                Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
-                rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
-            End If
 
-            If mcStartFolder = "" Then mcStartFolder = startDir
-            Dim workingFolder As String = mcStartFolder
-            Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
-            startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
-            Dim startfld As New DirectoryInfo(mcStartFolder)
-            If Not startfld.Exists Then
-                rootDir.CreateSubdirectory(startFolderName)
-            End If
 
-            For i = 0 To UBound(aFolderNames)
-                If aFolderNames(i) <> "" Then
-                    Dim dir1 As New DirectoryInfo(workingFolder)
-                    If dir1.Exists Then
-                        Dim dir2 As New DirectoryInfo(workingFolder.TrimEnd("\") & "\" & aFolderNames(i))
-                        If Not dir2.Exists Then
-                            dir1.CreateSubdirectory(CStr(aFolderNames(i)))
-                        End If
-                    End If
-                    workingFolder = workingFolder & "\" & aFolderNames(i)
+
+                Dim startDir As String
+                If mcRoot = "../" Then
+                    mcRoot = ""
+                    startDir = goServer.MapPath("/")
+                    Dim newDir As New DirectoryInfo(startDir)
+                    startDir = newDir.Parent.FullName
+                Else
+                    startDir = goServer.MapPath("/" & mcRoot)
                 End If
-            Next
 
-            PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+                'check startfolder exists
+                Dim rootDir As New DirectoryInfo(startDir)
 
-            Return "1"
+                If Not rootDir.Exists Then
+                    Dim baseDir As New DirectoryInfo(goServer.MapPath("/"))
+                    rootDir = baseDir.CreateSubdirectory(mcRoot.Replace(" ", "-"))
+                End If
+
+                If mcStartFolder = "" Then mcStartFolder = startDir
+                Dim workingFolder As String = mcStartFolder
+                Dim startFolderName As String = mcStartFolder.Replace("/", "\").Trim("\")
+                startFolderName = startFolderName.Substring(startFolderName.LastIndexOf("\") + 1)
+                Dim startfld As New DirectoryInfo(mcStartFolder)
+                If Not startfld.Exists Then
+                    rootDir.CreateSubdirectory(startFolderName)
+                End If
+
+                For i = 0 To UBound(aFolderNames)
+                    If aFolderNames(i) <> "" Then
+                        Dim dir1 As New DirectoryInfo(workingFolder)
+                        If dir1.Exists Then
+                            tempFolder = workingFolder.TrimEnd("\") & "\" & aFolderNames(i)
+                            Dim dir2 As New DirectoryInfo(tempFolder)
+                            If Not dir2.Exists Then
+                                dir1.CreateSubdirectory(aFolderNames(i))
+                            End If
+                        End If
+                        workingFolder = workingFolder & "\" & aFolderNames(i)
+                    End If
+                Next
+
+                PerfMon.Log("fsHelper", "CreatePath-End", cFolderPath)
+                oImp.UndoImpersonation()
+
+                Return "1"
+
+            Else
+                Return "Server admin permissions are not configured"
+            End If
+
 
         Catch ex As Exception
-            Return ex.Message & " - " & cFolderPath
+            Return ex.Message & " - " & tempFolder & "<br/>" & ex.StackTrace
+
         End Try
 
     End Function
@@ -458,6 +473,41 @@ Partial Public Class fsHelper
         End Try
 
     End Function
+
+
+    Public Function DeleteFolderContents(ByVal cFolderName As String, ByVal cFolderPath As String) As String
+        PerfMon.Log("fsHelper", "DeleteFolder")
+        'in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
+        Try
+
+            Dim oImp As Protean.Tools.Security.Impersonate = New Protean.Tools.Security.Impersonate
+            If oImp.ImpersonateValidUser(goConfig("AdminAcct"), goConfig("AdminDomain"), goConfig("AdminPassword"), , goConfig("AdminGroup")) Then
+                Dim FolderName As String = mcStartFolder & cFolderPath & "\" & cFolderName
+                Dim dir As New DirectoryInfo(FolderName)
+
+                If dir.Exists Then
+                    Dim f As FileInfo
+                    For Each f In dir.GetFiles()
+                        f.Delete()
+                    Next f
+                    Dim d As DirectoryInfo
+                    For Each d In dir.GetDirectories()
+                        d.Delete(True)
+                    Next d
+                Else
+                    Return "this folder does not exist"
+                End If
+                oImp.UndoImpersonation()
+            Else
+                Return "Server admin permissions are not configured"
+            End If
+            Return "1"
+        Catch ex As Exception
+            Return ex.Message
+        End Try
+
+    End Function
+
 
     Public Function VirtualFileExists(ByVal cVirtualPath As String) As Integer
         Try
@@ -610,6 +660,9 @@ Partial Public Class fsHelper
         Try
             httpURL = httpURL.Replace("\", "/")
             Dim filename As String = Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1)
+            If filename.IndexOf("?") > -1 Then
+                filename = Right(filename, filename.Length - filename.LastIndexOf("=") - 1)
+            End If
             'here we will fix any unsafe web charactors in the name
             filename = Replace(filename, " ", "-")
 
@@ -894,12 +947,15 @@ Partial Public Class fsHelper
     Private Sub UploadWholeFile(ByVal context As System.Web.HttpContext, ByVal statuses As List(Of FilesStatus))
         For i As Integer = 0 To context.Request.Files.Count - 1
             Dim file As Object = context.Request.Files(i)
+
             Try
                 If Not mcStartFolder.EndsWith("\") Then mcStartFolder = mcStartFolder & "\"
                 Dim fileNameFixed As String = Path.GetFileName(file.FileName).Replace(" ", "-")
 
-
-
+                'If Not (IO.File.Exists(goServer.MapPath(goConfig("ProjectPath") & "\images\" & fileNameFixed))) Then
+                '    Dim img As System.Drawing.Image = System.Drawing.Image.FromStream(context.Request.Files(i).InputStream)
+                '    Dim SizeInMB As Decimal = (CType(file.InputStream.Length, Decimal) / CDec(1024 * 1024))
+                '    If Not (SizeInMB > 4.0) Then
                 file.SaveAs(mcStartFolder & fileNameFixed)
 
                 If LCase(mcStartFolder & fileNameFixed).EndsWith(".jpg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".jpeg") Or LCase(mcStartFolder & fileNameFixed).EndsWith(".png") Then
@@ -910,6 +966,14 @@ Partial Public Class fsHelper
                 Dim fullName As String = Path.GetFileName(file.FileName)
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
 
+
+
+                '    Else
+                '        'alert: image size is bigger than 4 MB
+                '    End If
+                'Else
+                '    'alert: Image with Same  name already exist
+                'End If
 
             Catch ex As Exception
                 statuses.Add(New FilesStatus("failed", 0))
@@ -977,8 +1041,13 @@ Partial Public Class fsHelper
                                     Dim oWebFile As New WebFile(fi.FullName, sVirtualPath & "/" & fi.Name, True)
                                     fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height))
                                     fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width))
-                                Catch
-                                    'do nothin
+
+                                    'check and return the thumbnail path
+                                    Dim oImage As New Protean.Tools.Image(mcStartFolder & sVirtualPath & "\" & fi.Name)
+                                    fileElem.Attributes.Append(XmlAttribute("thumbnail", oImage.CreateThumbnail(sVirtualPath)))
+                                    oImage = Nothing
+                                Catch ex As Exception
+                                    Return XmlElement("error", ex.Message)
                                 End Try
 
                             Case Else

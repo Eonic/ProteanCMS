@@ -1048,7 +1048,7 @@ namespace Protean.Tools
             try
             {
                 string startString = sString;
-                if (sString == null)
+                if (sString == null | sString == "")
                     return "";
                 else
                 {
@@ -1270,13 +1270,19 @@ namespace Protean.Tools
             }
         }
 
-        public static System.Collections.Generic.Dictionary<string, string> XmltoDictionary(XmlElement oXml)
+        public static System.Collections.Generic.Dictionary<string, string> XmltoDictionary(XmlElement oXml,bool skipPrefix =false)
         {
             try
             {
                 var myDict = new System.Collections.Generic.Dictionary<string, string>();
-
-                XmltoDictionaryNode(oXml, ref myDict, oXml.Name);
+                if (skipPrefix)
+                {
+                    XmltoDictionaryNodeSkippingPrefix(oXml, ref myDict);
+                }
+                else
+                {
+                    XmltoDictionaryNode(oXml, ref myDict, oXml.Name);
+                }
 
                 return myDict;
             }
@@ -1308,7 +1314,26 @@ namespace Protean.Tools
             }
         }
 
-
+        private static void XmltoDictionaryNodeSkippingPrefix(XmlElement oThisElmt, ref Dictionary<string, string> myDict)
+        {
+            try
+            {
+                foreach (XmlAttribute Attribute in oThisElmt.Attributes)
+                    myDict.Add(Attribute.Value, oThisElmt.InnerText);
+                if (oThisElmt.SelectNodes("*").Count == 0)
+                {
+                    if (oThisElmt.InnerText != "" & !(myDict.ContainsKey(oThisElmt.Name)))
+                        myDict.Add(oThisElmt.Name, oThisElmt.InnerText);
+                }
+                else
+                    foreach (XmlElement oElmt in oThisElmt.SelectNodes("*"))
+                        XmltoDictionaryNodeSkippingPrefix(oElmt, ref myDict);
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""));
+            }
+        }
 
 
 

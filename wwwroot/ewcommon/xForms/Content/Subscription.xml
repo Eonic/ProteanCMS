@@ -50,7 +50,7 @@
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail>
-          <Content action="Eonic.Web+Cart+Subscriptions+Modules.Subscribe" >
+          <Content action="Protean.Cms+Cart+Subscriptions+Modules.Subscribe" >
             <Name/>
             <StockCode/>
             <Type>Fixed Length</Type>

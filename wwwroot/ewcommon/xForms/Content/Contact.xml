@@ -101,6 +101,7 @@
         <bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="format:/(?:http:\/\/)?(?:www\.)?linkedin\.com\/*"/>
         <bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="format:/(?:https:\/\/)?(?:plus\.)?google\.com\/*"/>
         <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="format:/(?:http:\/\/)?(?:www\.)?pinterest\.com\/*"/>
+        <bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="format:/(?:http:\/\/)?(?:www\.)?instagram\.com\/*"/>
         <bind id="bNoLink" nodeset="@noLink" required="false()" type="string"/>
       </bind>
       <bind nodeset="cContentXmlDetail/Content">
@@ -142,6 +143,8 @@
         <bind id="cContentLinkedIn" nodeset="@linkedInURL" required="false()" type="string"/>
         <bind id="cContentGooglePlus" nodeset="@googlePlusURL" required="false()" type="string"/>
         <bind id="cContentPinterest" nodeset="@pinterestURL" required="false()" type="string"/>
+
+        <bind id="cContentInstagram" nodeset="@instagramURL" required="false()" type="string"/>
       </bind>
       <bind calculate="concat(tblContent/cContentXmlBrief/Content/GivenName,' ',tblContent/cContentXmlBrief/Content/Surname)" nodeset="cContentName" required="true()" type="string"/>
       <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
@@ -248,6 +251,9 @@
         </input>
         <input bind="cContentTwitter" class="short">
           <label>Twitter URL</label>
+        </input>
+        <input bind="cContentInstagram" class="short">
+          <label>Instagram URL</label>
         </input>
         <input bind="cContentLinkedIn" class="short">
           <label>LinkedIn URL</label>

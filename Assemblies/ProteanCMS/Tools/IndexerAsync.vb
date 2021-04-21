@@ -183,9 +183,15 @@ Public Class IndexerAsync
                 Dim oLastIndexInfo As New XmlDocument
                 oLastIndexInfo.Load(mcIndexWriteFolder & "/indexInfo.xml")
                 Dim minInterval As Int32 = 12
-                If moConfig("SiteSearchIndexMinInterval") <> "" Then
-                    minInterval = moConfig("SiteSearchIndexMinInterval")
+                'If moConfig("SiteSearchIndexMinInterval") <> "" Then
+                '    minInterval = moConfig("SiteSearchIndexMinInterval")
+                'End If
+                If moConfig("SiteSearchIndexResultPaging") IsNot Nothing Then
+                    minInterval = moConfig("SiteSearchIndexResultPaging")
                 End If
+                'If moConfig("SiteSearchIndexResultPaging") <> "" Then
+                '    minInterval = moConfig("SiteSearchIndexResultPaging")
+                'End If
 
                 If Not oLastIndexInfo Is Nothing Then
                     Dim oLastInfoElmt As XmlElement = oLastIndexInfo.DocumentElement
@@ -429,10 +435,6 @@ Public Class IndexerAsync
         End Try
     End Sub
 
-
-
-
-
     Private Sub StopIndex()
         PerfMon.Log("Indexer", "StopIndex")
         Dim cProcessInfo As String = ""
@@ -450,7 +452,6 @@ Public Class IndexerAsync
             bIsError = True
         End Try
     End Sub
-
 
     Private Sub CopyFolderContents(ByVal cLocation As String, ByVal cDestination As String)
         PerfMon.Log("Indexer", "CopyFolderContents")
@@ -669,7 +670,11 @@ Public Class IndexerAsync
                 myWeb.InitializeVariables()
                 myWeb.Open()
                 myWeb.mnUserId = 1
-                myWeb.mbAdminMode = False
+                If (myWeb.moConfig("SiteSearchIndexHiddenDetail") = "on") Then
+                    myWeb.mbAdminMode = True
+                Else
+                    myWeb.mbAdminMode = False
+                End If
                 myWeb.ibIndexMode = True
                 myWeb.ibIndexRelatedContent = (myWeb.moConfig("SiteSearchIndexRelatedContent") = "on")
                 myWeb.moTransform = moTransform
@@ -790,7 +795,10 @@ Public Class IndexerAsync
                                         If Not oElmt.GetAttribute("type") = "Document" Then
                                             oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                             cRules = ""
-                                            Dim sPageUrl As String = oElmtURL.GetAttribute("url")
+                                            Dim sPageUrl As String
+                                            If Not oElmtURL Is Nothing Then
+                                                sPageUrl = oElmtURL.GetAttribute("url")
+                                            End If
                                             If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                                             If (Not InStr(cRules, "NOINDEX") > 0) And Not (sPageUrl.StartsWith("http")) Then
 

@@ -17,20 +17,32 @@ Partial Public Class Cms
 
             Dim myWeb As Cms
             Dim myCart As Cms.Cart
+            Public mbOveridePrices As Boolean = False
 
             Public Sub New(ByRef aWeb As Cms)
                 myWeb = aWeb
                 myCart = myWeb.moCart
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
+                End If
             End Sub
 
             Public Sub New(ByRef aCart As Cms.Cart)
                 myCart = aCart
                 myWeb = myCart.myWeb
+                If Not oSubConfig Is Nothing Then
+                    If oSubConfig("OveridePrices") = "on" Then
+                        mbOveridePrices = True
+                    End If
+                End If
             End Sub
 
             Public Sub New()
                 'wont do anything here
             End Sub
+
 
 #Region "Admin"
 
@@ -706,6 +718,7 @@ Partial Public Class Cms
                 Dim length As Integer
                 Dim minimumTerm As Integer
                 Dim renewalTerm As Integer
+                Dim startDate As String
                 Dim delayStart As String
                 Dim vatAmt As Double
 
@@ -716,7 +729,15 @@ Partial Public Class Cms
 
 
                     For Each oelmt In oCartXml.SelectNodes("descendant-or-self::Item[productDetail/SubscriptionPrices]")
-
+                        If Not oelmt.SelectSingleNode("productDetail/StartDate") Is Nothing Then
+                            If IsDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText) Then
+                                startDate = xmlDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText)
+                            Else
+                                startDate = xmlDate(Now())
+                            End If
+                        Else
+                            startDate = xmlDate(Now())
+                        End If
                         repeatPrice = repeatPrice + CDbl("0" & oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText)
                         repeatInterval = oelmt.SelectSingleNode("productDetail/PaymentUnit").InnerText
                         repeatFrequency = 1
@@ -743,7 +764,7 @@ Partial Public Class Cms
                     oCartXml.SetAttribute("repeatMinimumTerm", minimumTerm)
                     oCartXml.SetAttribute("repeatRenewalTerm", renewalTerm)
                     oCartXml.SetAttribute("delayStart", delayStart)
-                    oCartXml.SetAttribute("startDate", xmlDate(Now()))
+                    oCartXml.SetAttribute("startDate", startDate)
 
                     'oCartXml.SetAttribute("payableAmount", oCartXml.GetAttribute("total") - SubscriptionPrice(repeatPrice, repeatInterval, length, interval, xmlDate(Now())))
                     'Payable amount should be the setup cost TS commented out the above line 01/11/2017
@@ -1140,7 +1161,7 @@ RedoCheck:
                 End Try
             End Function
 
-            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0)
+            Public Overridable Sub AddUserSubscriptions(ByVal nCartId As Integer, ByVal nSubUserId As Integer, Optional ByVal nPaymentMethodId As Integer = 0, Optional ByRef oCartXml As XmlElement = Nothing)
 
                 Dim cLastSubXml As String = ""
                 Dim oSubConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/subscriptions")
@@ -1184,6 +1205,16 @@ RedoCheck:
                                 xItemDoc.FirstChild.AppendChild(oNotes)
 
                                 AddUserSubscription(oDR("nContentKey"), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId)
+
+                                'Hustle in the renewal end so we can show on receipt.
+                                If Not oCartXml Is Nothing Then
+                                    Dim contentId As Long = xItemDoc.DocumentElement.GetAttribute("id")
+                                    Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[@contentId='" & contentId & "']")
+                                    If Not ItemXml Is Nothing Then
+                                        Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
+                                        ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
+                                    End If
+                                End If
 
                                 cLastSubXml = xItemDoc.OuterXml 'oDR("cContentXmlBrief")
                             Next
@@ -1314,6 +1345,9 @@ RedoCheck:
                     End If
 
                     Dim SubEndDate As Date = SubscriptionEndDate(SubStartDate, oCurSubElmt)
+                    If Not cartItemXml Is Nothing Then
+                        cartItemXml.SetAttribute("renewalEnd", xmlDate(SubEndDate))
+                    End If
 
                     oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content")
 
@@ -1461,7 +1495,7 @@ RedoCheck:
                 End Try
             End Sub
 
-            Public Sub CancelSubscription(ByVal nId As Integer, Optional cReason As String = "")
+            Public Sub CancelSubscription(ByVal nId As Integer, Optional cReason As String = "", Optional bEmailCustomer As Boolean = True)
                 Try
 
                     Dim SubInstance As New XmlDocument()
@@ -1491,7 +1525,7 @@ RedoCheck:
                     ExpireSubscriptionGroups(nId)
 
                     'Email the site owner to inform of cancelation !!!
-                    If oSubConfig("CancellationXSL") <> "" Then
+                    If oSubConfig("CancellationXSL") <> "" And bEmailCustomer Then
                         Dim oMessager As New Protean.Messaging(myWeb.msException)
                         Dim SubXml As XmlElement = GetSubscriptionDetail(Nothing, nId)
                         Dim CustomerEmail As String = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText

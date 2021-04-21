@@ -26,6 +26,8 @@ Imports Protean.Tools.Number
 Imports Protean.Tools.Xml
 Imports System
 Imports System.Collections.Generic
+Imports System.Web
+Imports System.Collections.Specialized
 
 Partial Public Class Cms
 
@@ -364,10 +366,7 @@ Partial Public Class Cms
                         End If
 
                     Next
-
                 End If
-
-
 
                 Return filters
 
@@ -377,6 +376,7 @@ Partial Public Class Cms
             End Try
         End Function
 
+
         Sub IndexQuery(ByVal cQuery As String, Optional fuzzySearch As String = "on")
             PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
@@ -384,6 +384,42 @@ Partial Public Class Cms
 
                 Dim resultsCount As Integer = 0
                 Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
+                Dim HitsLimit As Integer
+                Dim PageSize As Integer
+                Dim command As Integer
+                Dim Page As Integer = 0
+                Dim NextPage As Integer = 0
+                Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
+                Dim path As String = "intotheblue.local/"
+
+                'allow paging as per config setting 
+                'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
+                    If (myWeb.moRequest("hitlimit") > 0) Then
+                        HitsLimit = myWeb.moRequest("hitlimit")
+                    Else
+                        HitsLimit = myWeb.moConfig("SearchDefaultPageSize") 'first load as per page count
+                    End If
+                    If (myWeb.moRequest("PageSize") > 0) Then
+                        PageSize = myWeb.moRequest("PageSize")
+                    Else
+                        PageSize = myWeb.moConfig("SearchDefaultPageSize")
+                    End If
+                    If (myWeb.moRequest("command") > 0) Then
+                        command = myWeb.moRequest("command")
+                    Else
+                        command = 0
+                    End If
+                    If (myWeb.moRequest("page") > 0) Then
+                        Page = myWeb.moRequest("page")
+                    End If
+
+                Else 'search index result will show without pagination and records will load as per config setting value
+                    HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                    If HitsLimit = 0 Then HitsLimit = 300
+                    PageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                    If PageSize = 0 Then PageSize = 300
+                End If
 
                 If Not cQuery.Equals("") Then
 
@@ -399,8 +435,8 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    If myWeb.moRequest("fuzzy") = "on" Then _includeFuzzySearch = True
-                    If myWeb.moRequest("fuzzy") = "off" Then _includeFuzzySearch = False
+                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
 
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
@@ -408,6 +444,12 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
 
@@ -416,7 +458,7 @@ Partial Public Class Cms
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                     ' Generate the search query
-                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
+                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser)
 
                     ' Add a sort from the request
                     Dim queryOrder As Sort = SetSortFieldFromRequest(myWeb.moRequest)
@@ -429,8 +471,6 @@ Partial Public Class Cms
                         addElement(resultsXML, "LuceneLivePageFilter", livePages.ToString)
                     End If
 
-                    Dim HitsLimit As Integer = 300
-
                     If livePages Is Nothing Then
                         results = searcher.Search(searchQuery, HitsLimit)
                     Else
@@ -442,7 +482,6 @@ Partial Public Class Cms
                         myWeb.moDbHelper.logActivity(IIf(_includeFuzzySearch, dbHelper.ActivityType.FuzzySearch, dbHelper.ActivityType.Search), myWeb.mnUserId, 0, 0, results.TotalHits, cQuery)
                     End If
 
-
                     ' Optional fuzzysearch for figures
                     ' This is simply designed to get a count that can be fed back to users
                     ' This could be a performance no-no, although most searches are quick
@@ -451,7 +490,6 @@ Partial Public Class Cms
                         searchQuery = BuildLuceneQuery(cQuery, searchFilters)
                         resultsXML.SetAttribute("fuzzyCount", searcher.Search(searchQuery, livePages, HitsLimit, queryOrder).TotalHits.ToString)
                     End If
-
 
                     Dim resultDoc As Document = Nothing
                     Dim result As XmlElement = Nothing
@@ -487,25 +525,104 @@ Partial Public Class Cms
                         Dim pageNumber As Integer = totalResults Mod pageCount
                     End If
 
-
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
                     resultsXML.SetAttribute("pageEnd", pageEnd)
+                    resultsXML.SetAttribute("nextPage", pageEnd + 1)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    Dim artIdResults As New List(Of Long)
+                    resultsXML.SetAttribute("totalResults", totalResults)
+                    resultsXML.SetAttribute("pageSize", PageSize)
+                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
 
+                    ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
+                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
+                        If bShowHiddenForUser Then
+                            resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                        End If
+                    Else
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                    End If
+                    resultsXML.SetAttribute("Hits", HitsLimit)
+                    'If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
+                        resultsXML.SetAttribute("startCount", HitsLimit - PageSize + 1)
+                    End If
+
+                    Dim artIdResults As New List(Of Long)
 
                     ' Process the results
                     If totalResults > 0 Then
-                        Dim sDoc As ScoreDoc
-                        For Each sDoc In results.ScoreDocs()
+                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PageSize
+                        Dim takeRecord As Integer = PageSize
+                        'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
+                        Dim scoreDocs As ScoreDoc() = results.ScoreDocs
 
-                            resultDoc = searcher.Doc(sDoc.Doc)
+                        Dim thisArtIdList As String = ""
+                        'For Each sDoc In results.ScoreDocs()
 
+                        '    resultDoc = searcher.Doc(sDoc.Doc)
+                        For i As Integer = skipRecords To results.TotalHits - 1
+
+                            If i > (skipRecords + takeRecord) - 1 Then
+                                Exit For
+                            End If
+                            resultDoc = searcher.Doc(scoreDocs(i).Doc)
+                            pageIdField = resultDoc.GetField("pgid")
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
+                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            Else
+                                pageId = 0
+                            End If
+
+                            url = "" ' this is the link for the page
+
+                            ' Get the menuitem element from the xml
+                            If NodeState(moPageXml.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
+
+                                'don't add artId more than twice to results.
+                                Dim thisArtId As Long
+
+                                If Not resultDoc.GetField("artid") Is Nothing Then
+                                    thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+
+                                    If thisArtIdList = "" Then
+                                        thisArtIdList = thisArtId
+                                    Else
+                                        thisArtIdList = thisArtIdList & "," & thisArtId
+                                    End If
+                                End If
+
+                            Else
+                                ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
+                                processInfo = "not found in live page filter"
+                            End If
+
+                        Next
+
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
+                        'check artid/product is active
+                        If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
+                            thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
+                        End If
+
+                        skipRecords = (myWeb.moRequest("page")) * PageSize
+
+                        For i As Integer = skipRecords To results.TotalHits - 1
+
+                            If i > (skipRecords + takeRecord) - 1 Then
+                                Exit For
+                            End If
+                            resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
                             If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
                                 pageId = Convert.ToInt32(pageIdField.StringValue)
@@ -520,88 +637,86 @@ Partial Public Class Cms
 
                                 ' Only process this result if it's in the paging zone
                                 ' pageStart - 1 To pageEnd - 1
+
                                 'don't add artId more than twice to results.
-                                Dim thisArtId As Long
+                                Dim thisArtId As Long = 0
+
                                 If Not resultDoc.GetField("artid") Is Nothing Then
                                     thisArtId = CInt(resultDoc.GetField("artid").StringValue)
                                 End If
 
-                                If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
-                                    If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
+                                If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
+                                    If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
+                                        If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
-                                    url = resultDoc.GetField("url").StringValue & ""
+                                        url = resultDoc.GetField("url").StringValue & ""
 
-                                    ' Build the URL
-                                    If url = "" Then
-                                        url = menuItem.GetAttribute("url")
-                                        ' Add the artId, if exists
-                                        If Not resultDoc.GetField("artid") Is Nothing Then
-
-
-                                            If resultDoc.GetField("contenttype") IsNot Nothing _
-                                                AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                                url = resultDoc.GetField("url").StringValue
-                                            Else
-                                                If moConfig("LegacyRedirect") = "on" Then
-                                                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
-
-                                                    Dim artName As String = ""
-                                                    If resultDoc.GetField("name") IsNot Nothing Then
-                                                        artName = resultDoc.GetField("name").StringValue
-                                                        Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                                        artName = oRe.Replace(artName, "-").Trim("-")
-                                                        url &= artName
-                                                    End If
+                                        ' Build the URL
+                                        If url = "" Then
+                                            url = menuItem.GetAttribute("url")
+                                            ' Add the artId, if exists
+                                            If Not resultDoc.GetField("artid") Is Nothing Then
+                                                If resultDoc.GetField("contenttype") IsNot Nothing _
+                                                        AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
+                                                    url = resultDoc.GetField("url").StringValue
                                                 Else
-                                                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                    If moConfig("LegacyRedirect") = "on" Then
+                                                        url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
+
+                                                        Dim artName As String = ""
+                                                        If resultDoc.GetField("name") IsNot Nothing Then
+                                                            artName = resultDoc.GetField("name").StringValue
+                                                            Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                                                            artName = oRe.Replace(artName, "-").Trim("-")
+                                                            url &= artName
+                                                        End If
+                                                    Else
+                                                        url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                    End If
                                                 End If
+
+                                            End If
+                                        End If
+
+                                        result = moPageXml.CreateElement("Content")
+                                        result.SetAttribute("type", "SearchResult")
+                                        'result.SetAttribute("indexId", )
+                                        'result.SetAttribute("indexRank", sDoc.Score)
+                                        result.SetAttribute("indexRank", scoreDocs(i).Score)
+                                        For Each docField As Field In resultDoc.GetFields()
+
+                                            ' Don't add info to certain fields
+                                            If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                                result.SetAttribute(docField.Name, docField.StringValue)
                                             End If
 
+                                            If docField.Name = "abstract" Then
 
-                                        End If
-                                    End If
-
-
-
-                                    result = moPageXml.CreateElement("Content")
-                                    result.SetAttribute("type", "SearchResult")
-                                    'result.SetAttribute("indexId", )
-                                    result.SetAttribute("indexRank", sDoc.Score)
-
-                                    For Each docField As Field In resultDoc.GetFields()
-
-                                        ' Don't add info to certain fields
-                                        If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                            result.SetAttribute(docField.Name, docField.StringValue)
-                                        End If
-
-                                        If docField.Name = "abstract" Then
-
-                                            ' Try to output this as Xml
-                                            Dim innerString As String = docField.StringValue & ""
-                                            processInfo = innerString
-                                            Try
-                                                result.InnerXml = innerString.Trim
-                                            Catch ex As Exception
-                                                innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+                                                ' Try to output this as Xml
+                                                Dim innerString As String = docField.StringValue & ""
                                                 processInfo = innerString
-                                                result.InnerText = innerString
-                                            End Try
+                                                Try
+                                                    result.InnerXml = innerString.Trim
+                                                Catch ex As Exception
+                                                    innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+                                                    processInfo = innerString
+                                                    result.InnerText = innerString
+                                                End Try
 
-                                        End If
-                                    Next
-                                    result.SetAttribute("url", url)
+                                            End If
+                                        Next
+                                        result.SetAttribute("url", url)
 
-                                    moContextNode.AppendChild(result)
-                                    resultsCount = resultsCount + 1
+                                        moContextNode.AppendChild(result)
+                                        resultsCount = resultsCount + 1
+                                    End If
                                 End If
-
                             Else
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
                                 processInfo = "not found in live page filter"
                             End If
-
                         Next
+
                     End If
 
                     dateFinish = Now
@@ -611,12 +726,10 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("Time", "0")
                 End If
 
-                'Dim oResXML As XmlElement = moPageXml.CreateElement("Content")
-
-                resultsXML.SetAttribute("SearchString", cQuery)
+                resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
-                resultsXML.SetAttribute("Hits", resultsCount)
+                resultsXML.SetAttribute("resultsReturned", resultsCount)
 
                 moContextNode.AppendChild(resultsXML)
 
@@ -626,12 +739,13 @@ Partial Public Class Cms
             End Try
         End Sub
 
-
-
         Sub IndexQuery(ByRef myAPI As Protean.API, ByVal cQuery As String, Optional HitsLimit As Integer = 300, Optional fuzzySearch As String = "on")
             PerfMon.Log("Search", "IndexQuery")
             Dim processInfo As String = "Looking for : " & cQuery
             Try
+                If myWeb Is Nothing Then
+                    myWeb = New Cms()
+                End If
 
                 Dim resultsCount As Integer = 0
                 Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
@@ -656,7 +770,12 @@ Partial Public Class Cms
 
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
-
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter(myAPI)
 
@@ -665,7 +784,7 @@ Partial Public Class Cms
                     If searchFilters IsNot Nothing Then resultsXML.AppendChild(searchFilters)
 
                     ' Generate the search query
-                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters)
+                    Dim searchQuery As Lucene.Net.Search.Query = BuildLuceneQuery(cQuery, searchFilters, bShowHiddenForUser)
 
                     ' Add a sort from the request
                     Dim queryOrder As Sort = SetSortFieldFromRequest(myAPI.moRequest)
@@ -715,11 +834,11 @@ Partial Public Class Cms
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
-                    Dim totalResults As Long = results.TotalHits
+                    Dim totalResults As Long = results.ScoreDocs.Length 'TotalHits
 
                     pageCount = 0 'myAPI.GetRequestItemAsInteger("pageCount", _pagingDefaultSize)
                     If pageCount <= 0 Then
-                        pageCount = results.TotalHits
+                        pageCount = results.ScoreDocs.Length 'TotalHits
                     End If
 
                     If totalResults = 0 Then
@@ -748,8 +867,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortDir", myAPI.moRequest("sortDir"))
 
                     Dim artIdResults As New List(Of Long)
-
-
+                    Dim thisArtIdList As String = ""
                     ' Process the results
                     If totalResults > 0 Then
                         Dim sDoc As ScoreDoc
@@ -766,92 +884,122 @@ Partial Public Class Cms
 
                             url = "" ' this is the link for the page
 
-                            ' Get the menuitem element from the xml
-                            '     If NodeState(moContextNode.OwnerDocument.DocumentElement, "/Page/Menu/descendant-or-self::MenuItem[@id=" & pageId & "]", , , , menuItem) <> XmlNodeState.NotInstantiated Then
-
-                            ' Only process this result if it's in the paging zone
-                            ' pageStart - 1 To pageEnd - 1
                             'don't add artId more than twice to results.
                             Dim thisArtId As Long
                             If Not resultDoc.GetField("artid") Is Nothing Then
                                 thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                                If thisArtIdList = "" Then
+                                    thisArtIdList = thisArtId
+                                Else
+                                    thisArtIdList = thisArtIdList & "," & thisArtId
+                                End If
                             End If
 
-                            If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
-                                If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
+                        Next
+                        ''check whether logged in user is csuser and skip checking status
+                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                        'End If
+                        'check artid/product is active
+                        If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
+                            thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
+                        End If
 
-                                url = resultDoc.GetField("url").StringValue & ""
+                        For Each sDoc In results.ScoreDocs()
 
-                                ' Build the URL
-                                If url = "" Then
-                                    url = menuItem.GetAttribute("url")
-                                    ' Add the artId, if exists
-                                    If Not resultDoc.GetField("artid") Is Nothing Then
+                            resultDoc = searcher.Doc(sDoc.Doc)
+
+                            pageIdField = resultDoc.GetField("pgid")
+                            If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
+                                pageId = Convert.ToInt32(pageIdField.StringValue)
+                            Else
+                                pageId = 0
+                            End If
+
+                            url = "" ' this is the link for the page
+                            Dim thisArtId As Long = 0
+                            If Not resultDoc.GetField("artid") Is Nothing Then
+                                thisArtId = CInt(resultDoc.GetField("artid").StringValue)
+                            End If
+                            If thisArtId = 0 Or thisArtIdList.Contains(thisArtId.ToString()) Then
+                                If thisArtId = Nothing Or Not artIdResults.Exists(Function(x) x = thisArtId) Then
+                                    If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
+
+                                    url = resultDoc.GetField("url").StringValue & ""
+
+                                    ' Build the URL
+                                    If url = "" Then
+                                        url = menuItem.GetAttribute("url")
+                                        ' Add the artId, if exists
+                                        If Not resultDoc.GetField("artid") Is Nothing Then
 
 
-                                        If resultDoc.GetField("contenttype") IsNot Nothing _
-                                                AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
-                                            url = resultDoc.GetField("url").StringValue
-                                        Else
-                                            If moConfig("LegacyRedirect") = "on" Then
-                                                url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
-
-                                                Dim artName As String = ""
-                                                If resultDoc.GetField("name") IsNot Nothing Then
-                                                    artName = resultDoc.GetField("name").StringValue
-                                                    Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
-                                                    artName = oRe.Replace(artName, "-").Trim("-")
-                                                    url &= artName
-                                                End If
+                                            If resultDoc.GetField("contenttype") IsNot Nothing _
+                                                    AndAlso resultDoc.GetField("contenttype").StringValue = "Download" Then
+                                                url = resultDoc.GetField("url").StringValue
                                             Else
-                                                url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                If moConfig("LegacyRedirect") = "on" Then
+                                                    url &= IIf(url = "/", "", "/") & resultDoc.GetField("artid").StringValue & "-/"
+
+                                                    Dim artName As String = ""
+                                                    If resultDoc.GetField("name") IsNot Nothing Then
+                                                        artName = resultDoc.GetField("name").StringValue
+                                                        Dim oRe As New Text.RegularExpressions.Regex("[^A-Z0-9]", Text.RegularExpressions.RegexOptions.IgnoreCase)
+                                                        artName = oRe.Replace(artName, "-").Trim("-")
+                                                        url &= artName
+                                                    End If
+                                                Else
+                                                    url &= IIf(url = "/", "", "/") & "item" & resultDoc.GetField("artid").StringValue
+                                                End If
                                             End If
                                         End If
-
-
-                                    End If
-                                End If
-
-
-
-                                result = moContextNode.OwnerDocument.CreateElement("Content")
-                                result.SetAttribute("type", "SearchResult")
-                                'result.SetAttribute("indexId", )
-                                result.SetAttribute("indexRank", sDoc.Score)
-
-                                For Each docField As Field In resultDoc.GetFields()
-
-                                    ' Don't add info to certain fields
-                                    If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
-                                        result.SetAttribute(docField.Name, docField.StringValue)
                                     End If
 
-                                    If docField.Name = "abstract" Then
+                                    result = moContextNode.OwnerDocument.CreateElement("Content")
+                                    result.SetAttribute("type", "SearchResult")
+                                    'result.SetAttribute("indexId", )
+                                    result.SetAttribute("indexRank", sDoc.Score)
 
-                                        ' Try to output this as Xml
-                                        Dim innerString As String = docField.StringValue & ""
-                                        processInfo = innerString
-                                        Try
-                                            result.InnerXml = innerString.Trim
-                                        Catch ex As Exception
-                                            innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+                                    For Each docField As Field In resultDoc.GetFields()
+
+                                        ' Don't add info to certain fields
+                                        'If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+                                        '    result.SetAttribute(docField.Name, docField.StringValue)
+                                        'End If
+
+                                        If Array.IndexOf(reservedFieldNames, docField.Name) = -1 Then
+
+                                            'check whether logged in user is csuser and skip checking status
+                                            If myWeb.moDbHelper Is Nothing Then
+                                                myWeb.moDbHelper = myWeb.GetDbHelper()
+                                            End If
+                                            result.SetAttribute(docField.Name, docField.StringValue) 'search all the products
+
+                                        End If
+
+                                        If docField.Name = "abstract" Then
+
+                                            ' Try to output this as Xml
+                                            Dim innerString As String = docField.StringValue & ""
                                             processInfo = innerString
-                                            result.InnerText = innerString
-                                        End Try
+                                            Try
+                                                result.InnerXml = innerString.Trim
+                                            Catch ex As Exception
+                                                innerString = innerString.Replace("&", "&amp;").Replace("&amp;amp;", "&amp;").Trim()
+                                                processInfo = innerString
+                                                result.InnerText = innerString
+                                            End Try
 
-                                    End If
-                                Next
-                                result.SetAttribute("url", url)
+                                        End If
+                                    Next
+                                    result.SetAttribute("url", url)
 
-                                moContextNode.AppendChild(result)
-                                resultsCount = resultsCount + 1
+                                    moContextNode.AppendChild(result)
+                                    resultsCount = resultsCount + 1
+                                End If
                             End If
-
-                            '  Else
-                            ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
-                            ' processInfo = "not found in live page filter"
-                            'End If
-
                         Next
                     End If
 
@@ -876,8 +1024,6 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
-
-
         Sub XPathQuery(ByVal sSearch As String, ByVal cContentType As String)
             PerfMon.Log("Search", "XPathQuery")
             Dim sXpath As String = ""
@@ -1821,7 +1967,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
         ''' <param name="filters"></param>
         ''' <returns></returns>
         ''' <remarks></remarks>
-        Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement) As Lucene.Net.Search.Query
+        Private Function BuildLuceneQuery(ByVal keywordsToSearch As String, ByVal filters As XmlElement, Optional ByVal bShowHiddenForUser As Boolean = False) As Lucene.Net.Search.Query
 
             PerfMon.Log("Search", "BuildLuceneQuery")
             Dim processInfo As String = "Looking for : " & keywordsToSearch
@@ -1863,7 +2009,14 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     ' Default field search
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
-
+                    'apply status filter to show only active Products
+                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
+                        If Not bShowHiddenForUser Then
+                            queryToBeParsed.Append(" AND ")
+                            queryTerms = ParseKeywordsAndPhrases("1")
+                            BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                        End If
+                    End If
                 End If
 
                 ' Prefix name search is an optional hardcoded search that prefix searches the qsname field
@@ -1871,7 +2024,14 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 ' In other words if you include this option, you will need to update your index to 
                 ' index the name field under qsname lowercased untokenized.
                 ' e.g. <meta name="qsname" content="{$displayNameToLower}" tokenize="false" />
-                Dim keywordQuery As Query = parser.Parse(queryToBeParsed.ToString())
+                Dim keywordQuery As Query
+                If moConfig("SiteWildCardSearch") = "on" Then
+                    parser.AllowLeadingWildcard = True
+                    keywordQuery = parser.Parse($"*{keywordsToSearch}*")
+                Else
+                    keywordQuery = parser.Parse(queryToBeParsed.ToString())
+                End If
+
 
                 If _includePrefixNameSearch And Not _overrideQueryBuilder Then
                     Dim booleanQ As New BooleanQuery()
@@ -2034,18 +2194,26 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
             PerfMon.Log("Search", "BuildLuceneKeywordQuery")
             Dim processInfo As String = ""
             Dim firstItem As Boolean = False
+            '  Dim queryBuilder1 As New StringBuilder
+            ' Dim fieldName1 As String = "status"
 
             Try
                 ' Text query 1:
                 ' Remove all quotes and put the whole thing in quotes
-                If Not String.IsNullOrEmpty(fieldName) Then queryBuilder.Append(fieldName).Append(":")
+                If Not String.IsNullOrEmpty(fieldName) Then
+                    queryBuilder.Append(fieldName).Append(":")
+                    'queryBuilder1.Append(fieldName1).Append(":")
+                End If
                 queryBuilder.Append("""")
+                ' queryBuilder1.Append("""")
                 For Each keyword As String In keywords
                     queryBuilder.Append(keyword.Replace("""", ""))
                     queryBuilder.Append(" ")
                 Next
+                ' queryBuilder1.Append("1")
+                ' queryBuilder1.Append(" ")
                 queryBuilder.Append("""^").Append((boostBase + 2).ToString)
-
+                'queryBuilder1.Append("""^").Append((boostBase + 2).ToString)
 
                 ' Text query 2 - as it comes:
                 If keywords.Length > 1 Then
@@ -2078,6 +2246,8 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         queryBuilder.Append(keyword)
                         queryBuilder.Append("~^").Append((boostBase).ToString)
                     Next
+                    ' queryBuilder.Append(") OR (")
+                    ' queryBuilder.Append(queryBuilder1)
                     queryBuilder.Append(") ")
                 End If
 

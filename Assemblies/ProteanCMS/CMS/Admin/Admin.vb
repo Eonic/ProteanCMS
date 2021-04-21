@@ -32,7 +32,7 @@ Partial Public Class Cms
 
         Public moPageXML As XmlDocument = New XmlDocument
 
-        Public Shadows mcModuleName As String = "Eonic.Admin"
+        Public Shadows mcModuleName As String = "Protea.Admin"
         Public mcEwCmd As String
         Public mcEwCmd2 As String
         Public mcEwCmd3 As String
@@ -639,7 +639,8 @@ ProcessFlow:
                             myWeb.moCtx.Application("ewSettings") = Nothing
                             mcEwCmd = "Normal"
                             myWeb.msRedirectOnEnd = "/?rebundle=true"
-
+                            '' When we call the rebundle when we add or edit a page (not content) we also want to clear the sitecache table.
+                            'moDbHelper.clearStructureCacheAll()
                         Else
                             sAdminLayout = "AdminXForm"
                         End If
@@ -734,7 +735,7 @@ ProcessFlow:
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
                                     Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-"(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
@@ -768,7 +769,7 @@ ProcessFlow:
                                     oXfrm.NewFrm("LocationFilter")
                                     oXfrm.submission("LocationFilter", "/?ewCmd=ByType." & ContentType & ".Location", "post", "")
                                     Dim sSql As String = "select dbo.fxn_getPagePath(nStructKey) as name, nStructKey as value from tblContentStructure where nStructKey in " &
-"(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
+                                    "(select nStructId from tblContentLocation cl inner join tblContent c on cl.nContentID = c.nContentKey where cContentSchemaName = '" & ContentType & "' and bPrimary = 1 ) order by name"
                                     Dim locSelect As XmlElement = oXfrm.addSelect1(oXfrm.moXformElmt, "Location", False, "Select Location", "submit-on-select")
 
                                     If myWeb.moRequest("Location") <> "" Then
@@ -784,10 +785,18 @@ ProcessFlow:
                                     oPageDetail.AppendChild(oXfrm.moXformElmt)
                                     myWeb.ClearPageCache()
 
+                                    Dim cSort As String = "|ASC_cl.nDisplayOrder"
+                                    Select Case myWeb.moRequest("sortby")
+                                        Case "name"
+                                            cSort = "|ASC_c.cContentName"
+                                        Case Else
+                                            cSort = "|ASC_cl.nDisplayOrder"
+                                    End Select
+
                                     'get a list of pages with this content on.
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
-                                        myWeb.GetContentXMLByType(moPageXML.DocumentElement, ContentType & "|ASC_cl.nDisplayOrder", FilterSQL)
+                                        myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
                                         myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
@@ -1359,7 +1368,19 @@ ProcessFlow:
                             If String.IsNullOrEmpty(myWeb.mcBehaviourAddPageCommand) And String.IsNullOrEmpty(myWeb.mcBehaviourEditPageCommand) Then
 
                                 ' Default behaviour
-                                If myWeb.moSession("lastPage") <> "" Then
+                                If myWeb.moRequest("returnCmd") <> "" Then
+                                    Dim returnPageId As Integer
+                                    If mcEwCmd = "EditPage" And myWeb.moRequest("pgid") <> "" Then
+                                        returnPageId = myWeb.moRequest("pgid")
+                                    ElseIf mcEwCmd = "AddPage" And myWeb.moRequest("parid") <> "" Then
+                                        returnPageId = myWeb.moRequest("parid")
+                                    End If
+                                    If returnPageId > 0 Then
+                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd") & "&pgid=" & returnPageId
+                                    Else
+                                        myWeb.msRedirectOnEnd = "?ewCmd=" & myWeb.moRequest("returnCmd")
+                                    End If
+                                ElseIf myWeb.moSession("lastPage") <> "" Then
                                     myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
                                     myWeb.moSession("lastPage") = ""
                                 Else
@@ -1550,6 +1571,20 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" & myWeb.moRequest("id")
                             GoTo ProcessFlow
                         End If
+                    Case "EditOrderContact"
+
+                        sAdminLayout = "EditUserContact"
+                        Dim sSql = "Select nContactKey from tblCartContact where cContactType = " &
+                            $"'{myWeb.moRequest("contacttype")} Address' and nContactCartid=" & myWeb.moRequest("orderid")
+                        Dim sContactKey As String = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(CInt("0" & sContactKey)))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "Orders"
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("orderid")
+                            GoTo ProcessFlow
+                        End If
                     Case "AddUserContact"
 
                         sAdminLayout = mcEwCmd
@@ -1643,7 +1678,16 @@ ProcessFlow:
                             'return to process flow
                             mcEwCmd = myWeb.moSession("ewCmd")
                             mcEwCmd2 = myWeb.moSession("ewCmd2")
-                            myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies&pgid=1"
+                            'Select Case myWeb.moRequest("dirType")
+                            '    Case "User"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
+                            '    Case "Group"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
+                            '    Case "Group"
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListGroups"
+                            '    Case Else
+                            '        myWeb.msRedirectOnEnd = "/?ewCmd=ListCompanies"
+                            'End Select
                             GoTo ProcessFlow
 
                         Else
@@ -2767,6 +2811,28 @@ AfterProcessFlow:
                                     End If
                                 Else
                                     sProcessInfo &= "cannot add " & currentCmd
+                                End If
+                            Next
+
+                            Dim currentModule As String
+                            Dim parentModule As String
+                            For Each oElmt In oTempMenuRoot.SelectNodes("descendant-or-self::Module[@jsonURL!='']")
+                                currentModule = oElmt.GetAttribute("name")
+                                Dim oParentElmt As XmlElement = oElmt.ParentNode
+                                parentModule = oParentElmt.GetAttribute("name")
+                                If oMenuRoot.SelectSingleNode("descendant-or-self::Module[@name ='" & currentModule & "' ]") Is Nothing Then
+                                    'we can't find it lets add it
+                                    If Not (oParentElmt.GetAttribute("name") = "" And oMenuRoot.SelectSingleNode("descendant-or-self::Module[@name ='" & oParentElmt.GetAttribute("name") & "' ]") Is Nothing) Then
+                                        If Not oMenuRoot.SelectSingleNode("descendant-or-self::MenuItem[@name ='" & parentModule & "' ]") Is Nothing Then
+                                            oMenuRoot.SelectSingleNode("descendant-or-self::MenuItem[@name ='" & parentModule & "' ]").AppendChild(oElmt.CloneNode(True))
+                                        Else
+                                            oMenuRoot.FirstChild.AppendChild(oElmt.CloneNode(True))
+                                        End If
+                                    Else
+                                        sProcessInfo &= "cannot add " & currentModule
+                                    End If
+                                Else
+                                    sProcessInfo &= "cannot add " & currentModule
                                 End If
                             Next
 

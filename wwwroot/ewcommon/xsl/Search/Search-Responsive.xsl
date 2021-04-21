@@ -7,7 +7,7 @@
   <xsl:template match="Content[@type='Module' and @moduleType='Search']" mode="displayBrief">
     <xsl:variable name="searchFormId" select="@id" />
     <xsl:variable name="searchMode" select="@searchMode" />
-    <xsl:variable name="searchString" select="/Page/Request/Form[Item[@name='searchMode']=$searchMode]/Item[@name='searchString']"/>
+    <xsl:variable name="searchString" select="/Content[@type='SearchHeader']/@searchString"/>
 
     <!-- Collect and Filter results -->
     <xsl:variable name="searchResults">
@@ -24,7 +24,7 @@
       <xsl:choose>
         <!-- Display Results -->
         <xsl:when test="count(ms:node-set($searchResults)/*) &gt; 0">
-          <xsl:apply-templates select="." mode="searchSummary">
+          <xsl:apply-templates select="Content[@type='SearchHeader']" mode="searchSummary">
             <xsl:with-param name="searchFormId" select="$searchFormId" />
             <xsl:with-param name="searchString" select="$searchString" />
             <xsl:with-param name="searchResults" select="$searchResults"/>
@@ -37,7 +37,7 @@
         
         <!-- Display No Results IF Search was of that type -->
         <xsl:when test="count(ms:node-set($searchResults)/*) &gt; 0 and @searchMode=/Page/Request/Form/Item[@name='searchMode']/node()">
-          <xsl:apply-templates select="." mode="searchSummary">
+          <xsl:apply-templates select="Content[@type='SearchHeader']" mode="searchSummary">
             <xsl:with-param name="searchFormId" select="$searchFormId" />
             <xsl:with-param name="searchString" select="$searchString" />
             <xsl:with-param name="searchResults" select="$searchResults"/>
@@ -95,7 +95,7 @@
           </select>
         </xsl:if>
           <span class="input-group-btn">
-            <button type="submit" class="btn btn-primary" name="Search">
+            <button type="button" class="btn btn-primary" name="Search">
               <i class="fa fa-search">
                 <xsl:text> </xsl:text>
               </i>
@@ -125,17 +125,60 @@
     <xsl:param name="searchResults" />
     <xsl:param name="searchString" />
     <xsl:variable name="resultCount" select="count(ms:node-set($searchResults)/Content)" />
+    <xsl:variable name="totalResults" select="@totalResults" />
+    <xsl:variable name="pageCount" select="@pageCount" />
+    <xsl:variable name="pageStart" select="@pageStart" />
+    <xsl:variable name="LastLoadResultCount" select="@loadedResult" />
+    <xsl:variable name="pageSize" select="@pageSize" />
     <br/>
-    <div class="alert alert-success">
-      <xsl:text>Your search for '</xsl:text>
-      <xsl:value-of select="$searchString" />
-      <xsl:text>' returned </xsl:text>
-      <xsl:value-of select="$resultCount" />
+    <div class="panel panel-primary text-right search-results-area" id="ResultDiv">
+      <div class="panel-body">
+      <!--<xsl:text> Total </xsl:text>
+      <xsl:value-of select="$resultTotalCount" />
+       <xsl:text> records found </xsl:text>
+     
+      <button type="button" id="btnPrevResult" class="search-result text-right text-green" name="Search">
+        Prev <i class=" fa fa-chevron-circle-left text-green"></i>
+      </button>&#160;&#160;
+      <xsl:if test="$resultTotalCount &gt; 12">
+        <button type="button" id="btnNextResult" class="search-result text-right text-green" name="Search">
+          Next <i class=" fa fa-chevron-circle-right text-green"></i>
+        </button>
+      </xsl:if>-->
+        <span class="legend">
+      <a type="button" id="btnPrevResult" class="btn btn-default pull-left" href="">
+        Prev <i class=" fa fa-chevron-circle-left text-green"></i>
+      </a>
+      <xsl:value-of select="$pageStart" />
+      -
       <xsl:choose>
-	      <xsl:when test="$resultCount='1'"><xsl:text> results </xsl:text></xsl:when>
-	      <xsl:otherwise><xsl:text> results </xsl:text></xsl:otherwise>
+        <xsl:when test="$totalResults &gt;= $pageCount">
+          <!--<xsl:value-of select="$Hit" />-->
+          <xsl:value-of select="$pageStart + $pageCount - 1" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$totalResults" />
+        </xsl:otherwise>
       </xsl:choose>
-      
+
+      <xsl:text> out of </xsl:text>
+
+      <xsl:value-of select="$totalResults" />
+      <xsl:choose>
+        <xsl:when test="$totalResults='1'">
+          <xsl:text> result </xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> results </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      </span>
+      <xsl:if test="$totalResults &gt; $pageSize">
+        <a id="btnNextResult" class="btn btn-default"  name="Search" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageEnd + 1}">
+          Next <i class=" fa fa-chevron-circle-right text-green"></i>
+        </a>
+      </xsl:if>
+      </div>
     </div>
   </xsl:template>
 

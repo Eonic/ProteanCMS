@@ -7,7 +7,8 @@
          <add key="" value=""/>
        </rewriteMap>
     </instance>
-    <submission id="WebSettings" action="" method="post" event="form_check(this)" />
+    <submission id="WebSettings" action="" method="post" />
+    
      <bind nodeset="rewriteMap">
        <bind id="urlRepeat" nodeset="add">
          <bind id="OldUrl" nodeset="@key" required="true()" type="string" />
@@ -15,10 +16,20 @@
        </bind>
      </bind>
    </model>
-   <group ref="WebSettings">
-    <label>301 (Perminent) Page Redirects</label>
-     <group>
-       <repeat bind="urlRepeat" class="row">
+ 
+ 
+  <group ref="WebSettings">
+   
+    <label>301 (Permanent) Page Redirects</label>
+    <!--<group>
+      <submit submission="" ref="submit" class="principle save301RedirectForm" id="">
+        <label>Save Settings</label>
+      </submit>
+
+    </group>-->
+     <group class="301RedirectBody">
+       <input class="RedirectPage"/>
+       <!--<repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
            <label>Old URL</label>
          </input>
@@ -29,18 +40,15 @@
            <label>Del</label>
            <delete bind="urlRepeat" at="index('urlRepeat')"/>
          </trigger>
-       </repeat>
+       </repeat>-->
      </group>
-     <group>
-       <trigger>
-         <label>Add New URL</label>
-         <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add"/>
-       </trigger>
-     </group>
+    <!--<group>
+      <trigger>
+        <label>Add New URL</label>
+        <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add "/>
+      </trigger>
+      
+    </group>-->
 
-     
-     <submit submission="" ref="submit" class="principle">
-      <label>Save Settings</label>
-    </submit>
   </group>
 </Content>

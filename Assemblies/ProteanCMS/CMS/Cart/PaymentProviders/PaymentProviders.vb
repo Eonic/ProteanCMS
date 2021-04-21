@@ -4177,7 +4177,9 @@ Partial Public Class Cms
                 If cResult = "" Then cResult = 0
                 Return cResult
             End Function
-
+            '
+            'Need to move to payment.baseprovider.activities
+            'Then we can remove this function from here.
             Function xfrmSecure3D(ByVal acs_url As String, ByVal MD As String, ByVal pa_req As String, ByVal callbackUrl As String) As xForm
                 PerfMon.Log("PaymentProviders", "xfrmSecure3D")
                 Dim oXform As xForm = New xForm(myWeb.msException)
@@ -4272,7 +4274,8 @@ Partial Public Class Cms
 
             End Function
 
-
+            'We need to get rid off it once each payment provider is tested.
+            'Moved to the payment.baseprovider.activities
             Function GetRedirect3dsForm(ByRef myWeb As Protean.Cms) As xForm
                 PerfMon.Log("EPDQ", "xfrmSecure3DReturn")
                 Dim oXform As xForm = New Protean.Cms.xForm(myWeb.msException)
@@ -4295,7 +4298,7 @@ Partial Public Class Cms
                     oXform.submission("Secure3DReturn", goServer.UrlDecode(RedirectURL), "POST", "return form_check(this);")
                     oFrmInstance = oXform.moPageXML.CreateElement("Secure3DReturn")
                     oXform.Instance.AppendChild(oFrmInstance)
-                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting...")
+                    oFrmGroup = oXform.addGroup(oXform.moXformElmt, "Secure3DReturn1", "Secure3DReturn1", "Redirecting... Please do not refresh")
                     Dim item As Object
 
                     For Each item In myWeb.moRequest.Form
@@ -4403,12 +4406,12 @@ Partial Public Class Cms
 
                     ' Optionally set cardholder name over billing address
                     If moCartConfig("CardholderName") = "on" Then
-                        oXform.addInput(oFrmGroup, "creditCard/cardholder", False, "Name of cardholder", "textbox required")
+                        oXform.addInput(oFrmGroup, "creditCard/cardholder", False, "Name of cardholder", "textbox required", "cc-name")
                         oXform.addNote("creditCard/cardholder", noteTypes.Hint, "<span class=""hint-trans-cardholder"">Enter name exactly as it appears on the card</span>")
 
                     End If
 
-                    oXform.addSelect1(oFrmGroup, "creditCard/type", False, "Card Type", "required", Protean.xForm.ApperanceTypes.Full)
+                    oXform.addSelect1(oFrmGroup, "creditCard/type", False, "Card Type", "required", Protean.xForm.ApperanceTypes.Full, "cc-type")
                     aCardTypes = Split(cardTypes, ",")
                     For i = 0 To UBound(aCardTypes)
                         aCardTypes2 = Split(aCardTypes(i), ":")
@@ -4417,10 +4420,10 @@ Partial Public Class Cms
                     Dim oGroup As XmlElement
                     Select Case myWeb.moConfig("cssFramework")
                         Case "bs3"
-                            oXform.addInput(oFrmGroup, "creditCard/number", False, "Card Number", "textbox required")
+                            oXform.addInput(oFrmGroup, "creditCard/number", False, "Card Number", "textbox required", "cc-number")
                             '  oGroup = oXform.addGroup(oFrmGroup, "cardDetails", "inline cardDetails")
-                            oXform.addInput(oFrmGroup, "creditCard/expireDate", False, "Expire Date", "ccExpire required")
-                            oXform.addInput(oFrmGroup, "creditCard/CV2", False, "Security Code (CV2)", "Cv2 textbox singleword required")
+                            oXform.addInput(oFrmGroup, "creditCard/expireDate", False, "Expire Date", "ccExpire required", "cc-exp")
+                            oXform.addInput(oFrmGroup, "creditCard/CV2", False, "Security Code (CV2)", "Cv2 textbox singleword required", "cc-csc")
                             oXform.addNote("creditCard/CV2", noteTypes.Hint, "Please enter the last 3 digits printed on the signature strip on the back of your card.", False, "cv2hint")
                             oXform.addInput(oFrmGroup, "creditCard/issueDate", False, "Issue Date", "ccIssue")
                             'oXform.addNote("creditCard/issueDate", noteTypes.Hint, "If required")

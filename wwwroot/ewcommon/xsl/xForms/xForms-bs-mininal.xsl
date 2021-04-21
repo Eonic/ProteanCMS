@@ -20,13 +20,13 @@
         </div>
       </div>
     </xsl:if>
-    
+
     <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
       <script type="text/javascript">
         var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;
       </script>
     </xsl:if>
-    
+
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
@@ -62,7 +62,7 @@
     </xsl:if>
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
-  
+
   <!-- -->
   <xsl:template match="Content | div[@class='xform']" mode="xform">
     <form method="{model/submission/@method}" action="" data-fv-framework="bootstrap"
@@ -241,57 +241,61 @@
   <!-- ========================== GROUP Horizontal ========================== -->
   <!-- -->
   <xsl:template match="group[contains(@class,'horizontal_cols') and parent::group] | repeat[contains(@class,'horizontal_cols') and parent::group]" mode="xform">
-    <div class="responsive-table">
-      <table cellspacing="0" class="table form-columns">
-        <thead>
-          <xsl:if test="label">
-            <tr>
-              <td colspan="{count(group[1]/input)+1}">
-                <h3>
-                  <xsl:copy-of select="label/node()"/>
-                </h3>
-              </td>
-            </tr>
-          </xsl:if>
-          <xsl:apply-templates select="hint | help | alert" mode="xform">
-            <xsl:with-param name="cols" select="count(group[1]/input)+1"/>
-          </xsl:apply-templates>
-          <tr class="horizontal_cols_header">
-            <xsl:for-each select="group[1] | repeat[1]">
-              <xsl:for-each select="input | secret | select | select1 | range | textarea | upload | hint | help | alert">
-                <th>
-                  <xsl:apply-templates select="." mode="xform_header"/>
-                  <xsl:text> </xsl:text>
-                </th>
-              </xsl:for-each>
-              </xsl:for-each>
-          </tr>
-        </thead>
-        <tbody>
-          <xsl:for-each select="group | repeat">
-            <tr>
-              <xsl:if test="label">
-                <th>
-                  <xsl:apply-templates select="label">
-                    <xsl:with-param name="cLabel">
-                      <xsl:value-of select="@ref"/>
-                    </xsl:with-param>
-                  </xsl:apply-templates>
-                </th>
-              </xsl:if>
-              <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | trigger" mode="xform_cols"/>
-            </tr>
-            <xsl:if test="*/alert or */hint or */help">
-              <tr>
-                <xsl:if test="label">
-                  <th>&#160;</th>
-                </xsl:if>
-                <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes"/>
-              </tr>
-            </xsl:if>
+    <div class="pseudo-table">
+      <div class="pt-head">
+        <xsl:if test="label">
+          <div class="pt-row">
+            <h3>
+              <xsl:copy-of select="label/node()"/>
+            </h3>
+          </div>
+        </xsl:if>
+        <xsl:apply-templates select="hint | help | alert" mode="xform">
+          <xsl:with-param name="cols" select="count(group[1]/input)+1"/>
+        </xsl:apply-templates>
+        <!--<div class="horizontal_cols_header pt-row">
+          <xsl:for-each select="group[1] | repeat[1]">
+            <xsl:for-each select="input | secret | select | select1 | range | textarea | upload | hint | help | alert ">
+              <div class="pt-col">
+                <xsl:apply-templates select="." mode="xform_header"/>
+                <xsl:text> </xsl:text>
+              </div>
+            </xsl:for-each>
+            <xsl:for-each select="trigger">
+              <div class="pt-col">
+                <xsl:text> </xsl:text>
+              </div>
+            </xsl:for-each>
           </xsl:for-each>
-        </tbody>
-      </table>
+        </div>-->
+      </div>
+      <div class="pt-body">
+        <xsl:for-each select="group | repeat">
+          <div class="pt-row">
+            <xsl:if test="label">
+              <div class="pt-col form-group">
+                <xsl:apply-templates select="label">
+                  <xsl:with-param name="cLabel">
+                    <xsl:value-of select="@ref"/>
+                  </xsl:with-param>
+                </xsl:apply-templates>
+              </div>
+            </xsl:if>
+            <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | trigger" mode="xform_cols_pt"/>
+
+          </div>
+          <xsl:if test="*/alert or */hint or */help">
+
+            <div class="pt-row">
+              <xsl:if test="label">
+
+                <div class="pt-col ">&#160;</div>
+              </xsl:if>
+              <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
+            </div>
+          </xsl:if>
+        </xsl:for-each>
+      </div>
     </div>
     <xsl:if test="count(submit | trigger) &gt; 0">
       <div>
@@ -361,7 +365,9 @@
       <ul class="nav nav-tabs" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation">
-              <xsl:if test="position()=1"><xsl:attribute name="class">active</xsl:attribute></xsl:if>
+            <xsl:if test="position()=1">
+              <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:if>
             <a href="#tab-{@id}" aria-controls="home" role="tab" data-toggle="tab">
               <xsl:apply-templates select="label"/>
             </a>
@@ -371,19 +377,21 @@
       <div class="tab-content">
         <xsl:for-each select="group">
           <div role="tabpanel" class="tab-pane" id="tab-{@id}">
-            <xsl:if test="position()=1"><xsl:attribute name="class">tab-pane active</xsl:attribute></xsl:if>
+            <xsl:if test="position()=1">
+              <xsl:attribute name="class">tab-pane active</xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="xform"/>
           </div>
         </xsl:for-each>
       </div>
     </div>
   </xsl:template>
-  
+
   <xsl:template match="group[contains(@class,'input-group')]" mode="xform">
     <div class="input-group">
       <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger" mode="xform"/>
       <span class="input-group-btn">
-           <xsl:apply-templates select="submit" mode="xform"/>
+        <xsl:apply-templates select="submit" mode="xform"/>
       </span>
     </div>
   </xsl:template>
@@ -422,6 +430,32 @@
     <td>
       <xsl:apply-templates select="." mode="xform_legend"/>
     </td>
+  </xsl:template>
+
+  <!-- -->
+  <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_pt">
+    
+    <div class="pt-col form-group">
+      <span class="pt-label">
+        <xsl:value-of select="label"/>
+      </span>
+      <xsl:apply-templates select="." mode="xform_control"/>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="trigger" mode="xform_cols_pt">
+    <div class="pt-col">
+    <span class="pt-label">&#160;</span>
+      <xsl:apply-templates select="." mode="xform"/>
+    </div>
+  </xsl:template>
+
+  <!-- -->
+  <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt">
+
+    <div class="pt-col">
+      <xsl:apply-templates select="." mode="xform_legend"/>
+    </div>
   </xsl:template>
 
   <xsl:template match="hint" mode="xform">
@@ -474,24 +508,24 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-      
-        <xsl:choose>
-          <xsl:when test="$classVal='alert-success'">
-            <i class="fa fa-check fa-2x pull-left">
-              <xsl:text> </xsl:text>
-            </i>
-          </xsl:when>
-          <xsl:when test="$classVal!=''">
-            <i class="fa fa-exclamation-triangle fa-2x pull-left">
-              <xsl:text> </xsl:text>
-            </i>
-          </xsl:when>
-          <xsl:otherwise>
-            <i class="fa fa-exclamation-circle fa-2x pull-left">
-              <xsl:text> </xsl:text>
-            </i>
-          </xsl:otherwise>
-        </xsl:choose>
+
+      <xsl:choose>
+        <xsl:when test="$classVal='alert-success'">
+          <i class="fa fa-check fa-2x pull-left">
+            <xsl:text> </xsl:text>
+          </i>
+        </xsl:when>
+        <xsl:when test="$classVal!=''">
+          <i class="fa fa-exclamation-triangle fa-2x pull-left">
+            <xsl:text> </xsl:text>
+          </i>
+        </xsl:when>
+        <xsl:otherwise>
+          <i class="fa fa-exclamation-circle fa-2x pull-left">
+            <xsl:text> </xsl:text>
+          </i>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:text>&#160;&#160;</xsl:text>
       <span class="alert-msg">
         <xsl:choose>
@@ -601,11 +635,11 @@
         <xsl:text>col-sm-9</xsl:text>
         <xsl:if test="not(label)">
           <xsl:text> col-md-offset-3</xsl:text>
-        </xsl:if>  
+        </xsl:if>
       </xsl:if>
 
     </xsl:variable>
-    
+
     <div class="control-wrapper {name()}-wrapper appearance-{@appearance} {$fmhz} input-group">
       <xsl:attribute name="class">
         <xsl:text>control-wrapper </xsl:text>
@@ -670,9 +704,9 @@
           <xsl:apply-templates select="." mode="xform_control"/>
         </xsl:otherwise>
       </xsl:choose>
-  
+
     </div>
-    
+
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
     </xsl:if>
@@ -704,7 +738,7 @@
 
 
   <!-- Commented out to test multi-language on shopping cart -->
-  
+
   <!--xsl:template match="submit[@ref!='']" mode="xform">
     <xsl:variable name="class">
       <xsl:text>button</xsl:text>
@@ -806,7 +840,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="submit[contains(@class,'principle')]" mode="xform">
     <xsl:variable name="class">
       <xsl:text>btn</xsl:text>
@@ -1109,6 +1143,7 @@
   </xsl:template>
 
 
+
   <!-- CREATE THE NAME attribute for an input field -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="getRefOrBind">
     <xsl:if test="@ref!=''">
@@ -1355,7 +1390,7 @@
     <xsl:variable name="formName">
       <xsl:value-of select="ancestor::Content/model/submission/@id"/>
     </xsl:variable>
-    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month">
+    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month" autocomplete="cc-exp-month">
       <option value="" selected=""/>
       <option value="01">01</option>
       <option value="02">02</option>
@@ -1370,7 +1405,7 @@
       <option value="11">11</option>
       <option value="12">12</option>
     </select>
-    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year">
+    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year" autocomplete="cc-exp-year">
       <option value="" selected=""/>
       <xsl:call-template name="getYearDropDown">
         <xsl:with-param name="i" select="0"/>
@@ -1379,7 +1414,7 @@
         <xsl:with-param name="year" select="substring(/Page/Request/ServerVariables/Item[@name='Date']/node(),1,4)"/>
       </xsl:call-template>
     </select>
-    <input type="hidden" name="{$ref}" value="{value/node()}"/>
+    <input type="hidden" name="{$ref}" value="{value/node()}" autocomplete="{@autocomplete}"/>
     <script type="text/javascript">
       loaddatemmyy('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
     </script>
@@ -1393,7 +1428,7 @@
     <xsl:variable name="formName">
       <xsl:value-of select="ancestor::Content/model/submission/@id"/>
     </xsl:variable>
-    <select name="month_{$ref}" id="month_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control month">
+    <select name="YGJNO_{$ref}" id="month_{$ref}" onchange="makedatemmyyObfuscated('{$formName}','{$ref}')" class="form-control month" autocomplete="off">
       <option value="" selected=""/>
       <option value="01">01</option>
       <option value="02">02</option>
@@ -1408,7 +1443,7 @@
       <option value="11">11</option>
       <option value="12">12</option>
     </select>
-    <select name="year_{$ref}" onchange="makedatemmyy('{$formName}','{$ref}')" class="form-control year">
+    <select name="FJFKT_{$ref}" onchange="makedatemmyyObfuscated('{$formName}','{$ref}')" class="form-control year" autocomplete="off">
       <option value="" selected=""/>
       <xsl:call-template name="getYearDropDown">
         <xsl:with-param name="i" select="0"/>
@@ -1417,9 +1452,9 @@
         <xsl:with-param name="year" select="substring(/Page/Request/ServerVariables/Item[@name='Date']/node(),1,4)"/>
       </xsl:call-template>
     </select>
-    <input type="hidden" name="{$ref}" value="{value/node()}"/>
+    <input type="hidden" name="{$ref}" value="{value/node()}" autocomplete="off"/>
     <script type="text/javascript">
-      loaddatemmyy('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
+      loaddatemmyyObfuscated('<xsl:value-of select="$formName"/>','<xsl:value-of select="$ref"/>');
     </script>
   </xsl:template>
 
@@ -1570,7 +1605,7 @@
 
   </xsl:template>
 
-   <xsl:template match="input[contains(@class,'calendar') and contains(@class,'readonly')]" mode="xform_control">
+  <xsl:template match="input[contains(@class,'calendar') and contains(@class,'readonly')]" mode="xform_control">
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
@@ -1617,18 +1652,18 @@
         <xsl:when test="value/node() &gt; 0">
           <xsl:call-template name="getUserXML">
             <xsl:with-param select="value/node()" name="id"/>
-          </xsl:call-template>        
+          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <User>
-            <FirstName>Unspecified</FirstName>    
-            <LastName>User</LastName>    
+            <FirstName>Unspecified</FirstName>
+            <LastName>User</LastName>
           </User>
         </xsl:otherwise>
       </xsl:choose>
- 
-    </xsl:variable>  
-  
+
+    </xsl:variable>
+
     <xsl:variable name="inlineHint">
       <xsl:apply-templates select="." mode="getInlineHint"/>
     </xsl:variable>
@@ -1696,12 +1731,14 @@
     <xsl:variable name="hValue" select="substring-before(value/node(),',')"/>
     <xsl:variable name="mValue" select="substring-after(value/node(),',')"/>
     <!-- HOURS -->
+
+    <div class="input-group">
     <select name="{$ref}" id="{$ref}">
       <xsl:attribute name="class">
         <xsl:value-of select="@class"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
-        <xsl:text>hours</xsl:text>
+        <xsl:text>hours form-control</xsl:text>
       </xsl:attribute>
       <xsl:call-template name="getHourOptions">
         <xsl:with-param name="value" select="$hValue"/>
@@ -1714,12 +1751,13 @@
         <xsl:value-of select="@class"/>
         <xsl:text> </xsl:text>
         <xsl:value-of select="@class"/>
-        <xsl:text>minutes</xsl:text>
+        <xsl:text>minutes form-control</xsl:text>
       </xsl:attribute>
       <xsl:call-template name="getMinuteOptions">
         <xsl:with-param name="value" select="$mValue"/>
       </xsl:call-template>
     </select>
+      </div>
   </xsl:template>
   <!-- -->
   <!-- ========================== CONTROL : Time ========================== -->
@@ -1869,7 +1907,7 @@
       </xsl:choose>
     </input>
     <xsl:if test="contains(@class,'strongPassword')">
-        <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
+      <a id="passwordPolicy" class="text-muted" href="#">view our password policy</a>
     </xsl:if>
   </xsl:template>
   <!-- -->
@@ -1996,7 +2034,7 @@
       </xsl:attribute>
       <xsl:if test="contains(@class,'readonly')">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
-        </xsl:if>
+      </xsl:if>
 
       <xsl:if test="@onChange!=''">
         <xsl:attribute name="onChange">
@@ -2517,7 +2555,7 @@
       <xsl:text> </xsl:text>
     </option>
   </xsl:template>
-  
+
   <!-- -->
   <xsl:template match="item" mode="xform_radiocheck">
     <xsl:param name="type"/>
@@ -3002,9 +3040,9 @@
   <xsl:template match="label">
     <xsl:param name="cLabel"/>
     <xsl:param name="bRequired"/>
-    <xsl:if test="parent::input[@data-length!='']">
+    <xsl:if test="parent::*[@data-length!='']">
       <span class="field-char-count badge" data-fieldref="{$cLabel}">
-        <span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::input/@data-length"/> characters
+        <span id="{$cLabel}-char-count">0</span>/<xsl:value-of select="parent::*/@data-length"/> characters
       </span>
     </xsl:if>
     <xsl:if test ="./node()!='' or span[contains(@class,'term')]">
@@ -3036,7 +3074,7 @@
             <xsl:apply-templates select="span" mode="term" />
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="." mode="xform-label"/> 
+            <xsl:apply-templates select="." mode="xform-label"/>
           </xsl:otherwise>
         </xsl:choose>
         <!--<xsl:value-of select="./node()"/>-->
@@ -3425,10 +3463,10 @@
         <xsl:text> </xsl:text>
       </xsl:if>
       <xsl:apply-templates select="label" mode="submitText"/>
+      <xsl:text> </xsl:text>
+      <i class="fa fa-arrow-right pull-right">
         <xsl:text> </xsl:text>
-        <i class="fa fa-arrow-right pull-right">
-          <xsl:text> </xsl:text>
-        </i>
+      </i>
     </button>
   </xsl:template>
 
@@ -3444,10 +3482,10 @@
       <xsl:apply-templates select="." mode="xform_value"/>
     </xsl:variable>
     <xsl:variable name="key">
-    <xsl:call-template name="getXmlSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
-    </xsl:call-template>
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+      </xsl:call-template>
     </xsl:variable>
     <div class="g-recaptcha" data-sitekey="{$key}">
       <xsl:text> </xsl:text>

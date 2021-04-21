@@ -238,8 +238,31 @@ Partial Public Class Cms
                         End If
 
                         'TS: Add a union in here to add discount rule applied at an order level.
+                        'New method introduced to just validate xml nodes values added in cAdditionalXML.
+                        'It is used for validation order total, minimum order value and  maximum order value.
+                        'If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
+                        'if total crossed more or less than defined range then it will remove promocode for the user.
+                        If oDsDiscounts IsNot Nothing Then
+                            If cPromoCodeUserEntered <> "" Then
+                                Dim additionalInfo As String = "<additionalXml>" + oDsDiscounts.Tables("Discount").Rows(0)("cAdditionalXML") + "</additionalXml>"
+                                Dim validateAddedDiscount As Boolean = True
+                                Dim totalAmount As Double = 0
+                                If oDsCart.Tables("Item").Rows.Count > 0 Then
+                                    For Each drItem As DataRow In oDsCart.Tables("Item").Rows
+                                        If (drItem(15) = 0) Then
+                                            totalAmount = totalAmount + drItem(6)
+                                        End If
+                                    Next
 
+                                End If
 
+                                validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo)
+                                If validateAddedDiscount = False Then
+                                    RemoveDiscountCode()
+                                    oDsDiscounts = Nothing
+                                End If
+                            End If
+                        End If
 
                         If oDsDiscounts Is Nothing Then
                             If cPromoCodeUserEntered <> "" Then
@@ -250,6 +273,7 @@ Partial Public Class Cms
                             End If
                             Return 0
                         Else
+
 
                             Dim oDc As DataColumn
                             For Each oDc In oDsDiscounts.Tables("Discount").Columns
@@ -453,7 +477,7 @@ Partial Public Class Cms
 
                 'try to get it from cart xml
                 If cPromotionalCode = "" Then
-                    Dim oPromoElmt As XmlElement = xmlNotes.SelectSingleNode("Notes/PromotionalCode")
+                    Dim oPromoElmt As XmlElement = xmlNotes.SelectSingleNode("//Notes/PromotionalCode")
                     If Not oPromoElmt Is Nothing Then cPromotionalCode = oPromoElmt.InnerText
                 End If
 
@@ -461,7 +485,7 @@ Partial Public Class Cms
                 If cPromotionalCode = "" Then
                     'Dim oXform As xForm = New xForm
                     'oXform.moPageXML = myWeb.moPageXml
-                    cPromotionalCode = myWeb.moRequest("Notes/PromotionalCode")
+                    cPromotionalCode = myWeb.moRequest("//Notes/PromotionalCode")
                     'If Not oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") Is Nothing Then
                     '    cPromotionalCode = oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode").InnerText
                     'End If
@@ -1391,23 +1415,38 @@ NoDiscount:
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
                         sXmlContent = oDs.Tables(0).Rows(0)("cCartXml") & ""
                         docOrder.LoadXml(sXmlContent)
+
                         Dim orderTotal As Double = docOrder.SelectSingleNode("Order").Attributes("total").Value
 
-                        strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName,  ")
-                        strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, tblCartDiscountRules.nDiscountCompoundBehaviour,  ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountValue, tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity,  ")
-                        strSQL.Append("  tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId,  ")
-                        strSQL.Append("tblCartDiscountRules.nDiscountCodeType, tblCartDiscountRules.cDiscountUserCode  ")
-                        strSQL.Append("FROM tblCartDiscountRules  ")
-                        strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey AND (tblAudit.nStatus = 1) ")
-                        If sCode <> "" Then
-                            strSQL.Append("WHERE tblCartDiscountRules.cDiscountCode= '" & sCode & "'")
+                        If myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups") Then
+                            '' call stored procedure else existing code.
+                            '' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                            Dim param As New Hashtable
+                            param.Add("PromoCodeEntered", sCode)
+                            param.Add("UserGroupIds", cUserGroupIds)
+                            param.Add("CartOrderId", myCart.mnCartId)
+                            param.Add("CartOrderDate", DiscountApplyDate)
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet("spCheckDiscounts", "Discount", "Discounts", False, param, CommandType.StoredProcedure)
+
+                        Else
+
+                            strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName,  ")
+                            strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, tblCartDiscountRules.nDiscountCompoundBehaviour,  ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountValue, tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity,  ")
+                            strSQL.Append("  tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId,  ")
+                            strSQL.Append("tblCartDiscountRules.nDiscountCodeType, tblCartDiscountRules.cDiscountUserCode  ")
+                            strSQL.Append("FROM tblCartDiscountRules  ")
+                            strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey AND (tblAudit.nStatus = 1) ")
+                            If sCode <> "" Then
+                                strSQL.Append("WHERE tblCartDiscountRules.cDiscountCode= '" & sCode & "'")
+                            End If
+                            strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
+                            strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
+
+
+                            oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
                         End If
-                        strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate > " & sqlDate(DiscountApplyDate) & ")  ")
-                        strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " & sqlDate(DiscountApplyDate) & ") ")
 
-
-                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
                         If oDsDiscounts.Tables(0).Rows.Count = 0 Then
                             If sCode <> "" Then
                                 oDsDiscounts.Clear()
@@ -1464,20 +1503,26 @@ NoDiscount:
                             Dim NotesXml As New XmlDocument
                             NotesXml.LoadXml(sXmlContent)
 
-                            If Not NotesXml.SelectSingleNode("Notes/PromotionalCode[node()='" & sCode & "']") Is Nothing Then
+                            If NotesXml.SelectSingleNode("Notes") Is Nothing Then
+                                Dim notesElement As XmlElement = NotesXml.CreateElement("NoteInfo")
+                                notesElement.InnerXml = "<Notes><PromotionalCode/></Notes>"
+                                NotesXml.FirstChild.AppendChild(notesElement.FirstChild)
+                            End If
+
+                            If Not NotesXml.SelectSingleNode("//Notes/PromotionalCode[node()='" & sCode & "']") Is Nothing Then
                                 'do nothing code exists
                             Else
-                                If NotesXml.SelectSingleNode("Notes/PromotionalCode") Is Nothing Then
+                                If NotesXml.SelectSingleNode("//Notes/PromotionalCode") Is Nothing Then
                                     'add another promotional code
                                     Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
-                                    NotesXml.SelectSingleNode("Notes").AppendChild(newElmt)
+                                    NotesXml.SelectSingleNode("//Notes").AppendChild(newElmt)
                                 Else
-                                    If NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = "" Then
-                                        NotesXml.SelectSingleNode("Notes/PromotionalCode").InnerText = sCode
+                                    If NotesXml.SelectSingleNode("//Notes/PromotionalCode").InnerText = "" Then
+                                        NotesXml.SelectSingleNode("//Notes/PromotionalCode").InnerText = sCode
                                     Else
                                         'add another promotional code
                                         Dim newElmt As XmlElement = NotesXml.CreateElement("PromotionalCode")
-                                        NotesXml.SelectSingleNode("Notes").AppendChild(newElmt)
+                                        NotesXml.SelectSingleNode("//Notes").AppendChild(newElmt)
                                     End If
                                 End If
                             End If
@@ -1494,6 +1539,53 @@ NoDiscount:
                     End If
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug)
+                End Try
+            End Function
+
+            Public Function ValidateDiscount(ByVal orderTotal As Double, ByVal additionalInfo As String) As Boolean
+                Dim cProcessInfo As String = "ValidateDiscount"
+                Try
+                    Dim doc As New XmlDocument()
+                    Dim applyToTotal As Boolean = False
+                    Dim minimumOrderTotal As Double = 0
+                    Dim maximumOrderTotal As Double = 0
+                    If (additionalInfo <> String.Empty) Then
+
+
+                        doc.LoadXml(additionalInfo)
+
+                        If (doc.InnerXml.Contains("nMinimumOrderValue")) Then
+                            minimumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText)
+                        End If
+                        If (doc.InnerXml.Contains("nMaximumOrderValue")) Then
+                            maximumOrderTotal = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText)
+                        End If
+
+                        If (doc.InnerXml.Contains("bApplyToOrder")) Then
+                            If (doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText = "") Then
+                                applyToTotal = False
+                            Else
+                                applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText)
+                            End If
+                            If (maximumOrderTotal <> 0) Then
+                                If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+
+                                    Return False
+                                End If
+                            End If
+                            If (applyToTotal) Then
+                                If (maximumOrderTotal <> 0) Then
+                                    If Not (orderTotal >= minimumOrderTotal And orderTotal <= maximumOrderTotal) Then
+                                        Return False
+                                    End If
+                                End If
+                            End If
+                        End If
+                        Return True
+
+                    End If
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "ValidateDiscount", ex, "", cProcessInfo, gbDebug)
                 End Try
             End Function
 
@@ -1596,6 +1688,9 @@ NoDiscount:
 
                         oDS = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
                         PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
+                        If oDS Is Nothing Then
+                            Exit Sub
+                        End If
 
                         If oDS.Tables.Count = 0 Then Exit Sub
                         Dim oDC As DataColumn

@@ -1,3 +1,4 @@
+
 '***********************************************************************
 ' $Library:     eonic.adminXforms
 ' $Revision:    3.1  
@@ -9,7 +10,7 @@
 '***********************************************************************
 
 Option Strict Off
-Option Explicit On 
+Option Explicit On
 
 Imports System.Xml
 Imports System.Web.HttpUtility
@@ -18,7 +19,7 @@ Imports System.Configuration
 Imports System.IO
 Imports System.Collections
 Imports System.Data
-Imports System.Data.sqlClient
+Imports System.Data.SqlClient
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports System.Collections.Specialized
@@ -1001,6 +1002,7 @@ Partial Public Class Cms
             End Function
 
 
+
             Public Function xFrmRewriteMaps(ByVal ConfigType As String) As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim cProcessInfo As String = ""
@@ -1045,7 +1047,29 @@ Partial Public Class Cms
                             If Not rewriteXml.SelectSingleNode(oCgfSectPath) Is Nothing Then
                                 MyBase.bProcessRepeats = True
                                 If goSession("oTempInstance") Is Nothing Then
-                                    MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+
+
+                                    Dim PerPageCount As Integer = 50
+                                    If goSession("totalCountTobeLoad") IsNot Nothing Then
+                                        PerPageCount = goSession("totalCountTobeLoad")
+                                    End If
+                                    Dim props As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    Dim TotalCount As Integer = props.ChildNodes.Count
+
+                                    If props.ChildNodes.Count >= PerPageCount Then
+                                        Dim xmlstring As String = "<rewriteMap name='" & ConfigType & "'>"
+                                        Dim xmlstringend As String = "</rewriteMap>"
+                                        Dim count As Integer = 0
+
+                                        For i As Integer = 0 To (PerPageCount) - 1
+                                            xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                        Next
+
+                                        MyBase.LoadInstanceFromInnerXml(xmlstring & xmlstringend)
+                                    Else
+                                        MyBase.LoadInstanceFromInnerXml(rewriteXml.SelectSingleNode(oCgfSectPath).OuterXml)
+                                    End If
+
                                     Me.bProcessRepeats = False
                                 Else
                                     Dim oTempInstance As XmlElement = moPageXML.CreateElement("instance")
@@ -1076,9 +1100,6 @@ Partial Public Class Cms
                                         MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "<strong>" & newURL & "</strong> cannot match an old URL")
                                     End If
                                 Next
-
-
-
 
 
                                 If MyBase.valid Then
@@ -1117,13 +1138,53 @@ Partial Public Class Cms
 
                                     End If
 
-                                    Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
-                                    If replacingNode Is Nothing Then
-                                        rewriteXml.FirstChild.AppendChild(replacerNode)
-                                    Else
-                                        rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
+                                    'Dim replacingNode As XmlElement = rewriteXml.SelectSingleNode(oCgfSectPath)
+                                    'If replacingNode Is Nothing Then
+                                    '    rewriteXml.FirstChild.AppendChild(replacerNode)
+                                    'Else
+                                    '    rewriteXml.FirstChild.ReplaceChild(replacerNode, replacingNode)
+                                    'End If
+                                    'rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
+
+                                    ''Check we do not have a redirect for the OLD URL allready. Remove if exists
+                                    ' Dim addValue As XmlElement
+
+
+                                    For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                        Dim oldUrl = oElmt.GetAttribute("key")
+
+                                        'If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
+                                        Dim existingRedirects As XmlNodeList = rewriteXml.SelectNodes("rewriteMaps/rewriteMap[@name='" & ConfigType & "']/add[@key='" & oldUrl & "']")
+                                        If Not existingRedirects Is Nothing Then
+
+                                            For Each existingNode As XmlNode In existingRedirects
+                                                existingNode.ParentNode.RemoveChild(existingNode)
+                                                'existingNode.RemoveAll()
+                                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                            Next
+                                        End If
+                                    Next
+
+                                    'Add redirect
+                                    Dim oCgfSectPathobj As String = "rewriteMaps/rewriteMap[@name='" & ConfigType & "']"
+                                    Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPathobj)
+                                    If Not redirectSectionXmlNode Is Nothing Then
+                                        For Each oElmt In MyBase.Instance.FirstChild.SelectNodes("descendant-or-self::add")
+                                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                            replacingElement.InnerXml = oElmt.OuterXml
+
+                                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                            rewriteXml.SelectSingleNode(oCgfSectPathobj).AppendChild(replacingElement.FirstChild)
+
+                                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                        Next
                                     End If
-                                    rewriteXml.Save(goServer.MapPath("/rewriteMaps.config"))
+
+
+
+
+
+
                                     Dim alertGrp As XmlElement = MyBase.addGroup(moXformElmt.SelectSingleNode("group[1]"), "alert",,, moXformElmt.SelectSingleNode("group[1]/group[1]"))
                                     MyBase.addNote(alertGrp, xForm.noteTypes.Alert, "Settings Saved")
                                     goSession("oTempInstance") = Nothing
@@ -1645,7 +1706,7 @@ Partial Public Class Cms
                         End If
                     End If
 
-
+                    cName = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
                     If MyBase.isSubmitted Then
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
@@ -1665,17 +1726,15 @@ Partial Public Class Cms
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
 
-                                'Insert code to create redirects if required.
+                                'page redirection for hub
+                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
+                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
+                                Dim sType As String = "Page"
+                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
 
-                                'Options to be 
-
-                                '301 perminent
-                                '302 tempory
-                                '404 page not found (do not add redirect)
-
-                                'if the page has child pages we should also create a redirect rule for all children.
-
-
+                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
+                                End If
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
@@ -2747,6 +2806,7 @@ Partial Public Class Cms
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
+
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2794,6 +2854,22 @@ Partial Public Class Cms
                                 Dim updatedVersionId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
+                                'Redirection 
+
+                                Dim sNewUrl As String = ""
+                                Dim sOldurl As String = ""
+                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
+                                Dim sType As String = "Product"
+                                If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
+                                    sNewUrl = moRequest("productNewUrl").ToString()
+                                End If
+                                If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
+                                    sOldurl = moRequest("productOldUrl").ToString()
+                                End If
+                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
+                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), sOldurl, sNewUrl, moRequest("pageOldUrl"), False, sType, pgid)
+
+                                End If
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
@@ -3337,16 +3413,19 @@ Partial Public Class Cms
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    If Not odr Is Nothing Then
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                    Else
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
+
                     odr = Nothing
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
@@ -3400,16 +3479,28 @@ Partial Public Class Cms
                     Dim oFsh As fsHelper = New fsHelper
                     oFsh.initialiseVariables(nType)
 
-                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
+                    Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/").Replace("//", "/")
+
+                    If fileToFind.EndsWith("/") Then
+                        fileToFind = fileToFind & cName
+                    Else
+                        fileToFind = fileToFind & "/" & cName
+                    End If
+
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
                     If odr.HasRows Then
                         Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Dim artIds As String = ""
                         Do While odr.Read
                             contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            artIds = odr("nContentKey") & ","
                         Loop
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
+                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                        MyBase.addOption(oSelUpd, "No", "0")
                     Else
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
                     End If
@@ -3419,6 +3510,8 @@ Partial Public Class Cms
                     MyBase.addOptionsFoldersFromDirectory(oSelElmt, "/" & oFsh.mcRoot)
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to move this file? - """ & cPath & "\" & cName & """", , "alert-danger")
+
+
 
                     MyBase.addSubmit(oFrmElmt, "", "Move file")
 
@@ -3435,9 +3528,11 @@ Partial Public Class Cms
 
                             If oFs.MoveFile(cName, cPath, cDestPath) Then
 
-                                Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
-                                Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
-                                moDbHelper.ExeProcessSql(sSQLUpd)
+                                If myWeb.moRequest("UpdatePaths") <> "0" And myWeb.moRequest("UpdatePaths") <> "" Then
+                                    Dim fileToReplace As String = "/" & oFs.mcRoot & cDestPath.Replace("\", "/") & "/" & cName.Replace(" ", "-")
+                                    Dim sSQLUpd As String = "Update tblContent set cContentXmlBrief = REPLACE(CAST(cContentXmlBrief AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "'), cContentXmlDetail = REPLACE(CAST(cContentXmlDetail AS NVARCHAR(MAX)),'" & fileToFind & "','" & fileToReplace & "') where nContentKey IN (" & myWeb.moRequest("UpdatePaths") & ")"
+                                    moDbHelper.ExeProcessSql(sSQLUpd)
+                                End If
 
                             Else
                                 MyBase.valid = False
@@ -10007,3 +10102,4 @@ Partial Public Class Cms
         End Sub
     End Class
 End Class
+

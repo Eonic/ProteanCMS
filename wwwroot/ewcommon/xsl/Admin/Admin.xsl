@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
+<!--<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+				xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" 
+				xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew" 
+				xmlns:v-if="http://example.com/xml/v-if" xmlns:v-on="http://example.com/xml/v-on">-->
+
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
+                xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
+                xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
+                xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
+                xmlns:v-model="http://example.com/xml/v-model">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -163,7 +172,11 @@
         <xsl:text>~/ewcommon/js/ewAdmin.js,</xsl:text>
         <xsl:text>~/ewcommon/js/codemirror/codemirror.js,</xsl:text>
         <xsl:text>~/ewcommon/js/jQuery/jquery.magnific-popup.min.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js</xsl:text>
+        <xsl:text>~/ewcommon/js/codemirror/mirrorframe.js,</xsl:text>
+	    <xsl:text>~/ewcommon/js/vuejs/vue.min.js,</xsl:text>
+	    <xsl:text>~/ewcommon/js/vuejs/axios.min.js,</xsl:text>
+	    <xsl:text>~/ewcommon/js/vuejs/polyfill.js,</xsl:text>
+	    <xsl:text>~/ewcommon/js/vuejs/protean-vue.js</xsl:text>
       </xsl:with-param>
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/Admin</xsl:text>
@@ -1371,6 +1384,7 @@
 
   <xsl:template match="MenuItem[@cmd='PageVersions']" mode="adminLink2">
     <xsl:if test="@display='true'">
+      
       <!-- Clone Parent Context-->
       <xsl:variable name="href">
         <xsl:text>?ewCmd=</xsl:text>
@@ -1380,16 +1394,30 @@
           <xsl:value-of select="/Page/@id"/>
         </xsl:if>
       </xsl:variable>
+      
+      <xsl:variable name="VersionParentId">
+        <xsl:choose>
+          <xsl:when test="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]">
+            <xsl:value-of select="/Page/Menu/descendant-or-self::PageVersion[@id=/Page/@id]/parent::MenuItem/@id"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="/Page/@id"/>
+          </xsl:otherwise>
+        </xsl:choose>        
+      </xsl:variable>
+      
+      
       <xsl:variable name="verCount">
         <xsl:choose>
           <xsl:when test="/Page/@ewCmd='PageVersions'">
-            <xsl:value-of select="count(/Page/ContentDetail/PageVersions/Version[@id!=/Page/@id])"/>
+            <xsl:value-of select="count(/Page/ContentDetail/PageVersions/Version)"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/PageVersion)"/>
+            <xsl:value-of select="count(/Page/Menu/descendant-or-self::MenuItem[@id=$VersionParentId]/PageVersion)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="$verCount &gt; 0 ">
           <a href="{$href}" title="{Description}">
@@ -1421,7 +1449,7 @@
       </xsl:choose>
 
     </xsl:if>
-  </xsl:template>
+    </xsl:template>
   <!-- -->
   <!--   ##############################   submenu for Advanced Mode   ##############################   -->
   <!-- -->
@@ -1484,258 +1512,302 @@
     </div>
   </xsl:template>
 
-  <xsl:template match="Page[@layout='AdmHome']" mode="Admin">
-    <xsl:variable name="supportEmail">
-      <xsl:call-template name="eonicwebSupportEmail"/>
-    </xsl:variable>
-    <xsl:variable name="supportWebsite">
-      <xsl:call-template name="eonicwebWebsite"/>
-    </xsl:variable>
+	<xsl:template match="Page[@layout='AdmHome']" mode="Admin">
+		<xsl:variable name="supportEmail">
+			<xsl:call-template name="eonicwebSupportEmail"/>
+		</xsl:variable>
+		<xsl:variable name="supportWebsite">
+			<xsl:call-template name="eonicwebWebsite"/>
+		</xsl:variable>
 
-    <section>
-      
-      <div class="row">
-        <div class="col-md-9">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">What's New</h3>
-                </div>
-                <div class="panel-body">
-                      <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-          <!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
-      </xsl:when>
-      <xsl:otherwise>
-            <h3><strong>ProteanCMS</strong></h3>
-              <p>ProteanCMS is fully opensource.</p>
-            <a href="https://www.proteancms.com">For more information click here.</a>
-      </xsl:otherwise>
-    </xsl:choose>
-                  
-              </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Performance Tips</h3>
-                </div>
-                <div class="panel-body">
-                  <p>Have you checked Google Analytics recently ?</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="panel panel-default matchHeight">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Get Help</h3>
-                </div>
-                <div class="panel-body">
-                  <xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
-                    <h5>
-                    <a href="https://www.facebook.com/proteancms" class="" target="_new">
-                      <i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
-                    </a>
-                    </h5>
-                    <h5>
-                    <a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
-                      <i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
-                    </a></h5>
-                     
-                  
-                  </xsl:if>
-                       <h5>
-                      <i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
-                    </h5>
-                  <h5>
-                      <i class="fa fa-envelope">&#160;</i>&#160;<a href="mailto:{$supportEmail}" title="Email Support">
-                    <xsl:value-of select="$supportEmail"/>
-                  </a>
-                  </h5>
-                  <h5>
-                      <i class="fa fa-globe">&#160;</i>&#160;	<a title="view the latest news">
-                      <xsl:attribute name="href">
-                        <xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
-                        <xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="$supportWebsite"/>
-                    </a>
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="panel panel-default matchHeight">
-            <div class="panel-heading">
-              <h3 class="panel-title">Features Enabled</h3>
-            </div>
-              <ul class="nav nav-stacked featuresEnabled">
-               
-                <li>
-              <a href="" class="btn btn-success">
-                <i class="fa fa-ok">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>
-                Content Management<br/>
-                <span class="btnNotes">
-                  <xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
-                  <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects</span>
-                <br/><strong>
-                <xsl:choose>
-                  <xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
-                    Lite Licence
-                  </xsl:when>
-                  <xsl:otherwise>
-                    Pro Licence
-                  </xsl:otherwise>
-                </xsl:choose></strong>
-              </a></li>
-                <li><a href="" class="btn btn-default">
-                <i class="fa fa-plus">
-                  <xsl:text> </xsl:text>
-                </i>
-                <xsl:text> </xsl:text>Multi-Language</a>
-                </li>
-                <li><a href="" class="btn btn-default">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>Page Versions</a>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>eCommerce
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>eCommerce
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Membership
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Membership
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li>
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Email Marketing
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Email Marketing
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <li class="active"><a href="" class="btn btn-default">
-                  <i class="fa fa-plus">
-                    <xsl:text> </xsl:text>
-                  </i>
-                  <xsl:text> </xsl:text>SEO Reporting</a>
-                </li>
-                <li>
-                  <!--Not working--> 
-                  <xsl:choose>
-                    <xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
-                      <a href="" class="btn btn-success">
-                        <i class="fa fa-check">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Page Cache
-                      </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <a href="" class="btn btn-default">
-                        <i class="fa fa-plus">
-                          <xsl:text> </xsl:text>
-                        </i>
-                        <xsl:text> </xsl:text>Page Cache
-                      </a>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </li>
-                <xsl:choose>
-                  
-                    <xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
-                <li class="active">
-                  <a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
-                    <i class="fa fa-bug">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Debug Mode Enabled
-                  </a>
-                </li>
-                <div class="bg-danger small well-sm">Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.</div>
-                </xsl:when>
-                  <xsl:otherwise>
-                  <li>
-                    <a href="{$appPath}?rebundle=true" class="btn btn-warning">
-                      <i class="fa fa-recycle">
-                        <xsl:text> </xsl:text>
-                      </i>
-                      <xsl:text> </xsl:text>Rebundle JS / CSS files
-                    </a>
-                  </li>
-                  </xsl:otherwise>
-                </xsl:choose>
-                <xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
-                <li>
-                  <a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
-                    <i class="fa fa-refresh">
-                      <xsl:text> </xsl:text>
-                    </i>
-                    <xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
-                  </a>
-                </li>
-                </xsl:if>
-              </ul>
-          </div>
+		<section>
 
-        </div>
-      </div>
-      
-    </section>
-  </xsl:template>
+			<div class="row">
+				<div class="col-md-9">					
+					<div class="row">
+						<div class="col-md-4">
+							<div class="matchHeight dashboard-first-column">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">What's New</h3>
+									</div>
+									<div class="panel-body">
+										<xsl:choose>
+											<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+												<!--xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/-->
+											</xsl:when>
+											<xsl:otherwise>
+												<h3>
+													<strong>ProteanCMS</strong>
+												</h3>
+												<p>ProteanCMS is fully opensource.</p>
+												<a href="https://www.proteancms.com">For more information click here.</a>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+								</div>
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title">Get Help</h3>
+									</div>
+									<div class="panel-body">
+										<xsl:if test="not($page/Settings/add[@key='web.eonicwebProductName']/@value!='')">
+											<h5>
+												<a href="https://www.facebook.com/proteancms" class="" target="_new">
+													<i class="fa fa-facebook-square fa-lg">&#160;</i>&#160;Follow ProteanCMS on Facebook
+												</a>
+											</h5>
+											<h5>
+												<a href="https://www.linkedin.com/groups?gid=1840777" class="" target="_new">
+													<i class="fa fa-linkedin-square fa-lg">&#160;</i>&#160;Join our LinkedIn Group
+												</a>
+											</h5>
+
+
+										</xsl:if>
+										<h5>
+											<i class="fa fa-phone">&#160;</i>&#160;<xsl:call-template name="eonicwebSupportTelephone"/>
+										</h5>
+										<h5>
+											<i class="fa fa-envelope">&#160;</i>&#160;<a href="mailto:{$supportEmail}" title="Email Support">
+												<xsl:value-of select="$supportEmail"/>
+											</a>
+										</h5>
+										<h5>
+											<i class="fa fa-globe">&#160;</i>&#160;	<a title="view the latest news">
+												<xsl:attribute name="href">
+													<xsl:text>http://{$supportWebsite}?utm_campaign=cmsadminsystem&amp;utm_source=</xsl:text>
+													<xsl:value-of select="//ServerVariables/Item[@name='SERVER_NAME']/node()"/>
+												</xsl:attribute>
+												<xsl:value-of select="$supportWebsite"/>
+											</a>
+										</h5>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="panel panel-default matchHeight">
+								<div class="panel-heading">
+									<h3 class="panel-title">Performance Tips</h3>
+								</div>
+								<div class="panel-body">
+									<p>Have you checked Google Analytics recently ?</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="panel panel-default matchHeight">
+								<div class="panel-heading">
+									<h3 class="panel-title">Insights</h3>
+								</div>
+								<div class="panel-body">
+									<div id="insights-section">
+										<xsl:for-each select="$page/AdminMenu/MenuItem/Module">
+											<xsl:if test="@name != ''">
+												<xsl:variable name="id" select="@id"/>
+												<xsl:variable name="jsonURL" select="@jsonURL"/>	
+												<div id="metric_{position()}" class="metric" data-json-url="{$jsonURL}">
+													<div class="metric-inner">
+														<header class="metric-header">
+															<h1 class="metric-title"><xsl:value-of select="@name"/></h1>
+														</header>
+														<div class="metric-body">
+															<div class="value">
+																<h1 class="metric-value" v-for="result in filterResultArray('metric_{position()}')">
+																	<b>{{result.Key}}</b>: {{result.Value}}<br/>
+																</h1>
+															</div>
+														</div>
+													</div>
+												</div>
+											</xsl:if>
+										</xsl:for-each>
+									</div>							
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default matchHeight">
+						<div class="panel-heading">
+							<h3 class="panel-title">Features Enabled</h3>
+						</div>
+						<ul class="nav nav-stacked featuresEnabled">
+
+							<li>
+								<a href="" class="btn btn-success">
+									<i class="fa fa-ok">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>
+									Content Management<br/>
+									<span class="btnNotes">
+										<xsl:value-of select="/Page/ContentDetail/Status/Status/@activePageCount"/> active pages of <xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageCount"/> pages <xsl:value-of select="/Page/ContentDetail/Status/Status/@contentCount"/> items.<br/>
+										<xsl:value-of select="/Page/ContentDetail/Status/Status/@totalPageRedirects"/> Page Redirects
+									</span>
+									<br/><strong>
+										<xsl:choose>
+											<xsl:when test="/Page/ContentDetail/Status/Status/@activePageCount &lt; 50 and /Page/ContentDetail/Status/Status/@contentCount &lt; 500">
+												Lite Licence
+											</xsl:when>
+											<xsl:otherwise>
+												Pro Licence
+											</xsl:otherwise>
+										</xsl:choose>
+									</strong>
+								</a>
+							</li>
+							<li>
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Multi-Language
+								</a>
+							</li>
+							<li>
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>Page Versions
+								</a>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/Cart/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>eCommerce
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>eCommerce
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/Membership/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Membership
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Membership
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li>
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/MailingList/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Email Marketing
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Email Marketing
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<li class="active">
+								<a href="" class="btn btn-default">
+									<i class="fa fa-plus">
+										<xsl:text> </xsl:text>
+									</i>
+									<xsl:text> </xsl:text>SEO Reporting
+								</a>
+							</li>
+							<li>
+								<!--Not working-->
+								<xsl:choose>
+									<xsl:when test="/Page/ContentDetail/Status/Status/PageCache/node() = 'on'">
+										<a href="" class="btn btn-success">
+											<i class="fa fa-check">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Page Cache
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="" class="btn btn-default">
+											<i class="fa fa-plus">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Page Cache
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+							<xsl:choose>
+
+								<xsl:when test="/Page/ContentDetail/Status/Status/Debug/node() = 'on'">
+									<li class="active">
+										<a href="{$appPath}?ewCmd=WebSettings" class="btn btn-danger">
+											<i class="fa fa-bug">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Debug Mode Enabled
+										</a>
+									</li>
+									<div class="bg-danger small well-sm">
+										Debug mode turns off some compression and performance features. It also reports any errors directly to screen rather than showing a friendly error page.<br/><br/> Debug Mode should be turned <strong>off</strong> on live websites.
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<li>
+										<a href="{$appPath}?rebundle=true" class="btn btn-warning">
+											<i class="fa fa-recycle">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Rebundle JS / CSS files
+										</a>
+									</li>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:if test="ContentDetail/Status/Status/DBVersion/node()!=ContentDetail/Status/Status/LatestDBVersion/node() and User/@name='Admin'">
+								<li>
+									<a href="/ewcommon/setup/?ewCmd=UpgradeDB" class="btn btn-default">
+										<i class="fa fa-refresh">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>Update Schema from <br/><xsl:value-of select="ContentDetail/Status/Status/DBVersion/node()"/> to <xsl:value-of select="ContentDetail/Status/Status/LatestDBVersion/node()"/>
+									</a>
+								</li>
+							</xsl:if>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</section>
+	</xsl:template>
 
   <xsl:template match="Page[@layout='SettingsDash']" mode="Admin">
     <div class="row">
@@ -2464,6 +2536,7 @@
   </xsl:template>
     <!-- -->
   <xsl:template match="Page[@layout='ByType']" mode="Admin">
+    <xsl:variable name="contentType" select="@ewCmd2"/>
     <div id="tpltAdvancedMode">   
             <div class="row header-panels">
               <div class="col-md-6">
@@ -2494,10 +2567,11 @@
                     </div>
                   </div>
                 </form>
+                            
               <!--xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/-->
               </div>
             </div>
-            <xsl:apply-templates select="/" mode="ListByContentTypeNoColaspe">
+            <xsl:apply-templates select="/" mode="ListByContentTypeByPage">
                   <xsl:with-param name="contentType" select="@ewCmd2"/>
             </xsl:apply-templates>
         </div>
@@ -2505,7 +2579,7 @@
   
    <!-- -->
   <xsl:template match="/" mode="ListByContentTypeNoColaspe">
-    <xsl:param name="contentType"/>
+	<xsl:param name="contentType"/>
     <xsl:variable name="pgid">
       <xsl:choose>
         <xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
@@ -2542,6 +2616,8 @@
           </div>
 
         </div>
+
+
               <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
                 <xsl:variable name="href">
                   <xsl:text>?ewCmd=AddContent</xsl:text>
@@ -2584,7 +2660,154 @@
     </table>
    </div>
     </form>
-  </xsl:template>
+  </xsl:template>  
+	
+  <xsl:template match="/" mode="ListByContentTypeByPage">
+	<xsl:param name="contentType"/>
+	<xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
+	<xsl:variable name="itemCount" select="'100'"/>
+	<xsl:variable name="total" select="$page/ContentDetail/@total"/>
+	<xsl:variable name="queryString">
+		<xsl:text>?</xsl:text>
+		<xsl:call-template name="getQString"/>
+	</xsl:variable>
+	<xsl:variable name="title">
+		<xsl:text>Location</xsl:text>
+	</xsl:variable>
+	<xsl:variable name="pgid">
+		<xsl:choose>
+			<xsl:when test="$page/ContentDetail/Content/select1[@ref='Location']/value/node()!=''">
+				<xsl:value-of select="$page/ContentDetail/Content/select1[@ref='Location']/value/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$page/@pgid"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+		<input type="hidden" name="ewCmd" value="BulkContentAction"/>
+		<input type="hidden" name="pgid" value="{$pgid}"/>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<xsl:if test="$contentType!='Module'">
+					<div class="panel-heading-buttons">
+						<div class="form-group bulk-action">
+							<div class="input-group">
+								<label class="input-group-addon">Bulk Action</label>
+								<select class="form-control" name="BulkAction" id="BulkAction">
+									<option value="Move">Move</option>
+									<option value="Locate">Locate</option>
+									<option value="Hide">Hide</option>
+									<option value="Show">Show</option>
+								</select>
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary">Go</button>
+								</span>
+						</div>
+      </div>
+          
+							</div>
+
+          </xsl:if>
+
+
+        <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
+          <div class="pull-right">
+            <xsl:variable name="href">
+              <xsl:text>?ewCmd=AddContent</xsl:text>
+              <xsl:text>&amp;pgid=</xsl:text>
+              <xsl:value-of select="/Page/@id"/>
+              <xsl:text>&amp;type=</xsl:text>
+              <xsl:value-of select="$contentType"/>
+            </xsl:variable>
+            <a class="btn btn-primary" href="{$href}">
+              <i class="fa fa-plus">
+                <xsl:text> </xsl:text>
+              </i>
+              <xsl:text> </xsl:text>Add <xsl:value-of select="$contentType"/>
+            </a>
+            &#160;
+          </div>
+        </xsl:if>
+
+
+        
+				<h6 class="panel-title">
+					<i class="fa fa-chevron-down">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>
+					<xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+				</h6>
+			</div>
+      <div class="list-controls row">
+        <div class="col-md-8">
+        <xsl:if test="$page/ContentDetail/@total > 0">
+
+          <div class="pull-right-stepper">
+            <xsl:apply-templates select="/" mode="adminStepper">
+              <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
+              <xsl:with-param name="itemTotal" select="$total"/>
+              <xsl:with-param name="startPos" select="$startPos"/>
+              <xsl:with-param name="path" select="$queryString"/>
+              <xsl:with-param name="itemName" select="$title"/>
+            </xsl:apply-templates>
+          </div>
+        </xsl:if>
+      </div>
+        <xsl:if test="$page/ContentDetail/@total > 0">
+          <div class="col-md-2">
+            <div class="input-group">
+              <label class="input-group-addon">Items Per Page</label>
+              <select class="form-control" name="PageCount" id="PageCount">
+                <option value="50">100</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+                <option value="500">500</option>
+                <option value="All">All</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="input-group">
+              <label class="input-group-addon">Sort By</label>
+              <select class="form-control" name="SortBy" id="SortBy">
+                <option value="Name">Name A-Z</option>
+                <option value="PagePosition">Page Position</option>
+              </select>
+            </div>
+          </div>
+        </xsl:if>
+      </div>
+			<table class="table table-striped-2">
+				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
+					<tr>
+						<td colspan="3">
+							<xsl:text>No </xsl:text>
+							<xsl:value-of select="$contentType"/>
+							<xsl:text> on this page</xsl:text>
+						</td>
+					</tr>
+				</xsl:if>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
+				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
+			</table>
+      <div class="panel-header">
+        
+        <xsl:if test="$page/ContentDetail/@total > 0">
+          <div class="pull-right-stepper">
+            <xsl:apply-templates select="/" mode="adminStepper">
+              <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
+              <xsl:with-param name="itemTotal" select="$total"/>
+              <xsl:with-param name="startPos" select="$startPos"/>
+              <xsl:with-param name="path" select="$queryString"/>
+              <xsl:with-param name="itemName" select="$title"/>
+            </xsl:apply-templates>
+          </div>
+        </xsl:if>
+      </div>
+		</div>
+	</form>
+</xsl:template>
 
   <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
     <div id="tpltAdvancedMode">
@@ -4230,9 +4453,22 @@
   <xsl:template match="Page" mode="MaxUploadWidth">0</xsl:template>
   <xsl:template match="Page" mode="MaxUploadHeight">0</xsl:template>
   
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">2700</xsl:template>
-  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">2700</xsl:template>
-
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadWidth">
+	  <xsl:choose>
+		  <xsl:when test="$page/Settings/add[@key='web.MaxUploadWidth']/@value!=''">
+			  <xsl:value-of select="$page/Settings/add[@key='web.MaxUploadWidth']/@value"/>
+		  </xsl:when>
+		  <xsl:otherwise>3000</xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
+  <xsl:template match="Page[@layout='ImageLib']" mode="MaxUploadHeight">
+	  <xsl:choose>
+		  <xsl:when test="$page/Settings/add[@key='web.MaxUploadHeight']/@value!=''">
+			  <xsl:value-of select="$page/Settings/add[@key='web.MaxUploadHeight']/@value"/>
+		  </xsl:when>
+		  <xsl:otherwise>3000</xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="adminPageHeader">
     <h1 class="page-header">
@@ -4631,34 +4867,8 @@
                         <xsl:choose>
                             <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
                                 <xsl:if test="@root">
-
-                                  <!--xsl:variable name="imgUrl">
-                                                <xsl:call-template name="resize-image">
-                                                    <xsl:with-param name="path" select="concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)"/>
-                                                    <xsl:with-param name="max-width" select="'165'"/>
-                                                    <xsl:with-param name="max-height" select="'165'"/>
-                                                    <xsl:with-param name="file-prefix" select="'~ew/tn8-'"/>
-                                                    <xsl:with-param name="file-suffix" select="''"/>
-                                                    <xsl:with-param name="quality" select="'99'"/>
-                                                    <xsl:with-param name="crop" select="'true'"/>
-                                                </xsl:call-template>
-                                            </xsl:variable>
-                                            <xsl:variable name="imgWidth">
-                                                <xsl:call-template name="get-image-width">
-                                                    <xsl:with-param name="path">
-                                                        <xsl:value-of select="$imgUrl"/>
-                                                    </xsl:with-param>
-                                                </xsl:call-template>
-                                            </xsl:variable>
-                                            <xsl:variable name="imgHeight">
-                                                <xsl:call-template name="get-image-height">
-                                                    <xsl:with-param name="path">
-                                                        <xsl:value-of select="$imgUrl"/>
-                                                    </xsl:with-param>
-                                                </xsl:call-template>
-                                            </xsl:variable-->
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
-                                            <img src="/ewcommon/images/loadingImage.png" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+                                            <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
                                             <div class="popup-description">
                                               <span class="image-description-name">
                                                 <xsl:value-of select="@name"/>
@@ -4674,7 +4884,7 @@
                                           <a data-toggle="popover" data-trigger="hover" data-container="body" data-contentwrapper="#imgpopover{position()}" data-placement="top">
                                                <xsl:choose>
                                                  <xsl:when test="@width&gt;125 and @height&gt;125">
-                                                   <img class="lazy" src="/ewcommon/images/loadingImage.png" data-src="/ewcommon/tools/adminthumb.ashx?path=/{@root}{translate(parent::folder/@path,'\', '/')}/{@name}"/>
+                                                   <img class="lazy" src="/ewcommon/images/loadingImage.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
                                                 </xsl:when>
                                                 <xsl:otherwise>
                                                   <div class="img-overflow">
@@ -4682,7 +4892,6 @@
                                                   </div>
                                                 </xsl:otherwise>
                                               </xsl:choose>
-                                          
                                           </a>
                                 </xsl:if>
                             </xsl:when>
@@ -6429,7 +6638,7 @@
   </xsl:template>
   <!-- -->
 
-  <xsl:template match="Page[@layout='AddUserContact'] | Page[@layout='EditUserContact'] | Page[@layout='AddDirContact'] | Page[@layout='EditDirContact']" mode="Admin">
+  <xsl:template match="Page[@layout='AddUserContact'] | Page[@layout='EditUserContact'] | Page[@layout='AddDirContact'] | Page[@layout='EditDirContact'] | Page[@layout='EditOrderContact']" mode="Admin">
     <div class="adminTemplate" id="template_AdminXForm">
       <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
     </div>
@@ -6886,7 +7095,7 @@
       </div>
       <xsl:if test="Contact[@type='Billing Address']">
         <div id="billingAddress" class="cartAddress col-md-3">
-          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Billing" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-edit"> </i>
             Edit
           </a>
@@ -6895,7 +7104,7 @@
       </xsl:if>
       <xsl:if test="Contact[@type='Delivery Address'] and not(@hideDeliveryAddress)">
         <div id="deliveryAddress" class="cartAddress col-md-3">
-          <a href="?ewCmd=EditOrderAddress&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
+          <a href="?ewCmd=EditOrderContact&amp;orderId={$orderId}&amp;ContactType=Delivery" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-edit"> </i>
             Edit
           </a>
@@ -7925,15 +8134,16 @@
   </xsl:template>
 
   <xsl:template match="TreeItem" mode="ListLocationsForm">
-    <li id="node{@id}">
-      <span class="treeNode">
-        <xsl:value-of select="@Name"/>
-      </span>
-      <input type="checkbox" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
+    <li id="node{@id}" class="checkbox">
+  
+      <input type="checkbox" id="loc-{@id}" name="aLocations" value="{@id}" onclick="checkShippingLocationsForm(this)">
         <xsl:if test="@selected = '1'">
           <xsl:attribute name="checked">true</xsl:attribute>
         </xsl:if>
       </input>
+      <label class="treeNode" for="loc-{@id}">
+        <xsl:value-of select="@Name"/>
+      </label>
       <xsl:if test="TreeItem">
         <ul>
           <xsl:apply-templates select="TreeItem" mode="ListLocationsForm"/>
@@ -8186,67 +8396,87 @@
     <xsl:param name="label"/>
     <xsl:param name="querystringAmendment"/>
 
-        <div class="btn-toolbar">
-          <div class="btn-group">
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
-        <xsl:text>All </xsl:text>
-        <xsl:value-of select="$label"/>
-      </a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
-      <xsl:text> </xsl:text>
-      <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
-      <xsl:text> </xsl:text>
+    <div class="btn-toolbar">
+      <div class="btn-group">
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;{$querystringAmendment}" class="all btn btn-default btn-sm">
+          <xsl:text>All </xsl:text>
+          <xsl:value-of select="$label"/>
+        </a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=A&amp;{$querystringAmendment}" class="btn btn-default btn-sm">A</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=B&amp;{$querystringAmendment}" class="btn btn-default btn-sm">B</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=C&amp;{$querystringAmendment}" class="btn btn-default btn-sm">C</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=D&amp;{$querystringAmendment}" class="btn btn-default btn-sm">D</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=E&amp;{$querystringAmendment}" class="btn btn-default btn-sm">E</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=F&amp;{$querystringAmendment}" class="btn btn-default btn-sm">F</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=G&amp;{$querystringAmendment}" class="btn btn-default btn-sm">G</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=H&amp;{$querystringAmendment}" class="btn btn-default btn-sm">H</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=I&amp;{$querystringAmendment}" class="btn btn-default btn-sm">I</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=J&amp;{$querystringAmendment}" class="btn btn-default btn-sm">J</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=K&amp;{$querystringAmendment}" class="btn btn-default btn-sm">K</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=L&amp;{$querystringAmendment}" class="btn btn-default btn-sm">L</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=M&amp;{$querystringAmendment}" class="btn btn-default btn-sm">M</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=N&amp;{$querystringAmendment}" class="btn btn-default btn-sm">N</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=O&amp;{$querystringAmendment}" class="btn btn-default btn-sm">O</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=P&amp;{$querystringAmendment}" class="btn btn-default btn-sm">P</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Q&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Q</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=R&amp;{$querystringAmendment}" class="btn btn-default btn-sm">R</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=S&amp;{$querystringAmendment}" class="btn btn-default btn-sm">S</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=T&amp;{$querystringAmendment}" class="btn btn-default btn-sm">T</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=U&amp;{$querystringAmendment}" class="btn btn-default btn-sm">U</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=V&amp;{$querystringAmendment}" class="btn btn-default btn-sm">V</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=W&amp;{$querystringAmendment}" class="btn btn-default btn-sm">W</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=X&amp;{$querystringAmendment}" class="btn btn-default btn-sm">X</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Y&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Y</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=Z&amp;{$querystringAmendment}" class="btn btn-default btn-sm">Z</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=0&amp;{$querystringAmendment}" class="btn btn-default btn-sm">0</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=1&amp;{$querystringAmendment}" class="btn btn-default btn-sm">1</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=2&amp;{$querystringAmendment}" class="btn btn-default btn-sm">2</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=3&amp;{$querystringAmendment}" class="btn btn-default btn-sm">3</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=4&amp;{$querystringAmendment}" class="btn btn-default btn-sm">4</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=5&amp;{$querystringAmendment}" class="btn btn-default btn-sm">5</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=6&amp;{$querystringAmendment}" class="btn btn-default btn-sm">6</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=7&amp;{$querystringAmendment}" class="btn btn-default btn-sm">7</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=8&amp;{$querystringAmendment}" class="btn btn-default btn-sm">8</a>
+        <xsl:text> </xsl:text>
+        <a href="{$appPath}?ewCmd={$ewCmd}&amp;LastNameStarts=9&amp;{$querystringAmendment}" class="btn btn-default btn-sm">9</a>
+        <xsl:text> </xsl:text>
       </div>
-        </div>
+    </div>
   </xsl:template>
   <!-- -->
   <xsl:template match="/" mode="adminStepper">
@@ -9421,25 +9651,82 @@
                   <xsl:text>Every </xsl:text><xsl:value-of select="@period"/><xsl:text> </xsl:text><xsl:value-of select="Content/Duration/Unit/node()"/><xsl:text>s</xsl:text>
                 </dd>
               </dl>
-              
-              <xsl:if test="@paymentStatus='active' or @paymentStatus='Manual' ">
-                <div class="alert alert-success">
-                  <xsl:if test="@paymentStatus='active'">
-                    Payment be collected via <strong>
-                      <xsl:value-of select="@providerName"/>
-                    </strong>
+
+              <xsl:choose>
+                <xsl:when test="tblCartPaymentMethod/nStatus='1'">
+                  <span class="text-success">
+                    <i class="far fa-lg fa-check-circle">&#160;</i>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span>
+
+                  <br/>
+                  <small>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                  </small>
+                </xsl:when>
+                <xsl:otherwise>
+                  <span class="text-danger">
+                    <i class="far fa-lg fa-times-circle">&#160;</i>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdProviderName/node()"/>
+                  </span>
+                  <br/>
+                  <small>
+                    <xsl:value-of select="tblCartPaymentMethod/cPayMthdDescription/node()"/>
+                  </small>
+                </xsl:otherwise>
+              </xsl:choose>
+
+              <xsl:choose>
+                <xsl:when test="tblCartPaymentMethod/nStatus!='0' or @cancelDate!=''">
+                  <xsl:choose>
+                    <xsl:when test="@paymentStatus='cancelled' and @providerName='GoCardless' ">
+                      <div class="alert alert-danger">
+                        The customer has canceled their GoCardless Direct Debit payment directly with their bank.
+                      </div>
+                    </xsl:when>
+                    <xsl:when test="tblCartPaymentMethod/nStatus='1' or @paymentStatus='Manual' ">
+                      <div class="alert alert-success">
+                        <xsl:choose>
+                          <xsl:when test="tblCartPaymentMethod/cPayMthdAcctName/node()='WorldPay'">
+                            Credit Card Payment needs to be processed
+                          </xsl:when>
+                          <xsl:otherwise>
+                            Payment be collected via
+                          </xsl:otherwise>
+                        </xsl:choose>
+                        <strong>
+                          <xsl:value-of select="@providerName"/>
+                        </strong>
+                        <br/>
+                        <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+                        <br/>
+                        <br/>
+                        <a href="?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
+                          <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
+                        </a>
+                      </div>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <div class="alert alert-warning">
+                        We cannot collect payment as we do not have an active payment method.
+                      </div>
+                    </xsl:otherwise>
+                  </xsl:choose>
+
+                  <xsl:if test="@cancelDate!=''">
                     <br/>
-                    <xsl:value-of select="@providerName"/> ref: <xsl:value-of select="@providerRef"/>
+                    <xsl:value-of select="@cancelDate"/> -
+                    <xsl:value-of select="@cancelReason"/>
                   </xsl:if>
-                  <br/>
-                  <br/>
-                  <a href="{$appPath}?ewCmd=RenewSubscription&amp;id={@id}" class="btn btn-success">
-                    <i class="fa fa-repeat">&#160;</i>&#160;Manual Renewal
-                  </a>
-                </div>
-              </xsl:if>
-  
-              <xsl:value-of select="@paymentStatus"/>
+
+
+
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="@paymentStatus"/>
+                </xsl:otherwise>
+
+              </xsl:choose>
  
               <xsl:if test="contains(@paymentStatus,'Expires')">
                 <div class="alert alert-success">
@@ -9457,6 +9744,10 @@
                   </a>
                 </div>
               </xsl:if>
+              
+              
+              
+              
             </div>
             <div class="panel-footer form-actions">
               
@@ -12113,5 +12404,153 @@
   </xsl:template>
   <!-- -->
 
+  <xsl:template match="input[@class='RedirectPage']" mode="xform" >
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <div class="input-group col-md-4">
+          <span class="input-group-btn">
+            <button type="button"  value="Clear" class="btn btn-default btnClear">
+              <i class="fa fa-times"/>
+            </button>
+          </span>
+          <input type="text" name="SearchURL" id="SearchURLText" class="form-control" />
+          <input type="hidden"  id="totalUrlCount" class="form-control" />
+          <span class="input-group-btn">
+            <button type="button"  value="Search" class="btn btn-primary btnSearchUrl">Search </button>
+          </span>
+        </div>
+        &#160;   &#160;   &#160;
+      </div>
+
+      <div class="col-md-4">
+        <lable class="countLable hidden"></lable>
+          &#160;   &#160;   &#160;
+       <!--<lable class="endLable hidden">You reached at end</lable>-->
+      </div>
+    </div>
+
+
+    <div class="control-wrapper RedirectPage" id="RedirectPage">
+      <div id="loadSpin" class="loadSpin modal " tabindex="-1" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!--<div class="modal-body">-->
+            <lable class="modalLable hidden"></lable>
+            <!--<div id="redirectLoad" v-if="loading" class="vueloadimg" v-show="true" >
+              <i class="fas fa-spinner fa-spin"> </i>
+            </div>-->
+
+
+            <!--</div>-->
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-group input-containing col-md-6">
+          <label >Old URL</label>
+        </div>
+        <div class="form-group input-containing col-md-6">
+          <label  >New URL</label>
+        </div>
+
+      </div>
+      <div id="addNewUrl" class="form-group  repeat-group newAddFormInline">
+        <fieldset class="rpt-00 row">
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper appearance-">
+
+              <input type="text" name="OldUrlform" id="OldUrlmodal" class="textbox form-control"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-5">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <input type="text" name="NewUrlform" id="NewUrlModal" class="textbox form-control"/>
+            </div>
+          </div>
+          <div class="form-group input-containing col-md-2">
+
+            <div class="control-wrapper input-wrapper appearance-">
+              <button type="button"  class="btn btn-primary addRedirectbtn">
+                Add new Url
+              </button>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+      <div>
+        <div class="form-group repeat-group ListOfNewAddedUrls"  v-for="(urls,index) in newAddedUrlList">
+          <fieldset>
+            <div class="form-group input-containing col-md-5" >
+
+              <div class="control-wrapper input-wrapper">
+
+                <input type="text" name="OldUrl" v-bind:id="'Old_' + index"  class="form-control addUrlText" v-bind:value="urls.oldUrl"/>
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-5">
+
+              <div class="control-wrapper input-wrapper">
+                <input type="text" name="NewUrl" v-bind:id="'New_' + index"  class="form-control addUrlText" v-bind:value="urls.NewUrl"/>
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-1">
+              <button type="button"  class="btn btn-primary btn-updateNewUrl hidden" >
+                Update
+              </button>
+              <lable class="tempLableSaveNew hidden">Saved..</lable>
+            </div>
+            <div class="form-group input-containing col-md-1">
+
+              <div class="control-wrapper input-wrapper">
+                <button type="button"  class="btn btn-danger delAddNewUrl">
+                  <i class="fa fa-times fa-white"> </i> Del
+                </button>
+              </div>
+            </div>
+
+          </fieldset>
+        </div>
+      </div>
+      <div class="scolling-pane">
+        <div class="form-group repeat-group parentDivOfRedirect"  v-for="(urls,index) in urlList" >
+          <fieldset v-bind:class="'row repeated rpt_'+ index">
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text"  v-bind:id="'OldUrl_' + index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.key.nodeValue"/>
+
+                <input type="hidden"  class="col-md-5 textbox form-control hiddenOldUrlText" v-bind:value="urls.attributes.key.nodeValue" />
+              </div>
+            </div>
+            <div class="form-group input-containing col-md-5">
+              <div class="control-wrapper input-wrapper appearance-">
+                <input type="text" v-bind:id="'NewUrl_'+index" class="col-md-5 textbox form-control redirecttext" v-bind:value="urls.attributes.value.nodeValue" />
+              </div>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'update_' + index" class="btn btn-primary btn-update hidden" >
+                Update
+              </button>
+              <lable class="tempLableSave hidden">Saved..</lable>
+            </div>
+            <div class="form-group trigger-group col-md-1">
+              <button type="button" value="Del" v-bind:id="'del_' + index" class="btn btn-danger btn-delete" >
+                <i class="fa fa-times fa-white"> </i> Del
+              </button>
+            </div>
+          </fieldset>
+        </div>
+
+      </div>
+      <div id="redirectLoad" v-if="loadingscroll" class="vueloadimg" v-show="true" >
+        <i class="fas fa-spinner fa-spin"> </i>
+      </div>
+    </div>
+
+  </xsl:template>
 	
 </xsl:stylesheet>

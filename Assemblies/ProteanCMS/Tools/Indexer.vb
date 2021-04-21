@@ -190,7 +190,11 @@ Public Class Indexer
             xWeb.InitializeVariables()
             xWeb.Open()
             xWeb.mnUserId = 1
-            xWeb.mbAdminMode = False
+            If (myWeb.moConfig("SiteSearchIndexHiddenDetail") = "on") Then
+                myWeb.mbAdminMode = True
+            Else
+                myWeb.mbAdminMode = False
+            End If
             xWeb.ibIndexMode = True
             xWeb.ibIndexRelatedContent = (myWeb.moConfig("SiteSearchIndexRelatedContent") = "on")
 
@@ -316,7 +320,11 @@ Public Class Indexer
                                             If Not oElmt.GetAttribute("type") = "Document" Then
                                                 oElmtRules = oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']")
                                                 cRules = ""
-                                                Dim sPageUrl As String = oElmtURL.GetAttribute("url")
+
+                                                Dim sPageUrl As String
+                                                If Not oElmtURL Is Nothing Then
+                                                    sPageUrl = oElmtURL.GetAttribute("url")
+                                                End If
                                                 If Not oElmtRules Is Nothing Then cRules = oElmtRules.GetAttribute("content")
                                                 If (Not InStr(cRules, "NOINDEX") > 0) And Not (sPageUrl.StartsWith("http")) Then
 

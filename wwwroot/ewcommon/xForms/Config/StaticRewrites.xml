@@ -17,7 +17,10 @@
    </model>
    <group ref="WebSettings">
     <label>Static URL Rewrites</label>
-     <group>
+     <group class="StaticRewritesRedirectBody">
+       <input class="RedirectPage"/>
+     </group>
+     <!--<group>
        <repeat bind="urlRepeat" class="row">
          <input bind="OldUrl" class="col-md-5">
            <label>Old URL</label>
@@ -30,9 +33,9 @@
            <delete bind="urlRepeat" at="index('urlRepeat')"/>
          </trigger>
        </repeat>
-     </group>
-     <group>
-       <trigger>
+     </group>-->
+     
+       <!--<trigger>
          <label>Add New URL</label>
          <insert position="after" bind="urlRepeat" at="index('urlRepeat')" class="add"/>
        </trigger>
@@ -41,6 +44,6 @@
      
      <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
-    </submit>
-  </group>
+    </submit>-->
+   </group>
 </Content>

@@ -68,6 +68,8 @@ Public Class Base
     Public mnArtId As Integer = 0
     Public mnUserId As Integer = 0
 
+    Public mbAdminMode As Boolean = False
+
     Private mbSystemPage As Boolean = False
     Private mnUserPagePermission As Cms.dbHelper.PermissionLevel = Cms.dbHelper.PermissionLevel.Open
 

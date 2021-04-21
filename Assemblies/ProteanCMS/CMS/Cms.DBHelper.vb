@@ -1,14 +1,14 @@
-    '***********************************************************************
-    ' $Library:     eonic.dbhelper
-    ' $Revision:    3.1  
-    ' $Date:        2006-03-02
-    ' $Author:      Trevor Spink (trevor@eonic.co.uk)
-    ' &Website:     www.eonic.co.uk
-    ' &Licence:     All Rights Reserved.
-    ' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
-    '***********************************************************************
+'***********************************************************************
+' $Library:     eonic.dbhelper
+' $Revision:    3.1  
+' $Date:        2006-03-02
+' $Author:      Trevor Spink (trevor@eonic.co.uk)
+' &Website:     www.eonic.co.uk
+' &Licence:     All Rights Reserved.
+' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+'***********************************************************************
 
-    Option Strict Off
+Option Strict Off
     Option Explicit On 
     Imports System.Data
     Imports System.Data.sqlClient
@@ -1152,11 +1152,14 @@ Partial Public Class Cms
                                 sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and cContentSchemaName like '" & thisContentType & "' " & myWeb.GetStandardFilterSQLForContent() & " order by nVersion desc"
                             End If
                             ods = GetDataSet(sSql, "Content")
-                            If ods.Tables("Content").Rows.Count = 1 Then
-                                nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
-                            Else
-                                'handling for content versions ?
+                            If Not ods Is Nothing Then
+                                If ods.Tables("Content").Rows.Count = 1 Then
+                                    nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
+                                Else
+                                    'handling for content versions ?
+                                End If
                             End If
+
                             'now get the page id 
                             If nArtId > 0 Then
                                 sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
@@ -1198,48 +1201,46 @@ Partial Public Class Cms
 
                     ods = GetDataSet(sSql, "Pages")
 
+                    If Not ods Is Nothing Then
+                        If ods.Tables("Pages").Rows.Count = 1 Then
+                            nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
+                            ' if there is just one page validate it
+                        ElseIf ods.Tables("Pages").Rows.Count = 0 Then
 
-                    If ods.Tables("Pages").Rows.Count = 1 Then
-                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
-                        ' if there is just one page validate it
-                    ElseIf ods.Tables("Pages").Rows.Count = 0 Then
+                            'do nothing nothing found
 
-                        'do nothing nothing found
-
-                    Else
-                        For Each oRow In ods.Tables("Pages").Rows
-                            ' Debug.WriteLine(oRow.Item("nStructKey"))
-                            If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
-                                'we have a language verion we need to behave differently to confirm id
-                                If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
-                                    nPageId = oRow.Item("nStructKey")
-                                    Exit For
-                                End If
-                            Else
-                                If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
-                                    If bCheckPermissions Then
-
-                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                        Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
-
-                                        If checkPermissionPageId <> 0 _
-                                            And (oRow.Item("nStructKey") = checkPermissionPageId _
-                                            Or IsSystemPage(checkPermissionPageId)) Then
-                                            nPageId = checkPermissionPageId
-                                            Exit For
-                                        End If
-                                    Else
+                        Else
+                            For Each oRow In ods.Tables("Pages").Rows
+                                ' Debug.WriteLine(oRow.Item("nStructKey"))
+                                If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
+                                    'we have a language verion we need to behave differently to confirm id
+                                    If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                         nPageId = oRow.Item("nStructKey")
                                         Exit For
                                     End If
+                                Else
+                                    If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                        If bCheckPermissions Then
+
+                                            ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                            Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                            If checkPermissionPageId <> 0 _
+                                                And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                                Or IsSystemPage(checkPermissionPageId)) Then
+                                                nPageId = checkPermissionPageId
+                                                Exit For
+                                            End If
+                                        Else
+                                            nPageId = oRow.Item("nStructKey")
+                                            Exit For
+                                        End If
+                                    End If
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
                 End If
-
-
-
 
                 ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                 If Not (nPageId > 1 And (sPath <> "")) Then
@@ -2393,6 +2394,16 @@ Partial Public Class Cms
             End Try
         End Function
 
+        Public Function IsChildPage(ByVal pageid As objectTypes, ByVal objectKey As Long) As Boolean
+
+            Try
+                Dim query As String = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" & objectKey
+                Return GetDataValue(query, , , 0) > 0
+            Catch ex As Exception
+                Return False
+            End Try
+        End Function
+
         Public Function isCascade(ByVal ContentId As Long) As Boolean
             PerfMon.Log("DBHelper", "isCascade")
             Dim nCount As Long
@@ -2530,7 +2541,7 @@ restart:
                         objectTypes.CartDiscountRules, objectTypes.CartProductCategories,
                         objectTypes.Codes, objectTypes.QuestionaireResult, objectTypes.CourseResult,
                         objectTypes.Certificate, objectTypes.CpdLog, objectTypes.QuestionaireResultDetail, objectTypes.Lookup, objectTypes.CartCarrier, objectTypes.CartDelivery,
-                            objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod
+                        objectTypes.Subscription, objectTypes.SubscriptionRenewal, objectTypes.CartPaymentMethod
 
 
                             '
@@ -4533,7 +4544,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nStructKey from tblContentStructure where cStructForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -4790,7 +4801,7 @@ restart:
 
             Dim cProcessInfo As String = ""
             Try
-                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & cForiegnRef & "'"
+                sSql = "select nContentKey from tblContent where cContentForiegnRef = '" & SqlFmt(cForiegnRef) & "'"
 
                 oDr = getDataReader(sSql)
 
@@ -5454,7 +5465,9 @@ restart:
                         oElmt.InnerXml = oElmt.FirstChild.InnerXml
                         If Not cOverrideUserGroups = "on" Then
                             If Not IsDBNull(odr("Member")) Then
-                                root.AppendChild(oElmt)
+                                If (Not oElmt Is Nothing) And (Not root Is Nothing) Then
+                                    root.AppendChild(oElmt)
+                                End If
                             End If
                         Else
                             root.AppendChild(oElmt)
@@ -6586,13 +6599,16 @@ restart:
                 "where r.nDirChildId = " & userId & " and d.cDirSchema='" & cSchemaName & "'"
 
                 oDr = getDataReader(sSql)
-                While oDr.Read
-                    If oDr("cDirName") = cRoleName Then
-                        bValid = True
-                    End If
+                If Not oDr Is Nothing Then
+                    While oDr.Read
+                        If oDr("cDirName") = cRoleName Then
+                            bValid = True
+                        End If
 
-                End While
-                oDr.Close()
+                    End While
+                    oDr.Close()
+                End If
+
                 oDr = Nothing
 
                 Return bValid
@@ -6813,10 +6829,26 @@ restart:
             PerfMon.Log("DBHelper", "FindDirectoryByForiegn")
             Try
 
-                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & ForiegnRef & "'"
+                Dim strSQL As String = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" & SqlFmt(ForiegnRef) & "'"
                 Dim iID As Integer
                 iID = CInt(ExeProcessSqlScalar(strSQL))
                 Return iID
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
+                Return -1
+
+            End Try
+        End Function
+
+        Public Function isParent(ByVal pageId As Integer) As Boolean
+            PerfMon.Log("DBHelper", "FindpageIsParent")
+            Try
+                Dim oDs As DataSet
+                Dim strSQL As String = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" & pageId & "'"
+                oDs = GetDataSet(strSQL, "page", "Page")
+                If oDs.Tables(0).Rows.Count > 0 Then
+                    Return True
+                End If
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
                 Return -1
@@ -7569,7 +7601,7 @@ restart:
                                         If sPrimary = 1 Then
                                             'does the item have a primary location that does not match the fRef ?
                                             ' if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
-                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & cleanFref & "'"
+                                            Dim sSQL As String = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " & savedId & " and cStructForiegnRef != '" & SqlFmt(cleanFref) & "'"
                                             If ExeProcessSqlScalar(sSQL) > 0 Then
                                                 'this item has an alternate primary location, then make sure we don't add it 
                                                 updateLocation = False
@@ -7789,7 +7821,7 @@ restart:
         Public Function setContentRelationByRef(ByVal nContentId As Integer, ByVal cContentFRef As String, Optional ByVal b2Way As Boolean = False, Optional ByVal rType As String = "", Optional ByVal bHaltRecursion As Boolean = False) As String
             Try
 
-                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & cContentFRef & "')", , , 0)
+                Dim nRefId As Integer = GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" & SqlFmt(cContentFRef) & "')", , , 0)
 
                 If Not nRefId = 0 Then
                     Return insertContentRelation(nContentId, nRefId, b2Way, rType, bHaltRecursion)
@@ -10308,7 +10340,7 @@ ReturnMe:
             Try
                 Select Case datatype.Name
                     Case "Boolean"
-                        If value = "true" Then
+                        If value = "true" Or value = "True" Or value = "1" Then
                             Return True
                         Else
                             Return False
@@ -11122,6 +11154,32 @@ ReturnMe:
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, String.Empty))
                 Return False
+            End Try
+        End Function
+
+        Public Function GetCountryISOCode(ByVal sCountry As String) As String
+            Dim oDr As SqlDataReader
+            Dim sSql As String
+            Dim strReturn As String = ""
+
+            Try
+                sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" & sCountry & "' or cLocationNameShort Like '" & sCountry & "'"
+                oDr = myWeb.moDbHelper.getDataReader(sSql)
+
+                If oDr.HasRows Then
+
+                    While oDr.Read()
+                        strReturn = oDr("cLocationISOa2").ToString()
+                    End While
+                Else
+                    strReturn = ""
+                End If
+
+                oDr.Close()
+                oDr = Nothing
+                Return strReturn
+            Catch ex As Exception
+                Return Nothing
             End Try
         End Function
 

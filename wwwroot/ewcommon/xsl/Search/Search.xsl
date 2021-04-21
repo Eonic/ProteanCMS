@@ -132,7 +132,7 @@
       <xsl:text>' returned </xsl:text>
       <xsl:value-of select="$resultCount" />
       <xsl:choose>
-	      <xsl:when test="$resultCount='1'"><xsl:text> results </xsl:text></xsl:when>
+	      <xsl:when test="$resultCount='1'"><xsl:text> result </xsl:text></xsl:when>
 	      <xsl:otherwise><xsl:text> results </xsl:text></xsl:otherwise>
       </xsl:choose>
       

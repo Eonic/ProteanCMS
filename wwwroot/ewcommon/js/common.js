@@ -794,6 +794,10 @@ function showDependant(dependant, allDependants) {
         var fieldName = $(this).attr('name');
         var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
         $(this).attr('name', tempFieldName);
+
+        var fieldId = $(this).attr('id');
+        var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+        $(this).attr('id', tempFieldId);
         //  alert("enable " + tempFieldName);
         //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
     });
@@ -1067,15 +1071,28 @@ function makedatemmyy(formName, dateField) {
     document.forms[formName].elements[dateField].value = document.forms[formName].elements['month_' + dateField].value + " " + document.forms[formName].elements['year_' + dateField].value;
 }
 
-function loaddatemmyy(formName, dateField) {
-    dateStr = document.forms[formName].elements[dateField].value
-    dateArr = dateStr.split(" ", 4)
+function makedatemmyyObfuscated(formName, dateField) {
+    document.forms[formName].elements[dateField].value = document.forms[formName].elements['YGJNO_' + dateField].value + " " + document.forms[formName].elements['FJFKT_' + dateField].value;
+}
 
-    document.forms[formName].elements['month_' + dateField].value = dateArr[0]
-    document.forms[formName].elements['year_' + dateField].value = dateArr[1]
+function loaddatemmyy(formName, dateField) {
+    dateStr = document.forms[formName].elements[dateField].value;
+    dateArr = dateStr.split(" ", 4);
+
+    document.forms[formName].elements['month_' + dateField].value = dateArr[0];
+    document.forms[formName].elements['year_' + dateField].value = dateArr[1];
     // alert(document.forms[formName].elements['month_' + dateField].selectedIndex)
 }
 
+
+function loaddatemmyyObfuscated(formName, dateField) {
+    dateStr = document.forms[formName].elements[dateField].value;
+    dateArr = dateStr.split(" ", 4);
+
+    document.forms[formName].elements['YGJNO_' + dateField].value = dateArr[0];
+    document.forms[formName].elements['FJFKT_' + dateField].value = dateArr[1];
+    // alert(document.forms[formName].elements['month_' + dateField].selectedIndex)
+}
 
 //define objects for the main list
 function ListItem(nvalue, description) {
@@ -2729,29 +2746,3 @@ var SWFObject = deconcept.SWFObject;
 
     };
 })(jQuery);
-
-
-
-//var Files = [];
-//$(".fileUploadCheck").on('change', function () {
-   
-//    var fileInput = this.files;
-//    for (var i = 0; i < fileInput.length; i++) {
-//        Files.push($('.fileUploadCheck')[0].files[i]);
-//    }
-//    var size = 0;
-//    size = calculateTotalSize();
-//    size = size / 1024 / 1024;
-//    if (size > 4.0) {
-//        Files.length = 0;
-//        alert('File size should be less than 4MB');
-//        this.val('');
-//        return false;
-//    }
-//    Files.length = 0;
-//});
-//function calculateTotalSize() {
-//    var totalSize = 0;
-//    Files.map((file) => totalSize += file.size)
-//    return totalSize; 
-//}
