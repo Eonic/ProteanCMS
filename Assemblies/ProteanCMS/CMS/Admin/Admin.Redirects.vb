@@ -416,15 +416,6 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
-
-                Dim Result As String = ""
-                If pageId > 0 Then
-                    Result = moDbHelper.isParent(pageId)
-                End If
-                Return Result
-            End Function
-
             ''' <summary>
             ''' This is method which validates the page to redirect in edit mode if we change page url
             ''' -if its h
