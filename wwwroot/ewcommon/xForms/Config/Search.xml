@@ -18,6 +18,7 @@
         <add key="IndexConcurrency" value="10" />
         <add key="SearchCatalog" value="" />
         <add key="SiteSearchIndexMinInterval" value="12" />
+        <add key="SearchDefaultPageSize" value="" />
        </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -34,6 +35,8 @@
      <bind id="ewIndexAlertEmail" nodeset="web/add[@key='IndexAlertEmail']/@value" required="false()" type="string" />
      <bind id="ewIndexConcurrency" nodeset="web/add[@key='IndexConcurrency']/@value" required="false()" type="number" />
      <bind id="ewSiteSearchIndexMinInterval" nodeset="web/add[@key='SiteSearchIndexMinInterval']/@value" required="false()" type="number" />
+     <bind id="SearchDefaultPageSize" nodeset="web/add[@key='SearchDefaultPageSize']/@value" required="false()" type="number" />
+
    </model>
    <group ref="WebSettings">
     <label>Search Settings</label>
@@ -121,6 +124,10 @@
      </input>
      <input bind="ewSiteSearchIndexMinInterval">
        <label>Index Minimum Interval (hrs)</label>
+       <value />
+     </input>
+     <input bind="SearchDefaultPageSize">
+       <label>Search Default PageSize (default 300)</label>
        <value />
      </input>
      <submit submission="" ref="submit" class="principle">

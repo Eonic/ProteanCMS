@@ -130,6 +130,8 @@
     <xsl:variable name="pageStart" select="@pageStart" />
     <xsl:variable name="LastLoadResultCount" select="@loadedResult" />
     <xsl:variable name="pageSize" select="@pageSize" />
+    <xsl:variable name="resultsReturned" select="@resultsReturned" />
+    
     <br/>
     <div class="panel panel-primary text-right search-results-area" id="ResultDiv">
       <div class="panel-body">
@@ -154,9 +156,9 @@
       <xsl:value-of select="$pageStart" />
       -
       <xsl:choose>
-        <xsl:when test="$totalResults &gt;= $pageCount">
+        <xsl:when test="$totalResults &gt;= $resultsReturned">
           <!--<xsl:value-of select="$Hit" />-->
-          <xsl:value-of select="$pageStart + $pageCount - 1" />
+          <xsl:value-of select="$pageStart + $resultsReturned - 1" />
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="$totalResults" />

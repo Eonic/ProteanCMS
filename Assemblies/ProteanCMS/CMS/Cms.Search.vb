@@ -47,7 +47,7 @@ Partial Public Class Cms
         Private _runPreFuzzySearch As Boolean = False
         Private _includePrefixNameSearch As Boolean = False
         Private _overrideQueryBuilder As Boolean = False
-        Private _pagingDefaultSize As Integer = 25
+        Private _pagingDefaultSize As Integer = 300
         Private _indexReadFolder As String = ""
         Private _indexPath As String = "../Index"
         Private _logSearches As Boolean = False
@@ -125,7 +125,7 @@ Partial Public Class Cms
                 _runPreFuzzySearch = (moConfig("SearchGetFuzzyCount") = "on")
 
                 Dim pageDefaultSize As String = moConfig("SearchDefaultPageSize") & ""
-                _pagingDefaultSize = Tools.Number.ConvertStringToIntegerWithFallback(pageDefaultSize, 25)
+                _pagingDefaultSize = Tools.Number.ConvertStringToIntegerWithFallback(pageDefaultSize, _pagingDefaultSize)
 
                 ' Site Search specifics
                 If moConfig("SiteSearch") = "on" Then
@@ -411,8 +411,6 @@ Partial Public Class Cms
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
                         PageSize = myWeb.moRequest("PageSize")
-                    Else
-                        PageSize = myWeb.moConfig("SearchDefaultPageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -424,9 +422,9 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                    HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                    HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
-                    PageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                    pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
                     If PageSize = 0 Then PageSize = 300
                 End If
 
@@ -524,8 +522,8 @@ Partial Public Class Cms
                         Dim pageNumber As Integer = totalResults Mod pageSize
                     End If
 
-                    resultsXML.SetAttribute("pageStart", pageStart)
-                    resultsXML.SetAttribute("pageEnd", pageEnd)
+                    resultsXML.SetAttribute("pageStart", pageStart) 'Start result number
+                    resultsXML.SetAttribute("pageEnd", pageEnd) 'End result number
                     resultsXML.SetAttribute("nextPage", pageEnd + 1)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
@@ -533,30 +531,30 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
                     resultsXML.SetAttribute("totalResults", totalResults)
-                    resultsXML.SetAttribute("pageSize", PageSize)
+                    resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
 
-                    ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
-                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
-                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
-                        If bShowHiddenForUser Then
-                            resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
-                        End If
-                    Else
-                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
-                    End If
+                    'Don't believe this to be required.
+                    'If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
+                    '    resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
+                    '    If bShowHiddenForUser Then
+                    '        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                    '    End If
+                    'Else
+                    '    resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                    'End If
+
                     resultsXML.SetAttribute("Hits", HitsLimit)
-                    'If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
-                        resultsXML.SetAttribute("startCount", HitsLimit - PageSize + 1)
+                        resultsXML.SetAttribute("startCount", HitsLimit - pageSize + 1)
                     End If
 
                     Dim artIdResults As New List(Of Long)
 
                     ' Process the results
                     If totalResults > 0 Then
-                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PageSize
-                        Dim takeRecord As Integer = PageSize
+                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * pageSize
                         'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
                         Dim scoreDocs As ScoreDoc() = results.ScoreDocs
 
@@ -566,7 +564,7 @@ Partial Public Class Cms
                         '    resultDoc = searcher.Doc(sDoc.Doc)
                         For i As Integer = pageStart - 1 To results.TotalHits - 1
 
-                            If i > (pageStart - 1 + takeRecord - 1) Then
+                            If i > (pageStart - 1 + pageSize - 1) Then
                                 Exit For
                             End If
 
@@ -616,7 +614,7 @@ Partial Public Class Cms
 
                         For i As Integer = pageStart - 1 To results.TotalHits - 1
 
-                            If i > (pageStart - 1 + takeRecord - 1) Then
+                            If i > (pageStart - 1 + pageSize - 1) Then
                                 Exit For
                             End If
 
@@ -727,7 +725,7 @@ Partial Public Class Cms
                 resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
-                resultsXML.SetAttribute("resultsReturned", resultsCount)
+                resultsXML.SetAttribute("resultsReturned", resultsCount + 1)
 
                 moContextNode.AppendChild(resultsXML)
 
