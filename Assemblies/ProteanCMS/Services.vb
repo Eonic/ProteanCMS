@@ -8,6 +8,7 @@ Imports System.Web.Configuration
 Imports Microsoft.VisualBasic
 Imports System.Net
 Imports System.IO
+Imports System.Collections.Generic
 
 <WebService(Namespace:="http://www.eonic.co.uk/ewcommon/Services")>
 <WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)>
@@ -27,6 +28,12 @@ Public Class Services
     Dim oResponseElmt As XmlElement
     Private mcModuleName As String = "Eonic.services"
     Private myWeb As Protean.Cms
+
+    'custom class for key/value (inbuilt struct KeyValuePair does not get correctly translated with WSDL).
+    Public Class KeyValPair
+        Public Key As String
+        Public Value As String
+    End Class
 #End Region
 #Region "Non Web Methods"
 
@@ -176,32 +183,36 @@ Public Class Services
 
     End Function
 
-    '    <WebMethod(Description:="Sends Email From Website xForm with Attachement")> _
-    'Public Function emailerWithAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal Attachment As String, ByVal AttachmentStream As String) As Object
+    <WebMethod(Description:="Sends Email From Website xForm with Attachement As Stream in base 64 string format")>
+    Public Function emailerWithAttachmentStreams(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal attachmentsBase64List As KeyValPair()) As Object
 
-    '        Dim sMessage As String
+        Dim sMessage As String
 
-    '        Dim cProcessInfo As String = "emailer"
-    '        Try
+        Dim cProcessInfo As String = "emailerWithAttachmentStreams"
+        Try
+            Dim myWeb As New Protean.Cms(moCtx)
+            Dim oMsg As Protean.Messaging = New Protean.Messaging(myWeb.msException)
 
-    '            Dim oMsg As Protean.Messaging = New Protean.Messaging
-    '            Dim contentStream As System.IO.Stream = Nothing
-    '            Dim encoding As System.Text.Encoding = System.Text.Encoding.UTF8
-    '            Dim writer As New System.IO.StreamWriter(contentStream, encoding)
-    '            writer.Write(AttachmentStream)
+            If Not IsNothing(attachmentsBase64List) Then
+                For Each attachment As KeyValPair In attachmentsBase64List
+                    Dim attachmentBase64 As String = attachment.Value
+                    Dim byteArray As Byte() = System.Convert.FromBase64String(attachmentBase64)
+                    Dim contentStream As MemoryStream = New MemoryStream(byteArray)
 
-    '            oMsg.addAttachment(contentStream, Attachment)
+                    If Not IsNothing(contentStream) Then
+                        oMsg.addAttachment(contentStream, attachment.Key)
+                    End If
+                Next
+            End If
 
-    '            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, , , , ccRecipient, bccRecipient, cSeperator)
+            Return sMessage
 
+        Catch ex As System.Exception
+            Return ex.Message & " - " & ex.GetBaseException.Message
+        End Try
 
-    '            Return sMessage
-
-    '        Catch ex As System.Exception
-    '            Return ex.Message & " - " & ex.GetBaseException.Message
-    '        End Try
-
-    '    End Function
+    End Function
 
     <WebMethod(Description:="Sends Email From Website xForm with Attachment (from physical file)")>
     Public Function emailerWithAttachment(ByRef oBodyXML As XmlElement, ByRef xsltPath As String, ByRef fromName As String, ByRef fromEmail As String, ByRef recipientEmail As String, ByRef SubjectLine As String, ByVal ccRecipient As String, ByVal bccRecipient As String, ByVal cSeperator As String, ByVal cAttachmentFilePath As String, ByVal bDeleteAfterSend As Boolean) As Object
@@ -899,5 +910,6 @@ Public Class Services
 
 
 #End Region
+
 End Class
 
