@@ -416,9 +416,6 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-
-
-
             ''' <summary>
             ''' This is method which validates the page to redirect in edit mode if we change page url
             ''' -if its h
