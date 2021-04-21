@@ -66,6 +66,7 @@ Partial Public Class Cms
                     'Determine all the paths that need to be redirected
                     ' If redirectType = "301Redirect" Then
                     If pageId > 0 Then
+
                         If isParentPage = "True" Then
                             Select Case redirectType
                                 Case "301Redirect"
@@ -91,6 +92,7 @@ Partial Public Class Cms
                             If matchString.StartsWith("/") Then
                                 matchString = matchString.TrimStart("/")
                             End If
+
                             folderRules.Add("Folder: " & OldUrl)
                             newRule.InnerXml = "<rule name=""Folder: " & OldUrl & """><match url=""^" & matchString & "(.*)""/><action type=""Redirect"" url=""" & NewUrl & "{R:1}"" /></rule>"
                             If CurrentRule Is Nothing Then
