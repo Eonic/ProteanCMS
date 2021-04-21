@@ -273,7 +273,7 @@
         <xsl:for-each select="group | repeat">
           <div class="pt-row">
             <xsl:if test="label">
-              <div class="pt-col">
+              <div class="pt-col form-group">
                 <xsl:apply-templates select="label">
                   <xsl:with-param name="cLabel">
                     <xsl:value-of select="@ref"/>
@@ -289,7 +289,7 @@
             <div class="pt-row">
               <xsl:if test="label">
 
-                <div class="pt-col">&#160;</div>
+                <div class="pt-col ">&#160;</div>
               </xsl:if>
               <xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_notes_pt"/>
             </div>
@@ -435,7 +435,7 @@
   <!-- -->
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform_cols_pt">
     
-    <div class="pt-col">
+    <div class="pt-col form-group">
       <span class="pt-label">
         <xsl:value-of select="label"/>
       </span>
