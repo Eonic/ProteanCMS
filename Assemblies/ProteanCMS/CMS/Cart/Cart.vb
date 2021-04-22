@@ -3265,11 +3265,22 @@ processFlow:
                         If IsNumeric(oThePrice.InnerText) Then
                             'this selects the cheapest price for this user assuming not free
                             If IsNumeric(oPNode.InnerText) Then
-                                If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
-                                    oThePrice = oPNode
+                                'if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
+                                If Not IsNothing(moCartConfig("OverrideCheapestPrice")) And moCartConfig("OverrideCheapestPrice") = "on" Then
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        Dim oThePriceType As String = oThePrice.GetAttribute("type")
+                                        Dim oPNodeType As String = oPNode.GetAttribute("type")
+
+                                        If Not (oPNodeType = "rrp" And oThePriceType = "sale") Then
+                                            oThePrice = oPNode
+                                        End If
+                                    End If
+                                Else
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        oThePrice = oPNode
+                                    End If
                                 End If
                             End If
-
                         Else
                             oThePrice = oPNode
                         End If

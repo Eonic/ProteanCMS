@@ -5455,7 +5455,7 @@ Partial Public Class Cms
 
                     If moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
                         oSelElmt = MyBase.addSelect(oGrp2Elmt, "bCollection", True, "Collection Option", "multiline", ApperanceTypes.Full)
-                        MyBase.addOption(oSelElmt, "Collection", "true")
+                        MyBase.addOption(oSelElmt, "Collection", "True")
                         MyBase.addBind("bCollection", "tblCartShippingMethods/bCollection", "false()")
                     End If
 
