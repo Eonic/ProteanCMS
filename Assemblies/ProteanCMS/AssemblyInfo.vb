@@ -34,12 +34,12 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 
 
-<Assembly: AssemblyVersion("6.0.47.13")>
+<Assembly: AssemblyVersion("6.0.48.1")>
 
 <Assembly: AssemblyDelaySign(False)>
 <Assembly: AssemblyKeyFile("../../../eonic.snk")>
 <Assembly: AssemblyKeyName("")>
 
-<Assembly: AssemblyFileVersion("6.0.47.13")>
+<Assembly: AssemblyFileVersion("6.0.48.1")>
 <Assembly: NeutralResourcesLanguageAttribute("en")>
 
