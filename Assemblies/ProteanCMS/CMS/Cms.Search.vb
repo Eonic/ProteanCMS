@@ -389,8 +389,6 @@ Partial Public Class Cms
                 Dim command As Integer
                 Dim Page As Integer = 0
                 Dim NextPage As Integer = 0
-                Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
-                Dim path As String = "intotheblue.local/"
 
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
@@ -528,7 +526,7 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("pageStart", pageStart)
                     resultsXML.SetAttribute("pageCount", pageCount)
                     resultsXML.SetAttribute("pageEnd", pageEnd)
-                    resultsXML.SetAttribute("nextPage", pageEnd + 1)
+                    resultsXML.SetAttribute("nextPage", Page + 1) 'pageEnd + 1)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
