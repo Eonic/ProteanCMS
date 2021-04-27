@@ -28,7 +28,8 @@ Partial Public Class Cms
                 moDbHelper = myWeb.moDbHelper
             End Sub
 
-            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Long = 0, Optional ByVal isParentPage As String = "") As String
+            Public Function CreateRedirect(ByRef redirectType As String, ByRef OldUrl As String, ByRef NewUrl As String, Optional ByVal hiddenOldUrl As String = "", Optional ByVal pageId As Integer = 0, Optional ByVal isParentPage As String = "") As String
+
                 Try
 
                     Dim rewriteXml As New XmlDocument
@@ -414,9 +415,6 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
-
-
-
 
             ''' <summary>
             ''' This is method which validates the page to redirect in edit mode if we change page url
