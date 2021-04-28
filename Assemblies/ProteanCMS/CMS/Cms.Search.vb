@@ -437,26 +437,31 @@ Partial Public Class Cms
                     Dim fsDir As Lucene.Net.Store.FSDirectory = FSDirectory.Open(oIndexDir)
                     Dim searcher As New IndexSearcher(fsDir, True)
 
-                    ' Check for settings
-                    If (fuzzySearch <> "off") Then
-                        If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
-                    End If
-
-                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
-
-                    _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
-                    _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
-
-                    resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
-                    resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
-
                     'check whether logged in user is csuser and skip checking status
                     Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
                     If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
                         Dim nUserId As Integer = myWeb.moSession("nUserId")
                         bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
                     End If
+
+                    ' Check for settings
+                    If (fuzzySearch <> "off") Then
+                        If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
+                    End If
+
+                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
+                    If bShowHiddenForUser Then
+                        _includeFuzzySearch = False ' to get exact matching result
+                    Else
+                        _includeFuzzySearch = True
+                    End If
+                    _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
+                    _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
+
+                    resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
+                    resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
+
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
 
@@ -532,17 +537,17 @@ Partial Public Class Cms
 
                     resultsXML.SetAttribute("totalResults", totalResults)
                     resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
-                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
+                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
                     'Don't believe this to be required.
-                    'If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
-                    '    resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
-                    '    If bShowHiddenForUser Then
-                    '        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
-                    '    End If
-                    'Else
-                    '    resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
-                    'End If
+                    If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
+                        resultsXML.SetAttribute("sitePaging", "on")
+                        If bShowHiddenForUser Then
+                            resultsXML.SetAttribute("sitePaging", "off")
+                        End If
+                    Else
+                        resultsXML.SetAttribute("sitePaging", "off")
+                    End If
 
                     resultsXML.SetAttribute("Hits", HitsLimit)
 
