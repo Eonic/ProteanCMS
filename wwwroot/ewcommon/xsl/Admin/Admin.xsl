@@ -273,6 +273,7 @@
       </div>
       <xsl:apply-templates select="." mode="adminFooter"/>
       <xsl:apply-templates select="." mode="footerJs"/>
+      <script>keepAlive();</script>
       <iframe id="keepalive" src="/ewCommon/tools/keepalive.ashx" frameborder="0" width="0" height="0" xmlns:ew="urn:ew">Keep Alive frame</iframe>
     </body>
   </xsl:template>
