@@ -1734,53 +1734,53 @@ Partial Public Class Cms
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
 
                                     oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
+                                End If
+                                newUrl = strOldurl.Replace(cName, newUrl)
+
+
+
+
+                                Select Case moRequest("redirectType")
+                                    Case "301Redirect"
+
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+                                    Case "302Redirect"
+                                        oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
+
+                                    Case "404Redirect"
+
+                                End Select
+
+                            Else
+
+                                newUrl = strarr2(0) & "/" & newUrl & "/"
                             End If
-                            newUrl = strOldurl.Replace(cName, newUrl)
-
-
-
-
-                            Select Case moRequest("redirectType")
-                                Case "301Redirect"
-
-                                    oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                Case "302Redirect"
-                                    oAdminRedirect.CreateRedirect(redirectType, strOldurl, newUrl, "", pgid, isParentPage)
-
-                                Case "404Redirect"
-
-                            End Select
-
-                        Else
-
-                            newUrl = strarr2(0) & "/" & newUrl & "/"
                         End If
-                    End If
 
-                    Select Case moRequest("redirectType")
-                        Case "301Redirect"
+                        Select Case moRequest("redirectType")
+                            Case "301Redirect"
 
-                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
 
-                        Case "302Redirect"
-                            obj.CreateRedirect(redirectType, strOldurl, newUrl)
-                    End Select
+                            Case "302Redirect"
+                                obj.CreateRedirect(redirectType, strOldurl, newUrl)
+                        End Select
 
                     Else
 
-                    pgid = moDbHelper.insertStructure(MyBase.Instance)
-                    moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
+                        pgid = moDbHelper.insertStructure(MyBase.Instance)
+                        moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
 
-                    ' If the site wants to, by default, restrict new pages to a given group or directory item, then
-                    ' read this in from the config and set the permission.
-                    If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
-                        Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
-                        moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
-                    End If
+                        ' If the site wants to, by default, restrict new pages to a given group or directory item, then
+                        ' read this in from the config and set the permission.
+                        If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
+                            Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
+                            moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
+                        End If
 
-                    ' We need to return the page id somehow, so we could update the instance
-                    Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
+                        ' We need to return the page id somehow, so we could update the instance
+                        Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
 
                     End If
 
