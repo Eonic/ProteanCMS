@@ -1732,23 +1732,24 @@ Partial Public Class Cms
                                 Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
                                 Dim sType As String = "Page"
                                 If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-
-                                Else
-
-                                    pgid = moDbHelper.insertStructure(MyBase.Instance)
-                                    moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
-
-                                    ' If the site wants to, by default, restrict new pages to a given group or directory item, then
-                                    ' read this in from the config and set the permission.
-                                    If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
-                                        Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
-                                        moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
-                                    End If
-
-                                    ' We need to return the page id somehow, so we could update the instance
-                                    Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
-
+                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
                                 End If
+                            Else
+
+                                pgid = moDbHelper.insertStructure(MyBase.Instance)
+                                moDbHelper.ReorderNode(dbHelper.objectTypes.ContentStructure, pgid, "MoveBottom")
+
+                                ' If the site wants to, by default, restrict new pages to a given group or directory item, then
+                                ' read this in from the config and set the permission.
+                                If IsNumeric(goConfig("DefaultPagePermissionGroupId")) And goConfig("DefaultPagePermissionGroupId") > 0 Then
+                                    Dim nDefaultPagePermDirId As Long = CLng(goConfig("DefaultPagePermissionGroupId"))
+                                    moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, dbHelper.PermissionLevel.View)
+                                End If
+
+                                ' We need to return the page id somehow, so we could update the instance
+                                Tools.Xml.NodeState(MyBase.Instance, "//nStructKey", pgid, , Tools.Xml.XmlNodeState.IsEmpty)
+
+                            End If
 
 
                                 ' Clear the cache
