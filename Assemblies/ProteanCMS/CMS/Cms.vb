@@ -1520,9 +1520,9 @@ Public Class Cms
             BuildPageXML()
 
             If msException = "" Then
+                'for preview mode .. should not check admin mode 
 
-
-                If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode Then
+                If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode And mbPreview = False Then
                     Dim url As String
                     Dim pagePath As String
                     If moConfig("DetailPathType") <> "" And mnArtId = 0 Then 'case to check for detail path setting and are we on a detail page. 
