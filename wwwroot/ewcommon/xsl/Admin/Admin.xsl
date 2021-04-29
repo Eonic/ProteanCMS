@@ -2685,7 +2685,33 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+    <xsl:if test="$page/ContentDetail/@total > 0">
+      <form method="post" action="?ewCmd={$page/@ewCmd}.{$page/@ewCmd2}.{$page/@ewCmd3}&amp;Location={$page/Request/*/Item[@name='Location']/node()}">
+        <div class="col-md-2">
+          <div class="input-group">
+            <label class="input-group-addon">Items Per Page</label>
+            <select class="form-control" name="PageCount" id="PageCount">
+              <option value="50">100</option>
+              <option value="100">100</option>
+              <option value="250">250</option>
+              <option value="500">500</option>
+              <option value="All">All</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="input-group">
+            <label class="input-group-addon">Sort By</label>
+            <select class="form-control submit-on-select" name="SortBy" id="SortBy">
+              <option value="Name">Name A-Z</option>
+              <option value="PagePosition">Page Position</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </xsl:if>
+
+    <form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
 		<input type="hidden" name="ewCmd" value="BulkContentAction"/>
 		<input type="hidden" name="pgid" value="{$pgid}"/>
 		<div class="panel panel-default">
@@ -2755,29 +2781,8 @@
           </div>
         </xsl:if>
       </div>
-        <xsl:if test="$page/ContentDetail/@total > 0">
-          <div class="col-md-2">
-            <div class="input-group">
-              <label class="input-group-addon">Items Per Page</label>
-              <select class="form-control" name="PageCount" id="PageCount">
-                <option value="50">100</option>
-                <option value="100">100</option>
-                <option value="250">250</option>
-                <option value="500">500</option>
-                <option value="All">All</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="input-group">
-              <label class="input-group-addon">Sort By</label>
-              <select class="form-control" name="SortBy" id="SortBy">
-                <option value="Name">Name A-Z</option>
-                <option value="PagePosition">Page Position</option>
-              </select>
-            </div>
-          </div>
-        </xsl:if>
+        
+
       </div>
 			<table class="table table-striped-2">
 				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
