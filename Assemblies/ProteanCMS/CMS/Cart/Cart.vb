@@ -8037,21 +8037,22 @@ SaveNotes:      ' this is so we can skip the appending of new node
                 cSQL &= Protean.Tools.Database.SqlDate(dEnd, True) & ","
                 cSQL &= "'" & cOrderType & "',"
                 cSQL &= nOrderStage
-
-                Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report")
-
-                If oDS.Tables("Item").Columns.Contains("cCartXML") Then
-                    oDS.Tables("Item").Columns("cCartXML").ColumnMapping = MappingType.Element
-                End If
                 Dim oRptElmt As XmlElement = myWeb.moPageXml.CreateElement("Content")
                 oRptElmt.SetAttribute("type", "Report")
                 oRptElmt.SetAttribute("name", "CartDownloads")
-                'NB editing this line to add in &'s
-                oRptElmt.InnerXml = oDS.GetXml
-                For Each oElmt In oRptElmt.SelectNodes("Report/Item/cCartXml")
-                    oElmt.InnerXml = oElmt.InnerText
-                Next
-
+                Dim oDS As DataSet = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report")
+                If Not oDS Is Nothing Then
+                    If oDS.Tables("Item").Columns.Contains("cCartXML") Then
+                        oDS.Tables("Item").Columns("cCartXML").ColumnMapping = MappingType.Element
+                    End If
+                    'NB editing this line to add in &'s
+                    oRptElmt.InnerXml = oDS.GetXml
+                    For Each oElmt In oRptElmt.SelectNodes("Report/Item/cCartXml")
+                        oElmt.InnerXml = oElmt.InnerText
+                    Next
+                Else
+                    oRptElmt.AppendChild(myWeb.moPageXml.CreateElement("Result"))
+                End If
                 'oRptElmt.InnerXml = Replace(Replace(Replace(Replace(oDS.GetXml, "&amp;", "&"), "&gt;", ">"), "&lt;", "<"), " xmlns=""""", "")
                 'oRptElmt.InnerXml = Replace(Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<"), " xmlns=""""", "")
                 Dim oReturnElmt As XmlElement = oRptElmt.FirstChild
