@@ -390,6 +390,7 @@ Partial Public Class Cms
                 Dim NextPage As Integer = 0
 
                 'allow paging as per config setting 
+                'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
                     If (myWeb.moRequest("hitlimit") > 0) Then
                         HitsLimit = myWeb.moRequest("hitlimit")
@@ -540,13 +541,14 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("pageSize", PageSize)
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
 
+                    ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
-                        resultsXML.SetAttribute("sitePaging", "on")
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
                         If bShowHiddenForUser Then
-                            resultsXML.SetAttribute("sitePaging", "off")
+                            resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
                         End If
                     Else
-                        resultsXML.SetAttribute("sitePaging", "off")
+                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
                     End If
                     resultsXML.SetAttribute("Hits", HitsLimit)
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
@@ -2009,13 +2011,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
                     'apply status filter to show only active Products
-                    'If LCase(moConfig("IndexIncludesHidden")) = "on" Then
-                    If Not bShowHiddenForUser Then
+                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
+                        If Not bShowHiddenForUser Then
                             queryToBeParsed.Append(" AND ")
                             queryTerms = ParseKeywordsAndPhrases("1")
                             BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
                         End If
-                    'End If
+                    End If
                 End If
 
                 ' Prefix name search is an optional hardcoded search that prefix searches the qsname field
