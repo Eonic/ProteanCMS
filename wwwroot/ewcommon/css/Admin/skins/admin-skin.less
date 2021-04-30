@@ -319,9 +319,39 @@ NEW BS ADMIN HEADER
                 right: 30px;
             }
 
-         .list-controls .pull-right-stepper {
-                float: right !important;
 
+            .list-controls {
+                text-align: right;
+
+                form {
+                    display: inline-block;
+                }
+
+                .input-group {
+                    width: 220px;
+                }
+
+                .pull-right-stepper {
+                    text-align: right;
+                }
+
+                .list-header-select {
+                    display: inline-block;
+                    margin-right: 5px;
+                }
+
+                .stepper-container {
+                    display: inline-block;
+                    position: relative;
+                    top: -15px;
+                    margin-right: 30px;
+
+                    .stepper {
+                        display: inline-block;
+                        padding-top: 0px;
+                        margin: 0;
+                    }
+                }
             }
 
             .optionsButton {
@@ -403,6 +433,14 @@ NEW BS ADMIN HEADER
             .bulk-action {
                 display: inline-block;
             }
+        }
+
+        .th-form{padding:0;}
+        .bulk-action {
+            width: 250px;
+            text-align: right;
+            display: inline;
+            margin-bottom: 0px;
         }
     }
     //end #adminLayout
@@ -1006,12 +1044,11 @@ NEW BS ADMIN HEADER
     color: #464646;
 }
 
-.ewAdmin form#UserLogon
-{
+.ewAdmin #adminLayout form#UserLogon {
     //margin-top: 100px;
     margin-bottom: 130px;
-    margin-right:auto;
-    margin-left:auto;
+    margin-right: auto;
+    margin-left: auto;
     width: 380px;
 }
 
