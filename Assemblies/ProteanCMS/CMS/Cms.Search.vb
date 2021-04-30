@@ -410,7 +410,7 @@ Partial Public Class Cms
                         HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
-                        PageSize = myWeb.moRequest("PageSize")
+                        pageSize = myWeb.moRequest("PageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -425,7 +425,7 @@ Partial Public Class Cms
                     HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
                     pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If PageSize = 0 Then PageSize = 300
+                    If pageSize = 0 Then pageSize = 300
                 End If
 
                 If Not cQuery.Equals("") Then
@@ -2013,13 +2013,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
                     'apply status filter to show only active Products
-                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
-                        If Not bShowHiddenForUser Then
-                            queryToBeParsed.Append(" AND ")
-                            queryTerms = ParseKeywordsAndPhrases("1")
-                            BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
-                        End If
+                    ' If LCase(moConfig("IndexIncludesHidden")) = "on" Then
+                    If Not bShowHiddenForUser Then
+                        queryToBeParsed.Append(" AND ")
+                        queryTerms = ParseKeywordsAndPhrases("1")
+                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
                     End If
+                    'End If
                 End If
 
                 ' Prefix name search is an optional hardcoded search that prefix searches the qsname field
