@@ -999,7 +999,7 @@
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
-        <div class="container">
+        
           <xsl:text>© </xsl:text>
           <xsl:call-template name="eonicwebCopyright"/>
           <xsl:text> 2002-</xsl:text>
@@ -1020,8 +1020,10 @@
             </xsl:attribute>
             <xsl:value-of select="$supportWebsite"/>
           </a>
+          <span class="pull-right">
+            <xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
+        </span>
         </div>
-      </div>
     </div>
     <div id="loading-indicator" class="model" style="display:none">
       <div class="modal-content">
