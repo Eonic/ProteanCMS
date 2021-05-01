@@ -53,7 +53,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        Eonic Associates LLP.
+        Eonic Digital LLP.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -75,7 +75,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.com</xsl:text>
+        <xsl:text>eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -246,7 +246,7 @@
   
   <!--In admin but not WYSIWYG-->
   <xsl:template match="Page[@adminMode='true']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin">
+    <body id="pg_{@id}" class="ewAdmin layout-{@layout}">
       <xsl:apply-templates select="AdminMenu"/>
       <div id="adminLayout">
         <div class="admin-page">
@@ -307,6 +307,13 @@
     </body>
   </xsl:template>
 
+  <xsl:template match="Page[@layout='Logon']" mode="Admin">
+    <div class="adminTemplate" id="template_Logon">
+      <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+      <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+    </div>
+  </xsl:template>
+  
     <xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
         <xsl:variable name="class">
             <xsl:text>adminButton</xsl:text>
@@ -8512,6 +8519,9 @@
 
     </div>
   </xsl:template>
+  
+  
+  
   <!-- BJR -->
   <!--   ##################  NewsLetter    ##############################   -->
   <!-- -->
