@@ -1754,49 +1754,49 @@ Partial Public Class Cms
 
                             ' Clear the cache
                             If gbSiteCacheMode Then
-                                    moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
-                                End If
+                                moDbHelper.ExeProcessSqlScalar("DELETE FROM dbo.tblXmlCache")
+                            End If
 
 
-                                'NB Notes: Get PgId above then process Related Content
-                                If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
-                                    If pgid > 0 Then
-                                        Dim oContent As XmlNode
-                                        Dim oDr As SqlDataReader
+                            'NB Notes: Get PgId above then process Related Content
+                            If Tools.Xml.NodeState(MyBase.Instance, "tblContentStructure/RelatedContent") = XmlNodeState.HasContents Then
+                                If pgid > 0 Then
+                                    Dim oContent As XmlNode
+                                    Dim oDr As SqlDataReader
 
-                                        oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
-                                        Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
-                                        oDr = moDbHelper.getDataReader(sSql)
-
-
-                                        Dim oInstance As XmlDocument = New XmlDocument
-                                        oInstance.AppendChild(oInstance.CreateElement("Instance"))
-                                        oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
-
-                                        nRContentId = 0
-                                        While oDr.Read
-                                            nRContentId = oDr(0)
-                                        End While
-                                        oDr.Close()
+                                    oContent = MyBase.Instance.SelectSingleNode("tblContentStructure/RelatedContent/tblContent")
+                                    Dim sSql As String = "Select nContentKey from tblContent c Inner Join tblContentLocation cl on c.nContentKey = cl.nContentId Where cl.nStructId = '" & pgid & "' AND c.cContentName = '" & cFormName & "_RelatedContent'"
+                                    oDr = moDbHelper.getDataReader(sSql)
 
 
-                                        If nRContentId > 0 Then
-                                            nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
-                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                            moDbHelper.setContentLocation(pgid, nRContentId)
-                                        Else
-                                            nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
-                                            moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
-                                            moDbHelper.setContentLocation(pgid, nRContentId)
-                                        End If
+                                    Dim oInstance As XmlDocument = New XmlDocument
+                                    oInstance.AppendChild(oInstance.CreateElement("Instance"))
+                                    oInstance.FirstChild.AppendChild(oInstance.ImportNode(oContent, True))
 
+                                    nRContentId = 0
+                                    While oDr.Read
+                                        nRContentId = oDr(0)
+                                    End While
+                                    oDr.Close()
+
+
+                                    If nRContentId > 0 Then
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild, nRContentId)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
+                                    Else
+                                        nRContentId = moDbHelper.setObjectInstance(oObjType, oInstance.FirstChild)
+                                        moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nRContentId, pgid, "")
+                                        moDbHelper.setContentLocation(pgid, nRContentId)
                                     End If
+
                                 End If
                             End If
                         End If
-
-                        MyBase.addValues()
-                        Return MyBase.moXformElmt
+                    End If
+                    End If
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug)
