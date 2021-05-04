@@ -413,16 +413,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\System.Diagnostics
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\MySql.Data.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Fonet.xml
 D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.pdb
-<<<<<<< HEAD
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
-D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
-=======
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Magick.Native-Q8-x64.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x64.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\tidy.x86.dll
