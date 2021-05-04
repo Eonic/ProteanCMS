@@ -27,7 +27,6 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.C
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
-D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache
 D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Magick.Native-Q8-x64.dll
 D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll.config
 D:\_Sonali_WorkPlace\DevOpsGit\Assemblies\Protean.Tools.Csharp\bin\Debug\Protean.Tools.Csharp.dll

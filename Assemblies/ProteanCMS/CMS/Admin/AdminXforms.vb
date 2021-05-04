@@ -1794,7 +1794,7 @@ Partial Public Class Cms
                             End If
                         End If
                     End If
-                    End If
+
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
