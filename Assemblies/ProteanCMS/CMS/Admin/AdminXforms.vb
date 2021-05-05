@@ -1726,14 +1726,7 @@ Partial Public Class Cms
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
 
-                                'page redirection for hub
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
-                                Dim sType As String = "Page"
-                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
-                                End If
+
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
@@ -2805,7 +2798,6 @@ Partial Public Class Cms
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2813,6 +2805,10 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
+
+
+
+
 
                         If MyBase.valid Then
 
@@ -2854,21 +2850,27 @@ Partial Public Class Cms
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
+                                Dim redirectType As String = ""
+                                Dim newUrl As String = ""
+                                Dim strOldurl As String = ""
+                                If moRequest("redirectType") IsNot Nothing Then
+                                    redirectType = moRequest("redirectType").ToString()
+                                End If
 
-                                Dim sNewUrl As String = ""
-                                Dim sOldurl As String = ""
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim sType As String = "Product"
-                                If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
-                                    sNewUrl = moRequest("productNewUrl").ToString()
+                                If moRequest("productNewUrl") IsNot Nothing Then
+                                    newUrl = moRequest("productNewUrl").ToString()
                                 End If
-                                If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
-                                    sOldurl = moRequest("productOldUrl").ToString()
+                                If moRequest("productOldUrl") IsNot Nothing Then
+                                    strOldurl = moRequest("productOldUrl").ToString()
                                 End If
-                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), sOldurl, sNewUrl, moRequest("pageOldUrl"), False, sType, pgid)
 
-                                End If
+
+
+
+
+
+
+
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
@@ -3488,20 +3490,25 @@ Partial Public Class Cms
 
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Dim artIds As String = ""
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                            artIds = odr("nContentKey") & ","
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
-
-                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
-                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
-                        MyBase.addOption(oSelUpd, "No", "0")
-                    Else
+                    If odr Is Nothing Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                    Else
+
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Dim artIds As String = ""
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                                artIds = odr("nContentKey") & ","
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                            Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                            MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                            MyBase.addOption(oSelUpd, "No", "0")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
                     odr = Nothing
 
