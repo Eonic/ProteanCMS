@@ -1858,7 +1858,25 @@
         </div>
       </div>
       <div class="col-md-9">
-      
+           <form action="{$appPath}" method="get" class="ewXform">
+        <input type="hidden" name="ewCmd" value="BulkContentAction"/>
+        <input type="hidden" name="pgid" value="{$page/@id}"/>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-heading-buttons">
+              <xsl:apply-templates select="." mode="bulkActionForm"/>
+            </div>
+            <h4 class="panel-title">All content on page - <strong><xsl:apply-templates select="$currentPage" mode="getDisplayName"/></strong></h4>
+          </div>
+            <div class="panel-group" id="accordion">
+              <xsl:for-each select="/Page/ContentDetail/ContentTypes/ContentTypeGroup/ContentType">
+                <xsl:apply-templates select="/" mode="ListByContentType">
+                  <xsl:with-param name="contentType" select="@type"/>
+                </xsl:apply-templates>
+              </xsl:for-each>
+            </div>
+        </div>
+            </form>
       </div>
     </div>
   </xsl:template>
@@ -1917,7 +1935,6 @@
   </xsl:template>
 
   <xsl:template match="*" mode="bulkActionForm">
-    <form action="{$appPath}" method="get" class="ewXform">
       <input type="hidden" name="ewCmd" value="BulkContentAction"/>
       <input type="hidden" name="pgid" value="{$page/@id}"/>
 
@@ -1936,7 +1953,6 @@
               </div>
             </div>
 
-    </form>
   </xsl:template>
 
   <xsl:template match="Content" mode="AdvancedModeHeader">
@@ -2625,6 +2641,7 @@
         
     </div>
     
+    <form action="{$appPath}" method="get" class="ewXform">
     <table class="table table-striped-2">
       <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
         <tr>
@@ -2638,6 +2655,7 @@
       <xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
       <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
     </table>
+    </form>
    </div>
     </form>
   </xsl:template>  
