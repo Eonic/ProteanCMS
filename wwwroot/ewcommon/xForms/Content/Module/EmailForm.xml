@@ -75,7 +75,7 @@
               </textarea>
               <textarea bind="Message" class="textarea" rows="4">
                 <label>How can we help</label>
-              </textarea>          
+              </textarea>
               <submit submission="mailForm" bind="ewCmd" class="principle">
                 <label>Send</label>
               </submit>
@@ -116,7 +116,7 @@
       <bind id="cSenderEmail" nodeset="ews2:fromEmail" required="false()" type="string"/>
       <bind id="cSenderName" nodeset="ews2:fromName" required="false()" type="string"/>
       <bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/>
-      
+
       <bind id="cXSLTPath" nodeset="ews2:xsltPath" required="false()" type="string"/>
       <!--bind id="cSubject" nodeset="ews2:SubjectLine" required="false()" type="string"/-->
       <bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
@@ -194,7 +194,7 @@
         <input bind="cSubject" class="long">
           <label>Email subject line</label>
         </input>
-       
+
         <input bind="cSubmissionId" class="long">
           <label>Submission ID</label>
           <hint>Ensure this matches the submission attribute on the sumbit button</hint>

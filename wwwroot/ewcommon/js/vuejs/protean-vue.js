@@ -8,6 +8,7 @@ var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
 var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
 var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
 var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/getTotalNumberOfSearchUrls';
+var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
 
 
 Vue.mixin({
@@ -20,42 +21,6 @@ Vue.mixin({
         }
     }
 });
-
-
-
-////Edit Page
-
-$(document).on("click", ".btnSavePage", function (event) {
-
-    var newStructName = $("#cStructName").val();
-    editPage.structNameOnChange(newStructName);
-
-});
-
-$(document).on("click", "#btnRedirectSave", function (event) {
-
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
-    }
-
-    $("#redirectModal").modal("hide");
-});
-
-$(document).on("click", "#btnRedirectDontSave", function (event) {
-    if ($(".btnSubmitProduct").length > 0) {
-        $(".btnSubmitProduct").click();
-    }
-    if ($(".btnSubmitPage").length > 0) {
-        $(".btnSubmitPage").click();
-    }
-    $("#redirectModal").modal("hide");
-});
-
-
-
 
 
 
@@ -695,7 +660,6 @@ $('.scolling-pane').on('scroll', function () {
 
     }
 });
-
 
 
 //Insights

@@ -2876,29 +2876,29 @@ Partial Public Class Cms
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
                                     End If
+                                End If
 
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
-                                    editResult = dbHelper.ActivityType.ContentEdited
+                                editResult = dbHelper.ActivityType.ContentEdited
 
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
                                 Else
-                                    Dim nContentId As Long
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3414,16 +3414,19 @@ Partial Public Class Cms
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    If Not odr Is Nothing Then
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                    Else
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
+
                     odr = Nothing
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
@@ -3538,7 +3541,7 @@ Partial Public Class Cms
                                 End If
 
                             Else
-                                    MyBase.valid = False
+                                MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 

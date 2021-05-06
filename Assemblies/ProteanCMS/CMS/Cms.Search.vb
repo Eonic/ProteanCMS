@@ -555,6 +555,7 @@ Partial Public Class Cms
                         resultsXML.SetAttribute("startCount", HitsLimit - pageSize + 1)
                     End If
 
+
                     Dim artIdResults As New List(Of Long)
 
                     ' Process the results
@@ -2013,13 +2014,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
                     'apply status filter to show only active Products
-                    ' If LCase(moConfig("IndexIncludesHidden")) = "on" Then
-                    If Not bShowHiddenForUser Then
-                        queryToBeParsed.Append(" AND ")
-                        queryTerms = ParseKeywordsAndPhrases("1")
-                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
+                        If Not bShowHiddenForUser Then
+                            queryToBeParsed.Append(" AND ")
+                            queryTerms = ParseKeywordsAndPhrases("1")
+                            BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                        End If
                     End If
-                    'End If
                 End If
 
                 ' Prefix name search is an optional hardcoded search that prefix searches the qsname field
