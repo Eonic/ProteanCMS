@@ -43,7 +43,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        Eonic Associates LLP.
+        Eonic Digital LLP.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -65,7 +65,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.co.uk</xsl:text>
+        <xsl:text>eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -657,7 +657,7 @@
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
-        <div class="container">
+
           <xsl:text>© </xsl:text>
           <xsl:call-template name="eonicwebCopyright"/>
           <xsl:text> 2002-</xsl:text>
@@ -678,7 +678,9 @@
             </xsl:attribute>
             <xsl:value-of select="$supportWebsite"/>
           </a>
-        </div>
+          <span class="pull-right">
+            <xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
+        </span>
       </div>
     </div>
     <div id="loading-indicator" class="model" style="display:none">

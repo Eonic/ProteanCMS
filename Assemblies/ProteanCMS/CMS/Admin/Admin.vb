@@ -361,6 +361,12 @@ ProcessFlow:
 
                             Dim oMembershipProv As New Providers.Membership.BaseProvider(myWeb, myWeb.moConfig("MembershipProvider"))
                             oPageDetail.AppendChild(oMembershipProv.AdminXforms.xFrmUserLogon("AdminLogon"))
+                            Dim oPageElmt As XmlElement
+                            moPageXML.CreateXmlDeclaration("1.0", "UTF-8", "yes")
+                            oPageElmt = moPageXML.CreateElement("Page")
+                            moPageXML.AppendChild(oPageElmt)
+                            oWeb.GetRequestVariablesXml(oPageElmt)
+                            oWeb.GetSettingsXml(oPageElmt)
 
                             'oPageDetail.AppendChild(moAdXfm.xFrmUserLogon("AdminLogon"))
                             If oMembershipProv.AdminXforms.valid Then
@@ -407,7 +413,7 @@ ProcessFlow:
 
                                 End If
                             Else
-                                sAdminLayout = "AdminXForm"
+                                sAdminLayout = "Logon"
                             End If
                         Else
                             If myWeb.mnPageId > 0 Then

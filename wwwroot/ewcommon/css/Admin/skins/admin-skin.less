@@ -35,813 +35,933 @@ NEW BS ADMIN HEADER
 @admin-header-color:			#000;
 @admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
-.ewAdmin {
-    .admin-breadcrumb {
+
+body.ewAdmin.layout-Logon {
+    background: url(/ewcommon/images/logon-bg.png);
+    #adminLayout .panel {
         position: absolute;
-        right: 0px;
-        background: transparent !important;
-        font-family: @admin-header-font;
-        color: #a5a7a9;
-        text-align: right;
-        padding: 15px 30px !important;
-
-        a {
-            color: #fff;
-
-            &:hover {
-                color: @admin-header-color-link;
-                text-decoration: none;
-            }
+        top: 40%;
+        left: 50%;
+        -ms-transform: translate(-50%, -40%);
+        transform: translate(-50%, -40%);
+        border-radius: 10px !important;
+        -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        .panel-heading {
+            border-radius: 10px 10px 0 0 !important;
         }
+        .panel-footer {
+            border-radius: 0 0 10px 10px !important;
+            padding: 10px 30px 0 30px;
+        }
+    }
+    #footer {
+        position: fixed;
+        bottom: 0%;
+        width: 100%;
+    }
+}
+body.ewAdmin.layout-AdmHome {
+    background: url(/ewcommon/images/logon-bg.png);
 
-        font-size: 12.5px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        padding-right: 20px;
-        margin-bottom: 0 !important;
+    #adminLayout {
+        margin: 50px;
+        border-radius: 10px !important;
+        background-color: #edf1f3;
+        -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
 
-        li:before {
-            color: #a5a7a9 !important;
+        .page-header {
+            border-radius: 10px 10px 0 0 !important;
         }
     }
 
-    #adminLayout {
-        font-size: @admin-font-size-base;
-        letter-spacing: normal;
-        padding-left: 0px;
-        padding-right: 0px;
+    #footer {
+        position: fixed;
+        bottom: 0%;
+        width: 100%;
+    }
+}
 
-        a {
-            color: @admin-primary;
-        }
-
-        a:hover {
-            text-decoration: none;
-            color: lighten(@admin-primary,20%);
-        }
-
-        .status.active, .status.activeParent {
-            color: @admin-success;
-        }
-
-        .status.inactive {
-            color: @admin-gray;
-        }
-
-        .table a {
-            color: darken(@admin-header-color-link,25%)
-        }
-
-        .table a:hover {
-            text-decoration: none;
-            color: @admin-header-color-link;
-        }
-
-        .listbox a {
-            color: darken(@admin-header-color-link,30%)
-        }
-
-        .row {
-            margin-left: 0px;
-            margin-right: 0px;
-        }
-
-        .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
-            padding-left: 0px;
-            padding-right: 1px;
-        }
-
-        .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-            color: @admin-header-color;
-            background-color: @admin-header-color-link;
+    .ewAdmin {
+        .admin-breadcrumb {
+            position: absolute;
+            right: 0px;
+            background: transparent !important;
+            font-family: @admin-header-font;
+            color: #a5a7a9;
+            text-align: right;
+            padding: 15px 30px !important;
 
             a {
-                color: @admin-header-color;
+                color: #fff;
+
+                &:hover {
+                    color: @admin-header-color-link;
+                    text-decoration: none;
+                }
+            }
+
+            font-size: 12.5px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            padding-right: 20px;
+            margin-bottom: 0 !important;
+
+            li:before {
+                color: #a5a7a9 !important;
+            }
+        }
+
+
+
+        #adminLayout {
+            font-size: @admin-font-size-base;
+            letter-spacing: normal;
+            padding-left: 0px;
+            padding-right: 0px;
+
+            a {
+                color: @admin-primary;
             }
 
             a:hover {
-                color: darken(@admin-header-color,25%);
+                text-decoration: none;
+                color: lighten(@admin-primary,20%);
             }
-        }
 
-        .admin-page {
+            .status.active, .status.activeParent {
+                color: @admin-success;
+            }
+
+            .status.inactive {
+                color: @admin-gray;
+            }
+
+            .table a {
+                color: darken(@admin-header-color-link,25%)
+            }
+
+            .table a:hover {
+                text-decoration: none;
+                color: @admin-header-color-link;
+            }
+
+            .listbox a {
+                color: darken(@admin-header-color-link,30%)
+            }
+
+            .row {
+                margin-left: 0px;
+                margin-right: 0px;
+            }
+
             .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+                padding-left: 0px;
+                padding-right: 1px;
+            }
 
-                > .panel-default,
-                > .ewXform .panel-default {
+            .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+                color: @admin-header-color;
+                background-color: @admin-header-color-link;
+
+                a {
+                    color: @admin-header-color;
+                }
+
+                a:hover {
+                    color: darken(@admin-header-color,25%);
+                }
+            }
+
+            .admin-page {
+                .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+
+                    > .panel-default,
+                    > .ewXform .panel-default {
+                        .panel-heading {
+                            padding-left: @admin-gutter-width;
+                            padding-right: @admin-gutter-width;
+                        }
+                    }
+                }
+
+                h1.page-header {
+                    padding-left: @admin-gutter-width;
+                    padding-right: @admin-gutter-width;
+                    padding-top: 15px;
+                    padding-bottom: 15px;
+                    //background-color: lighten(@admin-header-bg,70%);
+                    background-color: lighten(@admin-header-bg,30%);
+                    color: #fff;
+                    margin-bottom: 0px;
+                    border: 0;
+                    font-size: 30px;
+                }
+
+                > .panel-default {
+                    margin-bottom: 0;
+
+                    > .panel-heading {
+                        padding-bottom: 15px;
+                        padding-top: 15px;
+                        padding-left: @admin-gutter-width;
+                        padding-right: @admin-gutter-width;
+                    }
+
+                    > .panel-body {
+                        padding-left: @admin-gutter-width;
+                        padding-right: @admin-gutter-width;
+                    }
+                }
+
+                form.panel-default {
+                    > .panel-heading {
+                        border-bottom: 4px solid lighten(@admin-header-bg,30%);
+                        padding-bottom: 15px;
+                        padding-top: 15px;
+                        padding-left: @admin-gutter-width;
+                        padding-right: @admin-gutter-width;
+
+                        h3 {
+                            margin: 7px 0;
+                            font-size: 18px;
+                        }
+
+                        legend {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+
+                    .panel-body {
+                        padding-left: @admin-gutter-width;
+                        padding-right: @admin-gutter-width;
+                    }
+                }
+
+                #accordion {
+                    .panel-default .panel-heading {
+                        border-bottom: 4px solid lighten(@admin-header-bg,30%);
+                        padding-bottom: 15px;
+                        padding-top: 15px;
+                    }
+                }
+
+                .panel-default .panel-body {
+                    background-color: lighten(@admin-header-bg,85%);
+                }
+
+                .panel-default .panel-footer {
+                    border-radius: 0;
+                }
+
+                form.panel-default {
+                    margin-bottom: 0;
+                }
+
+                form.panel-default legend {
+                    border-color: lighten(@admin-header-bg,70%);
+                }
+
+                #template_FileSystem {
+                    > .panel-body.row {
+                        padding-left: 0;
+                    }
+
                     .panel-heading {
                         padding-left: @admin-gutter-width;
                         padding-right: @admin-gutter-width;
                     }
                 }
+
+                .dashboard-first-column {
+                    margin-bottom: 20px;
+
+                    .panel-default {
+                        border-color: #fff;
+                        height: 44.0% !important;
+                    }
+
+                    .panel-body {
+                        border-color: #fff;
+                        height: 100% !important;
+                    }
+                }
             }
 
-            h1.page-header {
-                padding-left: @admin-gutter-width;
-                padding-right: @admin-gutter-width;
-                padding-top: 15px;
-                padding-bottom: 15px;
-                //background-color: lighten(@admin-header-bg,70%);
-                background-color: lighten(@admin-header-bg,30%);
-                color: #fff;
+            #tpltEditStructure {
+                margin-left: 0px;
+                margin-right: 0px;
+
+                .btn-primary {
+                    border: 1px solid @admin-primary
+                }
+
+                .btn-success {
+                    border: 1px solid @admin-success
+                }
+
+                .list-group-item {
+                    border-bottom: 1px solid lighten(@admin-header-bg,75%);
+                }
+
+                .list-group-item:hover {
+                    background-color: lighten(@admin-header-bg,85%);
+                    -o-transition: .5s;
+                    -ms-transition: .5s;
+                    -moz-transition: .5s;
+                    -webkit-transition: .5s;
+                    /* ...and now for the proper property */
+                    transition: .5s;
+                }
+            }
+
+
+            #tpltAdvancedMode {
+                .ui-accordion {
+                    padding-top: 2px;
+
+                    .panel {
+                        margin-top: 0px;
+                    }
+
+                    .panel-heading {
+                        background-color: #fff;
+                        border-bottom: 1px solid #ddd;
+                        padding-bottom: 10px;
+                        padding-top: 11px;
+                    }
+
+                    border-right: 1px solid #ddd;
+                    border-left: 1px solid #ddd;
+
+                    .accordion-toggle span {
+                        padding-left: 5px;
+                    }
+
+                    td.status {
+                        width: 30px;
+
+                        i {
+                            padding-left: 7px;
+                        }
+                    }
+
+                    .checkbox {
+                        margin-top: 0px;
+                    }
+
+                    span.checkbox {
+                        display: inline-block;
+                    }
+                }
+
+                .panel-heading .pull-right {
+                    position: relative;
+                    top: -5px;
+                }
+
+                .panel-heading .pull-right-stepper {
+                    float: right !important;
+                    position: relative;
+                    top: -18px;
+                    right: 30px;
+                }
+
+
+                .list-controls {
+                    text-align: right;
+
+                    form {
+                        display: inline-block;
+                    }
+
+                    .input-group {
+                        width: 220px;
+                    }
+
+                    .pull-right-stepper {
+                        text-align: right;
+                    }
+
+                    .list-header-select {
+                        display: inline-block;
+                        margin-right: 5px;
+                    }
+
+                    .stepper-container {
+                        display: inline-block;
+                        position: relative;
+                        top: -15px;
+                        margin-right: 30px;
+
+                        .stepper {
+                            display: inline-block;
+                            padding-top: 0px;
+                            margin: 0;
+                        }
+                    }
+                }
+
+                .optionsButton {
+                    text-align: right;
+                }
+
+                .hitarea {
+                    display: inline-block;
+                }
+
+                .treeNode {
+                    display: inline-block;
+                    padding: 8px 0px;
+                }
+
+                .panel-group .panel {
+                    overflow: inherit;
+                }
+            }
+
+            .prices {
+                .rrpLabel {
+                    display: none;
+                }
+
+                .rrpPrice {
+                    text-decoration: line-through;
+                }
+            }
+
+            .popover {
+                z-index: 1060;
+            }
+
+            .listItem .ewAdmin .btn,
+            .panel .list-group .ewAdmin .btn,
+            .panel .listItem .ewAdmin .btn {
+                padding-left: 5px !important;
+                padding-right: 5px !important;
+                border-radius: 0px !important;
+
+                i {
+                    font-size: 1em;
+                }
+
+                ;
+                text-decoration: none !important;
+            }
+
+            .table-striped-2 > tbody > tr:nth-of-type(4n+0) {
+                background-color: #f9f9f9;
+            }
+
+            .table-striped-2 tbody th {
+                background-color: #f9f9f9;
+            }
+
+            .table-striped-2 tbody td.detail {
+                background-color: none;
+                border-top: 0;
+            }
+
+            table td .checkbox, table th .checkbox {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+
+            .header-panels .panel, .header-panels .form-group {
                 margin-bottom: 0px;
-                border: 0;
-                font-size: 30px;
             }
 
-            > .panel-default {
-                margin-bottom: 0;
-
-                > .panel-heading {
-                    padding-bottom: 15px;
-                    padding-top: 15px;
-                    padding-left: @admin-gutter-width;
-                    padding-right: @admin-gutter-width;
-                }
-
-                > .panel-body {
-                    padding-left: @admin-gutter-width;
-                    padding-right: @admin-gutter-width;
-                }
+            .panel-heading .principle {
+                margin-right: 5px;
+                top: -10px;
+                position: relative;
             }
 
-            form.panel-default {
-                > .panel-heading {
-                    border-bottom: 4px solid lighten(@admin-header-bg,30%);
-                    padding-bottom: 15px;
-                    padding-top: 15px;
-                    padding-left: @admin-gutter-width;
-                    padding-right: @admin-gutter-width;
-
-                    h3 {
-                        margin: 7px 0;
-                        font-size: 18px;
-                    }
-
-                    legend {
-                        margin: 0;
-                        padding: 0;
-                    }
-                }
-
-                .panel-body {
-                    padding-left: @admin-gutter-width;
-                    padding-right: @admin-gutter-width;
-                }
-            }
-
-            #accordion {
-                .panel-default .panel-heading {
-                    border-bottom: 4px solid lighten(@admin-header-bg,30%);
-                    padding-bottom: 15px;
-                    padding-top: 15px;
-                }
-            }
-
-            .panel-default .panel-body {
-                background-color: lighten(@admin-header-bg,85%);
-            }
-
-            .panel-default .panel-footer {
-                border-radius: 0;
-            }
-
-            form.panel-default {
-                margin-bottom: 0;
-            }
-
-            form.panel-default legend {
-                border-color: lighten(@admin-header-bg,70%);
-            }
-
-            #template_FileSystem {
-                > .panel-body.row {
-                    padding-left: 0;
-                }
-
-                .panel-heading {
-                    padding-left: @admin-gutter-width;
-                    padding-right: @admin-gutter-width;
-                }
-            }
-
-            .dashboard-first-column {
-                margin-bottom: 20px;
-
-                .panel-default {
-                    border-color: #fff;
-                    height: 44.0% !important;
-                }
-
-                .panel-body {
-                    border-color: #fff;
-                    height: 100% !important;
-                }
-            }
-        }
-
-        #tpltEditStructure {
-            margin-left: 0px;
-            margin-right: 0px;
-
-            .btn-primary {
-                border: 1px solid @admin-primary
-            }
-
-            .btn-success {
-                border: 1px solid @admin-success
-            }
-
-            .list-group-item {
-                border-bottom: 1px solid lighten(@admin-header-bg,75%);
-            }
-
-            .list-group-item:hover {
-                background-color: lighten(@admin-header-bg,85%);
-                -o-transition: .5s;
-                -ms-transition: .5s;
-                -moz-transition: .5s;
-                -webkit-transition: .5s;
-                /* ...and now for the proper property */
-                transition: .5s;
-            }
-        }
-
-
-        #tpltAdvancedMode {
-            .ui-accordion {
-                padding-top: 2px;
-
-                .panel {
-                    margin-top: 0px;
-                }
-
-                .panel-heading {
-                    background-color: #fff;
-                    border-bottom: 1px solid #ddd;
-                    padding-bottom: 10px;
-                    padding-top: 11px;
-                }
-
-                border-right: 1px solid #ddd;
-                border-left: 1px solid #ddd;
-
-                .accordion-toggle span {
-                    padding-left: 5px;
-                }
-
-                td.status {
-                    width: 30px;
-
-                    i {
-                        padding-left: 7px;
-                    }
-                }
-
-                .checkbox {
-                    margin-top: 0px;
-                }
-
-                span.checkbox {
+            .panel-heading-buttons {
+                .bulk-action {
                     display: inline-block;
                 }
             }
 
-            .panel-heading .pull-right {
-                position: relative;
-                top: -5px;
+            .th-form {
+                padding: 0;
             }
 
-            .panel-heading .pull-right-stepper {
-                float: right !important;
-                position: relative;
-                top: -18px;
-                right: 30px;
-            }
-
-         .list-controls .pull-right-stepper {
-                float: right !important;
-
-            }
-
-            .optionsButton {
+            .bulk-action {
+                width: 250px;
                 text-align: right;
+                display: inline;
+                margin-bottom: 0px;
+            }
+        }
+        //end #adminLayout
+    }
+
+    .ewAdmin .open,
+    #mainTable .ewAdmin,
+    #pagefooter .ewAdmin {
+        .dropdown {
+            width: auto;
+
+            a.btn-primary,
+            a:visited.btn-primary {
+                color: #fff !important;
+                letter-spacing: normal;
             }
 
-            .hitarea {
+            a.btn:focus,
+            a.btn:hover {
+                outline: none;
+                text-decoration: none;
+            }
+        }
+
+        .dropdown-menu {
+            text-align: left;
+            background: @admin-header-bg-light;
+            letter-spacing: normal;
+
+            li {
+                width: 100%;
+            }
+
+            li a {
+                color: @admin-header-color !important;
+
+                &:hover {
+                    color: @admin-header-color-link !important;
+                    background: transparent;
+                }
+
+                padding: 3px 20px !important;
+                background-image: none !important;
+                background: none !important;
+                text-transform: none !important;
+                height: auto !important;
+                letter-spacing: normal;
+                text-decoration: none !important;
+                font-size: 13px !important;
+                font-weight: 400 !important;
+            }
+
+            li.mansonary-size a.btn {
+                -moz-border-bottom-colors: none;
+                -moz-border-left-colors: none;
+                -moz-border-right-colors: none;
+                -moz-border-top-colors: none;
+                background-image: -moz-linear-gradient(center top, #FFFFFF, #E6E6E6);
+                border-image: none;
+                border-style: solid;
+                border-width: 1px;
+                box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
                 display: inline-block;
+                font-size: 14px;
+                line-height: 20px;
+                margin-bottom: 0px;
+                padding: 4px 8px;
+                text-align: center;
+                text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
+                vertical-align: middle;
             }
 
-            .treeNode {
-                display: inline-block;
-                padding: 8px 0px;
+            li.updown a {
+                padding: 0 !important;
             }
 
-            .panel-group .panel {
-                overflow: inherit;
+            li.mansonary-size a {
+                padding: 3px 5px !important;
+            }
+
+            li.title {
+                font-size: 12px;
+                color: darken(@admin-header-color, 30%) !important;
+            }
+
+            .divider {
+                background-color: darken(@admin-header-color, 80%) !important;
+                margin: 5px 0;
             }
         }
+    }
 
-        .prices {
-            .rrpLabel {
-                display: none;
-            }
-
-            .rrpPrice {
-                text-decoration: line-through;
-            }
+    .normalMode {
+        a:hover {
+            text-decoration: none;
         }
 
-        .popover {
-            z-index: 1060;
+        .slick-list .ewAdmin .btn-primary {
+            z-index: 10;
         }
 
-        .listItem .ewAdmin .btn,
-        .panel .list-group .ewAdmin .btn,
-        .panel .listItem .ewAdmin .btn {
-            padding-left: 5px !important;
-            padding-right: 5px !important;
-            border-radius: 0px !important;
+        .ewAdmin > .btn-default,
+        .ewAdmin > .btn-primary,
+        .ewAdmin > .dropdown > .btn-primary,
+        .ewAdmin > .dropdown .dropdown-menu a {
+            font-family: @admin-header-font;
 
             i {
-                font-size: 1em;
+                font-size: 13px !important;
+                color: @admin-header-color !important;
+                border: 0 !important;
+                width: auto !important;
+                height: auto !important;
+                display: inline-block !important;
+
+                &:before {
+                    display: inline !important;
+                }
+            }
+        }
+
+        .ewAdmin > .btn-primary,
+        .ewAdmin > .dropdown .btn-primary {
+            margin-left: 3px;
+        }
+
+        .ewAdmin > .dropdown .dropdown-menu li {
+            display: block;
+            text-align: left;
+
+            a {
+                border: 0;
+                text-align: left;
+            }
+        }
+
+        .grid-item > .ewAdmin {
+            margin-top: 3px;
+        }
+
+        span.editable {
+            .ewAdmin {
+                display: inline-block;
+                float: right;
+            }
+        }
+
+        .ewAdmin > .dropdown .dropdown-menu {
+            a {
+                margin: 0 !important;
             }
 
-            ;
-            text-decoration: none !important;
+            .updown,
+            .divider {
+                clear: both
+            }
         }
 
-        .table-striped-2 > tbody > tr:nth-of-type(4n+0) {
-            background-color: #f9f9f9;
+        .ewAdmin > .btn-default i {
+            color: @admin-header-color-link !important;
         }
 
-        .table-striped-2 tbody th {
-            background-color: #f9f9f9;
+        .ewAdmin > .btn-default,
+        .ewAdmin > .btn-primary,
+        .ewAdmin > .dropdown > .btn-primary,
+        .ewAdmin > .dropdown > .btn-default {
+            //padding: 0px 3px 3px 5px !important;
+            font-weight: 400 !important;
+            border-radius: 3px !important;
+            border: 0px !important;
         }
 
-        .table-striped-2 tbody td.detail {
-            background-color: none;
-            border-top: 0;
-        }
-
-        table td .checkbox, table th .checkbox {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-
-        .header-panels .panel, .header-panels .form-group {
-            margin-bottom: 0px;
-        }
-
-        .panel-heading .principle {
-            margin-right: 5px;
-            top: -10px;
+        .ewAdmin > .ui-draggable-handle i {
+            top: 2px;
             position: relative;
         }
 
-        .panel-heading-buttons {
-            .bulk-action {
-                display: inline-block;
+        .ewAdmin > .btn-primary,
+        .ewAdmin > .dropdown > .btn-primary {
+            background: @admin-header-color-link !important;
+            border: 0px !important;
+            color: #fff !important;
+        }
+
+        .ewAdmin > .btn-default,
+        .ewAdmin > .dropdown > .btn-default {
+            background: lighten(@admin-header-color-link, 25%) !important;
+            border-color: lighten(@admin-header-color-link, 5%) !important;
+            border: 1px !important;
+            color: @admin-header-color-link !important;
+
+            &:hover {
+                background: lighten(@admin-header-color-link, 32%) !important;
+            }
+
+            font-family: @admin-header-font !important;
+            text-shadow: none;
+            border-width: 1px;
+            letter-spacing: 0;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+
+            i {
+                margin: 0;
             }
         }
-    }
-    //end #adminLayout
-}
-.ewAdmin .open,
-#mainTable .ewAdmin,
-#pagefooter .ewAdmin{
-	.dropdown{
-		width:auto;
-		a.btn-primary,
-		a:visited.btn-primary{
-            color:#fff!important;
-            letter-spacing:normal;
-		}
-		a.btn:focus,
-		a.btn:hover{
-			outline:none;
-			text-decoration:none;
-		}
-	}
-	.dropdown-menu{
-		text-align:left;
-		background:@admin-header-bg-light;
-        letter-spacing:normal;
-        li{width:100%;}
-		li a{
-			color:@admin-header-color!important;
-			&:hover{
-				color:@admin-header-color-link!important;
-				background:transparent;
-			}
-			padding:3px 20px!important;
-			background-image:none !important;
-			background:none !important;
-			text-transform:none!important;
-			height:auto!important;
-            letter-spacing:normal;
-            text-decoration:none!important;
-            font-size:13px!important;
-            font-weight:400!important;
-		}
-		li.mansonary-size a.btn{
-			
 
+        a.arrowbutton span, a.drag span {
+            display: none;
+        }
 
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-	background-image: -moz-linear-gradient(center top , #FFFFFF, #E6E6E6);
-    border-image: none;
-    border-style: solid;
-    border-width: 1px;
-    box-shadow: inset 0px 1px 0px rgba(255,255,255,0.2), 0px 1px 2px rgba(0,0,0,0.05);
-	display: inline-block;
-    font-size: 14px;
-    line-height: 20px;
-    margin-bottom: 0px;
-    padding: 4px 8px;
-    text-align: center;
-    text-shadow: 0px 1px 1px rgba(255,255,255,0.75);
-    vertical-align: middle;
-
-
-		}
-		li.updown a{padding:0!important;}
-		li.mansonary-size a{padding:3px 5px!important;}
-		li.title{
-			font-size:12px;
-			color:darken(@admin-header-color, 30%)!important;
-		}
-		.divider{
-			background-color:darken(@admin-header-color, 80%)!important;
-			margin:5px 0;
-		}
-	}
-}
-.normalMode {
-    a:hover {
-        text-decoration: none;
-    }
-
-    .slick-list .ewAdmin .btn-primary {
-        z-index: 10;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary,
-    .ewAdmin > .dropdown .dropdown-menu a {
-        font-family: @admin-header-font;
-
-        i {
-            font-size: 13px !important;
-            color: @admin-header-color !important;
-            border: 0 !important;
-            width: auto !important;
-            height: auto !important;
-            display: inline-block !important;
+        .btn-primary,
+        .btn-info,
+        .btn-default {
+            &:after {
+                content: none !important
+            }
 
             &:before {
-                display: inline !important;
+                content: none !important
             }
         }
-    }
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown .btn-primary{margin-left:3px;}
-    .ewAdmin > .dropdown .dropdown-menu li{
-        display:block;
-        text-align:left;
-        a{
-            border:0;
-            text-align:left;
-        }
-    }
-    .grid-item > .ewAdmin{margin-top:3px;}
-    span.editable {
-        .ewAdmin {
-            display: inline-block;
-            float: right;
+
+        .editable > div.ewAdmin.options {
+            position: relative
         }
     }
 
-    .ewAdmin > .dropdown .dropdown-menu {
-        a {
-            margin: 0 !important;
+    .moduleDrag {
+        .clearfix;
+    }
+
+    .ewAdmin #adminLayout {
+        .scroll-pane-arrows {
+            overflow-y: scroll;
+            //background:#fff;
+            .Default-Box {
+                background: #fff;
+            }
         }
 
-        .updown,
-        .divider {
-            clear: both
-        }
-    }
-
-    .ewAdmin > .btn-default i {
-        color: @admin-header-color-link !important;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary,
-    .ewAdmin > .dropdown > .btn-default {
-        //padding: 0px 3px 3px 5px !important;
-        font-weight: 400 !important;
-        border-radius: 3px !important;
-        border: 0px !important;
-    }
-
-    .ewAdmin > .ui-draggable-handle i {
-        top: 2px;
-        position: relative;
-    }
-
-    .ewAdmin > .btn-primary,
-    .ewAdmin > .dropdown > .btn-primary {
-        background: @admin-header-color-link !important;
-        border: 0px !important;
-        color: #fff !important;
-    }
-
-    .ewAdmin > .btn-default,
-    .ewAdmin > .dropdown > .btn-default {
-        background: lighten(@admin-header-color-link, 25%) !important;
-        border-color: lighten(@admin-header-color-link, 5%) !important;
-        border: 1px !important;
-        color: @admin-header-color-link !important;
-
-        &:hover {
-            background: lighten(@admin-header-color-link, 32%) !important;
+        #divHelpBox #helpBox {
+            background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
         }
 
-        font-family: @admin-header-font !important;
-        text-shadow: none;
-        border-width: 1px;
-        letter-spacing: 0;
-        text-transform: none !important;
-        letter-spacing: normal !important;
-
-        i {
-            margin: 0;
-        }
-    }
-
-    a.arrowbutton span, a.drag span {
-        display: none;
-    }
-
-    .btn-primary,
-    .btn-info,
-    .btn-default {
-        &:after {
-            content: none !important
+        #template_FileSystem #MenuTree {
+            height: 100vh;
+            overflow-y: scroll;
         }
 
-        &:before {
-            content: none !important
-        }
-    }
-
-    .editable > div.ewAdmin.options {
-        position: relative
-    }
-}
-.moduleDrag{.clearfix;}
-
-.ewAdmin #adminLayout {
-    .scroll-pane-arrows {
-        overflow-y: scroll;
-        //background:#fff;
-        .Default-Box {
-            background: #fff;
-        }
-    }
-
-    #divHelpBox #helpBox {
-        background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
-    }
-
-    #template_FileSystem #MenuTree {
-        height: 100vh;
-        overflow-y: scroll;
-    }
-
-    #MenuTree table td {
-        background-color: transparent !important;
-    }
-
-    #MenuTree.sideNav li {
-        span.treeNode > i {
-            float: left;
+        #MenuTree table td {
+            background-color: transparent !important;
         }
 
-        .hitarea {
-            margin-top: 10px;
-            padding-top: 0;
-        }
-    }
+        #MenuTree.sideNav li {
+            span.treeNode > i {
+                float: left;
+            }
 
-    #collapseInstalled_Themes button img {
-        height: 175px;
-    }
-
-    .btn, .btn-sm, .btn-xs {
-        border-radius: @admin-header-border-radius;
-        margin-right: 1px;
-    }
-
-    a.arrowbutton span, a.drag span {
-        display: none;
-    }
-
-    .btn-xs {
-        padding: 4px 10px;
-    }
-
-    .panel-heading, .panel {
-        border-radius: @admin-header-border-radius;
-    }
-
-    .btn-primary i {
-        color: @admin-header-color !important;
-    }
-
-    .btn-toolbar {
-        padding-bottom: 10px;
-    }
-
-    .btn-primary,
-    .btn-info,
-    .btn-default {
-        &:after {
-            content: none !important
+            .hitarea {
+                margin-top: 10px;
+                padding-top: 0;
+            }
         }
 
-        &:before {
-            content: none !important
-        }
-    }
-
-    .btn-primary,
-    .btn-info {
-        background: @admin-primary !important;
-        border-color: darken(@admin-header-color-link, 10%) !important;
-        color: @admin-header-color !important;
-
-        &:hover {
-            background: lighten(@admin-header-color-link, 7%) !important;
-        }
-        //border-width: 0px;
-        &:focus {
-            outline: none;
+        #collapseInstalled_Themes button img {
+            height: 175px;
         }
 
-        i {
-            margin: 0;
-        }
-    }
-
-    .btn-default {
-        background: lighten(@admin-primary, 30%) !important;
-        border-color: @admin-primary;
-        color: @admin-primary !important;
-        border-width: 1px !important;
-        border-style: solid;
-
-        &:hover {
-            background: lighten(@admin-primary, 32%) !important;
+        .btn, .btn-sm, .btn-xs {
+            border-radius: @admin-header-border-radius;
+            margin-right: 1px;
         }
 
-        font-family: @admin-header-font !important;
-        text-shadow: none;
-        border-width: 0px;
-        letter-spacing: 0;
-        text-transform: none;
-
-        i {
-            margin: 0;
-        }
-    }
-
-    .btn-danger {
-        background: @admin-danger !important;
-        border-color: darken(@admin-danger, 10%) !important;
-        color: @admin-header-color !important;
-
-        &:hover {
-            background: lighten(@admin-danger, 7%) !important;
+        a.arrowbutton span, a.drag span {
+            display: none;
         }
 
-        border-width: 1px;
-    }
-
-    .btn-success {
-        background: @admin-success !important;
-        // border-width: 0px;
-        color: @admin-header-color !important;
-
-        &:hover {
-            background: lighten(@admin-success, 7%) !important;
-        }
-    }
-
-    .btn-warning {
-        background: @admin-warning !important;
-        border-color: darken(@admin-warning, 10%) !important;
-        color: @admin-header-color !important;
-
-        &:hover {
-            background: lighten(@admin-warning, 7%) !important;
+        .btn-xs {
+            padding: 4px 10px;
         }
 
-        border-width: 1px;
-    }
-
-
-    .dropdown {
-        font-family: @admin-header-font;
-    }
-
-
-
-    .adminTemplate {
-        font-weight: 400;
-
-        .radiocheckbox label,
-        .checkboxes label {
-            font-weight: 400;
+        .panel-heading, .panel {
+            border-radius: @admin-header-border-radius;
         }
 
-        #fileupload .description,
-        .cDisplay-dependant {
-            color: @admin-header-font-color;
+        .btn-primary i {
+            color: @admin-header-color !important;
+        }
+
+        .btn-toolbar {
+            padding-bottom: 10px;
+        }
+
+        .btn-primary,
+        .btn-info,
+        .btn-default {
+            &:after {
+                content: none !important
+            }
+
+            &:before {
+                content: none !important
+            }
+        }
+
+        .btn-primary,
+        .btn-info {
+            background: @admin-primary !important;
+            border-color: darken(@admin-header-color-link, 10%) !important;
+            color: @admin-header-color !important;
+
+            &:hover {
+                background: lighten(@admin-header-color-link, 7%) !important;
+            }
+            //border-width: 0px;
+            &:focus {
+                outline: none;
+            }
+
+            i {
+                margin: 0;
+            }
+        }
+
+        .btn-default {
+            background: lighten(@admin-primary, 30%) !important;
+            border-color: @admin-primary;
+            color: @admin-primary !important;
+            border-width: 1px !important;
+            border-style: solid;
+
+            &:hover {
+                background: lighten(@admin-primary, 32%) !important;
+            }
+
+            font-family: @admin-header-font !important;
+            text-shadow: none;
+            border-width: 0px;
+            letter-spacing: 0;
+            text-transform: none;
+
+            i {
+                margin: 0;
+            }
+        }
+
+        .btn-danger {
+            background: @admin-danger !important;
+            border-color: darken(@admin-danger, 10%) !important;
+            color: @admin-header-color !important;
+
+            &:hover {
+                background: lighten(@admin-danger, 7%) !important;
+            }
+
+            border-width: 1px;
+        }
+
+        .btn-success {
+            background: @admin-success !important;
+            // border-width: 0px;
+            color: @admin-header-color !important;
+
+            &:hover {
+                background: lighten(@admin-success, 7%) !important;
+            }
+        }
+
+        .btn-warning {
+            background: @admin-warning !important;
+            border-color: darken(@admin-warning, 10%) !important;
+            color: @admin-header-color !important;
+
+            &:hover {
+                background: lighten(@admin-warning, 7%) !important;
+            }
+
+            border-width: 1px;
+        }
+
+
+        .dropdown {
             font-family: @admin-header-font;
-            font-size: 13px;
-            //> .row{
-            //    margin:0;
-            //}
         }
-    }
 
 
-    h1.page-header {
-        font-size: 2em;
-        margin: 0;
-        border-bottom: 1px solid #cccccc;
-        font-family: @admin-body-font;
-        font-weight: 500;
-        line-height: 1.1;
-        color: #333333;
-    }
 
-    .panel-heading {
-        legend {
-            border-bottom: 0;
+        .adminTemplate {
+            font-weight: 400;
+
+            .radiocheckbox label,
+            .checkboxes label {
+                font-weight: 400;
+            }
+
+            #fileupload .description,
+            .cDisplay-dependant {
+                color: @admin-header-font-color;
+                font-family: @admin-header-font;
+                font-size: 13px;
+                //> .row{
+                //    margin:0;
+                //}
+            }
+        }
+
+
+        h1.page-header {
+            font-size: 2em;
+            margin: 0;
+            border-bottom: 1px solid #cccccc;
+            font-family: @admin-body-font;
+            font-weight: 500;
+            line-height: 1.1;
+            color: #333333;
+        }
+
+        .panel-heading {
+            legend {
+                border-bottom: 0;
+                margin-bottom: 0;
+            }
+
+            h3 {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-size: 18px;
+            }
+        }
+
+        .panel-body > .alert:last-child {
             margin-bottom: 0;
         }
 
-        h3 {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-    }
-
-    .panel-body > .alert:last-child {
-        margin-bottom: 0;
-    }
-
-    table.manage-lookups .buttonCell {
-        min-width: 210px;
-    }
-
-    dl.tabled {
-        border: none;
-        padding: 0;
-
-        dt {
-            float: left;
-            clear: left;
-            width: 150px;
-            text-align: right;
-            font-weight: bold;
+        table.manage-lookups .buttonCell {
+            min-width: 210px;
         }
 
-        dt::after {
-            content: ":";
-        }
+        dl.tabled {
+            border: none;
+            padding: 0;
 
-        dd {
-            margin: 0 0 0 160px;
-            padding: 0 0 0.5em 0;
+            dt {
+                float: left;
+                clear: left;
+                width: 150px;
+                text-align: right;
+                font-weight: bold;
+            }
+
+            dt::after {
+                content: ":";
+            }
+
+            dd {
+                margin: 0 0 0 160px;
+                padding: 0 0 0.5em 0;
+            }
         }
     }
-}
 
 .ewAdmin #footer {
     background-color: @admin-header-bg;
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
     font-family: @admin-header-font;
 
     a {
@@ -856,128 +976,128 @@ NEW BS ADMIN HEADER
     border-top: 4px solid fadeout(@admin-bg, 60%);
 }
 
-#keepalive{
-	display:none;
-}
+    #keepalive {
+        display: none;
+    }
+    // - DRAG AND DROP
+    .droppable-hover {
+        background-color: #d9d9d9;
+        height: auto;
+    }
 
-// - DRAG AND DROP
-.droppable-hover
-{
-    background-color: #d9d9d9;
-    height: auto;
-}
+    .droppable-hover .dropable-active {
+        background-color: none;
+        height: auto;
+    }
+    // - ADMIN HEADER
+    // - DROPDOWNS
+    .list-group-item .ewAdmin {
+        //.clearfix();
+        //position:relative;
+        //dropdown-menu{margin-top:20px;}
+        //a.btn-primary{
+        //	position: absolute;
+        //	margin-right: 0;
+        //}
+    }
 
-.droppable-hover .dropable-active
-{
-    background-color: none;
-    height: auto;
-}
+    .Site .ewAdmin .dropdown-menu li {
+        font-size: 13px !important;
+    }
 
-// - ADMIN HEADER
+    .ewAdmin .open .dropdown-menu {
+        background-color: @admin-header-bg-light;
+        font-size: 1em !important;
+        margin-top: -1px;
+        min-width: 160px !important;
 
-// - DROPDOWNS
-.list-group-item .ewAdmin{
-	//.clearfix();
-	//position:relative;
-	//dropdown-menu{margin-top:20px;}
-	//a.btn-primary{
-	//	position: absolute;
-	//	margin-right: 0;
-	//}
-}
-.Site .ewAdmin .dropdown-menu li{
-	font-size:13px !important;
-}
-.ewAdmin .open .dropdown-menu {
-		background-color: @admin-header-bg-light;
-		font-size:1em !important;
-		margin-top:-1px;
-        min-width:160px!important;
         &:before,
-        &:after{display:none!important}
+        &:after {
+            display: none !important
+        }
+
         > li > a {
-          color: @admin-header-color;
-          &:hover,
-          &:focus {
-            color: @admin-header-color-link;
-            background-color: transparent;
-          }
-        }
-		li{
-			list-style:none!important;
-			margin-left:0!important;
-			background:none!important;
-			padding:0px;
-            float:none!important;
-		}
-		> .active > a {
-          &,
-          &:hover,
-          &:focus {
             color: @admin-header-color;
-            background-color: transparent;
-          }
+
+            &:hover,
+            &:focus {
+                color: @admin-header-color-link;
+                background-color: transparent;
+            }
         }
-        
-      }
 
+        li {
+            list-style: none !important;
+            margin-left: 0 !important;
+            background: none !important;
+            padding: 0px;
+            float: none !important;
+        }
 
+        > .active > a {
+            &,
+            &:hover,
+            &:focus {
+                color: @admin-header-color;
+                background-color: transparent;
+            }
+        }
+    }
+    // - GUIDE
+    #btnHelpEditing {
+        background: @admin-header-color-link;
+        border-radius: @admin-header-border-radius 0 0 @admin-header-border-radius;
+        border-left: 2px solid #fff;
+        border-top: 2px solid #fff;
+        border-bottom: 2px solid #fff;
+        border-right: 0;
+        position: fixed;
+        right: 0px;
+        width: 34px;
+        height: 180px;
+        top: 40%;
+        cursor: pointer;
+        z-index: 5000;
+        outline: none;
+        color: #fff;
 
+        span {
+            transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg); /* IE 9 */
+            -webkit-transform: rotate(-90deg); /* Safari and Chrome */
+            display: block;
+            width: 100px;
+            height: 100px;
+            vertical-align: top;
+            padding: 0px;
+            font-weight: 300;
+        }
 
+        &:hover {
+            background: lighten(@admin-header-color-link, 10)
+        }
 
-// - GUIDE
-#btnHelpEditing {
-    background: @admin-header-color-link;
-    border-radius: @admin-header-border-radius 0 0 @admin-header-border-radius;
-    border-left: 2px solid #fff;
-    border-top: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    border-right: 0;
-    position: fixed;
-    right: 0px;
-    width: 34px;
-    height: 180px;
-    top: 40%;
-    cursor: pointer;
-    z-index: 5000;
-    outline: none;
-    color: #fff;
-
-    span {
-        transform: rotate(-90deg);
-        -ms-transform: rotate(-90deg); /* IE 9 */
-        -webkit-transform: rotate(-90deg); /* Safari and Chrome */
-        display: block;
-        width: 100px;
-        height: 100px;
-        vertical-align: top;
-        padding: 0px;
-        font-weight: 300;
+        i {
+            padding: 0 !important
+        }
     }
 
-    &:hover {
-        background: lighten(@admin-header-color-link, 10)
+    #btnHelpEditing.open .fa-chevron-left {
+        transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg); /* IE 9 */
+        -webkit-transform: rotate(-180deg); /* Safari and Chrome */
     }
 
-    i {
-        padding: 0 !important
+    #helpBox {
+        color: #464646;
+        padding: 0px 5px 0px 15px;
+        overflow: hidden;
+        background: #fff;
+        border-left: 3px solid @admin-header-color-link;
+        height: 100%;
+        overflow: auto;
     }
-}
-	#btnHelpEditing.open .fa-chevron-left
-	{
-		transform:rotate(-180deg);
-		-ms-transform:rotate(-180deg); /* IE 9 */
-		-webkit-transform:rotate(-180deg); /* Safari and Chrome */
-	}
-#helpBox {
-    color: #464646;
-    padding: 0px 5px 0px 15px;
-    overflow: hidden;
-    background: #fff;
-    border-left: 3px solid @admin-header-color-link;
-    height: 100%;
-    overflow: auto;
-}
+
     #divHelpBox {
         right: -350px;
         position: fixed;
@@ -985,346 +1105,352 @@ NEW BS ADMIN HEADER
         z-index: 49900;
     }
 
-.mfp-bg {
-    z-index: 49901;
-}
-.mfp-wrap {
-    z-index: 49902;
-}
-.mfp-content {
-    z-index: 49903;
-}
-//CMS LOGIN
-.ewAdmin div.report
-{
-    position: relative;
-    background: #f3f7fb;
-    border: solid 1px #c0cfd8;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-    padding: 10px;
-    color: #464646;
-}
+    .mfp-bg {
+        z-index: 49901;
+    }
 
-.ewAdmin form#UserLogon
-{
-    //margin-top: 100px;
-    margin-bottom: 130px;
-    margin-right:auto;
-    margin-left:auto;
-    width: 380px;
-}
+    .mfp-wrap {
+        z-index: 49902;
+    }
 
-.ewAdmin .stepper
-{
-    padding-top: 10px;
-	.itemInfo{padding-right: 10px;}
-}
-.ewAdmin #template_ListDirectory .btn{margin-bottom:3px;}
+    .mfp-content {
+        z-index: 49903;
+    }
+    //CMS LOGIN
+    .ewAdmin div.report {
+        position: relative;
+        background: #f3f7fb;
+        border: solid 1px #c0cfd8;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+        padding: 10px;
+        color: #464646;
+    }
 
+    .ewAdmin #adminLayout form#UserLogon {
+        //margin-top: 100px;
+        margin-bottom: 130px;
+        margin-right: auto;
+        margin-left: auto;
+        width: 380px;
+    }
 
-.ewAdmin form#UserLogon h3.panel-title
-{
-    font-size:1.7em;
-}
+    .ewAdmin .stepper {
+        padding-top: 10px;
 
-.ewAdmin form#UserLogon input.adminButton
-{
-    width: auto;
-}
+        .itemInfo {
+            padding-right: 10px;
+        }
+    }
 
-//ACCORDIONS
-.normalMode .panel-group .panel{
-	overflow:visible;
-}
+    .ewAdmin #template_ListDirectory .btn {
+        margin-bottom: 3px;
+    }
 
 
-// - In site edit button styling
-.Site, .Email {
-    .addmodule {
+    .ewAdmin form#UserLogon h3.panel-title {
+        font-size: 1.7em;
+    }
+
+    .ewAdmin form#UserLogon input.adminButton {
+        width: auto;
+    }
+    //ACCORDIONS
+    .normalMode .panel-group .panel {
+        overflow: visible;
+    }
+    // - In site edit button styling
+    .Site, .Email {
+        .addmodule {
+            .clearfix();
+        }
+
+        .ewAdmin.options.addmodule {
+            border-color: lighten(@admin-header-color-link, 10%) !important;
+        }
+
+        .conditional-block {
+            border-color: lighten(@admin-header-color-warning, 10%) !important;
+        }
+
+        .conditional-note {
+            color: lighten(@admin-header-color-warning, 10%) !important;
+            font-size: 11px;
+            font-weight: 400;
+            padding: 3px;
+            letter-spacing: normal;
+        }
+
+        .ewAdmin {
+            .dropdown-menu a:hover {
+                background: @admin-header-color-link;
+                color: @admin-header-color;
+            }
+
+            .addHere {
+                color: lighten(@admin-header-color-link, 10%);
+            }
+        }
+
+        .dragging {
+            padding: 3px;
+            margin-bottom: 3px;
+            border: dashed 1px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            border-color: lighten(@admin-header-color-link, 10%) !important;
+            z-index: 10000;
+        }
+
+        .ewAdmin .dropdown-menu li.title {
+            margin: 3px 5px 2px 20px !important;
+            color: rgba(0,0,0,0.4);
+            padding: 0;
+        }
+
+        #mainTitle .ewAdmin .dropdown-menu {
+            li a,
+            li.title {
+                font-size: 14px;
+            }
+        }
+
+        .ewAdmin.options.addmodule, .conditional-block {
+            padding: 3px;
+            margin-bottom: 3px;
+            border: dashed 1px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+        }
+
+        .ewAdmin.options.addmodule a.btn {
+            margin-right: 0;
+            margin-left: 4px;
+        }
+
+        .ewAdmin .dropdown {
+            font-weight: normal;
+            font-size: 13px !important;
+            line-height: 20px !important;
+            text-decoration: none;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            height: auto !important;
+        }
+    }
+
+    .ewAdmin .dropdown-menu li.updown {
+        margin: 9px 5px 4px 20px !important;
+        min-width: 133px;
         .clearfix();
     }
 
-    .ewAdmin.options.addmodule {
-        border-color: lighten(@admin-header-color-link, 10%) !important;
+    .ewAdmin .dropdown-menu li.updown a {
+        display: block;
+        margin: 0;
+        background: none !important;
+        border: 0;
+        float: left;
+        clear: none;
+        padding: 0 !important;
     }
 
-    .conditional-block {
-        border-color: lighten(@admin-header-color-warning, 10%) !important;
+    .ewAdmin .dropdown-menu li.updown a i {
+        vertical-align: middle;
+        text-align: center;
+        width: 10px;
+        display: block;
+        float: left;
+        margin-right: 27px;
     }
 
-    .conditional-note {
-        color: lighten(@admin-header-color-warning, 10%) !important;
-        font-size: 11px;
-        font-weight: 400;
-        padding: 3px;
-        letter-spacing: normal;
+    .ewAdmin .dropdown-menu li.updown a i.fa-step-backward,
+    .ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
+        padding-top: 2px;
     }
 
-    .ewAdmin {
-        .dropdown-menu a:hover {
-            background: @admin-header-color-link;
-            color: @admin-header-color;
-        }
-
-        .addHere {
-            color: lighten(@admin-header-color-link, 10%);
-        }
-    }
-
-    .dragging {
-        padding: 3px;
-        margin-bottom: 3px;
-        border: dashed 1px;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-        border-color: lighten(@admin-header-color-link, 10%) !important;
-        z-index: 10000;
-    }
-
-    .ewAdmin .dropdown-menu li.title {
-        margin: 3px 5px 2px 20px !important;
-        color: rgba(0,0,0,0.4);
-        padding: 0;
-    }
-
-    #mainTitle .ewAdmin .dropdown-menu {
-        li a,
-        li.title {
-            font-size: 14px;
-        }
-    }
-
-    .ewAdmin.options.addmodule, .conditional-block {
-        padding: 3px;
-        margin-bottom: 3px;
-        border: dashed 1px;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-    }
-
-    .ewAdmin.options.addmodule a.btn {
+    .ewAdmin .dropdown-menu li.updown a i.fa-step-forward {
         margin-right: 0;
-        margin-left: 4px;
     }
 
-    .ewAdmin .dropdown {
-        font-weight: normal;
-        font-size: 13px !important;
-        line-height: 20px !important;
-        text-decoration: none;
-        -moz-border-radius: 0px;
-        border-radius: 0px;
-        height: auto !important;
+    .Site, .Email {
+        .ewAdmin .btn, .ewAdmin .dropdown {
+            font-weight: normal;
+            font-size: 13px !important;
+            line-height: 20px !important;
+            text-decoration: none;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            height: auto !important;
+            text-decoration: none !important;
+        }
+
+        .ewAdmin .btn-xs {
+            padding: 1px 5px;
+        }
+
+        .ewAdmin .addHere {
+            font-size: 11px;
+            font-weight: 400;
+            padding: 3px;
+            letter-spacing: normal;
+        }
+
+        #isotope-module .editable {
+            position: relative;
+            display: block;
+        }
+
+        #isotope-module div.options {
+            position: relative;
+            display: block;
+        }
+
+        .ewAdmin .masonary-size .dropdown-menu li a {
+            padding: 3px 5px !important;
+        }
     }
-}
 
-.ewAdmin .dropdown-menu li.updown 
-{
-	margin: 9px 5px 4px 20px!important;
-    min-width:133px;
-	.clearfix();
-}
+    form#AddModule {
+        div.panel {
+            a:focus {
+                outline: none;
+                text-decoration: none;
+            }
 
-.ewAdmin .dropdown-menu li.updown a
-{
-	display: block;
-	margin: 0;
-	background:none!important;
-	border: 0;
-	float: left;
-	clear: none;
-	padding: 0!important;
-}
-.ewAdmin .dropdown-menu li.updown a i
-{
-	vertical-align:middle;
-	text-align:center;
-	width:10px;
-	display:block;
-	float:left;
-	margin-right: 27px;
-}
-.ewAdmin .dropdown-menu li.updown a i.fa-step-backward,
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward
-{
-	padding-top:2px;
-}
-.ewAdmin .dropdown-menu li.updown a i.fa-step-forward
-{
-	margin-right:0;
-}
-.Site, .Email{
-	.ewAdmin .btn, .ewAdmin .dropdown
-	{
-		font-weight: normal;
-		font-size: 13px !important;
-		line-height: 20px !important;
-		text-decoration: none;
-		-moz-border-radius: 0px;
-		border-radius: 0px;
-		height:auto !important;
-        
-    text-decoration:none !important;
+            .panel-heading h6 {
+                padding-left: 3px;
+                margin-left: -5px;
+                position: relative;
 
-	}
-	.ewAdmin .btn-xs{
-		padding: 1px 5px;
-	}
-	.ewAdmin .addHere
-	{
-		font-size: 11px;
-		font-weight:400;
-		padding: 3px;
-        letter-spacing:normal;
-	}
-	#isotope-module .editable {
-		position:relative;
-		display:block;
-	}
-	#isotope-module div.options {
-		position:relative;
-		display:block;
-	}
-	.ewAdmin .masonary-size .dropdown-menu li a{
-		padding:3px 5px !important;
-	}
-}
-form#AddModule{
-	div.panel{
-		a:focus{
-			outline:none;
-			text-decoration:none;
-		}
-		.panel-heading h6{
-			padding-left: 3px;
-			margin-left: -5px;
-			position: relative;
-			&:focus{text-decoration:none;}
-			&:before{
-				font-family:FontAwesome;
-				padding-right:3px;
-			}
-		}
-	}
-}
-.pickImageModal{
-    font-family:@admin-header-font;
-}
+                &:focus {
+                    text-decoration: none;
+                }
 
-#RedirectPage .scolling-pane {
-    width: 100%;
-    height: 250px;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
+                &:before {
+                    font-family: FontAwesome;
+                    padding-right: 3px;
+                }
+            }
+        }
+    }
 
-#RedirectPage .modal {
-    position: absolute;
-    float: left;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
+    .pickImageModal {
+        font-family: @admin-header-font;
+    }
 
-/*#div-cContentSummary .mce-edit-area #cContentSummary_ifr .mce-content-body {
+    #RedirectPage .scolling-pane {
+        width: 100%;
+        height: 250px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    #RedirectPage .modal {
+        position: absolute;
+        float: left;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    /*#div-cContentSummary .mce-edit-area #cContentSummary_ifr .mce-content-body {
     background-image: url("http://placekitten.com/500/500");
     //background-image: url(../images/grayImg.png);
     // width: 500px;
     body#tinymce.mce-content-body
 }*/
-#cContentSummary_ifr {
-    #tinymce.mce-content-body {
-        background-image: url('http://intotheblue.local/images/grayImg1.png');
-        width: 380px;
-        background-repeat: no-repeat;
-    }
-}
-
-#insights-section {
-    .green {
-        color: #24C279 !important;
+    #cContentSummary_ifr {
+        #tinymce.mce-content-body {
+            background-image: url('http://intotheblue.local/images/grayImg1.png');
+            width: 380px;
+            background-repeat: no-repeat;
+        }
     }
 
-    .red {
-        color: #BC2929 !important;
-    }
+    #insights-section {
+        .green {
+            color: #24C279 !important;
+        }
 
-    .metric-loader {
-        background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
-    }
+        .red {
+            color: #BC2929 !important;
+        }
 
-    .metric {
-        //float: left;
-        margin-bottom: 20px;
-        margin-right: auto;
-        margin-left: auto;
-        background-color: #fff;
-        border-radius: 10px 10px 10px 10px;
-        box-shadow: 0px 0px 15px #A9BACB;
-        width: 300px;
-        height: 130px;
-        overflow: hidden;
+        .metric-loader {
+            background: url(/ewcommon/images/loader.gif) no-repeat 50% 50% #fff;
+        }
 
-        .metric-inner {
-            // margin:10px;
-            header.metric-header {
-                overflow: hidden;
-                // background: #f9f9f9;
-                margin: 0;
-                border-bottom: 1px solid #f0f0f0;
-                height: 50px;
-                line-height: 50px;
-                width: 100%;
+        .metric {
+            //float: left;
+            margin-bottom: 20px;
+            margin-right: auto;
+            margin-left: auto;
+            background-color: #fff;
+            border-radius: 10px 10px 10px 10px;
+            box-shadow: 0px 0px 15px #A9BACB;
+            width: 300px;
+            height: 130px;
+            overflow: hidden;
 
-                h1.metric-title {
-                    // margin:20px auto 10px;
+            .metric-inner {
+                // margin:10px;
+                header.metric-header {
+                    overflow: hidden;
+                    // background: #f9f9f9;
+                    margin: 0;
+                    border-bottom: 1px solid #f0f0f0;
+                    height: 50px;
+                    line-height: 50px;
                     width: 100%;
-                    margin: 0;
-                    padding: 15px;
-                    color: #666;
-                    display: block;
-                    text-align: center;
-                    font-weight: 400;
-                    font-size: 18px;
-                }
-            }
 
-            .metric-body {
-                width: 100%;
-                height: 60px;
-                margin-top: 10px;
-                // background:#b0b;
-                overflow: hidden;
-                height: 100px !important;
-
-                h1,
-                h2 {
-                    margin: 0;
-                    padding: 0;
-                    font-weight: 400;
-                    color: #444;
-                    text-align: center;
+                    h1.metric-title {
+                        // margin:20px auto 10px;
+                        width: 100%;
+                        margin: 0;
+                        padding: 15px;
+                        color: #666;
+                        display: block;
+                        text-align: center;
+                        font-weight: 400;
+                        font-size: 18px;
+                    }
                 }
 
-                h1 {
-                    font-size: 18px;
-                    font-weight: 300;
-                }
+                .metric-body {
+                    width: 100%;
+                    height: 60px;
+                    margin-top: 10px;
+                    // background:#b0b;
+                    overflow: hidden;
+                    height: 100px !important;
 
-                h1.metric-value {
-                    color: #5BC1DE;
-                }
+                    h1,
+                    h2 {
+                        margin: 0;
+                        padding: 0;
+                        font-weight: 400;
+                        color: #444;
+                        text-align: center;
+                    }
 
-                h2 {
-                    color: #888;
-                    font-weight: 300;
-                    font-size: 16px;
-                    margin: 0;
-                    padding: 0;
-                    text-align: center;
+                    h1 {
+                        font-size: 18px;
+                        font-weight: 300;
+                    }
+
+                    h1.metric-value {
+                        color: #5BC1DE;
+                    }
+
+                    h2 {
+                        color: #888;
+                        font-weight: 300;
+                        font-size: 16px;
+                        margin: 0;
+                        padding: 0;
+                        text-align: center;
+                    }
                 }
             }
         }
     }
-}
