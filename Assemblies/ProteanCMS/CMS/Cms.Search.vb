@@ -422,9 +422,9 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                    HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
+                    HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
-                    pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
+                    pageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
                     If pageSize = 0 Then pageSize = 300
                 End If
 
@@ -449,10 +449,13 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
                     If bShowHiddenForUser Then
                         _includeFuzzySearch = False ' to get exact matching result
+                        'keep page size for csuser as default
+                        HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                        If HitsLimit = 0 Then HitsLimit = 300
+                        pageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                        If pageSize = 0 Then pageSize = 300
                     Else
                         _includeFuzzySearch = True
                     End If
