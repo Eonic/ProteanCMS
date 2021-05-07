@@ -5895,7 +5895,12 @@ Partial Public Class Cms
                         Dim updateNotes As String = goRequest("cNotesAmend")
                         '  If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim notes As String = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim AdminUserName As String = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText
+                        notes += "by " + AdminUserName
+
+                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = notes
+                        moDbHelper.logActivity(dbHelper.ActivityType.OrderStatusChange, myWeb.mnUserId, 0, 0, notes)
 
                         aSellerNotes = Split(MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText, "/n")
                         cSellerNotesHtml = "<ul>"

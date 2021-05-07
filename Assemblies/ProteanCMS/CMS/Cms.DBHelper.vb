@@ -411,6 +411,9 @@ Partial Public Class Cms
             'Integrations - 900+
             IntegrationTwitterPost = 901
 
+            'Order Status Change
+            OrderStatusChange = 400
+
         End Enum
 
         Enum DirectoryType
