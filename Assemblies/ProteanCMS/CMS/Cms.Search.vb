@@ -410,7 +410,7 @@ Partial Public Class Cms
                         HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
-                        pageSize = myWeb.moRequest("PageSize")
+                        PageSize = myWeb.moRequest("PageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -425,7 +425,7 @@ Partial Public Class Cms
                     HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
                     pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If pageSize = 0 Then pageSize = 300
+                    If PageSize = 0 Then PageSize = 300
                 End If
 
                 If Not cQuery.Equals("") Then
@@ -554,7 +554,6 @@ Partial Public Class Cms
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
                         resultsXML.SetAttribute("startCount", HitsLimit - pageSize + 1)
                     End If
-
 
                     Dim artIdResults As New List(Of Long)
 

@@ -22,21 +22,6 @@ ProteanCMS
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
-<member name="M:Protean.Cms.Admin.Redirects.RedirectPage(System.String@,System.String@,System.String@,System.String@,System.Boolean,System.String,System.Int32)">
- <summary>
- This is method which validates the page to redirect in edit mode if we change page url
- -if its h
- </summary>
- <param name="sRedirectType"></param>
- <param name="sOldUrl"></param>
- <param name="sNewUrl"></param>
- <param name="sPageUrl"></param>
- <param name="bRedirectChildPage"></param>
- <param name="sType"></param>
- <param name="nPageId"></param>
- <returns></returns>
- sRedirectType can be object type to validate.
-</member>
 <member name="M:Protean.Cms.Admin.MemberCodesProcess(System.Xml.XmlElement@,System.String@)">
  <summary>
  The Member code management process.

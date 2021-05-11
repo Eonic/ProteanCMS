@@ -1652,6 +1652,7 @@ function incrementQuantity(inputName, operator) {
         if (document.getElementById(inputName).value > 0) {
             document.getElementById(inputName).value = (document.getElementById(inputName).value * 1) - 1;
         }
+
     }
 }
 

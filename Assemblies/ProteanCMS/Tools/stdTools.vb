@@ -242,9 +242,7 @@ Public Module stdTools
                                     'convert to Xml Dom
                                     Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
                                     oXml.PreserveWhitespace = False
-                                    If Not oXml.DocumentElement Is Nothing Then
-                                        oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
-                                    End If
+                                    oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
                                 End If
 
                             End If
