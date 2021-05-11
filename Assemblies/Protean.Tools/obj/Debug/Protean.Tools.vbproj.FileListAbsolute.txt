@@ -507,4 +507,11 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb
-
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Google.Protobuf.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\bin\Debug\Renci.SshNet.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbprojAssemblyReference.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CoreCompileInputs.cache
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.vbproj.CopyComplete
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.dll
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.xml
+D:\HostingSpaces\DevOpsGit\Assemblies\Protean.Tools\obj\Debug\Protean.Tools.pdb

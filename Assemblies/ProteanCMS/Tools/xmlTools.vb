@@ -1,24 +1,12 @@
-Imports VB = Microsoft.VisualBasic
+
 Imports System.Xml
 Imports System.Web
 Imports System.IO
 Imports System.Xml.XPath
 Imports System.Text.RegularExpressions
 Imports System.Reflection
-Imports System.Web.Configuration
-Imports System.Globalization
-Imports System.Globalization.CultureInfo
-Imports System.Windows.Media.Imaging
-Imports System
 Imports System.Runtime.InteropServices
 
-Imports BundleTransformer.Core.Builders
-Imports BundleTransformer.Core.Orderers
-Imports BundleTransformer.Core.Resolvers
-Imports BundleTransformer.Core.Transformers
-
-Imports System.Linq
-Imports System.Collections.Generic
 
 Public Class Proxy
     Inherits MarshalByRefObject
@@ -463,11 +451,14 @@ Public Class XmlHelper
             End Get
             Set(ByVal value As String)
                 Try
+                    If goApp("XsltCompileVersion") Is Nothing Then
+                        goApp("XsltCompileVersion") = "0"
+                    End If
+                    Dim sCompileVersion As String = "v" & goApp("XsltCompileVersion")
                     msXslFile = value.Replace("/", "\")
                     ClassName = msXslFile.Substring(msXslFile.LastIndexOf("\") + 1)
-                    ClassName = ClassName.Replace(".", "_")
+                    ClassName = ClassName.Replace(".", "_") & sCompileVersion
                     If mbCompiled Then
-
 
                         Dim assemblyInstance As [Assembly]
                         AssemblyPath = goServer.MapPath(compiledFolder) & ClassName & ".dll"
@@ -622,7 +613,9 @@ Public Class XmlHelper
                 '    'End If
 
                 If recompile Then
-                    ClearXSLTassemblyCache()
+
+                    goApp("XsltCompileVersion") = CStr(CInt(goApp("XsltCompileVersion")) + 1)
+
                 End If
 
                 '    goApp("ewStarted") = True

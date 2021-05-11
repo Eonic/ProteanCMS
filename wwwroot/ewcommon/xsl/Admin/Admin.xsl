@@ -4,11 +4,11 @@
 				xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew" 
 				xmlns:v-if="http://example.com/xml/v-if" xmlns:v-on="http://example.com/xml/v-on">-->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl ew"
                 xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
                 xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
-                xmlns:v-model="http://example.com/xml/v-model">
+                xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -2455,7 +2455,73 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- -->
+  <xsl:template name="inlinePopupAddOptions">
+    <xsl:param name="type"/>
+    <xsl:param name="name"/>
+    <xsl:choose>
+      <xsl:when test="contains($type,',')">
+        <xsl:variable name="contentType" select="substring-before($type,',')"/>
+        <xsl:call-template name="inlinePopupAddOption">
+          <xsl:with-param name="name" select="$name"/>
+          <xsl:with-param name="type" select="$contentType"/>
+        </xsl:call-template>
 
+        <!-- This IF condition is to 'idiot proof' this mechanism, safe guarding against a developer leaving a trailing ',' at the end of the TYPE string -->
+        <xsl:if test="substring-after($type,',')!=''">
+          <xsl:call-template name="inlinePopupAddOptions">
+            <xsl:with-param name="name" select="$name"/>
+            <xsl:with-param name="type" select="substring-after($type,',')"/>
+          </xsl:call-template>
+        </xsl:if>
+
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="inlinePopupAddOption">
+          <xsl:with-param name="name" select="$name"/>
+          <xsl:with-param name="type" select="$type"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template>
+
+  
+  <xsl:template name="inlinePopupAddOption">
+    <xsl:param name="type"/>
+    <xsl:param name="name"/>
+    <li>
+    <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="add adminButton">
+      <xsl:choose>
+        <xsl:when test="$type='PlainText'">
+          <xsl:text>As Plain Text</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='FormattedText'">
+          <xsl:text>As Formatted Text</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='Image'">
+          <xsl:text>As Image</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='FlashMovie'">
+          <xsl:text>As Flash Movie</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='AdSenseAdvert'">
+          <xsl:text>As AdSense Advert</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='ImageLink'">
+          <xsl:text>As Image Link</xsl:text>
+        </xsl:when>
+
+        <xsl:otherwise>
+          <xsl:text>As </xsl:text>
+          <xsl:value-of select="$type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </a>
+      </li>
+  </xsl:template>
+
+  
   <!-- -->
   <xsl:template match="Content" mode="inlineOptionsNoPopup">
     <xsl:param name="parId"/>
@@ -12044,6 +12110,8 @@
 	</xsl:template>
   
   <xsl:template match="Page[@layout='WebStats']" mode="LayoutAdminJs">
+    <xsl:variable name="statsId" select="ew:EonicConfigValue('web','StatsID')"/>
+
     <xsl:choose>
       <xsl:when test="$statsId!=''">
         <script LANGUAGE="JavaScript">

@@ -661,11 +661,6 @@ Partial Public Class Cms
 
                             End Select
 
-
-
-
-
-
                             'send registration confirmation
                             Dim xsltPath As String = "/xsl/email/registration.xsl"
 
