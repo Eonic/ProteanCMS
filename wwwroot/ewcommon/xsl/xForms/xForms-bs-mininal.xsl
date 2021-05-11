@@ -12,9 +12,9 @@
               <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
               <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times"> &#160;</i>
+                <i class="fa fa-times">&#160;</i>
               </button>
-              <span id="errorMessage"></span>
+              <span id="errorMessage">&#160;</span>
             </div>
           </div>
         </div>

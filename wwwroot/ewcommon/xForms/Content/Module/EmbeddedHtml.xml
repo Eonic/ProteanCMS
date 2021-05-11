@@ -74,7 +74,7 @@
           &lt;script&gt;&amp;#160;&lt;/script&gt;<br/>
           Ensure all &amp; signs in urls are replaced with &amp;amp; everytime you save<br/>
 	  Ensure async/defer are defined in quotation marks: async="async"<br/>
-          And ensure all HTML is strictly well formed.
+          And ensure all HTML is strictly well formed as XHTML. i.e. all tags are correctly closed either <tag>stuff</tag> or <tag stuff='stuff'/> 
         </hint>
         <textarea bind="cContentBody" class="xml" rows="15" cols="70">
         </textarea>
