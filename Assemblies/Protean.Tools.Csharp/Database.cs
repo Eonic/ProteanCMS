@@ -1397,7 +1397,7 @@ namespace Protean.Tools
         public bool checkTableColumnExists(string tableName, string columnName)
         {
             bool columnExists = false;
-
+            
             try
             {
 
@@ -1407,9 +1407,9 @@ namespace Protean.Tools
                     // Check table exists
                     if (checkDBObjectExists(tableName, objectTypes.Table))
                     {
-                        // Get an empty data set to check the schema
-                        DataSet checkSet = GetDataSet("SELECT * FROM " + tableName + " WHERE 0=1", "setCheck");
-                        columnExists = checkSet.Tables[0].Columns.Contains(columnName);
+                        // Check the column existence using database system table.
+                        string sql = "SELECT COUNT(*) As c FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + tableName + "' AND COLUMN_NAME = '" + columnName + "'";
+                        columnExists = ((int)this.GetDataValue(sql, nullreturnvalue: 0) > 0);
                     }
                 }
 
