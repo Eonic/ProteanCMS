@@ -70,11 +70,13 @@
           <strong>
             CAUTION READ THIS !!!<br/>You embed code at your own risk, this will not be supported, you risk breaking the layout of the page.
           </strong><br/>
-          Ensure all script tags contain an entity encoded space i.e.<br/>
-          &lt;script&gt;&amp;#160;&lt;/script&gt;<br/>
-          Ensure all &amp; signs in urls are replaced with &amp;amp; everytime you save<br/>
-	  Ensure async/defer are defined in quotation marks: async="async"<br/>
-          And ensure all HTML is strictly well formed as XHTML. i.e. all tags are correctly closed either <tag>stuff</tag> or <tag stuff='stuff'/> 
+	  <ul>
+          <li>Ensure all script tags contain an entity encoded space i.e.
+          &lt;script&gt;&amp;#160;&lt;/script&gt;</li>
+          <li>Ensure all '&amp;' signs in urls are replaced with &amp;amp; <b>everytime you save</b></li>
+	  <li>Ensure async/defer attributes are defined with quotation marks: async="async"</li>
+          <li>And ensure all HTML is strictly well formed as XHTML. i.e. all tags are correctly closed, either like this &lt;tag&gt;stuff&lt;/tag&gt; or this &lt;tag stuff='stuff'/&gt;</li> 
+       </ul>
         </hint>
         <textarea bind="cContentBody" class="xml" rows="15" cols="70">
         </textarea>
