@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("Protean.Tools")>
 <Assembly: AssemblyDescription("ProteanCommon Tools")>
-<Assembly: AssemblyCompany("Eonic Associates LLP")>
+<Assembly: AssemblyCompany("Eonic Digital LLP")>
 <Assembly: AssemblyProduct("Protean.Tools")>
 <Assembly: AssemblyCopyright("Copyright © Eonic Digital LLP.  2021")>
 <Assembly: AssemblyTrademark("Eonic")> 
@@ -33,8 +33,8 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("6.0.49.1")>
-<Assembly: AssemblyFileVersion("6.0.49.1")>
+<Assembly: AssemblyVersion("6.0.49.17")>
+<Assembly: AssemblyFileVersion("6.0.49.17")>
 
 '<Assembly: System.Security.AllowPartiallyTrustedCallersAttribute()> 
 

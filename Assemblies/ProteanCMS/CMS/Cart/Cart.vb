@@ -3116,6 +3116,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", FormatNumber(vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost + vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 Else
                     oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatRate", 0.0#)
@@ -3123,6 +3125,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", 0.0#)
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 End If
 
                 Return vatAmt
