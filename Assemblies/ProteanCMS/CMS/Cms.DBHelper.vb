@@ -8477,7 +8477,7 @@ restart:
 
                 'sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, x.nDisplayOrder as displayorder, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId " & _
 
-                Dim cSQL As String = "SELECT * FROM tblContentRelation"
+                Dim cSQL As String = "SELECT TOP 1 * FROM tblContentRelation"
                 Dim oDs_2 As New DataSet
                 oDs_2 = GetDataSet(cSQL, "Content")
                 If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
@@ -9105,7 +9105,7 @@ restart:
                             If Not oTmp Is Nothing Then
                                 oTmp.SetAttribute("related", 1)
 
-                                cSQL = "SELECT * FROM tblContentRelation"
+                                cSQL = "SELECT TOP 1 * FROM tblContentRelation"
                                 Dim oDs_2 As New DataSet
                                 oDs_2 = GetDataSet(cSQL, "Content")
                                 If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
