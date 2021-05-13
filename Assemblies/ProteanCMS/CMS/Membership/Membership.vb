@@ -682,16 +682,22 @@ Partial Public Class Cms
                                 Dim oMsg As Messaging = New Messaging(myWeb.msException)
                                 'send an email to the new registrant
                                 If Not recipientEmail = "" Then sProcessInfo = oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, "Message Sent", "Message Failed")
-                                'send an email to the webadmin
-                                recipientEmail = moConfig("SiteAdminEmail")
-                                If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
-                                    sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
-                                End If
-                                oMsg = Nothing
-                            End If
 
-                            'redirect to this page or alternative page.
-                            If bRedirect Then
+                                'send an email to the webadmin
+                                If moConfig("RegistrationAlertEmail") = "" Then
+                                    recipientEmail = moConfig("SiteAdminEmail")
+                                Else
+                                    recipientEmail = moConfig("RegistrationAlertEmail")
+                                End If
+
+                                If IO.File.Exists(goServer.MapPath(moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl")) Then
+                                        sProcessInfo = oMsg.emailer(oUserElmt, moConfig("ProjectPath") & "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, "Message Sent", "Message Failed")
+                                    End If
+                                    oMsg = Nothing
+                                End If
+
+                                'redirect to this page or alternative page.
+                                If bRedirect Then
                                 myWeb.msRedirectOnEnd = myWeb.mcOriginalURL
                             Else
                                 oContentNode.InnerXml = oXfmElmt.InnerXml
