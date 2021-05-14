@@ -407,7 +407,7 @@ ProcessFlow:
 
                                 End If
                             Else
-                                sAdminLayout = "AdminXForm"
+                                sAdminLayout = "Logon"
                             End If
                         Else
                             If myWeb.mnPageId > 0 Then

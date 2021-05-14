@@ -4,11 +4,11 @@
 				xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew" 
 				xmlns:v-if="http://example.com/xml/v-if" xmlns:v-on="http://example.com/xml/v-on">-->
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl ew"
                 xmlns:v-bind="http://example.com/xml/v-bind" xmlns:v-on="http://example.com/xml/v-on"
                 xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
-                xmlns:v-model="http://example.com/xml/v-model">
+                xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
   <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
 
@@ -53,7 +53,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebCopyright']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        Eonic Associates LLP.
+        Eonic Digital LLP.
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -75,7 +75,7 @@
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>www.eonic.com</xsl:text>
+        <xsl:text>eonic.com</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -246,7 +246,7 @@
   
   <!--In admin but not WYSIWYG-->
   <xsl:template match="Page[@adminMode='true']" mode="bodyBuilder">
-    <body id="pg_{@id}" class="ewAdmin">
+    <body id="pg_{@id}" class="ewAdmin layout-{@layout}">
       <xsl:apply-templates select="AdminMenu"/>
       <div id="adminLayout">
         <div class="admin-page">
@@ -307,6 +307,13 @@
     </body>
   </xsl:template>
 
+  <xsl:template match="Page[@layout='Logon']" mode="Admin">
+    <div class="adminTemplate" id="template_Logon">
+      <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+      <xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
+    </div>
+  </xsl:template>
+  
     <xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
         <xsl:variable name="class">
             <xsl:text>adminButton</xsl:text>
@@ -992,7 +999,7 @@
     </xsl:variable>
     <div id="footer">
       <div id="footerCopyright" class="text-muted">
-        <div class="container">
+        
           <xsl:text>© </xsl:text>
           <xsl:call-template name="eonicwebCopyright"/>
           <xsl:text> 2002-</xsl:text>
@@ -1013,8 +1020,10 @@
             </xsl:attribute>
             <xsl:value-of select="$supportWebsite"/>
           </a>
+          <span class="pull-right">
+            <xsl:value-of select="substring-before(//ServerVariables/Item[@name='GENERATOR']/node(),', Culture')"/>
+        </span>
         </div>
-      </div>
     </div>
     <div id="loading-indicator" class="model" style="display:none">
       <div class="modal-content">
@@ -1849,26 +1858,13 @@
         </div>
       </div>
       <div class="col-md-9">
-      <form action="{$appPath}" method="get" class="ewXform">
+           <form action="{$appPath}" method="get" class="ewXform">
         <input type="hidden" name="ewCmd" value="BulkContentAction"/>
         <input type="hidden" name="pgid" value="{$page/@id}"/>
         <div class="panel panel-default">
           <div class="panel-heading">
             <div class="panel-heading-buttons">
-              <div class="form-group bulk-action">
-                <div class="input-group">
-                  <label class="input-group-addon">Bulk Action</label>
-                  <select class="form-control" name="BulkAction" id="BulkAction">
-                    <option value="Move">Move</option>
-                    <option value="Locate">Locate</option>
-                    <option value="Hide">Hide</option>
-                    <option value="Show">Show</option>
-                  </select>
-                  <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary">Go</button>
-                  </span>
-                </div>
-              </div>
+              <xsl:apply-templates select="." mode="bulkActionForm"/>
             </div>
             <h4 class="panel-title">All content on page - <strong><xsl:apply-templates select="$currentPage" mode="getDisplayName"/></strong></h4>
           </div>
@@ -1938,6 +1934,27 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="*" mode="bulkActionForm">
+      <input type="hidden" name="ewCmd" value="BulkContentAction"/>
+      <input type="hidden" name="pgid" value="{$page/@id}"/>
+
+            <div class="form-group bulk-action">
+              <div class="input-group">
+                <label class="input-group-addon">Bulk Action</label>
+                <select class="form-control" name="BulkAction" id="BulkAction">
+                  <option value="Move">Move</option>
+                  <option value="Locate">Locate</option>
+                  <option value="Hide">Hide</option>
+                  <option value="Show">Show</option>
+                </select>
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-primary">Go</button>
+                </span>
+              </div>
+            </div>
+
+  </xsl:template>
+
   <xsl:template match="Content" mode="AdvancedModeHeader">
     <xsl:param name="contentType"/>
     <tr>
@@ -1947,8 +1964,8 @@
       <th>
         Details
       </th>
-      <th>
-        Options
+      <th class="th-form">
+        <xsl:apply-templates select="parent::*" mode="bulkActionForm"/>
       </th>
       <th>
         <a href="" class="btn btn-default">Select All</a>
@@ -2059,8 +2076,8 @@
       <th>
         Price
       </th>
-      <th>
-        Options
+      <th class="th-form">
+        <xsl:apply-templates select="parent::*" mode="bulkActionForm"/>
       </th>
       <th>
         <div class="checkbox checkbox-primary">
@@ -2200,8 +2217,8 @@
       <th>
         Answer
       </th>
-      <th style="width:400px">
-        Options
+      <th style="width:400px" class="th-form">
+        <xsl:apply-templates select="parent::*" mode="bulkActionForm"/>
       </th>
     </tr>
   </xsl:template>
@@ -2438,7 +2455,73 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- -->
+  <xsl:template name="inlinePopupAddOptions">
+    <xsl:param name="type"/>
+    <xsl:param name="name"/>
+    <xsl:choose>
+      <xsl:when test="contains($type,',')">
+        <xsl:variable name="contentType" select="substring-before($type,',')"/>
+        <xsl:call-template name="inlinePopupAddOption">
+          <xsl:with-param name="name" select="$name"/>
+          <xsl:with-param name="type" select="$contentType"/>
+        </xsl:call-template>
 
+        <!-- This IF condition is to 'idiot proof' this mechanism, safe guarding against a developer leaving a trailing ',' at the end of the TYPE string -->
+        <xsl:if test="substring-after($type,',')!=''">
+          <xsl:call-template name="inlinePopupAddOptions">
+            <xsl:with-param name="name" select="$name"/>
+            <xsl:with-param name="type" select="substring-after($type,',')"/>
+          </xsl:call-template>
+        </xsl:if>
+
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="inlinePopupAddOption">
+          <xsl:with-param name="name" select="$name"/>
+          <xsl:with-param name="type" select="$type"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+
+  </xsl:template>
+
+  
+  <xsl:template name="inlinePopupAddOption">
+    <xsl:param name="type"/>
+    <xsl:param name="name"/>
+    <li>
+    <a href="?ewCmd=AddContent&amp;pgid={/Page/@id}&amp;type={$type}&amp;name={$name}" class="add adminButton">
+      <xsl:choose>
+        <xsl:when test="$type='PlainText'">
+          <xsl:text>As Plain Text</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='FormattedText'">
+          <xsl:text>As Formatted Text</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='Image'">
+          <xsl:text>As Image</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='FlashMovie'">
+          <xsl:text>As Flash Movie</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='AdSenseAdvert'">
+          <xsl:text>As AdSense Advert</xsl:text>
+        </xsl:when>
+        <xsl:when test="$type='ImageLink'">
+          <xsl:text>As Image Link</xsl:text>
+        </xsl:when>
+
+        <xsl:otherwise>
+          <xsl:text>As </xsl:text>
+          <xsl:value-of select="$type"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </a>
+      </li>
+  </xsl:template>
+
+  
   <!-- -->
   <xsl:template match="Content" mode="inlineOptionsNoPopup">
     <xsl:param name="parId"/>
@@ -2597,28 +2680,6 @@
     <div class="panel panel-default">
       <div class="panel-heading">
             <xsl:if test="$contentType!='Module'">
-          
-     
-
-          <div class="panel-heading-buttons">
-          <div class="form-group bulk-action">
-            <div class="input-group">
-              <label class="input-group-addon">Bulk Action</label>
-              <select class="form-control" name="BulkAction" id="BulkAction">
-                <option value="Move">Move</option>
-                <option value="Locate">Locate</option>
-                <option value="Hide">Hide</option>
-                <option value="Show">Show</option>
-              </select>
-              <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary">Go</button>
-              </span>
-            </div>
-          </div>
-
-        </div>
-
-
               <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
                 <xsl:variable name="href">
                   <xsl:text>?ewCmd=AddContent</xsl:text>
@@ -2646,6 +2707,7 @@
         
     </div>
     
+    <form action="{$appPath}" method="get" class="ewXform">
     <table class="table table-striped-2">
       <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
         <tr>
@@ -2659,6 +2721,7 @@
       <xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
       <xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
     </table>
+    </form>
    </div>
     </form>
   </xsl:template>  
@@ -2685,100 +2748,86 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
-		<input type="hidden" name="ewCmd" value="BulkContentAction"/>
-		<input type="hidden" name="pgid" value="{$pgid}"/>
+
+
+   
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<xsl:if test="$contentType!='Module'">
-					<div class="panel-heading-buttons">
-						<div class="form-group bulk-action">
-							<div class="input-group">
-								<label class="input-group-addon">Bulk Action</label>
-								<select class="form-control" name="BulkAction" id="BulkAction">
-									<option value="Move">Move</option>
-									<option value="Locate">Locate</option>
-									<option value="Hide">Hide</option>
-									<option value="Show">Show</option>
-								</select>
-								<span class="input-group-btn">
-									<button type="submit" class="btn btn-primary">Go</button>
-								</span>
-						</div>
-      </div>
-          
-							</div>
-
-          </xsl:if>
-
-
-        <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
-          <div class="pull-right">
-            <xsl:variable name="href">
-              <xsl:text>?ewCmd=AddContent</xsl:text>
-              <xsl:text>&amp;pgid=</xsl:text>
-              <xsl:value-of select="/Page/@id"/>
-              <xsl:text>&amp;type=</xsl:text>
-              <xsl:value-of select="$contentType"/>
-            </xsl:variable>
-            <a class="btn btn-primary" href="{$href}">
-              <i class="fa fa-plus">
-                <xsl:text> </xsl:text>
-              </i>
-              <xsl:text> </xsl:text>Add <xsl:value-of select="$contentType"/>
-            </a>
-            &#160;
-          </div>
-        </xsl:if>
-
-
-        
-				<h6 class="panel-title">
-					<i class="fa fa-chevron-down">
-						<xsl:text> </xsl:text>
-					</i><xsl:text> </xsl:text>
-					<xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
+			<div class="panel-heading row">
+				<h6 class="panel-title col-md-3">
+				   <xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/Contents/Content[@type=$contentType])"/>)
 				</h6>
-			</div>
-      <div class="list-controls row">
-        <div class="col-md-8">
         <xsl:if test="$page/ContentDetail/@total > 0">
+          <div class="list-controls col-md-9">
+            <xsl:if test="not($page/Contents/Content[@type='SearchHeader'])">
 
-          <div class="pull-right-stepper">
-            <xsl:apply-templates select="/" mode="adminStepper">
-              <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
-              <xsl:with-param name="itemTotal" select="$total"/>
-              <xsl:with-param name="startPos" select="$startPos"/>
-              <xsl:with-param name="path" select="$queryString"/>
-              <xsl:with-param name="itemName" select="$title"/>
-            </xsl:apply-templates>
-          </div>
-        </xsl:if>
-      </div>
-        <xsl:if test="$page/ContentDetail/@total > 0">
-          <div class="col-md-2">
-            <div class="input-group">
-              <label class="input-group-addon">Items Per Page</label>
-              <select class="form-control" name="PageCount" id="PageCount">
-                <option value="50">100</option>
-                <option value="100">100</option>
-                <option value="250">250</option>
-                <option value="500">500</option>
-                <option value="All">All</option>
-              </select>
+              <xsl:variable name="href">
+                <xsl:text>?ewCmd=AddContent</xsl:text>
+                <xsl:text>&amp;pgid=</xsl:text>
+                <xsl:value-of select="/Page/@id"/>
+                <xsl:text>&amp;type=</xsl:text>
+                <xsl:value-of select="$contentType"/>
+              </xsl:variable>
+              <div class="stepper-container">
+                <a class="btn btn-primary" href="{$href}">
+                  <i class="fa fa-plus">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <xsl:text> </xsl:text>Add <xsl:value-of select="$contentType"/>
+                </a>
+              </div>
+            </xsl:if>
+
+
+            <form method="post" action="?ewCmd={$page/@ewCmd}.{$page/@ewCmd2}.{$page/@ewCmd3}&amp;Location={$page/Request/*/Item[@name='Location']/node()}" id="listReload">
+              <div class="list-header-select">
+                <span class="input-group">
+                  <label class="input-group-addon">Items Per Page</label>
+                  <select class="form-control" name="PageCount" id="PageCount">
+                    <option value="50">100</option>
+                    <option value="100">100</option>
+                    <option value="250">250</option>
+                    <option value="500">500</option>
+                    <option value="All">All</option>
+                  </select>
+                </span>
+              </div>
+
+              <div class="list-header-select">
+                <span class="input-group list-control-select">
+                  <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
+                  <label class="input-group-addon">Sort By</label>
+                  <select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
+                    <option value="default">
+                      <xsl:if test="not($sortBy!='')">
+                        <xsl:attribute name="selected">selected</xsl:attribute>
+                      </xsl:if>
+                      Page Position
+                    </option>
+                    <option value="name">
+                      <xsl:if test="$sortBy='name'">
+                        <xsl:attribute name="selected">selected</xsl:attribute>
+                      </xsl:if>Name A-Z
+                    </option>
+                  </select>
+                </span>
+              </div>
+            </form>
+            <div class="stepper-container">
+              <xsl:apply-templates select="/" mode="adminStepper">
+                <xsl:with-param name="itemCount" select="$page/ContentDetail/@rows"/>
+                <xsl:with-param name="itemTotal" select="$total"/>
+                <xsl:with-param name="startPos" select="$startPos"/>
+                <xsl:with-param name="path" select="$queryString"/>
+                <xsl:with-param name="itemName" select="$title"/>
+              </xsl:apply-templates>
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="input-group">
-              <label class="input-group-addon">Sort By</label>
-              <select class="form-control" name="SortBy" id="SortBy">
-                <option value="Name">Name A-Z</option>
-                <option value="PagePosition">Page Position</option>
-              </select>
-            </div>
-          </div>
         </xsl:if>
+			</div>
       </div>
+    <form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+      <input type="hidden" name="ewCmd" value="BulkContentAction"/>
+      <input type="hidden" name="pgid" value="{$pgid}"/>
 			<table class="table table-striped-2">
 				<xsl:if test="not(Page/Contents/Content[@type=$contentType])">
 					<tr>
@@ -2792,6 +2841,7 @@
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType][1]" mode="AdvancedModeHeader"/>
 				<xsl:apply-templates select="Page/Contents/Content[@type=$contentType]" mode="AdvancedMode"/>
 			</table>
+    </form>
       <div class="panel-header">
         
         <xsl:if test="$page/ContentDetail/@total > 0">
@@ -2806,8 +2856,6 @@
           </div>
         </xsl:if>
       </div>
-		</div>
-	</form>
 </xsl:template>
 
   <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
@@ -8557,6 +8605,9 @@
 
     </div>
   </xsl:template>
+  
+  
+  
   <!-- BJR -->
   <!--   ##################  NewsLetter    ##############################   -->
   <!-- -->
@@ -12059,6 +12110,8 @@
 	</xsl:template>
   
   <xsl:template match="Page[@layout='WebStats']" mode="LayoutAdminJs">
+    <xsl:variable name="statsId" select="ew:EonicConfigValue('web','StatsID')"/>
+
     <xsl:choose>
       <xsl:when test="$statsId!=''">
         <script LANGUAGE="JavaScript">

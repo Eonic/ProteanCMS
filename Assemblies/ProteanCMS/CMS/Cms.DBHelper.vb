@@ -8477,10 +8477,7 @@ restart:
 
                 'sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, x.nDisplayOrder as displayorder, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId " & _
 
-                Dim cSQL As String = "SELECT * FROM tblContentRelation"
-                Dim oDs_2 As New DataSet
-                oDs_2 = GetDataSet(cSQL, "Content")
-                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
                     sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cRelationType as rtype, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId " &
                             " FROM tblContent c INNER JOIN" &
                             " tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN" &
@@ -9105,10 +9102,7 @@ restart:
                             If Not oTmp Is Nothing Then
                                 oTmp.SetAttribute("related", 1)
 
-                                cSQL = "SELECT * FROM tblContentRelation"
-                                Dim oDs_2 As New DataSet
-                                oDs_2 = GetDataSet(cSQL, "Content")
-                                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
 
                                     cSQL = "SELECT cRelationType FROM tblContentRelation WHERE nContentParentId = '" + nParentId.ToString + "' AND nContentChildId = '" + oRelated(nI) + "'"
 

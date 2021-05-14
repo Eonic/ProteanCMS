@@ -35,6 +35,37 @@ NEW BS ADMIN HEADER
 @admin-header-color:			#000;
 @admin-header-logo:				url(/ewcommon/images/admin/skin/eonic-admin-purple.png) 10px 13px no-repeat;*/
 // END VARIABLES
+
+body.ewAdmin.layout-Logon {
+    background: url(/ewcommon/images/logon-bg.png);
+
+    #adminLayout .panel {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        -ms-transform: translate(-50%, -40%);
+        transform: translate(-50%, -40%);
+        border-radius: 10px !important;
+        -webkit-box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+        box-shadow: 0px 0px 18px 10px rgba(0,0,0,0.57);
+
+        .panel-heading {
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .panel-footer {
+            border-radius: 0 0 10px 10px !important;
+            padding: 10px 30px 0 30px;
+        }
+    }
+
+    #footer {
+        position: fixed;
+        bottom: 0%;
+        width: 100%;
+    }
+}
+
 .ewAdmin {
     .admin-breadcrumb {
         position: absolute;

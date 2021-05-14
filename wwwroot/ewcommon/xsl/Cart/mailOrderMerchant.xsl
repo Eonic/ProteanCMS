@@ -16,6 +16,14 @@
   </xsl:template>
 
   <xsl:template match="Order" mode="bodyLayout">
+    <xsl:variable name="currency">
+      <xsl:choose>
+        <xsl:when test="ancestor::Cart/@currencySymbol!=''">
+          <xsl:value-of select="ancestor::Cart/@currencySymbol"/>
+        </xsl:when>
+        <xsl:otherwise>£</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <table cellpadding="10" cellspacing="0" width="100%" id="cartBody">
       <tr>
         <td id="layoutHeader" colspan="2" align="left" style="text-align:left !important;">
@@ -24,7 +32,7 @@
             <font size="1">
               Reference:&#160;<xsl:value-of select="@InvoiceRef" />
               <br/>
-              Order Total:&#160;£<xsl:value-of select="format-number(@total, '0.00')" />
+              Order Total:&#160;<xsl:value-of select="$currency" /><xsl:value-of select="format-number(@total, '0.00')" />
               <br/>
               Date:&#160;<xsl:value-of select="@InvoiceDate" />
               <br/>
