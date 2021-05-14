@@ -41,7 +41,7 @@ Partial Public Class Cms
                 goConfig = myWeb.moConfig
             End Sub
 
-            Public Shadows Sub open(ByVal oPageXml As XmlDocument)
+            Public Shadows Sub Open(ByVal oPageXml As XmlDocument)
                 Dim cProcessInfo As String = ""
                 Try
                     moAdXfm.moPageXML = oPageXml
@@ -52,14 +52,14 @@ Partial Public Class Cms
             End Sub
 
 
-            Public Function loadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function LoadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim JsonResult As String = ""
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.urlsForPegination(redirectType, pageloadCount)
+                        JsonResult = moAdminRedirect.LoadUrlsForPegination(redirectType, pageloadCount)
                     End If
                     Return JsonResult
                 Catch ex As Exception
@@ -87,14 +87,14 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SearchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim searchObj As String = inputJson("searchObj").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Try
                     Dim JsonResult As String = ""
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.searchUrl(redirectType, searchObj, pageloadCount)
+                        JsonResult = moAdminRedirect.SearchUrl(redirectType, searchObj, pageloadCount)
                     End If
                     Return JsonResult
 
@@ -107,7 +107,7 @@ Partial Public Class Cms
 
 
 
-            Public Function saveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SaveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
@@ -127,7 +127,7 @@ Partial Public Class Cms
                 Return JsonResult
             End Function
 
-            Public Function deleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function DeleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
@@ -135,7 +135,7 @@ Partial Public Class Cms
 
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.deleteUrls(redirectType, oldUrl, newUrl)
+                        JsonResult = moAdminRedirect.DeleteUrls(redirectType, oldUrl, newUrl)
                     End If
 
                     Return JsonResult
@@ -155,7 +155,7 @@ Partial Public Class Cms
                 Return JsonResult
             End Function
 
-            Public Function getTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function GetTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
 
@@ -164,18 +164,18 @@ Partial Public Class Cms
                 End If
                 Return JsonResult
             End Function
-            Public Function getTotalNumberOfSearchUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function GetTotalNumberOfSearchUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim SearchObj As String = inputJson("searchObj").ToObject(Of String)
 
                 If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.getTotalNumberOfSearchUrls(redirectType, SearchObj)
+                    JsonResult = moAdminRedirect.GetTotalNumberOfSearchUrls(redirectType, SearchObj)
                 End If
                 Return JsonResult
             End Function
 
-            Public Function loadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function LoadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)

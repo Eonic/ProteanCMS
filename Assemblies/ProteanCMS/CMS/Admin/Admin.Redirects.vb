@@ -106,7 +106,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function urlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
+            Public Function LoadUrlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
                 Try
 
                     Dim Result As String = ""
@@ -131,10 +131,10 @@ Partial Public Class Cms
                             If (pageloadCount = 0) Then
 
                                 myWeb.moSession("loadCount") = PerPageCount
-                                    moAdXfm.goSession("oTempInstance") = Nothing
+                                moAdXfm.goSession("oTempInstance") = Nothing
 
-                                Else
-                                    skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
+                            Else
+                                skipRecords = Convert.ToInt32(myWeb.moSession("loadCount"))
                                 myWeb.moSession("loadCount") = Convert.ToInt32(myWeb.moSession("loadCount")) + PerPageCount
                             End If
                         End If
@@ -168,7 +168,7 @@ Partial Public Class Cms
 
                         End If
 
-                        End If
+                    End If
 
                     Return Result
                 Catch ex As Exception
@@ -178,7 +178,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef redirectType As String, ByRef searchObj As String, ByRef pageloadCount As Integer) As String
+            Public Function SearchUrl(ByRef redirectType As String, ByRef searchObj As String, ByRef pageloadCount As Integer) As String
 
                 Try
 
@@ -216,34 +216,34 @@ Partial Public Class Cms
                         Dim searchString As String = "<rewriteMap name='" & redirectType & "'>"
 
                         Dim searchProps As New XmlDocument
-                            Dim count As Integer = 0
+                        Dim count As Integer = 0
 
-                            For i As Integer = 0 To props.ChildNodes.Count - 1
-                                If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+                        For i As Integer = 0 To props.ChildNodes.Count - 1
+                            If (props.ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
 
-                                    xmlstring = xmlstring & props.ChildNodes(i).OuterXml
+                                xmlstring = xmlstring & props.ChildNodes(i).OuterXml
 
+                            End If
+                        Next
+                        searchProps.LoadXml(xmlstring & xmlstringend)
+
+
+                        For i As Integer = skipRecords To searchProps.ChildNodes(0).ChildNodes.Count - 1
+
+                            If (searchProps.ChildNodes(0).ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
+                                If i > (skipRecords + takeRecord) - 1 Then
+                                    Exit For
+                                Else
+                                    searchString = searchString & searchProps.ChildNodes(0).ChildNodes(i).OuterXml
                                 End If
-                            Next
-                            searchProps.LoadXml(xmlstring & xmlstringend)
-
-
-                            For i As Integer = skipRecords To searchProps.ChildNodes(0).ChildNodes.Count - 1
-
-                                If (searchProps.ChildNodes(0).ChildNodes(i).OuterXml).IndexOf(searchObj, 0, StringComparison.CurrentCultureIgnoreCase) > -1 Then
-                                    If i > (skipRecords + takeRecord) - 1 Then
-                                        Exit For
-                                    Else
-                                        searchString = searchString & searchProps.ChildNodes(0).ChildNodes(i).OuterXml
-                                    End If
-                                End If
-                            Next
+                            End If
+                        Next
 
 
                         Result = searchString & xmlstringend
                     End If
 
-                                Return Result
+                    Return Result
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
@@ -252,7 +252,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function deleteUrls(ByRef redirectType As String, ByRef oldUrl As String, ByRef newUrl As String) As String
+            Public Function DeleteUrls(ByRef redirectType As String, ByRef oldUrl As String, ByRef newUrl As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
@@ -290,7 +290,7 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
-            Public Function getTotalNumberOfUrls(ByRef redirectType As String) As String
+            Public Function GetTotalNumberOfUrls(ByRef redirectType As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
@@ -358,7 +358,7 @@ Partial Public Class Cms
                 End Try
 
             End Function
-            Public Function getTotalNumberOfSearchUrls(ByRef redirectType As String, ByRef searchObj As String) As String
+            Public Function GetTotalNumberOfSearchUrls(ByRef redirectType As String, ByRef searchObj As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument

@@ -1,13 +1,13 @@
 ﻿var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
-var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/loadUrlsForPagination';
+var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/LoadUrlsForPagination';
 var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
-var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
-var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
-var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
+var SearchUrlAPIUrl = '/ewapi/Cms.Admin/SearchUrl';
+var SaveUrlAPIUrl = '/ewapi/Cms.Admin/SaveUrls';
+var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/DeleteUrls';
 var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
-var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
-var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
-var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/getTotalNumberOfSearchUrls';
+var LoadAllURLAPI = '/ewapi/Cms.Admin/LoadAllUrls';
+var getTotalNumberOfUrls = '/ewapi/Cms.Admin/GetTotalNumberOfUrls';
+var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/GetTotalNumberOfSearchUrls';
 
 
 Vue.mixin({
@@ -54,129 +54,8 @@ $(document).on("click", "#btnRedirectDontSave", function (event) {
     $("#redirectModal").modal("hide");
 });
 
-const editPageElement = document.querySelector("#EditPage");
-if (editPageElement) {
-    window.editPage = new Vue({
-        el: "#EditPage",
-        data: {
-            structName: "",
-            originalStructureName: ""
-        },
-        methods: {
-            createRedirects: function () {
-                $("#redirectModal").modal("hide");
-                var redirectType = $(".redirectStatus:checked").val();
-
-                if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
-                    return false;
-                }
-                else {
-
-                    var newUrl = $("#cStructName").val();
-                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
-                    axios.post(IsUrlPResentAPI, inputJson)
-                        .then(function (response) {
-
-                            if (response.data == "True") {
-                                if (confirm("Old url is already exist. Do you want to replace it?")) {
-
-                                    $("#cRedirect").val(redirectType);
-
-                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
-                                    axios.post(paginationAddNewUrlAPIUrl, inputJson)
-                                        .then(function (response) {
-                                            if (response.data == "success") {
-                                                $("#redirectModal").modal("hide");
-                                                // window.location.href = "?ewCmd=Normal";
-                                            }
-
-                                        });
-                                }
-                                else {
-                                    return false;
-                                }
-                            }
-                            else {
-
-                                $("#cRedirect").val(redirectType);
-                                $("#redirectModal").modal("hide");
-
-                            }
-                        });
 
 
-                }
-
-            },
-
-
-
-            structNameOnChange: function (newStructName) {
-
-                if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
-
-                    redirectModal.toggleModal();
-                    $("#OldPageName").val(localStorage.originalStructName);
-                    $("#NewPageName").val(newStructName);
-                    this.structName = newStructName;
-                    $(".hiddenpageId").val(localStorage.pageId);
-                }
-                else {
-                    $(".btnSubmitPage").click();
-                }
-
-            }
-        },
-        watch: {
-            // whenever StructName changes, this function will run
-            //structName: function (newStructName) {
-            //    debugger;
-            //    if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
-
-            //        redirectModal.toggleModal();
-
-            //    } else {
-            //        redirectModal.showRedirectModal = false;
-            //        localStorage.originalStructName = newStructName;
-
-            //    }
-
-            //}
-        },
-        mounted: function () {
-
-            var cStructName = document.getElementById('cStructName');
-            if (cStructName != null) {
-                this.structName = cStructName.value;
-            }
-
-            //clean the storage for struct name when page changes.
-            let pageId = this.getQueryStringParam('pgid');
-            if (!localStorage.pageId || localStorage.pageId != pageId) {
-                localStorage.removeItem('originalStructName');
-            }
-            localStorage.pageId = pageId;
-            localStorage.originalStructName = this.structName;
-        }
-    });
-}
-
-const redirectModalElement = document.querySelector("#redirectModal");
-if (redirectModalElement) {
-    window.redirectModal = new Vue({
-        el: "#redirectModal",
-        data: {
-            showRedirectModal: false
-        },
-        methods: {
-            toggleModal: function () {
-
-                $("#redirectModal").modal("show");
-
-            }
-        }
-    });
-}
 //$(".btnaddNewUrl").click(function () {
 //    //addNewUrl.toggleModal();
 //    $(".newAddFormInline").removeClass("hidden");
@@ -821,54 +700,6 @@ $('.scolling-pane').on('scroll', function () {
     }
 });
 
-//Edit Product
-const editProductElement = $(".ProductSub").length;
-if (editProductElement > 0) {
-    window.editProduct = new Vue({
-        el: ".ProductSub",
-        data: {
-            urlPathInput: "",
-            originalPathName: ""
-        },
-        methods: {
-            storedPath: function () {
-
-                var cContentPath = $("#cContentPath").val();
-                if (cContentPath != null) {
-                    this.urlPathInput = cContentPath;
-                }
-
-                //clean the storage for struct name when page changes.
-                let pageId = this.getQueryStringParam('pgid');
-                if (!localStorage.pageId || localStorage.pageId != pageId) {
-                    localStorage.removeItem('originalPathName');
-                }
-                localStorage.pageId = pageId;
-                localStorage.originalPathName = this.urlPathInput;
-            },
-            UrlPathOnChange: function (newContentPath) {
-
-                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
-
-                    redirectModal.toggleModal();
-                    $("#OldPageName").val(localStorage.originalPathName);
-                    $("#NewPageName").val(newContentPath);
-                    this.cContentPath = newContentPath;
-
-                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
-                    $(".hiddenProductNewUrl").val(newContentPath);
-                }
-                else {
-                    $(".btnSubmitProduct").click();
-                }
-
-            },
-        },
-        mounted: function () {
-            this.storedPath();
-        }
-    });
-}
 
 $(document).on("click", ".btnSaveProduct", function (event) {
 
