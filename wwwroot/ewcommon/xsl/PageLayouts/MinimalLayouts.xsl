@@ -8553,6 +8553,13 @@
         </xsl:if>
         <h3 class="title">
           <a rel="external">
+            <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="Title/node()"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="href">
               <xsl:choose>
                 <xsl:when test="contains(Path,'http://')">

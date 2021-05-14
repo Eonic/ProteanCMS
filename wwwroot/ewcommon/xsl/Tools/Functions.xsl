@@ -4403,6 +4403,15 @@
                     
                   </xsl:otherwise>
                 </xsl:choose>
+
+                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="$link"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+                
                 <xsl:value-of select="@linkText"/>
               </a>
             </span>
