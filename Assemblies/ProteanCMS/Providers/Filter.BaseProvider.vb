@@ -44,6 +44,33 @@ Namespace Providers
 
             Protected moStreamingCfg As XmlNode
 
+            Public Property AdminXforms() As Object
+                Set(ByVal value As Object)
+                    _AdminXforms = value
+                End Set
+                Get
+                    Return _AdminXforms
+                End Get
+            End Property
+
+            Public Property AdminProcess() As Object
+                Set(ByVal value As Object)
+                    _AdminProcess = value
+                End Set
+                Get
+                    Return _AdminProcess
+                End Get
+            End Property
+
+            Public Property Activities() As Object
+                Set(ByVal value As Object)
+                    _Activities = value
+                End Set
+                Get
+                    Return _Activities
+                End Get
+            End Property
+
             Public Sub New(ByRef myWeb As Protean.Cms, ByVal ProviderName As String)
                 Try
                     Dim calledType As Type
@@ -65,12 +92,12 @@ Namespace Providers
                         ProviderClass = "Protean.Providers.Filter.DefaultProvider"
                         calledType = System.Type.GetType(ProviderClass, True)
                     Else
-                        Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/paymentProviders")
+                        Dim moPrvConfig As Protean.ProviderSectionHandler = WebConfigurationManager.GetWebApplicationSection("protean/fliterProviders")
                         If Not moPrvConfig.Providers(ProviderClass) Is Nothing Then
                             Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderClass).Type)
-                            calledType = assemblyInstance.GetType("Protean.Providers.Payment." & ProviderClass, True)
+                            calledType = assemblyInstance.GetType("Protean.Providers.Filter." & ProviderClass, True)
                         Else
-                            calledType = System.Type.GetType("Protean.Providers.Payment." & ProviderClass, True)
+                            calledType = System.Type.GetType("Protean.Providers.Filter." & ProviderClass, True)
                         End If
 
                     End If
@@ -101,9 +128,41 @@ Namespace Providers
             End Sub
 
             Public Sub Initiate(ByRef _AdminXforms As Object, ByRef _AdminProcess As Object, ByRef _Activities As Object, ByRef MemProvider As Object, ByRef myWeb As Protean.Cms)
-
+                MemProvider.AdminXforms = New AdminXForms(myWeb)
+                MemProvider.AdminProcess = New AdminProcess(myWeb)
+                MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                MemProvider.Filters = New Filters()
 
             End Sub
+
+            Public Class AdminXForms
+                Inherits Cms.Admin.AdminXforms
+                Private Const mcModuleName As String = "Providers.Providers.Eonic.AdminXForms"
+
+                Sub New(ByRef aWeb As Cms)
+                    MyBase.New(aWeb)
+                End Sub
+
+            End Class
+
+            Public Class AdminProcess
+                Inherits Cms.Admin
+
+                Dim _oAdXfm As Protean.Providers.Filter.DefaultProvider.AdminXForms
+
+                Public Property oAdXfm() As Object
+                    Set(ByVal value As Object)
+                        _oAdXfm = value
+                    End Set
+                    Get
+                        Return _oAdXfm
+                    End Get
+                End Property
+
+                Sub New(ByRef aWeb As Cms)
+                    MyBase.New(aWeb)
+                End Sub
+            End Class
 
 
             Public Sub DoContentIndex()
