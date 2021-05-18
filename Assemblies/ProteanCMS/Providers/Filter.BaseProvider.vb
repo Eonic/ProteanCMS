@@ -42,7 +42,7 @@ Namespace Providers
             Private _AdminProcess As Object
             Private _Activities As Object
 
-            Protected moStreamingCfg As XmlNode
+            Protected moFilterCfg As XmlNode
 
             Public Property AdminXforms() As Object
                 Set(ByVal value As Object)
@@ -76,8 +76,8 @@ Namespace Providers
                     Dim calledType As Type
                     Dim oProviderCfg As XmlElement
 
-                    moStreamingCfg = WebConfigurationManager.GetWebApplicationSection("protean/streaming")
-                    oProviderCfg = moStreamingCfg.SelectSingleNode("provider[@name='" & ProviderName & "']")
+                    moFilterCfg = WebConfigurationManager.GetWebApplicationSection("protean/Filter")
+                    oProviderCfg = moFilterCfg.SelectSingleNode("provider[@name='" & ProviderName & "']")
 
                     Dim ProviderClass As String = ""
                     If Not oProviderCfg Is Nothing Then
@@ -131,6 +131,7 @@ Namespace Providers
                 MemProvider.AdminXforms = New AdminXForms(myWeb)
                 MemProvider.AdminProcess = New AdminProcess(myWeb)
                 MemProvider.AdminProcess.oAdXfm = MemProvider.AdminXforms
+                '   MemProvider.Activities = New Activities()
                 MemProvider.Filters = New Filters()
 
             End Sub
@@ -184,16 +185,38 @@ Namespace Providers
 
 
                 Sub PageFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
+                    Try
+                        'create stored procedure to pull 
+                        ' add it in database upgrade. check if with exists- display errors 
+                        ' Error handling should be there 
 
-                    'This pulls in all the products to be subsequently filtered.
+                        'This pulls in all the products to be subsequently filtered.
 
-                    'Removes the Products on the current page to be replaced by the products in this query.
+                        'Removes the Products on the current page to be replaced by the products in this query.
 
-                    'additive
-                    'Pull in products from other pages specificed
-                    'Pull in product form all child pages by default
-                    'Also list the child pages within the filterNode to easily render the control on the page
+                        'additive
+                        'Pull in products from other pages specificed
+                        'Pull in product form all child pages by default
+                        'Also list the child pages within the filterNode to easily render the control on the page
 
+                        'extract value from the filter node
+                        Dim nPageId As Integer = 0
+                        nPageId = oFilterNode.SelectNodes("Filter/PageId").ToString()
+                        Dim cSql As String = String.Empty
+
+                        Dim oMenuItem As XmlElement
+                        If (nPageId <> 0) Then
+                            'Dim oMenuElmt As XmlElement = aWeb.GetStructureXML(aWeb.mnUserId, nPageId, 0, "Site", False, False, False, True, False, "MenuItem", "Menu")
+                            Dim oSubMenuList As XmlNodeList = aWeb.moPageXml.SelectSingleNode("/Page/Menu/MenuItem/descendant-or-self::MenuItem[@id='" & nPageId & "']").SelectNodes("MenuItem")
+                            For Each oMenuItem In oSubMenuList
+                                cSql = cSql + oMenuItem.Attributes("id").InnerText.ToString() + ","
+                            Next
+
+                        End If
+
+                    Catch ex As Exception
+
+                    End Try
                 End Sub
 
                 Sub PriceRangeFilter(ByRef aWeb As Cms, ByRef oFilterNode As XmlElement)
