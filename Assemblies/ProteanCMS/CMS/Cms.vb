@@ -5493,6 +5493,9 @@ Public Class Cms
                             sUrl += "context=" + cCloneParent
                         End If
                     End If
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
 
                     oMenuItem.SetAttribute("url", sUrl)
 
@@ -5548,6 +5551,10 @@ Public Class Cms
                                         End If
                                     End If
                                     sUrl = sUrl & "/" & cPageName
+
+                                    If moConfig("LowerCaseUrl") = "on" Then
+                                        sUrl = sUrl.ToLower()
+                                    End If
                                 End If
                             Next
 
@@ -5838,7 +5845,9 @@ Public Class Cms
                                 If moConfig("DetailPathTrailingSlash") = "on" Then
                                     cURL = cURL + "/"
                                 End If
-
+                                If moConfig("LowerCaseUrl") = "on" Then
+                                    cURL = cURL.ToLower()
+                                End If
                             End If
                         Next
                     Case Else
@@ -6188,6 +6197,9 @@ Public Class Cms
                 ContentURL = ContentURL & ContentName
             End If
 
+            If moConfig("LowerCaseUrl") = "on" Then
+                ContentURL = ContentURL.ToLower()
+            End If
             Return ContentURL
 
         Catch ex As Exception
