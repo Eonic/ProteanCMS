@@ -4914,7 +4914,7 @@
                             <xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                         </xsl:variable>
                         <xsl:choose>
-                            <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
+                            <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tif' or $Extension='.webp'">
                                 <xsl:if test="@root">
                                           <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
                                             <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
@@ -4923,7 +4923,7 @@
                                                 <xsl:value-of select="@name"/>
                                               </span>
                                               <br/>
-                                              <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                                              <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or $Extension='.tif' or $Extension='.webp'">
                                                 <xsl:value-of select="@width"/>
                                                 <xsl:text> x </xsl:text>
                                                 <xsl:value-of select="@height"/>
