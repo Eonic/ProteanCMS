@@ -4872,7 +4872,7 @@
   </xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib']" mode="fileTypeScript">
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|tif?f)$/i,
   </xsl:template>
 
 
@@ -4980,7 +4980,7 @@
                     <div class="thumb-button description">
                      <xsl:choose>
                         <xsl:when test="$popup='true'">
-                          <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
+                          <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'  or @Extension='.tif'  or @Extension='.tiff'">
                             <a href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={parent::folder/@path}&amp;file={@name}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                               <i class="fa fa-check-circle-o fa-white">
                                 <xsl:text> </xsl:text>
@@ -5009,7 +5009,7 @@
                         <xsl:value-of select="@name"/>
                       </span>
                       <xsl:choose>
-                         <xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                         <xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tif'  or  @Extension='.tiff'">
                           <xsl:value-of select="@width"/>
                           <xsl:text> x </xsl:text>
                           <xsl:value-of select="@height"/>
