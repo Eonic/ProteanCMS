@@ -5789,7 +5789,7 @@
   </xsl:template>
 
   <!-- Ensure no Self Closing P and Span and i and em tags-->
-  <xsl:template match="p | span | i | em" mode="cleanXhtml">
+  <xsl:template match="p | span | i | em | div" mode="cleanXhtml">
 
     <xsl:element name="{name()}">
       <!-- process attributes -->
