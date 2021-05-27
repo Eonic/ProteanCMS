@@ -9,12 +9,12 @@
         <div class="modal-dialog">
           <div class="modal-content  alert alert-danger" role="alert">
             <div class="modal-body">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
               <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
               <button type="button" class="close" data-dismiss="modal">
-                <i class="fa fa-times"> &#160;</i>
+                <i class="fa fa-times">&#160;</i>
               </button>
-              <span id="errorMessage"></span>
+              <span id="errorMessage">&#160;</span>
             </div>
           </div>
         </div>
@@ -1994,8 +1994,9 @@
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text></xsl:text>
+      <xsl:text> </xsl:text>
     </textarea>
+    <!--Space is required for XSLT compiled mode-->
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">

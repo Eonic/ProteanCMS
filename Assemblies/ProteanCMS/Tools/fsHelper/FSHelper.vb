@@ -40,6 +40,8 @@ Partial Public Class fsHelper
     Public mcRoot As String = ""
     Shared msException As String
 
+    Private _thumbnailPath As String = "/~ptn"
+
     Shared _libraryTypeExtensions()() As String = {
                                                  New String() {},
                                                  New String() {"png", "jpg", "gif", "jpeg", "bmp"},
@@ -965,12 +967,14 @@ Partial Public Class fsHelper
                 End If
                 Dim fullName As String = Path.GetFileName(file.FileName)
                 statuses.Add(New FilesStatus(fullName.Replace(" ", "-"), file.ContentLength))
+
+
+
                 '    Else
                 '        'alert: image size is bigger than 4 MB
                 '    End If
                 'Else
                 '    'alert: Image with Same  name already exist
-
                 'End If
 
             Catch ex As Exception
@@ -1014,6 +1018,11 @@ Partial Public Class fsHelper
             Dim files As FileInfo() = dir.GetFiles()
             Dim fi As FileInfo
             Dim sVirtualPath As String
+            Dim tnfiles As FileInfo() = Nothing
+            Dim tndir As New DirectoryInfo(Folder & _thumbnailPath)
+            If tndir.Exists Then
+                tnfiles = tndir.GetFiles()
+            End If
 
             If mcStartFolder.Contains("..") Then
                 'we have a virtual path and we need to be a bit more cleverer
@@ -1026,6 +1035,7 @@ Partial Public Class fsHelper
 
             If mcPopulateFilesNode = sVirtualPath Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
                 startNode.SetAttribute("active", "true")
+                Dim fileCount As Int16 = 1
                 For Each fi In files
                     If Not (Left(fi.Name, 5) = "Icon_") And Not (fi.Name.ToLower = "thumbs.db") And Not (fi.Name.ToLower = ".ds_store") Then
                         Dim cExt As String = LCase(fi.Extension)
@@ -1036,11 +1046,33 @@ Partial Public Class fsHelper
 
                             Case ".jpg", ".gif", ".jpeg", ".png", ".bmp"
                                 Try
-                                    Dim oWebFile As New WebFile(fi.FullName, sVirtualPath & "/" & fi.Name, True)
-                                    fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height))
-                                    fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width))
-                                Catch
-                                    'do nothin
+                                    'this is slow so we only want to do it for the first 100 files
+                                    If fileCount < 100 Then
+                                        Dim oWebFile As New WebFile(fi.FullName, sVirtualPath & "/" & fi.Name, True)
+                                        fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height))
+                                        fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width))
+                                    End If
+
+                                    'check and return the thumbnail path
+                                    Dim createTn As Boolean = True
+                                    If tnfiles IsNot Nothing Then
+                                        For Each tnfi As FileInfo In tnfiles
+                                            If fi.Name = tnfi.Name Then
+                                                createTn = False
+                                            End If
+                                        Next
+                                    End If
+
+                                    If createTn Then
+                                        Dim oImage As New Protean.Tools.Image(mcStartFolder & sVirtualPath & "\" & fi.Name)
+                                        fileElem.Attributes.Append(XmlAttribute("thumbnail", oImage.CreateThumbnail(sVirtualPath, _thumbnailPath)))
+                                        oImage = Nothing
+                                    Else
+                                        fileElem.Attributes.Append(XmlAttribute("thumbnail", _thumbnailPath & "/" & fi.Name))
+                                    End If
+
+                                Catch ex As Exception
+                                    Return XmlElement("error", ex.Message)
                                 End Try
 
                             Case Else
@@ -1076,6 +1108,7 @@ Partial Public Class fsHelper
                         fileElem.SetAttribute("root", mcRoot)
                         startNode.AppendChild(fileElem)
                     End If
+                    fileCount = fileCount + 1
                 Next fi
             End If
 

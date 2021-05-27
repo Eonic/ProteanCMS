@@ -74,7 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.46.58</AssemblyVersion>
+    <AssemblyVersion>6.0.49.31</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -499,7 +499,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Setup.vb" />
-    <Compile Include="Tools\JsStart.vb" />
+    <Compile Include="Tools\Startup.vb" />
     <Compile Include="Tools\Configuration.vb" />
     <Compile Include="Tools\CSVHelper.vb" />
     <Compile Include="Tools\Encryption.vb" />

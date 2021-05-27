@@ -3487,20 +3487,25 @@ Partial Public Class Cms
 
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Dim artIds As String = ""
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                            artIds = odr("nContentKey") & ","
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
-
-                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
-                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
-                        MyBase.addOption(oSelUpd, "No", "0")
-                    Else
+                    If odr Is Nothing Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                    Else
+
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Dim artIds As String = ""
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                                artIds = odr("nContentKey") & ","
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                            Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                            MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                            MyBase.addOption(oSelUpd, "No", "0")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
                     odr = Nothing
 
@@ -5450,7 +5455,7 @@ Partial Public Class Cms
 
                     If moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
                         oSelElmt = MyBase.addSelect(oGrp2Elmt, "bCollection", True, "Collection Option", "multiline", ApperanceTypes.Full)
-                        MyBase.addOption(oSelElmt, "Collection", "true")
+                        MyBase.addOption(oSelElmt, "Collection", "True")
                         MyBase.addBind("bCollection", "tblCartShippingMethods/bCollection", "false()")
                     End If
 
@@ -5890,7 +5895,12 @@ Partial Public Class Cms
                         Dim updateNotes As String = goRequest("cNotesAmend")
                         '  If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim notes As String = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim AdminUserName As String = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText
+                        notes += "by " + AdminUserName
+
+                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = notes
+                        moDbHelper.logActivity(dbHelper.ActivityType.OrderStatusChange, myWeb.mnUserId, 0, 0, notes)
 
                         aSellerNotes = Split(MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText, "/n")
                         cSellerNotesHtml = "<ul>"

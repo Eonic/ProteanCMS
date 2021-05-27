@@ -1688,6 +1688,9 @@ NoDiscount:
 
                         oDS = myWeb.moDbHelper.GetDataSet(sSql, "Discount", "Discounts")
                         PerfMon.Log("Discount", "getAvailableDiscounts-startEndDataset")
+                        If oDS Is Nothing Then
+                            Exit Sub
+                        End If
 
                         If oDS.Tables.Count = 0 Then Exit Sub
                         Dim oDC As DataColumn

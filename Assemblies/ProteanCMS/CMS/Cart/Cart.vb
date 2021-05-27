@@ -3116,6 +3116,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", FormatNumber(vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost + vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 Else
                     oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatRate", 0.0#)
@@ -3123,6 +3125,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", 0.0#)
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 End If
 
                 Return vatAmt
@@ -3265,11 +3269,22 @@ processFlow:
                         If IsNumeric(oThePrice.InnerText) Then
                             'this selects the cheapest price for this user assuming not free
                             If IsNumeric(oPNode.InnerText) Then
-                                If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
-                                    oThePrice = oPNode
+                                'if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
+                                If Not IsNothing(moCartConfig("OverrideCheapestPrice")) And moCartConfig("OverrideCheapestPrice") = "on" Then
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        Dim oThePriceType As String = oThePrice.GetAttribute("type")
+                                        Dim oPNodeType As String = oPNode.GetAttribute("type")
+
+                                        If Not (oPNodeType = "rrp" And oThePriceType = "sale") Then
+                                            oThePrice = oPNode
+                                        End If
+                                    End If
+                                Else
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        oThePrice = oPNode
+                                    End If
                                 End If
                             End If
-
                         Else
                             oThePrice = oPNode
                         End If

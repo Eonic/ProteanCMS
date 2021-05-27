@@ -15,7 +15,14 @@
     <xsl:variable name="siteURL">
       <xsl:call-template name="getSiteURL"/>
     </xsl:variable>
-    <xsl:variable name="currency" select="'£'"/>
+    <xsl:variable name="currencySymbol">
+      <xsl:choose>
+        <xsl:when test="ancestor::Cart/@currencySymbol!=''">
+          <xsl:value-of select="ancestor::Cart/@currencySymbol"/>
+        </xsl:when>
+        <xsl:otherwise>£</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <br/>
     <br/>
     <table cellspacing="0" width="100%" id="cartListing" summary="This table contains a list of the items which you have ordered.">
@@ -102,7 +109,7 @@
           <td class="vat amount" align="right">
             <font face="{$bodyFont}" size="2">
               <span class="currency">
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
               </span>
               <xsl:value-of select="format-number(@vatAmt, '0.00')"/>
             </font>
@@ -116,7 +123,7 @@
         </td>
         <td class="total amount" align="right">
           <font face="{$bodyFont}" size="2">
-            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="$currencySymbol"/>
             <xsl:value-of select="format-number(@total, '0.00')"/>
           </font>
         </td>
@@ -134,7 +141,7 @@
           </td>
           <td class="total amount" align="right">
             <font face="{$bodyFont}" size="2" align="right">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currencySymbol"/>
               <xsl:value-of select="format-number(@paymentMade, '0.00')"/>
             </font>
           </td>
@@ -153,7 +160,7 @@
           </td>
           <td class="total amount" align="right">
             <font face="{$bodyFont}" size="2">
-              <xsl:value-of select="$currency"/>
+              <xsl:value-of select="$currencySymbol"/>
               <xsl:value-of select="format-number(@payableAmount, '0.00')"/>
             </font>
           </td>
@@ -176,7 +183,14 @@
     <xsl:variable name="secureURL">
       <xsl:call-template name="getSecureURL"/>
     </xsl:variable>
-    <xsl:variable name="currency" select="'£'"/>
+    <xsl:variable name="currencySymbol">
+      <xsl:choose>
+        <xsl:when test="ancestor::Cart/@currencySymbol!=''">
+          <xsl:value-of select="ancestor::Cart/@currencySymbol"/>
+        </xsl:when>
+        <xsl:otherwise>£.</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <tr class="orderItem">
       <td class="cell quantity" align="left">
         <font face="{$bodyFont}" size="2">
@@ -209,7 +223,7 @@
               <xsl:if test="@price!=0">
                 <strong>
                   &#160;
-                  <xsl:value-of select="$currency"/>
+                  <xsl:value-of select="$currencySymbol"/>
                   <xsl:value-of select="format-number(@price,'#.00')"/>
                 </strong>
               </xsl:if>
@@ -230,7 +244,7 @@
                 </xsl:if>
                 <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
                 RRP:&#160;<strike>
-                  <xsl:value-of select="$currency"/>
+                  <xsl:value-of select="$currencySymbol"/>
                   <xsl:choose>
                     <xsl:when test="position()=1">
                       <xsl:value-of select="format-number(ancestor::Item/DiscountPrice/@OriginalUnitPrice,'#.00')"/>
@@ -241,7 +255,7 @@
                   </xsl:choose>
                 </strike>
                 less:&#160;
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
                 <xsl:value-of select="format-number(@UnitSaving,'#.00')"/>
               </div>
             </xsl:for-each>
@@ -253,7 +267,7 @@
               <div class="discount">
                 <xsl:value-of select="ancestor::Item/Discount[@nDiscountKey=$DiscID]/@cDiscountName"/>
                 <xsl:value-of select="@oldUnits - @Units"/>&#160;Unit<xsl:if test="(@oldUnits - @Units) > 1">s</xsl:if>
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
                 <xsl:value-of select="format-number(@TotalSaving,'#.00')"/>
               </div>
             </xsl:for-each>
@@ -273,17 +287,17 @@
           <font face="{$bodyFont}" size="2">
             <xsl:if test="DiscountPrice/@OriginalUnitPrice > @price">
               <strike>
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
                 <xsl:value-of select="format-number(DiscountPrice/@OriginalUnitPrice,'#.00')"/>
               </strike>
               <br/>
             </xsl:if>
-            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="$currencySymbol"/>
             <xsl:value-of select="format-number(@price,'#.00')"/>
             <xsl:for-each select="Item[@price &gt; 0]">
               <br/>
               <span class="optionList">
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
                 <xsl:value-of select="format-number(@price,'#.00')"/>
               </span>
             </xsl:for-each>
@@ -293,12 +307,12 @@
           <font face="{$bodyFont}" size="2">
             <xsl:if test="DiscountPrice/@OriginalUnitPrice * DiscountPrice/@Units > @itemTotal">
               <strike>
-                <xsl:value-of select="$currency"/>
+                <xsl:value-of select="$currencySymbol"/>
                 <xsl:value-of select="format-number(DiscountPrice/@OriginalUnitPrice * DiscountPrice/@Units,'#.00')"/>
               </strike>
               <br/>
             </xsl:if>
-            <xsl:value-of select="$currency"/>
+            <xsl:value-of select="$currencySymbol"/>
             <xsl:choose>
               <xsl:when test="@itemTotal">
                 <xsl:value-of select="format-number(@itemTotal,'#.00')"/>

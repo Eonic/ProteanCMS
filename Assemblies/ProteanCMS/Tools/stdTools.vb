@@ -54,6 +54,7 @@ Public Module stdTools
 
     Public SortDirectionVal() As String = {"descending", "ascending"}
 
+
     Public Sub returnException(ByRef sException As String, ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
         'Author:        Trevor Spink
         'Copyright:     Eonic Ltd 2005

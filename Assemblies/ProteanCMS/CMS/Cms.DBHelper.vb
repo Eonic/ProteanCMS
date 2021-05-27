@@ -411,6 +411,9 @@ Partial Public Class Cms
             'Integrations - 900+
             IntegrationTwitterPost = 901
 
+            'Order Status Change
+            OrderStatusChange = 400
+
         End Enum
 
         Enum DirectoryType
@@ -1152,11 +1155,14 @@ Partial Public Class Cms
                                 sSql = "select TOP(1) nContentKey from tblContent c inner join tblAudit a on a.nAuditKey = c.nAuditId where cContentName like '" & SqlFmt(sPath) & "' and cContentSchemaName like '" & thisContentType & "' " & myWeb.GetStandardFilterSQLForContent() & " order by nVersion desc"
                             End If
                             ods = GetDataSet(sSql, "Content")
-                            If ods.Tables("Content").Rows.Count = 1 Then
-                                nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
-                            Else
-                                'handling for content versions ?
+                            If Not ods Is Nothing Then
+                                If ods.Tables("Content").Rows.Count = 1 Then
+                                    nArtId = ods.Tables("Content").Rows("0").Item("nContentKey")
+                                Else
+                                    'handling for content versions ?
+                                End If
                             End If
+
                             'now get the page id 
                             If nArtId > 0 Then
                                 sSql = "select nStructId from tblContentLocation where bPrimary = 1 and nContentId = " & nArtId
@@ -1198,48 +1204,46 @@ Partial Public Class Cms
 
                     ods = GetDataSet(sSql, "Pages")
 
+                    If Not ods Is Nothing Then
+                        If ods.Tables("Pages").Rows.Count = 1 Then
+                            nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
+                            ' if there is just one page validate it
+                        ElseIf ods.Tables("Pages").Rows.Count = 0 Then
 
-                    If ods.Tables("Pages").Rows.Count = 1 Then
-                        nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
-                        ' if there is just one page validate it
-                    ElseIf ods.Tables("Pages").Rows.Count = 0 Then
+                            'do nothing nothing found
 
-                        'do nothing nothing found
-
-                    Else
-                        For Each oRow In ods.Tables("Pages").Rows
-                            ' Debug.WriteLine(oRow.Item("nStructKey"))
-                            If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
-                                'we have a language verion we need to behave differently to confirm id
-                                If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
-                                    nPageId = oRow.Item("nStructKey")
-                                    Exit For
-                                End If
-                            Else
-                                If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
-                                    If bCheckPermissions Then
-
-                                        ' Check the permissions for the page - this will either return 0, the page id or a system page.
-                                        Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
-
-                                        If checkPermissionPageId <> 0 _
-                                            And (oRow.Item("nStructKey") = checkPermissionPageId _
-                                            Or IsSystemPage(checkPermissionPageId)) Then
-                                            nPageId = checkPermissionPageId
-                                            Exit For
-                                        End If
-                                    Else
+                        Else
+                            For Each oRow In ods.Tables("Pages").Rows
+                                ' Debug.WriteLine(oRow.Item("nStructKey"))
+                                If Not (CInt("0" & oRow.Item("nVersionParId")) = 0) Then
+                                    'we have a language verion we need to behave differently to confirm id
+                                    If myWeb.mcPageLanguage = oRow.Item("cVersionLang") Then
                                         nPageId = oRow.Item("nStructKey")
                                         Exit For
                                     End If
+                                Else
+                                    If recurseUpPathArray(oRow.Item("nStructParId"), aPath, UBound(aPath) - 1) = True Then
+                                        If bCheckPermissions Then
+
+                                            ' Check the permissions for the page - this will either return 0, the page id or a system page.
+                                            Dim checkPermissionPageId As Long = checkPagePermission(oRow.Item("nStructKey"))
+
+                                            If checkPermissionPageId <> 0 _
+                                                And (oRow.Item("nStructKey") = checkPermissionPageId _
+                                                Or IsSystemPage(checkPermissionPageId)) Then
+                                                nPageId = checkPermissionPageId
+                                                Exit For
+                                            End If
+                                        Else
+                                            nPageId = oRow.Item("nStructKey")
+                                            Exit For
+                                        End If
+                                    End If
                                 End If
-                            End If
-                        Next
+                            Next
+                        End If
                     End If
                 End If
-
-
-
 
                 ' Note : if sPath is empty the SQL call above WILL return pages, we don't want these, we want top level pgid
                 If Not (nPageId > 1 And (sPath <> "")) Then
@@ -6598,13 +6602,16 @@ restart:
                 "where r.nDirChildId = " & userId & " and d.cDirSchema='" & cSchemaName & "'"
 
                 oDr = getDataReader(sSql)
-                While oDr.Read
-                    If oDr("cDirName") = cRoleName Then
-                        bValid = True
-                    End If
+                If Not oDr Is Nothing Then
+                    While oDr.Read
+                        If oDr("cDirName") = cRoleName Then
+                            bValid = True
+                        End If
 
-                End While
-                oDr.Close()
+                    End While
+                    oDr.Close()
+                End If
+
                 oDr = Nothing
 
                 Return bValid
@@ -6829,6 +6836,22 @@ restart:
                 Dim iID As Integer
                 iID = CInt(ExeProcessSqlScalar(strSQL))
                 Return iID
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
+                Return -1
+
+            End Try
+        End Function
+
+        Public Function isParent(ByVal pageId As Integer) As Boolean
+            PerfMon.Log("DBHelper", "FindpageIsParent")
+            Try
+                Dim oDs As DataSet
+                Dim strSQL As String = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" & pageId & "'"
+                oDs = GetDataSet(strSQL, "page", "Page")
+                If oDs.Tables(0).Rows.Count > 0 Then
+                    Return True
+                End If
             Catch ex As Exception
                 RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "FindDirectoryByForiegn", ex, "AllowMigration"))
                 Return -1
@@ -8454,10 +8477,7 @@ restart:
 
                 'sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, x.nDisplayOrder as displayorder, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId " & _
 
-                Dim cSQL As String = "SELECT * FROM tblContentRelation"
-                Dim oDs_2 As New DataSet
-                oDs_2 = GetDataSet(cSQL, "Content")
-                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
                     sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cRelationType as rtype, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId " &
                             " FROM tblContent c INNER JOIN" &
                             " tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN" &
@@ -9082,10 +9102,7 @@ restart:
                             If Not oTmp Is Nothing Then
                                 oTmp.SetAttribute("related", 1)
 
-                                cSQL = "SELECT * FROM tblContentRelation"
-                                Dim oDs_2 As New DataSet
-                                oDs_2 = GetDataSet(cSQL, "Content")
-                                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
 
                                     cSQL = "SELECT cRelationType FROM tblContentRelation WHERE nContentParentId = '" + nParentId.ToString + "' AND nContentChildId = '" + oRelated(nI) + "'"
 

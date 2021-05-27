@@ -41,7 +41,7 @@ Partial Public Class Cms
                 goConfig = myWeb.moConfig
             End Sub
 
-            Public Shadows Sub open(ByVal oPageXml As XmlDocument)
+            Public Shadows Sub Open(ByVal oPageXml As XmlDocument)
                 Dim cProcessInfo As String = ""
                 Try
                     moAdXfm.moPageXML = oPageXml
@@ -52,14 +52,14 @@ Partial Public Class Cms
             End Sub
 
 
-            Public Function loadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function LoadUrlsForPagination(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Dim JsonResult As String = ""
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.urlsForPegination(redirectType, pageloadCount)
+                        JsonResult = moAdminRedirect.LoadUrlsForPegination(redirectType, pageloadCount)
                     End If
                     Return JsonResult
                 Catch ex As Exception
@@ -87,14 +87,14 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SearchUrl(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim searchObj As String = inputJson("searchObj").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
                 Try
                     Dim JsonResult As String = ""
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.searchUrl(redirectType, searchObj, pageloadCount)
+                        JsonResult = moAdminRedirect.SearchUrl(redirectType, searchObj, pageloadCount)
                     End If
                     Return JsonResult
 
@@ -107,7 +107,7 @@ Partial Public Class Cms
 
 
 
-            Public Function saveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function SaveUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
@@ -127,7 +127,7 @@ Partial Public Class Cms
                 Return JsonResult
             End Function
 
-            Public Function deleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function DeleteUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim oldUrl As String = inputJson("oldUrl").ToObject(Of String)
                 Dim newUrl As String = inputJson("NewUrl").ToObject(Of String)
@@ -135,7 +135,7 @@ Partial Public Class Cms
 
                 Try
                     If myApi.mbAdminMode Then
-                        JsonResult = moAdminRedirect.deleteUrls(redirectType, oldUrl, newUrl)
+                        JsonResult = moAdminRedirect.DeleteUrls(redirectType, oldUrl, newUrl)
                     End If
 
                     Return JsonResult
@@ -155,7 +155,7 @@ Partial Public Class Cms
                 Return JsonResult
             End Function
 
-            Public Function getTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function GetTotalNumberOfUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
 
@@ -164,18 +164,18 @@ Partial Public Class Cms
                 End If
                 Return JsonResult
             End Function
-            Public Function getTotalNumberOfSearchUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function GetTotalNumberOfSearchUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
                 Dim JsonResult As String = ""
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim SearchObj As String = inputJson("searchObj").ToObject(Of String)
 
                 If myApi.mbAdminMode Then
-                    JsonResult = moAdminRedirect.getTotalNumberOfSearchUrls(redirectType, SearchObj)
+                    JsonResult = moAdminRedirect.GetTotalNumberOfSearchUrls(redirectType, SearchObj)
                 End If
                 Return JsonResult
             End Function
 
-            Public Function loadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
+            Public Function LoadAllUrls(ByRef myApi As Protean.API, ByRef inputJson As Newtonsoft.Json.Linq.JObject) As String
 
                 Dim redirectType As String = inputJson("redirectType").ToObject(Of String)
                 Dim pageloadCount As Integer = inputJson("loadCount").ToObject(Of Integer)
@@ -211,29 +211,46 @@ Partial Public Class Cms
                         Dim sSql As String = "SELECT C.nContentKey,"
                         sSql &= " C.cContentName,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'int') AS lineTension,"
-                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@link)[1]', 'Varchar(100)') AS url,"
-                        sSql &= " CONVERT(XML, CL.cContentXmlBrief).value('(Content/@xLoc)[1]', 'Varchar(10)') AS xLoc,"
-                        sSql &= " CONVERT(XML, CL.cContentXmlBrief).value('(Content/@yLoc)[1]', 'Varchar(10)') AS yLoc,"
-                        sSql &= " CL.cContentName AS title"
+                        sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
+                        sSql &= " '' AS url,"
+                        sSql &= " P.ProductId AS productId,"
+                        sSql &= " CD.D.value('(@x)[1]', 'Varchar(10)') AS xLoc,"
+                        sSql &= " CD.D.value('(@y)[1]', 'Varchar(10)') AS yLoc"
                         sSql &= " FROM tblContentRelation CR"
                         sSql &= " JOIN tblContent C ON C.nContentKey = CR.nContentChildId"
-                        sSql &= " OUTER APPLY ("
-                        sSql &= " SELECT CONVERT(XML, C1.cContentXmlBrief) AS cContentXmlBrief, C1.cContentName"
+                        sSql &= " OUTER APPLY"
+                        sSql &= " ("
+                        sSql &= " SELECT CR1.nContentChildId AS ProductId"
                         sSql &= " FROM tblContentRelation CR1"
                         sSql &= " JOIN tblContent C1 ON C1.nContentKey = CR1.nContentChildId"
-                        sSql &= " WHERE CR1.nContentParentId = CR.nContentChildId AND C1.cContentSchemaName = 'ChartLabel'"
-                        sSql &= " ) CL"
+                        sSql &= " WHERE CR1.nContentParentId = C.nContentKey AND C1.cContentSchemaName = 'Product'"
+                        sSql &= " ) P"
+                        sSql &= " OUTER APPLY (SELECT CAST(C.cContentXmlBrief as xml) as cContentXmlBriefxml) CB"
+                        sSql &= " OUTER APPLY CB.cContentXmlBriefxml.nodes('/Content/dataset/datapoint') as CD(D) "
                         sSql &= " WHERE nContentParentId = " & chartContentKey & " AND C.cContentSchemaName = 'ChartDataSet'"
 
                         dsChartData = myWeb.moDbHelper.GetDataSet(sSql, "ChartDataSet", "Chart")
 
-                        Dim chartXml As String = dsChartData.GetXml()
-                        Dim xmlDoc As New XmlDocument
-                        xmlDoc.LoadXml(chartXml)
+                        If Not dsChartData Is Nothing Then
+                            'Update the contentUrls
+                            If dsChartData.Tables.Count > 0 Then
+                                For Each oRow As DataRow In dsChartData.Tables(0).Rows
+                                    If Not oRow("productId") Is Nothing And Not oRow("productId") Is System.DBNull.Value Then
+                                        oRow("url") = myWeb.GetContentUrl(oRow("productId"))
+                                    End If
+                                Next
+                            End If
 
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-                        Return jsonString.Replace("""@", """_")
+                            Dim chartXml As String = dsChartData.GetXml()
+                            Dim xmlDoc As New XmlDocument
+                            xmlDoc.LoadXml(chartXml)
+
+                            Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                            Return jsonString.Replace("""@", """_")
+                        End If
+
+                        Return String.Empty
+
                     End If
                     Return JsonResult
                 Catch ex As Exception

@@ -1141,19 +1141,17 @@
   <xsl:template match="Page" mode="pageJs"></xsl:template>
 
   <xsl:template match="Page" mode="JSONLD">
-
     <xsl:variable name="jsonld">
       <xsl:choose>
-        <xsl:when test="ContentDetail/Content">1
+        <xsl:when test="ContentDetail/Content">
           <xsl:apply-templates select="ContentDetail/Content" mode="JSONLD"/>
         </xsl:when>
-        <xsl:otherwise>2
+        <xsl:otherwise>
           <xsl:apply-templates select="Contents/Content" mode="JSONLD"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
-    
     <xsl:if test ="$jsonld!=''">
       
       <script type="application/ld+json">
@@ -4423,6 +4421,15 @@
                     
                   </xsl:otherwise>
                 </xsl:choose>
+
+                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="$link"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+                
                 <xsl:value-of select="@linkText"/>
               </a>
             </span>

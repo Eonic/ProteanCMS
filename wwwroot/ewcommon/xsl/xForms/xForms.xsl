@@ -4422,4 +4422,33 @@
   </xsl:template>
 
 
+  <!-- -->
+  <!-- ========================== CONTROL : INPUT HIDDEN ========================== -->
+  <!-- -->
+
+  <xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+    <xsl:variable name="ref">
+      <xsl:apply-templates select="." mode="getRefOrBind"/>
+    </xsl:variable>
+    <xsl:variable name="value">
+      <xsl:apply-templates select="." mode="xform_value"/>
+    </xsl:variable>
+    <xsl:variable name="key">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <div class="g-recaptcha" data-sitekey="{$key}">
+      <xsl:text> </xsl:text>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="Content[descendant::input[contains(@class,'recaptcha')]]" mode="contentJS">
+    <script src="https://www.google.com/recaptcha/api.js" async="" defer="">
+      <xsl:text> </xsl:text>
+    </script>
+  </xsl:template>
+  
+  
 </xsl:stylesheet>
