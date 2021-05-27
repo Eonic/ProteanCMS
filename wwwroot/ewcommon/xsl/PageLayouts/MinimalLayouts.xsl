@@ -7086,6 +7086,7 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="@crop"/>
           <xsl:with-param name="lightbox" select="@lightbox"/>
+          <xsl:with-param name="showTitle" select="@showTitle"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -7096,6 +7097,7 @@
     <xsl:param name="sortBy"/>
     <xsl:param name="crop"/>
     <xsl:param name="lightbox"/>
+    <xsl:param name="showTitle"/>
     <xsl:variable name="cropSetting">
       <xsl:choose>
         <xsl:when test="$crop='false'">
@@ -7156,7 +7158,7 @@
                     <xsl:with-param name="width" select="$lg-max-width"/>
                     <xsl:with-param name="height" select="$lg-max-height"/>
                   </xsl:apply-templates>
-                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                  <xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
                     <div class="caption">
                       <h4>
                         <xsl:value-of select="Title/node()"/>
@@ -8257,11 +8259,11 @@
     </xsl:variable>
     <xsl:variable name="cropSetting">
       <xsl:choose>
-        <xsl:when test="@crop='false'">
-          <xsl:value-of select="false()"/>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="true()"/>
+          <xsl:text>false</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -8336,7 +8338,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="gridDisplayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
-          <xsl:with-param name="crop" select="@cropSetting"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -8351,15 +8353,15 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:variable name="cropSetting">
-      <!--<xsl:choose>
-        <xsl:when test="$crop='false'">
-          <xsl:value-of select="false()"/>
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="true()"/>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
-      </xsl:choose>-->
-      <xsl:value-of select="$crop"/>
+      </xsl:choose>
+      <!--<xsl:value-of select="$crop"/>-->
     </xsl:variable>
     <xsl:variable name="lg-max-width">
       <xsl:apply-templates select="." mode="getFullSizeWidth"/>

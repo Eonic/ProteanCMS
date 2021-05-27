@@ -3969,6 +3969,7 @@
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
     <xsl:param name="mobileDD"/>
+    <xsl:param name="overviewLink"/>
     <xsl:variable name="liClass">
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
@@ -4049,6 +4050,23 @@
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
+        <xsl:if test="$overviewLink='true'">
+          <li>
+            <a href="{@url}">
+              <xsl:attribute name="class">
+                <xsl:choose>
+                  <xsl:when test="self::MenuItem[@id=/Page/@id]">
+                    <xsl:text>active</xsl:text>
+                  </xsl:when>
+                  <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                    <xsl:text>on</xsl:text>
+                  </xsl:when>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:text>Overview</xsl:text>
+            </a>
+          </li>
+        </xsl:if>
         <xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem"/>
       </ul>
     </li>
