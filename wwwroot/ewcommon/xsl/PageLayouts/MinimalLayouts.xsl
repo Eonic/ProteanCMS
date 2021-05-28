@@ -7992,6 +7992,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -8063,6 +8073,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -8072,11 +8083,22 @@
   <!-- Sub Page Content -->
   <xsl:template match="MenuItem" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:variable name="pageName">
       <xsl:apply-templates select="." mode="getDisplayName"/>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:if test="@name!='Information' and not(DisplayName/@exclude='true')">
       <div class="list-group-item listItem subpageItem">
@@ -8093,7 +8115,9 @@
               <xsl:attribute name="title">
                 <xsl:apply-templates select="." mode="getTitleAttr"/>
               </xsl:attribute>
-              <xsl:apply-templates select="." mode="displaySubPageThumb"/>
+              <xsl:apply-templates select="." mode="displaySubPageThumb">
+                <xsl:with-param name="crop" select="$cropSetting" />
+              </xsl:apply-templates>
             </a>
           </xsl:if>
           <span class="listDescription">
