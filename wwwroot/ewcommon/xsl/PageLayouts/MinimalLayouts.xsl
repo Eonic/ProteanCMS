@@ -9007,6 +9007,16 @@
         <xsl:with-param name="parentClass" select="concat('cols',@cols)" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -9081,6 +9091,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/node()" mode="displayBriefLinkGrid">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -9089,6 +9100,7 @@
   <!-- Links Grid Brief-->
   <xsl:template match="Content[@type='Link']" mode="displayBriefLinkGrid">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="preURL" select="substring(Url,1,3)" />
     <xsl:variable name="url" select="Url/node()" />
     <xsl:variable name="linkURL">
@@ -9101,6 +9113,16 @@
             <xsl:text>http://</xsl:text>
           </xsl:if>
           <xsl:value-of select="$url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -9117,7 +9139,20 @@
           </xsl:attribute>
         </xsl:if>
         <div class="thumbnail">
-          <img src="{Images/img[@class='thumbnail']/@src}" class="img-responsive" style="overflow:hidden;"/>
+          <xsl:choose>
+            <xsl:when test="$cropSetting='true'">
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="$cropSetting" />
+                <xsl:with-param name="class" select="'img-responsive'" />
+                <xsl:with-param name="style" select="'overflow:hidden;'" />
+                <!--<xsl:with-param name="width" select="$lg-max-width"/>
+              <xsl:with-param name="height" select="$lg-max-height"/>-->
+              </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+              <img src="{Images/img[@class='thumbnail']/@src}" class="img-responsive" style="overflow:hidden;"/>
+            </xsl:otherwise>
+          </xsl:choose>
           <div class="caption">
             <h4>
               <xsl:apply-templates select="." mode="getDisplayName"/>
