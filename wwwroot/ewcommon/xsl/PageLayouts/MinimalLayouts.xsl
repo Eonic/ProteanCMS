@@ -7090,6 +7090,7 @@
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="@crop"/>
           <xsl:with-param name="lightbox" select="@lightbox"/>
+          <xsl:with-param name="showTitle" select="@showTitle"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -7100,6 +7101,7 @@
     <xsl:param name="sortBy"/>
     <xsl:param name="crop"/>
     <xsl:param name="lightbox"/>
+    <xsl:param name="showTitle"/>
     <xsl:variable name="cropSetting">
       <xsl:choose>
         <xsl:when test="$crop='false'">
@@ -7160,7 +7162,7 @@
                     <xsl:with-param name="width" select="$lg-max-width"/>
                     <xsl:with-param name="height" select="$lg-max-height"/>
                   </xsl:apply-templates>
-                  <xsl:if test="Title/node()!='' or Body/node()!=''">
+                  <xsl:if test="(Title/node()!='' or Body/node()!='') and not($showTitle='false')">
                     <div class="caption">
                       <h4>
                         <xsl:value-of select="Title/node()"/>
@@ -7994,6 +7996,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -8065,6 +8077,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -8074,11 +8087,22 @@
   <!-- Sub Page Content -->
   <xsl:template match="MenuItem" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:variable name="pageName">
       <xsl:apply-templates select="." mode="getDisplayName"/>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:if test="@name!='Information' and not(DisplayName/@exclude='true')">
       <div class="list-group-item listItem subpageItem">
@@ -8095,7 +8119,9 @@
               <xsl:attribute name="title">
                 <xsl:apply-templates select="." mode="getTitleAttr"/>
               </xsl:attribute>
-              <xsl:apply-templates select="." mode="displaySubPageThumb"/>
+              <xsl:apply-templates select="." mode="displaySubPageThumb">
+                <xsl:with-param name="crop" select="$cropSetting" />
+              </xsl:apply-templates>
             </a>
           </xsl:if>
           <span class="listDescription">
@@ -8261,11 +8287,11 @@
     </xsl:variable>
     <xsl:variable name="cropSetting">
       <xsl:choose>
-        <xsl:when test="@crop='false'">
-          <xsl:value-of select="false()"/>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="true()"/>
+          <xsl:text>false</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -8340,7 +8366,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="gridDisplayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
-          <xsl:with-param name="crop" select="@cropSetting"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -8355,15 +8381,15 @@
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
     <xsl:variable name="cropSetting">
-      <!--<xsl:choose>
-        <xsl:when test="$crop='false'">
-          <xsl:value-of select="false()"/>
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="true()"/>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
-      </xsl:choose>-->
-      <xsl:value-of select="$crop"/>
+      </xsl:choose>
+      <!--<xsl:value-of select="$crop"/>-->
     </xsl:variable>
     <xsl:variable name="lg-max-width">
       <xsl:apply-templates select="." mode="getFullSizeWidth"/>
@@ -8557,6 +8583,13 @@
         </xsl:if>
         <h3 class="title">
           <a rel="external">
+            <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+              <xsl:attribute name="onclick">
+                <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                <xsl:value-of select="Title/node()"/>
+                <xsl:text>');</xsl:text>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="href">
               <xsl:choose>
                 <xsl:when test="contains(Path,'http://')">
@@ -8741,6 +8774,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -8827,6 +8870,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -8835,6 +8879,7 @@
   <!-- Links Brief -->
   <xsl:template match="Content[@type='Link']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="preURL" select="substring(Url,1,3)" />
     <xsl:variable name="url" select="Url/node()" />
     <xsl:variable name="linkURL">
@@ -8847,6 +8892,16 @@
             <xsl:text>http://</xsl:text>
           </xsl:if>
           <xsl:value-of select="$url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -8871,7 +8926,9 @@
             <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
               <xsl:attribute name="rel">external</xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
+            <xsl:apply-templates select="." mode="displayThumbnail">
+              <xsl:with-param name="crop" select="$cropSetting" />
+            </xsl:apply-templates>
           </a>
         </xsl:if>
         <xsl:if test="Body/node()!=''">
@@ -9002,6 +9059,16 @@
         <xsl:with-param name="parentClass" select="concat('cols',@cols)" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -9076,6 +9143,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/node()" mode="displayBriefLinkGrid">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -9084,6 +9152,7 @@
   <!-- Links Grid Brief-->
   <xsl:template match="Content[@type='Link']" mode="displayBriefLinkGrid">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="preURL" select="substring(Url,1,3)" />
     <xsl:variable name="url" select="Url/node()" />
     <xsl:variable name="linkURL">
@@ -9096,6 +9165,16 @@
             <xsl:text>http://</xsl:text>
           </xsl:if>
           <xsl:value-of select="$url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -9112,7 +9191,20 @@
           </xsl:attribute>
         </xsl:if>
         <div class="thumbnail">
-          <img src="{Images/img[@class='thumbnail']/@src}" class="img-responsive" style="overflow:hidden;"/>
+          <xsl:choose>
+            <xsl:when test="$cropSetting='true'">
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="$cropSetting" />
+                <xsl:with-param name="class" select="'img-responsive'" />
+                <xsl:with-param name="style" select="'overflow:hidden;'" />
+                <!--<xsl:with-param name="width" select="$lg-max-width"/>
+              <xsl:with-param name="height" select="$lg-max-height"/>-->
+              </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+              <img src="{Images/img[@class='thumbnail']/@src}" class="img-responsive" style="overflow:hidden;"/>
+            </xsl:otherwise>
+          </xsl:choose>
           <div class="caption">
             <h4>
               <xsl:apply-templates select="." mode="getDisplayName"/>
@@ -10648,31 +10740,31 @@
 
 
   <xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
-      {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-      <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
-      <xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
-      ]
-      }
+    {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+    <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+    <xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
+    ]
+    }
   </xsl:template>
 
   <xsl:template match="Content[@type='FAQ']" mode="JSONLD-list">
     {
     "@type": "Question",
     "name": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>",
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
     "acceptedAnswer": {
     "@type": "Answer",
     "text": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="Body" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>"
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Body" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>"
     }
     }
     <xsl:if test="position()!=last()">,</xsl:if>

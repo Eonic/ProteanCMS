@@ -3967,6 +3967,7 @@
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
     <xsl:param name="mobileDD"/>
+    <xsl:param name="overviewLink"/>
     <xsl:variable name="liClass">
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
         <xsl:text>active </xsl:text>
@@ -4047,6 +4048,23 @@
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
+        <xsl:if test="$overviewLink='true'">
+          <li>
+            <a href="{@url}">
+              <xsl:attribute name="class">
+                <xsl:choose>
+                  <xsl:when test="self::MenuItem[@id=/Page/@id]">
+                    <xsl:text>active</xsl:text>
+                  </xsl:when>
+                  <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                    <xsl:text>on</xsl:text>
+                  </xsl:when>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:text>Overview</xsl:text>
+            </a>
+          </li>
+        </xsl:if>
         <xsl:apply-templates select="MenuItem[@name!='Information' and @name!='Footer' and not(DisplayName/@exclude='true')]" mode="submenuitem"/>
       </ul>
     </li>
@@ -4403,6 +4421,15 @@
                     
                   </xsl:otherwise>
                 </xsl:choose>
+
+                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="$link"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+                
                 <xsl:value-of select="@linkText"/>
               </a>
             </span>
@@ -7965,6 +7992,7 @@
   </xsl:template>
 
   <xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
+    <xsl:param name="crop"/>
     <!-- SRC VALUE -->
     <xsl:variable name="src">
       <xsl:value-of select="Images/img[@class='thumbnail']/@src"/>
@@ -7978,6 +8006,16 @@
     </xsl:variable>
     <xsl:variable name="max-height">
       <xsl:apply-templates select="." mode="getsubThHeight"/>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
 
     <!-- IF Image to resize -->
@@ -8003,7 +8041,21 @@
       <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
       <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
       <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-      <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="photo thumbnail 3333"/>
+      
+      <xsl:choose>
+        <xsl:when test="$cropSetting='true'">
+          <xsl:apply-templates select="." mode="displayThumbnail">
+            <xsl:with-param name="crop" select="$cropSetting" />
+            <xsl:with-param name="class" select="'thumbnail'" />
+            <xsl:with-param name="style" select="'overflow:hidden;'" />
+            <!--<xsl:with-param name="width" select="$newimageWidth"/>
+          <xsl:with-param name="height" select="$newimageHeight"/>-->
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="photo thumbnail 3333"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
