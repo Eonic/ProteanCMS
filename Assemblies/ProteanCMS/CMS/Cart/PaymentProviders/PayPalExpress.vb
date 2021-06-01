@@ -1,15 +1,8 @@
 ﻿Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.IO
-Imports System.Collections
 Imports System.Collections.Generic
-Imports System.Data
 Imports System.Data.SqlClient
-Imports VB = Microsoft.VisualBasic
-Imports Eonic
 Imports Protean.Cms.Cart
-Imports System.Net
 Imports PayPal.Api
 
 Namespace Providers

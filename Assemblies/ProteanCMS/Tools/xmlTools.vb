@@ -1057,33 +1057,42 @@ Public Class XmlHelper
             Dim outFile As String = classname & ".dll"
             Dim cmdLine As String = " /class:" & classname & " /out:" & outFile & " " & xsltPath
             Dim process1 As New System.Diagnostics.Process
-            Dim output As String
+            Dim output As String = ""
 
             Try
-                process1.EnableRaisingEvents = True
-                process1.StartInfo.FileName = compilerPath
-                process1.StartInfo.Arguments = cmdLine
-                process1.StartInfo.UseShellExecute = False
-                process1.StartInfo.RedirectStandardOutput = True
-                process1.StartInfo.RedirectStandardInput = True
-                process1.StartInfo.RedirectStandardError = True
 
-                'check if local bin exists
-                Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
-                Dim di As DirectoryInfo = New DirectoryInfo(cWorkingDirectory)
-                If Not di.Exists Then
-                    di.Create()
+                If goApp("compileLock-" & classname) Is Nothing Then
+
+                    goApp("compileLock-" & classname) = True
+
+                    process1.EnableRaisingEvents = True
+                    process1.StartInfo.FileName = compilerPath
+                    process1.StartInfo.Arguments = cmdLine
+                    process1.StartInfo.UseShellExecute = False
+                    process1.StartInfo.RedirectStandardOutput = True
+                    process1.StartInfo.RedirectStandardInput = True
+                    process1.StartInfo.RedirectStandardError = True
+
+                    'check if local bin exists
+                    Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
+                    Dim di As DirectoryInfo = New DirectoryInfo(cWorkingDirectory)
+                    If Not di.Exists Then
+                        di.Create()
+                    End If
+
+                    process1.StartInfo.WorkingDirectory = cWorkingDirectory
+                    'Start the process
+                    process1.Start()
+                    output = process1.StandardOutput.ReadToEnd()
+
+                    'Wait for process to finish
+                    process1.WaitForExit()
+
+                    process1.Close()
+
+                    goApp("compileLock-" & classname) = Nothing
+
                 End If
-
-                process1.StartInfo.WorkingDirectory = cWorkingDirectory
-                'Start the process
-                process1.Start()
-                output = process1.StandardOutput.ReadToEnd()
-
-                'Wait for process to finish
-                process1.WaitForExit()
-
-                process1.Close()
 
                 If output.Contains("error") Then
                     Return output

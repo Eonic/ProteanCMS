@@ -2443,6 +2443,7 @@
   <xsl:template match="Content[@type='Image']" mode="displayBrief">
     <xsl:param name="maxWidth"/>
     <xsl:param name="maxHeight"/>
+    <xsl:param name="noLazy"/>
     <xsl:choose>
       <xsl:when test="@internalLink!=''">
         <xsl:variable name="pageId" select="@internalLink"/>
@@ -2463,12 +2464,15 @@
               </svg>
             </xsl:when>
             <xsl:when test="@resize='true'">
-              <xsl:apply-templates select="." mode="resize-image"/>
+              <xsl:apply-templates select="." mode="resize-image">
+                <xsl:with-param name="noLazy" select="$noLazy"/>
+              </xsl:apply-templates>
             </xsl:when>
             <xsl:when test="$maxWidth!='' or $maxHeight!=''">
               <xsl:apply-templates select="." mode="resize-image">
                 <xsl:with-param name="maxWidth" select="$maxWidth"/>
                 <xsl:with-param name="maxHeight" select="$maxHeight"/>
+                <xsl:with-param name="noLazy" select="$noLazy"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
