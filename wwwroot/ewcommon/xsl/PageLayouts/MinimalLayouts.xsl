@@ -8770,6 +8770,16 @@
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
     </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:variable name="totalCount">
       <xsl:choose>
         <xsl:when test="@display='related'">
@@ -8856,6 +8866,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
         </xsl:apply-templates>
       </div>
     </div>
@@ -8864,6 +8875,7 @@
   <!-- Links Brief -->
   <xsl:template match="Content[@type='Link']" mode="displayBrief">
     <xsl:param name="sortBy"/>
+    <xsl:param name="crop"/>
     <xsl:variable name="preURL" select="substring(Url,1,3)" />
     <xsl:variable name="url" select="Url/node()" />
     <xsl:variable name="linkURL">
@@ -8876,6 +8888,16 @@
             <xsl:text>http://</xsl:text>
           </xsl:if>
           <xsl:value-of select="$url"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -8900,7 +8922,9 @@
             <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
               <xsl:attribute name="rel">external</xsl:attribute>
             </xsl:if>
-            <xsl:apply-templates select="." mode="displayThumbnail"/>
+            <xsl:apply-templates select="." mode="displayThumbnail">
+              <xsl:with-param name="crop" select="$cropSetting" />
+            </xsl:apply-templates>
           </a>
         </xsl:if>
         <xsl:if test="Body/node()!=''">
@@ -10712,31 +10736,31 @@
 
 
   <xsl:template match="Content[@moduleType='FAQList']" mode="JSONLD">
-      {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-      <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
-      <xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
-      ]
-      }
+    {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+    <xsl:apply-templates select="Content[@type='FAQ']" mode="JSONLD-list"/>
+    <xsl:apply-templates select="$page/Contents/Content[@type='FAQ']" mode="JSONLD-list"/>
+    ]
+    }
   </xsl:template>
 
   <xsl:template match="Content[@type='FAQ']" mode="JSONLD-list">
     {
     "@type": "Question",
     "name": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>",
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="DisplayName" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>",
     "acceptedAnswer": {
     "@type": "Answer",
     "text": "<xsl:call-template name="escape-json">
-    <xsl:with-param name="string">
-      <xsl:apply-templates select="Body" mode="flattenXhtml"/>
-    </xsl:with-param>
-  </xsl:call-template>"
+      <xsl:with-param name="string">
+        <xsl:apply-templates select="Body" mode="flattenXhtml"/>
+      </xsl:with-param>
+    </xsl:call-template>"
     }
     }
     <xsl:if test="position()!=last()">,</xsl:if>
