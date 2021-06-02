@@ -5544,13 +5544,14 @@
 
   <!-- IMAGE PROCESSING  -->
   <xsl:template match="img" mode="cleanXhtml">
+    <xsl:param name="noLazy"/>
 
     <!-- Stick in Variable and then ms:nodest it 
           - ensures its self closing and we can process all nodes!! -->
     <xsl:variable name="img">
       <xsl:element name="img">
         <xsl:choose>
-          <xsl:when test="$lazy='on'">
+          <xsl:when test="$lazy='on' and $noLazy!='true'">
             <xsl:attribute name="data-src">
               <xsl:value-of select="@src"/>
             </xsl:attribute>
@@ -5588,13 +5589,13 @@
                     <xsl:value-of select="$float"/>
                   </xsl:otherwise>
                 </xsl:choose>
-                <xsl:if test="$lazy='on'">
+                <xsl:if test="$lazy='on' and $noLazy!='true'">
                   <xsl:text> lazy</xsl:text>
                 </xsl:if>
               </xsl:when>
               <xsl:when test="name()='class'">
                 <xsl:value-of select="."  />
-                <xsl:if test="$lazy='on'">
+                <xsl:if test="$lazy='on' and $noLazy!='true'">
                   <xsl:text> lazy</xsl:text>
                 </xsl:if>
               </xsl:when>
@@ -5807,7 +5808,7 @@
   </xsl:template>
 
   <!-- Ensure no Self Closing P and Span and i and em tags-->
-  <xsl:template match="p | span | i | em" mode="cleanXhtml">
+  <xsl:template match="p | span | i | em | div" mode="cleanXhtml">
 
     <xsl:element name="{name()}">
       <!-- process attributes -->

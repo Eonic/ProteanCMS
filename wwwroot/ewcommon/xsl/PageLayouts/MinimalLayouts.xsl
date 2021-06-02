@@ -2487,7 +2487,9 @@
             <xsl:attribute name="rel">external</xsl:attribute>
             <!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
           </xsl:if>
-          <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+          <xsl:apply-templates select="./node()" mode="cleanXhtml">
+            <xsl:with-param name="noLazy" select="'true'"/>
+          </xsl:apply-templates>
         </a>
       </xsl:when>
       <xsl:otherwise>
@@ -2575,6 +2577,7 @@
   <xsl:template match="Content[@type='Module' and @moduleType='Image' and @link!='']" mode="displayBrief">
     <xsl:param name="maxWidth"/>
     <xsl:param name="maxHeight"/>
+    <xsl:param name="lazy"/>
     <a>
       <xsl:attribute name="href">
         <xsl:choose>
