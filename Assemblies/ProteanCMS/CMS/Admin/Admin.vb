@@ -797,7 +797,10 @@ ProcessFlow:
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
                                         myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
-                                        myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
+                                        Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
+                                        If Not IsNothing(contentsNode) Then
+                                            myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                        End If
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
 
@@ -1223,6 +1226,9 @@ ProcessFlow:
                             'lest just try this redirecting to page we moved it to
                             If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
                                 myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
+                            ElseIf myWeb.moSession("lastPage") <> "" Then
+                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                myWeb.moSession("lastPage") = ""
                             End If
                             oPageDetail.RemoveAll()
                             myWeb.ClearPageCache()
