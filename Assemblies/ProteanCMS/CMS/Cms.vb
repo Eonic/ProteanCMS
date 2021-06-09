@@ -1078,7 +1078,7 @@ Public Class Cms
                 mbAdminMode = True
             End If
         End If
-        If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode And mbPreview = False And moRequest.QueryString("cartCmd") Is Nothing Then
+        If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode And mbPreview = False And moRequest.QueryString("cartCmd") Is Nothing And moRequest.QueryString Is Nothing Then
             If (moConfig("LowerCaseUrl") = "on") Then
                 If (Regex.IsMatch(pageUrl, "[A-Z]")) Then
                     bLowerCaseUrl = True
