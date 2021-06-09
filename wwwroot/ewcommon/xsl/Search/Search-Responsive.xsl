@@ -95,7 +95,7 @@
           </select>
         </xsl:if>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-primary" name="Search">
+            <button type="submit" class="btn btn-primary" name="Search">
               <i class="fa fa-search">
                 <xsl:text> </xsl:text>
               </i>

@@ -1756,7 +1756,7 @@
                     </a>
                     <ul class="dropdown-menu">
                       <li class="title">
-                        Add <xsl:value-of select="$type"/> to page&#160;
+                        Add <xsl:value-of select="$type"/> to page!&#160;
                       </li>
                       <li class="divider">&#160;</li>
                       <xsl:if test="not($page/@ewCmd='NormalMail')">

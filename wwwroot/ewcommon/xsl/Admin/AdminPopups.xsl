@@ -402,7 +402,7 @@
                                     <xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                                 </xsl:variable>
                                 <xsl:choose>
-                                    <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
+                                    <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tiff' or $Extension='.tif' ">
                                         <xsl:if test="@root">
 
                                           <!--xsl:variable name="imgUrl">
@@ -437,7 +437,7 @@
                                                         <xsl:value-of select="@name"/>
                                                       </span>
                                                       <br/>
-                                                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                                                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif' ">
                                                         <xsl:value-of select="@width"/>
                                                         <xsl:text> x </xsl:text>
                                                         <xsl:value-of select="@height"/>
@@ -500,7 +500,7 @@
                                   </a>
                                 </xsl:when>
                                 <xsl:when test="/Page[@ewCmd='ImageLib' and Request/QueryString/Item[@name='ewCmd2']/node()='PathOnly'] or $page/Request/QueryString/Item[@name='pathonly' and node()='true']">
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
+                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or $Extension='.tiff' or $Extension='.tif' ">
                                     <a onclick="passImgFileToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate($fld,'\','/')}/{$filename}');" class="btn btn-xs btn-default" href="#">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
@@ -510,7 +510,7 @@
                                   </xsl:if>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
+                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
                                     <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
@@ -525,7 +525,7 @@
                       <span class="image-description-name">
                         <xsl:value-of select="@name"/>
                       </span>
-                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
                         <xsl:value-of select="@width"/>
                         <xsl:text> x </xsl:text>
                         <xsl:value-of select="@height"/>

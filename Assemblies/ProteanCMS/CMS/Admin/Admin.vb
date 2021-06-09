@@ -3192,13 +3192,28 @@ AfterProcessFlow:
 
                 Dim bShowTree As Boolean = False
                 Dim sFolder As String = myWeb.goServer.UrlDecode(myWeb.moRequest("fld"))
+
                 If sFolder = Nothing Then
                     If myWeb.moSession(LibType & "-path") <> "" Then
                         sFolder = myWeb.moSession(LibType & "-path")
                     End If
                 Else
-                    myWeb.moSession(LibType & "-path") = sFolder
+                    If sFolder.Contains("[yyyy-mm]") Then
+                        sFolder = sFolder.Replace("[yyyy-mm]", Now.Year.ToString("D4") & "-" & Now.Month.ToString("D2"))
+                        Dim oFs As New fsHelper(myWeb.moCtx)
+                        oFs.initialiseVariables(LibType)
+                        oFs.CreatePath(sFolder)
+                        oFs = Nothing
+                        myWeb.moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='fld']").InnerText = sFolder
+
+                    Else
+                        myWeb.moSession(LibType & "-path") = sFolder
+                    End If
                 End If
+
+
+
+
 
                 Dim sFile As String = myWeb.moRequest("file")
 
@@ -3284,6 +3299,7 @@ AfterProcessFlow:
                 If bShowTree = True Then
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibType, sFolder))
                 End If
+
                 oFsh = Nothing
 
             Catch ex As Exception
