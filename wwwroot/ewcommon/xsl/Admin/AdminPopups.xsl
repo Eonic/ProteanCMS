@@ -255,20 +255,22 @@
           <xsl:text>&amp;pathonly=true</xsl:text>
         </xsl:if>
       </xsl:variable>
-      
-          <xsl:variable name="fileCount" select="count(file)"/>
-          <xsl:variable name="itemCount" select="'24'"/>
+
+        <xsl:variable name="fileCount" select="count(file)"/>
+        <xsl:variable name="itemCount" select="'24'"/>
+
+        <xsl:variable name="startPos">
+	        <xsl:choose>
+		        <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
+			        <xsl:value-of select="/Page/Request/QueryString/Item[@name='startPos']/node()"/>
+		        </xsl:when>
+		        <xsl:otherwise>0</xsl:otherwise>
+	        </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
+				  
        <xsl:choose>
             <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
-              <xsl:variable name="startPos">
-                <xsl:choose>
-                  <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
-                    <xsl:value-of select="/Page/Request/QueryString/Item[@name='startPos']/node()"/>
-                  </xsl:when>
-                  <xsl:otherwise>0</xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-              <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
               <div class="alert alert-info">
                 <xsl:if test="$startPos&gt;=$itemCount">
                   <a class="btn btn-primary btn-sm" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos - $itemCount)}">
