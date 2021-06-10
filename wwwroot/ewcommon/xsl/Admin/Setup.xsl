@@ -219,7 +219,7 @@
 			</div>
 			<div id="footer">
 				<div id="footerCopyright" class="container text-muted">
-					© Eonic Associates LLP | 2002-2021
+					© Eonic Digital LLP | 2002-2021
 					T: +44 (0)1892 534044 |
 					E: <a href="mailto:support@eonic.co.uk" title="Email Eonic">support@eonic.co.uk</a>
           W: <a href="http://www.proteancms.com">www.proteancms.com</a>
