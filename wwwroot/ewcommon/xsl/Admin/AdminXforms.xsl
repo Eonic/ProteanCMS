@@ -2566,40 +2566,51 @@
                 </div>
               </fieldset>
             </div>
-             <div class="form-group repeat-group ">
-               <div>
-                  <button class="btn btn-primary" id="301Redirect" >301 Permanent Redirect</button>
-                    <button class="btn btn-primary" id="301Redirect" >302 Temporary Redirect</button>
-                  <button class="btn btn-primary" id="301Redirect" >404 Page Not Found</button>
-               </div>
-            </div>
-            <xsl:choose>
-              <xsl:when test="/Page/Menu/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url!=''">
-                <xsl:variable name="objOldUrl" select="/Page/Menu/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
-              </xsl:when>
-              <xsl:when  test="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url!=''">
-                <xsl:variable name="objOldUrlCat3page" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrlCat3page}" class="hiddenOldUrl" />
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:variable name="objOldUrlCatpage" select="/Page/Menu/MenuItem/MenuItem[@id=/Page/@id]/@url" />
-                <input name="pageOldUrl" type="hidden" value="{$objOldUrlCatpage}" class="hiddenOldUrl" />
-              </xsl:otherwise>
-            </xsl:choose>
+            <div>
+                <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick();">301 Permanant Redirect</button>
+                <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
+                <button type="button" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave">302 Temporary Redirect</button>
+                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404 Page Not Found</button>
+             </div>
+
+            <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
+              <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
+              <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
+            </xsl:if>
             <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
-
-            <!--a href="?ewCmd=EditXForm&amp;artid={/Page/Request/QueryString/Item[@name='id']/node()}" class="textButton">Click Here to Edit this Form</a-->
-
-            <input name="pageId" type="hidden"  class="hiddenpageId" />
+            <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
+            <input name="pageId" type="hidden"  class="hiddenPageId" />
           </div>
-
         </div>
       </div>
     </div>
-  
+
+    <div id="RedirectionChildConfirmationModal" class="suitableForModal modal fade " tabindex="-1">
+
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" >
+              <span aria-hidden="true">&#215;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Current page have child/product pages beneath it, do you want to redirect them as well?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnNocreateRuleForChild" >Cancel</button>
+            <button type="button" id="btnYescreateRuleForChild"
+             class="btn btn-primary">
+              Yes
+            </button>
+          </div>
+        </div>
+        <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
+            <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
+            <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
+            <input name="pageId" type="hidden"  class="hiddenPageId" />
+      </div>
+    </div>
   </xsl:template>
-
-
-</xsl:stylesheet>
+ </xsl:stylesheet>
