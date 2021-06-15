@@ -2555,22 +2555,21 @@
                   <label>Old URL</label>
                   <div class="control-wrapper input-wrapper appearance-">
 
-                    <input type="text" name="OldUrl" id="OldPageName" class="textbox form-control"/>
+                    <input type="text" name="OldUrl" id="OldUrl" class="textbox form-control"/>
                   </div>
                 </div>
                 <div class="form-group input-containing col-md-6">
                   <label>New URL</label>
                   <div class="control-wrapper input-wrapper appearance-">
-                    <input type="text" name="NewUrl" id="NewPageName" class="textbox form-control"/>
+                    <input type="text" name="NewUrl" id="NewUrl" class="textbox form-control"/>
                   </div>
                 </div>
               </fieldset>
             </div>
             <div>
                 <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick();">301 Permanant Redirect</button>
-                <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
-                <button type="button" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave">302 Temporary Redirect</button>
-                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404 Page Not Found</button>
+                <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">302 Temporary Redirect</button>
+                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">404 Page Not Found</button>
              </div>
 
             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
@@ -2581,6 +2580,8 @@
             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
             <input name="pageId" type="hidden"  class="hiddenPageId" />
+            <input name="type" type="hidden"  class="hiddenType" />
+             <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
           </div>
         </div>
       </div>
@@ -2596,14 +2597,11 @@
             </button>
           </div>
           <div class="modal-body">
-            Current page have child/product pages beneath it, do you want to redirect them as well?
+            Current page have category/product pages beneath it, do you want to redirect them as well?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="btnNocreateRuleForChild" >Cancel</button>
-            <button type="button" id="btnYescreateRuleForChild"
-             class="btn btn-primary">
-              Yes
-            </button>
+            <button type="button" id="btnYescreateRuleForChild" class="btn btn-primary">Yes </button>
           </div>
         </div>
         <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
