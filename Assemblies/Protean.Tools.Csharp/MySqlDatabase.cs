@@ -11,7 +11,7 @@ using MySql.Data.MySqlClient;
 
 namespace Protean.Tools
 {
-    
+
     public class MySqlDatabase : IDisposable
     {
         private driverType oDriver;
@@ -443,6 +443,68 @@ namespace Protean.Tools
                 CloseConnection();
             }
             return oDs;
+        }
+
+        public int ExecuteScalar(string sql, Hashtable parameters = null)
+        {
+            string cProcessInfo = "Running Sql:  " + sql;
+            int iResult = 0;
+
+            if (oConn == null)
+                ResetConnection();
+            try
+            {
+                MySqlCommand myCommand = new MySqlCommand(sql, oConn);
+                myCommand.Connection.Open();
+                myCommand.ExecuteScalar();
+                oConn.Close();
+                iResult = 1;
+            }
+            catch (Exception ex)
+            {
+                iResult = 0;
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ExecuteScalar", ex, cProcessInfo));
+            }
+
+            finally
+            {
+                CloseConnection();
+            }
+            return iResult;
+        }
+
+        public int ExecuteNonQuery(string sql, string parameters, int commandType)
+        {
+            string cProcessInfo = "Running Sql:  " + sql;
+            int iResult = 0;
+
+            if (oConn == null)
+                ResetConnection();
+            try
+            {
+                MySqlCommand myCommand = new MySqlCommand(sql, oConn);
+                if (commandType == 0)
+                {
+                    myCommand.CommandType = CommandType.StoredProcedure;
+                    myCommand.Parameters.AddWithValue("", parameters);
+                }
+                else { myCommand.CommandType = CommandType.Text; }
+
+                myCommand.Connection.Open();
+                myCommand.ExecuteNonQuery();
+                oConn.Close();
+            }
+            catch (Exception ex)
+            {
+                iResult = 0;
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ExecuteNonQuery", ex, cProcessInfo));
+            }
+
+            finally
+            {
+                CloseConnection();
+            }
+            return iResult;
         }
 
         public void CloseConnection()
