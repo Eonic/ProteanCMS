@@ -23,6 +23,8 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Protean.Providers.Payment.JudoPayProvider
+
 
 Partial Public Class Cms
     Public Class Admin
@@ -1561,6 +1563,26 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
+                    Case "RefundJudoPayment"
+                        sAdminLayout = "RefundJudoPayment"
+                        Dim IsRefund As Boolean = False
+                        Dim nStatus As Long
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
+                        Dim oCart As New Cart(myWeb)
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+                        oCart.moPageXml = moPageXML
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, orderid, sAdminLayout)
+                        If (IsRefund = True) Then
+                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
+                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+                            nStatus = Cart.cartProcess.Refunded
+                            oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("User", CInt("0" & myWeb.moSession("UserParId")), nStatus))  'check
+                        End If
+
+                        myWeb.msRedirectOnEnd = "/?ewCmd=Orders&startPos=0"   'check
+
                     Case "EditUserContact"
 
                         sAdminLayout = "EditUserContact"
@@ -4665,6 +4687,17 @@ SP:
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
+        End Sub
+
+        Protected Sub RefundPayment_onclick(ByVal sender As Object, ByVal e As EventArgs)
+            Try
+                Dim a As String
+                a = "dddd"
+
+            Catch ex As Exception
+
+            End Try
+
         End Sub
 
     End Class
