@@ -1578,10 +1578,14 @@ ProcessFlow:
                             Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
                             nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
                             nStatus = Cart.cartProcess.Refunded
-                            oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("User", CInt("0" & myWeb.moSession("UserParId")), nStatus))  'check
+                            If CInt("0" & orderid) > 0 Then
+                                'reset cart processId
+                                Dim sSqlquery As String = "update tblCartOrder set nCartStatus ='" & nStatus & "', cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & orderid
+                                myWeb.moDbHelper.ExeProcessSql(sSqlquery)
+                            End If
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
+                            GoTo ProcessFlow
                         End If
-
-                        myWeb.msRedirectOnEnd = "/?ewCmd=Orders&startPos=0"   'check
 
                     Case "EditUserContact"
 
@@ -4687,17 +4691,6 @@ SP:
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug)
             End Try
-        End Sub
-
-        Protected Sub RefundPayment_onclick(ByVal sender As Object, ByVal e As EventArgs)
-            Try
-                Dim a As String
-                a = "dddd"
-
-            Catch ex As Exception
-
-            End Try
-
         End Sub
 
     End Class
