@@ -8752,22 +8752,32 @@ Partial Public Class Cms
                                         ' _form.addOption(_selectItem, menuName, menuId)
 
                                         'if we are only 2 levels from the root then we use choices
-                                        If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
-                                            If proceedingParent Is Nothing Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
-                                            ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                        If Not oParentParentNode Is Nothing Then
+                                            If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
+                                                If proceedingParent Is Nothing Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                                ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
 
+                                                End If
+                                                ' Add the checkbox
+                                                _form.addOption(oChoices, menuName, menuId)
+                                            Else
+                                                If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                        oParentNode = oParentNode.ParentNode
+                                                    Loop
+                                                End If
                                             End If
                                             ' Add the checkbox
-                                            _form.addOption(oChoices, menuName, menuId)
-
+                                            _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
-                                            If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                    menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                    oParentNode = oParentNode.ParentNode
+                                            If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                Do While menuItem.GetAttribute("id") <> selectItem.Root.ToString
+                                                    menuName = menuItem.GetAttribute("name") & " / " & menuName
+                                                    oParentNode = menuItem.ParentNode
                                                 Loop
                                             End If
 

@@ -1033,6 +1033,8 @@ Partial Public Class fsHelper
                 sVirtualPath = Replace(Folder, mcStartFolder, "")
             End If
 
+            mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", "\")
+
             If mcPopulateFilesNode = sVirtualPath Or (mcPopulateFilesNode = "\" And sVirtualPath = "") Then
                 startNode.SetAttribute("active", "true")
                 Dim fileCount As Int16 = 1

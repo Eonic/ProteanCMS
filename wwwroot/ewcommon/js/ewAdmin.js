@@ -441,6 +441,7 @@ function setEditImage() {
     $('a.editImage').click(function () {
         var targetForm = $(this).parents('form').attr('id');
         var imgtag = $(this).parents('.input-group').children('textarea').val();
+        imgtag = $.trim(imgtag);
         imgtag = encodeURIComponent(imgtag);
         var targetField = $(this).parents('.input-group').children('textarea').attr('id');
         var cName = "";

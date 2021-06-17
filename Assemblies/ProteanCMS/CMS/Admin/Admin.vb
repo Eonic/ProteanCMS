@@ -799,7 +799,10 @@ ProcessFlow:
                                     If FilterValue <> "" Then
                                         FilterSQL = " and CL.nStructId = '" & FilterValue & "'"
                                         myWeb.GetContentXMLByTypeAndOffset(moPageXML.DocumentElement, ContentType & cSort, FilterSQL, "", oPageDetail)
-                                        myWeb.moDbHelper.addBulkRelatedContent(moPageXML.SelectSingleNode("/Page/Contents"))
+                                        Dim contentsNode = moPageXML.SelectSingleNode("/Page/Contents")
+                                        If Not IsNothing(contentsNode) Then
+                                            myWeb.moDbHelper.addBulkRelatedContent(contentsNode)
+                                        End If
                                         myWeb.moSession("FilterValue") = FilterValue
                                     End If
 
@@ -1225,6 +1228,9 @@ ProcessFlow:
                             'lest just try this redirecting to page we moved it to
                             If mcEwCmd = "Normal" Or mcEwCmd = "NormalMail" Then
                                 myWeb.msRedirectOnEnd = "?ewCmd=" & mcEwCmd & "&pgid=" & myWeb.mnPageId 'myWeb.moSession("lastPage")
+                            ElseIf myWeb.moSession("lastPage") <> "" Then
+                                myWeb.msRedirectOnEnd = myWeb.moSession("lastPage")
+                                myWeb.moSession("lastPage") = ""
                             End If
                             oPageDetail.RemoveAll()
                             myWeb.ClearPageCache()
@@ -3212,13 +3218,28 @@ AfterProcessFlow:
 
                 Dim bShowTree As Boolean = False
                 Dim sFolder As String = myWeb.goServer.UrlDecode(myWeb.moRequest("fld"))
+
                 If sFolder = Nothing Then
                     If myWeb.moSession(LibType & "-path") <> "" Then
                         sFolder = myWeb.moSession(LibType & "-path")
                     End If
                 Else
-                    myWeb.moSession(LibType & "-path") = sFolder
+                    If sFolder.Contains("[yyyy-mm]") Then
+                        sFolder = sFolder.Replace("[yyyy-mm]", Now.Year.ToString("D4") & "-" & Now.Month.ToString("D2"))
+                        Dim oFs As New fsHelper(myWeb.moCtx)
+                        oFs.initialiseVariables(LibType)
+                        oFs.CreatePath(sFolder)
+                        oFs = Nothing
+                        myWeb.moPageXml.SelectSingleNode("/Page/Request/QueryString/Item[@name='fld']").InnerText = sFolder
+
+                    Else
+                        myWeb.moSession(LibType & "-path") = sFolder
+                    End If
                 End If
+
+
+
+
 
                 Dim sFile As String = myWeb.moRequest("file")
 
@@ -3304,6 +3325,7 @@ AfterProcessFlow:
                 If bShowTree = True Then
                     oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(LibType, sFolder))
                 End If
+
                 oFsh = Nothing
 
             Catch ex As Exception
