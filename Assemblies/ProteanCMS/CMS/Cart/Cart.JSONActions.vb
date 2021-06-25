@@ -679,6 +679,39 @@ Partial Public Class Cms
 
             End Function
 
+            Dim sAdminLayout = CStr(jObj("sAdminLayout"))
+            Dim Providername = CStr(jObj("sProvider"))
+            Dim nOrderid = CStr(jObj("nOrderid"))
+            Dim sLoginUser = CStr(jObj("sUser"))
+
+            Dim refundPaymentReceipt = ""
+            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+            If (Providername = "JudoPay") Then
+            'check whether csuser is logged in
+            If sLoginUser = "ITB Customer Services" Then
+                            refundPaymentReceipt = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderid, sAdminLayout, sLoginUser)
+                        Else
+                            refundPaymentReceipt = "access denied"
+                        End If
+            End If
+
+            Dim xmlDoc As New XmlDocument
+            Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
+                    xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
+                    xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                    Return jsonString
+
+            Catch ex As Exception
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+            End Try
+
+            End Function
         End Class
 
 #End Region
