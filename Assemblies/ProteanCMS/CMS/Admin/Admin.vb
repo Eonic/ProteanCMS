@@ -23,6 +23,8 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Protean.Providers.Payment.JudoPayProvider
+
 
 Partial Public Class Cms
     Public Class Admin
@@ -1567,6 +1569,30 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
+                    Case "RefundJudoPayment"
+                        sAdminLayout = "RefundJudoPayment"
+                        Dim IsRefund As Boolean = False
+                        Dim nStatus As Long
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
+                        Dim oCart As New Cart(myWeb)
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+                        oCart.moPageXml = moPageXML
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, orderid, sAdminLayout)
+                        If (IsRefund = True) Then
+                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
+                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+                            nStatus = Cart.cartProcess.Refunded
+                            If CInt("0" & orderid) > 0 Then
+                                'reset cart processId
+                                Dim sSqlquery As String = "update tblCartOrder set nCartStatus ='" & nStatus & "', cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & orderid
+                                myWeb.moDbHelper.ExeProcessSql(sSqlquery)
+                            End If
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
+                            GoTo ProcessFlow
+                        End If
+
                     Case "EditUserContact"
 
                         sAdminLayout = "EditUserContact"

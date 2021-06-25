@@ -22,5 +22,8 @@
         Public nLong As Double
         Public cContactForeignRef As String
         Public cContactAddress2 As String
+        Public cContactFirstName As String
+        Public cContactLastName As String
+        Public cContactTitle As String
     End Class
 End Class

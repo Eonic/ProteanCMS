@@ -524,44 +524,90 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function DoRefund(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function AddCartAddress(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
                 Try
-                    Dim oCart As New Cart(myWeb)
-                    oCart.moPageXml = myWeb.moPageXml
-
-                    Dim sAdminLayout = CStr(jObj("sAdminLayout"))
-                    Dim Providername = CStr(jObj("sProvider"))
-                    Dim nOrderid = CStr(jObj("nOrderid"))
-                    Dim sLoginUser = CStr(jObj("sUser"))
-
-                    Dim refundPaymentReceipt = ""
-                    Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
-                    If (Providername = "JudoPay") Then
-                        'check whether csuser is logged in
-                        If sLoginUser = "ITB Customer Services" Then
-                            refundPaymentReceipt = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderid, sAdminLayout, sLoginUser)
-                        Else
-                            refundPaymentReceipt = "access denied"
+                    Dim contact As New Contact()
+                    Dim nId As Int32
+                    If (jObj IsNot Nothing) Then
+                        contact.cContactEmail = emailAddress
+                        contact.cContactTel = telphone
+                        contact.cContactType = contactType
+                        If (jObj("Forename") IsNot Nothing) Then
+                            contact.cContactFirstName = jObj("Forename")
                         End If
+                        If (jObj("Surname") IsNot Nothing) Then
+                            contact.cContactLastName = jObj("Surname")
+                        End If
+                        If (jObj("Title") IsNot Nothing) Then
+                            contact.cContactTitle = jObj("Title")
+                        End If
+                        If (jObj("cContactCompany") IsNot Nothing) Then
+                            contact.cContactCompany = jObj("cContactCompany")
+                        End If
+                        If (jObj("CartId") IsNot Nothing) Then
+                            contact.nContactCartId = cartId
+                        End If
+                        If (jObj("Address1") IsNot Nothing) Then
+                            contact.cContactAddress = jObj("Address1")
+                        End If
+
+                        If (jObj("Address2") IsNot Nothing) Then
+                            contact.cContactAddress = contact.cContactAddress + " " + jObj("Address2").ToString()
+                        End If
+                        If (jObj("City") IsNot Nothing) Then
+                            contact.cContactCity = jObj("City")
+                        End If
+                        If (jObj("State") IsNot Nothing) Then
+                            contact.cContactState = jObj("State")
+                        End If
+                        If (jObj("Country") IsNot Nothing) Then
+                            contact.cContactCountry = jObj("Country")
+                        End If
+                        If (jObj("Postcode") IsNot Nothing) Then
+                            contact.cContactZip = jObj("Postcode")
+                        End If
+                        If (jObj("Fax") IsNot Nothing) Then
+                            contact.cContactFax = jObj("Fax")
+                        End If
+
+                        contact.cContactName = contact.cContactTitle + " " + contact.cContactFirstName + " " + contact.cContactLastName
+
                     End If
 
-                    Dim xmlDoc As New XmlDocument
-                    Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
-                    xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
-                    xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+                    nId = myWeb.moDbHelper.SetContact(contact)
+                    Return nId
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
 
+            Public Function SavePaymentDetails(ByVal sProviderName As String, ByVal nCartId As Int32, ByVal sAuthNo As String, ByVal dAmount As Double) As String
+                Try
+                    Dim oXml As XmlDocument = New XmlDocument
+                    Dim oDetailXml As XmlElement = oXml.CreateElement("Response")
+                    addNewTextNode("AuthCode", oDetailXml, sAuthNo)
+
+                    myCart.updateGCgetValidShippingOptionsDS(65)
+                    myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
+
+
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    myCart.GetCart(CartXml.FirstChild)
+
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
                     jsonString = jsonString.Replace("""@", """_")
                     jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-
                     Return jsonString
-
                 Catch ex As Exception
-                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
                     Return ex.Message
                 End Try
 
             End Function
+
 
         End Class
 
