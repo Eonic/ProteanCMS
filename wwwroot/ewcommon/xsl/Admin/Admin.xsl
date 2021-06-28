@@ -7248,6 +7248,15 @@
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
+
+		            <!--<input type="text" id="amount-text" name="fname"></input>
+			                   <div>
+								<a href="?ewCmd=AdditionalJudoPayment&amp;orderId={$orderId}" class="btn btn-primary btn-sm pull-right" style="opacity: 0.65;cursor: not-allowed;pointer-events: none;">
+									<i class="fa fa-money"> </i>
+									AdditionalPayment
+								</a>
+							</div>-->
+		  
       <xsl:if test="DeliveryDetails">
       <div id="carrier-info" class="col-md-3">
         <h4>Shipping Details</h4>

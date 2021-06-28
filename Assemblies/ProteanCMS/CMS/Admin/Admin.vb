@@ -1571,7 +1571,7 @@ ProcessFlow:
                         End If
                     Case "RefundJudoPayment"
                         sAdminLayout = "RefundJudoPayment"
-                        Dim IsRefund As Boolean = False
+                        Dim IsRefund As String = ""
                         Dim nStatus As Long
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
                         Dim oCart As New Cart(myWeb)
@@ -1580,7 +1580,7 @@ ProcessFlow:
                         Dim orderid As String = myWeb.moRequest("orderId")
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
                         IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, orderid, sAdminLayout)
-                        If (IsRefund = True) Then
+                        If (IsRefund = "Success") Then
                             Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
                             nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
                             nStatus = Cart.cartProcess.Refunded
@@ -1592,6 +1592,18 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
                             GoTo ProcessFlow
                         End If
+                    Case "AdditionalJudoPayment"
+                        sAdminLayout = "AdditionalJudoPayment"
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
+                        Dim oCart As New Cart(myWeb)
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+                        oCart.moPageXml = moPageXML
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        Dim amount As Decimal
+                        oPayProv.Activities.CollectPayment(myWeb, oCart, amount, orderid)
+                        myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
+                        GoTo ProcessFlow
 
                     Case "EditUserContact"
 
