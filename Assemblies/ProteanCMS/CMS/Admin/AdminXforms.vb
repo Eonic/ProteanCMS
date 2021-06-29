@@ -5964,6 +5964,29 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal cSchemaName As String) As XmlElement
+
+                Dim cProcessInfo As String = ""
+                Dim nStatus As Long
+                Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
+
+                Try
+
+                    MyBase.NewFrm("Update" & cSchemaName)
+
+                    MyBase.submission("Update" & cSchemaName, "", "post", "form_check(this)")
+
+                    MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nOrderId)
+
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim oSelElmt1 As XmlElement
@@ -8752,22 +8775,32 @@ Partial Public Class Cms
                                         ' _form.addOption(_selectItem, menuName, menuId)
 
                                         'if we are only 2 levels from the root then we use choices
-                                        If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
-                                            If proceedingParent Is Nothing Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
-                                            ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                        If Not oParentParentNode Is Nothing Then
+                                            If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
+                                                If proceedingParent Is Nothing Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                                ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
 
+                                                End If
+                                                ' Add the checkbox
+                                                _form.addOption(oChoices, menuName, menuId)
+                                            Else
+                                                If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                        oParentNode = oParentNode.ParentNode
+                                                    Loop
+                                                End If
                                             End If
                                             ' Add the checkbox
-                                            _form.addOption(oChoices, menuName, menuId)
-
+                                            _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
-                                            If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                    menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                    oParentNode = oParentNode.ParentNode
+                                            If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                Do While menuItem.GetAttribute("id") <> selectItem.Root.ToString
+                                                    menuName = menuItem.GetAttribute("name") & " / " & menuName
+                                                    oParentNode = menuItem.ParentNode
                                                 Loop
                                             End If
 

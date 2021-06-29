@@ -6,9 +6,9 @@
         ==  this file can be overided in the website directory for overiding fields  ============  
   -->
   
-  <xsl:import href="../../../../ewcommon_v5-1/xsl/tools/Functions.xsl"/>
-  <xsl:import href="../../../../ewcommon_v5-1/xsl/localisation/SystemTranslations.xsl"/>
-  <xsl:import href="../../../../ewcommon_v5-1/xsl/feeds/google/product-specification.xsl"/>
+  <xsl:import href="../../../../ewcommon/xsl/tools/Functions.xsl"/>
+  <xsl:import href="../../../../ewcommon/xsl/localisation/SystemTranslations.xsl"/>
+  <xsl:import href="../../../../ewcommon/xsl/feeds/google/product-specification.xsl"/>
   
   <xsl:output method="xml" indent="no" omit-xml-declaration="no" encoding="UTF-8"/>
 

@@ -76,10 +76,10 @@
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />
         <add key="CheckDetailPath" value="off" />
-         <add key="TrailingSlash" value="off" />
+        <add key="TrailingSlash" value="off" />
         <add key="LowerCaseUrl" value="off" />
-         <add key="EnableWebP" value="off" />
-         <add key="EnableRetina" value="off" />
+        <add key="EnableWebP" value="off" />
+        <add key="EnableRetina" value="off" />
        </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />

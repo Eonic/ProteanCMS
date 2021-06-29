@@ -1,17 +1,8 @@
 ﻿Imports System.Xml
-Imports System.Web.HttpUtility
 Imports System.Web.Configuration
-Imports System.IO
-Imports System.Collections
-Imports System.Data
-Imports System.Data.SqlClient
-Imports System.Text
 Imports System.Text.RegularExpressions
-Imports VB = Microsoft.VisualBasic
-Imports Protean
 Imports Protean.Cms.Cart
-Imports System.Net
-Imports CardinalCommerce
+
 
 Namespace Providers
     Namespace Payment

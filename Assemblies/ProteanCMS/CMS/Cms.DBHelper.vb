@@ -1319,7 +1319,7 @@ Partial Public Class Cms
                 ods = GetDataSet(sSql, "Pages")
 
 
-                If ods.Tables("Pages").Rows.Count = 1 Then
+                If Not IsNothing(ods) AndAlso ods.Tables("Pages").Rows.Count = 1 Then
                     nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
                     ' if there is just one page validate it
                 ElseIf ods.Tables("Pages").Rows.Count = 0 Then

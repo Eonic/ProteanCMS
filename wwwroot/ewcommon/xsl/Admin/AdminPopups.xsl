@@ -255,20 +255,22 @@
           <xsl:text>&amp;pathonly=true</xsl:text>
         </xsl:if>
       </xsl:variable>
-      
-          <xsl:variable name="fileCount" select="count(file)"/>
-          <xsl:variable name="itemCount" select="'24'"/>
+
+        <xsl:variable name="fileCount" select="count(file)"/>
+        <xsl:variable name="itemCount" select="'24'"/>
+
+        <xsl:variable name="startPos">
+	        <xsl:choose>
+		        <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
+			        <xsl:value-of select="/Page/Request/QueryString/Item[@name='startPos']/node()"/>
+		        </xsl:when>
+		        <xsl:otherwise>0</xsl:otherwise>
+	        </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
+				  
        <xsl:choose>
             <xsl:when test="$fld='' and $fileCount &gt; $itemCount and not(/Page/Request/QueryString/Item[@name='showall']/node()='all')">
-              <xsl:variable name="startPos">
-                <xsl:choose>
-                  <xsl:when test="/Page/Request/QueryString/Item[@name='startPos']/node()!=''">
-                    <xsl:value-of select="/Page/Request/QueryString/Item[@name='startPos']/node()"/>
-                  </xsl:when>
-                  <xsl:otherwise>0</xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-              <xsl:variable name="endPos" select="($startPos + $itemCount - 1)"/>
               <div class="alert alert-info">
                 <xsl:if test="$startPos&gt;=$itemCount">
                   <a class="btn btn-primary btn-sm" href="?contentType=popup&amp;ewcmd={/Page/@ewCmd}{$pathonly}&amp;fld={$fld}&amp;startPos={($startPos - $itemCount)}">
@@ -400,7 +402,7 @@
                                     <xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
                                 </xsl:variable>
                                 <xsl:choose>
-                                    <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp'">
+                                    <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tiff' or $Extension='.tif' ">
                                         <xsl:if test="@root">
 
                                           <!--xsl:variable name="imgUrl">
@@ -435,7 +437,7 @@
                                                         <xsl:value-of select="@name"/>
                                                       </span>
                                                       <br/>
-                                                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                                                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif' ">
                                                         <xsl:value-of select="@width"/>
                                                         <xsl:text> x </xsl:text>
                                                         <xsl:value-of select="@height"/>
@@ -498,7 +500,7 @@
                                   </a>
                                 </xsl:when>
                                 <xsl:when test="/Page[@ewCmd='ImageLib' and Request/QueryString/Item[@name='ewCmd2']/node()='PathOnly'] or $page/Request/QueryString/Item[@name='pathonly' and node()='true']">
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
+                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or $Extension='.tiff' or $Extension='.tif' ">
                                     <a onclick="passImgFileToForm('{/Page/Request/QueryString/Item[@name='targetForm']/node()}','{/Page/Request/QueryString/Item[@name='targetField']/node()}','/{translate(@root,'\','/')}{translate($fld,'\','/')}/{$filename}');" class="btn btn-xs btn-default" href="#">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
@@ -508,7 +510,7 @@
                                   </xsl:if>
                                 </xsl:when>
                                 <xsl:otherwise>
-                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg'">
+                                  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
                                     <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" data-toggle="modal" data-target="#modal-{/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-xs btn-info pickImage">
                                       <i class="fa fa-picture-o fa-white">
                                         <xsl:text> </xsl:text>
@@ -523,7 +525,7 @@
                       <span class="image-description-name">
                         <xsl:value-of select="@name"/>
                       </span>
-                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png'">
+                      <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
                         <xsl:value-of select="@width"/>
                         <xsl:text> x </xsl:text>
                         <xsl:value-of select="@height"/>
