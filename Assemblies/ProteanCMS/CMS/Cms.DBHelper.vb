@@ -10692,6 +10692,15 @@ ReturnMe:
             End Try
         End Sub
 
+        Public Sub SaveCartStatus(ByVal CartId As Integer, ByVal StatusId As Integer)
+            Try
+                Dim cSQL As String = "UPDATE tblCartOrder SET nCartStatus = " & StatusId & " WHERE nCartOrderKey = " & CartId
+                ExeProcessSql(cSQL)
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug)
+            End Try
+        End Sub
+
         Public Sub UpdateSellerNotes(ByVal CartId As Long, ByVal TransactionDetails As String)
             Dim sSql As String = ""
             Dim oDs As DataSet
