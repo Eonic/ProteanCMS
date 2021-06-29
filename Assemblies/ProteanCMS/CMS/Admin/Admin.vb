@@ -23,6 +23,8 @@ Imports System.Text.RegularExpressions
 Imports Protean.Tools
 Imports System
 Imports System.Reflection
+Imports Protean.Providers.Payment.JudoPayProvider
+
 
 Partial Public Class Cms
     Public Class Admin
@@ -1567,6 +1569,42 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
+                    Case "RefundOrder"
+                        Dim providerName As String = ""
+                        Dim cardReference As String = ""
+                        Dim IsRefund As String = ""
+                        Dim nStatus As Long
+                        Dim oCart As New Cart(myWeb)
+                        oCart.moPageXml = moPageXML
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        Dim sql As String = "select cpayMthdProviderName, cPayMthdProviderRef from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" & myWeb.moRequest("id")
+                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        While oDr.Read()
+                            providerName = oDr.GetString(0)
+                            cardReference = oDr.GetString(1)
+                        End While
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), "Order"))
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+
+                        '`get the payment mothod id for this order
+                        ' `from the paymentmethod we get the provider name And the card reference
+                        ' `we show a New form populating the refnd amount And showing the provider name And referance
+                        ' `on submitting the form we process using the provider name
+
+                    Case "AdditionalPayment"
+                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
+                        Dim oCart As New Cart(myWeb)
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+                        oCart.moPageXml = moPageXML
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        Dim amount As Decimal
+                        oPayProv.Activities.CollectPayment(myWeb, oCart, amount, orderid)
+                        myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
+                        GoTo ProcessFlow
+
                     Case "EditUserContact"
 
                         sAdminLayout = "EditUserContact"

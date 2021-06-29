@@ -5964,6 +5964,29 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal cSchemaName As String) As XmlElement
+
+                Dim cProcessInfo As String = ""
+                Dim nStatus As Long
+                Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
+
+                Try
+
+                    MyBase.NewFrm("Update" & cSchemaName)
+
+                    MyBase.submission("Update" & cSchemaName, "", "post", "form_check(this)")
+
+                    MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nOrderId)
+
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim oSelElmt1 As XmlElement
