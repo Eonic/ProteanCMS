@@ -210,6 +210,7 @@ Partial Public Class Cms
 
                         Dim sSql As String = "SELECT C.nContentKey,"
                         sSql &= " C.cContentName,"
+                        sSql &= " Convert(Xml, C.cContentXmlBrief).value('(Content/cDisplayName)[1]', 'Varchar(50)') AS displayName,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineColor)[1]', 'Varchar(50)') AS lineColor,"
                         sSql &= " CONVERT(XML, C.cContentXmlBrief).value('(Content/@lineTension)[1]', 'Varchar(10)') AS lineTension,"
                         sSql &= " '' AS url,"
