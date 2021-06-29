@@ -6083,9 +6083,9 @@ processFlow:
 
             Try
                 'stop carts being added by robots
-                If Not myWeb.moSession("previousPage") = "" Then
+                'If Not myWeb.moSession("previousPage") = "" Then
 
-                    oInstance.AppendChild(oInstance.CreateElement("instance"))
+                oInstance.AppendChild(oInstance.CreateElement("instance"))
                     oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
                     'addNewTextNode("nCartOrderKey", oElmt)
                     addNewTextNode("cCurrency", oElmt, mcCurrencyRef)
@@ -6121,10 +6121,10 @@ processFlow:
 
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
                     Return mnCartId
-                Else
-                    mnCartId = 0
-                    Return mnCartId
-                End If
+                'Else
+                '    mnCartId = 0
+                '    Return mnCartId
+                'End If
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug)
