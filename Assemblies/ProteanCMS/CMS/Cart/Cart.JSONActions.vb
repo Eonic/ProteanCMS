@@ -532,6 +532,7 @@ Partial Public Class Cms
                         contact.cContactEmail = emailAddress
                         contact.cContactTel = telphone
                         contact.cContactType = contactType
+                        contact.nContactCartId = cartId
                         If (jObj("Forename") IsNot Nothing) Then
                             contact.cContactFirstName = jObj("Forename")
                         End If
@@ -581,19 +582,21 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function SavePaymentDetails(ByVal sProviderName As String, ByVal nCartId As Int32, ByVal sAuthNo As String, ByVal dAmount As Double) As String
+
+
+            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal nStatusId As Integer) As String
                 Try
                     Dim oXml As XmlDocument = New XmlDocument
                     Dim oDetailXml As XmlElement = oXml.CreateElement("Response")
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     addNewTextNode("AuthCode", oDetailXml, sAuthNo)
 
                     myCart.updateGCgetValidShippingOptionsDS(65)
                     myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
+                    myWeb.moDbHelper.SaveCartStatus(nCartId, nStatusId)
 
-
-                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     myCart.GetCart(CartXml.FirstChild)
-
+                    myCart.purchaseActions(CartXml)
                     'persist cart
                     myCart.close()
                     CartXml = updateCartforJSON(CartXml)
