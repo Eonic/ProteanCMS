@@ -1569,31 +1569,31 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
-                    Case "RefundJudoPayment"
-                        sAdminLayout = "RefundJudoPayment"
+                    Case "RefundOrder"
+                        Dim providerName As String = ""
+                        Dim cardReference As String = ""
                         Dim IsRefund As String = ""
                         Dim nStatus As Long
-                        oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
                         Dim oCart As New Cart(myWeb)
-                        moPageXML.DocumentElement.AppendChild(oPageDetail)
                         oCart.moPageXml = moPageXML
                         Dim orderid As String = myWeb.moRequest("orderId")
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
-                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, orderid, sAdminLayout)
-                        If (IsRefund = "Success") Then
-                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
-                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
-                            nStatus = Cart.cartProcess.Refunded
-                            If CInt("0" & orderid) > 0 Then
-                                'reset cart processId
-                                Dim sSqlquery As String = "update tblCartOrder set nCartStatus ='" & nStatus & "', cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & orderid
-                                myWeb.moDbHelper.ExeProcessSql(sSqlquery)
-                            End If
-                            myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" & orderid
-                            GoTo ProcessFlow
-                        End If
-                    Case "AdditionalJudoPayment"
-                        sAdminLayout = "AdditionalJudoPayment"
+                        Dim sql As String = "select cpayMthdProviderName, cPayMthdProviderRef from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" & myWeb.moRequest("id")
+                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        While oDr.Read()
+                            providerName = oDr.GetString(0)
+                            cardReference = oDr.GetString(1)
+                        End While
+
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), "Order"))
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+
+                        '`get the payment mothod id for this order
+                        ' `from the paymentmethod we get the provider name And the card reference
+                        ' `we show a New form populating the refnd amount And showing the provider name And referance
+                        ' `on submitting the form we process using the provider name
+
+                    Case "AdditionalPayment"
                         oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(myWeb.moRequest("id"), True))
                         Dim oCart As New Cart(myWeb)
                         Dim orderid As String = myWeb.moRequest("orderId")
