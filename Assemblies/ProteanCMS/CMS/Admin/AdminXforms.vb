@@ -5964,21 +5964,71 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal cSchemaName As String) As XmlElement
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal providerName As String, ByVal providerPaymentReference As String) As XmlElement
 
                 Dim cProcessInfo As String = ""
-                Dim nStatus As Long
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
 
                 Try
-
-                    MyBase.NewFrm("Update" & cSchemaName)
-
-                    MyBase.submission("Update" & cSchemaName, "", "post", "form_check(this)")
-
-                    MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nOrderId)
+                    Dim IsRefund As String = ""
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    MyBase.NewFrm("Refund")
+                    MyBase.submission("Refund using " & providerName, "post", "form_check(this)")
 
 
+                    Dim xdoc As New XmlDocument()
+                    Dim amount As String = ""
+                    If (nOrderId > 0) Then
+                        Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
+                        If (cartXmlSql <> "") Then
+                            Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
+                            xDoc.LoadXml(orderXml)
+                        End If
+                        If (xdoc.InnerXml <> "") Then
+
+                            Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            If (xn IsNot Nothing And xnInstance IsNot Nothing) Then
+                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                            End If
+                        End If
+
+                    End If
+
+                    MyBase.Instance.InnerXml = "<Refund> <RefundAmount> </RefundAmount> <ProviderName></ProviderName> <ProviderReference> </ProviderReference> </Refund>"
+                    Dim oFrmElmt As XmlElement
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
+                    MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
+                    MyBase.addBind("RefundAmount", "Refund/RefundAmount", "true()")
+
+                    MyBase.addInput(oFrmElmt, "ProviderName", True, "Provider Name", "readonly")
+                    MyBase.addBind("ProviderName", "Refund/ProviderName", "true()")
+
+                    MyBase.addInput(oFrmElmt, "ProviderReference", True, "Provider Reference", "readonly")
+                    MyBase.addBind("ProviderReference", "Refund/ProviderReference", "true()")
+
+                    MyBase.addInput(oFrmElmt, "id", True, "Order Id", "readonly")
+                    MyBase.addBind("id", "Refund/OrderId", "true()")
+
+                    MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
+
+                    MyBase.updateInstanceFromRequest()
+                    MyBase.validate()
+                    'check amount is less than initail amount otherwise invalid
+                    If MyBase.valid Then
+                        'this is where we process the refund
+                        'update notes on the order
+                        'refunding information
+                        'it must contain user and date of the refund and refund reference from the provider 
+                        'if the refund failswe need to return error msg from the provider and change the form   (addalert-error)
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderId)
+                    End If
+                    If (IsRefund Is Nothing) Then
+                        MyBase.addNote("cStructName", noteTypes.Alert, "Refund Failed")
+                    End If
+
+                    MyBase.addValues()
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception

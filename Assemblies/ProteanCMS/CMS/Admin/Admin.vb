@@ -1570,8 +1570,9 @@ ProcessFlow:
                             GoTo ProcessFlow
                         End If
                     Case "RefundOrder"
+                        sAdminLayout = "RefundOrder"
                         Dim providerName As String = ""
-                        Dim cardReference As String = ""
+                        Dim providerPaymentReference As String = ""
                         Dim IsRefund As String = ""
                         Dim nStatus As Long
                         Dim oCart As New Cart(myWeb)
@@ -1581,11 +1582,17 @@ ProcessFlow:
                         Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
                         While oDr.Read()
                             providerName = oDr.GetString(0)
-                            cardReference = oDr.GetString(1)
+                            providerPaymentReference = oDr.GetString(1)
                         End While
 
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), "Order"))
+                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), providerName, providerPaymentReference))
+                        If moAdXfm.valid Then
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "OrderDetail"
+                            myWeb.msRedirectOnEnd = "?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("id")
+                        End If
+
+
                         moPageXML.DocumentElement.AppendChild(oPageDetail)
 
                         '`get the payment mothod id for this order
