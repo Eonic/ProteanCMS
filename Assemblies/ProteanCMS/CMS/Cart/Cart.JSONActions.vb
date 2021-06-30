@@ -608,7 +608,7 @@ Partial Public Class Cms
 
 
 
-            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal nStatusId As Integer) As String
+            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double) As String
                 Try
                     Dim oXml As XmlDocument = New XmlDocument
                     Dim oDetailXml As XmlElement = oXml.CreateElement("Response")
@@ -617,7 +617,7 @@ Partial Public Class Cms
 
                     myCart.updateGCgetValidShippingOptionsDS(65)
                     myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
-                    myWeb.moDbHelper.SaveCartStatus(nCartId, nStatusId)
+                    myWeb.moDbHelper.SaveCartStatus(nCartId, cartProcess.Complete)
 
                     myCart.GetCart(CartXml.FirstChild)
                     myCart.purchaseActions(CartXml)
@@ -635,10 +635,6 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function DoRefund(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Try
-                    Dim oCart As New Cart(myWeb)
-                    oCart.moPageXml = myWeb.moPageXml
 
                     Dim sAdminLayout = IIf(jObj("sAdminLayout") IsNot Nothing, CStr(jObj("sAdminLayout")), "")
                     Dim Providername = IIf(jObj("sProvider") IsNot Nothing, CStr(jObj("sProvider")), "")
