@@ -611,6 +611,10 @@ Partial Public Class Cms
 
             End Function
 
+            Public Function DoRefund(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oCart As New Cart(myWeb)
+                    oCart.moPageXml = myWeb.moPageXml
 
                     Dim sAdminLayout = IIf(jObj("sAdminLayout") IsNot Nothing, CStr(jObj("sAdminLayout")), "")
                     Dim Providername = IIf(jObj("sProvider") IsNot Nothing, CStr(jObj("sProvider")), "")
