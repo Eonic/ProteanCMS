@@ -1510,8 +1510,6 @@
       <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
-
-
           <xsl:if test="$href!=''">
             <link rel="canonical" href="{$href}"/>
           </xsl:if>
@@ -1519,6 +1517,16 @@
       </xsl:if>
     </xsl:if>
   </xsl:template>
+
+  <!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
+    <!-- not admin -->
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+
+            <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+
+  </xsl:template>
+
 
   <xsl:template match="Page" mode="getPageThumbnail">
 

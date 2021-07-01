@@ -2606,6 +2606,8 @@ Partial Public Class Cms
                             If moRequest("type") <> "" Then cContentSchemaName = moRequest("type")
                         End If
 
+                        moDbHelper.getLocationsByContentId(id, oTempInstance.FirstChild)
+
                         'Add ProductCategories
                         Dim sProductTypes As String = "Product,SKU"
                         If myWeb.moConfig("ProductTypes") <> "" Then
