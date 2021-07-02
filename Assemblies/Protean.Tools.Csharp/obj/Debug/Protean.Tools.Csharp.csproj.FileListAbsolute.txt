@@ -277,3 +277,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.To
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.pdb
+D:\Manashri_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools.Csharp\obj\Debug\Protean.Tools.Csharp.csprojAssemblyReference.cache

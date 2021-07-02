@@ -11,7 +11,6 @@
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
 	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
-
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -7058,6 +7057,15 @@
     </tr>
   </xsl:template>
 
+	<!--################################################################-->
+	<xsl:template match="Page[@layout='RefundOrder']" mode="Admin">
+		<div class="template" id="template_EditStructure">
+			<div id="column2">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+		</div>
+	</xsl:template>
+	
   <!-- -->
   <!--   ##################  List Quotes  ##############################   -->
   <!-- -->
