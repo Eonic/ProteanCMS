@@ -297,7 +297,7 @@
         <xsl:otherwise>
           <span class="input-group-btn editpick">
             <!--<a href="#" onclick="OpenWindow_pick_{$ref}();return false;" title="pick an image from the image library" class="btn btn-primary">-->
-            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}" data-target="#modal-{$ref}" class="btn btn-primary">
+            <a data-toggle="modal" href="?contentType=popup&amp;ewCmd=ImageLib&amp;targetForm={ancestor::Content/model/submission/@id}&amp;targetField={$ref}&amp;targetClass={value/*/@class}&amp;fld={@targetFolder}" data-target="#modal-{$ref}" class="btn btn-primary">
               <i class="fa fa-picture-o fa-white">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Pick
@@ -2555,84 +2555,60 @@
                   <label>Old URL</label>
                   <div class="control-wrapper input-wrapper appearance-">
 
-                    <input type="text" name="OldUrl" id="OldPageName" class="textbox form-control"/>
+                    <input type="text" name="OldUrl" id="OldUrl" class="textbox form-control"/>
                   </div>
                 </div>
                 <div class="form-group input-containing col-md-6">
                   <label>New URL</label>
                   <div class="control-wrapper input-wrapper appearance-">
-                    <input type="text" name="NewUrl" id="NewPageName" class="textbox form-control"/>
+                    <input type="text" name="NewUrl" id="NewUrl" class="textbox form-control"/>
                   </div>
                 </div>
               </fieldset>
             </div>
-            <ul>
-              <li>
-                <button type="button" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave">301:  We will Permanently redirect</button>
-                <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
-
-              </li>
-              <br></br>
-              <li>
-                <button type="button" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave">302: We will temporarily redirect</button>
-
-              </li>
-              <br></br>
-              <li>
-                <button type="button" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave">404: page not found</button>
-              </li>
-            </ul>
-
-             <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
-               <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
-               <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
-             </xsl:if>
-                <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
-             <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
-             <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
-
-            <!--a href="?ewCmd=EditXForm&amp;artid={/Page/Request/QueryString/Item[@name='id']/node()}" class="textButton">Click Here to Edit this Form</a-->
-
-            <input name="pageId" type="hidden"  class="hiddenpageId" />
-          </div>
-
-          <div class="modal-footer">
             <div>
-              <h4>
-                Do you want to redirect?
-              </h4>
-            </div>
-            <button class="btn btn-primary" id="btnRedirectDontSave" data-dismiss="modal" >Dont save redirect</button>
-            <button type="button" id="btnRedirectSave"
-              class="btn btn-primary">
-              Save redirect
-            </button>
+                <button type="submit" name="redirectType"  value="301Redirect" class="btn btn-primary btnRedirectSave" onclick="return RedirectClick();">301 Permanant Redirect</button>
+                <button type="submit" name="redirectType"  value="302Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">302 Temporary Redirect</button>
+                <button type="submit" name="redirectType"  value="404Redirect" class="btn btn-primary btnRedirectSave"  onclick="return RedirectClick();">404 Page Not Found</button>
+             </div>
+
+            <xsl:if test="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url!=''">
+              <xsl:variable name="objOldUrl" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url" />
+              <input name="pageOldUrl" type="hidden" value="{$objOldUrl}" class="hiddenOldUrl" />
+            </xsl:if>
+            <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
+            <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
+            <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
+            <input name="pageId" type="hidden"  class="hiddenPageId" />
+            <input name="type" type="hidden"  class="hiddenType" />
+             <input  name="redirectType" type="hidden" class="hiddenRedirectType" />
           </div>
         </div>
       </div>
     </div>
-    
+
     <div id="RedirectionChildConfirmationModal" class="suitableForModal modal fade " tabindex="-1">
-       
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" >
-                      <span aria-hidden="true">&#215;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    Current page have child/product pages beneath it, do you want to redirect them as well?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnNocreateRuleForChild" >Cancel</button>
-                    <button type="button" id="btnYescreateRuleForChild" 
-                     class="btn btn-primary">
-                      Yes
-                    </button>
-                  </div>
-                </div>
-              </div>
+
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" >
+              <span aria-hidden="true">&#215;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Current page have category/product pages beneath it, do you want to redirect them as well?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnNocreateRuleForChild" >Cancel</button>
+            <button type="button" id="btnYescreateRuleForChild" class="btn btn-primary">Yes </button>
+          </div>
+        </div>
+        <input name="productOldUrl" type="hidden" class="hiddenProductOldUrl" />
+            <input name="productNewUrl" type="hidden" class="hiddenProductNewUrl" />
+            <input name="IsParentPage" type="hidden" class="hiddenParentCheck" />
+            <input name="pageId" type="hidden"  class="hiddenPageId" />
+      </div>
     </div>
   </xsl:template>
-</xsl:stylesheet>
+ </xsl:stylesheet>

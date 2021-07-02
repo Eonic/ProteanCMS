@@ -5,16 +5,10 @@ Imports System.Xml
 Imports System.Web.HttpUtility
 Imports System.Web.Configuration
 Imports System.IO
-Imports System.Collections
-Imports System.Threading
-Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Reflection
 Imports System.Net
 Imports System.Text.RegularExpressions
-Imports System.Collections.Specialized
-Imports VB = Microsoft.VisualBasic
-Imports System
 Imports System.Collections.Generic
 
 
@@ -1074,6 +1068,39 @@ Public Class Cms
 
     End Sub
 
+
+    Public Sub CheckPagePath()
+        Dim pageUrl As String = moRequest.RawUrl.ToString()
+        Dim bLowerCaseUrl As Boolean = False
+        Dim bTrailingSlash As Boolean = False
+        If Not moSession Is Nothing Then
+            If moSession("adminMode") = "true" Then
+                mbAdminMode = True
+            End If
+        End If
+        If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode And mbPreview = False And moRequest.QueryString("cartCmd") Is Nothing And Not mcOriginalURL.Contains("?") Then
+            If (moConfig("LowerCaseUrl") = "on") Then
+                If (Regex.IsMatch(pageUrl, "[A-Z]")) Then
+                    bLowerCaseUrl = True
+                    pageUrl = pageUrl.ToLower()
+                End If
+            End If
+            If moConfig("DetailPathType") <> "" Then
+                If moConfig("TrailingSlash") = "on" Then
+                    If (pageUrl.Length <> 0 And Right(pageUrl, 1) <> "/") Then
+                        If (pageUrl.Length <> 1) Then
+                            pageUrl = pageUrl + "/"
+                            bTrailingSlash = True
+                        End If
+                    End If
+                End If
+            End If
+            If ((bTrailingSlash Or bLowerCaseUrl) And pageUrl.Length <> 0) Then
+                mbRedirectPerm = True
+                msRedirectOnEnd = moRequest.Url.Scheme.ToString().ToLower() + "://" + moRequest.Url.Host.ToString().ToLower() + pageUrl
+            End If
+        End If
+    End Sub
     Public Overridable Sub GetPageHTML()
         PerfMon.Log("Web", "GetPageHTML")
         Dim sProcessInfo As String = ""
@@ -1094,7 +1121,7 @@ Public Class Cms
 
 
                 Case Else
-
+                    CheckPagePath()
 
                     If gbCart Or gbQuote Then
                         If CInt("0" + moSession("CartId")) > 0 Then
@@ -5453,7 +5480,9 @@ Public Class Cms
                     If sUrl = "/" Then
                         sUrl = DomainURL
                     End If
-
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
                     'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
                     If mbAdminMode _
                         And moConfig("pageExt") = "" _
@@ -5523,6 +5552,9 @@ Public Class Cms
                                         End If
                                     End If
                                     sUrl = sUrl & "/" & cPageName
+                                    If moConfig("LowerCaseUrl") = "on" Then
+                                        sUrl = sUrl.ToLower()
+                                    End If
                                 End If
                             Next
 
@@ -5828,6 +5860,9 @@ Public Class Cms
                             cProcessInfo = "orphan Content"
                         End If
                 End Select
+                If moConfig("LowerCaseUrl") = "on" Then
+                    cURL = cURL.ToLower()
+                End If
                 If cURL <> "" Then
                     oContElmt.SetAttribute("url", cURL)
                     oContElmt.SetAttribute("name", oDR(1).ToString)
@@ -6163,6 +6198,10 @@ Public Class Cms
                 ContentURL = ContentURL & ContentName
             End If
 
+
+            If moConfig("LowerCaseUrl") = "on" Then
+                ContentURL = ContentURL.ToLower()
+            End If
             Return ContentURL
 
         Catch ex As Exception
@@ -8562,12 +8601,14 @@ Public Class Cms
             Dim oDr As System.Data.SqlClient.SqlDataReader
             Dim sSQL As String = "DECLARE @List VARCHAR(8000)
 
-            SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
-            FROM tblcontent C
-            INNER JOIN tblAudit A ON C.nAuditId = A.nAuditKey
-            WHERE A.nstatus = 1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
+SELECT @List = COALESCE(@List + ',', '') + CAST(C.nContentKey AS VARCHAR)
+from tblcontent C 
+ inner join tblAudit A on C.nAuditId = A.nAuditKey 
+ where A.nstatus=1 and c.ncontentkey in ( " & nArtId.ToString() & " )"
             sSQL = sSQL & " SELECT @List "
 
+            '"select  C.nContentKey from tblcontent C inner join tblAudit A on C.nAuditId = A.nAuditKey "
+            'sSQL = sSQL & " where A.nstatus=1 and  c.ncontentkey in ( " & nArtId.ToString() & " )"
             If moDbHelper Is Nothing Then
                 moDbHelper = GetDbHelper()
             End If

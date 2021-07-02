@@ -33,6 +33,7 @@ Partial Public Class Cms
                 Try
 
                     Dim rewriteXml As New XmlDocument
+                    Dim Result As String = "success"
                     rewriteXml.Load(myWeb.goServer.MapPath("/rewriteMaps.config"))
 
                     ''Check we do not have a redirect for the OLD URL allready. Remove if exists
@@ -51,17 +52,19 @@ Partial Public Class Cms
                             rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
                         Next
                     Else
-
                         'Add redirect
-                        Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
-                        Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
-                        If Not redirectSectionXmlNode Is Nothing Then
-                            Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
-                            replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
+                        If isParentPage = "False" Then
+                            Dim oCgfSectPath As String = "rewriteMaps/rewriteMap[@name='" & redirectType & "']"
+                            Dim redirectSectionXmlNode As XmlNode = rewriteXml.SelectSingleNode(oCgfSectPath)
+                            If Not redirectSectionXmlNode Is Nothing Then
+                                Dim replacingElement As XmlElement = rewriteXml.CreateElement("RedirectInfo")
+                                replacingElement.InnerXml = $"<add key='{OldUrl}' value='{NewUrl}'/>"
 
-                            ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
-                            rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
-                            rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+                                ' rewriteXml.SelectSingleNode(oCgfSectPath).FirstChild.AppendChild(replacingElement.FirstChild)
+                                rewriteXml.SelectSingleNode(oCgfSectPath).AppendChild(replacingElement.FirstChild)
+                                rewriteXml.Save(myWeb.goServer.MapPath("/rewriteMaps.config"))
+
+                            End If
                         End If
                     End If
                     'Determine all the paths that need to be redirected
@@ -76,6 +79,10 @@ Partial Public Class Cms
 
                                 Case "302Redirect"
                                     redirectType = "302 Redirects"
+
+                                Case "Redirect404"
+                                    redirectType = "404 Redirects"
+                                Case Else
 
                             End Select
 
@@ -113,7 +120,7 @@ Partial Public Class Cms
                             myWeb.bRestartApp = True
                         End If
                     End If
-                    Dim Result As String = "success"
+
                     Return Result
 
                 Catch ex As Exception
@@ -123,7 +130,8 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function urlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
+
+            Public Function LoadUrlsForPegination(ByRef redirectType As String, ByRef pageloadCount As Integer) As String
                 Try
 
                     Dim Result As String = ""
@@ -195,7 +203,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function searchUrl(ByRef redirectType As String, ByRef searchObj As String, ByRef pageloadCount As Integer) As String
+            Public Function SearchUrl(ByRef redirectType As String, ByRef searchObj As String, ByRef pageloadCount As Integer) As String
 
                 Try
 
@@ -269,7 +277,7 @@ Partial Public Class Cms
 
             End Function
 
-            Public Function deleteUrls(ByRef redirectType As String, ByRef oldUrl As String, ByRef newUrl As String) As String
+            Public Function DeleteUrls(ByRef redirectType As String, ByRef oldUrl As String, ByRef newUrl As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
@@ -307,7 +315,7 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
-            Public Function getTotalNumberOfUrls(ByRef redirectType As String) As String
+            Public Function GetTotalNumberOfUrls(ByRef redirectType As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
@@ -375,7 +383,7 @@ Partial Public Class Cms
                 End Try
 
             End Function
-            Public Function getTotalNumberOfSearchUrls(ByRef redirectType As String, ByRef searchObj As String) As String
+            Public Function GetTotalNumberOfSearchUrls(ByRef redirectType As String, ByRef searchObj As String) As String
 
                 Dim Result As String = ""
                 Dim rewriteXml As New XmlDocument
@@ -407,7 +415,7 @@ Partial Public Class Cms
                 Return Result
             End Function
 
-            Public Function isParentPage(ByRef pageId As Integer) As Boolean
+            Public Function IsParentPage(ByRef pageId As Integer) As Boolean
 
                 Dim Result As String = ""
                 If pageId > 0 Then
@@ -415,23 +423,9 @@ Partial Public Class Cms
                 End If
                 Return Result
             End Function
-
-            ''' <summary>
-            ''' This is method which validates the page to redirect in edit mode if we change page url
-            ''' -if its h
-            ''' </summary>
-            ''' <param name="sRedirectType"></param>
-            ''' <param name="sOldUrl"></param>
-            ''' <param name="sNewUrl"></param>
-            ''' <param name="sPageUrl"></param>
-            ''' <param name="bRedirectChildPage"></param>
-            ''' <param name="sType"></param>
-            ''' <param name="nPageId"></param>
-            ''' <returns></returns>
-            ''' sRedirectType can be object type to validate.
             Public Function RedirectPage(ByRef sRedirectType As String, ByRef sOldUrl As String, ByRef sNewUrl As String, ByRef sPageUrl As String, Optional ByVal bRedirectChildPage As Boolean = False, Optional ByVal sType As String = "", Optional ByVal nPageId As Integer = 0) As String
 
-                Dim result As String = ""
+                Dim result As String = "success"
                 If sRedirectType IsNot Nothing And sRedirectType <> String.Empty Then
 
                     Dim sUrl As String = ""
@@ -450,9 +444,10 @@ Partial Public Class Cms
 
                     Select Case sType
                         Case "Page"
-                            sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
-                            sOldUrl = sUrl
-
+                            If (sUrl <> String.Empty) Then
+                                sNewUrl = sUrl.Replace(sOldUrl, sNewUrl)
+                                sOldUrl = sUrl
+                            End If
                         Case Else
 
                             ' If (sType = "Product") Then

@@ -95,7 +95,7 @@
           </select>
         </xsl:if>
           <span class="input-group-btn">
-            <button type="button" class="btn btn-primary" name="Search">
+            <button type="submit" class="btn btn-primary" name="Search">
               <i class="fa fa-search">
                 <xsl:text> </xsl:text>
               </i>
@@ -130,6 +130,8 @@
     <xsl:variable name="pageStart" select="@pageStart" />
     <xsl:variable name="LastLoadResultCount" select="@loadedResult" />
     <xsl:variable name="pageSize" select="@pageSize" />
+    <xsl:variable name="resultsReturned" select="@resultsReturned" />
+    
     <br/>
     <div class="panel panel-primary text-right search-results-area" id="ResultDiv">
       <div class="panel-body">
@@ -145,16 +147,18 @@
           Next <i class=" fa fa-chevron-circle-right text-green"></i>
         </button>
       </xsl:if>-->
-        <span class="legend">
-      <a type="button" id="btnPrevResult" class="btn btn-default pull-left" href="">
-        Prev <i class=" fa fa-chevron-circle-left text-green"></i>
+       <xsl:if test="@pageStart &gt; 1">
+      <a type="button" id="btnPrevResult" class="btn btn-default pull-left" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageStart - @pageSize}">
+        <i class=" fa fa-chevron-circle-left text-green">&#160;</i>&#160;Prev 
       </a>
+         </xsl:if>
+        <span class="btn">
       <xsl:value-of select="$pageStart" />
       -
       <xsl:choose>
-        <xsl:when test="$totalResults &gt;= $pageCount">
+        <xsl:when test="$totalResults &gt;= $resultsReturned">
           <!--<xsl:value-of select="$Hit" />-->
-          <xsl:value-of select="$pageStart + $pageCount - 1" />
+          <xsl:value-of select="$pageStart + $resultsReturned - 1" />
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="$totalResults" />
@@ -173,9 +177,9 @@
         </xsl:otherwise>
       </xsl:choose>
       </span>
-      <xsl:if test="$totalResults &gt; $pageSize">
-        <a id="btnNextResult" class="btn btn-default"  name="Search" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageEnd + 1}">
-          Next <i class=" fa fa-chevron-circle-right text-green"></i>
+      <xsl:if test="@pageEnd &lt; $totalResults">
+        <a id="btnNextResult" class="btn btn-default" name="Search" href="?searchMode=INDEX&amp;searchString={@searchString}&amp;pageStart={@pageEnd + 1}">
+          Next&#160;<i class=" fa fa-chevron-circle-right text-green">&#160;</i>
         </a>
       </xsl:if>
       </div>

@@ -66,29 +66,35 @@ Partial Public Class fsHelper
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Process()
-            If _webFile IsNot Nothing AndAlso _webFile.Exists Then
-                Select Case _webFile.LibraryType
-
-                    Case LibraryType.Image
-                        'original
-                        'Dim imageFromFile As System.Drawing.Image = System.Drawing.Image.FromFile(_webFile.AbsolutePath)
-                        '_width = imageFromFile.Width
-                        '_height = imageFromFile.Height
-
-                        'didn't work
-                        'Dim oSize As Size = GetDimensions(_webFile.AbsolutePath)
-                        '_width = oSize.Width
-                        '_height = oSize.Height
-
-                        Dim imageFromFile As BitmapSource = BitmapFrame.Create(New Uri(_webFile.AbsolutePath))
-                        _width = imageFromFile.PixelWidth
-                        _height = imageFromFile.PixelHeight
+            Try
 
 
+                If _webFile IsNot Nothing AndAlso _webFile.Exists Then
+                    Select Case _webFile.LibraryType
 
-                End Select
-            End If
+                        Case LibraryType.Image
+                            'original
+                            'Dim imageFromFile As System.Drawing.Image = System.Drawing.Image.FromFile(_webFile.AbsolutePath)
+                            '_width = imageFromFile.Width
+                            '_height = imageFromFile.Height
 
+                            'didn't work
+                            'Dim oSize As Size = GetDimensions(_webFile.AbsolutePath)
+                            '_width = oSize.Width
+                            '_height = oSize.Height
+
+                            Dim imageFromFile As BitmapSource = BitmapFrame.Create(New Uri(_webFile.AbsolutePath))
+                            _width = imageFromFile.PixelWidth
+                            _height = imageFromFile.PixelHeight
+
+
+
+                    End Select
+                End If
+            Catch ex As Exception
+                _width = 0
+                _height = 0
+            End Try
         End Sub
 
 

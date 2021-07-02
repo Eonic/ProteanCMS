@@ -1726,15 +1726,7 @@ Partial Public Class Cms
                             If pgid > 0 Then
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.ContentStructure, MyBase.Instance)
 
-                                'page redirection for hub
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim newUrl As String = MyBase.Instance.SelectSingleNode("tblContentStructure/cStructName").InnerText
-                                Dim bRedirectChildPages As Boolean = IIf(moRequest("IsParentPage") = "True", True, False)
-                                Dim sType As String = "Page"
-                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
 
-                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), cName, newUrl, moRequest("pageOldUrl"), bRedirectChildPages, sType, pgid)
-                                End If
                             Else
 
                                 pgid = moDbHelper.insertStructure(MyBase.Instance)
@@ -2806,7 +2798,6 @@ Partial Public Class Cms
                     ' Additional Processing : Post Build
                     Me.xFrmEditContentPostBuildProcessing(cContentSchemaName)
 
-
                     If MyBase.isSubmitted Then
 
                         ' Additional Processing : Pre Submission 
@@ -2814,6 +2805,10 @@ Partial Public Class Cms
 
                         MyBase.updateInstanceFromRequest()
                         MyBase.validate()
+
+
+
+
 
                         If MyBase.valid Then
 
@@ -2855,49 +2850,55 @@ Partial Public Class Cms
 
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, Now, id, pgid, "")
                                 'Redirection 
+                                Dim redirectType As String = ""
+                                Dim newUrl As String = ""
+                                Dim strOldurl As String = ""
+                                If moRequest("redirectType") IsNot Nothing Then
+                                    redirectType = moRequest("redirectType").ToString()
+                                End If
 
-                                Dim sNewUrl As String = ""
-                                Dim sOldurl As String = ""
-                                Dim oAdminRedirect As Admin.Redirects = New Admin.Redirects()
-                                Dim sType As String = "Product"
-                                If moRequest("productNewUrl") IsNot Nothing And moRequest("productNewUrl") <> "" Then
-                                    sNewUrl = moRequest("productNewUrl").ToString()
+                                If moRequest("productNewUrl") IsNot Nothing Then
+                                    newUrl = moRequest("productNewUrl").ToString()
                                 End If
-                                If moRequest("productOldUrl") IsNot Nothing And moRequest("productOldUrl") <> "" Then
-                                    sOldurl = moRequest("productOldUrl").ToString()
+                                If moRequest("productOldUrl") IsNot Nothing Then
+                                    strOldurl = moRequest("productOldUrl").ToString()
                                 End If
-                                If moRequest("redirectType") IsNot Nothing And moRequest("redirectType") <> "" Then
-                                    oAdminRedirect.RedirectPage(moRequest("redirectType"), sOldurl, sNewUrl, moRequest("pageOldUrl"), False, sType, pgid)
 
-                                End If
+
+
+
+
+
+
+
 
                                 ' Individual content location set
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
+                                        End If
                                     End If
-                                End If
 
-                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                If bCascade And pgid > 0 Then
-                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                End If
+                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                    If bCascade And pgid > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                    End If
 
 
-                                editResult = dbHelper.ActivityType.ContentEdited
+                                    editResult = dbHelper.ActivityType.ContentEdited
 
-                                If updatedVersionId <> id Then
-                                    nReturnId = updatedVersionId
+                                    If updatedVersionId <> id Then
+                                        nReturnId = updatedVersionId
+                                    Else
+                                        nReturnId = id
+                                    End If
+
                                 Else
-                                    nReturnId = id
-                                End If
-
-                            Else
-                                Dim nContentId As Long
+                                    Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3413,19 +3414,16 @@ Partial Public Class Cms
                     Dim fileToFind As String = "/" & oFsh.mcRoot & cPath.Replace("\", "/") & "/" & cName
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If Not odr Is Nothing Then
-                        If odr.HasRows Then
-                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                            Do While odr.Read
-                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                            Loop
-                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+                    If odr.HasRows Then
+                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                        Do While odr.Read
+                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                        Loop
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
 
-                        Else
-                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
-                        End If
+                    Else
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
                     End If
-
                     odr = Nothing
 
                     MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this file? - """ & cPath & "\" & cName & """", , "alert-danger")
@@ -3489,20 +3487,25 @@ Partial Public Class Cms
 
                     Dim sSQL As String = "select * from tblContent where cContentXmlBrief like '%" & fileToFind & "%' or cContentXmlDetail like '%" & fileToFind & "%'"
                     Dim odr As SqlDataReader = moDbHelper.getDataReader(sSQL)
-                    If odr.HasRows Then
-                        Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
-                        Dim artIds As String = ""
-                        Do While odr.Read
-                            contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
-                            artIds = odr("nContentKey") & ","
-                        Loop
-                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
-
-                        Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
-                        MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
-                        MyBase.addOption(oSelUpd, "No", "0")
-                    Else
+                    If odr Is Nothing Then
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                    Else
+
+                        If odr.HasRows Then
+                            Dim contentFound As String = "<p>This file is used in these content Items</p><ul>"
+                            Dim artIds As String = ""
+                            Do While odr.Read
+                                contentFound = contentFound + "<li><a href=""?artid=" & odr("nContentKey") & """ target=""_new"">" & odr("cContentSchemaName") & " - " & odr("cContentName") & "</a></li>"
+                                artIds = odr("nContentKey") & ","
+                            Loop
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, contentFound & "</ul>")
+
+                            Dim oSelUpd As XmlElement = MyBase.addSelect1(oFrmElmt, "UpdatePaths", False, "Update Paths", "", xForm.ApperanceTypes.Full)
+                            MyBase.addOption(oSelUpd, "Yes", artIds.TrimEnd(","))
+                            MyBase.addOption(oSelUpd, "No", "0")
+                        Else
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Hint, "This cannot be found referenced in any content but it may be used in a template or stylesheet")
+                        End If
                     End If
                     odr = Nothing
 
@@ -3535,7 +3538,7 @@ Partial Public Class Cms
                                 End If
 
                             Else
-                                MyBase.valid = False
+                                    MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 
@@ -5452,7 +5455,7 @@ Partial Public Class Cms
 
                     If moDbHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection") Then
                         oSelElmt = MyBase.addSelect(oGrp2Elmt, "bCollection", True, "Collection Option", "multiline", ApperanceTypes.Full)
-                        MyBase.addOption(oSelElmt, "Collection", "true")
+                        MyBase.addOption(oSelElmt, "Collection", "True")
                         MyBase.addBind("bCollection", "tblCartShippingMethods/bCollection", "false()")
                     End If
 
@@ -5892,7 +5895,12 @@ Partial Public Class Cms
                         Dim updateNotes As String = goRequest("cNotesAmend")
                         '  If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim notes As String = MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText & "/n" & Now() & ": changed to: (" & goRequest("nStatus") & ") " & sStatusDesc & " - " & updateNotes
+                        Dim AdminUserName As String = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText
+                        notes += "by " + AdminUserName
+
+                        MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText = notes
+                        moDbHelper.logActivity(dbHelper.ActivityType.OrderStatusChange, myWeb.mnUserId, 0, 0, notes)
 
                         aSellerNotes = Split(MyBase.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText, "/n")
                         cSellerNotesHtml = "<ul>"
@@ -5956,94 +5964,25 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal providerName As String, ByVal providerPaymentReference As String) As XmlElement
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal cSchemaName As String) As XmlElement
 
                 Dim cProcessInfo As String = ""
+                Dim nStatus As Long
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
-                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
-                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
+
                 Try
-                    Dim IsRefund As String = ""
-                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
-                    MyBase.NewFrm("Refund")
-                    MyBase.submission("Refund", "", "post", "form_check(this)")
-                    Dim refundAmount As Decimal
-                    Dim cResponse As String = ""   'check this
-                    Dim xdoc As New XmlDocument()
-                    Dim amount As String = ""
-                    If (nOrderId > 0) Then
-                        Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
-                        If (cartXmlSql <> "") Then
-                            Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
-                            xdoc.LoadXml(orderXml)
-                        End If
-                        If (xdoc.InnerXml <> "") Then
 
-                            Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
-                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
-                            If (xn IsNot Nothing And xnInstance IsNot Nothing) Then
-                                amount = xnInstance.Attributes("AmountPaid").InnerText
-                            End If
-                        End If
+                    MyBase.NewFrm("Update" & cSchemaName)
 
-                    End If
+                    MyBase.submission("Update" & cSchemaName, "", "post", "form_check(this)")
 
-                    MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
-                    Dim oFrmElmt As XmlElement
-                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
-                    MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
-                    MyBase.addBind("RefundAmount", "Refund/RefundAmount", "true()")
+                    MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nOrderId)
 
-                    MyBase.addInput(oFrmElmt, "ProviderName", True, "Provider Name", "readonly")
-                    MyBase.addBind("ProviderName", "Refund/ProviderName", "true()")
 
-                    MyBase.addInput(oFrmElmt, "ProviderReference", True, "Provider Reference", "readonly")
-                    MyBase.addBind("ProviderReference", "Refund/ProviderReference", "true()")
-
-                    MyBase.addInput(oFrmElmt, "id", True, "Order Id", "readonly")
-                    MyBase.addBind("id", "Refund/OrderId", "true()")
-
-                    MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
-
-                    If MyBase.isSubmitted Then
-                        MyBase.updateInstanceFromRequest()
-                        MyBase.validate()
-                        If (amount > refundAmount) Then
-                            If MyBase.valid Then
-                                'it must contain user and date of the refund and refund reference from the provider 
-                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, amount)
-                                If (IsRefund Is Nothing) Then
-                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
-                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
-                                End If
-                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
-                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
-                                oCfg.Save()
-
-                                'Update Seller Notes:
-                                Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
-                                Dim oDs As DataSet
-                                Dim oRow As DataRow
-                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
-                                For Each oRow In oDs.Tables("Order").Rows
-                                    If (IsRefund IsNot Nothing) Then
-                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
-                                    Else
-                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
-                                    End If
-                                Next
-                                myWeb.moDbHelper.updateDataset(oDs, "Order")
-
-                            End If
-                        End If
-
-                    End If
-                    MyBase.addValues()
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
@@ -8836,22 +8775,32 @@ Partial Public Class Cms
                                         ' _form.addOption(_selectItem, menuName, menuId)
 
                                         'if we are only 2 levels from the root then we use choices
-                                        If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
-                                            If proceedingParent Is Nothing Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
-                                            ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                        If Not oParentParentNode Is Nothing Then
+                                            If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
+                                                If proceedingParent Is Nothing Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                                ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
 
+                                                End If
+                                                ' Add the checkbox
+                                                _form.addOption(oChoices, menuName, menuId)
+                                            Else
+                                                If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                        oParentNode = oParentNode.ParentNode
+                                                    Loop
+                                                End If
                                             End If
                                             ' Add the checkbox
-                                            _form.addOption(oChoices, menuName, menuId)
-
+                                            _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
-                                            If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                    menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                    oParentNode = oParentNode.ParentNode
+                                            If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                Do While menuItem.GetAttribute("id") <> selectItem.Root.ToString
+                                                    menuName = menuItem.GetAttribute("name") & " / " & menuName
+                                                    oParentNode = menuItem.ParentNode
                                                 Loop
                                             End If
 

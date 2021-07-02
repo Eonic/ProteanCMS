@@ -1,14 +1,13 @@
 ﻿var manageRedirectsAPIUrl = "/ewapi/Cms.Admin/ManageRedirects";
-var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/loadUrlsForPagination';
+var paginationRedirectsAPIUrl = '/ewapi/Cms.Admin/LoadUrlsForPagination';
 var paginationAddNewUrlAPIUrl = '/ewapi/Cms.Admin/AddNewUrl';
-var SearchUrlAPIUrl = '/ewapi/Cms.Admin/searchUrl';
-var SaveUrlAPIUrl = '/ewapi/Cms.Admin/saveUrls';
-var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/deleteUrls';
+var SearchUrlAPIUrl = '/ewapi/Cms.Admin/SearchUrl';
+var SaveUrlAPIUrl = '/ewapi/Cms.Admin/SaveUrls';
+var deleteUrlsAPIUrl = '/ewapi/Cms.Admin/DeleteUrls';
 var IsUrlPResentAPI = '/ewapi/Cms.Admin/IsUrlPresent';
-var LoadAllURLAPI = '/ewapi/Cms.Admin/loadAllUrls';
-var getTotalNumberOfUrls = '/ewapi/Cms.Admin/getTotalNumberOfUrls';
-var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/getTotalNumberOfSearchUrls';
-var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
+var LoadAllURLAPI = '/ewapi/Cms.Admin/LoadAllUrls';
+var getTotalNumberOfUrls = '/ewapi/Cms.Admin/GetTotalNumberOfUrls';
+var getTotalNumberOfSearchUrls = '/ewapi/Cms.Admin/GetTotalNumberOfSearchUrls';
 
 
 Vue.mixin({
@@ -21,6 +20,46 @@ Vue.mixin({
         }
     }
 });
+
+
+
+////Edit Page
+
+$(document).on("click", ".btnSavePage", function (event) {
+
+    var newStructName = $("#cStructName").val();
+    editPage.structNameOnChange(newStructName);
+
+});
+
+$(document).on("click", "#btnRedirectSave", function (event) {
+
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
+
+    $("#redirectModal").modal("hide");
+});
+
+$(document).on("click", "#btnRedirectDontSave", function (event) {
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+    }
+    if ($(".btnSubmitPage").length > 0) {
+        $(".btnSubmitPage").click();
+    }
+    $("#redirectModal").modal("hide");
+});
+
+
+
+//$(".btnaddNewUrl").click(function () {
+//    //addNewUrl.toggleModal();
+//    $(".newAddFormInline").removeClass("hidden");
+//});
 
 
 
@@ -661,6 +700,14 @@ $('.scolling-pane').on('scroll', function () {
     }
 });
 
+
+$(document).on("click", ".btnSaveProduct", function (event) {
+
+    var newContentPath = $("#cContentPath").val();
+    editProduct.UrlPathOnChange(newContentPath);
+
+
+});
 
 //Insights
 const insightsSectionElement = document.querySelector("#insights-section");

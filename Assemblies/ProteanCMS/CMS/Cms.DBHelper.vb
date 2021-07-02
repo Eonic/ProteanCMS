@@ -1,14 +1,14 @@
-'***********************************************************************
-' $Library:     eonic.dbhelper
-' $Revision:    3.1  
-' $Date:        2006-03-02
-' $Author:      Trevor Spink (trevor@eonic.co.uk)
-' &Website:     www.eonic.co.uk
-' &Licence:     All Rights Reserved.
-' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
-'***********************************************************************
+    '***********************************************************************
+    ' $Library:     eonic.dbhelper
+    ' $Revision:    3.1  
+    ' $Date:        2006-03-02
+    ' $Author:      Trevor Spink (trevor@eonic.co.uk)
+    ' &Website:     www.eonic.co.uk
+    ' &Licence:     All Rights Reserved.
+    ' $Copyright:   Copyright (c) 2002 - 2006 Eonic Ltd.
+    '***********************************************************************
 
-Option Strict Off
+    Option Strict Off
     Option Explicit On 
     Imports System.Data
     Imports System.Data.sqlClient
@@ -410,6 +410,9 @@ Partial Public Class Cms
 
             'Integrations - 900+
             IntegrationTwitterPost = 901
+
+            'Order Status Change
+            OrderStatusChange = 400
 
         End Enum
 
@@ -1316,7 +1319,7 @@ Partial Public Class Cms
                 ods = GetDataSet(sSql, "Pages")
 
 
-                If ods.Tables("Pages").Rows.Count = 1 Then
+                If Not IsNothing(ods) AndAlso ods.Tables("Pages").Rows.Count = 1 Then
                     nPageId = ods.Tables("Pages").Rows("0").Item("nStructKey")
                     ' if there is just one page validate it
                 ElseIf ods.Tables("Pages").Rows.Count = 0 Then
@@ -8474,10 +8477,7 @@ restart:
 
                 'sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, x.nDisplayOrder as displayorder, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId " & _
 
-                Dim cSQL As String = "SELECT * FROM tblContentRelation"
-                Dim oDs_2 As New DataSet
-                oDs_2 = GetDataSet(cSQL, "Content")
-                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
                     sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cRelationType as rtype, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId " &
                             " FROM tblContent c INNER JOIN" &
                             " tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN" &
@@ -9102,10 +9102,7 @@ restart:
                             If Not oTmp Is Nothing Then
                                 oTmp.SetAttribute("related", 1)
 
-                                cSQL = "SELECT * FROM tblContentRelation"
-                                Dim oDs_2 As New DataSet
-                                oDs_2 = GetDataSet(cSQL, "Content")
-                                If (oDs_2.Tables("Content").Columns.Contains("cRelationType")) Then
+                                If checkTableColumnExists("tblContentRelation", "cRelationType") Then
 
                                     cSQL = "SELECT cRelationType FROM tblContentRelation WHERE nContentParentId = '" + nParentId.ToString + "' AND nContentChildId = '" + oRelated(nI) + "'"
 
@@ -10692,6 +10689,15 @@ ReturnMe:
                 ExeProcessSql(cSQL)
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug)
+            End Try
+        End Sub
+
+        Public Sub SaveCartStatus(ByVal CartId As Integer, ByVal StatusId As Integer)
+            Try
+                Dim cSQL As String = "UPDATE tblCartOrder SET nCartStatus = " & StatusId & " WHERE nCartOrderKey = " & CartId
+                ExeProcessSql(cSQL)
+            Catch ex As Exception
+                returnException(myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug)
             End Try
         End Sub
 

@@ -44,6 +44,7 @@
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
       <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
       <bind id="cLightbox" nodeset="@lightbox" required="false()" type="string"/>
+      <bind id="cTitles" nodeset="@showTitle" required="false()" type="string"/>
       <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
       <bind id="carouselBullets" nodeset="@carouselBullets" required="false()" type="string"/>
       <bind id="carouselHeight" nodeset="@carouselHeight" required="false()" type="string"/>
@@ -91,6 +92,17 @@
           </select1>
           <select1 bind="cLightbox" appearance="full" class="vshort">
             <label>Lightbox</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+          </select1>
+          <select1 bind="cTitles" appearance="full" class="vshort">
+            <label>Show Titles</label>
             <item>
               <label>Yes</label>
               <value>true</value>

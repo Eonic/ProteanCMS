@@ -2899,7 +2899,7 @@ processFlow:
 
 
                         ' Check if the cart needs to be adjusted for deposits or settlements
-                        If mcDeposit = "On" Then
+                        If mcDeposit = "on" Then
                             Dim nTotalAmount As Double = total + shipCost + vatAmt
                             Dim nPayable As Double = 0.0#
                             ' First check if an inital deposit has been paid
@@ -3116,6 +3116,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", FormatNumber(vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost + vatAmt, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 Else
                     oCartElmt.SetAttribute("totalNet", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatRate", 0.0#)
@@ -3123,6 +3125,8 @@ processFlow:
                     oCartElmt.SetAttribute("shippingCost", FormatNumber(shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
                     oCartElmt.SetAttribute("vatAmt", 0.0#)
                     oCartElmt.SetAttribute("total", FormatNumber(total + shipCost, 2, Microsoft.VisualBasic.TriState.True, Microsoft.VisualBasic.TriState.False, Microsoft.VisualBasic.TriState.False))
+                    oCartElmt.SetAttribute("currency", mcCurrencyCode)
+                    oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol)
                 End If
 
                 Return vatAmt
@@ -3265,11 +3269,22 @@ processFlow:
                         If IsNumeric(oThePrice.InnerText) Then
                             'this selects the cheapest price for this user assuming not free
                             If IsNumeric(oPNode.InnerText) Then
-                                If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
-                                    oThePrice = oPNode
+                                'if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
+                                If Not IsNothing(moCartConfig("OverrideCheapestPrice")) And moCartConfig("OverrideCheapestPrice") = "on" Then
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        Dim oThePriceType As String = oThePrice.GetAttribute("type")
+                                        Dim oPNodeType As String = oPNode.GetAttribute("type")
+
+                                        If Not (oPNodeType = "rrp" And oThePriceType = "sale") Then
+                                            oThePrice = oPNode
+                                        End If
+                                    End If
+                                Else
+                                    If CDbl(oPNode.InnerText) < CDbl(oThePrice.InnerText) And CLng(oPNode.InnerText) <> 0 Then
+                                        oThePrice = oPNode
+                                    End If
                                 End If
                             End If
-
                         Else
                             oThePrice = oPNode
                         End If
@@ -5229,37 +5244,114 @@ processFlow:
                             oXform.NewFrm(formName)
                             oFormGrp = oXform.addGroup(oXform.moXformElmt, "notes", , "Missing File: " & mcNotesXForm)
                         Else
+                            Dim cTicketTypes As String = moCartConfig("TicketTypes")
+                            ''Modify the notes for dependant on tickets
+                            If cTicketTypes <> "" Then
+                                If Not moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count = 0 Then
+                                    Dim ticketType As String
+                                    For Each ticketType In Split(cTicketTypes, ",")
+
+                                        Dim blankElmt As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" & ticketType & "']")
+                                        Dim blankBind As XmlElement = oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" & ticketType & "']")
+                                        Dim blankControl As XmlElement = oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" & ticketType & "')]")
+                                        Dim oNotesRoot As XmlElement = oXform.Instance.SelectSingleNode("Notes/Notes")
+                                        Dim oBindRoot As XmlElement = oXform.model.SelectSingleNode("bind")
+                                        Dim oControlRoot As XmlElement = oXform.moXformElmt.SelectSingleNode("group")
+
+                                        'Case for Run
+                                        Dim newElmt2 As XmlElement
+                                        Dim nCount As Integer = 0
+                                        Dim i As Integer = 0
+                                        Dim oItemElmt As XmlElement
+                                        For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
+                                            For i = 1 To oItemElmt.GetAttribute("quantity")
+
+                                                'Update the instance
+                                                oNotesRoot.AppendChild(blankElmt.CloneNode(True))
+                                                Dim newElmt As XmlElement = oNotesRoot.LastChild
+                                                newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
+                                                newElmt.SetAttribute("id", ticketType & nCount)
+                                                newElmt = Nothing
+                                                'Update the binds
+                                                oBindRoot.AppendChild(blankBind.CloneNode(True))
+                                                newElmt = oBindRoot.LastChild
+                                                newElmt.SetAttribute("nodeset", "Attendee[@id='" & ticketType & nCount & "']")
+                                                For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*")
+                                                    If newElmt2.GetAttribute("id") <> "" Then
+                                                        newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") & "-" & ticketType & nCount)
+                                                    End If
+                                                Next
+                                                newElmt = Nothing
+                                                'Update the controls
+                                                If Not blankControl Is Nothing Then
+                                                    oControlRoot.AppendChild(blankControl.CloneNode(True))
+                                                End If
+                                                newElmt = oControlRoot.LastChild
+
+                                                Dim labelElmt As XmlElement = moPageXml.CreateElement("label")
+                                                labelElmt.InnerText = oItemElmt.SelectSingleNode("Name").InnerText & " - " & moCartConfig("TicketAttendeeLabel") & " " & i
+                                                newElmt.InsertBefore(labelElmt, newElmt.FirstChild)
+
+                                                For Each newElmt2 In newElmt.SelectNodes("descendant-or-self::*[@bind]")
+                                                    If newElmt2.GetAttribute("bind") <> "" Then
+                                                        If i <> oItemElmt.GetAttribute("quantity") Then
+                                                            'remove all but the last delcarations
+                                                            If CStr(newElmt2.GetAttribute("bind")).StartsWith("AttDeclaration") Then
+                                                                'newElmt2.ParentNode.RemoveChild(newElmt2.PreviousSibling)
+                                                                Dim delGroup As XmlElement = newElmt2.ParentNode
+                                                                delGroup.SetAttribute("delete", True)
+                                                            End If
+                                                        End If
+
+                                                        newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") & "-" & ticketType & nCount)
+                                                    End If
+                                                Next
+                                                newElmt = Nothing
+                                                nCount = nCount + 1
+                                            Next
+                                        Next
+                                        'remove the blanks
+                                        For Each newElmt2 In oControlRoot.SelectNodes("descendant-or-self::*[@delete]")
+                                            newElmt2.ParentNode.RemoveChild(newElmt2)
+                                        Next
+                                        blankElmt.ParentNode.RemoveChild(blankElmt)
+                                        blankBind.ParentNode.RemoveChild(blankBind)
+                                        blankControl.ParentNode.RemoveChild(blankControl)
+                                    Next
+                                End If
+                            End If
+
 
                             'add missing submission or submit buttons
                             If oXform.moXformElmt.SelectSingleNode("model/submission") Is Nothing Then
-                                'If oXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
-                                oXform.submission(formName, action, "POST", "return form_check(this);")
-                            End If
-                            If oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") Is Nothing Then
-                                oXform.addSubmit(oXform.moXformElmt, "Submit", "Continue")
-                            End If
-                            If moDiscount.bHasPromotionalDiscounts Then
-                                Dim oSubmit As XmlElement = oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit")
-                                If Not oSubmit Is Nothing Then
-                                    oFormGrp = oSubmit.ParentNode
-                                Else
-                                    oFormGrp = oXform.addGroup(oXform.moXformElmt, "Promo", , "Enter Promotional Code")
+                                    'If oXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
+                                    oXform.submission(formName, action, "POST", "return form_check(this);")
                                 End If
-                                If oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") Is Nothing Then
-                                    'If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
-                                    If Protean.Tools.Xml.firstElement(oXform.Instance).SelectSingleNode("Notes") Is Nothing Then
-                                        'ocNode.AppendChild(moPageXml.ImportNode(Protean.Tools.Xml.firstElement(newXml.DocumentElement), True))
-                                        'oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                        'Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                        Protean.Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
+                                If oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") Is Nothing Then
+                                    oXform.addSubmit(oXform.moXformElmt, "Submit", "Continue")
+                                End If
+                                If moDiscount.bHasPromotionalDiscounts Then
+                                    Dim oSubmit As XmlElement = oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit")
+                                    If Not oSubmit Is Nothing Then
+                                        oFormGrp = oSubmit.ParentNode
+                                    Else
+                                        oFormGrp = oXform.addGroup(oXform.moXformElmt, "Promo", , "Enter Promotional Code")
                                     End If
-                                    'oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    'Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    promocodeElement = Protean.Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    oXform.addInput(oFormGrp, "Notes/PromotionalCode", False, "Promotional Code", "")
+                                    If oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") Is Nothing Then
+                                        'If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
+                                        If Protean.Tools.Xml.firstElement(oXform.Instance).SelectSingleNode("Notes") Is Nothing Then
+                                            'ocNode.AppendChild(moPageXml.ImportNode(Protean.Tools.Xml.firstElement(newXml.DocumentElement), True))
+                                            'oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
+                                            'Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
+                                            Protean.Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
+                                        End If
+                                        'oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
+                                        'Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
+                                        promocodeElement = Protean.Tools.Xml.firstElement(oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance")).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
+                                        oXform.addInput(oFormGrp, "Notes/PromotionalCode", False, "Promotional Code", "")
+                                    End If
                                 End If
                             End If
-                        End If
                 End Select
 
                 ' External promo code checks
@@ -5991,9 +6083,9 @@ processFlow:
 
             Try
                 'stop carts being added by robots
-                If Not myWeb.moSession("previousPage") = "" Then
+                'If Not myWeb.moSession("previousPage") = "" Then
 
-                    oInstance.AppendChild(oInstance.CreateElement("instance"))
+                oInstance.AppendChild(oInstance.CreateElement("instance"))
                     oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
                     'addNewTextNode("nCartOrderKey", oElmt)
                     addNewTextNode("cCurrency", oElmt, mcCurrencyRef)
@@ -6029,10 +6121,10 @@ processFlow:
 
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
                     Return mnCartId
-                Else
-                    mnCartId = 0
-                    Return mnCartId
-                End If
+                'Else
+                '    mnCartId = 0
+                '    Return mnCartId
+                'End If
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug)

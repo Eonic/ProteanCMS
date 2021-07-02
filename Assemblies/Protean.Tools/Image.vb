@@ -154,13 +154,13 @@ Public Class Image
         End Try
     End Function
 
-    Public Function CreateThumbnail(VirtualPath As String) As String
+    Public Function CreateThumbnail(VirtualPath As String, VirtualThumbnailPath As String) As String
         'saves the file to designated location
         Dim nCompression = 50
         Try
             Dim thumbnailVirtualPath As String = ""
             Dim fi As New FileInfo(cLocation)
-            Dim thumbnailPath As String = cLocation.Remove(cLocation.Length - fi.Name.Length) & "~ptn\"
+            Dim thumbnailPath As String = cLocation.Remove(cLocation.Length - fi.Name.Length) & VirtualThumbnailPath & "\"
             Dim thfi As New FileInfo(thumbnailPath & fi.Name)
 
             If thfi.Exists = False Then
@@ -174,7 +174,7 @@ Public Class Image
             End If
             thfi = Nothing
 
-            Return "/~ptn/" & fi.Name
+            Return VirtualThumbnailPath & "/" & fi.Name
 
 
         Catch ex As Exception

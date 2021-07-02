@@ -47,7 +47,7 @@ Partial Public Class Cms
         Private _runPreFuzzySearch As Boolean = False
         Private _includePrefixNameSearch As Boolean = False
         Private _overrideQueryBuilder As Boolean = False
-        Private _pagingDefaultSize As Integer = 25
+        Private _pagingDefaultSize As Integer = 300
         Private _indexReadFolder As String = ""
         Private _indexPath As String = "../Index"
         Private _logSearches As Boolean = False
@@ -125,7 +125,7 @@ Partial Public Class Cms
                 _runPreFuzzySearch = (moConfig("SearchGetFuzzyCount") = "on")
 
                 Dim pageDefaultSize As String = moConfig("SearchDefaultPageSize") & ""
-                _pagingDefaultSize = Tools.Number.ConvertStringToIntegerWithFallback(pageDefaultSize, 25)
+                _pagingDefaultSize = Tools.Number.ConvertStringToIntegerWithFallback(pageDefaultSize, _pagingDefaultSize)
 
                 ' Site Search specifics
                 If moConfig("SiteSearch") = "on" Then
@@ -385,25 +385,32 @@ Partial Public Class Cms
                 Dim resultsCount As Integer = 0
                 Dim resultsXML As XmlElement = moContextNode.OwnerDocument.CreateElement("Content")
                 Dim HitsLimit As Integer
-                Dim PageSize As Integer
                 Dim command As Integer
                 Dim Page As Integer = 0
                 Dim NextPage As Integer = 0
-                Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
-                Dim path As String = "intotheblue.local/"
+                ' Dim pathList As String() = Split(CleanSearchString(HttpContext.Current.Request.Url.Host), "?")
+
+                Dim resultDoc As Document = Nothing
+                Dim result As XmlElement = Nothing
+                Dim pageIdField As Field = Nothing
+                Dim pageId As Long = 0
+                Dim url As String = ""
+                Dim menuItem As XmlElement = Nothing
+                Dim reservedFieldNames() As String = {"type", "text", "abstract"}
+                Dim pageStart As Integer = Math.Max(myWeb.GetRequestItemAsInteger("pageStart", 1), 1)
+                Dim pageSize As Integer = myWeb.GetRequestItemAsInteger("pageSize", _pagingDefaultSize)
+                Dim pageEnd As Integer
 
                 'allow paging as per config setting 
                 'If myWeb.moConfig("SiteSearchIndexResultPaging") IsNot Nothing And (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
                 If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
-                    If (myWeb.moRequest("hitlimit") > 0) Then
-                        HitsLimit = myWeb.moRequest("hitlimit")
+                    If (pageStart > 1) Then
+                        HitsLimit = pageStart + pageSize
                     Else
-                        HitsLimit = myWeb.moConfig("SearchDefaultPageSize") 'first load as per page count
+                        HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
                         PageSize = myWeb.moRequest("PageSize")
-                    Else
-                        PageSize = myWeb.moConfig("SearchDefaultPageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -415,11 +422,12 @@ Partial Public Class Cms
                     End If
 
                 Else 'search index result will show without pagination and records will load as per config setting value
-                    HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                    HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
-                    PageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                    pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
                     If PageSize = 0 Then PageSize = 300
                 End If
+
 
                 If Not cQuery.Equals("") Then
 
@@ -430,13 +438,30 @@ Partial Public Class Cms
                     Dim fsDir As Lucene.Net.Store.FSDirectory = FSDirectory.Open(oIndexDir)
                     Dim searcher As New IndexSearcher(fsDir, True)
 
+                    'check whether logged in user is csuser and skip checking status
+                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
+                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
+                        Dim nUserId As Integer = myWeb.moSession("nUserId")
+                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
+                    End If
+
                     ' Check for settings
                     If (fuzzySearch <> "off") Then
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
+                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
+                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
+                    If bShowHiddenForUser Then
+                        _includeFuzzySearch = False ' to get exact matching result
+                        'keep page size for csuser as default
+                        HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                        If HitsLimit = 0 Then HitsLimit = 300
+                        pageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                        If pageSize = 0 Then pageSize = 300
+                    Else
+                        _includeFuzzySearch = True
+                    End If
 
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
@@ -444,12 +469,6 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("fuzzy", IIf(_includeFuzzySearch, "on", "off"))
                     resultsXML.SetAttribute("prefixNameSearch", IIf(_includePrefixNameSearch, "true", "false"))
 
-                    'check whether logged in user is csuser and skip checking status
-                    Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                    If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                        Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                    End If
                     ' Generate the live page filter
                     Dim livePages As Filter = LivePageLuceneFilter()
 
@@ -491,43 +510,32 @@ Partial Public Class Cms
                         resultsXML.SetAttribute("fuzzyCount", searcher.Search(searchQuery, livePages, HitsLimit, queryOrder).TotalHits.ToString)
                     End If
 
-                    Dim resultDoc As Document = Nothing
-                    Dim result As XmlElement = Nothing
-                    Dim pageIdField As Field = Nothing
-                    Dim pageId As Long = 0
-                    Dim url As String = ""
-                    Dim menuItem As XmlElement = Nothing
-                    Dim reservedFieldNames() As String = {"type", "text", "abstract"}
-                    Dim pageStart As Integer
-                    Dim pageCount As Integer
-                    Dim pageEnd As Integer
+
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
                     Dim totalResults As Long = results.TotalHits
 
-                    pageCount = myWeb.GetRequestItemAsInteger("pageCount", _pagingDefaultSize)
-                    If pageCount <= 0 Then
-                        pageCount = results.TotalHits
+
+                    If pageSize <= 0 Then
+                        pageSize = results.TotalHits
                     End If
 
                     If totalResults = 0 Then
                         pageStart = totalResults
                         pageEnd = totalResults
                     Else
-                        pageStart = Math.Max(myWeb.GetRequestItemAsInteger("pageStart", 1), 1)
-                        pageEnd = Math.Min(totalResults, pageStart + pageCount - 1)
+                        pageEnd = Math.Min(totalResults, pageStart + pageSize - 1)
                     End If
 
                     If pageEnd < pageStart Then pageEnd = pageStart
 
-                    If totalResults > 0 And pageCount > 0 Then
-                        Dim pageNumber As Integer = totalResults Mod pageCount
+                    If totalResults > 0 And pageSize > 0 Then
+                        Dim pageNumber As Integer = totalResults Mod pageSize
                     End If
 
-                    resultsXML.SetAttribute("pageStart", pageStart)
-                    resultsXML.SetAttribute("pageCount", pageCount)
-                    resultsXML.SetAttribute("pageEnd", pageEnd)
+                    resultsXML.SetAttribute("pageStart", pageStart) 'Start result number
+                    resultsXML.SetAttribute("pageEnd", pageEnd) 'End result number
                     resultsXML.SetAttribute("nextPage", pageEnd + 1)
 
                     resultsXML.SetAttribute("sortCol", myWeb.moRequest("sortCol"))
@@ -535,30 +543,30 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
                     resultsXML.SetAttribute("totalResults", totalResults)
-                    resultsXML.SetAttribute("pageSize", PageSize)
-                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / PageSize))
+                    resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
+                    resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
-                    ' If myWeb.moConfig("SiteSearchIndexResultPaging") = "on" Then
+                    'Don't believe this to be required.
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
-                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "on")
+                        resultsXML.SetAttribute("sitePaging", "on")
                         If bShowHiddenForUser Then
-                            resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                            resultsXML.SetAttribute("sitePaging", "off")
                         End If
                     Else
-                        resultsXML.SetAttribute("SiteSearchIndexResultPaging", "off")
+                        resultsXML.SetAttribute("sitePaging", "off")
                     End If
+
                     resultsXML.SetAttribute("Hits", HitsLimit)
-                    'If (myWeb.moConfig("SiteSearchIndexResultPaging") = "on") Then 'allow paging for search index page result
+
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then 'allow paging for search index page result
-                        resultsXML.SetAttribute("startCount", HitsLimit - PageSize + 1)
+                        resultsXML.SetAttribute("startCount", HitsLimit - pageSize + 1)
                     End If
 
                     Dim artIdResults As New List(Of Long)
 
                     ' Process the results
                     If totalResults > 0 Then
-                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * PageSize
-                        Dim takeRecord As Integer = PageSize
+                        Dim skipRecords As Integer = (myWeb.moRequest("page")) * pageSize
                         'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
                         Dim scoreDocs As ScoreDoc() = results.ScoreDocs
 
@@ -566,11 +574,12 @@ Partial Public Class Cms
                         'For Each sDoc In results.ScoreDocs()
 
                         '    resultDoc = searcher.Doc(sDoc.Doc)
-                        For i As Integer = skipRecords To results.TotalHits - 1
+                        For i As Integer = pageStart - 1 To results.TotalHits - 1
 
-                            If i > (skipRecords + takeRecord) - 1 Then
+                            If i > (pageStart - 1 + pageSize - 1) Then
                                 Exit For
                             End If
+
                             resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
                             If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
@@ -615,13 +624,12 @@ Partial Public Class Cms
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        skipRecords = (myWeb.moRequest("page")) * PageSize
+                        For i As Integer = pageStart - 1 To results.TotalHits - 1
 
-                        For i As Integer = skipRecords To results.TotalHits - 1
-
-                            If i > (skipRecords + takeRecord) - 1 Then
+                            If i > (pageStart - 1 + pageSize - 1) Then
                                 Exit For
                             End If
+
                             resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
                             If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
@@ -729,7 +737,7 @@ Partial Public Class Cms
                 resultsXML.SetAttribute("searchString", cQuery)
                 resultsXML.SetAttribute("searchType", "INDEX")
                 resultsXML.SetAttribute("type", "SearchHeader")
-                resultsXML.SetAttribute("resultsReturned", resultsCount)
+                resultsXML.SetAttribute("resultsReturned", resultsCount + 1)
 
                 moContextNode.AppendChild(resultsXML)
 
@@ -1024,6 +1032,8 @@ Partial Public Class Cms
                 returnException(myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug)
             End Try
         End Sub
+
+
         Sub XPathQuery(ByVal sSearch As String, ByVal cContentType As String)
             PerfMon.Log("Search", "XPathQuery")
             Dim sXpath As String = ""

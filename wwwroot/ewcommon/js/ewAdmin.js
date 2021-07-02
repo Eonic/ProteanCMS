@@ -441,6 +441,7 @@ function setEditImage() {
     $('a.editImage').click(function () {
         var targetForm = $(this).parents('form').attr('id');
         var imgtag = $(this).parents('.input-group').children('textarea').val();
+        imgtag = $.trim(imgtag);
         imgtag = encodeURIComponent(imgtag);
         var targetField = $(this).parents('.input-group').children('textarea').attr('id');
         var cName = "";
@@ -2114,3 +2115,287 @@ $(document).on('click', '.PrevPage', function () {
 
 
 });
+
+function ValidateContentForm(event) {
+    if (form_check(event)) {
+        var pageId = this.getQueryStringParam('pgid');
+        $(".hiddenType").val("Page");
+        $(".hiddenPageId").val(pageId);
+        var newStructName = $("#cStructName").val();
+        return editPage.structNameOnChange(newStructName);
+
+    }
+}
+
+function RedirectClick(event) {
+
+    var redirectType = $(".hiddenRedirectType").val();
+    if (redirectType == "404Redirect") {
+
+        $(".hiddenRedirectType").val("");
+        if ($(".btnSubmitPage").length > 0) {
+
+            $(".hiddenParentCheck").val("false");
+            $("#redirectModal").modal("hide");
+            $(".btnSubmitPage").click();
+        }
+    }
+    else {
+
+        $(".hiddenRedirectType").val(redirectType);
+
+        var pageId = $(".hiddenPageId").val();
+        var type = $(".hiddenType").val();
+        var inputJson = { pageId: pageId };
+        var isParent = "false";
+        if (type == "Page") {
+            axios.post(IsParentPageAPI, inputJson)
+                .then(function (response) {
+
+                    if (response.data == "True") {
+                        isParent = response.data;
+                        $("#RedirectionChildConfirmationModal").modal("show");
+                        $("#btnYescreateRuleForChild").removeAttr("disabled");
+                        $("#btnNocreateRuleForChild").removeAttr("disabled");
+                        $("#redirectModal").modal("hide");
+                    }
+                    else {
+                        var newUrl = $("#NewUrl").val();
+                        var oldUrl = $("#OldUrl").val();
+                        inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+                        axios.post(redirectAPIUrl, inputJson)
+                            .then(function (response) {
+                                if (response.data == "success") {
+                                    $("#redirectModal").modal("hide");
+                                    $(".hiddenParentCheck").val("false");
+                                    localStorage.originalStructName = newUrl;
+                                    $("#EditPage").unbind().submit();
+                                }
+                            });
+
+
+
+                    }
+                });
+        }
+        else if (type == "Product") {
+            var newUrl = $("#NewUrl").val();
+            var oldUrl = $("#OldUrl").val();
+            inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+            axios.post(redirectAPIUrl, inputJson)
+                .then(function (response) {
+                    if (response.data == "success") {
+                        $("#redirectModal").modal("hide");
+                        $(".hiddenParentCheck").val("false");
+                        localStorage.originalStructName = newUrl;
+                        $("#EditPage").unbind().submit();
+                    }
+                });
+        }
+
+        //}
+
+    }
+
+    if ($(".btnSubmitProduct").length > 0) {
+        $(".btnSubmitProduct").click();
+        $("#redirectModal").modal("hide");
+    }
+
+
+}//);
+
+function CreateRedirectRule() {
+
+    var newUrl = $("#NewUrl").val();
+    var oldUrl = $("#OldUrl").val();
+    var type = $(".hiddenType").val();
+    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+    axios.post(redirectAPIUrl, inputJson)
+        .then(function (response) {
+            if (response.data == "success") {
+                $("#redirectModal").modal("hide");
+
+            }
+        });
+}
+
+$(document).on("click", "#btnNocreateRuleForChild", function (event) {
+
+    $(".hiddenParentCheck").val("false");
+    $("#RedirectionChildConfirmationModal").modal("hide");
+    $("#redirectModal").modal("hide");
+
+});
+
+$(document).on("click", "#btnYescreateRuleForChild", function (event) {
+
+    var pageId = $(".hiddenPageId").val();
+    var redirectType = $(".hiddenRedirectType").val();
+    var newUrl = $("#NewUrl").val();
+    var oldUrl = $("#OldUrl").val();
+    var type = $(".hiddenType").val();
+    inputJson = { redirectType: redirectType, oldUrl: oldUrl, newUrl: newUrl, pageId: pageId, isParent: isParent, pageType: type };
+    axios.post(redirectAPIUrl, inputJson)
+        .then(function (response) {
+            if (response.data == "success") {
+                $("#RedirectionChildConfirmationModal").modal("hide");
+                $("#redirectModal").modal("hide");
+
+
+            }
+        });
+
+});
+
+
+const editPageElement = document.querySelector("#EditPage");
+if (editPageElement) {
+    window.editPage = new Vue({
+        el: "#EditPage",
+        data: {
+            structName: "",
+            originalStructureName: ""
+        },
+        methods: {
+            createRedirects: function () {
+                $("#redirectModal").modal("hide");
+                var redirectType = $(".redirectStatus:checked").val();
+
+                if (redirectType == "" || redirectType == "404Redirect" || redirectType == undefined) {
+                    return false;
+                }
+                else {
+
+                    var newUrl = $("#cStructName").val();
+                    var inputJson = { redirectType: redirectType, oldUrl: newUrl };
+                    axios.post(IsUrlPResentAPI, inputJson)
+                        .then(function (response) {
+
+                            if (response.data == "True") {
+                                if (confirm("Old url is already exist. Do you want to replace it?")) {
+
+                                    $("#cRedirect").val(redirectType);
+
+                                    var inputJson = { redirectType: redirectType, oldUrl: localStorage.originalStructName, newUrl: newUrl };
+                                    axios.post(redirectUrl, inputJson)
+                                        .then(function (response) {
+                                            if (response.data == "success") {
+                                                $("#redirectModal").modal("hide");
+
+                                            }
+
+                                        });
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            else {
+
+                                $("#cRedirect").val(redirectType);
+                                $("#redirectModal").modal("hide");
+
+                            }
+                        });
+
+
+                }
+
+            },
+
+
+
+            structNameOnChange: function (newStructName) {
+
+                if (localStorage.originalStructName && localStorage.originalStructName != "" && localStorage.originalStructName != newStructName) {
+                    $('.btnRedirectSave').removeAttr("disabled");
+                    $("#redirectModal").modal("show");
+                    $("#OldUrl").val(localStorage.originalStructName);
+                    $("#NewUrl").val(newStructName);
+                    this.structName = newStructName;
+                    $(".hiddenPageId").val(localStorage.pageId);
+                    event.preventDefault();
+
+                }
+                else {
+
+                    return true;
+                }
+
+            }
+        },
+
+        mounted: function () {
+
+            var cStructName = document.getElementById('cStructName');
+            if (cStructName != null) {
+                this.structName = cStructName.value;
+            }
+
+            //clean the storage for struct name when page changes.
+            let pageId = this.getQueryStringParam('pgid');
+            if (!localStorage.pageId || localStorage.pageId != pageId) {
+                localStorage.removeItem('originalStructName');
+            }
+            localStorage.pageId = pageId;
+            localStorage.originalStructName = this.structName;
+        }
+    });
+}
+
+//End Page Edit
+
+
+//Edit Product
+const editProductElement = $(".ProductSub").length;
+if (editProductElement > 0) {
+    window.editProduct = new Vue({
+        el: ".ProductSub",
+        data: {
+            urlPathInput: "",
+            originalPathName: ""
+        },
+        methods: {
+            storedPath: function () {
+
+                var cContentPath = $("#cContentPath").val();
+                if (cContentPath != null) {
+                    this.urlPathInput = cContentPath;
+                }
+
+                //clean the storage for struct name when page changes.
+                let pageId = getQueryStringParam('pgid');
+                if (!localStorage.pageId || localStorage.pageId != pageId) {
+                    localStorage.removeItem('originalPathName');
+                }
+                localStorage.pageId = pageId;
+                localStorage.originalPathName = this.urlPathInput;
+            },
+            UrlPathOnChange: function (newContentPath) {
+
+                if (localStorage.originalPathName && localStorage.originalPathName != "" && localStorage.originalPathName != newContentPath) {
+                    $('.btnRedirectSave').removeAttr("disabled");
+                    $("#redirectModal").modal("show");
+                    $("#OldUrl").val(localStorage.originalPathName);
+                    $("#NewUrl").val(newContentPath);
+                    this.cContentPath = newContentPath;
+                    $(".hiddenPageId").val(localStorage.pageId);
+                    $(".hiddenProductOldUrl").val(localStorage.originalPathName);
+                    $(".hiddenProductNewUrl").val(newContentPath);
+                    $(".hiddenRedirectType").val("301Redirect");
+                    event.preventDefault();
+
+                }
+                else {
+
+                    return true;
+                }
+
+            },
+        },
+        mounted: function () {
+            this.storedPath();
+        }
+    });
+}

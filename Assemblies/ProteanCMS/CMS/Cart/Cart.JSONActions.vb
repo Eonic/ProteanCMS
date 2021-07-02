@@ -524,28 +524,135 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
-            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            Public Function AddCartAddress(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
                 Try
-                    Dim cProcessInfo As String = ""
-                    Dim josResult As String = "SUCESS"
+                    Dim contact As New Contact()
+                    Dim nId As Int32
+                    If (jObj IsNot Nothing) Then
+                        contact.cContactEmail = emailAddress
+                        contact.cContactTel = telphone
+                        contact.cContactType = contactType
+                        contact.nContactCartId = cartId
+                        If (jObj("Forename") IsNot Nothing) Then
+                            contact.cContactFirstName = jObj("Forename")
+                        End If
+                        If (jObj("Surname") IsNot Nothing) Then
+                            contact.cContactLastName = jObj("Surname")
+                        End If
+                        If (jObj("Title") IsNot Nothing) Then
+                            contact.cContactTitle = jObj("Title")
+                        End If
+                        If (jObj("cContactCompany") IsNot Nothing) Then
+                            contact.cContactCompany = jObj("cContactCompany")
+                        End If
+                        If (jObj("CartId") IsNot Nothing) Then
+                            contact.nContactCartId = cartId
+                        End If
+                        If (jObj("Address1") IsNot Nothing) Then
+                            contact.cContactAddress = jObj("Address1")
+                        End If
 
-                    'input params
-                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+                        If (jObj("Address2") IsNot Nothing) Then
+                            contact.cContactAddress = contact.cContactAddress + " " + jObj("Address2").ToString()
+                        End If
+                        If (jObj("City") IsNot Nothing) Then
+                            contact.cContactCity = jObj("City")
+                        End If
+                        If (jObj("State") IsNot Nothing) Then
+                            contact.cContactState = jObj("State")
+                        End If
+                        If (jObj("Country") IsNot Nothing) Then
+                            contact.cContactCountry = jObj("Country")
+                        End If
+                        If (jObj("Postcode") IsNot Nothing) Then
+                            contact.cContactZip = jObj("Postcode")
+                        End If
+                        If (jObj("Fax") IsNot Nothing) Then
+                            contact.cContactFax = jObj("Fax")
+                        End If
 
+                        contact.cContactName = contact.cContactTitle + " " + contact.cContactFirstName + " " + contact.cContactLastName
 
-                    Try
-                        'Data updates.
-                    Catch ex As Exception
-                        josResult = "ERROR"
-                    End Try
+                    End If
 
-
-                    Return josResult
-
+                    nId = myWeb.moDbHelper.SetContact(contact)
+                    Return nId
                 Catch ex As Exception
                     Return ex.Message
                 End Try
+            End Function
+
+
+
+            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double) As String
+                Try
+                    Dim oXml As XmlDocument = New XmlDocument
+                    Dim oDetailXml As XmlElement = oXml.CreateElement("Response")
+                    Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
+                    addNewTextNode("AuthCode", oDetailXml, sAuthNo)
+
+                    myCart.updateGCgetValidShippingOptionsDS(65)
+                    myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
+                    myWeb.moDbHelper.SaveCartStatus(nCartId, cartProcess.Complete)
+
+                    myCart.GetCart(CartXml.FirstChild)
+                    myCart.purchaseActions(CartXml)
+                    'persist cart
+                    myCart.close()
+                    CartXml = updateCartforJSON(CartXml)
+
+                    Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented)
+                    jsonString = jsonString.Replace("""@", """_")
+                    jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+                    Return jsonString
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+
+            End Function
+
+            Public Function DoRefund(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oCart As New Cart(myWeb)
+                    oCart.moPageXml = myWeb.moPageXml
+
+                    Dim sAdminLayout = IIf(jObj("sAdminLayout") IsNot Nothing, CStr(jObj("sAdminLayout")), "")
+                    Dim Providername = IIf(jObj("sProvider") IsNot Nothing, CStr(jObj("sProvider")), "")
+                    If jObj("nOrderid") Is Nothing Then
+                        Return ""
+                    End If
+                    Dim nOrderid = CStr(jObj("nOrderid"))
+                    Dim sLoginUser = CStr(jObj("sUser"))
+
+                    Dim refundPaymentReceipt = ""
+                    If Providername <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername) ' "JudoPay"
+                        If (Providername = "JudoPay") Then
+                            'check whether csuser is logged in
+                            If sLoginUser = "ITB Customer Services" Then
+                                refundPaymentReceipt = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderid, sAdminLayout, sLoginUser)
+                            Else
+                                refundPaymentReceipt = "User is Not valid."
+                            End If
+                        End If
+
+                        Dim xmlDoc As New XmlDocument
+                        Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
+                        xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
+                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                        Return jsonString
+                    End If
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+
             End Function
 
         End Class

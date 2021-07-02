@@ -76,8 +76,10 @@
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />
         <add key="CheckDetailPath" value="off" />
-         <add key="EnableWebP" value="off" />
-         <add key="EnableRetina" value="off" />
+        <add key="TrailingSlash" value="off" />
+        <add key="LowerCaseUrl" value="off" />
+        <add key="EnableWebP" value="off" />
+        <add key="EnableRetina" value="off" />
        </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -150,6 +152,8 @@
      <bind id="ewPageCache" nodeset="web/add[@key='PageCache']/@value" required="false()" type="string" />
      <bind id="ewPageCacheTimeout" nodeset="web/add[@key='PageCacheTimeout']/@value" required="false()" type="string" />
      <bind id="ewCheckDetailPath" nodeset="web/add[@key='CheckDetailPath']/@value" required="false()" type="string" />
+     <bind id="ewTrailingSlash" nodeset="web/add[@key='TrailingSlash']/@value" required="false()" type="string" />
+     <bind id="ewLowerCaseUrl" nodeset="web/add[@key='LowerCaseUrl']/@value" required="false()" type="string" />
      <bind id="ewEnableWebP" nodeset="web/add[@key='EnableWebP']/@value" required="false()" type="string" />
      <bind id="ewEnableRetina" nodeset="web/add[@key='EnableRetina']/@value" required="false()" type="string" />
    </model>
@@ -392,6 +396,36 @@
        </input>
        <select1 bind="ewCheckDetailPath" appearance="full">
          <label>Check Detail Path</label>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>
+       <select1 bind="ewTrailingSlash" appearance="full">
+         <label>Force Trailing Slash</label>
+         <help class="inline">
+          Forces all urls to contain a trailing slash
+        </help>
+         <item>
+           <label>On</label>
+           <value>on</value>
+         </item>
+         <item>
+           <label>Off</label>
+           <value>off</value>
+         </item>
+         <value>off</value>
+       </select1>
+       <select1 bind="ewLowerCaseUrl" appearance="full">
+         <label>Enable Lower Case Url</label>
+         <help class="inline">
+          Convert all urls to lower case and automatically redirect url with uppercase characters.
+        </help>
          <item>
            <label>On</label>
            <value>on</value>

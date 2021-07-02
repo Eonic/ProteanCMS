@@ -54,6 +54,7 @@ Public Module stdTools
 
     Public SortDirectionVal() As String = {"descending", "ascending"}
 
+
     Public Sub returnException(ByRef sException As String, ByVal vstrModuleName As String, ByVal vstrRoutineName As String, ByVal oException As Exception, Optional ByVal xsltTemplatePath As String = "/ewcommon/xsl/standard.xsl", Optional ByVal vstrFurtherInfo As String = "", Optional ByVal bDebug As Boolean = False, Optional ByVal cSubjectLinePrefix As String = "")
         'Author:        Trevor Spink
         'Copyright:     Eonic Ltd 2005
@@ -241,9 +242,7 @@ Public Module stdTools
                                     'convert to Xml Dom
                                     Dim oXml As XmlDataDocument = New XmlDataDocument(oDs)
                                     oXml.PreserveWhitespace = False
-                                    If Not oXml.DocumentElement Is Nothing Then
-                                        oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
-                                    End If
+                                    oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Replace(Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<")
                                 End If
 
                             End If
