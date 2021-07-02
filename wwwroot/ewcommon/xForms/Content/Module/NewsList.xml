@@ -412,6 +412,7 @@
       </group>
       <group>
         <label>Module Links</label>
+
         <select1 bind="cLinkType" appearance="full">
           <label>Type of link</label>
           <item>
@@ -440,6 +441,12 @@
         <input bind="cModuleLinkText" class="long">
           <label>Module footer link text</label>
         </input>
+        <select bind="bLinkArticle" appearance="full" class="multiline">
+          <item>
+            <label>Make whole article clickable</label>
+            <value>true</value>
+          </item>
+        </select>
       </group>
     </group>
   </group>
