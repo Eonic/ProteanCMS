@@ -610,35 +610,72 @@ Partial Public Class Cms
                 End Try
 
             End Function
-
-            Public Function DoRefund(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+            ''' <summary>
+            ''' Refund order 
+            ''' </summary>
+            ''' <param name="myApi"></param>
+            ''' <param name="jObj"></param>
+            ''' <returns></returns>
+            Public Function RefundOrder(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim sAdminLayout = IIf(jObj("sAdminLayout") IsNot Nothing, CStr(jObj("sAdminLayout")), "")
-                    Dim Providername = IIf(jObj("sProvider") IsNot Nothing, CStr(jObj("sProvider")), "")
-                    If jObj("nOrderid") Is Nothing Then
-                        Return ""
-                    End If
-                    Dim nOrderid = CStr(jObj("nOrderid"))
-                    Dim sLoginUser = CStr(jObj("sUser"))
-
+                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CInt(jObj("nProviderReference")), "")
+                    Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
                     Dim refundPaymentReceipt = ""
-                    If Providername <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername) ' "JudoPay"
-                        If (Providername = "JudoPay") Then
-                            'check whether csuser is logged in
-                            If sLoginUser = "ITB Customer Services" Then
-                                refundPaymentReceipt = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderid, sAdminLayout, sLoginUser)
-                            Else
-                                refundPaymentReceipt = "User is Not valid."
-                            End If
-                        End If
+                    If nProviderReference <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, nProviderReference)
+                        refundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, Amount)
 
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<RefundPaymentReceiptId>" & refundPaymentReceipt & "</RefundPaymentReceiptId>"
+                        xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
+                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
+
+                        jsonString = jsonString.Replace("""@", """_")
+                        jsonString = jsonString.Replace("#cdata-section", "cDataValue")
+
+                        Return jsonString
+                    End If
+
+                Catch ex As Exception
+                    RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+                End Try
+
+            End Function
+
+
+            Public Function ProcessNewPayment(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim oCart As New Cart(myWeb)
+                    oCart.moPageXml = myWeb.moPageXml
+
+                    Dim providerName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
+                    Dim orderId = IIf(jObj("orderId") IsNot Nothing, CStr(jObj("orderId")), "")
+                    Dim amount = IIf(jObj("amount") IsNot Nothing, CDec(jObj("amount")), "")
+                    Dim cardNumber = IIf(jObj("cardNumber") IsNot Nothing, CStr(jObj("cardNumber")), "")
+                    Dim cV2 = IIf(jObj("cV2") IsNot Nothing, CStr(jObj("cV2")), "")
+                    Dim expiryDate = IIf(jObj("expiryDate") IsNot Nothing, CStr(jObj("expiryDate")), "")
+                    Dim startDate = IIf(jObj("startDate") IsNot Nothing, CStr(jObj("startDate")), "")
+                    Dim cardHolderName = IIf(jObj("cardHolderName") IsNot Nothing, CStr(jObj("cardHolderName")), "")
+                    Dim address1 = IIf(jObj("address1") IsNot Nothing, CStr(jObj("address1")), "")
+                    Dim address2 = IIf(jObj("address2") IsNot Nothing, CStr(jObj("address2")), "")
+                    Dim town = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
+                    Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
+                    Dim paymentReceipt = ""
+
+                    If Providername <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername)
+                        If (Providername = "JudoPay") Then
+                            paymentReceipt = oPayProv.Activities.ProcessNewPayment(providerName, orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
+                        End If
+
+                        Dim xmlDoc As New XmlDocument
+                        Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
+                        xmlResponse.InnerXml = "<PaymentReceiptId>" & paymentReceipt & "</PaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
                         Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
 
