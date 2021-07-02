@@ -524,6 +524,30 @@ Partial Public Class Cms
                 End Try
             End Function
 
+
+            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCESS"
+
+                    'input params
+                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+
+
+                    Try
+                        'Data updates.
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
         End Class
 
 #End Region

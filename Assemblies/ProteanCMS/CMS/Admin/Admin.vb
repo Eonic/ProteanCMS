@@ -1561,6 +1561,43 @@ ProcessFlow:
                             mcEwCmd = "ListUserContacts"
                             GoTo ProcessFlow
                         End If
+                    Case "RefundOrder"
+                        sAdminLayout = "RefundOrder"
+                        Dim providerName As String = ""
+                        Dim providerPaymentReference As String = ""
+                        Dim IsRefund As String = ""
+                        Dim nStatus As Long
+                        Dim oCart As New Cart(myWeb)
+                        oCart.moPageXml = moPageXML
+                        Dim orderid As String = myWeb.moRequest("orderId")
+                        Dim sql As String = "select cpayMthdProviderName, cPayMthdProviderRef from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" & myWeb.moRequest("id")
+                        Dim oDr As SqlDataReader = myWeb.moDbHelper.getDataReader(sql)
+                        While oDr.Read()
+                            providerName = oDr.GetString(0)
+                            providerPaymentReference = oDr.GetString(1)
+                        End While
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder(CInt("0" & myWeb.moRequest("id")), providerName, providerPaymentReference))
+                        If moAdXfm.valid Then
+                            Dim sSql As String = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" & myWeb.moRequest("id")
+                            nStatus = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+                            nStatus = Cart.cartProcess.Refunded
+                            If CInt(orderid) > 0 Then
+                                Dim sSqlquery As String = "update tblCartOrder set nCartStatus ='" & nStatus & "', cCartSessionId='" & SqlFmt(myWeb.moSession.SessionID) & "'  where nCartOrderKey = " & orderid
+                                myWeb.moDbHelper.ExeProcessSql(sSqlquery)
+                            End If
+
+                            oPageDetail.RemoveAll()
+                            mcEwCmd = "OrderDetail"
+                            myWeb.msRedirectOnEnd = "?ewCmd=Orders&ewCmd2=Display&id=" & myWeb.moRequest("id")
+                        End If
+                        moPageXML.DocumentElement.AppendChild(oPageDetail)
+
+                        '`get the payment mothod id for this order
+                        ' `from the paymentmethod we get the provider name And the card reference
+                        ' `we show a New form populating the refnd amount And showing the provider name And referance
+                        ' `on submitting the form we process using the provider name
+
                     Case "EditUserContact"
 
                         sAdminLayout = "EditUserContact"

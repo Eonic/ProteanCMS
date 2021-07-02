@@ -10,17 +10,16 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model">
 
-  <xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
-
-  <xsl:template name="eonicwebProductName">
-    <xsl:choose>
-      <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-        <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>ProteanCMS</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
+	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+	<xsl:template name="eonicwebProductName">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>ProteanCMS</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
   
 	<xsl:template name="eonicwebCMSName">
@@ -6889,6 +6888,15 @@
     </tr>
   </xsl:template>
 
+	<!--################################################################-->
+	<xsl:template match="Page[@layout='RefundOrder']" mode="Admin">
+		<div class="template" id="template_EditStructure">
+			<div id="column2">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+		</div>
+	</xsl:template>
+	
   <!-- -->
   <!--   ##################  List Quotes  ##############################   -->
   <!-- -->
@@ -7111,6 +7119,23 @@
           <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
         </div>
       </xsl:if>
+		           <xsl:choose>
+						<xsl:when test="PaymentDetails/Refund">
+							<div>
+								<a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-primary btn-sm pull-right" style="opacity: 0.65;cursor: not-allowed;pointer-events: none;">
+									<i class="fa fa-money"> </i>
+									Refund
+								</a>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="?ewCmd=RefundOrder&amp;orderId={$orderId}&amp;id={/Page/Request/QueryString/Item[@name='id']}" class="btn btn-primary btn-sm pull-right">
+								<i class="fa fa-money"> </i>
+								Refund
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+		  
       <xsl:if test="DeliveryDetails">
       <div id="carrier-info" class="col-md-3">
         <h4>Shipping Details</h4>
