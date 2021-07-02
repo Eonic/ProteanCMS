@@ -476,6 +476,7 @@ Public Class XmlHelper
                             End If
                         Else
                             If IO.File.Exists(AssemblyPath) Then
+                                AddHandler AppDomain.CurrentDomain.AssemblyResolve, AddressOf CurrentDomain_AssemblyResolve
                                 assemblyInstance = [Assembly].LoadFrom(AssemblyPath)
                                 If assemblyInstance IsNot Nothing Then
                                     goApp(ClassName) = True
@@ -513,12 +514,41 @@ Public Class XmlHelper
                         End If
                     End If
                 Catch ex As Exception
+
+                    'To be removed.
+                    'Dim reflection As ReflectionTypeLoadException = TryCast(ex, ReflectionTypeLoadException)
+                    'If reflection IsNot Nothing Then
+                    '    For Each expct As Exception In reflection.LoaderExceptions
+                    '        Using eventLog As New EventLog("Application")
+                    '            eventLog.WriteEntry(expct.Message)
+                    '            eventLog.WriteEntry(expct.InnerException.Message)
+                    '        End Using
+                    '    Next
+                    'End If
+
                     transformException = ex
                     returnException(myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug)
                     bError = True
                 End Try
             End Set
         End Property
+
+        Private Function CurrentDomain_AssemblyResolve(ByVal sender As Object, ByVal args As ResolveEventArgs) As Assembly
+            Dim assembly, objExecutingAssemblies As Assembly
+            Dim strTempAsmbPath As String = ""
+            objExecutingAssemblies = args.RequestingAssembly
+            Dim arrReferencedAssmbNames As AssemblyName() = objExecutingAssemblies.GetReferencedAssemblies()
+
+            For Each strAssmbName As AssemblyName In arrReferencedAssmbNames
+                If strAssmbName.FullName.Substring(0, strAssmbName.FullName.IndexOf(",")) = args.Name.Substring(0, args.Name.IndexOf(",")) Then
+                    strTempAsmbPath = goServer.MapPath(compiledFolder) & "\" + args.Name.Substring(0, args.Name.IndexOf(",")) & ".dll"
+                    Exit For
+                End If
+            Next
+
+            assembly = Assembly.LoadFrom(strTempAsmbPath)
+            Return assembly
+        End Function
 
         Public Property XSLFile() As String
             Get
@@ -1057,33 +1087,42 @@ Public Class XmlHelper
             Dim outFile As String = classname & ".dll"
             Dim cmdLine As String = " /class:" & classname & " /out:" & outFile & " " & xsltPath
             Dim process1 As New System.Diagnostics.Process
-            Dim output As String
+            Dim output As String = ""
 
             Try
-                process1.EnableRaisingEvents = True
-                process1.StartInfo.FileName = compilerPath
-                process1.StartInfo.Arguments = cmdLine
-                process1.StartInfo.UseShellExecute = False
-                process1.StartInfo.RedirectStandardOutput = True
-                process1.StartInfo.RedirectStandardInput = True
-                process1.StartInfo.RedirectStandardError = True
 
-                'check if local bin exists
-                Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
-                Dim di As DirectoryInfo = New DirectoryInfo(cWorkingDirectory)
-                If Not di.Exists Then
-                    di.Create()
+                If goApp("compileLock-" & classname) Is Nothing Then
+
+                    goApp("compileLock-" & classname) = True
+
+                    process1.EnableRaisingEvents = True
+                    process1.StartInfo.FileName = compilerPath
+                    process1.StartInfo.Arguments = cmdLine
+                    process1.StartInfo.UseShellExecute = False
+                    process1.StartInfo.RedirectStandardOutput = True
+                    process1.StartInfo.RedirectStandardInput = True
+                    process1.StartInfo.RedirectStandardError = True
+
+                    'check if local bin exists
+                    Dim cWorkingDirectory As String = goServer.MapPath(compiledFolder)
+                    Dim di As DirectoryInfo = New DirectoryInfo(cWorkingDirectory)
+                    If Not di.Exists Then
+                        di.Create()
+                    End If
+
+                    process1.StartInfo.WorkingDirectory = cWorkingDirectory
+                    'Start the process
+                    process1.Start()
+                    output = process1.StandardOutput.ReadToEnd()
+
+                    'Wait for process to finish
+                    process1.WaitForExit()
+
+                    process1.Close()
+
+                    goApp("compileLock-" & classname) = Nothing
+
                 End If
-
-                process1.StartInfo.WorkingDirectory = cWorkingDirectory
-                'Start the process
-                process1.Start()
-                output = process1.StandardOutput.ReadToEnd()
-
-                'Wait for process to finish
-                process1.WaitForExit()
-
-                process1.Close()
 
                 If output.Contains("error") Then
                     Return output

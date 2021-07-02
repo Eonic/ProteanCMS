@@ -2606,6 +2606,8 @@ Partial Public Class Cms
                             If moRequest("type") <> "" Then cContentSchemaName = moRequest("type")
                         End If
 
+                        moDbHelper.getLocationsByContentId(id, oTempInstance.FirstChild)
+
                         'Add ProductCategories
                         Dim sProductTypes As String = "Product,SKU"
                         If myWeb.moConfig("ProductTypes") <> "" Then
@@ -5964,6 +5966,79 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal providerName As String, ByVal providerPaymentReference As String) As XmlElement
+
+                Dim cProcessInfo As String = ""
+                Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
+
+                Try
+                    Dim IsRefund As String = ""
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    MyBase.NewFrm("Refund")
+                    MyBase.submission("Refund using " & providerName, "post", "form_check(this)")
+
+
+                    Dim xdoc As New XmlDocument()
+                    Dim amount As String = ""
+                    If (nOrderId > 0) Then
+                        Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
+                        If (cartXmlSql <> "") Then
+                            Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
+                            xDoc.LoadXml(orderXml)
+                        End If
+                        If (xdoc.InnerXml <> "") Then
+
+                            Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            If (xn IsNot Nothing And xnInstance IsNot Nothing) Then
+                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                            End If
+                        End If
+
+                    End If
+
+                    MyBase.Instance.InnerXml = "<Refund> <RefundAmount> </RefundAmount> <ProviderName></ProviderName> <ProviderReference> </ProviderReference> </Refund>"
+                    Dim oFrmElmt As XmlElement
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
+                    MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
+                    MyBase.addBind("RefundAmount", "Refund/RefundAmount", "true()")
+
+                    MyBase.addInput(oFrmElmt, "ProviderName", True, "Provider Name", "readonly")
+                    MyBase.addBind("ProviderName", "Refund/ProviderName", "true()")
+
+                    MyBase.addInput(oFrmElmt, "ProviderReference", True, "Provider Reference", "readonly")
+                    MyBase.addBind("ProviderReference", "Refund/ProviderReference", "true()")
+
+                    MyBase.addInput(oFrmElmt, "id", True, "Order Id", "readonly")
+                    MyBase.addBind("id", "Refund/OrderId", "true()")
+
+                    MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
+
+                    MyBase.updateInstanceFromRequest()
+                    MyBase.validate()
+                    'check amount is less than initail amount otherwise invalid
+                    If MyBase.valid Then
+                        'this is where we process the refund
+                        'update notes on the order
+                        'refunding information
+                        'it must contain user and date of the refund and refund reference from the provider 
+                        'if the refund failswe need to return error msg from the provider and change the form   (addalert-error)
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderId)
+                    End If
+                    If (IsRefund Is Nothing) Then
+                        MyBase.addNote("cStructName", noteTypes.Alert, "Refund Failed")
+                    End If
+
+                    MyBase.addValues()
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
                 Dim oSelElmt1 As XmlElement
@@ -8752,22 +8827,32 @@ Partial Public Class Cms
                                         ' _form.addOption(_selectItem, menuName, menuId)
 
                                         'if we are only 2 levels from the root then we use choices
-                                        If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
-                                            If proceedingParent Is Nothing Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
-                                            ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
-                                                oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                        If Not oParentParentNode Is Nothing Then
+                                            If oParentParentNode.GetAttribute("id") = selectItem.Root.ToString And LCase(_selectItem.GetAttribute("showAllLevels")) <> "true" Then
+                                                If proceedingParent Is Nothing Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
+                                                ElseIf proceedingParent.GetAttribute("id") <> oParentNode.GetAttribute("id") Then
+                                                    oChoices = _form.addChoices(_selectItem, oParentNode.GetAttribute("name"))
 
+                                                End If
+                                                ' Add the checkbox
+                                                _form.addOption(oChoices, menuName, menuId)
+                                            Else
+                                                If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                    Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
+                                                        menuName = oParentNode.GetAttribute("name") & " / " & menuName
+                                                        oParentNode = oParentNode.ParentNode
+                                                    Loop
+                                                End If
                                             End If
                                             ' Add the checkbox
-                                            _form.addOption(oChoices, menuName, menuId)
-
+                                            _form.addOption(_selectItem, menuName, menuId)
                                         Else
 
-                                            If oParentNode.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
-                                                Do While oParentNode.GetAttribute("id") <> selectItem.Root.ToString
-                                                    menuName = oParentNode.GetAttribute("name") & " / " & menuName
-                                                    oParentNode = oParentNode.ParentNode
+                                            If menuItem.GetAttribute("id") <> _form.myWeb.moConfig("RootPageId") Then
+                                                Do While menuItem.GetAttribute("id") <> selectItem.Root.ToString
+                                                    menuName = menuItem.GetAttribute("name") & " / " & menuName
+                                                    oParentNode = menuItem.ParentNode
                                                 Loop
                                             End If
 

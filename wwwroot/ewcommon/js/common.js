@@ -1652,7 +1652,6 @@ function incrementQuantity(inputName, operator) {
         if (document.getElementById(inputName).value > 0) {
             document.getElementById(inputName).value = (document.getElementById(inputName).value * 1) - 1;
         }
-
     }
 }
 
@@ -2746,3 +2745,12 @@ var SWFObject = deconcept.SWFObject;
 
     };
 })(jQuery);
+
+//Handle the back-forward cache on Safari/Mac.
+if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    $(window).bind("pageshow", function (event) {
+        if (event.originalEvent.persisted) {
+            window.location.reload()
+        }
+    });
+}

@@ -1068,6 +1068,39 @@ Public Class Cms
 
     End Sub
 
+
+    Public Sub CheckPagePath()
+        Dim pageUrl As String = moRequest.RawUrl.ToString()
+        Dim bLowerCaseUrl As Boolean = False
+        Dim bTrailingSlash As Boolean = False
+        If Not moSession Is Nothing Then
+            If moSession("adminMode") = "true" Then
+                mbAdminMode = True
+            End If
+        End If
+        If Not mbAdminMode And moConfig("CheckPageURL") = "on" And Not ibIndexMode And mbPreview = False And moRequest.QueryString("cartCmd") Is Nothing And Not mcOriginalURL.Contains("?") Then
+            If (moConfig("LowerCaseUrl") = "on") Then
+                If (Regex.IsMatch(pageUrl, "[A-Z]")) Then
+                    bLowerCaseUrl = True
+                    pageUrl = pageUrl.ToLower()
+                End If
+            End If
+            If moConfig("DetailPathType") <> "" Then
+                If moConfig("TrailingSlash") = "on" Then
+                    If (pageUrl.Length <> 0 And Right(pageUrl, 1) <> "/") Then
+                        If (pageUrl.Length <> 1) Then
+                            pageUrl = pageUrl + "/"
+                            bTrailingSlash = True
+                        End If
+                    End If
+                End If
+            End If
+            If ((bTrailingSlash Or bLowerCaseUrl) And pageUrl.Length <> 0) Then
+                mbRedirectPerm = True
+                msRedirectOnEnd = moRequest.Url.Scheme.ToString().ToLower() + "://" + moRequest.Url.Host.ToString().ToLower() + pageUrl
+            End If
+        End If
+    End Sub
     Public Overridable Sub GetPageHTML()
         PerfMon.Log("Web", "GetPageHTML")
         Dim sProcessInfo As String = ""
@@ -1088,7 +1121,7 @@ Public Class Cms
 
 
                 Case Else
-
+                    CheckPagePath()
 
                     If gbCart Or gbQuote Then
                         If CInt("0" + moSession("CartId")) > 0 Then
@@ -5447,7 +5480,9 @@ Public Class Cms
                     If sUrl = "/" Then
                         sUrl = DomainURL
                     End If
-
+                    If moConfig("LowerCaseUrl") = "on" Then
+                        sUrl = sUrl.ToLower()
+                    End If
                     'for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
                     If mbAdminMode _
                         And moConfig("pageExt") = "" _
@@ -5517,6 +5552,9 @@ Public Class Cms
                                         End If
                                     End If
                                     sUrl = sUrl & "/" & cPageName
+                                    If moConfig("LowerCaseUrl") = "on" Then
+                                        sUrl = sUrl.ToLower()
+                                    End If
                                 End If
                             Next
 
@@ -5822,6 +5860,9 @@ Public Class Cms
                             cProcessInfo = "orphan Content"
                         End If
                 End Select
+                If moConfig("LowerCaseUrl") = "on" Then
+                    cURL = cURL.ToLower()
+                End If
                 If cURL <> "" Then
                     oContElmt.SetAttribute("url", cURL)
                     oContElmt.SetAttribute("name", oDR(1).ToString)
@@ -6157,6 +6198,10 @@ Public Class Cms
                 ContentURL = ContentURL & ContentName
             End If
 
+
+            If moConfig("LowerCaseUrl") = "on" Then
+                ContentURL = ContentURL.ToLower()
+            End If
             Return ContentURL
 
         Catch ex As Exception
@@ -6970,9 +7015,15 @@ Public Class Cms
                                 Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
 
                                 Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
-                                Dim nPrice As Double = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                Dim nPrice As Double = 0
+                                If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
+                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                End If
+
                                 If nPrice = 0 Then
-                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    If Not contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") Is Nothing Then
+                                        nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    End If
                                 End If
                                 Dim nWeight As Double = 0
                                 If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then

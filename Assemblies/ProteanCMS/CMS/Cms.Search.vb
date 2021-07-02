@@ -428,6 +428,7 @@ Partial Public Class Cms
                     If PageSize = 0 Then PageSize = 300
                 End If
 
+
                 If Not cQuery.Equals("") Then
 
                     'do the actual search
@@ -453,9 +454,15 @@ Partial Public Class Cms
                     'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
                     If bShowHiddenForUser Then
                         _includeFuzzySearch = False ' to get exact matching result
+                        'keep page size for csuser as default
+                        HitsLimit = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit")) '300
+                        If HitsLimit = 0 Then HitsLimit = 300
+                        pageSize = CInt("0" & myWeb.moConfig("SiteSearchDefaultHitsLimit"))
+                        If pageSize = 0 Then pageSize = 300
                     Else
                         _includeFuzzySearch = True
                     End If
+
                     _overrideQueryBuilder = myWeb.moRequest("overrideQueryBuilder") = "true"
                     _includePrefixNameSearch = myWeb.moRequest("prefixNameSearch") = "true"
 

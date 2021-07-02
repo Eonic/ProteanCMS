@@ -1,19 +1,9 @@
-﻿Imports System.Xml
-Imports System.Web.HttpUtility
-Imports System.Web.Configuration
-Imports System.IO
-Imports System.Collections.Generic
-Imports System.Data
+﻿Imports System.Collections.Generic
 Imports System.Data.SqlClient
-Imports VB = Microsoft.VisualBasic
-Imports Protean.Cms.Cart
-Imports System.Net
+Imports System.Web.Configuration
+Imports System.Xml
 Imports CardinalCommerce
-Imports System.IdentityModel.Tokens
-Imports System.IdentityModel.Tokens.Jwt
-Imports System.Security.Claims
-Imports System.Text
-Imports Newtonsoft.Json.Linq
+Imports Protean.Cms.Cart
 
 
 Namespace Providers

@@ -2443,6 +2443,7 @@
   <xsl:template match="Content[@type='Image']" mode="displayBrief">
     <xsl:param name="maxWidth"/>
     <xsl:param name="maxHeight"/>
+    <xsl:param name="noLazy"/>
     <xsl:choose>
       <xsl:when test="@internalLink!=''">
         <xsl:variable name="pageId" select="@internalLink"/>
@@ -2463,12 +2464,15 @@
               </svg>
             </xsl:when>
             <xsl:when test="@resize='true'">
-              <xsl:apply-templates select="." mode="resize-image"/>
+              <xsl:apply-templates select="." mode="resize-image">
+                <xsl:with-param name="noLazy" select="$noLazy"/>
+              </xsl:apply-templates>
             </xsl:when>
             <xsl:when test="$maxWidth!='' or $maxHeight!=''">
               <xsl:apply-templates select="." mode="resize-image">
                 <xsl:with-param name="maxWidth" select="$maxWidth"/>
                 <xsl:with-param name="maxHeight" select="$maxHeight"/>
+                <xsl:with-param name="noLazy" select="$noLazy"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
@@ -2483,7 +2487,9 @@
             <xsl:attribute name="rel">external</xsl:attribute>
             <!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
           </xsl:if>
-          <xsl:apply-templates select="./node()" mode="cleanXhtml"/>
+          <xsl:apply-templates select="./node()" mode="cleanXhtml">
+            <xsl:with-param name="noLazy" select="'true'"/>
+          </xsl:apply-templates>
         </a>
       </xsl:when>
       <xsl:otherwise>
@@ -2571,6 +2577,7 @@
   <xsl:template match="Content[@type='Module' and @moduleType='Image' and @link!='']" mode="displayBrief">
     <xsl:param name="maxWidth"/>
     <xsl:param name="maxHeight"/>
+    <xsl:param name="lazy"/>
     <a>
       <xsl:attribute name="href">
         <xsl:choose>
