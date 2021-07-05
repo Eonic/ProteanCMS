@@ -655,6 +655,37 @@ Partial Public Class Cms
 
             End Function
 
+            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
+                Try
+                    Dim cProcessInfo As String = ""
+                    Dim josResult As String = "SUCCESS"
+
+                    'input params
+                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
+
+
+                    Try
+                        'if we receive any response from judopay pass it from PaymentReceipt
+                        'response should contain payment related all references like result, status, cardtoken, receiptId etc
+                        'validate if weather success or declined in Judopay.cs and redirect accordingly
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
+                        myWeb.msRedirectOnEnd = "http://intotheblue.local"
+
+                        'Return oPayProv.Activities.PaymentReceipt()
+
+                    Catch ex As Exception
+                        josResult = "ERROR"
+                    End Try
+
+
+                    Return josResult
+
+                Catch ex As Exception
+                    Return ex.Message
+                End Try
+            End Function
+
+
         End Class
 
 #End Region

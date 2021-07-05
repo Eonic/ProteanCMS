@@ -1477,3 +1477,7 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Co
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+D:\Manashri_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
+D:\Manashri_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
+D:\Manashri_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
+D:\Manashri_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
