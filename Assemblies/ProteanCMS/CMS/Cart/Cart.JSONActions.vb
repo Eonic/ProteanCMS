@@ -96,8 +96,10 @@ Partial Public Class Cms
                     Dim oDoc As New XmlDocument
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
 
+
+
                     If myCart.mnCartId < 1 Then
-                        myCart.CreateNewCart(CartXml)
+                        myCart.CreateNewCart(CartXml, "Order", True)
                         If myCart.mcItemOrderType <> "" Then
                             myCart.mmcOrderType = myCart.mcItemOrderType
                         Else
@@ -584,14 +586,23 @@ Partial Public Class Cms
 
 
 
-            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double) As String
+            Public Function CompleteOrder(ByVal sProviderName As String, ByVal nCartId As Integer, ByVal sAuthNo As String, ByVal dAmount As Double, ByVal ShippingType As String) As String
                 Try
                     Dim oXml As XmlDocument = New XmlDocument
+                    Dim cShippingType As String = String.Empty
                     Dim oDetailXml As XmlElement = oXml.CreateElement("Response")
                     Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                     addNewTextNode("AuthCode", oDetailXml, sAuthNo)
 
-                    myCart.updateGCgetValidShippingOptionsDS(65)
+                    If (ShippingType = String.Empty) Then
+                        myCart.updateGCgetValidShippingOptionsDS(65)
+                    Else
+                        Dim shippingXml As XmlElement = myCart.makeShippingOptionsXML()
+
+                        Dim nShipOptKey As Integer = Convert.ToInt32(shippingXml.SelectSingleNode("Method[cShipOptName='" + ShippingType + "']").SelectSingleNode("nShipOptKey").InnerText)
+                        myCart.updateGCgetValidShippingOptionsDS(nShipOptKey)
+                    End If
+
                     myWeb.moDbHelper.savePayment(nCartId, 0, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, False, dAmount)
                     myWeb.moDbHelper.SaveCartStatus(nCartId, cartProcess.Complete)
 

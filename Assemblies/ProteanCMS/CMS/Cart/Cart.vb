@@ -6073,7 +6073,7 @@ processFlow:
 
         End Sub
 
-        Public Function CreateNewCart(ByRef oCartElmt As XmlElement, Optional ByVal cCartSchemaName As String = "Order") As Long
+        Public Function CreateNewCart(ByRef oCartElmt As XmlElement, Optional ByVal cCartSchemaName As String = "Order", Optional ByVal bCreateNewCart As Boolean = False) As Long
             PerfMon.Log("Cart", "CreateNewCart")
             '   user has started shopping so we need to initialise the cart and add it to the db
 
@@ -6083,9 +6083,9 @@ processFlow:
 
             Try
                 'stop carts being added by robots
-                'If Not myWeb.moSession("previousPage") = "" Then
+                If Not myWeb.moSession("previousPage") = "" Or bCreateNewCart = True Then
 
-                oInstance.AppendChild(oInstance.CreateElement("instance"))
+                    oInstance.AppendChild(oInstance.CreateElement("instance"))
                     oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
                     'addNewTextNode("nCartOrderKey", oElmt)
                     addNewTextNode("cCurrency", oElmt, mcCurrencyRef)
@@ -6121,10 +6121,10 @@ processFlow:
 
                     mnCartId = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement)
                     Return mnCartId
-                'Else
-                '    mnCartId = 0
-                '    Return mnCartId
-                'End If
+                Else
+                    mnCartId = 0
+                    Return mnCartId
+                End If
 
             Catch ex As Exception
                 returnException(myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug)
@@ -8553,7 +8553,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                     strSql.Append("opt.nShipOptWeightMin AS WeightMin, opt.nShipOptWeightMax AS WeightMax,  ")
                     strSql.Append("opt.nShipOptPriceMin AS PriceMin, opt.nShipOptPriceMax AS PriceMax,  ")
                     strSql.Append("opt.nShipOptQuantMin AS QuantMin, opt.nShipOptQuantMax AS QuantMax, ")
-                    strSql.Append("tblCartShippingLocations.nLocationType, tblCartShippingLocations.cLocationNameFull ")
+                    strSql.Append("tblCartShippingLocations.nLocationType, tblCartShippingLocations.cLocationNameFull, opt.cShipOptName,opt.nShipOptKey ")
                     strSql.Append("FROM tblCartShippingLocations ")
                     strSql.Append("INNER JOIN tblCartShippingRelations ON tblCartShippingLocations.nLocationKey = tblCartShippingRelations.nShpLocId ")
                     strSql.Append("RIGHT OUTER JOIN tblCartShippingMethods AS opt ")
@@ -8923,26 +8923,7 @@ SaveNotes:      ' this is so we can skip the appending of new node
                         End If
                     Next
                 End If
-                'If oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") IsNot Nothing Then
-                '    cDestinationCountry = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText
-                '    '' pass other parameters as well-
-                '    ''get it from cart
-                '    Dim oDsShipOptions As DataSet = getValidShippingOptionsDS(cDestinationCountry, total, quant, weight)
-                '    Dim oRowSO As DataRow
 
-                '    For Each oRowSO In oDsShipOptions.Tables(0).Rows
-                '        If bChangedDelivery Then
-                '            updateGCgetValidShippingOptionsDS(oRowSO("nShipOptKey"))
-                '            'shipCost = CDbl("0" & oRowSO("nShipOptCost"))
-                '            'oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig("DefaultCountry"))
-                '            'oCartElmt.SetAttribute("shippingType", oRowSO("nShipOptKey") & "")
-                '            'oCartElmt.SetAttribute("shippingCost", shipCost & "")
-                '            'oCartElmt.SetAttribute("shippingDesc", oRowSO("cShipOptName") & "")
-                '            'oCartElmt.SetAttribute("shippingCarrier", oRowSO("cShipOptCarrier") & "")
-                '            bChangedDelivery = False
-                '        End If
-                '    Next
-                'End If
 
                 Return DeliveryOption
             Catch ex As Exception
@@ -8950,6 +8931,8 @@ SaveNotes:      ' this is so we can skip the appending of new node
             End Try
 
         End Function
+
+
     End Class
 
 
