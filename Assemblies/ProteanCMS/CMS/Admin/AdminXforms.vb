@@ -5964,28 +5964,98 @@ Partial Public Class Cms
                 End Try
             End Function
 
-            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal cSchemaName As String) As XmlElement
+            Public Function xFrmRefundOrder(ByVal nOrderId As Long, ByVal providerName As String, ByVal providerPaymentReference As String) As XmlElement
 
                 Dim cProcessInfo As String = ""
-                Dim nStatus As Long
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
-
+                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
+                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                 Try
+                    Dim IsRefund As String = ""
+                    Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
+                    MyBase.NewFrm("Refund")
+                    MyBase.submission("Refund", "", "post", "form_check(this)")
+                    Dim refundAmount As Decimal
+                    Dim cResponse As String = ""   'check this
+                    Dim xdoc As New XmlDocument()
+                    Dim amount As String = ""
+                    If (nOrderId > 0) Then
+                        Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
+                        If (cartXmlSql <> "") Then
+                            Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
+                            xdoc.LoadXml(orderXml)
+                        End If
+                        If (xdoc.InnerXml <> "") Then
 
-                    MyBase.NewFrm("Update" & cSchemaName)
+                            Dim xn As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance/Response")
+                            Dim xnInstance As XmlNode = xdoc.SelectSingleNode("/Order/PaymentDetails/instance")
+                            If (xn IsNot Nothing And xnInstance IsNot Nothing) Then
+                                amount = xnInstance.Attributes("AmountPaid").InnerText
+                            End If
+                        End If
 
-                    MyBase.submission("Update" & cSchemaName, "", "post", "form_check(this)")
+                    End If
 
-                    MyBase.Instance.InnerXml = moDbHelper.getObjectInstance(dbHelper.objectTypes.CartOrder, nOrderId)
+                    MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
+                    Dim oFrmElmt As XmlElement
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
+                    MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
+                    MyBase.addBind("RefundAmount", "Refund/RefundAmount", "true()")
 
+                    MyBase.addInput(oFrmElmt, "ProviderName", True, "Provider Name", "readonly")
+                    MyBase.addBind("ProviderName", "Refund/ProviderName", "true()")
 
+                    MyBase.addInput(oFrmElmt, "ProviderReference", True, "Provider Reference", "readonly")
+                    MyBase.addBind("ProviderReference", "Refund/ProviderReference", "true()")
+
+                    MyBase.addInput(oFrmElmt, "id", True, "Order Id", "readonly")
+                    MyBase.addBind("id", "Refund/OrderId", "true()")
+
+                    MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If (amount > refundAmount) Then
+                            If MyBase.valid Then
+                                'it must contain user and date of the refund and refund reference from the provider 
+                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, amount)
+                                If (IsRefund Is Nothing) Then
+                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
+                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                End If
+                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                oCfg.Save()
+
+                                'Update Seller Notes:
+                                Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
+                                Dim oDs As DataSet
+                                Dim oRow As DataRow
+                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                                For Each oRow In oDs.Tables("Order").Rows
+                                    If (IsRefund IsNot Nothing) Then
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
+                                    Else
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
+                                    End If
+                                Next
+                                myWeb.moDbHelper.updateDataset(oDs, "Order")
+
+                            End If
+                        End If
+
+                    End If
+                    MyBase.addValues()
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
+
 
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement

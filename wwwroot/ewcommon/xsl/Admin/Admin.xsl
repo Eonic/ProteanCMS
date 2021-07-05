@@ -7005,6 +7005,15 @@
     </tr>
   </xsl:template>
 
+	<!--################################################################-->
+	<xsl:template match="Page[@layout='RefundOrder']" mode="Admin">
+		<div class="template" id="template_EditStructure">
+			<div id="column2">
+				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+			</div>
+		</div>
+	</xsl:template>
+	
   <!-- -->
   <!--   ##################  List Quotes  ##############################   -->
   <!-- -->
@@ -7248,14 +7257,6 @@
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
-		           
-			         <!--<div>
-					 <input type="text" id="amount-text" name="fname"></input>
-					  <a href="?ewCmd=AdditionalPayment&amp;orderId={$orderId}" class="btn btn-primary btn-sm pull-right">
-						<i class="fa fa-money"> </i>
-						AdditionalPayment
-					 </a>
-					</div>-->
 		  
       <xsl:if test="DeliveryDetails">
       <div id="carrier-info" class="col-md-3">
