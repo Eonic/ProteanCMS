@@ -5,7 +5,8 @@ Option Explicit On
 Imports System.Web.Configuration
 Imports System.IO
 Imports System.Reflection
-
+Imports System.Linq
+Imports System.Collections.Generic
 
 Public Class API
     Inherits Base
@@ -88,8 +89,16 @@ Public Class API
             End If
 
             Dim jObj As Newtonsoft.Json.Linq.JObject = Nothing
+            Dim paramDictionary As Dictionary(Of String, String) = Nothing
             If Not jsonString Is Nothing Then
-                jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
+                Try
+                    jObj = Newtonsoft.Json.Linq.JObject.Parse(jsonString)
+                Catch ex As Exception
+                    'Not a valid json string
+                    Dim query As String = System.Web.HttpUtility.UrlDecode(jsonString)
+                    Dim formData As System.Collections.Specialized.NameValueCollection = System.Web.HttpUtility.ParseQueryString(query)
+                    paramDictionary = formData.AllKeys.ToDictionary(Function(k) k, Function(k) formData(k))
+                End Try
             End If
 
             Dim calledType As Type
@@ -112,7 +121,13 @@ Public Class API
 
             Dim args(1) As Object
             args(0) = Me
-            args(1) = jObj
+            If Not jObj Is Nothing Then
+                args(1) = jObj
+            ElseIf Not paramDictionary Is Nothing Then
+                args(1) = paramDictionary
+            Else
+                args(1) = Nothing
+            End If
 
             Dim myResponse As String = calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, Nothing, o, args)
 
