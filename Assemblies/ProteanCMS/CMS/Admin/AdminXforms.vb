@@ -6000,12 +6000,10 @@ Partial Public Class Cms
                             End If
                     End If
 
-                    End If
-                        MyBase.addValues()
-                        Return MyBase.moXformElmt
+                    Return MyBase.moXformElmt
 
                             Catch ex As Exception
-                                returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
+                                returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
                                 Return Nothing
                             End Try
             End Function

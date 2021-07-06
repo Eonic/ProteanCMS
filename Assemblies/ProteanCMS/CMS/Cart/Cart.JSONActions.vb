@@ -526,30 +526,6 @@ Partial Public Class Cms
                 End Try
             End Function
 
-
-            Public Function SavePaymentInfo(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
-                Try
-                    Dim cProcessInfo As String = ""
-                    Dim josResult As String = "SUCESS"
-
-                    'input params
-                    Dim cProductPrice As Double = CDbl(jObj("orderId"))
-
-
-                    Try
-                        'Data updates.
-                    Catch ex As Exception
-                        josResult = "ERROR"
-                    End Try
-
-
-                    Return josResult
-
-                Catch ex As Exception
-                    Return ex.Message
-                End Try
-            End Function
-
             Public Function AddCartAddress(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject, ByVal contactType As String, ByVal cartId As Int32, Optional ByVal emailAddress As String = "", Optional ByVal telphone As String = "") As Int32
                 Try
                     Dim contact As New Contact()
@@ -702,9 +678,9 @@ Partial Public Class Cms
                     Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
                     Dim paymentReceipt = ""
 
-                    If Providername <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername)
-                        If (Providername = "JudoPay") Then
+                    If providerName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                        If (providerName = "JudoPay") Then
                             paymentReceipt = oPayProv.Activities.ProcessNewPayment(providerName, orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
                         End If
 
