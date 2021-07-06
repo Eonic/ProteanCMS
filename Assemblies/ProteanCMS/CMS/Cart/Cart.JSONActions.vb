@@ -99,7 +99,7 @@ Partial Public Class Cms
 
 
                     If myCart.mnCartId < 1 Then
-                        myCart.CreateNewCart(CartXml, "Order", True)
+                        myCart.CreateNewCart(CartXml, "Order")
                         If myCart.mcItemOrderType <> "" Then
                             myCart.mmcOrderType = myCart.mcItemOrderType
                         Else
