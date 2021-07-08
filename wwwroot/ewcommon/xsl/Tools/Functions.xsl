@@ -1510,8 +1510,6 @@
       <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
-
-
           <xsl:if test="$href!=''">
             <link rel="canonical" href="{$href}"/>
           </xsl:if>
@@ -1519,6 +1517,16 @@
       </xsl:if>
     </xsl:if>
   </xsl:template>
+
+  <!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
+    <!-- not admin -->
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+
+            <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+
+  </xsl:template>
+
 
   <xsl:template match="Page" mode="getPageThumbnail">
 
@@ -5358,17 +5366,18 @@
                   <xsl:apply-templates select="$currentPage" mode="getHref"/>
                 </xsl:variable>
                 <li class="previous">
-                  <a href="{$origURL}" title="click here to view the previous page in sequence">&#8592; Back</a>
+                  <a href="{$origURL}" title="click here to view the previous page in sequence"><span class="pager-arrow">&#8592;</span> Back</a>
                 </li>
               </xsl:when>
               <xsl:when test="$startPos &gt; ($noPerPage - 1)">
                 <li class="previous">
-                  <a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">&#8592; Back</a>
+                  <a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence"><span class="pager-arrow">&#8592;</span> Back</a>
                 </li>
               </xsl:when>
               <xsl:otherwise>
                 <li class="previous disabled">
-                  <a href="#">&#8592; Back</a>
+                  <a href="#">
+                    <span class="pager-arrow">&#8592;</span> Back</a>
                 </li>
               </xsl:otherwise>
             </xsl:choose>
@@ -5377,12 +5386,12 @@
             <xsl:choose>
               <xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
                 <li class="next">
-                  <a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">Next &#8594;</a>
+                  <a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">Next <span class="pager-arrow">&#8594;</span></a>
                 </li>
               </xsl:when>
               <xsl:otherwise>
                 <li class="next disabled">
-                  <span class="ghosted">Next &#8594;</span>
+                  <span class="ghosted">Next <span class="pager-arrow">&#8594;</span></span>
                 </li>
               </xsl:otherwise>
             </xsl:choose>
@@ -10105,7 +10114,7 @@
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
                 <xsl:attribute name="style">
-                  background-image: url('<xsl:value-of select="@backgroundImage"/>') 50% 50% no-repeat;
+                  background-image: url('<xsl:value-of select="@backgroundImage"/>');
                 </xsl:attribute>
             </xsl:if>
             <xsl:choose>

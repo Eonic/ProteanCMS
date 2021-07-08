@@ -571,14 +571,14 @@
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:attribute name="style">
-                        background-image: url('<xsl:value-of select="@backgroundImage"/>' 50% 50% no-repeat);
+                        background-image: url('<xsl:value-of select="@backgroundImage"/>');
                       </xsl:attribute>
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                   <xsl:attribute name="style">
-                    background-image: url('<xsl:value-of select="@backgroundImage"/>' 50% 50% no-repeat);
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
                   </xsl:attribute>
                 </xsl:otherwise>
               </xsl:choose>
@@ -10296,10 +10296,20 @@
             <xsl:with-param name="totalCount" select="$totalCount"/>
           </xsl:apply-templates>
         </xsl:if>
-        <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-          <xsl:with-param name="sortBy" select="@sortBy"/>
-        </xsl:apply-templates>
-        <xsl:text> </xsl:text>
+        <xsl:choose>
+          <xsl:when test="@linkArticle='true'">
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+            <xsl:text> </xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+            <xsl:text> </xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </div>
     </div>
   </xsl:template>
@@ -10408,6 +10418,103 @@
           <xsl:text> </xsl:text>
         </div>
       </div>
+    </div>
+  </xsl:template>
+
+  <!-- Job Brief -->
+  <xsl:template match="Content[@type='Job']" mode="displayBriefLinked">
+    <xsl:param name="sortBy"/>
+    <!-- vacancyBrief -->
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <div class="listItem list-group-item">
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="'listItem list-group-item'"/>
+      </xsl:apply-templates>
+      <a href="{$parentURL}" title="{JobTitle/node()}">
+        <div class="lIinner">
+          <h3 class="title">
+            <xsl:value-of select="JobTitle/node()"/>
+
+          </h3>
+          <xsl:apply-templates select="." mode="displayThumbnail"/>
+          <div class="vacancy-intro">
+            <dl class="dl-horizontal">
+              <xsl:if test="@publish and @publish!=''">
+                <dt class="date">
+                  <!--Added on-->
+                  <xsl:call-template name="term2062" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="@publish"/>
+                  </xsl:call-template>
+                </dd>
+              </xsl:if>
+              <xsl:if test="ContractType/node()!=''">
+                <dt class="contract">
+                  <!--Contract Type-->
+                  <xsl:call-template name="term2063" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:value-of select="ContractType/node()"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Ref/node()!=''">
+                <dt class="ref">
+                  <!--Ref-->
+                  <xsl:call-template name="term2064" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:value-of select="Ref/node()"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Location/node()!=''">
+                <dt class="location">
+                  <!--Location-->
+                  <xsl:call-template name="term2065" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:value-of select="Location/node()"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="Salary/node()!=''">
+                <dt class="salary">
+                  <!--Salary-->
+                  <xsl:call-template name="term2066" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:value-of select="Salary/node()"/>
+                </dd>
+              </xsl:if>
+              <xsl:if test="ApplyBy/node()!=''">
+                <dt class="applyBy">
+                  <!--Deadline for applications-->
+                  <xsl:call-template name="term2067" />
+                  <xsl:text>: </xsl:text>
+                </dt>
+                <dd>
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="ApplyBy/node()"/>
+                  </xsl:call-template>
+                </dd>
+              </xsl:if>
+            </dl>
+          </div>
+          <div class="vacancy-summary">
+            <xsl:if test="Summary/node()!=''">
+              <xsl:apply-templates select="Summary/node()" mode="cleanXhtml"/>
+            </xsl:if>
+          </div>
+
+        </div>
+      </a>
     </div>
   </xsl:template>
 
@@ -14799,9 +14906,9 @@
           <img src="{Images/img[@class='detail']/@src}" alt="{Title/node()}" />
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:if test="Title/node()!='' or Body/node()!=''">
+      <xsl:if test="(Title/node()!='' and not(@showHeading='false')) or Body/node()!=''">
         <div class="carousel-caption">
-          <xsl:if test="Title/node()!=''">
+          <xsl:if test="Title/node()!='' and not(@showHeading='false')">
             <h3 class="caption-title">
               <xsl:value-of select="Title/node()"/>
             </h3>
@@ -14880,7 +14987,7 @@
       <xsl:if test="position()=1">
         <xsl:attribute name="class">item active</xsl:attribute>
       </xsl:if>
-      <xsl:if test="Title/node()!='' or Body/node()!=''">
+      <xsl:if test="(Title/node()!='' and not(@showHeading='false')) or Body/node()!=''">
         <div class="carousel-caption">
           <xsl:attribute name="class">
             <xsl:text>carousel-caption container carousel-v-</xsl:text>
@@ -14889,7 +14996,7 @@
             <xsl:value-of select="@position-horizontal"/>
           </xsl:attribute>
           <div class="carousel-caption-inner">
-            <xsl:if test="Title/node()!=''">
+            <xsl:if test="Title/node()!='' and not(@showHeading='false')">
               <h3 class="caption-title">
                 <xsl:value-of select="Title/node()"/>
               </h3>

@@ -596,7 +596,7 @@ Partial Public Class Cms
                     ' If in Admin Mode, then present it as WYSIWYG
                     If (Not (myWeb.mbAdminMode) And myWeb.mnUserId > 0) Then
 
-                        Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-Or-selfContent[@type='xform' and @name='UserMyAccount']")
+                        Dim oContentForm As XmlElement = myWeb.moPageXml.SelectSingleNode("descendant-Or-self::Content[@type='xform' and @name='UserMyAccount']")
                         If oContentForm Is Nothing Then
                             oXfmElmt = adXfm.xFrmEditDirectoryItem(myWeb.mnUserId, "User", , AccountUpdateForm)
                         Else

@@ -36,6 +36,7 @@
       <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
       <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
       <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="bLinkArticle" nodeset="@linkArticle" required="false()" type="string"/>
       <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
       <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
       <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
@@ -332,6 +333,12 @@
         <input bind="cModuleLinkText" class="long">
           <label>Module footer link text</label>
         </input>
+        <select bind="bLinkArticle" appearance="full" class="multiline">
+          <item>
+            <label>Make whole article clickable</label>
+            <value>true</value>
+          </item>
+        </select>
       </group>
 
     </group>

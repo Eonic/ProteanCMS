@@ -6073,7 +6073,7 @@ processFlow:
 
         End Sub
 
-        Public Function CreateNewCart(ByRef oCartElmt As XmlElement, Optional ByVal cCartSchemaName As String = "Order", Optional ByVal bCreateNewCart As Boolean = False) As Long
+        Public Function CreateNewCart(ByRef oCartElmt As XmlElement, Optional ByVal cCartSchemaName As String = "Order") As Long
             PerfMon.Log("Cart", "CreateNewCart")
             '   user has started shopping so we need to initialise the cart and add it to the db
 
@@ -6083,7 +6083,7 @@ processFlow:
 
             Try
                 'stop carts being added by robots
-                If Not myWeb.moSession("previousPage") = "" Or bCreateNewCart = True Then
+                If Not myWeb.moSession("previousPage") = "" Then
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"))
                     oElmt = addNewTextNode("tblCartOrder", oInstance.DocumentElement)
