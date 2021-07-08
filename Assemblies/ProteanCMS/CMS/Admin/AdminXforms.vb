@@ -5998,6 +5998,8 @@ Partial Public Class Cms
 
                     End If
 
+                    refundAmount = Convert.ToInt16(myWeb.moRequest("RefundAmount"))
+
                     MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
@@ -6020,17 +6022,18 @@ Partial Public Class Cms
                         MyBase.validate()
                         If (amount > refundAmount) Then
                             If MyBase.valid Then
-                                'it must contain user and date of the refund and refund reference from the provider 
-                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, amount)
-                                If (IsRefund Is Nothing) Then
-                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
-                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
-                                End If
+                                'it must contain user And date of the refund And refund reference from the provider 
                                 oCgfSect.SectionInformation.RestartOnExternalChanges = False
                                 oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
                                 oCfg.Save()
 
+                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, amount)
+                                If (IsRefund Is Nothing) Then
+
+                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
+                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                End If
                                 'Update Seller Notes:
                                 Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
                                 Dim oDs As DataSet
