@@ -632,7 +632,7 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CInt(jObj("nProviderReference")), "")
+                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CObj(jObj("nProviderReference")), "")
                     Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
                     Dim refundPaymentReceipt = ""
                     If nProviderReference <> "" Then
@@ -678,11 +678,11 @@ Partial Public Class Cms
             '        Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
             '        Dim paymentReceipt = ""
 
-            '        If providerName <> "" Then
-            '            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-            '            If (providerName = "JudoPay") Then
-            '                paymentReceipt = oPayProv.Activities.ProcessNewPayment(providerName, orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
-            '            End If
+            If Providername <> "" Then
+            Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername)
+            If (Providername = "JudoPay") Then
+                            paymentReceipt = oPayProv.Activities.ProcessNewPayment(providerName, orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
+                        End If
 
             '            Dim xmlDoc As New XmlDocument
             '            Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
@@ -696,10 +696,10 @@ Partial Public Class Cms
             '            Return jsonString
             '        End If
 
-            '    Catch ex As Exception
-            '        RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-            '        Return ex.Message
-            '    End Try
+            Catch ex As Exception
+            RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
+                    Return ex.Message
+            End Try
 
             'End Function
 
