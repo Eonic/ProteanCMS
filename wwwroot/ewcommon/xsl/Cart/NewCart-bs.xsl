@@ -1929,7 +1929,7 @@
         <xsl:call-template name="term3058" />
       </xsl:attribute>
       <xsl:call-template name="term3058" />
-      &#160;
+      <span class="space">&#160;</span>
       <i class="fa fa-shopping-cart">&#160;</i>
     </button>
   </xsl:template>
@@ -1941,7 +1941,7 @@
         <xsl:call-template name="term3058" />
       </xsl:attribute>
       <xsl:call-template name="term3058" />
-      &#160;
+      <span class="space">&#160;</span>
       <i class="fa fa-shopping-cart">&#160;</i>
     </button>
   </xsl:template>

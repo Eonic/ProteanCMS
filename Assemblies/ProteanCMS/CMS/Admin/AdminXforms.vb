@@ -2606,6 +2606,8 @@ Partial Public Class Cms
                             If moRequest("type") <> "" Then cContentSchemaName = moRequest("type")
                         End If
 
+                        moDbHelper.getLocationsByContentId(id, oTempInstance.FirstChild)
+
                         'Add ProductCategories
                         Dim sProductTypes As String = "Product,SKU"
                         If myWeb.moConfig("ProductTypes") <> "" Then
@@ -2876,29 +2878,29 @@ Partial Public Class Cms
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
                                     End If
+                                End If
 
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
-                                    editResult = dbHelper.ActivityType.ContentEdited
+                                editResult = dbHelper.ActivityType.ContentEdited
 
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
                                 Else
-                                    Dim nContentId As Long
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3538,7 +3540,7 @@ Partial Public Class Cms
                                 End If
 
                             Else
-                                    MyBase.valid = False
+                                MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 

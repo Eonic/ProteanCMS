@@ -99,7 +99,7 @@ Partial Public Class Cms
 
 
                     If myCart.mnCartId < 1 Then
-                        myCart.CreateNewCart(CartXml, "Order", True)
+                        myCart.CreateNewCart(CartXml, "Order")
                         If myCart.mcItemOrderType <> "" Then
                             myCart.mmcOrderType = myCart.mcItemOrderType
                         Else
@@ -620,8 +620,7 @@ Partial Public Class Cms
                     Return ex.Message
                 End Try
 
-            End Function
-            ''' <summary>
+             ''' <summary>
             ''' Refund order 
             ''' </summary>
             ''' <param name="myApi"></param>
@@ -632,7 +631,7 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CInt(jObj("nProviderReference")), "")
+                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CObj(jObj("nProviderReference")), "")
                     Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
                     Dim refundPaymentReceipt = ""
                     If nProviderReference <> "" Then
@@ -658,7 +657,12 @@ Partial Public Class Cms
 
             End Function
 
-
+            ''' <summary>
+            ''' Process New payment
+            ''' </summary>
+            ''' <param name="myApi"></param>
+            ''' <param name="jObj"></param>
+            ''' <returns></returns>
             Public Function ProcessNewPayment(ByRef myApi As Protean.API, ByRef jObj As Newtonsoft.Json.Linq.JObject) As String
                 Try
                     Dim oCart As New Cart(myWeb)
@@ -677,28 +681,26 @@ Partial Public Class Cms
                     Dim town = IIf(jObj("town") IsNot Nothing, CStr(jObj("town")), "")
                     Dim postCode = IIf(jObj("postCode") IsNot Nothing, CStr(jObj("postCode")), "")
                     Dim paymentReceipt = ""
-
-                    If Providername <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, Providername)
-                        If (Providername = "JudoPay") Then
-                            paymentReceipt = oPayProv.Activities.ProcessNewPayment(providerName, orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
+                    Dim jsonString As String = ""
+                    If providerName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                        If (providerName = "JudoPay") Then
+                            paymentReceipt = oPayProv.Activities.ProcessNewPayment(orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
                         End If
 
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<PaymentReceiptId>" & paymentReceipt & "</PaymentReceiptId>"
                         xmlDoc.LoadXml(xmlResponse.InnerXml.ToString())
-                        Dim jsonString As String = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
-
+                        jsonString = Newtonsoft.Json.JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented)
                         jsonString = jsonString.Replace("""@", """_")
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue")
-
-                        Return jsonString
                     End If
+                    Return jsonString
 
                 Catch ex As Exception
                     RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""))
-                    Return ex.Message
+                    Return "Error"
                 End Try
 
             End Function
@@ -716,8 +718,6 @@ Partial Public Class Cms
                         'if we receive any response from judopay pass it from PaymentReceipt
                         'response should contain payment related all references like result, status, cardtoken, receiptId etc
                         'validate if weather success or declined in Judopay.cs and redirect accordingly
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
-                        myWeb.msRedirectOnEnd = "http://intotheblue.local"
 
                         'Return oPayProv.Activities.PaymentReceipt()
 

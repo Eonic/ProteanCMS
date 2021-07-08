@@ -49,6 +49,7 @@
       <bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
       <bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
       <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+      <bind id="groupEventsByMonth" nodeset="@groupEventsByMonth" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -130,7 +131,7 @@
                 <value>true</value>
               </item>
             </select>
-           
+
           </case>
         </switch>
       </group>
@@ -267,6 +268,12 @@
           </case>
           <case id="cSortBy_5"/>
         </switch>
+        <select bind="groupByMonth" appearance="full" class="multiline hidden groupEventsByMonth">
+          <item>
+            <label>Group Events By Month</label>
+            <value>true</value>
+          </item>
+        </select>
       </group>
       <group class="inline">
         <select1 bind="carousel" appearance="full"  class="form-group">

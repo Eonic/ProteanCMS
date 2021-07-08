@@ -7015,9 +7015,15 @@ Public Class Cms
                                 Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
 
                                 Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
-                                Dim nPrice As Double = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                Dim nPrice As Double = 0
+                                If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
+                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                End If
+
                                 If nPrice = 0 Then
-                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    If Not contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") Is Nothing Then
+                                        nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    End If
                                 End If
                                 Dim nWeight As Double = 0
                                 If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then

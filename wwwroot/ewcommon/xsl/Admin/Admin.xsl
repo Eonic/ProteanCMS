@@ -11,7 +11,6 @@
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
 	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
-
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -530,7 +529,7 @@
 					</button>
 					<a class="navbar-brand" href="#">
 						<span class="admin-logo-text">
-							eonic<strong>web</strong>5
+							proteancms
 						</span>
 						<span class="visible-admin-xs xs-admin-switch">
 							<span class="sectionName">
@@ -812,9 +811,8 @@
 
 		<xsl:if test="not(/Page[@ewCmd='Normal'])">
 			<!--<div id="breadcrumb">-->
-			<ol class="breadcrumb admin-breadcrumb">
 				<xsl:apply-templates select="/" mode="adminBreadcrumb"/>
-			</ol>
+	
 			<!--</div>-->
 		</xsl:if>
 	</xsl:template>
@@ -924,9 +922,18 @@
 			<xsl:apply-templates select="self::MenuItem" mode="getHref"/>
 		</xsl:variable>
 		<xsl:apply-templates select="." mode="adminMenuLinkSt"/>
-		<xsl:text> / </xsl:text>
 		<xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="adminBreadcrumbSt"/>
 	</xsl:template>
+
+  <xsl:template match="MenuItem" mode="adminBreadcrumbId">
+    <xsl:param name="thispageid"/>
+    <xsl:variable name="url">
+      <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+    </xsl:variable>
+    <xsl:apply-templates select="." mode="adminMenuLinkSt"/>
+    <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=$thispageid]]" mode="adminBreadcrumbSt"/>
+  </xsl:template>
+  
 	<!-- Generic Menu Link -->
 	<xsl:template match="MenuItem" mode="adminMenuLinkSt">
 		<li>
@@ -942,7 +949,15 @@
 						<xsl:attribute name="class">on</xsl:attribute>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:apply-templates select="." mode="getDisplayName"/>
+        <xsl:choose>
+          <xsl:when test="DisplayName/@siteTemplate='micro'">
+            <xsl:value-of select="@name"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="." mode="getDisplayName"/>
+          </xsl:otherwise>
+        </xsl:choose> 
+				
 				<xsl:if test="self::MenuItem[@id=/Page/@id]">
 					<xsl:if test="@verDesc!=''">
 						[ver: <xsl:value-of select="@verDesc"/>]
@@ -957,25 +972,43 @@
 
 	<!-- -->
 	<xsl:template match="Page" mode="adminBreadcrumb">
-		<xsl:apply-templates select="AdminMenu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="adminLink"/>
-	</xsl:template>
+    <ol class="breadcrumb admin-breadcrumb">
+      <xsl:apply-templates select="AdminMenu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="adminLink"/>
+    </ol>
+  </xsl:template>
 
 	<xsl:template match="Page[@ewCmd='ByPage' or @ewCmd='Normal' or @ewCmd='Advanced' or @ewCmd='EditPage' or @ewCmd='EditPageLayout' or @ewCmd='EditMailLayout'  or @ewCmd='EditPagePermissions' or @ewCmd='EditPageRights' or @ewCmd='LocateSearch']" mode="adminBreadcrumb">
 		<xsl:if test="/Page/@id != ''">
+      <ol class="breadcrumb admin-breadcrumb">
 			<xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbSt"/>
+      </ol>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="Page[@ewCmd='EditContent' or contains(@ewCmd,'EditXForm') or @ewCmd='EditMailContent']" mode="adminBreadcrumb">
-		<xsl:if test="/Page/@id != ''">
-			<xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbSt"/>
-		</xsl:if>
-		<xsl:value-of select="ContentDetail/Content[@type='xform']/model/instance/tblContent/cContentName/node()"/> [Editing]
+    <div class="breadcrumb admin-breadcrumb">
+      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary='true']">
+        <i class="fa fa-file">&#160;</i> &#160;[Primary page]&#160;
+        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+          <xsl:with-param name="thispageid" select="@pgid"/>
+        </xsl:apply-templates>
+        <br/>
+      </xsl:for-each>
+      <xsl:for-each select="ContentDetail/Content/model/instance/tblContent/Location[@primary!='true']">
+        <i class="fa fa-file-o">&#160;</i> &#160; [Also on page]&#160;
+        <xsl:apply-templates select="/Page/Menu/MenuItem" mode="adminBreadcrumbId">
+          <xsl:with-param name="thispageid" select="@pgid"/>
+        </xsl:apply-templates>      
+        <br/>
+      </xsl:for-each>    
+    </div>
 	</xsl:template>
 
 	<xsl:template match="Page[@ewCmd='CopyPage']" mode="adminBreadcrumb">
 		<xsl:if test="/Page/@id != ''">
+      <ol class="breadcrumb admin-breadcrumb">
 			<xsl:apply-templates select="/Page/Menu/MenuItem" mode="breadcrumb"/>
+      </ol>
 		</xsl:if>
 		<xsl:text>[Copying]</xsl:text>
 	</xsl:template>
@@ -990,12 +1023,15 @@
 
 
 	<xsl:template match="MenuItem" mode="adminBreadcrumb">
+
+    <ol class="breadcrumb admin-breadcrumb">
 		<xsl:if test="@cmd!='AdmHome'">
 			<xsl:apply-templates select="self::MenuItem" mode="adminLink"/>
 			<xsl:text> / </xsl:text>
 		</xsl:if>
 		<xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@cmd=/Page/@ewCmd or contains(@subCmds,$subMenuCommand)]]" mode="breadcrumbAdmin"/>
-	</xsl:template>
+    </ol>
+  </xsl:template>
 
 	<!-- -->
 	<xsl:template match="Page" mode="adminFooter">
@@ -3003,10 +3039,26 @@
 					<xsl:apply-templates select="." mode="getDisplayName" />
 				</xsl:variable>
 				<a href="{$pageLink}" title="{@name}" name="{@id}">
-					<xsl:apply-templates select="." mode="status_legend"/>
-					<span class="pageName">
-						<xsl:value-of select="$displayName"/>
-					</span>
+          <xsl:choose>
+            <xsl:when test="DisplayName/@siteTemplate='micro'">
+              <i class="fa fa-home fa-lg status activeParent" xmlns="http://www.w3.org/1999/xhtml">
+                &#160;
+              </i>
+              <span class="pageName">
+                &#160;
+                <xsl:value-of select="@name"/>
+              </span>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="." mode="status_legend"/>
+              <span class="pageName">
+                <xsl:value-of select="$displayName"/>
+              </span>
+            </xsl:otherwise>
+          </xsl:choose>
+          
+          
+
 				</a>
 			</div>
 			<div class="optionButtons">

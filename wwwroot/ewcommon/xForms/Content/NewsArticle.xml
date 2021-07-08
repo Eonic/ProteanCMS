@@ -156,7 +156,7 @@
         <relatedContent search="find add" type="FAQ" relationType="" direction="1way">
           <label>FAQ's</label>
         </relatedContent>
-        <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" class="form-border-bottom" maxRelationNo="1">
+        <relatedContent bind="Related-Author" search="pick add" type="Contact" relationType="Author" direction="2way" maxRelationNo="1">
           <label>Related Author</label>
         </relatedContent>
         <relatedContent search="find add" type="Tag" relationType="Tag" direction="2way">

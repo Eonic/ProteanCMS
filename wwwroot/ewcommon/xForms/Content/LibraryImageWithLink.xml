@@ -66,6 +66,7 @@
 				<bind id="cContentPicture" nodeset="Images/img[@class='display']" required="false()" type="xml-replace"/>
 				<bind id="cContentDetail" nodeset="Images/img[@class='detail']" required="false()" type="xml-replace"/>
 				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+        <bind id="showHeading" nodeset="@showHeading" required="false()" type="string"/>
 
         <bind id="cContentLink" nodeset="@externalLink" required="false()" type="string"/>
         <bind id="cContentPage" nodeset="@internalLink" required="false()" type="string"/>
@@ -144,6 +145,17 @@
 				<input bind="cContentImageTitle" class="long">
 					<label>Image Title</label>
 				</input>
+        <select1 bind="showHeading" appearance="full" class="vshort">
+          <label>Show title on slide?</label>
+          <item>
+            <label>Yes</label>
+            <value>true</value>
+          </item>
+          <item>
+            <label>No</label>
+            <value>false</value>
+          </item>
+        </select1>
 				<input bind="cContentImageAuthor" class="short">
 					<label>Image Author</label>
 				</input>
