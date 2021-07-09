@@ -6028,7 +6028,7 @@ Partial Public Class Cms
                                 oCfg.Save()
 
                                 Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, amount)
+                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, refundAmount)
                                 If (IsRefund Is Nothing) Then
 
                                     MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
