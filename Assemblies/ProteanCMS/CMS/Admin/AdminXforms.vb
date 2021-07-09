@@ -2878,29 +2878,29 @@ Partial Public Class Cms
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
                                     End If
+                                End If
 
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
-                                    editResult = dbHelper.ActivityType.ContentEdited
+                                editResult = dbHelper.ActivityType.ContentEdited
 
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
                                 Else
-                                    Dim nContentId As Long
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3540,7 +3540,7 @@ Partial Public Class Cms
                                 End If
 
                             Else
-                                    MyBase.valid = False
+                                MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 
@@ -5970,21 +5970,22 @@ Partial Public Class Cms
 
                 Dim cProcessInfo As String = ""
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
-
+                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
+                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                 Try
                     Dim IsRefund As String = ""
                     Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
                     MyBase.NewFrm("Refund")
-                    MyBase.submission("Refund using " & providerName, "post", "form_check(this)")
-
-
+                    MyBase.submission("Refund", "", "post", "form_check(this)")
+                    Dim refundAmount As Decimal
+                    Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
                             Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
-                            xDoc.LoadXml(orderXml)
+                            xdoc.LoadXml(orderXml)
                         End If
                         If (xdoc.InnerXml <> "") Then
 
@@ -5997,7 +5998,9 @@ Partial Public Class Cms
 
                     End If
 
-                    MyBase.Instance.InnerXml = "<Refund> <RefundAmount> </RefundAmount> <ProviderName></ProviderName> <ProviderReference> </ProviderReference> </Refund>"
+                    refundAmount = Convert.ToInt16(myWeb.moRequest("RefundAmount"))
+
+                    MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
                     MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
@@ -6014,30 +6017,50 @@ Partial Public Class Cms
 
                     MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
 
-                    MyBase.updateInstanceFromRequest()
-                    MyBase.validate()
-                    'check amount is less than initail amount otherwise invalid
-                    If MyBase.valid Then
-                        'this is where we process the refund
-                        'update notes on the order
-                        'refunding information
-                        'it must contain user and date of the refund and refund reference from the provider 
-                        'if the refund failswe need to return error msg from the provider and change the form   (addalert-error)
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
-                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderId)
-                    End If
-                    If (IsRefund Is Nothing) Then
-                        MyBase.addNote("cStructName", noteTypes.Alert, "Refund Failed")
-                    End If
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If (amount > refundAmount) Then
+                            If MyBase.valid Then
+                                'it must contain user And date of the refund And refund reference from the provider 
+                                oCgfSect.SectionInformation.RestartOnExternalChanges = False
+                                oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                oCfg.Save()
 
+                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, refundAmount)
+                                If (IsRefund Is Nothing) Then
+
+                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
+                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                End If
+                                'Update Seller Notes:
+                                Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
+                                Dim oDs As DataSet
+                                Dim oRow As DataRow
+                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                                For Each oRow In oDs.Tables("Order").Rows
+                                    If (IsRefund IsNot Nothing) Then
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
+                                    Else
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund" & vbLf & "Full Response:' " & IsRefund & "'"
+                                    End If
+                                Next
+                                myWeb.moDbHelper.updateDataset(oDs, "Order")
+
+                            End If
+                        End If
+
+                    End If
                     MyBase.addValues()
                     Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
+
 
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement
