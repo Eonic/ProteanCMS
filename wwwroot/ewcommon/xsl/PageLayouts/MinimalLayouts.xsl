@@ -7995,6 +7995,7 @@
     <xsl:variable name="parentPage" select="//MenuItem[@id=$link]"/>
     <xsl:variable name="contentList">
       <xsl:apply-templates select="." mode="getContent">
+        <xsl:with-param name="showHidden" select="@showHidden"/>
         <xsl:with-param name="contentType" select="$contentType" />
         <xsl:with-param name="startPos" select="$startPos" />
       </xsl:apply-templates>
@@ -8081,6 +8082,8 @@
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="crop" select="$cropSetting"/>
+          <xsl:with-param name="showHidden" select="@showHidden"/>
+          <xsl:with-param name="fixedThumb" select="@fixedThumb"/>
         </xsl:apply-templates>
         <div class="terminus">&#160;</div>
       </div>
@@ -8091,6 +8094,8 @@
   <xsl:template match="MenuItem" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="crop"/>
+    <xsl:param name="showHidden"/>
+    <xsl:param name="fixedThumb"/>
     <xsl:variable name="url">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
@@ -8107,7 +8112,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="@name!='Information' and not(DisplayName/@exclude='true')">
+    <xsl:if test="(@name!='Information' and (not(DisplayName/@exclude='true'))) or (@name!='Information' and $showHidden='true')">
       <div class="list-group-item listItem subpageItem">
         <xsl:apply-templates select="." mode="inlinePopupOptions">
           <xsl:with-param name="class" select="'list-group-item listItem subpageItem'"/>
@@ -8124,6 +8129,7 @@
               </xsl:attribute>
               <xsl:apply-templates select="." mode="displaySubPageThumb">
                 <xsl:with-param name="crop" select="$cropSetting" />
+                <xsl:with-param name="fixedThumb" select="$fixedThumb" />
               </xsl:apply-templates>
             </a>
           </xsl:if>
