@@ -632,11 +632,12 @@ Partial Public Class Cms
                     Dim oCart As New Cart(myWeb)
                     oCart.moPageXml = myWeb.moPageXml
 
-                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CObj(jObj("nProviderReference")), "")
+                    Dim nProviderReference = IIf(jObj("nProviderReference") IsNot Nothing, CType(jObj("nProviderReference"), Long), 0)
                     Dim Amount = IIf(jObj("nAmount") IsNot Nothing, CDec(jObj("nAmount")), "")
+                    Dim providerName = IIf(jObj("sProviderName") IsNot Nothing, CStr(jObj("sProviderName")), "")
                     Dim refundPaymentReceipt = ""
-                    If nProviderReference <> "" Then
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, nProviderReference)
+                    If providerName <> "" Then
+                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
                         refundPaymentReceipt = oPayProv.Activities.RefundPayment(nProviderReference, Amount)
 
                         Dim xmlDoc As New XmlDocument
