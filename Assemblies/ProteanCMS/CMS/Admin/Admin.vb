@@ -1184,23 +1184,8 @@ ProcessFlow:
                     Case "DeleteContent"
                         Dim ids = myWeb.moRequest("id")
                         Dim bulkIds() As String = ids.split(",")
-                        Dim status As Integer
-                        Dim id As String
-                        Dim count As Integer = ids.Split(",").Length
-                        Dim totalStatusCount As Integer = 0
-                        For Each id In bulkIds
-                            status = myWeb.moDbHelper.getObjectStatus(dbHelper.objectTypes.Content, id)
-                            If (status = 0) Then
-                                totalStatusCount = totalStatusCount + 1
-                            End If
 
-                        Next
-                        If (count = totalStatusCount) Then
-                            If (status = 0) Then  'check status here
-                                oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
-                            End If
-                        End If
-
+                        oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
                         If moAdXfm.valid Then
                             bAdminMode = False
                             sAdminLayout = ""
