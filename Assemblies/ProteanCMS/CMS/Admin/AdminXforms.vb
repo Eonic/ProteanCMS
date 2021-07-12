@@ -3358,14 +3358,14 @@ Partial Public Class Cms
                     For i As Integer = 0 To UBound(artid)
                         sContentName = moDbHelper.getNameByKey(dbHelper.objectTypes.Content, artid(i))
                         sContentSchemaName = moDbHelper.getContentType(artid(i))
-                        bulkContentName = Tools.Xml.encodeAllHTML(sContentName)
+                        bulkContentName = Tools.Xml.encodeAllHTML(sContentName) & " , "
                         MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this item - """ & bulkContentName & """", , "alert-danger")
                         If sContentSchemaName = "xFormQuiz" Then
                             MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database ""ARE YOU SURE"" !", , "alert-danger")
                         End If
                         bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
-                    bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
+
                     MyBase.addSubmit(oFrmElmt, "", "Delete " & bulkContentSchemaName, , "principle btn-danger", "fa-trash-o")
 
                     MyBase.Instance.InnerXml = "<delete/>"
