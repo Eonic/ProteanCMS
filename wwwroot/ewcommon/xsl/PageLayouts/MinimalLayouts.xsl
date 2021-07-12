@@ -5933,7 +5933,7 @@
           <xsl:text>clearfix EventsList content-scroller</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <div class="cols cols{@cols}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
+      <div class="cols cols{@cols}" data-xscols="{$xsColsToShow}" data-smcols="{$smColsToShow}" data-mdcols="{$mdColsToShow}" data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" >
         <!--responsive columns-->
         <xsl:attribute name="class">
           <xsl:text>cols</xsl:text>
@@ -5966,9 +5966,18 @@
             <xsl:value-of select="@autoPlaySpeed"/>
           </xsl:attribute>
         </xsl:if>
-        <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
-          <xsl:with-param name="sortBy" select="@sortBy"/>
-        </xsl:apply-templates>
+        <xsl:choose>
+          <xsl:when test="@linkArticle='true'">
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefLinked">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+              <xsl:with-param name="sortBy" select="@sortBy"/>
+            </xsl:apply-templates>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:if test="@stepCount != '0'">
           <div class="terminus">&#160;</div>
           <xsl:apply-templates select="/" mode="genericStepper">
@@ -6062,6 +6071,74 @@
         <!-- Accessiblity fix : Separate adjacent links with more than whitespace -->
         <div class="terminus">&#160;</div>
       </div>
+    </div>
+  </xsl:template>
+
+  <!-- Event Brief Linked -->
+  <xsl:template match="Content[@type='Event']" mode="displayBriefLinked">
+    <xsl:param name="sortBy"/>
+    <!-- articleBrief -->
+    <xsl:variable name="parentURL">
+      <xsl:apply-templates select="." mode="getHref"/>
+    </xsl:variable>
+    <div class="listItem list-group-item vevent">
+      <xsl:apply-templates select="." mode="inlinePopupOptions">
+        <xsl:with-param name="class" select="'listItem list-group-item vevent'"/>
+        <xsl:with-param name="sortBy" select="$sortBy"/>
+      </xsl:apply-templates>
+      <a href="{$parentURL}" title="Read More - {Headline/node()}">
+        <div class="lIinner media">
+          <xsl:if test="Images/img/@src!=''">
+            <xsl:apply-templates select="." mode="displayThumbnail"/>
+          </xsl:if>
+          <div class="media-body">
+            <h4 class="media-heading">
+              <xsl:apply-templates select="." mode="getDisplayName"/>
+            </h4>
+            <xsl:if test="StartDate/node()!=''">
+              <p class="date">
+                <span class="dtstart">
+                  <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="date" select="StartDate/node()"/>
+                  </xsl:call-template>
+                  <span class="value-title" title="{StartDate/node()}T{translate(Times/@start,',',':')}" ></span>
+                </span>
+                <xsl:if test="EndDate/node()!='' and EndDate/node() != StartDate/node()">
+                  <xsl:text> - </xsl:text>
+                  <span class="dtend">
+                    <xsl:call-template name="DisplayDate">
+                      <xsl:with-param name="date" select="EndDate/node()"/>
+                    </xsl:call-template>
+                    <span class="value-title" title="{EndDate/node()}T{translate(Times/@end,',',':')}"></span>
+                  </span>
+                </xsl:if>
+                <xsl:text>&#160;</xsl:text>
+                <xsl:if test="Times/@start!='' and Times/@start!=','">
+                  <span class="times">
+                    <xsl:value-of select="translate(Times/@start,',',':')"/>
+                    <xsl:if test="Times/@end!='' and Times/@end!=','">
+                      <xsl:text> - </xsl:text>
+                      <xsl:value-of select="translate(Times/@end,',',':')"/>
+                    </xsl:if>
+                  </span>
+                </xsl:if>
+              </p>
+            </xsl:if>
+            <xsl:if test="Location/Venue!=''">
+              <p class="location vcard">
+                <span class="fn org">
+                  <xsl:value-of select="Location/Venue"/>
+                </span>
+              </p>
+            </xsl:if>
+            <xsl:if test="Strap/node()!=''">
+              <div class="summary">
+                <xsl:apply-templates select="Strap/node()" mode="cleanXhtml"/>
+              </div>
+            </xsl:if>
+          </div>
+        </div>
+      </a>
     </div>
   </xsl:template>
 
