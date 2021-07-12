@@ -1998,6 +1998,7 @@
 					<option value="Locate">Locate</option>
 					<option value="Hide">Hide</option>
 					<option value="Show">Show</option>
+				    <option value="Delete">Delete</option>
 				</select>
 				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary">Go</button>
