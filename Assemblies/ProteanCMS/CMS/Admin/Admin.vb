@@ -1115,6 +1115,10 @@ ProcessFlow:
                                 mcEwCmd = "ShowContent"
                                 sAdminLayout = "ShowContent"
                                 GoTo ProcessFlow
+                            Case "Delete"
+                                mcEwCmd = "DeleteContent"
+                                sAdminLayout = "DeleteContent"
+                                GoTo ProcessFlow
                         End Select
                     Case "HideContent"
                         ' hide content
@@ -1178,7 +1182,10 @@ ProcessFlow:
                         If mcEwCmd = "Advanced" Then GoTo ProcessFlow
 
                     Case "DeleteContent"
-                        oPageDetail.AppendChild(moAdXfm.xFrmDeleteContent(myWeb.moRequest("id")))
+                        Dim ids = myWeb.moRequest("id")
+                        Dim bulkIds() As String = ids.split(",")
+
+                        oPageDetail.AppendChild(moAdXfm.xFrmDeleteBulkContent(bulkIds))
                         If moAdXfm.valid Then
                             bAdminMode = False
                             sAdminLayout = ""

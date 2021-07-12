@@ -2876,29 +2876,29 @@ Partial Public Class Cms
                                 ' Don't set a location if a contentparid has been passed (still process content locations as tickboexs on the form, if they've been set)
                                 If Not (myWeb.moRequest("contentParId") IsNot Nothing And myWeb.moRequest("contentParId") <> "") Then
 
-                                        'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
-                                        'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
-                                            moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
-                                        End If
+                                    'TS 28-11-2017 we only want to update the cascade information if the content is on this page.
+                                    'If not on this page i.e. being edited via search results or related content on a page we should ignore this.
+                                    If moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" & id & " and nStructId = " & pgid) > 0 Then
+                                        moDbHelper.setContentLocation(pgid, id, , bCascade, , "")
                                     End If
+                                End If
 
-                                    'TS 10-01-2014 fix for cascade on saved items... To Be tested
-                                    If bCascade And pgid > 0 Then
-                                        moDbHelper.setContentLocation(pgid, id, True, bCascade, )
-                                    End If
+                                'TS 10-01-2014 fix for cascade on saved items... To Be tested
+                                If bCascade And pgid > 0 Then
+                                    moDbHelper.setContentLocation(pgid, id, True, bCascade, )
+                                End If
 
 
-                                    editResult = dbHelper.ActivityType.ContentEdited
+                                editResult = dbHelper.ActivityType.ContentEdited
 
-                                    If updatedVersionId <> id Then
-                                        nReturnId = updatedVersionId
-                                    Else
-                                        nReturnId = id
-                                    End If
-
+                                If updatedVersionId <> id Then
+                                    nReturnId = updatedVersionId
                                 Else
-                                    Dim nContentId As Long
+                                    nReturnId = id
+                                End If
+
+                            Else
+                                Dim nContentId As Long
                                 nContentId = moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, MyBase.Instance)
                                 moDbHelper.CommitLogToDB(dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, Now, nContentId, pgid, "")
 
@@ -3334,6 +3334,69 @@ Partial Public Class Cms
                 End Try
             End Function
 
+            Public Function xFrmDeleteBulkContent(ByVal ParamArray artid() As String) As XmlElement
+
+                Dim oFrmElmt As XmlElement
+                Dim sContentName As String
+                Dim sContentSchemaName As String
+
+                Dim cProcessInfo As String = ""
+                Dim bulkContentName As String = ""
+                Dim bulkContentSchemaName As String = ""
+
+                Try
+                    'load the xform to be edited
+                    moDbHelper.moPageXml = moPageXML
+
+                    MyBase.NewFrm("DeleteContent")
+
+                    MyBase.submission("DeleteContent", "", "post")
+                    oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "DeleteItem", "", "Delete Content")
+
+                    For i As Integer = 0 To UBound(artid)
+                        sContentName = moDbHelper.getNameByKey(dbHelper.objectTypes.Content, artid(i))
+                        sContentSchemaName = moDbHelper.getContentType(artid(i))
+                        bulkContentName = Tools.Xml.encodeAllHTML(sContentName) & " , "
+                        MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "Are you sure you want to delete this item - """ & bulkContentName & """", , "alert-danger")
+                        If sContentSchemaName = "xFormQuiz" Then
+                            MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database ""ARE YOU SURE"" !", , "alert-danger")
+                        End If
+                        bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
+                    Next i
+
+                    MyBase.addSubmit(oFrmElmt, "", "Delete " & bulkContentSchemaName, , "principle btn-danger", "fa-trash-o")
+
+                    MyBase.Instance.InnerXml = "<delete/>"
+
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If MyBase.valid Then
+
+                            'remove the relevent content information
+                            For i As Integer = 0 To UBound(artid)
+                                sContentName = moDbHelper.getNameByKey(dbHelper.objectTypes.Content, artid(i))
+                                sContentSchemaName = moDbHelper.getContentType(artid(i))
+                                moDbHelper.DeleteObject(dbHelper.objectTypes.Content, artid(i))
+                            Next i
+
+
+
+                        Else
+                            MyBase.addValues()
+                        End If
+                    Else
+                        MyBase.addValues()
+                    End If
+
+                    Return MyBase.moXformElmt
+
+                Catch ex As Exception
+                    returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
+                    Return Nothing
+                End Try
+            End Function
+
             Public Function xFrmDeleteFolder(ByRef cPath As String, ByVal nType As fsHelper.LibraryType) As XmlElement
 
                 Dim oFrmElmt As XmlElement
@@ -3538,7 +3601,7 @@ Partial Public Class Cms
                                 End If
 
                             Else
-                                    MyBase.valid = False
+                                MyBase.valid = False
                                 MyBase.addNote(oFrmElmt, noteTypes.Alert, "File move error")
                                 MyBase.addValues()
 
@@ -6012,24 +6075,40 @@ Partial Public Class Cms
 
                     MyBase.addSubmit(oFrmElmt, "Refund", "Refund", "ewSubmit")
 
-                    MyBase.updateInstanceFromRequest()
-                    MyBase.validate()
-                    'check amount is less than initail amount otherwise invalid
-                    If MyBase.valid Then
-                        'this is where we process the refund
-                        'update notes on the order
-                        'refunding information
-                        'it must contain user and date of the refund and refund reference from the provider 
-                        'if the refund failswe need to return error msg from the provider and change the form   (addalert-error)
-                        Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, "JudoPay")
-                        IsRefund = oPayProv.Activities.RefundPayment(myWeb, oCart, nOrderId)
-                    End If
-                    If (IsRefund Is Nothing) Then
-                        MyBase.addNote("cStructName", noteTypes.Alert, "Refund Failed")
-                    End If
+                    If MyBase.isSubmitted Then
+                        MyBase.updateInstanceFromRequest()
+                        MyBase.validate()
+                        If (amount > refundAmount) Then
+                            If MyBase.valid Then
+                                'oCgfSect.SectionInformation.RestartOnExternalChanges = False    'check this
+                                'oCgfSect.SectionInformation.SetRawXml(MyBase.Instance.InnerXml)
+                                'oCfg.Save()
 
-                    MyBase.addValues()
-                    Return MyBase.moXformElmt
+                                Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
+                                IsRefund = oPayProv.Activities.RefundPayment(providerPaymentReference, refundAmount)
+                                If (IsRefund Is Nothing) Then
+                                    MyBase.addNote("Refund", noteTypes.Alert, "Refund Failed")
+                                    myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + nOrderId
+                                End If
+                                'Update Seller Notes:
+                                Dim sSql As String = "select * from tblCartOrder where nCartOrderKey = " & nOrderId
+                                Dim oDs As DataSet
+                                Dim oRow As DataRow
+                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart")
+                                For Each oRow In oDs.Tables("Order").Rows
+                                    If (IsRefund IsNot Nothing) Then
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Successful) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
+                                    Else
+                                        oRow("cSellerNotes") = oRow("cSellerNotes") & vbLf & Today & " " & TimeOfDay & ": changed to: (Refund Payment Failed) " & vbLf & "comment: " & "Refund amount:" & refundAmount & vbLf & "Full Response:' Refunded Amount is " & refundAmount & " And ReceiptId is: " & IsRefund & "'"
+                                    End If
+                                Next
+                                myWeb.moDbHelper.updateDataset(oDs, "Order")
+
+                            End If
+                        End If
+
+                        MyBase.addValues()
+                        Return MyBase.moXformElmt
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
