@@ -686,9 +686,7 @@ Partial Public Class Cms
                     Dim jsonString As String = ""
                     If providerName <> "" Then
                         Dim oPayProv As New Providers.Payment.BaseProvider(myWeb, providerName)
-                        If (providerName = "JudoPay") Then
-                            paymentReceipt = oPayProv.Activities.ProcessNewPayment(orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
-                        End If
+                        paymentReceipt = oPayProv.Activities.ProcessNewPayment(orderId, amount, cardNumber, cV2, expiryDate, startDate, cardHolderName, address1, address2, town, postCode)
                         Dim xmlDoc As New XmlDocument
                         Dim xmlResponse As XmlElement = xmlDoc.CreateElement("Response")
                         xmlResponse.InnerXml = "<PaymentReceiptId>" & paymentReceipt & "</PaymentReceiptId>"
