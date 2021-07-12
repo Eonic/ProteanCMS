@@ -3363,7 +3363,7 @@ Partial Public Class Cms
                         If sContentSchemaName = "xFormQuiz" Then
                             MyBase.addNote(oFrmElmt, xForm.noteTypes.Alert, "By deleting the Exam you will also delete all the user results from the database ""ARE YOU SURE"" !", , "alert-danger")
                         End If
-                        bulkContentSchemaName = bulkContentSchemaName & Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
+                        bulkContentSchemaName = Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
                     bulkContentSchemaName = bulkContentSchemaName.Trim(" ").Trim(",").Trim(" ")
                     MyBase.addSubmit(oFrmElmt, "", "Delete " & bulkContentSchemaName, , "principle btn-danger", "fa-trash-o")
