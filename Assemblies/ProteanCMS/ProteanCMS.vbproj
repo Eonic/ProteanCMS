@@ -74,7 +74,7 @@
     </NuGetPackageImportStamp>
     <ShouldCreateLogs>False</ShouldCreateLogs>
     <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
-    <AssemblyVersion>6.0.49.83</AssemblyVersion>
+    <AssemblyVersion>6.0.49.110</AssemblyVersion>
     <UpdatePackageVersion>False</UpdatePackageVersion>
     <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
     <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
@@ -264,9 +264,6 @@
       <HintPath>..\NonNuget\PreMailer.Net.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
-    <Reference Include="Protean.Providers.Payment.JudoPay">
-      <HintPath>..\..\..\ProteanCMS Addons\Providers\Payment\JudoPay\bin\Debug\Protean.Providers.Payment.JudoPay.dll</HintPath>
-    </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
     </Reference>

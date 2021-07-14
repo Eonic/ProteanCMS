@@ -87,7 +87,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\MySql.Data.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Fonet.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Google.Protobuf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\bin\Release\Renci.SshNet.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbprojAssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.CopyComplete
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
@@ -295,3 +294,4 @@ E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.dll
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.xml
 E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.Tools\obj\Release\Protean.Tools.vbproj.AssemblyReference.cache
