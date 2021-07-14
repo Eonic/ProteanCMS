@@ -12,14 +12,14 @@
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
   <!-- removes xmlns="" on all copy-of responses -->
   <xsl:variable name="appPath">
-  	<xsl:choose>
-		<xsl:when test="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()!=''">
-		<xsl:value-of select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
-		</xsl:when>
-		<xsl:otherwise>
-		<xsl:text>/</xsl:text>
-		</xsl:otherwise>
-	</xsl:choose>
+    <xsl:choose>
+      <xsl:when test="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()!=''">
+        <xsl:value-of select="/Page/Request/ServerVariables/Item[@name='APPLICATION_ROOT']/node()"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>/</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:variable>
   <xsl:variable name="menu" select="/Page/Menu"/>
   <xsl:variable name="cart" select="/Page/Cart"/>
@@ -33,9 +33,9 @@
   <xsl:variable name="subSubSubSubSectionPage" select="/Page/Menu/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem/MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]"/>
   <xsl:variable name="MatchHeightType" select="'matchHeight'"/>
 
-  
+
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
-    
+
   <xsl:variable name="sitename">
     <xsl:choose>
       <xsl:when test="$siteURL=''">
@@ -49,7 +49,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  
+
   <xsl:variable name="href">
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail">
@@ -60,7 +60,7 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  
+
   <xsl:variable name="scriptVersion" select="'2'"/>
   <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
 
@@ -161,21 +161,21 @@
       <xsl:with-param name="valueName" select="'DescriptiveContentURLs'"/>
     </xsl:call-template>
   </xsl:variable>
-  
+
   <xsl:variable name="siteName">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'SiteName'"/>
-      </xsl:call-template>
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteName'"/>
+    </xsl:call-template>
   </xsl:variable>
-  
+
   <xsl:variable name="siteLogo">
-      <xsl:call-template name="getXmlSettings">
-        <xsl:with-param name="sectionName" select="'web'"/>
-        <xsl:with-param name="valueName" select="'SiteLogo'"/>
-      </xsl:call-template>
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteLogo'"/>
+    </xsl:call-template>
   </xsl:variable>
-    
+
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
       <xsl:call-template name="getXmlSettings">
@@ -222,19 +222,19 @@
 
   <xsl:variable name="GoogleTagManagerID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-        <xsl:call-template name="getXmlSettings">
-          <xsl:with-param name="sectionName" select="'web'"/>
-          <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
-        </xsl:call-template>
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleTagManagerID'"/>
+      </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-  
+
   <xsl:variable name="GoogleOptimizeID">
-  <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-        <xsl:call-template name="getXmlSettings">
-          <xsl:with-param name="sectionName" select="'web'"/>
-          <xsl:with-param name="valueName" select="'GoogleOptimizeID'"/>
-        </xsl:call-template>
+    <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
+      <xsl:call-template name="getXmlSettings">
+        <xsl:with-param name="sectionName" select="'web'"/>
+        <xsl:with-param name="valueName" select="'GoogleOptimizeID'"/>
+      </xsl:call-template>
     </xsl:if>
   </xsl:variable>
 
@@ -246,7 +246,7 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-  
+
   <xsl:variable name="BingTrackingID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:call-template name="getXmlSettings">
@@ -255,8 +255,8 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-  
-   <xsl:variable name="FacebookTrackingID">
+
+  <xsl:variable name="FacebookTrackingID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:call-template name="getXmlSettings">
         <xsl:with-param name="sectionName" select="'web'"/>
@@ -264,7 +264,7 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-  
+
   <xsl:variable name="FeedOptimiseID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:call-template name="getXmlSettings">
@@ -348,14 +348,14 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-        
+
         <xsl:if test="$GoogleOptimizeID!=''">
-        	  <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
+          <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}">&#160;</script>
         </xsl:if>
-        
+
         <xsl:if test="$GoogleTagManagerID!=''">
           <!-- Google Tag Manager -->
-	        <script>
+          <script>
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
@@ -365,15 +365,15 @@
           <!-- End Google Tag Manager -->
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
-        <!-- PayPal BEGIN -->
-        <script>
-          (function (a, t, o, m, s) {
-          a[m] = a[m] || []; a[m].push({ t: new Date().getTime(), event: 'snippetRun' });
-          var f = t.getElementsByTagName(o)[0], e = t.createElement(o), d = m !== 'paypalDDL' ? '&amp;m=' + m : ''; e.async = !0;
-          e.src = 'https://www.paypal.com/tagmanager/pptm.js?id=' + s + d; f.parentNode.insertBefore(e, f);
-          })(window, document, 'script', 'paypalDDL', '<xsl:value-of select="$PayPalTagManagerID"/>');
-        </script>
-        <!-- PayPal END -->
+          <!-- PayPal BEGIN -->
+          <script>
+            (function (a, t, o, m, s) {
+            a[m] = a[m] || []; a[m].push({ t: new Date().getTime(), event: 'snippetRun' });
+            var f = t.getElementsByTagName(o)[0], e = t.createElement(o), d = m !== 'paypalDDL' ? '&amp;m=' + m : ''; e.async = !0;
+            e.src = 'https://www.paypal.com/tagmanager/pptm.js?id=' + s + d; f.parentNode.insertBefore(e, f);
+            })(window, document, 'script', 'paypalDDL', '<xsl:value-of select="$PayPalTagManagerID"/>');
+          </script>
+          <!-- PayPal END -->
         </xsl:if>
         <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->
@@ -430,7 +430,7 @@
             <xsl:apply-templates select="." mode="commonStyle"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates select="." mode="criticalPathCSS"/>         
+            <xsl:apply-templates select="." mode="criticalPathCSS"/>
           </xsl:otherwise>
         </xsl:choose>
 
@@ -442,16 +442,16 @@
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
-      
 
-      
+
+
     </html>
   </xsl:template>
 
   <xsl:template match="Page" mode="criticalPathCSS">
-           <style>
-              <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
-            </style>
+    <style>
+      <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
+    </style>
   </xsl:template>
 
   <xsl:template match="Page" mode="alternatePages">
@@ -461,7 +461,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$currentPage/PageVersion[@verType='3']">
-          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />          
+          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
@@ -479,7 +479,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="htmlattr"></xsl:template>
-  
+
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS"></xsl:template>
@@ -602,7 +602,7 @@
           <link rel="stylesheet" href="/ewcommon/js/jquery/cookiecuttr/cookiecuttr.css"/>
         </xsl:if>
       </xsl:if>
-      
+
       <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
         <link rel="stylesheet" href="/ewcommon/js/jquery/SlideCarousel/SlideCarousel.css"/>
       </xsl:if>
@@ -660,7 +660,7 @@
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="text/javascript" src="/ewcommon/js/pngfix.js" defer="">/* */</script>
     </xsl:if>
-  
+
   </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
@@ -720,10 +720,10 @@
     </xsl:choose>
     <xsl:text>~/ewcommon/js/common.js</xsl:text>
     <xsl:if test="Contents/Content[@type='CookiePolicy']">
-        <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
-        <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>   
+      <xsl:text>,~/ewcommon/js/jquery/jquery.cookie.js,</xsl:text>
+      <xsl:text>~/ewcommon/js/jquery/cookiecuttr/jquery.cookiecuttr.js</xsl:text>
     </xsl:if>
-    
+
   </xsl:template>
 
   <!-- template to bring in all the jQuery and plugins that are as standard on each page -->
@@ -1033,12 +1033,12 @@
     <xsl:if test="$ScriptAtBottom='on' or $adminMode">
       <xsl:apply-templates select="." mode="js"/>
     </xsl:if>
-    
+
     <!-- page module specific javascripts -->
     <xsl:apply-templates select="." mode="jQuery" />
     <!-- page specific javascripts -->
     <xsl:apply-templates select="." mode="pageJs"/>
-    
+
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
@@ -1049,7 +1049,7 @@
     </xsl:choose>
 
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
-    
+
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
     <!-- Includes initialisation template if at least one method is in use: -->
@@ -1116,8 +1116,8 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
-    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>  
-    
+    <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
+
     <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
     <xsl:apply-templates select="." mode="FeedOptimiseCode"/>
@@ -1153,7 +1153,7 @@
     </xsl:variable>
 
     <xsl:if test ="$jsonld!=''">
-      
+
       <script type="application/ld+json">
         <xsl:value-of select="$jsonld"/>
       </script>
@@ -1172,7 +1172,7 @@
 
 
   <xsl:variable name="preloader-background" select="'#FFFFFF'"/>
-                
+
   <xsl:variable name="preloader-color" select="'#333333'"/>
 
   <xsl:template match="Page" mode="preloader">
@@ -1213,17 +1213,17 @@
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
-    
+
     <xsl:choose>
       <xsl:when test="ContentDetail/Content[@metaKeywords!='']">
         <meta name="keywords" content="{ContentDetail/Content/@metaKeywords}"/>
       </xsl:when>
-       <xsl:when test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
-         <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
+      <xsl:when test="Contents/Content[@name='MetaKeywords' or @name='metaKeywords']">
+        <meta name="keywords" content="{Contents/Content[@name='MetaKeywords' or @name='metaKeywords']}{Contents/Content[@name='MetaKeywords-Specific']}"/>
       </xsl:when>
-    
+
     </xsl:choose>
-   
+
     <xsl:if test="$currentPage/DisplayName/@noindex='true' or (ContentDetail/Content and not(ContentDetail/Content[@parId=/Page/@id]))">
       <!--This content is to be found elsewhere on the site and should not be indexed again-->
       <meta name="ROBOTS" content="NOINDEX, NOFOLLOW"/>
@@ -1287,22 +1287,22 @@
 
     <xsl:apply-templates select="." mode="dublincore"/>
     <xsl:apply-templates select="." mode="sitemeta"/>
-    
+
     <!-- if cart noindex nofollow-->
-    
-    
-    
+
+
+
   </xsl:template>
 
 
   <xsl:template match="Page" mode="sitemeta">
-    
+
   </xsl:template>
-  
-  
+
+
   <xsl:template match="Page" mode="dublincore">
-    
-     <xsl:if test="Contents/Content[@type='MetaData' and starts-with(@name,'DC')]">
+
+    <xsl:if test="Contents/Content[@type='MetaData' and starts-with(@name,'DC')]">
       <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
     </xsl:if>
     <xsl:if test="Contents/Content[@name='DCTitle']">
@@ -1510,8 +1510,6 @@
       <xsl:if test="not(Cart/Order and Cart/Order/@cmd!='')">
         <!-- not a steppered page -->
         <xsl:if test="not(/Page/Request/QueryString/Item[starts-with(@name,'startPos')])">
-
-
           <xsl:if test="$href!=''">
             <link rel="canonical" href="{$href}"/>
           </xsl:if>
@@ -1519,6 +1517,16 @@
       </xsl:if>
     </xsl:if>
   </xsl:template>
+
+  <!--  ==  Canonical links  ======================================================================  -->
+  <xsl:template match="Page[descendant-or-self::MenuItem[@id=//Page/@id and DisplayName/@canonicalLink!='']]" mode="canonicalLink">
+    <!-- not admin -->
+    <xsl:variable name="canonicalID" select="descendant-or-self::MenuItem[@id=//Page/@id]/DisplayName/@canonicalLink"/>
+
+    <link rel="canonical" href="{descendant-or-self::MenuItem[@id=$canonicalID]/@url}"/>
+
+  </xsl:template>
+
 
   <xsl:template match="Page" mode="getPageThumbnail">
 
@@ -1583,7 +1591,7 @@
       <xsl:if test="/Page/Contents/Content[@name='criticalPathCSS'] and not($adminMode)">
         <xsl:apply-templates select="." mode="commonStyle"/>
       </xsl:if>
-      
+
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -2183,13 +2191,13 @@
     <xsl:value-of select="Cart/Order/@shippingCost"/>
     <xsl:text>'</xsl:text>
     <xsl:text>});</xsl:text>
-  <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
-    ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
-     </xsl:if>
-  <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
-    ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
-  
-  </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_source']!=''">
+      ga('set', 'campaignSource', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_source']"/>');
+    </xsl:if>
+    <xsl:if test="$page/Request/GoogleCampaign/Item[@name='utm_medium']!=''">
+      ga('set', 'campaignMedium', '<xsl:value-of select="$page/Request/GoogleCampaign/Item[@name='utm_medium']"/>');
+
+    </xsl:if>
   </xsl:template>
 
   <!-- Log Order Items-->
@@ -2419,54 +2427,59 @@
 
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template match="Page" mode="BingTrackingCode">
     <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
       <xsl:if test="$BingTrackingID!=''">
-            <script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');</script>
-            <script>window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' }); </script>
+        <script>
+          (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
+        </script>
+        <script>
+          window.uetq = window.uetq || [];  window.uetq.push({ 'gv': '<xsl:value-of select="Cart/Order/@total"/>' });
+        </script>
       </xsl:if>
     </xsl:if>
   </xsl:template>
-  
-    <xsl:template match="Page" mode="FacebookTrackingCode">
+
+  <xsl:template match="Page" mode="FacebookTrackingCode">
     <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
       <xsl:if test="$FacebookTrackingID!=''">
         <xsl:variable name="total"
             select="sum(Cart/Order/Item/@itemTotal)">
         </xsl:variable>
-       
-        <script> (function () 
-                var _fbq = window._fbq || (window._fbq = []);
-                if (!_fbq.loaded) {
-                 var fbds = document.createElement('script');
-                fbds.async = true;
-                fbds.src = '//connect.facebook.net/en_US/fbds.js';
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(fbds, s);
-                 _fbq.loaded = true;
-                 }})();
-                 window._fbq = window._fbq || [];
-                  window._fbq.push(['track', '<xsl:value-of select="$FacebookTrackingID"/>', { 'value': '<xsl:value-of select="$total"/>', 'currency': 'GBP' }]);
-                 </script>
-       </xsl:if>
+
+        <script>
+          (function ()
+          var _fbq = window._fbq || (window._fbq = []);
+          if (!_fbq.loaded) {
+          var fbds = document.createElement('script');
+          fbds.async = true;
+          fbds.src = '//connect.facebook.net/en_US/fbds.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(fbds, s);
+          _fbq.loaded = true;
+          }})();
+          window._fbq = window._fbq || [];
+          window._fbq.push(['track', '<xsl:value-of select="$FacebookTrackingID"/>', { 'value': '<xsl:value-of select="$total"/>', 'currency': 'GBP' }]);
+        </script>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
-  
-   <xsl:template match="Page" mode="FeedOptimiseCode">  
-       <xsl:if test="$FeedOptimiseID!=''">
-             <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-		 <script type="text/javascript">
-	           var _fo = _fo || [];");
-	           _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
-	           _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
-	         </script> 
-	     </xsl:if>
-	     <script async="async" type="text/javascript" src="//cdn.feedoptimise.com/fo.js#{$FeedOptimiseID}">&#160;</script>
-       </xsl:if>
+
+  <xsl:template match="Page" mode="FeedOptimiseCode">
+    <xsl:if test="$FeedOptimiseID!=''">
+      <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
+        <script type="text/javascript">
+          var _fo = _fo || [];");
+          _fo.push(["orderTotal","<xsl:value-of select="Cart/Order/@total"/>" ]);
+          _fo.push(["orderId", "<xsl:value-of select="Cart/Order/@InvoiceRef"/>"]);
+        </script>
+      </xsl:if>
+      <script async="async" type="text/javascript" src="//cdn.feedoptimise.com/fo.js#{$FeedOptimiseID}">&#160;</script>
+    </xsl:if>
   </xsl:template>
-  
-         
+
+
 
   <xsl:template match="Content" mode="A1WebStatsCode">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
@@ -2817,14 +2830,14 @@
             </xsl:when>
           </xsl:choose>
           <a itemprop="item">
-	     <xsl:attribute name="href">
+            <xsl:attribute name="href">
               <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
             </xsl:attribute>
-          <!-- output page name -->
-          <span itemprop="name">
-            <xsl:apply-templates select="." mode="getDisplayName"/>
-          </span>
-          <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
+            <!-- output page name -->
+            <span itemprop="name">
+              <xsl:apply-templates select="." mode="getDisplayName"/>
+            </span>
+            <meta itemprop="position" content="{count(parent::MenuItem)+1}" />
           </a>
         </xsl:when>
         <xsl:otherwise>
@@ -2934,7 +2947,7 @@
           <xsl:value-of select="$page/Settings/add[@key='web.websitecreditText']/@value"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:text>Site by Eonic</xsl:text>
+          <xsl:text>Site by Eonic</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -3600,7 +3613,7 @@
     <xsl:variable name="siteURL">
       <xsl:call-template name="getSiteURL"/>
     </xsl:variable>
-    
+
     <xsl:variable name="url" select="@url"/>
 
     <xsl:choose>
@@ -3870,18 +3883,18 @@
   <!-- -->
 
   <xsl:template match="Content[@type='Contact']" mode="getSafeURLName">
-      <xsl:variable name="apos">'</xsl:variable>
+    <xsl:variable name="apos">'</xsl:variable>
     <xsl:variable name="name">
       <xsl:choose>
-      <xsl:when test="GivenName/node()!=''">
-       <xsl:value-of select="translate(GivenName/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
-        <xsl:text>-</xsl:text>
-       <xsl:value-of select="translate(Surname/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
-      </xsl:when>
+        <xsl:when test="GivenName/node()!=''">
+          <xsl:value-of select="translate(GivenName/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+          <xsl:text>-</xsl:text>
+          <xsl:value-of select="translate(Surname/node(), translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+        </xsl:when>
         <xsl:otherwise>
-              <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
-      </xsl:otherwise>
-        </xsl:choose>
+          <xsl:value-of select="translate(@name, translate(@name,'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ',''),'')"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:value-of select="translate(translate($name,' /\.:','----'),$apos,'')"/>
   </xsl:template>
@@ -4418,7 +4431,7 @@
                         <xsl:attribute name="rel">external</xsl:attribute>
                       </xsl:otherwise>
                     </xsl:choose>
-                    
+
                   </xsl:otherwise>
                 </xsl:choose>
 
@@ -4429,7 +4442,7 @@
                     <xsl:text>');</xsl:text>
                   </xsl:attribute>
                 </xsl:if>
-                
+
                 <xsl:value-of select="@linkText"/>
               </a>
             </span>
@@ -4935,16 +4948,16 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:choose>      
-    <xsl:when test="$thisPageUrl=''">
-      <xsl:text>http</xsl:text>
-      <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-      <xsl:text>://</xsl:text>
-      <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$thisPageUrl"/>
-    </xsl:otherwise>
+    <xsl:choose>
+      <xsl:when test="$thisPageUrl=''">
+        <xsl:text>http</xsl:text>
+        <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+        <xsl:text>://</xsl:text>
+        <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$thisPageUrl"/>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -5091,18 +5104,18 @@
           </i>
         </span>
         &#160;<xsl:choose>
-        <xsl:when test="FirstName and LastName">
-          <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
-        </xsl:when>
-        <xsl:when test="User/FirstName and User/LastName">
-          <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="node()"/>
-        </xsl:otherwise>
-      </xsl:choose>
+          <xsl:when test="FirstName and LastName">
+            <xsl:value-of select="LastName"/>, <xsl:value-of select="FirstName"/>
+          </xsl:when>
+          <xsl:when test="User/FirstName and User/LastName">
+            <xsl:value-of select="User/LastName"/>, <xsl:value-of select="User/FirstName"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="node()"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </a>
-      
+
     </td>
   </xsl:template>
 
@@ -5358,17 +5371,23 @@
                   <xsl:apply-templates select="$currentPage" mode="getHref"/>
                 </xsl:variable>
                 <li class="previous">
-                  <a href="{$origURL}" title="click here to view the previous page in sequence">&#8592; Back</a>
+                  <a href="{$origURL}" title="click here to view the previous page in sequence">
+                    <span class="pager-arrow">&#8592;</span> Back
+                  </a>
                 </li>
               </xsl:when>
               <xsl:when test="$startPos &gt; ($noPerPage - 1)">
                 <li class="previous">
-                  <a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">&#8592; Back</a>
+                  <a href="{$thisURL}={$startPos - $noPerPage}" title="click here to view the previous page in sequence">
+                    <span class="pager-arrow">&#8592;</span> Back
+                  </a>
                 </li>
               </xsl:when>
               <xsl:otherwise>
                 <li class="previous disabled">
-                  <a href="#">&#8592; Back</a>
+                  <a href="#">
+                    <span class="pager-arrow">&#8592;</span> Back
+                  </a>
                 </li>
               </xsl:otherwise>
             </xsl:choose>
@@ -5377,12 +5396,16 @@
             <xsl:choose>
               <xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
                 <li class="next">
-                  <a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">Next &#8594;</a>
+                  <a href="{$thisURL}={$startPos+$noPerPage}" title="click here to view the next page in sequence">
+                    Next <span class="pager-arrow">&#8594;</span>
+                  </a>
                 </li>
               </xsl:when>
               <xsl:otherwise>
                 <li class="next disabled">
-                  <span class="ghosted">Next &#8594;</span>
+                  <span class="ghosted">
+                    Next <span class="pager-arrow">&#8594;</span>
+                  </span>
                 </li>
               </xsl:otherwise>
             </xsl:choose>
@@ -5565,7 +5588,7 @@
             </xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-       
+
         <!--<xsl:for-each select="@*[name()!='border' and name()!='align' and name()!='style']">-->
         <xsl:for-each select="@*[name()!='border' and name()!='align' and name()!='src']">
 
@@ -5608,31 +5631,31 @@
 
         <!-- ##### VALIDATION - Attribute "align" can not be used for this element. ##### -->
         <xsl:choose>
-         <xsl:when test="(not(@class) and (@align or contains(@style,'float: '))) or ancestor::Content[@responsiveImg='true']">
-          <xsl:attribute name="class">
-            <xsl:variable name="float" select="substring-before(substring-after(@style,'float: '),';')"/>
-            <xsl:variable name="align" select="@align"/>
-            <xsl:text>align</xsl:text>
-            <xsl:choose>
-              <xsl:when test="@align">
-                <xsl:value-of select="$align"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="$float"/>
-              </xsl:otherwise>
-            </xsl:choose>
-            <xsl:if test="ancestor::Content[@responsiveImg='true']">
-              <xsl:text> img-responsive</xsl:text>
-            </xsl:if>
-            <xsl:if test="$lazy='on'">
-              <xsl:text> lazy</xsl:text>
-            </xsl:if>
-          </xsl:attribute>
-         </xsl:when>
-           <xsl:when test="not(@class) and $lazy='on'">
-             <xsl:attribute name="class">
-                 <xsl:text>lazy</xsl:text>
-             </xsl:attribute>
+          <xsl:when test="(not(@class) and (@align or contains(@style,'float: '))) or ancestor::Content[@responsiveImg='true']">
+            <xsl:attribute name="class">
+              <xsl:variable name="float" select="substring-before(substring-after(@style,'float: '),';')"/>
+              <xsl:variable name="align" select="@align"/>
+              <xsl:text>align</xsl:text>
+              <xsl:choose>
+                <xsl:when test="@align">
+                  <xsl:value-of select="$align"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$float"/>
+                </xsl:otherwise>
+              </xsl:choose>
+              <xsl:if test="ancestor::Content[@responsiveImg='true']">
+                <xsl:text> img-responsive</xsl:text>
+              </xsl:if>
+              <xsl:if test="$lazy='on'">
+                <xsl:text> lazy</xsl:text>
+              </xsl:if>
+            </xsl:attribute>
+          </xsl:when>
+          <xsl:when test="not(@class) and $lazy='on'">
+            <xsl:attribute name="class">
+              <xsl:text>lazy</xsl:text>
+            </xsl:attribute>
           </xsl:when>
         </xsl:choose>
 
@@ -7055,7 +7078,7 @@
               </xsl:call-template>
             </xsl:variable>
 
-             <xsl:variable name="newSrc-xs">
+            <xsl:variable name="newSrc-xs">
               <xsl:call-template name="resize-image">
                 <xsl:with-param name="path" select="$src"/>
                 <xsl:with-param name="max-width" select="$max-width-xs"/>
@@ -7169,7 +7192,7 @@
                 <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg)"/>
                 <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder)"/>
 
-                
+
                 <!--WebP Images-->
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
@@ -7511,14 +7534,14 @@
         </xsl:otherwise>
       </xsl:choose>
 
-          <xsl:attribute name="srcset">
-            <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
-              <xsl:if test="imageRetinaUrl!=''">
-                  <xsl:text> 1x, </xsl:text>
-                <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
-                <xsl:text> 2x</xsl:text>
-              </xsl:if>
-          </xsl:attribute>
+      <xsl:attribute name="srcset">
+        <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
+        <xsl:if test="imageRetinaUrl!=''">
+          <xsl:text> 1x, </xsl:text>
+          <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
+          <xsl:text> 2x</xsl:text>
+        </xsl:if>
+      </xsl:attribute>
 
       <xsl:attribute name="class">
         <xsl:if test="$class!=''">
@@ -7631,7 +7654,7 @@
                 <xsl:value-of select="substring-before($imageSize,'x')" />
               </xsl:otherwise>
             </xsl:choose>
-            
+
           </xsl:attribute>
           <!-- Height -->
           <xsl:attribute name="height">
@@ -7643,7 +7666,7 @@
                 <xsl:value-of select="substring-after($imageSize,'x')" />
               </xsl:otherwise>
             </xsl:choose>
-            
+
           </xsl:attribute>
           <!-- Alt -->
           <xsl:attribute name="alt">
@@ -7723,17 +7746,17 @@
     <xsl:variable name="lg-max-height">
       <xsl:apply-templates select="." mode="getFullSizeHeight"/>
     </xsl:variable>
-      <xsl:variable name="cropvar">
-        <xsl:choose>
-          <xsl:when test="$crop='true'">
-            <xsl:value-of select="true()"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates select="." mode="getFullCrop"/>
-          </xsl:otherwise>
-        </xsl:choose>
+    <xsl:variable name="cropvar">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="getFullCrop"/>
+        </xsl:otherwise>
+      </xsl:choose>
 
-      </xsl:variable>
+    </xsl:variable>
     <!-- IF Image to resize -->
     <xsl:choose>
       <xsl:when test="$src!=''">
@@ -7877,7 +7900,7 @@
       </xsl:otherwise>-->
     </xsl:choose>
   </xsl:template>
-  
+
   <xsl:template match="Content | MenuItem | Company | Item" mode="getFullCrop">
     <xsl:value-of select="false()"/>
   </xsl:template>
@@ -7994,6 +8017,7 @@
 
   <xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
     <xsl:param name="crop"/>
+    <xsl:param name="fixedThumb"/>
     <!-- SRC VALUE -->
     <xsl:variable name="src">
       <xsl:value-of select="Images/img[@class='thumbnail']/@src"/>
@@ -8042,7 +8066,6 @@
       <xsl:variable name="newimageSize" select="ew:ImageSize($newSrc)"/>
       <xsl:variable name="newimageWidth" select="substring-before($newimageSize,'x')"/>
       <xsl:variable name="newimageHeight" select="substring-after($newimageSize,'x')"/>
-      
       <xsl:choose>
         <xsl:when test="$cropSetting='true'">
           <xsl:apply-templates select="." mode="displayThumbnail">
@@ -8054,7 +8077,18 @@
           </xsl:apply-templates>
         </xsl:when>
         <xsl:otherwise>
-          <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="photo thumbnail 3333"/>
+          <xsl:choose>
+            <xsl:when test="$fixedThumb='fixed'">
+              <xsl:apply-templates select="." mode="displayThumbnail">
+                <xsl:with-param name="crop" select="false" />
+                <xsl:with-param name="class" select="'thumbnail'" />
+              </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+              <img src="{$newSrc}" width="{$newimageWidth}" height="{$newimageHeight}" alt="{$alt}" class="photo thumbnail 3333"/>
+            </xsl:otherwise>
+          </xsl:choose>
+
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -8261,13 +8295,13 @@
   <!-- -->
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth">100</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight">100</xsl:template>
-  
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xxs">768</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xxs">768</xsl:template>
-  
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-xs">768</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-xs">768</xsl:template>
-  
+
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThWidth-sm">496</xsl:template>
   <xsl:template match="Content | MenuItem | Discount | Company | productDetail" mode="getThHeight-sm">496</xsl:template>
 
@@ -8589,6 +8623,7 @@
     <xsl:param name="contentType" />
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />
+    <xsl:param name="showHidden"/>
     <xsl:param name="sort-data-type">
       <xsl:call-template name="ordering-data-type">
         <xsl:with-param name="field" select="@sortBy"/>
@@ -8621,21 +8656,45 @@
 
       <!-- When Menu Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
-        <xsl:for-each select="$currentPage/MenuItem[not(DisplayName/@exclude='true')]">
-          <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
-            <xsl:copy-of select="."/>
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:choose>
+          <xsl:when test="$showHidden='true'">
+            <xsl:for-each select="$currentPage/MenuItem">
+              <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
+                <xsl:copy-of select="."/>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$currentPage/MenuItem[not(DisplayName/@exclude='true')]">
+              <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
+                <xsl:copy-of select="."/>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
 
       <xsl:otherwise>
-        <xsl:for-each select="$currentPage/MenuItem[not(DisplayName/@exclude='true')]">
-          <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
-          <xsl:sort select="@update" order="{$order}" data-type="text"/>
-          <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
-            <xsl:copy-of select="."/>
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:choose>
+          <xsl:when test="$showHidden='true'">
+            <xsl:for-each select="$currentPage/MenuItem">
+              <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
+              <xsl:sort select="@update" order="{$order}" data-type="text"/>
+              <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+                <xsl:copy-of select="."/>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$currentPage/MenuItem[not(DisplayName/@exclude='true')]">
+              <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
+              <xsl:sort select="@update" order="{$order}" data-type="text"/>
+              <xsl:if test="$stepCount = '0' or ($stepCount &gt; 0 and position() &gt; $startPos and position() &lt;= $endPos)">
+                <xsl:copy-of select="."/>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
 
     </xsl:choose>
@@ -9805,8 +9864,8 @@
     <xsl:param name="removetags" />
     <xsl:copy-of select="ew:CleanHTMLNode($htmlstring,$removetags)"/>
   </xsl:template>
-  
-  
+
+
   <!--<xsl:template match="select1 | select" mode="getSelectOptions">
     <xsl:variable name="options">
       <options>
@@ -10104,9 +10163,9 @@
               </xsl:attribute>
             </xsl:if>-->
             <xsl:if test="@backgroundImage!=''">
-                <xsl:attribute name="style">
-                  background-image: url('<xsl:value-of select="@backgroundImage"/>') 50% 50% no-repeat;
-                </xsl:attribute>
+              <xsl:attribute name="style">
+                background-image: url('<xsl:value-of select="@backgroundImage"/>');
+              </xsl:attribute>
             </xsl:if>
             <xsl:choose>
               <xsl:when test="@fullWidth='true'">
@@ -10126,23 +10185,23 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-    
+
         <xsl:choose>
           <xsl:when test="/Page/Contents/Content[@position = $position]">
             <xsl:choose>
               <xsl:when test="@backgroundImage!=''">
-                  <div>
-                    <xsl:attribute name="style">
-                      background-image: url('<xsl:value-of select="@backgroundImage"/>');
-                    </xsl:attribute>
-                     <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
-                  </div>
+                <div>
+                  <xsl:attribute name="style">
+                    background-image: url('<xsl:value-of select="@backgroundImage"/>');
+                  </xsl:attribute>
+                  <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
+                </div>
               </xsl:when>
               <xsl:otherwise>
                 <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule" />
               </xsl:otherwise>
             </xsl:choose>
-                     </xsl:when>
+          </xsl:when>
           <xsl:otherwise>
             <!-- if no contnet, need a space for the compiling of the XSL. -->
             <xsl:text>&#160;</xsl:text>

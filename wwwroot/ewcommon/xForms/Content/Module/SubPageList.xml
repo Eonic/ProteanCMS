@@ -45,6 +45,7 @@
       <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
       <bind id="cShowHidden" nodeset="@showHidden" required="false()" type="string"/>
       <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+      <bind id="fixedThumb" nodeset="@fixedThumb" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
@@ -167,6 +168,7 @@
             <value>false</value>
           </item>
         </select1>
+        
         <select1 bind="cCrop" appearance="full" class="vshort">
           <label>Crop Images</label>
           <item>
@@ -178,6 +180,12 @@
             <value>false</value>
           </item>
         </select1>
+        <select bind="fixedThumb" appearance="full">
+          <item>
+            <label>Fixed size thumbnail</label>
+            <value>fixed</value>
+          </item>
+        </select>
       </group>
       <group>
         <label>Module Links</label>

@@ -3199,20 +3199,20 @@ Public Class Cms
                                     calledType = assemblyInstance.GetType(classPath, True)
                                 End If
                             Else
-                                Select Case moPrvConfig.Providers(providerName).Parameters("path")
-                                    Case ""
-                                        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
-                                        calledType = assemblyInstance.GetType(classPath, True)
-                                    Case "builtin"
-                                        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                        prepProviderName = moPrvConfig.Providers(providerName).Type
-                                        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
-                                    Case Else
-                                        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
-                                        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
-                                        calledType = assemblyInstance.GetType(classPath, True)
-                                End Select
+                                'Select Case moPrvConfig.Providers(providerName).Parameters("path")
+                                '    Case ""
+                                '        assemblyInstance = [Assembly].Load(moPrvConfig.Providers(providerName).Type)
+                                '        calledType = assemblyInstance.GetType(classPath, True)
+                                '    Case "builtin"
+                                '        Dim prepProviderName As String ' = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
+                                '        'prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
+                                '        prepProviderName = moPrvConfig.Providers(providerName).Type
+                                '        calledType = System.Type.GetType(prepProviderName & "+" & classPath, True)
+                                '    Case Else
+                                '        assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
+                                '        classPath = moPrvConfig.Providers(providerName).Parameters("classPrefix") & classPath
+                                '        calledType = assemblyInstance.GetType(classPath, True)
+                                'End Select
 
                                 'If moPrvConfig.Providers(providerName).Parameters("path") <> "" Then
                                 '    assemblyInstance = [Assembly].LoadFrom(goServer.MapPath(moPrvConfig.Providers(providerName).Parameters("path")))
@@ -7015,9 +7015,15 @@ Public Class Cms
                                 Dim oShippingElmt As XmlElement = moPageXml.CreateElement("ShippingCosts")
 
                                 Dim cDestinationCountry As String = moCart.moCartConfig("DefaultDeliveryCountry")
-                                Dim nPrice As Double = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                Dim nPrice As Double = 0
+                                If Not contentElmt.SelectSingleNode("Prices/Price[@type='sale']") Is Nothing Then
+                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText)
+                                End If
+
                                 If nPrice = 0 Then
-                                    nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    If Not contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") Is Nothing Then
+                                        nPrice = CDbl("0" & contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText)
+                                    End If
                                 End If
                                 Dim nWeight As Double = 0
                                 If (contentElmt.SelectSingleNode("ShippingWeight") IsNot Nothing) Then

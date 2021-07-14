@@ -2606,6 +2606,8 @@ Partial Public Class Cms
                             If moRequest("type") <> "" Then cContentSchemaName = moRequest("type")
                         End If
 
+                        moDbHelper.getLocationsByContentId(id, oTempInstance.FirstChild)
+
                         'Add ProductCategories
                         Dim sProductTypes As String = "Product,SKU"
                         If myWeb.moConfig("ProductTypes") <> "" Then
@@ -6031,21 +6033,22 @@ Partial Public Class Cms
 
                 Dim cProcessInfo As String = ""
                 Dim moCartConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/cart")
-
+                Dim oCfg As Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("/" & myWeb.moConfig("ProjectPath"))
+                Dim oCgfSect As System.Configuration.DefaultSection = oCfg.GetSection("protean/web")
                 Try
                     Dim IsRefund As String = ""
                     Dim oCart As Protean.Cms.Cart = New Cart(myWeb)
                     MyBase.NewFrm("Refund")
-                    MyBase.submission("Refund using " & providerName, "post", "form_check(this)")
-
-
+                    MyBase.submission("Refund", "", "post", "form_check(this)")
+                    Dim refundAmount As Decimal
+                    Dim cResponse As String = ""   'check this
                     Dim xdoc As New XmlDocument()
                     Dim amount As String = ""
                     If (nOrderId > 0) Then
                         Dim cartXmlSql As String = "select cCartXml from tblCartOrder where nCartOrderKey = " & nOrderId
                         If (cartXmlSql <> "") Then
                             Dim orderXml As String = Convert.ToString(myWeb.moDbHelper.GetDataValue(cartXmlSql))
-                            xDoc.LoadXml(orderXml)
+                            xdoc.LoadXml(orderXml)
                         End If
                         If (xdoc.InnerXml <> "") Then
 
@@ -6058,7 +6061,9 @@ Partial Public Class Cms
 
                     End If
 
-                    MyBase.Instance.InnerXml = "<Refund> <RefundAmount> </RefundAmount> <ProviderName></ProviderName> <ProviderReference> </ProviderReference> </Refund>"
+                    refundAmount = Convert.ToInt16(myWeb.moRequest("RefundAmount"))
+
+                    MyBase.Instance.InnerXml = "<Refund><RefundAmount> " & refundAmount & " </RefundAmount><ProviderName>" & providerName & "</ProviderName> <ProviderReference>" & providerPaymentReference & " </ProviderReference><OrderId>" & nOrderId & "</OrderId></Refund>"
                     Dim oFrmElmt As XmlElement
                     oFrmElmt = MyBase.addGroup(MyBase.moXformElmt, "Refund " & providerName, "", "")
                     MyBase.addInput(oFrmElmt, "RefundAmount", True, "Refund Amount")
@@ -6111,10 +6116,11 @@ Partial Public Class Cms
                         Return MyBase.moXformElmt
 
                 Catch ex As Exception
-                    returnException(myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug)
+                    returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
                     Return Nothing
                 End Try
             End Function
+
 
             Public Function xFrmFindRelated(ByVal nParentID As String, ByVal cContentType As String, ByRef oPageDetail As XmlElement, ByVal nParId As String, ByVal bIgnoreParID As Boolean, ByVal cTableName As String, ByVal cSelectField As String, ByVal cFilterField As String, Optional ByVal redirect As String = "") As XmlElement
                 Dim oFrmElmt As XmlElement

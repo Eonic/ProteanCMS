@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content action="Eonic.Web+Calendar+Modules.Add" moduleType="EventCalendar" contentType="Event" box="" title="" link="" linkType="internal" linkText="More events" months="1" startDateAsToday="true" startDateInMonths="" display="all" sortBy="StartDate" order="ascending" stepCount="0" cols="1" contentTypes="Event" showList="false"/>
+          <Content action="Protean.Cms+Calendar+Modules.Add" moduleType="EventCalendar" contentType="Event" box="" title="" link="" linkType="internal" linkText="More events" months="1" startDateAsToday="true" startDateInMonths="" display="all" sortBy="StartDate" order="ascending" stepCount="0" cols="1" contentTypes="Event" showList="false"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
