@@ -505,7 +505,6 @@ D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitc
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.Msie.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\JavaScriptEngineSwitcher.V8.resources.dll
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\ru-ru\MsieJavaScriptEngine.resources.dll
-D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbprojAssemblyReference.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\Protean.Resources.resources
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.GenerateResource.cache
 D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.CopyComplete
@@ -1370,6 +1369,15 @@ D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\Santosh_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
+E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
+D:\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.AssemblyReference.cache
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\tidy.x86.dll
@@ -1477,11 +1485,3 @@ D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.vbproj.Co
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\obj\Debug\ProteanCMS.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\DevOpsGit\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\JudoPayDotNet.dll
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.pdb
-E:\Shubhangi_WorkSpace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS\bin\Protean.Providers.Payment.JudoPay.dll.config
