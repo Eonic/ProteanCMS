@@ -1208,11 +1208,19 @@ RedoCheck:
 
                                 'Hustle in the renewal end so we can show on receipt.
                                 If Not oCartXml Is Nothing Then
-                                    Dim contentId As Long = xItemDoc.DocumentElement.GetAttribute("id")
-                                    Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[@contentId='" & contentId & "']")
-                                    If Not ItemXml Is Nothing Then
-                                        Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
-                                        ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
+                                    If xItemDoc.DocumentElement.GetAttribute("id") <> "" Then
+                                        Dim contentId As Long = xItemDoc.DocumentElement.GetAttribute("id")
+                                        Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[@contentId='" & contentId & "']")
+                                        If Not ItemXml Is Nothing Then
+                                            Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
+                                            ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
+                                        End If
+                                    Else
+                                        Dim ItemXml As XmlElement = oCartXml.SelectSingleNode("Order/Item[0]")
+                                        If Not ItemXml Is Nothing Then
+                                            Dim ProductDetailXml As XmlElement = ItemXml.SelectSingleNode("productDetail")
+                                            ProductDetailXml.SetAttribute("renewalEnd", xItemDoc.DocumentElement.GetAttribute("renewalEnd"))
+                                        End If
                                     End If
                                 End If
 
