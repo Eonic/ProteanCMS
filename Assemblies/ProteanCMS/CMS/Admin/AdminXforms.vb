@@ -6111,9 +6111,12 @@ Partial Public Class Cms
 
                             End If
                         End If
+                    End If
 
-                        MyBase.addValues()
-                        Return MyBase.moXformElmt
+                    MyBase.addValues()
+
+                    Return MyBase.moXformElmt
+
 
                 Catch ex As Exception
                     returnException(myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug)
