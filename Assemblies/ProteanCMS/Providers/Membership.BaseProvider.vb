@@ -924,8 +924,8 @@ Check:
                                         For Each oCartContact In MyBase.Instance.SelectNodes("tblCartContact")
                                             Dim TempInstance As New XmlDocument
                                             TempInstance.LoadXml("<instance/>")
-                                            TempInstance.InnerXml = oCartContact.OuterXml
-                                            TempInstance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
+                                            TempInstance.DocumentElement.InnerXml = oCartContact.OuterXml
+                                            TempInstance.DocumentElement.SelectSingleNode("tblCartContact/nContactDirId").InnerText = id
                                             moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, TempInstance.DocumentElement)
                                         Next
                                     End If
