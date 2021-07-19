@@ -989,6 +989,33 @@ Partial Public Class Cms
 
         End Function
 
+        Public Overridable Function getObjectStatus(ByVal objecttype As objectTypes, ByVal nId As String) As String
+            PerfMon.Log("DBHelper", "setObjectStatus")
+            Dim sSql As String
+            Dim nAuditId As Long
+            Dim oDr As SqlDataReader
+            Dim sResult As Integer
+            Dim cProcessInfo As String = ""
+            Try
+                sSql = "select nAuditId from " & getTable(objecttype) & " where " & getKey(objecttype) & " = " & nId
+                oDr = getDataReader(sSql)
+
+                While oDr.Read
+                    nAuditId = oDr(0)
+                End While
+
+                oDr.Close()
+                oDr = Nothing
+                sSql = "select nStatus from tblAudit WHERE nAuditKey =" & nAuditId
+                sResult = myWeb.moDbHelper.ExeProcessSqlScalar(sSql)
+
+                Return sResult
+            Catch ex As Exception
+                RaiseEvent OnError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "setObjectStatus", ex, cProcessInfo))
+                Return ""
+            End Try
+
+        End Function
 
         ''' <summary>
         ''' Assess an audit id, it's previous and new status and if changed logs the appropriate change
