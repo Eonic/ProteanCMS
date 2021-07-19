@@ -108,7 +108,7 @@ Public Module stdTools
                 strMessageHtml = "<div style=""font-family:Verdana,Tahoma,Arial""><h2>Unfortunately this site has experienced an error.</h2>" &
                 "<h3>We take all errors very seriously.</h3>" &
                 "<p>" &
-                "This error has been recorded and details sent to <a href=""http://www.eonic.co.uk"">Eonic</a> who provide technical support for this website." &
+                "This error has been recorded and details sent to <a href=""http://eonic.com"">Eonic</a> who provide technical support for this website." &
                 "</p>" &
                 "<p>" &
                 "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=""mailto:support@eonic.co.uk"">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." &

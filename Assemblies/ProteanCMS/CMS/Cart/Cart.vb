@@ -1512,7 +1512,7 @@ processFlow:
                                 GetCart(oElmt)
                             End If
 
-                            If mnProcessId = Cart.cartProcess.Complete Then
+                            If mnProcessId = Cart.cartProcess.Complete Or mnProcessId = Cart.cartProcess.AwaitingPayment Then
 
                                 If moCartConfig("StockControl") = "on" Then
                                     UpdateStockLevels(oElmt)
