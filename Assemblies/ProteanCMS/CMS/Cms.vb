@@ -2457,9 +2457,9 @@ Public Class Cms
                     Dim nContentPermissionCheck As Long = nContentId
                     Dim bResetUser As Boolean = False
 
-                    If mbPreview Then
+                    If mbPreview And moConfig("inlineContentPermissions") = "AdminUser" Then
                         ' commented out because it was breaking PSMG edit jobs
-                        '      mnUserId = moSession("nUserId")
+                        mnUserId = moSession("nUserId")
                     End If
 
                     If mnUserId = 0 Then
