@@ -3365,8 +3365,7 @@ Partial Public Class Cms
                         End If
                         bulkContentSchemaName = bulkContentSchemaName & Tools.Xml.encodeAllHTML(sContentSchemaName) & " , "
                     Next i
-                    bulkContentSchemaName = bulkContentSchemaName.Trim(",".ToCharArray())
-                    bulkContentSchemaName = bulkContentSchemaName.Remove(bulkContentSchemaName.Length - 1)
+                    bulkContentSchemaName = bulkContentSchemaName.Substring(0, Len(bulkContentSchemaName) - 1)
 
                     MyBase.addSubmit(oFrmElmt, "", "Delete " & bulkContentSchemaName, , "principle btn-danger", "fa-trash-o")
 
