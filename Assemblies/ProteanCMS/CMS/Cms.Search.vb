@@ -410,7 +410,7 @@ Partial Public Class Cms
                         HitsLimit = pageSize 'first load as per page count
                     End If
                     If (myWeb.moRequest("PageSize") > 0) Then
-                        PageSize = myWeb.moRequest("PageSize")
+                        pageSize = myWeb.moRequest("PageSize")
                     End If
                     If (myWeb.moRequest("command") > 0) Then
                         command = myWeb.moRequest("command")
@@ -425,9 +425,8 @@ Partial Public Class Cms
                     HitsLimit = CInt("0" & myWeb.moConfig("SearchDefaultPageSize")) '300
                     If HitsLimit = 0 Then HitsLimit = 300
                     pageSize = CInt("0" & myWeb.moConfig("SearchDefaultPageSize"))
-                    If PageSize = 0 Then PageSize = 300
+                    If pageSize = 0 Then pageSize = 300
                 End If
-
 
                 If Not cQuery.Equals("") Then
 
@@ -495,6 +494,12 @@ Partial Public Class Cms
                     Else
                         results = searcher.Search(searchQuery, livePages, HitsLimit, queryOrder)
                     End If
+                    'to get whole result 
+                    If livePages Is Nothing Then
+                        results = searcher.Search(searchQuery, HitsLimit)
+                    Else
+                        results = searcher.Search(searchQuery, livePages, results.TotalHits, queryOrder)
+                    End If
 
                     ' Log the search
                     If _logSearches Then
@@ -510,12 +515,10 @@ Partial Public Class Cms
                         resultsXML.SetAttribute("fuzzyCount", searcher.Search(searchQuery, livePages, HitsLimit, queryOrder).TotalHits.ToString)
                     End If
 
-
                     ' Paging settings
                     ' Hits is so lightweight that we don't have to filter it beforehand
                     ' See: http://wiki.apache.org/lucene-java/LuceneFAQ#How_do_I_implement_paging.2C_i.e._showing_result_from_1-10.2C_11-20_etc.3F
                     Dim totalResults As Long = results.TotalHits
-
 
                     If pageSize <= 0 Then
                         pageSize = results.TotalHits
@@ -542,11 +545,10 @@ Partial Public Class Cms
                     resultsXML.SetAttribute("sortColType", myWeb.moRequest("sortColType"))
                     resultsXML.SetAttribute("sortDir", myWeb.moRequest("sortDir"))
 
-                    resultsXML.SetAttribute("totalResults", totalResults)
+                    'resultsXML.SetAttribute("totalResults", totalResults)
                     resultsXML.SetAttribute("pageSize", pageSize) 'Max Number of items per page
                     resultsXML.SetAttribute("totalPages", Math.Ceiling(totalResults / pageSize))
 
-                    'Don't believe this to be required.
                     If myWeb.moConfig("SearchDefaultPageSize") IsNot Nothing Then
                         resultsXML.SetAttribute("sitePaging", "on")
                         If bShowHiddenForUser Then
@@ -567,16 +569,15 @@ Partial Public Class Cms
                     ' Process the results
                     If totalResults > 0 Then
                         Dim skipRecords As Integer = (myWeb.moRequest("page")) * pageSize
-                        'Dim luceneDocuments As IList(Of Document) = New List(Of Document)()
                         Dim scoreDocs As ScoreDoc() = results.ScoreDocs
 
                         Dim thisArtIdList As String = ""
-                        'For Each sDoc In results.ScoreDocs()
 
-                        '    resultDoc = searcher.Doc(sDoc.Doc)
-                        For i As Integer = pageStart - 1 To results.TotalHits - 1
+                        'For i As Integer = pageStart - 1 To results.TotalHits - 1
+                        For i As Integer = 0 To results.TotalHits - 1
 
-                            If i > (pageStart - 1 + pageSize - 1) Then
+                            'If i > (pageStart - 1 + pageSize - 1) Then
+                            If i > (pageStart - 1 + results.TotalHits - 1) Then 'to get all the artid from result in one hit
                                 Exit For
                             End If
 
@@ -610,23 +611,31 @@ Partial Public Class Cms
                                 ' Couldn't find the menuitme in the xml - which is odd given the livepagefilter
                                 processInfo = "not found in live page filter"
                             End If
-
                         Next
 
-                        ''check whether logged in user is csuser and skip checking status
-                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                        'End If
                         'check artid/product is active
                         If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        For i As Integer = pageStart - 1 To results.TotalHits - 1
+                        'get total count loaded on page
+                        Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
+
+                        resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
+
+                        Dim nGetProductsLoadedCount As Int32 = 0
+                        Dim intPageStartIndex As Int32 = pageStart
+                        If myWeb.moSession("IndexPointer") IsNot Nothing Then
+                            intPageStartIndex = CInt(myWeb.moSession("IndexPointer")) + 1
+                        End If
+                        ' For i As Integer = pageStart - 1 To results.TotalHits - 1
+                        For i As Integer = intPageStartIndex - 1 To results.TotalHits - 1
 
                             If i > (pageStart - 1 + pageSize - 1) Then
+                                'Exit For
+                            End If
+                            If nGetProductsLoadedCount = pageSize Then
+                                myWeb.moSession("IndexPointer") = i
                                 Exit For
                             End If
 
@@ -658,7 +667,9 @@ Partial Public Class Cms
                                         If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
                                         url = resultDoc.GetField("url").StringValue & ""
-
+                                        If (resultDoc.GetField("status").StringValue = "1" And resultDoc.GetField("contenttype").StringValue = "Product") Then
+                                            nGetProductsLoadedCount += 1
+                                        End If
                                         ' Build the URL
                                         If url = "" Then
                                             url = menuItem.GetAttribute("url")
@@ -688,8 +699,6 @@ Partial Public Class Cms
 
                                         result = moPageXml.CreateElement("Content")
                                         result.SetAttribute("type", "SearchResult")
-                                        'result.SetAttribute("indexId", )
-                                        'result.SetAttribute("indexRank", sDoc.Score)
                                         result.SetAttribute("indexRank", scoreDocs(i).Score)
                                         For Each docField As Field In resultDoc.GetFields()
 
@@ -729,7 +738,6 @@ Partial Public Class Cms
 
                     dateFinish = Now
                     resultsXML.SetAttribute("Time", dateFinish.Subtract(dateStart).TotalMilliseconds)
-                    'resultsCount = results.TotalHits()
                 Else
                     resultsXML.SetAttribute("Time", "0")
                 End If
@@ -904,12 +912,7 @@ Partial Public Class Cms
                             End If
 
                         Next
-                        ''check whether logged in user is csuser and skip checking status
-                        'Dim bShowHiddenForUser As Boolean = False 'set for normal user default value
-                        'If myWeb.moConfig("UserRoleAllowedHiddenProductSearch") IsNot Nothing Then
-                        '    Dim nUserId As Integer = myWeb.moSession("nUserId")
-                        '    bShowHiddenForUser = myWeb.moDbHelper.checkUserRole(myWeb.moConfig("UserRoleAllowedHiddenProductSearch"), "Role", nUserId)
-                        'End If
+
                         'check artid/product is active
                         If (Not bShowHiddenForUser) And thisArtIdList <> "" Then
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
@@ -918,7 +921,6 @@ Partial Public Class Cms
                         For Each sDoc In results.ScoreDocs()
 
                             resultDoc = searcher.Doc(sDoc.Doc)
-
                             pageIdField = resultDoc.GetField("pgid")
                             If pageIdField IsNot Nothing AndAlso IsStringNumeric(pageIdField.StringValue) Then
                                 pageId = Convert.ToInt32(pageIdField.StringValue)
@@ -2019,12 +2021,22 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     ' Default field search
                     queryToBeParsed.Append(" OR ")
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
-                    'apply status filter to show only active Products
-                    If LCase(moConfig("IndexIncludesHidden")) = "on" Then
-                        If Not bShowHiddenForUser Then
+
+                    If Not bShowHiddenForUser Then
+                        'get only products
+                        queryToBeParsed.Append(" AND ")
+                        queryToBeParsed.Append(" ( ")
+                        queryTerms = ParseKeywordsAndPhrases("Product")
+                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "type", 3, _includeFuzzySearch)
+                        queryToBeParsed.Append(" ) ")
+
+                        'apply status filter to show only active Products
+                        If LCase(moConfig("IndexIncludesHidden")) = "on" Then
                             queryToBeParsed.Append(" AND ")
+                            queryToBeParsed.Append(" ( ")
                             queryTerms = ParseKeywordsAndPhrases("1")
                             BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch)
+                            queryToBeParsed.Append(" ) ")
                         End If
                     End If
                 End If
