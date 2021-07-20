@@ -629,20 +629,20 @@ Partial Public Class Cms
                         End If
 
                         Dim nGetProductsLoadedCount As Int32 = 0
-                            Dim intPageStartIndex As Int32 = pageStart
-                            If myWeb.moSession("IndexPointer") IsNot Nothing And pageStart > 1 Then
-                                intPageStartIndex = CInt(myWeb.moSession("IndexPointer")) + 1
-                            End If
-                            ' For i As Integer = pageStart - 1 To results.TotalHits - 1
-                            For i As Integer = intPageStartIndex - 1 To results.TotalHits - 1
+                        Dim intPageStartIndex As Int32 = pageStart
+                        If myWeb.moSession("IndexPointer") IsNot Nothing And pageStart > 1 Then
+                            intPageStartIndex = CInt(myWeb.moSession("IndexPointer")) + 1
+                        End If
+                        ' For i As Integer = pageStart - 1 To results.TotalHits - 1
+                        For i As Integer = intPageStartIndex - 1 To results.TotalHits - 1
 
-                                'If i > (pageStart - 1 + pageSize - 1) Then
-                                '    Exit For
-                                'End If
-                                If nGetProductsLoadedCount = pageSize Then
-                                    myWeb.moSession("IndexPointer") = i
-                                    Exit For
-                                End If
+                            'If i > (pageStart - 1 + pageSize - 1) Then
+                            '    Exit For
+                            'End If
+                            If nGetProductsLoadedCount = pageSize Then
+                                myWeb.moSession("IndexPointer") = i
+                                Exit For
+                            End If
 
                             resultDoc = searcher.Doc(scoreDocs(i).Doc)
                             pageIdField = resultDoc.GetField("pgid")
