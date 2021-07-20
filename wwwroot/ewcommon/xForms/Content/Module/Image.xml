@@ -12,6 +12,7 @@
         <cContentXmlBrief>
           <Content position="" moduleType="Image" box="" title="" link="" linkType="internal" resize="false" constrain="true" width="" height="" crop="" stretch="false" responsiveImg="true">
             <img class="image"/>
+            <!--<img class="imageDetail"/>-->
           </Content>
         </cContentXmlBrief>
         <cContentXmlDetail/>
@@ -48,6 +49,7 @@
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <ewInclude filePath="/ewthemes/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
     <bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
+    <!--<bind id="cContentImageDetail" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>-->
     <ewInclude filePath="/ewcommon/xforms/content/module/genericModule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
   </model>
   <group ref="EditContent" class="2col">
@@ -78,6 +80,10 @@
         <input bind="cContentImage" class="short pickImage">
           <label>Image</label>
         </input>
+        <!--<input bind="cContentImageDetail" class="short pickImage">
+          <label>Larger Image (if needed)</label>
+          <hint>if you add a larger version, the original image can be clicked on and the larger image will then be displayed</hint>
+        </input>-->
         <group>
           <select1 bind="cResizeImage" appearance="full">
             <label>Resize image</label>
@@ -133,13 +139,13 @@
               </group>
             </case>
           </switch>
-          <select bind="cResponsiveImg" appearance="full" class="bs-only">
+          <!--<select bind="cResponsiveImg" appearance="full" class="bs-only">
             <item>
               <label class="bs-only">Auto adjust to fit space</label>
               <value>true</value>
             </item>
             <help class="inline">If selected, the image will shrink to fit the space available, and will automatically adjust if the space changes. It will not become larger than the original size of the image, so make sure the image you use is at least as big as you would like it to appear.</help>
-          </select>
+          </select>-->
         </group>
       </group>
       <group>
