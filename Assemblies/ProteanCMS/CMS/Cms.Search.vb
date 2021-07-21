@@ -616,17 +616,10 @@ Partial Public Class Cms
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        If moConfig("ExcludeCategoryFromSearch") IsNot Nothing Then
-                            'get total count loaded on page
-                            If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
-                                Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
-                                resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
-                            Else
-                                resultsXML.SetAttribute("totalResults", totalResults)
-                            End If
-                        Else
-                            resultsXML.SetAttribute("totalResults", totalResults)
-                        End If
+                        'get total count loaded on page
+                        Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
+
+                        resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
 
                         Dim nGetProductsLoadedCount As Int32 = 0
                         Dim intPageStartIndex As Int32 = pageStart
