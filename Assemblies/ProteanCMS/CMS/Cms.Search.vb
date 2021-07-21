@@ -449,8 +449,6 @@ Partial Public Class Cms
                         If LCase(myWeb.moConfig("SiteSearchFuzzy")) = "on" Then _includeFuzzySearch = True
                     End If
 
-                    'If myWeb.moRequest("fuzzySearch") = "on" Then _includeFuzzySearch = True
-                    'If myWeb.moRequest("fuzzySearch") = "off" Then _includeFuzzySearch = False
                     If bShowHiddenForUser Then
                         _includeFuzzySearch = False ' to get exact matching result
                         'keep page size for csuser as default
@@ -618,22 +616,27 @@ Partial Public Class Cms
                             thisArtIdList = myWeb.CheckProductStatus(thisArtIdList)
                         End If
 
-                        'get total count loaded on page
-                        Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
-
-                        resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
+                        If moConfig("ExcludeCategoryFromSearch") IsNot Nothing Then
+                            'get total count loaded on page
+                            If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
+                                Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
+                                resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
+                            End If
+                        Else
+                            resultsXML.SetAttribute("totalResults", totalResults)
+                        End If
 
                         Dim nGetProductsLoadedCount As Int32 = 0
                         Dim intPageStartIndex As Int32 = pageStart
-                        If myWeb.moSession("IndexPointer") IsNot Nothing Then
+                        If myWeb.moSession("IndexPointer") IsNot Nothing And pageStart > 1 Then
                             intPageStartIndex = CInt(myWeb.moSession("IndexPointer")) + 1
                         End If
                         ' For i As Integer = pageStart - 1 To results.TotalHits - 1
                         For i As Integer = intPageStartIndex - 1 To results.TotalHits - 1
 
-                            If i > (pageStart - 1 + pageSize - 1) Then
-                                'Exit For
-                            End If
+                            'If i > (pageStart - 1 + pageSize - 1) Then
+                            '    Exit For
+                            'End If
                             If nGetProductsLoadedCount = pageSize Then
                                 myWeb.moSession("IndexPointer") = i
                                 Exit For
@@ -667,9 +670,28 @@ Partial Public Class Cms
                                         If Not thisArtId = Nothing Then artIdResults.Add(thisArtId)
 
                                         url = resultDoc.GetField("url").StringValue & ""
-                                        If (resultDoc.GetField("status").StringValue = "1" And resultDoc.GetField("contenttype").StringValue = "Product") Then
-                                            nGetProductsLoadedCount += 1
+                                        If (Not bShowHiddenForUser) Then
+                                            If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
+                                                If (resultDoc.GetField("status").StringValue = "1" And resultDoc.GetField("contenttype").StringValue = "Product") Then
+                                                    nGetProductsLoadedCount += 1
+                                                End If
+                                            Else
+                                                If (resultDoc.GetField("status").StringValue = "1") Then
+                                                    nGetProductsLoadedCount += 1
+                                                End If
+                                            End If
+
+                                        Else 'for bShowHiddenForUser skip status condition
+                                            If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
+                                                If (resultDoc.GetField("contenttype").StringValue = "Product") Then
+                                                    nGetProductsLoadedCount += 1
+                                                End If
+                                            Else
+                                                nGetProductsLoadedCount += 1
+                                            End If
+
                                         End If
+
                                         ' Build the URL
                                         If url = "" Then
                                             url = menuItem.GetAttribute("url")
@@ -2023,12 +2045,14 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch)
 
                     If Not bShowHiddenForUser Then
-                        'get only products
-                        queryToBeParsed.Append(" AND ")
-                        queryToBeParsed.Append(" ( ")
-                        queryTerms = ParseKeywordsAndPhrases("Product")
-                        BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "type", 3, _includeFuzzySearch)
-                        queryToBeParsed.Append(" ) ")
+                        If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
+                            'get only products
+                            queryToBeParsed.Append(" AND ")
+                            queryToBeParsed.Append(" ( ")
+                            queryTerms = ParseKeywordsAndPhrases("Product")
+                            BuildLuceneKeywordQuery(queryToBeParsed, queryTerms, "type", 3, _includeFuzzySearch)
+                            queryToBeParsed.Append(" ) ")
+                        End If
 
                         'apply status filter to show only active Products
                         If LCase(moConfig("IndexIncludesHidden")) = "on" Then
