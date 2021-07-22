@@ -621,6 +621,8 @@ Partial Public Class Cms
                             If LCase(moConfig("ExcludeCategoryFromSearch")) = "on" Then
                                 Dim totalActiveResultsArr() As String = thisArtIdList.Split(",")
                                 resultsXML.SetAttribute("totalResults", totalActiveResultsArr.Length())
+                            Else
+                                resultsXML.SetAttribute("totalResults", totalResults)
                             End If
                         Else
                             resultsXML.SetAttribute("totalResults", totalResults)
