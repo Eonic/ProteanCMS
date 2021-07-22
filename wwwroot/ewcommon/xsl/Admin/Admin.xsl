@@ -1907,8 +1907,8 @@
 			</div>
 			<div class="col-md-9">
 				<form action="{$appPath}" method="get" class="ewXform">
-					<input type="hidden" name="ewCmd" value="BulkContentAction"/>
-					<input type="hidden" name="pgid" value="{$page/@id}"/>
+          <!--input type="hidden" name="ewCmd" value="BulkContentAction"/>
+					<input type="hidden" name="pgid" value="{$page/@id}"/-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<div class="panel-heading-buttons">
