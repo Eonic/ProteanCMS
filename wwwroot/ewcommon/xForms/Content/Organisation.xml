@@ -448,7 +448,8 @@
         <select1 bind="cLocationCountry" class="ewQuery" query="Countries" appearance="minimal">
           <label>Country</label>
         </select1>
-
+      </group>
+      <group class="inline">
           <input bind="cContentLocationLat">
             <label>Latitude</label>
           </input>
@@ -456,8 +457,8 @@
             <label>Longitude</label>
           </input>
           <submit submission="" ref="" class=" hideRequired getGeocodeButton" icon="fa-map-marker">
-          <label>Get latitude and longitude</label>
-        </submit>
+            <label>Get latitude and longitude</label>
+          </submit>
 
       </group>
       <group class="inline">

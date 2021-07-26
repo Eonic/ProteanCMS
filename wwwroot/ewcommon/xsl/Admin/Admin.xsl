@@ -10,7 +10,10 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
-	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+  </xsl:variable>
+  
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
