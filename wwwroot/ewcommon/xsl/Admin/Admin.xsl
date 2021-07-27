@@ -10,7 +10,10 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
-	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+  </xsl:variable>
+  
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -4829,6 +4832,8 @@
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 		<!-- The File Upload image preview & resize plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The Image Lazy load plugin -->
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -4901,6 +4906,8 @@
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 			<!-- The File Upload image preview & resize plugin -->
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+			<!-- The Image Lazy load plugin -->
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
 		<script>
@@ -4976,7 +4983,6 @@
 			});
 		</script>
 
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		<script>
 			$(function() {
 			$('.lazy').lazy();
