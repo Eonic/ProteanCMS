@@ -450,16 +450,17 @@
         </select1>
       </group>
       <group class="inline">
+        <group class="inline-col3">
           <input bind="cContentLocationLat">
             <label>Latitude</label>
           </input>
           <input bind="cContentLocationLong">
             <label>Longitude</label>
           </input>
-          <submit submission="" ref="" class=" hideRequired getGeocodeButton" icon="fa-map-marker">
+          <submit submission="" ref="" class="hideRequired getGeocodeButton" icon="fa-map-marker">
             <label>Get latitude and longitude</label>
           </submit>
-
+        </group>
       </group>
       <group class="inline">
         <label>Postal Address (If Different)</label>

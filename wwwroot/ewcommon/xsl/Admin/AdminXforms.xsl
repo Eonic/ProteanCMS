@@ -2689,7 +2689,6 @@
         </button>
       </xsl:when>
       <xsl:otherwise>
-        <hr/>
         <div class="alert alert-warning">For geo-coding to work you require a Google API Key in the <a href="?ewCmd=WebSettings">config settings</a></div>
       </xsl:otherwise>
     </xsl:choose>
