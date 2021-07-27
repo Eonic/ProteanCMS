@@ -60,7 +60,7 @@
     <bind nodeset="tblContent">
       <bind id="cModuleTitle" nodeset="cContentName" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">
-        <bind id="cGoogleAPIKey" nodeset="@apiKey" required="false()" type="string"/>
+        <!--bind id="cGoogleAPIKey" nodeset="@apiKey" required="false()" type="string"/-->
         <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
         <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
         <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
@@ -233,6 +233,7 @@
               <label>Get latitude and longitude</label>
             </submit>
           </group>
+        </group>
         <select1 bind="bMarker" appearance="full" class="">
           <label>Add a marker for this location to the map</label>
           <item>
