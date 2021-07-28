@@ -534,9 +534,6 @@ $.fn.prepareXform = function () {
     //    var datePickerSettings = ;
 
     if ($(this).find('input.jqDatePicker').exists()) {
-
-        alert('datepicker!');
-
         $.datepicker.setDefaults($.datepicker.regional['']);
         $(this).find('input.jqDatePicker').each(function (i) {
             $(this).datepicker({

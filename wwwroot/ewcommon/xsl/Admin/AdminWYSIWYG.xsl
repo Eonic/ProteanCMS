@@ -223,7 +223,7 @@
           </div>
         </div>
         <div id="headers" class="preview form-inline">
-          <form class="ewXform">
+          <form class="ewXform" id="previewSettings" action="?ewCmd=PreviewOn">
           <span id="breadcrumb">
             <strong>
               <xsl:value-of select="/Page/PreviewMenu/User/@name"/>
@@ -242,10 +242,10 @@
             <label for="PreviewDate"> as of date&#160;</label>
             
             <span class="input-group">
-              <input type="text" class="form-control jqDatePicker" name="PreviewDate" id="PreviewDate" value="{/Page/@pageViewDate}">
+              <input type="text" class="form-control jqDatePicker" name="dPreviewDate" id="dPreviewDate" value="{/Page/@pageViewDate}" oninput="document.getElementById('previewSettings').submit();">
               </input>
               <span class="input-group-btn">
-                <label for="dPublishDate" class="input-group-addon btn btn-default">
+                <label for="dPreviewDate" class="input-group-addon btn btn-default">
                   <i class="fa fa-calendar"> </i>
                 </label>
               </span>
