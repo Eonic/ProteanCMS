@@ -239,16 +239,16 @@
             </strong>
             <xsl:text> </xsl:text>
            
-            <label for="PreviewDate"> as of date&#160;</label>
+            <label for="PreviewDate"> as of date&#160;</label>&#160;
             
             <span class="input-group">
-              <input type="text" class="form-control jqDatePicker" name="dPreviewDate" id="dPreviewDate" value="{/Page/@pageViewDate}" oninput="document.getElementById('previewSettings').submit();">
+              <input type="date" class="form-control" name="dPreviewDate" id="dPreviewDate" value="{/Page/@pageViewDate}" onChange="document.getElementById('previewSettings').submit();">
               </input>
-              <span class="input-group-btn">
+              <!--span class="input-group-btn">
                 <label for="dPreviewDate" class="input-group-addon btn btn-default">
                   <i class="fa fa-calendar"> </i>
                 </label>
-              </span>
+              </span-->
              </span>
 
             &#160;

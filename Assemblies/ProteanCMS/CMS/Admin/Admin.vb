@@ -1986,8 +1986,8 @@ ProcessFlow:
                             myWeb.msRedirectOnEnd = "/"
                         End If
 
-                        If IsDate(myWeb.moRequest("PreviewDate")) Then
-                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("PreviewDate"))
+                        If IsDate(myWeb.moRequest("dPreviewDate")) Then
+                            myWeb.moSession("PreviewDate") = CDate(myWeb.moRequest("dPreviewDate"))
                         End If
                         myWeb.mdDate = myWeb.moSession("PreviewDate")
 
