@@ -11406,7 +11406,7 @@
     </xsl:variable>
 
     <!-- ###### -->
-    <div class="advanced-carousel-container">
+    <div class="advanced-carousel-container" style="height:{@CarouselHeight}px">
       <div class="cover-container">
         <div class="advanced-carousel">
           <ul style="display:none">
