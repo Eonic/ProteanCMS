@@ -2611,4 +2611,90 @@
       </div>
     </div>
   </xsl:template>
- </xsl:stylesheet>
+
+
+  <xsl:template match="submit[contains(@class,'getGeocodeButton')]" mode="xform">
+    <xsl:variable name="class">
+      <xsl:text>btn</xsl:text>
+      <xsl:if test="not(contains(@class,'btn-'))">
+        <xsl:text> btn-success</xsl:text>
+      </xsl:if>
+      <xsl:if test="@class!=''">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@class"/>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="name">
+      <xsl:choose>
+        <xsl:when test="@ref!=''">
+          <xsl:value-of select="@ref"/>
+        </xsl:when>
+        <xsl:when test="@submission!=''">
+          <xsl:value-of select="@submission"/>
+        </xsl:when>
+        <xsl:when test="@bind!=''">
+          <xsl:value-of select="@bind"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>ewSubmit</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="icon">
+      <xsl:choose>
+        <xsl:when test="@icon!=''">
+          <xsl:value-of select="@icon"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>fa-check</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="buttonValue">
+      <xsl:choose>
+        <xsl:when test="@value!=''">
+          <xsl:value-of select="@value"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="label/node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$GoogleAPIKey!=''">
+        <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}"  onclick="disableButton(this);">
+          <xsl:if test="@data-pleasewaitmessage != ''">
+            <xsl:attribute name="data-pleasewaitmessage">
+              <xsl:value-of select="@data-pleasewaitmessage"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="@data-pleasewaitdetail != ''">
+            <xsl:attribute name="data-pleasewaitdetail">
+              <xsl:value-of select="@data-pleasewaitdetail"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:if test="not(contains($class,'icon-right'))">
+            <i class="fa {$icon} fa-white">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
+          </xsl:if>
+          <xsl:apply-templates select="label" mode="submitText"/>
+          <xsl:if test="contains($class,'icon-right')">
+            <xsl:text> </xsl:text>
+            <i class="fa {$icon} fa-white">
+              <xsl:text> </xsl:text>
+            </i>
+          </xsl:if>
+        </button>
+      </xsl:when>
+      <xsl:otherwise>
+        <hr/>
+        <div class="alert alert-warning">For geo-coding to work you require a Google API Key in the <a href="?ewCmd=WebSettings">config settings</a></div>
+      </xsl:otherwise>
+    </xsl:choose>
+    
+  </xsl:template>
+
+
+</xsl:stylesheet>
