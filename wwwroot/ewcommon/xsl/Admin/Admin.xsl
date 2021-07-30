@@ -10,7 +10,10 @@
                 xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                 xmlns:v-model="http://example.com/xml/v-model" xmlns:ew="urn:ew">
 
-	<xsl:variable name="GoogleAPIKey" select="'AIzaSyDgWT-s0qLPmpc4aakBNkfWsSapEQLUEbo'"/>
+  <xsl:variable name="GoogleAPIKey">
+    <xsl:value-of select="$page/Settings/add[@key='web.GoogleAPIKey']/@value"/>
+  </xsl:variable>
+  
 	<xsl:template name="eonicwebProductName">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -1907,8 +1910,8 @@
 			</div>
 			<div class="col-md-9">
 				<form action="{$appPath}" method="get" class="ewXform">
-					<input type="hidden" name="ewCmd" value="BulkContentAction"/>
-					<input type="hidden" name="pgid" value="{$page/@id}"/>
+          <!--input type="hidden" name="ewCmd" value="BulkContentAction"/>
+					<input type="hidden" name="pgid" value="{$page/@id}"/-->
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<div class="panel-heading-buttons">
@@ -4829,6 +4832,8 @@
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 		<!-- The File Upload image preview & resize plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+		<!-- The Image Lazy load plugin -->
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -4901,6 +4906,8 @@
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">/* */</script>
 			<!-- The File Upload image preview & resize plugin -->
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">/* */</script>
+			<!-- The Image Lazy load plugin -->
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
 
 		<script>
@@ -4976,7 +4983,6 @@
 			});
 		</script>
 
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">/* */</script>
 		<script>
 			$(function() {
 			$('.lazy').lazy();
@@ -11269,13 +11275,7 @@
       </xsl:if>
     </xsl:variable>
     <td class="btn-group">
-      <xsl:if test="@status='0'">
-        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to delete this item">
-          <i class="fa fa-remove-circle fa-white">
-            <xsl:text> </xsl:text>
-          </i>
-          <xsl:text> </xsl:text>Delete</a>
-      </xsl:if>
+
 
       <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-default" title="Click here to edit this content">
         <i class="fa fa-eye">
@@ -11296,6 +11296,13 @@
           <xsl:text> </xsl:text>
         </i>
         <xsl:text> </xsl:text>Edit</a>
+      <xsl:if test="@status='0' or @status='3'">
+        <a href="{$appPath}?ewCmd=DeleteContent&amp;pgid={/Page/@id}&amp;id={@id}" class="btn btn-xs btn-danger" title="Click here to delete this item">
+          <i class="fa fa-trash fa-white">
+            <xsl:text> </xsl:text>
+          </i>
+          </a>
+        </xsl:if>
     </td>
   </xsl:template>
 

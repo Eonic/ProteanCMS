@@ -1,13 +1,11 @@
-﻿// (c) Eonic Associates LLP. 2002-2020
+﻿// (c) Eonic Digital LLP. 2002-2020
 // Authority: Trevor Spink
 
 var obj = null;
 var oQueryParams = {};
 
-
 /* MAIN PAGE READY METHOD or All site, All pages - Keep Smart! */
 $(document).ready(function () {
-
     oQueryParams = $.getURLParams();
     cleanDatepicker();
     initialiseXforms();
@@ -265,7 +263,6 @@ function matchHeightScroller() {
 
 function initialiseXforms() {
     if ($("form.ewXform").exists()) {
-
         $('form.ewXform').prepareXform();
 
         if ($.browser.msie && $.browser.version <= 9 || $.browser.opera) {
@@ -671,6 +668,7 @@ $.fn.prepareXform = function () {
 
     if ($(this).find('.contentLocations').exists()) {
         $(this).find('.contentLocations').each(function (i) {
+            debugger;
             var classString = $(this).attr('class').match(/([^\?]*)pickLimit\-(\d*)/);
             var cbLimit = classString[2];
             //  alert(cbLimit);

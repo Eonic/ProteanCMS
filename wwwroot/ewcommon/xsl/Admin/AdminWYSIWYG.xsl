@@ -223,6 +223,7 @@
           </div>
         </div>
         <div id="headers" class="preview form-inline">
+          <form class="ewXform" id="previewSettings" action="?ewCmd=PreviewOn">
           <span id="breadcrumb">
             <strong>
               <xsl:value-of select="/Page/PreviewMenu/User/@name"/>
@@ -237,19 +238,32 @@
               
             </strong>
             <xsl:text> </xsl:text>
-            <!--
-              <label for="PreviewDate"> as of date&#160;</label>
+           
+            <label for="PreviewDate"> as of date&#160;</label>&#160;
+            
             <span class="input-group">
-              <input type="text" class="form-control jqDatePicker" name="PreviewDate" value="{/Page/@pageViewDate}">
+              <input type="date" class="form-control" name="dPreviewDate" id="dPreviewDate" value="{/Page/@pageViewDate}" onChange="document.getElementById('previewSettings').submit();">
               </input>
-              <span class="input-group-btn">
-                <label for="dPublishDate" class="input-group-addon btn btn-default">
+              <!--span class="input-group-btn">
+                <label for="dPreviewDate" class="input-group-addon btn btn-default">
                   <i class="fa fa-calendar"> </i>
                 </label>
-              </span>
+              </span-->
              </span>
-             -->
+
+            &#160;
+            <xsl:choose>
+              <xsl:when test="/Page/@previewHidden='on'">
+                <a href="?ewcmd=PreviewOn&amp;ewCmd2=hideHidden" class="btn btn-default">Hide Hidden</a>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="?ewcmd=PreviewOn&amp;ewCmd2=showHidden" class="btn btn-default">Show Hidden</a>
+              </xsl:otherwise>
+            </xsl:choose>
+             
+          
           </span>
+          </form>
           <xsl:text> </xsl:text>
           <xsl:text> </xsl:text>
           <a href="?ewCmd=Normal&amp;pgid={/Page/@id}" class="btn btn-success btn-lg pull-right" id="previewBack">

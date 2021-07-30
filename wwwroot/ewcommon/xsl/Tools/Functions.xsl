@@ -338,6 +338,7 @@
     <html lang="{$pageLang}" xml:lang="{$pageLang}">
       <xsl:apply-templates select="." mode="htmlattr"/>
       <head>
+        <xsl:apply-templates select="." mode="metacharset"/>
         <xsl:choose>
           <xsl:when test="ContentDetail">
             <xsl:attribute name="prefix">
@@ -375,7 +376,6 @@
           </script>
           <!-- PayPal END -->
         </xsl:if>
-        <xsl:apply-templates select="." mode="metacharset"/>
         <!-- browser title -->
         <title>
           <xsl:apply-templates select="." mode="PageTitle"/>
@@ -442,9 +442,6 @@
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
-
-
-
     </html>
   </xsl:template>
 
@@ -471,7 +468,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metacharset">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   </xsl:template>
 
   <xsl:template match="Page[Contents/Content[@name='EncType']]" mode="metacharset">
