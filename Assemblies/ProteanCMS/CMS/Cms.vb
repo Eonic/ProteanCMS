@@ -5362,6 +5362,13 @@ Public Class Cms
                             newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"))
                             newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"))
                             newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"))
+                            Dim sInnerXml As String
+                            Dim infoElmt As XmlElement
+                            For Each infoElmt In oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']")
+                                sInnerXml = sInnerXml & infoElmt.OuterXml
+                            Next
+                            newVerNode.InnerXml = sInnerXml
+                            sInnerXml = ""
                             If Not goLangConfig Is Nothing Then
                                 newVerNode.SetAttribute("lang", goLangConfig.GetAttribute("code"))
                             End If
